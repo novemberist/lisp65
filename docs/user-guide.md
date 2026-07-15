@@ -133,6 +133,14 @@ further writes. The release does not claim atomicity inside that narrow window.
   there is no `unload`, and exhausting a pool requires a restart.
 - The on-device compiler builds L65M modules for the current Workbench; it does
   not create standalone runtimes or bootable application disks.
+- M65D and editor saves accept payloads from 1 through 8,192 bytes. Evaluator
+  `load` has a separate 38,400-byte staging ceiling, but editor heap and string
+  capacity may become the practical limit earlier. The maximum supported
+  editable load/save round trip is therefore 8 KiB.
+- Xemu is useful for logic and boot-choreography checks but is not a complete
+  replacement for a MEGA65. F011 writes, SD buffer mapping, Freezer behavior,
+  reset behavior, and hardware timing are not fully covered in an emulator-only
+  setup.
 - One drive is supported; use the documented one-swap workflow.
 - There is no on-device disk formatter.
 - The editor uses fixed-capacity buffers and intentionally omits undo/redo.
