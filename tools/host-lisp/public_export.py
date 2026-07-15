@@ -161,14 +161,23 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def source_commit() -> str:
-    return subprocess.run(
-        ["git", "rev-parse", "HEAD"],
+def source_commit(policy: dict) -> str:
+    """Return the newest commit that changed any exported path.
+
+    Private-only status and evidence commits must not move public snapshot
+    provenance when the exported tree itself is byte-identical.
+    """
+    paths = selected_paths(policy)
+    result = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--", *paths],
         cwd=ROOT,
         check=True,
         text=True,
         stdout=subprocess.PIPE,
     ).stdout.strip()
+    if not result:
+        raise PolicyError("cannot identify a commit for the exported paths")
+    return result
 
 
 def worktree_is_clean() -> bool:
@@ -213,7 +222,7 @@ def materialize(policy: dict, destination: Path, allow_dirty: bool) -> None:
 
     manifest = {
         "format": "lisp65-public-source-manifest-v1",
-        "source_commit": source_commit(),
+        "source_commit": source_commit(policy),
         "source_tree_clean": worktree_is_clean(),
         "file_count": len(manifest_files),
         "tree_sha256": tree_digest.hexdigest(),
@@ -256,6 +265,47 @@ def verify_snapshot(root: Path) -> list[str]:
         errors.append("public source tree digest mismatch")
     if len(manifest.get("files", [])) != manifest.get("file_count"):
         errors.append("public source manifest file count mismatch")
+    return errors
+
+
+def compare_snapshot(policy: dict, root: Path) -> list[str]:
+    """Compare a public checkout with a freshly materialized private export."""
+    if not worktree_is_clean():
+        return ["refusing to compare from a dirty private source tree"]
+
+    errors: list[str] = []
+    with tempfile.TemporaryDirectory(prefix="lisp65-public-compare-") as temp:
+        expected = Path(temp)
+        materialize(policy, expected, allow_dirty=False)
+        errors.extend(verify_snapshot(root))
+
+        expected_paths = selected_paths(policy) + ["PUBLIC-SOURCE-MANIFEST.json"]
+        for relative in expected_paths:
+            wanted = expected / relative
+            actual = root / relative
+            if not actual.is_file():
+                errors.append(f"public checkout file missing: {relative}")
+            elif wanted.read_bytes() != actual.read_bytes():
+                errors.append(f"private/public byte drift: {relative}")
+
+        if (root / ".git").is_dir():
+            result = subprocess.run(
+                ["git", "ls-files", "-z"],
+                cwd=root,
+                check=True,
+                stdout=subprocess.PIPE,
+            )
+            tracked = {
+                item.decode("utf-8", "surrogateescape")
+                for item in result.stdout.split(b"\0")
+                if item
+            }
+            wanted = set(expected_paths)
+            for relative in sorted(wanted - tracked):
+                errors.append(f"public checkout path is not tracked: {relative}")
+            for relative in sorted(tracked - wanted):
+                errors.append(f"unexpected tracked public path: {relative}")
+
     return errors
 
 
@@ -308,7 +358,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("check", "list", "export", "verify", "selftest"),
+        choices=("check", "list", "export", "verify", "compare", "selftest"),
         help="operation to perform",
     )
     parser.add_argument("destination", nargs="?", type=Path)
@@ -345,6 +395,15 @@ def main() -> int:
             if errors:
                 raise PolicyError("\n".join(errors))
             print(f"public source manifest: passed ({root})")
+            return 0
+        if args.command == "compare":
+            if args.destination is None:
+                parser.error("compare requires a public checkout")
+            root = args.destination.resolve()
+            errors = compare_snapshot(policy, root)
+            if errors:
+                raise PolicyError("\n".join(errors))
+            print(f"private/public snapshot comparison: passed ({root})")
             return 0
         if args.destination is None:
             parser.error("export requires a destination")

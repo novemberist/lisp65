@@ -32,6 +32,13 @@ python3 verify.py
 The verifier checks the complete package, its product artifacts, and the
 embedded G6 hardware-acceptance seal before you use either disk image.
 
+The verified archive is an immutable tag-time snapshot. Its bundled
+`README-FIRST.txt` is retained byte-for-byte as release evidence; the current
+[README](README.md), [User Guide](docs/user-guide.md), and
+[release notes](docs/releases/1.0.0.md) on `main` contain subsequent
+documentation corrections and supersede it for usage instructions. Product
+artifacts and acceptance claims are unchanged.
+
 ## First start from BASIC
 
 1. Make `media/lisp65-product.d81` available on the MEGA65 SD card.

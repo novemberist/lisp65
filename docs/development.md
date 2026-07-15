@@ -68,6 +68,20 @@ pretending those gates still ran would weaken their claim. `make check` remains
 the cumulative private MVP/product gate used by older workflows. Hardware
 targets are never implied by a host-only command.
 
+Before or after publishing documentation, compare the complete curated export
+with the public checkout and verify the frozen release-document boundary:
+
+```sh
+python3 tools/host-lisp/public_export.py compare /path/to/public/lisp65
+python3 tools/host-lisp/publication_drift.py --public-root /path/to/public/lisp65
+```
+
+The first command requires byte parity for every exported and tracked public
+file. The second also verifies the release-bundle SHA and the immutable bundled
+README classification. The tag-time README is never rewritten; current online
+documents supersede it for usage instructions through an explicit release-page
+notice.
+
 ## Change rules
 
 1. **Probe first.** Measure a real differential link before accepting a memory
@@ -93,6 +107,8 @@ targets are never implied by a host-only command.
 - Keep user instructions separate from implementation contracts and evidence.
 - Mark proposals as proposals; do not describe them as shipped behavior.
 - Historical evidence may retain its original language and exact frozen claims.
+- Keep the private export and public checkout byte-identical. Classify immutable
+  release documentation explicitly instead of silently editing a sealed asset.
 - Add every tracked Markdown file under `docs/` to
   `config/document-index.json` with the correct class.
 - Run `make document-index-check` after adding, moving, or removing a document.
