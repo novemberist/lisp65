@@ -4,7 +4,9 @@ lisp65 is a native, interactive Lisp workbench for the [MEGA65](https://mega65.o
 It combines a Common Lisp–inspired language, an on-device bytecode compiler, an
 Emacs-style full-screen editor, and transactional 1581 disk persistence.
 
-The current release is **lisp65 1.0.0**, which uses **Dialect V2**.
+The current release is **lisp65 1.0.1**, which uses **Dialect V2**. Release
+1.0.1 is a packaging and documentation correction; its 13 product artifacts
+are byte-identical to the hardware-accepted 1.0.0 product set.
 
 ## Highlights
 
@@ -18,26 +20,24 @@ The current release is **lisp65 1.0.0**, which uses **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.0.0.tar.gz` from the
-[v1.0.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.0.0).
+Download `lisp65-1.0.1.tar.gz` from the
+[v1.0.1 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.0.1).
 Release bundles are published as assets and are not stored in the public Git
 history.
 
 ```sh
-tar -xzf lisp65-1.0.0.tar.gz
-cd lisp65-1.0.0
+tar -xzf lisp65-1.0.1.tar.gz
+cd lisp65-1.0.1
 python3 verify.py
 ```
 
 The verifier checks the complete package, its product artifacts, and the
 embedded G6 hardware-acceptance seal before you use either disk image.
 
-The verified archive is an immutable tag-time snapshot. Its bundled
-`README-FIRST.txt` is retained byte-for-byte as release evidence; the current
-[README](README.md), [User Guide](docs/user-guide.md), and
-[release notes](docs/releases/1.0.0.md) on `main` contain subsequent
-documentation corrections and supersede it for usage instructions. Product
-artifacts and acceptance claims are unchanged.
+The 1.0.1 archive corrects the first-session instructions while preserving all
+13 product artifacts byte-for-byte. The original 1.0.0 archive and tag remain
+immutable historical evidence. See the [1.0.1 release notes](docs/releases/1.0.1.md)
+for the exact package-only delta.
 
 ## First start from BASIC
 
@@ -73,7 +73,7 @@ Try this at the REPL:
 ```
 
 M65D accepts any valid 1581 work disk and rejects the product disk by identity.
-There is no on-device disk formatter in 1.0.0.
+There is no on-device disk formatter in 1.0.1.
 
 See the [User Guide](docs/user-guide.md) for the editor keys, disk workflow,
 error recovery, and current limitations.
@@ -87,8 +87,8 @@ The hardware UX receipts injected normalized key events after that boundary, so
 they do not prove every documented physical chord.
 
 - Load `ide`, `idex`, and `m65d` from `L65SYS` before the one-drive swap. The
-  immutable bundled `README-FIRST.txt` lists only `ide`; the live instructions
-  above supersede it.
+  1.0.0 bundled `README-FIRST.txt` listed only `ide`; 1.0.1 corrects that
+  package instruction.
 - The command launcher implemented by 1.0.0 is `C-x x` or `C-x Return`, not
   physical `M-x`, and it requires IDEX.
 - `C-Space` cannot reach the 1.0.0 dispatcher and must be treated as broken.
@@ -101,16 +101,18 @@ they do not prove every documented physical chord.
 - `compile-load` and `compile-buffer-to-lib` require an existing, preallocated
   FASL target. The supplied blank work D81 contains no `fasl0`--`fasl2` slots,
   so persistent on-device compilation is not available out of the box in the
-  1.0.0 bundle.
+  supplied bundle.
 
-These are documentation corrections; the immutable 1.0.0 product bytes and
-acceptance seals are unchanged. A narrow 1.0.1 package repair is planned for the
-load order and work-media provisioning. The modifier-aware MEGA65 keyboard
-driver and fully bound keymap belong to 1.1.
+Release 1.0.1 ships these documentation corrections and the corrected load
+order without changing product bytes. It deliberately does not provision FASL
+slots: the legacy compiler writer does not share M65D's product-media guard or
+transaction binding. Persistent compilation remains unavailable on the blank
+work image until the transactional 1.1 redesign. The modifier-aware MEGA65
+keyboard driver and fully bound keymap also belong to 1.1.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.0.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.0.1 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 yet be treated as a general-purpose production environment for irreplaceable
 data, unattended operation, or large applications.
@@ -120,12 +122,12 @@ data, unattended operation, or large applications.
 | Finite session metadata | The released baseline leaves 120 symbol entries, 2,160 name-pool bytes, and 32 L65M directory entries. Libraries and definitions are append-only in 1.0.0; there is no `unload`, so a long or heavily composed session can exhaust a pool and require a restart. | 1.1 plans export-only interning, measured capacity relief, and dependency-safe LIFO `unload`. |
 | Libraries come from the product medium | With one drive, IDE, IDEX, and M65D must be loaded before swapping from the product D81 to a work disk. | The 1.1 Attic library shelf is intended to remove the post-boot library-disk dependency. |
 | IDE keyboard path is incomplete | Arrow navigation is usable, but the 1.0.0 input path loses modifier identity. `C-Space` is broken, physical `M-x` is not implemented, and the other documented chords lack an end-to-end physical-key receipt. | 1.0.1 corrects packaging and documentation only. 1.1 replaces the input path and binds every documented key. |
-| Blank work media has no compiler targets | Persistent compilation requires an existing preallocated FASL slot, but the supplied blank work D81 has no `fasl0`--`fasl2`; `compile-load` therefore reports `slot missing` without externally provisioned media. | 1.0.1 will ship provisioned target slots; more flexible allocation remains later work. |
+| Blank work media has no compiler targets | Persistent compilation requires an existing preallocated FASL slot, but the supplied blank work D81 has no `fasl0`--`fasl2`; `compile-load` therefore reports `slot missing` without externally provisioned media. | 1.1 replaces the slot writer with the M65D copy-on-write transaction and removes preallocated slots. |
 | No standalone application builder | The on-device compiler creates and loads L65M modules for the current Workbench. It cannot yet produce a self-contained runtime or bootable application disk. | An on-device ship builder is the lead goal for 1.2. |
 | Editor safety and discoverability are limited | Buffers have fixed capacities. There is no undo/redo, interactive symbol completion, integrated help, or full Lisp-aware structural editing. | 1.1 plans measured undo, incremental search, S-expression navigation, completion, and help; full Paredit is not promised. |
 | File sizes are bounded | M65D and editor saves accept payloads from 1 through 8,192 bytes, so 8 KiB is the maximum supported editable load/save round trip. Evaluator `load` has a separate 38,400-byte staging ceiling; editor memory may become the practical limit before that. | 1.1 buffer work targets safer construction and better capacity use, but no larger file-size limit is currently promised. |
 | Xemu-only use has limited fidelity | Xemu is useful for evaluator, compiler, editor, and boot-choreography checks, but it is not a complete substitute for a MEGA65. Known local gaps include F011 sector writes, SD buffer mapping, and the missing Freezer; reset, timing, and media-swap behavior remain hardware-only claims. | Emulator-valid tests remain a prefilter. Broader emulator-only support depends partly on upstream Xemu behavior and has no promised release date. |
-| Storage workflow remains narrow | Release 1.0.0 supports one drive, has no on-device formatter, and retains a documented Freezer media-swap race in which at most one already-started sector can cross the media boundary before writes stop. | Keep backups now. Multi-drive support and stronger core-assisted mount locking remain later work, without a promised release date. |
+| Storage workflow remains narrow | Release 1.0.1 supports one drive, has no on-device formatter, and retains a documented Freezer media-swap race in which at most one already-started sector can cross the media boundary before writes stop. | Keep backups now. Multi-drive support and stronger core-assisted mount locking remain later work, without a promised release date. |
 
 These roadmap items describe current intent, not release dates or compatibility
 promises. Each change remains conditional on measured capacity, reproducible
@@ -133,7 +135,7 @@ builds, and hardware acceptance.
 
 ## Verification status
 
-Release 1.0.0 is bound to product artifact set `c41b9643…` and G6 seal
+Release 1.0.1 reuses product artifact set `c41b9643…` and G6 seal
 `b339a274…`:
 
 - G3: passed as an emulator prefilter
@@ -143,15 +145,16 @@ Release 1.0.0 is bound to product artifact set `c41b9643…` and G6 seal
   stock-core SD-D81 profile
 
 The exact claims, full hashes, toolchain provenance, and negative verification
-tests are recorded in the [release receipt](releases/lisp65-1.0.0-receipt.json).
-The public [artifact manifest](releases/lisp65-1.0.0-manifest.json) lists the
+tests are recorded in the [1.0.1 release receipt](releases/lisp65-1.0.1-receipt.json).
+The public [1.0.1 artifact manifest](releases/lisp65-1.0.1-manifest.json) lists the
 SHA-256 digest and byte count of every sealed product artifact.
 
 The public repository is a curated source snapshot with independent Git
-history. Its `v1.0.0` tag therefore has a different Git object identity from
-the private proof tag. The release receipt preserves the authoritative proof
-source commit (`5897294…`), while `PUBLIC-SOURCE-MANIFEST.json` binds every file
-in the public snapshot to the private cleanup commit from which it was exported.
+history. Its tags therefore have different Git object identities from the
+private proof tags. The 1.0.1 release receipt preserves authoritative proof
+source commit `5479471…` (the 1.0.0 receipt retains `5897294…`), while
+`PUBLIC-SOURCE-MANIFEST.json` binds every file in the public snapshot to the
+private cleanup commit from which it was exported.
 
 ## Building from source
 
@@ -180,6 +183,7 @@ only in the private proof repository.
 - [Development Guide](docs/development.md)
 - [Architecture Overview](docs/architecture-overview.md)
 - [Documentation Index](docs/README.md)
+- [Release Notes for 1.0.1](docs/releases/1.0.1.md)
 - [Release Notes for 1.0.0](docs/releases/1.0.0.md)
 
 ## Scope

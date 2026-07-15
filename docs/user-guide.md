@@ -3,7 +3,7 @@
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.0.0` release bundle
+- The extracted `lisp65-1.0.1` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -70,9 +70,9 @@ they prove the editor backends on hardware but not every physical key chord.
 
 The practical 1.0.0 rules are:
 
-- Load `ide`, `idex`, and `m65d` while `L65SYS` is mounted. The immutable
-  `README-FIRST.txt` in the release bundle omits the latter two loads; this live
-  guide supersedes it.
+- Load `ide`, `idex`, and `m65d` while `L65SYS` is mounted. The immutable 1.0.0
+  `README-FIRST.txt` omitted the latter two loads; the 1.0.1 bundle and this
+  live guide correct that instruction.
 - Use `C-x x` or `C-x Return` for the command launcher. Physical `M-x` is not
   implemented, despite the original table wording.
 - `C-Space` is broken: its zero code collides with the driver's empty-queue
@@ -89,10 +89,12 @@ The practical 1.0.0 rules are:
   `compile-buffer-to-lib` and `compile-load` report `slot missing` unless the
   work medium was provisioned externally.
 
-The planned 1.0.1 patch repairs the bundled load instructions and supplies
-`fasl0`--`fasl2`, without changing the keyboard driver. The modifier-aware
-keyboard path and a hardware-bound case for every documented binding are 1.1
-work.
+Release 1.0.1 repairs the bundled load instructions without changing product
+code or the keyboard driver. It deliberately does not supply `fasl0`--`fasl2`:
+the legacy compiler writer lacks M65D's product-media guard and transaction
+binding, so `slot missing` remains the safe default on the supplied work image.
+The modifier-aware keyboard path and transactional compiler persistence are
+1.1 work.
 
 ## REPL essentials
 
@@ -108,7 +110,7 @@ work.
 ```
 
 The persistent compiler writes only to preallocated FASL slots. The blank work
-D81 supplied with 1.0.0 has none; `compile-load` combines compilation and loading
+D81 supplied with 1.0.1 has none; `compile-load` combines compilation and loading
 only on externally provisioned media.
 
 ## Editor keys
@@ -166,7 +168,7 @@ further writes. The release does not claim atomicity inside that narrow window.
 
 ## Current limitations
 
-- Release 1.0.0 is intended for exploration and small, backed-up projects, not
+- Release 1.0.1 is intended for exploration and small, backed-up projects, not
   irreplaceable data or unattended production use.
 - The released baseline leaves 120 symbol entries, 2,160 name-pool bytes, and
   32 L65M directory entries. Library loads and definitions are append-only;
@@ -185,8 +187,10 @@ further writes. The release does not claim atomicity inside that narrow window.
 - There is no on-device disk formatter.
 - The physical editor input path is not fully bound to the documented keymap;
   `C-Space` is broken and physical `M-x` is not implemented.
-- The supplied blank work D81 contains no preallocated FASL target, so persistent
-  compilation needs externally provisioned media.
+- The supplied blank work D81 intentionally contains no preallocated FASL
+  target. Persistent compilation is not supported out of the box; externally
+  provisioned slots still use the legacy non-transactional writer and require
+  avoiding media changes during compilation.
 - The editor uses fixed-capacity buffers and intentionally omits undo/redo.
 - lisp65 is a Common Lisp–inspired subset, not full ANSI Common Lisp.
 - Physical product-disk write protection was not applicable to the tested

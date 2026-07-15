@@ -1,15 +1,15 @@
 {
   "format": "lisp65-r7-release-contract-v1",
   "version": 1,
-  "id": "lisp65-private-release-v1.0.0",
+  "id": "lisp65-private-release-v1.0.1-light",
   "status": "owner-authorized",
   "release": {
     "product": "lisp65",
-    "version": "1.0.0",
-    "tag": "v1.0.0",
+    "version": "1.0.1",
+    "tag": "v1.0.1",
     "tag_type": "annotated",
-    "tag_target": "589729471b39ef218397663480905a36fd03dd16",
-    "bundle": "releases/lisp65-1.0.0.tar.gz",
+    "tag_target": "547947116b9660042488a63c0ae336c4cb926eeb",
+    "bundle": "releases/lisp65-1.0.1.tar.gz",
     "visibility": "private-mirror"
   },
   "product": {
@@ -23,7 +23,15 @@
     "archive": "tests/bytecode/dialect-v2/evidence/promotions/r6-g6-hardware-acceptance-aed1595.tar.gz",
     "archive_sha256": "b339a274a97c947025ce66b09cd54ce5af73e24d8a99328fcb0659ffa605ddba",
     "ship_manifest_sha256": "323d6f497c1849af3916cfbe9c3f0d73936eaa72f271d97412666f25369f6764",
-    "g6_receipt_sha256": "edcca70cc747be2b42ab20ee96c74dceb46e490125dc4c6d740a7d1b4c369b7d"
+    "g6_receipt_sha256": "edcca70cc747be2b42ab20ee96c74dceb46e490125dc4c6d740a7d1b4c369b7d",
+    "current_ship_manifest": "build/r6/ship/manifest.json",
+    "current_ship_manifest_sha256": "e04f3f99589ba956ec2e9bb21e932a4f4bb5fe18e85a07fe463c42252d2c8801",
+    "package_rebind_receipt": "tests/bytecode/dialect-v2/evidence/post-release/r6-g6-101-package-rebind-receipt.json",
+    "package_rebind_receipt_sha256": "18b3993cc3b1946ba925dd5ad2f26dd378959e0656d1d44e27b461785131f80a",
+    "static_preflight_receipt": "tests/bytecode/dialect-v2/evidence/post-release/r6-g6-101-static-preflight-receipt.json",
+    "static_preflight_receipt_sha256": "c920bab3dcbdfc4b48e4b9bbd1eb3aec6d8150124910843e246db439171981b6",
+    "profile_applicability_receipt": "tests/bytecode/dialect-v2/evidence/post-release/r6-g6-101-profile-applicability-receipt.json",
+    "profile_applicability_receipt_sha256": "68004ed076eff7c0c7d1d91030279a18fc061b7ee9cd06df960726a6c4fadd17"
   },
   "prerequisites": {
     "manifest": "tests/bytecode/dialect-v2/evidence/r7/public-manifest-prerequisites.json",
@@ -32,20 +40,20 @@
     "receipt_sha256": "95a3b216a76e53ced43abcb1ff03b859bfdea2633e23518cd2dc161ff20303e8"
   },
   "policy": {
-    "operation": "transform-and-package-only",
+    "operation": "documentation-and-package-only",
     "product_byte_source": "registered-r6-g6-seal-only",
     "live_tree_product_authority": false,
     "product_byte_identity": "required-against-sealed-r6-ship-for-all-13-artifacts",
     "self_contained": true,
     "offline_verification": "bundle-alone-no-repository-no-network",
     "double_pack_axes": ["PYTHONHASHSEED", "TZ"],
-    "negative_tests": ["product-byte", "manifest", "source-seal"],
+    "negative_tests": ["product-byte", "manifest", "source-seal", "package-rebind", "readme"],
     "tag_after_bundle_verification": true
   },
   "claims": {
     "G3": "passed-emulator-prefilter-only",
     "G5": "passed-for-product-artifact-set",
     "G6": "G6: 5/5 anwendbare Hardwarefälle bestanden; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration",
-    "release": "private-release-v1.0.0"
+    "release": "private-release-v1.0.1-light"
   }
 }

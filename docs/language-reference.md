@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-lisp65 1.0.0 ships Dialect V2, a small Common Lisp–inspired Lisp-2 for the
+lisp65 1.0.1 ships Dialect V2, a small Common Lisp–inspired Lisp-2 for the
 MEGA65. It is intentionally not ANSI Common Lisp.
 
 ## Evaluation model
