@@ -22,12 +22,22 @@ Do not use a bundle that fails verification. The verifier checks every packaged
 file and the embedded hardware-acceptance evidence without consulting the live
 source repository.
 
-## Boot and perform the one-drive swap
+## Start from BASIC and perform the one-drive swap
 
-1. Mount `media/lisp65-product.d81` in drive 8.
-2. Power on or cold-boot the MEGA65.
-3. Wait for staging to complete and for the Lisp REPL to appear.
-4. Load the editor and persistence composition while `L65SYS` is mounted:
+1. Make `media/lisp65-product.d81` available on the MEGA65 SD card.
+2. Power on the MEGA65 and wait for the BASIC 65 prompt.
+3. Mount the product D81 in drive 8 using the Freezer, then return to BASIC
+   without rebooting. If the image is accessible by name on the SD card, you
+   can use BASIC's `MOUNT` command instead.
+4. At the BASIC prompt, load and run the stager:
+
+   ```basic
+   DLOAD "AUTOBOOT.C65",U8
+   RUN
+   ```
+
+5. Wait for staging to complete and for the Lisp REPL to appear.
+6. Load the editor and persistence composition while `L65SYS` is mounted:
 
    ```lisp
    (load-lib "ide")
@@ -37,8 +47,12 @@ source repository.
 
    `idex` is optional. Loading `m65d` before the swap avoids needing the product
    disk when the first save occurs.
-5. Swap drive 8 to `media/lisp65-work.d81` or another valid 1581 disk.
-6. Start the editor with `(edit)`.
+7. Swap drive 8 to `media/lisp65-work.d81` or another valid 1581 disk.
+8. Start the editor with `(edit)`.
+
+A D81 selected in the Freezer is not retained across a reboot. Automatic cold
+start is possible only when a default disk image has been configured separately
+in the MEGA65 Config menu; this guide does not require that configuration.
 
 Any valid non-product 1581 disk is writable; it does not need to be named
 `L65WORK`. The system disk is denied by its product identity. SD-backed D81
@@ -116,6 +130,5 @@ further writes. The release does not claim atomicity inside that narrow window.
 - There is no on-device disk formatter.
 - The editor uses fixed-capacity buffers and intentionally omits undo/redo.
 - lisp65 is a Common Lisp–inspired subset, not full ANSI Common Lisp.
-- Dialect V2 is the only released language profile.
 - Physical product-disk write protection was not applicable to the tested
   stock-core SD-D81 setup.

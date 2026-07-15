@@ -4,9 +4,7 @@ lisp65 is a native, interactive Lisp workbench for the [MEGA65](https://mega65.o
 It combines a Common Lisp–inspired language, an on-device bytecode compiler, an
 Emacs-style full-screen editor, and transactional 1581 disk persistence.
 
-The current release is **lisp65 1.0.0**, which contains **Dialect V2**. Product
-and dialect versions are independent; Dialect V1 was an internal development
-profile and was never released.
+The current release is **lisp65 1.0.0**, which uses **Dialect V2**.
 
 ## Highlights
 
@@ -15,7 +13,7 @@ profile and was never released.
 - Full-screen editor with Emacs-style navigation and file workflows
 - On-demand IDE, IDEX, and M65D libraries
 - Copy-on-write disk persistence with read-back verification
-- Cold boot from an SD-backed D81 image without a connected development PC
+- Start from an SD-backed D81 image without a connected development PC
 - Reproducible, self-verifying release bundle with hardware-bound receipts
 
 ## Get the release
@@ -34,13 +32,28 @@ python3 verify.py
 The verifier checks the complete package, its product artifacts, and the
 embedded G6 hardware-acceptance seal before you use either disk image.
 
-## First boot
+## First start from BASIC
 
-1. Mount `media/lisp65-product.d81` as `L65SYS` in drive 8 and boot it.
-2. Wait for the stager to finish and for the REPL to appear.
-3. Load the libraries you want while the product disk is still mounted.
-4. Swap once to `media/lisp65-work.d81` or any other valid, non-product 1581
+1. Make `media/lisp65-product.d81` available on the MEGA65 SD card.
+2. Power on the MEGA65 and wait for the BASIC 65 prompt.
+3. Mount the product D81 in drive 8 using the Freezer, then return to BASIC
+   without rebooting. You can instead use BASIC's `MOUNT` command if the image
+   is accessible by name on the SD card.
+4. Start the lisp65 boot stager from BASIC:
+
+   ```basic
+   DLOAD "AUTOBOOT.C65",U8
+   RUN
+   ```
+
+5. Wait for the stager to finish and for the REPL to appear.
+6. Load the libraries you want while the product disk is still mounted.
+7. Swap once to `media/lisp65-work.d81` or any other valid, non-product 1581
    disk before saving user files.
+
+The MEGA65 does not retain a D81 selected in the Freezer across a reboot. An
+automatic cold start therefore requires separately configuring a default disk
+image in the MEGA65 Config menu; it is not assumed by this procedure.
 
 Try this at the REPL:
 
