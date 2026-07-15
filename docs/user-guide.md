@@ -126,6 +126,13 @@ further writes. The release does not claim atomicity inside that narrow window.
 
 ## Current limitations
 
+- Release 1.0.0 is intended for exploration and small, backed-up projects, not
+  irreplaceable data or unattended production use.
+- The released baseline leaves 120 symbol entries, 2,160 name-pool bytes, and
+  32 L65M directory entries. Library loads and definitions are append-only;
+  there is no `unload`, and exhausting a pool requires a restart.
+- The on-device compiler builds L65M modules for the current Workbench; it does
+  not create standalone runtimes or bootable application disks.
 - One drive is supported; use the documented one-swap workflow.
 - There is no on-device disk formatter.
 - The editor uses fixed-capacity buffers and intentionally omits undo/redo.

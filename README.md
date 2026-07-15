@@ -71,6 +71,25 @@ There is no on-device disk formatter in 1.0.0.
 See the [User Guide](docs/user-guide.md) for the editor keys, disk workflow,
 error recovery, and current limitations.
 
+## Maturity, known limitations, and roadmap
+
+**lisp65 1.0.0 is an early, hardware-validated release.** It is suitable for
+exploration, learning, and small projects with reliable backups. It should not
+yet be treated as a general-purpose production environment for irreplaceable
+data, unattended operation, or large applications.
+
+| Current limitation | Practical effect | Planned direction |
+| --- | --- | --- |
+| Finite session metadata | The released baseline leaves 120 symbol entries, 2,160 name-pool bytes, and 32 L65M directory entries. Libraries and definitions are append-only in 1.0.0; there is no `unload`, so a long or heavily composed session can exhaust a pool and require a restart. | 1.1 plans export-only interning, measured capacity relief, and dependency-safe LIFO `unload`. |
+| Libraries come from the product medium | With one drive, IDE, IDEX, and M65D must be loaded before swapping from the product D81 to a work disk. | The 1.1 Attic library shelf is intended to remove the post-boot library-disk dependency. |
+| No standalone application builder | The on-device compiler creates and loads L65M modules for the current Workbench. It cannot yet produce a self-contained runtime or bootable application disk. | An on-device ship builder is the lead goal for 1.2. |
+| Editor safety and discoverability are limited | Buffers have fixed capacities. There is no undo/redo, interactive symbol completion, integrated help, or full Lisp-aware structural editing. | 1.1 plans measured undo, incremental search, S-expression navigation, completion, and help; full Paredit is not promised. |
+| Storage workflow remains narrow | Release 1.0.0 supports one drive, has no on-device formatter, and retains a documented Freezer media-swap race in which at most one already-started sector can cross the media boundary before writes stop. | Keep backups now. Multi-drive support and stronger core-assisted mount locking remain later work, without a promised release date. |
+
+These roadmap items describe current intent, not release dates or compatibility
+promises. Each change remains conditional on measured capacity, reproducible
+builds, and hardware acceptance.
+
 ## Verification status
 
 Release 1.0.0 is bound to product artifact set `c41b9643…` and G6 seal
