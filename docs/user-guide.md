@@ -45,8 +45,9 @@ source repository.
    (load-lib "m65d")
    ```
 
-   `idex` is optional. Loading `m65d` before the swap avoids needing the product
-   disk when the first save occurs.
+   `idex` is optional only when its word, page, mark, region, search, and command-
+   launcher features are not needed. Loading `m65d` before the swap is required
+   for saving after the product disk is no longer mounted.
 7. Swap drive 8 to `media/lisp65-work.d81` or another valid 1581 disk.
 8. Start the editor with `(edit)`.
 
@@ -59,6 +60,40 @@ Any valid non-product 1581 disk is writable; it does not need to be named
 images on the tested stock core do not expose a virtual physical-write-protect
 switch, so the identity check is the relevant protection in that profile.
 
+## IDE input erratum for 1.0.0
+
+The 1.0.0 editor implementation and its physical keyboard interface do not have
+the same verified feature surface. The editor receives a KERNAL/PETSCII code,
+not a complete MEGA65 key event with Control, MEGA, and Alt state. Existing
+hardware UX receipts inject normalized key codes directly into the dispatcher;
+they prove the editor backends on hardware but not every physical key chord.
+
+The practical 1.0.0 rules are:
+
+- Load `ide`, `idex`, and `m65d` while `L65SYS` is mounted. The immutable
+  `README-FIRST.txt` in the release bundle omits the latter two loads; this live
+  guide supersedes it.
+- Use `C-x x` or `C-x Return` for the command launcher. Physical `M-x` is not
+  implemented, despite the original table wording.
+- `C-Space` is broken: its zero code collides with the driver's empty-queue
+  sentinel. Mark and region commands are consequently not usable through the
+  documented keyboard workflow.
+- Arrow navigation is known to work. Other Control and `C-x` chords have tested
+  command backends but no bound physical-key acceptance case and should be
+  treated as experimental in 1.0.0.
+- For a reliable save, exit the editor with Run/Stop and call
+  `(save-buffer-to "file" "buffer")` at the REPL. M65D must already have been
+  loaded before the disk swap.
+- Persistent compilation requires an existing preallocated FASL target. The
+  supplied blank `lisp65-work.d81` contains no such targets, so
+  `compile-buffer-to-lib` and `compile-load` report `slot missing` unless the
+  work medium was provisioned externally.
+
+The planned 1.0.1 patch repairs the bundled load instructions and supplies
+`fasl0`--`fasl2`, without changing the keyboard driver. The modifier-aware
+keyboard path and a hardware-bound case for every documented binding are 1.1
+work.
+
 ## REPL essentials
 
 ```lisp
@@ -68,42 +103,47 @@ switch, so the identity check is the relevant protection in that profile.
 (load-file-to-buffer "demo")      ; load source into a buffer
 (save-buffer-to "demo")           ; save the current buffer
 (eval-buffer "demo")              ; evaluate a buffer in this session
-(compile-buffer-to-lib "fasl0")   ; compile a buffer to an L65M library slot
+(compile-buffer-to-lib "fasl0")   ; requires a preallocated L65M library slot
 (load-lib "fasl0")                ; load the compiled library
 ```
 
-The persistent compiler writes to preallocated FASL slots. `compile-load` in the
-editor combines compilation and loading.
+The persistent compiler writes only to preallocated FASL slots. The blank work
+D81 supplied with 1.0.0 has none; `compile-load` combines compilation and loading
+only on externally provisioned media.
 
 ## Editor keys
 
-The editor follows a compact Emacs-style key set. `C-x` means press Control-X,
-then the following control key.
+The editor intends to provide the compact Emacs-style key set below. `C-x` means
+press Control-X, then the following control key. For 1.0.0 this table describes
+the dispatcher/backend mapping, not a complete physical-key acceptance claim;
+see the erratum above.
 
-| Key | Action |
-| --- | --- |
-| Arrow keys, `C-b`, `C-f`, `C-p`, `C-n` | Move left, right, up, or down |
-| `C-a`, `C-e` | Start or end of line |
-| `C-x C-a`, `C-x C-e` | Start or end of buffer |
-| `C-v`, `C-z` | Page down or up |
-| `C-o`, `C-u` | Move forward or backward by one word |
-| `C-d`, Backspace | Delete forward or backward |
-| `C-k`, `C-y` | Kill line and yank |
-| `C-w`, `C-r` | Kill word and backward-kill word |
-| `C-Space` | Set mark |
-| `C-x C-x` | Exchange point and mark |
-| `C-x C-r`, `C-x C-y` | Kill or copy the region |
-| `C-x C-f` | Find a source file |
-| `C-x C-s` | Save the current buffer |
-| `C-x C-w` | Write the buffer under another name |
-| `C-x C-d` | Open the source directory buffer |
-| `C-x C-b` | Select a buffer |
-| `C-x C-n`, `C-x C-p` | Cycle through buffers |
-| `C-x C-k` | Compile the current buffer and load it |
+| Key | Action | Tier / 1.0.0 note |
+| --- | --- | --- |
+| Arrow keys, `C-b`, `C-f`, `C-p`, `C-n` | Move left, right, up, or down | IDE; arrows hardware-observed, Control aliases not fully bound |
+| `C-a`, `C-e` | Start or end of line | IDE; physical chord not fully bound |
+| `C-x C-a`, `C-x C-e` | Start or end of buffer | IDEX; physical chord not fully bound |
+| `C-v`, `C-z` | Page down or up | IDEX; physical chord not fully bound |
+| `C-o`, `C-u` | Move forward or backward by one word | IDEX; physical chord not fully bound |
+| `C-d`, Backspace | Delete forward or backward | IDE |
+| `C-k`, `C-y` | Kill line and yank | IDE; physical Control chord not fully bound |
+| `C-w`, `C-r` | Kill word and backward-kill word | IDEX; physical chord not fully bound |
+| `C-Space` | Set mark | IDEX; broken in 1.0.0 |
+| `C-x C-x` | Exchange point and mark | IDEX; depends on a mark that cannot be set through `C-Space` |
+| `C-x C-r`, `C-x C-y` | Kill or copy the region | IDEX; depends on a mark that cannot be set through `C-Space` |
+| `C-x C-f` | Find a source file | IDE; physical chord not fully bound |
+| `C-x C-s` | Save the current buffer | IDE; physical chord not fully bound; use the REPL API when needed |
+| `C-x C-w` | Write the buffer under another name | IDE; physical chord not fully bound |
+| `C-x C-d` | Open the source directory buffer | IDE; physical chord not fully bound |
+| `C-x C-b` | Select a buffer | IDE; physical chord not fully bound |
+| `C-x C-n`, `C-x C-p` | Cycle through buffers | IDE; physical chord not fully bound |
+| `C-x C-k` | Compile the current buffer and load it | IDE; requires a preallocated FASL slot absent from the supplied work D81 |
 
 Inside minibuffer prompts, `Tab` cycles candidates and `C-p` recalls the last
-input for the same action. `M-x` exposes `find-file`, `save-buffer`,
-`compile-load`, `goto-line`, and `eval-buffer`.
+input for the same action; these physical bindings are not end-to-end accepted
+in 1.0.0. With IDEX loaded, `C-x x` or `C-x Return` opens the command launcher
+for `find-file`, `save-buffer`, `compile-load`, `goto-line`, and `eval-buffer`.
+There is no physical `M-x` binding in 1.0.0.
 
 ## Disk safety and recovery
 
@@ -143,6 +183,10 @@ further writes. The release does not claim atomicity inside that narrow window.
   setup.
 - One drive is supported; use the documented one-swap workflow.
 - There is no on-device disk formatter.
+- The physical editor input path is not fully bound to the documented keymap;
+  `C-Space` is broken and physical `M-x` is not implemented.
+- The supplied blank work D81 contains no preallocated FASL target, so persistent
+  compilation needs externally provisioned media.
 - The editor uses fixed-capacity buffers and intentionally omits undo/redo.
 - lisp65 is a Common Lisp–inspired subset, not full ANSI Common Lisp.
 - Physical product-disk write protection was not applicable to the tested

@@ -78,6 +78,36 @@ There is no on-device disk formatter in 1.0.0.
 See the [User Guide](docs/user-guide.md) for the editor keys, disk workflow,
 error recovery, and current limitations.
 
+## IDE input erratum for 1.0.0
+
+A post-release end-to-end audit found that the editor backends are more complete
+than the physical keyboard path that exposes them. Release 1.0.0 reads a
+KERNAL/PETSCII code but does not retain the MEGA65 Control, MEGA, or Alt state.
+The hardware UX receipts injected normalized key events after that boundary, so
+they do not prove every documented physical chord.
+
+- Load `ide`, `idex`, and `m65d` from `L65SYS` before the one-drive swap. The
+  immutable bundled `README-FIRST.txt` lists only `ide`; the live instructions
+  above supersede it.
+- The command launcher implemented by 1.0.0 is `C-x x` or `C-x Return`, not
+  physical `M-x`, and it requires IDEX.
+- `C-Space` cannot reach the 1.0.0 dispatcher and must be treated as broken.
+  Mark- and region-based keyboard workflows are therefore not usable as
+  documented.
+- Other Control and `C-x` bindings have working dispatcher/backend tests, but
+  their physical keyboard path was not accepted end to end. Treat them as
+  experimental; for a reliable save, leave the editor and call
+  `save-buffer-to` explicitly after loading M65D.
+- `compile-load` and `compile-buffer-to-lib` require an existing, preallocated
+  FASL target. The supplied blank work D81 contains no `fasl0`--`fasl2` slots,
+  so persistent on-device compilation is not available out of the box in the
+  1.0.0 bundle.
+
+These are documentation corrections; the immutable 1.0.0 product bytes and
+acceptance seals are unchanged. A narrow 1.0.1 package repair is planned for the
+load order and work-media provisioning. The modifier-aware MEGA65 keyboard
+driver and fully bound keymap belong to 1.1.
+
 ## Maturity, known limitations, and roadmap
 
 **lisp65 1.0.0 is an early, hardware-validated release.** It is suitable for
@@ -89,6 +119,8 @@ data, unattended operation, or large applications.
 | --- | --- | --- |
 | Finite session metadata | The released baseline leaves 120 symbol entries, 2,160 name-pool bytes, and 32 L65M directory entries. Libraries and definitions are append-only in 1.0.0; there is no `unload`, so a long or heavily composed session can exhaust a pool and require a restart. | 1.1 plans export-only interning, measured capacity relief, and dependency-safe LIFO `unload`. |
 | Libraries come from the product medium | With one drive, IDE, IDEX, and M65D must be loaded before swapping from the product D81 to a work disk. | The 1.1 Attic library shelf is intended to remove the post-boot library-disk dependency. |
+| IDE keyboard path is incomplete | Arrow navigation is usable, but the 1.0.0 input path loses modifier identity. `C-Space` is broken, physical `M-x` is not implemented, and the other documented chords lack an end-to-end physical-key receipt. | 1.0.1 corrects packaging and documentation only. 1.1 replaces the input path and binds every documented key. |
+| Blank work media has no compiler targets | Persistent compilation requires an existing preallocated FASL slot, but the supplied blank work D81 has no `fasl0`--`fasl2`; `compile-load` therefore reports `slot missing` without externally provisioned media. | 1.0.1 will ship provisioned target slots; more flexible allocation remains later work. |
 | No standalone application builder | The on-device compiler creates and loads L65M modules for the current Workbench. It cannot yet produce a self-contained runtime or bootable application disk. | An on-device ship builder is the lead goal for 1.2. |
 | Editor safety and discoverability are limited | Buffers have fixed capacities. There is no undo/redo, interactive symbol completion, integrated help, or full Lisp-aware structural editing. | 1.1 plans measured undo, incremental search, S-expression navigation, completion, and help; full Paredit is not promised. |
 | File sizes are bounded | M65D and editor saves accept payloads from 1 through 8,192 bytes, so 8 KiB is the maximum supported editable load/save round trip. Evaluator `load` has a separate 38,400-byte staging ceiling; editor memory may become the practical limit before that. | 1.1 buffer work targets safer construction and better capacity use, but no larger file-size limit is currently promised. |
