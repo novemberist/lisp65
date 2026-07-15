@@ -1,0 +1,543 @@
+{
+  "format": "lisp65-dialect-migration-contract-v1",
+  "version": 1,
+  "status": "ready-for-g5",
+  "release_policy": {
+    "only_product": "lisp65-workbench-v2",
+    "release_authority": "workbench-v2-link-plus-full-g5",
+    "dialect_v1": "frozen-evidence-never-release",
+    "runtime_core": "internal-proof-only",
+    "runtime_core_receipt_effect": "none",
+    "family_advancement": "sequential-after-capability-carrier",
+    "ap8_advancement": "explicit-block-after-capability-carrier",
+    "active_work_lines": ["dialect-v2-family-migration"],
+    "family_status_hold": {
+      "prelude-control": "migrated",
+      "lists": "migrated",
+      "strings": "migrated",
+      "system-runtime": "migrated",
+      "ide": "migrated"
+    }
+  },
+  "source_profile": {
+    "id": "dialect-v1",
+    "dialect_contract": "config/dialect-contract.json",
+    "dialect_contract_sha256": "c6293aa8d803e8ce730682e8499faa5ec97aef50da48714a9e80ea2f55d25874",
+    "source_commit": "f6527d25e2035eae5a98dae7431d641515e2fd2e",
+    "lifecycle": "frozen-evidence",
+    "allowed_operations": [
+      "reproducibility-rebuild"
+    ],
+    "features": "forbidden",
+    "backports": "forbidden",
+    "evidence": [
+      {
+        "id": "workbench-g5",
+        "path": "tests/bytecode/runtime/evidence/ap8.1-g5-78083d6/ship-manifest.json",
+        "sha256": "275723fb7259261c9606cee6a0dcc17c593a4cbf9c77f44b482d7cd031d5e211"
+      },
+      {
+        "id": "runtime-export-g5",
+        "path": "tests/bytecode/runtime/evidence/ap8.2-g5-589844f/candidate/manifest.json",
+        "sha256": "589844faff2d8674baf75f4e8faeef22ab4e7eef2d0db698c4a928c53461f6f6"
+      }
+    ],
+    "sunset": {
+      "target_state": "archived",
+      "requires_profile": "dialect-v2",
+      "requires_gate": "G5",
+      "requires_matrix": "dialect-v2-product-switch"
+    }
+  },
+  "target_profile": {
+    "id": "dialect-v2",
+    "lifecycle": "migration-candidate",
+    "runtime_compatibility_layer": "forbidden",
+    "legacy_source_aliases": "forbidden",
+    "p0_decode_compatibility": "permanent",
+    "abi_ledger": "config/bytecode-abi-ledger.json",
+    "abi_ledger_sha256": "c51cc94bf1cfd3804a0da55f5b7f9d902e5ebf726699c52e9499da045e5e7c63"
+  },
+  "artifact_arity_contract": {
+    "decision": "decision:strict-arity-codeobject",
+    "path": "config/code-object-arity-contract.json",
+    "sha256": "827fecea041a8e66a8a045d76e7b35f5a9ee2753fda5146cbc30f227c2d16291",
+    "source_lowering": {
+      "optional": "dialect-v2-bare-symbols",
+      "syntax_snapshot": "required* [&optional optional*] [&rest rest]",
+      "omitted_value": "nil",
+      "explicit_nil_distinguishable": false
+    }
+  },
+  "decision_contract": {
+    "path": "config/dialect-v2-r2-decisions.json",
+    "sha256": "1a7c0c556290cf3bd7ac4479412a9874d1e5a1eb61595a3f9f8910abaca7931b"
+  },
+  "classification": {
+    "policy": {
+      "scope": "all-resolved-v1-public-names",
+      "public_coverage": "exactly-once",
+      "new_public_definition": "explicit-classification-required",
+      "unclassified": "fail",
+      "ambiguous": "fail",
+      "catch_all": "forbidden",
+      "replacement_aliases_at_runtime": "forbidden"
+    },
+    "internal_rules": [
+      "descriptor-non-export",
+      "percent-prefix",
+      "private-inline-manifest"
+    ],
+    "new_names": [
+      {"name": "filter", "family": "lists", "target_role": "core", "target_delivery": "bank5-preload", "target_library": null},
+      {"name": "key-event", "family": "system-runtime", "target_role": "core", "target_delivery": "bank0-native", "target_library": null},
+      {"name": "set", "family": "system-runtime", "target_role": "core", "target_delivery": "bank0-native", "target_library": null}
+    ],
+    "pattern_groups": [
+      {
+        "id": "ide-internal-default",
+        "family": "ide",
+        "surface_ids": [
+          "ide",
+          "idex",
+          "workbench-preload"
+        ],
+        "prefix": "ide-",
+        "except_names": [
+          "ide-buffers"
+        ],
+        "disposition": "internalize",
+        "target_role": "internal",
+        "target_delivery": "runtime-local",
+        "target_library": "ide"
+      }
+    ],
+    "name_groups": [
+      {
+        "id": "prelude-core-keep",
+        "family": "prelude-control",
+        "disposition": "keep",
+        "target_role": "core",
+        "target_delivery": "unchanged",
+        "target_library": null,
+        "names": ["*", "+", "-", "/", "<", "<=", "=", ">", ">=", "abs", "atom", "consp", "eq", "equal", "max", "min", "null", "numberp", "symbolp", "zerop"]
+      },
+      {
+        "id": "prelude-semantic-redefine",
+        "family": "prelude-control",
+        "disposition": "redefine",
+        "target_role": "core",
+        "target_delivery": "unchanged",
+        "target_library": null,
+        "names": ["/="]
+      },
+      {
+        "id": "prelude-source-replace",
+        "family": "prelude-control",
+        "disposition": "replace",
+        "target_role": "removed",
+        "target_delivery": "none",
+        "target_library": null,
+        "names": ["1+", "1-", "clamp", "eql", "evenp", "identity", "integerp", "minusp", "nonnegativep", "nonpositivep", "not", "oddp", "plusp", "signum"]
+      },
+      {
+        "id": "prelude-remove",
+        "family": "prelude-control",
+        "disposition": "remove-v2",
+        "target_role": "removed",
+        "target_delivery": "none",
+        "target_library": null,
+        "names": ["remainder"]
+      },
+      {
+        "id": "lists-core-keep",
+        "family": "lists",
+        "disposition": "keep",
+        "target_role": "core",
+        "target_delivery": "unchanged",
+        "target_library": null,
+        "names": ["append", "car", "cdr", "cons", "length", "list", "mapc", "mapcar", "nreverse", "nth", "nthcdr", "rplaca", "rplacd"]
+      },
+      {
+        "id": "lists-library",
+        "family": "lists",
+        "disposition": "move-library",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "lists",
+        "names": ["butlast", "copy-list", "every", "getf", "last", "list*", "mapcan", "reduce", "remf", "reverse", "some"]
+      },
+      {
+        "id": "lists-source-replace",
+        "family": "lists",
+        "disposition": "replace",
+        "target_role": "removed",
+        "target_delivery": "none",
+        "target_library": null,
+        "names": ["assq", "caar", "cadr", "cdar", "cddr", "count-if", "find-if", "first", "position-if", "remove", "remove-if", "remove-if-not", "rest", "second"]
+      },
+      {
+        "id": "lists-semantic-redefine-core",
+        "family": "lists",
+        "disposition": "redefine",
+        "target_role": "core",
+        "target_delivery": "unchanged",
+        "target_library": null,
+        "names": ["assoc", "find", "member"]
+      },
+      {
+        "id": "lists-semantic-redefine-library",
+        "family": "lists",
+        "disposition": "redefine",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "lists",
+        "names": ["count", "position"]
+      },
+      {
+        "id": "strings-core-keep",
+        "family": "strings",
+        "disposition": "keep",
+        "target_role": "core",
+        "target_delivery": "unchanged",
+        "target_library": null,
+        "names": ["string-append", "string-length", "string-ref", "string<", "string=", "stringp", "substring"]
+      },
+      {
+        "id": "strings-library",
+        "family": "strings",
+        "disposition": "move-library",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "str",
+        "names": ["char", "char->string", "char-downcase", "char-upcase", "search", "string-downcase", "string-equal", "string-prefix-p", "string-suffix-p", "string-trim", "string-upcase"]
+      },
+      {
+        "id": "strings-format-library",
+        "family": "strings",
+        "disposition": "move-library",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "fmt",
+        "names": ["number->string"]
+      },
+      {
+        "id": "strings-source-replace",
+        "family": "strings",
+        "disposition": "replace",
+        "target_role": "removed",
+        "target_delivery": "none",
+        "target_library": null,
+        "names": ["string-contains-p", "string/=", "string<=", "string>", "string>="]
+      },
+      {
+        "id": "strings-remove",
+        "family": "strings",
+        "disposition": "remove-v2",
+        "target_role": "removed",
+        "target_delivery": "none",
+        "target_library": null,
+        "names": ["list->string", "string->list"]
+      },
+      {
+        "id": "ide-command-exports",
+        "family": "ide",
+        "disposition": "keep",
+        "target_role": "workbench",
+        "target_delivery": "disk-on-demand",
+        "target_library": "ide",
+        "names": ["compile-buffer-to-lib", "compile-file-to-lib", "dir", "eval-buffer", "ide", "ide-buffers", "load-file-to-buffer", "save-buffer-to"]
+      },
+      {
+        "id": "ide-edit-autoload",
+        "family": "ide",
+        "disposition": "keep",
+        "target_role": "core",
+        "target_delivery": "bank5-preload",
+        "target_library": null,
+        "names": ["edit"]
+      },
+      {
+        "id": "system-core-keep",
+        "family": "system-runtime",
+        "disposition": "keep",
+        "target_role": "core",
+        "target_delivery": "unchanged",
+        "target_library": null,
+        "names": ["apply", "boundp", "funcall", "gensym", "load", "load-lib", "mod", "peek", "poke", "prin1", "princ", "print", "symbol-value", "terpri", "write-char"]
+      },
+      {
+        "id": "system-m65d-keep",
+        "family": "system-runtime",
+        "disposition": "keep",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "m65d",
+        "names": ["m65d-remount", "m65d-save", "m65d-save-new", "m65d-status"]
+      },
+      {
+        "id": "system-runtime-export-keep",
+        "family": "system-runtime",
+        "disposition": "keep",
+        "target_role": "library",
+        "target_delivery": "bank5-preload",
+        "target_library": "runtime-export-app",
+        "names": ["runtime-main"]
+      },
+      {
+        "id": "system-internalize",
+        "family": "system-runtime",
+        "disposition": "internalize",
+        "target_role": "internal",
+        "target_delivery": "runtime-local",
+        "target_library": null,
+        "names": ["compile-error", "compile-string", "function-kind", "lcc-compile", "lcc-compile-obj", "lcc-lits", "lcc-run", "nth-symbol", "screen-bulk-p", "set-symbol-function", "symbol-count", "symbol-max", "symbol-name"]
+      },
+      {
+        "id": "system-screen-library",
+        "family": "system-runtime",
+        "disposition": "move-library",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "m65-screen",
+        "names": ["screen-clear", "screen-put-char", "screen-size", "screen-write-string"]
+      },
+      {
+        "id": "system-format-library",
+        "family": "system-runtime",
+        "disposition": "move-library",
+        "target_role": "library",
+        "target_delivery": "disk-on-demand",
+        "target_library": "fmt",
+        "names": ["write", "write-line", "write-string"]
+      },
+      {
+        "id": "system-source-replace",
+        "family": "system-runtime",
+        "disposition": "replace",
+        "target_role": "removed",
+        "target_delivery": "none",
+        "target_library": null,
+        "names": ["load-libs", "poll-key", "read-key", "save", "set-symbol-value"]
+      }
+    ],
+    "replacements": [
+      {"name": "/=", "target": "/=", "rewrite": "binary only: (null (= a b)); any arity other than two is an error", "semantic_status": "specified"},
+      {"name": "1+", "target": "+", "rewrite": "(+ x 1)", "semantic_status": "specified"},
+      {"name": "1-", "target": "-", "rewrite": "(- x 1)", "semantic_status": "specified"},
+      {"name": "assoc", "target": "assoc", "rewrite": "(assoc key alist [&optional test]); test defaults to eq and is called as (test key entry-key)", "semantic_status": "specified"},
+      {"name": "assq", "target": "assoc", "rewrite": "(assoc key alist)", "semantic_status": "specified"},
+      {"name": "caar", "target": "car", "rewrite": "(car (car x))", "semantic_status": "specified"},
+      {"name": "cadr", "target": "car", "rewrite": "(car (cdr x))", "semantic_status": "specified"},
+      {"name": "cdar", "target": "cdr", "rewrite": "(cdr (car x))", "semantic_status": "specified"},
+      {"name": "cddr", "target": "cdr", "rewrite": "(cdr (cdr x))", "semantic_status": "specified"},
+      {"name": "clamp", "target": "min", "rewrite": "(min hi (max lo x))", "semantic_status": "specified"},
+      {"name": "count", "target": "count", "rewrite": "(count (lambda (x) (eq x item)) list)", "semantic_status": "specified"},
+      {"name": "count-if", "target": "count", "rewrite": "(count predicate list)", "semantic_status": "specified"},
+      {"name": "eql", "target": "eq", "rewrite": "(eq a b)", "semantic_status": "specified"},
+      {"name": "evenp", "target": "mod", "rewrite": "(zerop (mod x 2))", "semantic_status": "specified"},
+      {"name": "find", "target": "find", "rewrite": "(find predicate list)", "semantic_status": "specified"},
+      {"name": "find-if", "target": "find", "rewrite": "(find predicate list)", "semantic_status": "specified"},
+      {"name": "first", "target": "car", "rewrite": "(car list)", "semantic_status": "specified"},
+      {"name": "identity", "target": "lambda", "rewrite": "(lambda (x) x)", "semantic_status": "specified"},
+      {"name": "integerp", "target": "numberp", "rewrite": "(numberp x)", "semantic_status": "specified"},
+      {"name": "load-libs", "target": "load-lib", "rewrite": "normalize v1 argument forms, call load-lib in order, stop on first failure, and do not roll back libraries already loaded", "semantic_status": "specified"},
+      {"name": "member", "target": "member", "rewrite": "(member item list [&optional test]); test defaults to eq and is called as (test item element)", "semantic_status": "specified"},
+      {"name": "minusp", "target": "<", "rewrite": "(< x 0)", "semantic_status": "specified"},
+      {"name": "nonnegativep", "target": ">=", "rewrite": "(>= x 0)", "semantic_status": "specified"},
+      {"name": "nonpositivep", "target": "<=", "rewrite": "(<= x 0)", "semantic_status": "specified"},
+      {"name": "not", "target": "null", "rewrite": "(null x)", "semantic_status": "specified"},
+      {"name": "oddp", "target": "mod", "rewrite": "(null (zerop (mod x 2)))", "semantic_status": "specified"},
+      {"name": "plusp", "target": ">", "rewrite": "(> x 0)", "semantic_status": "specified"},
+      {"name": "poll-key", "target": "key-event", "rewrite": "(key-event 0), nonblocking, nil on an empty queue", "semantic_status": "specified"},
+      {"name": "position", "target": "position", "rewrite": "(position (lambda (x) (eq x item)) list)", "semantic_status": "specified"},
+      {"name": "position-if", "target": "position", "rewrite": "(position predicate list)", "semantic_status": "specified"},
+      {"name": "read-key", "target": "key-event", "rewrite": "(key-event 1), blocking, same normalized event format as mode 0", "semantic_status": "specified"},
+      {"name": "remove", "target": "filter", "rewrite": "(filter (lambda (x) (null (eq x item))) list)", "semantic_status": "specified"},
+      {"name": "remove-if", "target": "filter", "rewrite": "(filter (lambda (x) (null (funcall predicate x))) list)", "semantic_status": "specified"},
+      {"name": "remove-if-not", "target": "filter", "rewrite": "(filter predicate list)", "semantic_status": "specified"},
+      {"name": "rest", "target": "cdr", "rewrite": "(cdr list)", "semantic_status": "specified"},
+      {"name": "save", "target": "m65d-save", "rewrite": "(m65d-save name source); no generic v2 runtime alias", "semantic_status": "specified"},
+      {"name": "second", "target": "nth", "rewrite": "(nth 1 list)", "semantic_status": "specified"},
+      {"name": "set-symbol-value", "target": "set", "rewrite": "strictly binary (set symbol value); symbol required; return value", "semantic_status": "specified"},
+      {"name": "signum", "target": "cond", "rewrite": "(cond ((< x 0) -1) ((> x 0) 1) (t 0))", "semantic_status": "specified"},
+      {"name": "string-contains-p", "target": "search", "rewrite": "booleanize zero-based (search needle haystack), which returns first index or nil", "semantic_status": "specified"},
+      {"name": "string/=", "target": "string=", "rewrite": "(null (string= a b))", "semantic_status": "specified"},
+      {"name": "string<=", "target": "string<", "rewrite": "(null (string< b a))", "semantic_status": "specified"},
+      {"name": "string>", "target": "string<", "rewrite": "(string< b a)", "semantic_status": "specified"},
+      {"name": "string>=", "target": "string<", "rewrite": "(null (string< a b))", "semantic_status": "specified"}
+    ],
+    "removals": [
+      {"name": "list->string", "reason": "v2 has no public character-list string representation", "replacement": null, "semantic_status": "specified"},
+      {"name": "remainder", "reason": "v2 exposes mod only; P0 opcode 24 and the internal truncated-remainder operation remain permanently decodable", "replacement": null, "semantic_status": "specified"},
+      {"name": "string->list", "reason": "v2 has no public character-list string representation", "replacement": null, "semantic_status": "specified"}
+    ]
+  },
+  "syntax": {
+    "coverage": "explicit-v1-snapshot",
+    "special_forms_current": ["and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function", "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq", "unless", "unquote", "unquote-splicing", "when"],
+    "special_forms_target": ["and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function", "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq", "unless", "unquote", "unquote-splicing", "when"],
+    "macro_migrations": [
+      {"name": "decf", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"},
+      {"name": "defparameter", "disposition": "keep", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "bank5-preload", "target_library": null, "semantic_status": "specified"},
+      {"name": "defvar", "disposition": "keep", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "bank5-preload", "target_library": null, "semantic_status": "specified"},
+      {"name": "do", "disposition": "remove-v2", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "none", "target_library": null, "semantic_status": "specified"},
+      {"name": "incf", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"},
+      {"name": "pop", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"},
+      {"name": "push", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"},
+      {"name": "setf", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"}
+    ],
+    "retained_macros": ["and", "case", "cond", "defun", "dolist", "dotimes", "let", "let*", "or", "unless", "when"],
+    "lambda_list_forms_current": ["dotted", "fixed", "rest-marker", "variadic-symbol"],
+    "lambda_list_forms_target": ["fixed", "optional-marker", "rest-marker"],
+    "lambda_markers_current": ["&rest"],
+    "lambda_markers_target": ["&optional", "&rest"],
+    "reader_tokens": ["#'", "'", ",", ",@", ".", "`"],
+    "deferred_control_forms": ["catch", "on-error", "throw"]
+  },
+  "families": [
+    {
+      "id": "prelude-control",
+      "order": 1,
+      "status": "migrated",
+      "depends_on": [],
+      "requires_blocks": [],
+      "semantic_contracts": ["dialect-v2-prelude-control"],
+      "projection": {"loaded_symbol_delta": -16, "loaded_namepool_delta_bytes": -108, "boot_symbol_delta": -21, "boot_namepool_delta_bytes": -132, "directory_delta": -16},
+      "acceptance": {"min_symbol_savings": 1, "min_namepool_savings_bytes": 1},
+      "measurement": {
+        "differential_receipt": "tests/bytecode/dialect-v2/evidence/prelude-control/differential-receipt.json",
+        "differential_receipt_sha256": "f939fba74158e74a78a735eae4f577a737c3b8b51e400f1ab47fe11a69498061",
+        "baseline_manifest": "tests/bytecode/dialect-v2/evidence/prelude-control/dialect-v1-manifest.json",
+        "baseline_manifest_sha256": "ec0da4e5c1081a2f78f2293cad4b8cfdef20e35e7575bb57971bbadb94b5ad39",
+        "candidate_manifest": "tests/bytecode/dialect-v2/evidence/prelude-control/dialect-v2-manifest.json",
+        "candidate_manifest_sha256": "bf882ba085f0360568d18f7370de23804cea6a054825121c25bb9a8214c8a1ff"
+      }
+    },
+    {
+      "id": "lists",
+      "order": 2,
+      "status": "migrated",
+      "depends_on": ["prelude-control"],
+      "requires_blocks": ["v2-capability-carrier"],
+      "semantic_contracts": ["dialect-v2-lists"],
+      "projection": {"loaded_symbol_delta": -13, "loaded_namepool_delta_bytes": -96, "boot_symbol_delta": -26, "boot_namepool_delta_bytes": -183, "directory_delta": -13},
+      "acceptance": {"min_symbol_savings": 1, "min_namepool_savings_bytes": 1},
+      "measurement": {
+        "differential_receipt": "tests/bytecode/dialect-v2/evidence/lists/differential-receipt.json",
+        "differential_receipt_sha256": "3c482506d106a94793f3ab48d70cfc603dcf0eda5008981a2f2d75df1eca39e6",
+        "baseline_manifest": "tests/bytecode/dialect-v2/evidence/lists/dialect-v1-manifest.json",
+        "baseline_manifest_sha256": "8ea97aceb939b7465f178e840f9ed800ba602082fc8da40d5f318cacaadad06a",
+        "candidate_manifest": "tests/bytecode/dialect-v2/evidence/lists/dialect-v2-manifest.json",
+        "candidate_manifest_sha256": "9aaac52db41029188177cc284a26b766d2b452a8cace69c36621e92b0ef70d84"
+      }
+    },
+    {
+      "id": "strings",
+      "order": 3,
+      "status": "migrated",
+      "depends_on": ["lists"],
+      "requires_blocks": ["v2-capability-carrier"],
+      "semantic_contracts": ["dialect-v2-strings"],
+      "projection": {"loaded_symbol_delta": -7, "loaded_namepool_delta_bytes": -79, "boot_symbol_delta": -19, "boot_namepool_delta_bytes": -232, "directory_delta": -7},
+      "acceptance": {"min_symbol_savings": 1, "min_namepool_savings_bytes": 1},
+      "measurement": {
+        "differential_receipt": "tests/bytecode/dialect-v2/evidence/strings/differential-receipt.json",
+        "differential_receipt_sha256": "80ae884dfb30181ae6d2b6187efe185c13b73c11a0fde9a64f49f4adaba1eb06",
+        "baseline_manifest": "tests/bytecode/dialect-v2/evidence/strings/dialect-v1-manifest.json",
+        "baseline_manifest_sha256": "4398dc1df1bdfdd3e3887cdcfff719f2b7ccb8a89756b61ed81340cfa9afde03",
+        "candidate_manifest": "tests/bytecode/dialect-v2/evidence/strings/dialect-v2-manifest.json",
+        "candidate_manifest_sha256": "3991d8315f83577196111b62109ec9cc19f49f2ffa10116a7da588974cc1352b"
+      }
+    },
+    {
+      "id": "system-runtime",
+      "order": 4,
+      "status": "migrated",
+      "depends_on": ["strings"],
+      "requires_blocks": ["lists-malformed-type-errors", "public-error-channel"],
+      "semantic_contracts": ["dialect-v2-system-runtime"],
+      "projection": {"loaded_symbol_delta": -16, "loaded_namepool_delta_bytes": -205, "boot_symbol_delta": -23, "boot_namepool_delta_bytes": -296, "directory_delta": -3},
+      "acceptance": {"min_symbol_savings": 1, "min_namepool_savings_bytes": 1},
+      "measurement": {
+        "differential_receipt": "tests/bytecode/dialect-v2/evidence/system-runtime/differential-receipt.json",
+        "differential_receipt_sha256": "070aa672c28103045cadf226265294d2d75ff0d3c6055d1550dc9fe3916c3397",
+        "baseline_manifest": "tests/bytecode/dialect-v2/evidence/system-runtime/dialect-v1-manifest.json",
+        "baseline_manifest_sha256": "65c3103753a7e28bbd1fcf25757021cd6d78d4de260bcec39f21ea67291190b0",
+        "candidate_manifest": "tests/bytecode/dialect-v2/evidence/system-runtime/dialect-v2-manifest.json",
+        "candidate_manifest_sha256": "aae15e2bb7f3a238d22c5355e781d58b29221a438bcbaec1c6b54e574647de97"
+      }
+    },
+    {
+      "id": "ide",
+      "order": 5,
+      "status": "migrated",
+      "depends_on": ["system-runtime"],
+      "requires_blocks": ["directory-only-l65m-v2"],
+      "semantic_contracts": ["dialect-v2-ide"],
+      "projection": {"loaded_symbol_delta": -72, "loaded_namepool_delta_bytes": -1295, "boot_symbol_delta": -1, "boot_namepool_delta_bytes": -13, "directory_delta": 0},
+      "acceptance": {"min_symbol_savings": 1, "min_namepool_savings_bytes": 1},
+      "measurement": {
+        "differential_receipt": "tests/bytecode/dialect-v2/evidence/ide/differential-receipt.json",
+        "differential_receipt_sha256": "ea645465cc6d92d451ed0d7375c61e2b5228c21bc9659e78363a45c1f569bb1c",
+        "baseline_manifest": "tests/bytecode/dialect-v2/evidence/ide/dialect-v1-manifest.json",
+        "baseline_manifest_sha256": "ffe8479538970325f1895a2e172d322111a9b0c46952be6aa8375e764940a522",
+        "candidate_manifest": "tests/bytecode/dialect-v2/evidence/ide/dialect-v2-manifest.json",
+        "candidate_manifest_sha256": "d82e6788d4284bfabf8eb3cfeeb82013d24497963a9fc0661ad70b45f63ce996"
+      }
+    }
+  ],
+  "historical_forecast": {
+    "source": "docs/lisp65-dialect-redesign-2026-07-10.md#8",
+    "status": "non-normative-rebase-input",
+    "already_realized": [
+      "hw-math-519-bank0-bytes",
+      "ide-idex-m65d-private-inline-52-names"
+    ],
+    "comparison_report": "tests/bytecode/dialect-v2/evidence/dialect-v2-budget-comparison.json",
+    "comparison_report_sha256": "00b637afaca4c419b34fd6a7ca996a41fe9682ef66503ff00e002cb20e5fe910"
+  },
+  "open_decisions": [
+    {"id": "assq-assoc-semantics", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "defparameter-defvar-surface", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "do-removal", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "edit-autoload", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:edit-autoload"},
+    {"id": "eval-apply-funcall-surface", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "find-member-assoc-predicate", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "ide-command-short-names", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:ide-command-short-names"},
+    {"id": "key-event-blocking-semantics", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:key-event-blocking-semantics"},
+    {"id": "lists-core-library-boundary", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "lists-malformed-input", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "lists-mutation-arity-semantics", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "lists-v2-expansion-scope", "status": "resolved", "blocks_profile_switch": false},
+    {"id": "load-libs-migration", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:load-libs-migration"},
+    {"id": "not-equal-binary-arity", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "optional-source-lowering", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "remainder-v2-surface", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "save-m65d-contract", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:save-m65d-contract"},
+    {"id": "screen-library-boundary", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:screen-library-boundary"},
+    {"id": "set-public-semantics", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:set-public-semantics"},
+    {"id": "strict-arity-codeobject", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "string-bounds-contract", "status": "resolved", "blocks_profile_switch": true},
+    {"id": "string-contains-search-result", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:string-contains-search-result"},
+    {"id": "string-list-conversion-removal", "status": "decided", "blocks_profile_switch": true, "contract_ref": "dialect-v2-r2-decisions:string-list-conversion-removal"}
+  ],
+  "deferred_blocks": [
+    {"id": "directory-only-l65m-v2", "status": "completed", "requires": [], "completion": {"contract": "config/directory-only-l65m-v2-block.json", "contract_sha256": "78ef758053e7fdfe8c2f9dd518de5beae74ca3329895effed7388cd2a0e0be4f", "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-receipt.json", "receipt_sha256": "39a7997ded97523c6f7f06f011b19d05c6f51296cec1312d899dfaaa9a7b62cf"}},
+    {"id": "first-class-buffer", "status": "deferred", "requires": [], "completion": null},
+    {"id": "export-only-interning-require", "status": "deferred", "requires": ["directory-only-l65m-v2"], "completion": null},
+    {"id": "lifo-unload", "status": "deferred", "requires": ["export-only-interning-require", "first-class-buffer"], "completion": null},
+    {"id": "new-control-flow", "status": "deferred", "requires": [], "completion": null},
+    {"id": "public-error-channel", "status": "completed", "requires": [], "completion": {"contract": "config/public-error-channel-block.json", "contract_sha256": "8f03b01f949598a1c97be59231bf2fa51e3725ba5fdffcf1a81e4796bf619c14", "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/public-error-channel-receipt.json", "receipt_sha256": "21b608007b419f98580c711189987215984d04060652f4462e143ab4d1b23e5c"}},
+    {"id": "lists-malformed-type-errors", "status": "completed", "requires": ["public-error-channel"], "completion": {"contract": "config/lists-malformed-type-errors-block.json", "contract_sha256": "c65d27579c83542a0429333c1c12ce9d267a99c645bdb1be7fd5404a6c018733", "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/lists-malformed-type-errors-receipt.json", "receipt_sha256": "da277ceb87d5858d1d7753fbf7653e5f1d3155a2f8b1272e9458c51269f960c5"}},
+    {"id": "lists-v2-expansion", "status": "deferred", "requires": [], "completion": null},
+    {"id": "buffer-and-string-construction-block", "status": "deferred", "requires": ["first-class-buffer"], "completion": null},
+    {"id": "v2-capability-carrier", "status": "completed", "requires": [], "completion": {"contract": "config/v2-capability-carrier-block.json", "contract_sha256": "d1895f4f9056419ec72e5a2a1c889e7d6f53ad72cfbb8a2ead44093103b4ba1d", "receipt": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-5-receipt.json", "receipt_sha256": "5317dc43fc79c2a90580865abf8f35487dcd2b7060852910ef130871a5e3598d"}, "contract": "config/v2-capability-carrier-block.json", "contract_sha256": "d1895f4f9056419ec72e5a2a1c889e7d6f53ad72cfbb8a2ead44093103b4ba1d"}
+  ],
+  "switch_criteria": {
+    "authority": "hardware-G5",
+    "matrix_contract": "config/dialect-v2-g5-matrix.json",
+    "matrix_contract_sha256": "8730941fbd06f985539604f1ad45ea14bcede3b4a00846c4158b2b594da123f5",
+    "release_effect": "none-without-G6"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-workbench-product-contract-v1",
+  "status": "candidate",
+  "claims": {
+    "interactive_product": true,
+    "language_semantics": false,
+    "release": false,
+    "runtime_export": false
+  },
+  "product": {
+    "id": "lisp65-workbench",
+    "profile": "mvp-vm-stdlib-einsuite-core-workbench",
+    "ship_format": "lisp65-workbench-ship-v5",
+    "verified_status": "g2-verified-candidate"
+  },
+  "release_policy": {
+    "only_product": "lisp65-workbench",
+    "required_dialect": "dialect-v2",
+    "dialect_v1": "frozen-evidence-never-release",
+    "runtime_core": "internal-proof-never-release",
+    "runtime_core_receipt_effect": "none",
+    "requires": [
+      "workbench-v2-link-budget",
+      "full-workbench-plus-runtime-g5"
+    ]
+  },
+  "workflows": [
+    "repl",
+    "editor",
+    "lcc-compile-install",
+    "source-load-save",
+    "compile-load-lib",
+    "error-recovery"
+  ],
+  "delivery": {
+    "resident": [
+      "repl",
+      "lcc",
+      "source-load",
+      "compile-string",
+      "load-lib",
+      "error-recovery"
+    ],
+    "on_demand": [
+      "ide",
+      "m65d"
+    ],
+    "optional": [
+      "idex"
+    ]
+  },
+  "package": {
+    "files": [
+      "manifest.json",
+      "lisp65-mvp-workbench.prg",
+      "lisp65-mvp-workbench.blob.bin",
+      "lisp65-mvp-workbench.overlays.bin",
+      "lisp65-mvp-workbench.d81",
+      "mvp-vm-stdlib-footprint.txt",
+      "workbench-d81-manifest.txt",
+      "stdlib-artifact-manifest.json",
+      "resolved-profile.txt",
+      "toolchain-report.txt"
+    ],
+    "verified_directory": "build/ship",
+    "deploy_target": "workbench-deploy",
+    "deploy_dry_run_target": "workbench-deploy-dry-run"
+  },
+  "release": {
+    "G3": "not-available",
+    "generic_targets": "fail-closed",
+    "release_claim": false
+  }
+}

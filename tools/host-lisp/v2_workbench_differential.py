@@ -1,0 +1,221 @@
+#!/usr/bin/env python3
+"""Prove case-observation equivalence for the four v2 Workbench artifacts."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import sys
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[2]
+HOST_TOOLS = ROOT / "tools" / "host-lisp"
+if str(HOST_TOOLS) not in sys.path:
+    sys.path.insert(0, str(HOST_TOOLS))
+
+import bytecode_p0_stdlib as Stdlib  # noqa: E402
+
+
+DEFAULT_CLOSURE = ROOT / "config" / "v2-workbench-artifact-closure.json"
+DEFAULT_CODEMOD_RECEIPT = ROOT / "build" / "bytecode" / "dialect-v2" / "codemod-receipt.json"
+DEFAULT_OUTPUT = (
+    ROOT / "tests" / "bytecode" / "dialect-v2" / "evidence"
+    / "capability-carrier" / "workbench-artifact-differential-receipt.json"
+)
+FORMAT = "lisp65-v2-workbench-artifact-differential-v1"
+ARTIFACT_IDS = ("resident", "ide", "idex", "m65d")
+
+
+class DifferentialError(RuntimeError):
+    pass
+
+
+def _sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _path(raw: str, label: str, *, require=True) -> Path:
+    if not isinstance(raw, str) or not raw or Path(raw).is_absolute():
+        raise DifferentialError(f"{label} must be a project-relative path")
+    path = (ROOT / raw).resolve()
+    try:
+        path.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise DifferentialError(f"{label} escapes the project root") from exc
+    if require and (path.is_symlink() or not path.is_file()):
+        raise DifferentialError(f"{label} is not a regular file: {raw}")
+    return path
+
+
+def _relative(path: Path) -> str:
+    return path.resolve().relative_to(ROOT.resolve()).as_posix()
+
+
+def _json(path: Path, label: str) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise DifferentialError(f"cannot read {label}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise DifferentialError(f"{label} must be an object")
+    return value
+
+
+def _compare(
+    artifact_id: str, baseline: list[dict[str, str]], candidate: list[dict[str, str]]
+) -> None:
+    baseline_rows = [(row["name"], row["result"]) for row in baseline]
+    candidate_rows = [(row["name"], row["result"]) for row in candidate]
+    if baseline_rows != candidate_rows:
+        baseline_map = dict(baseline_rows)
+        candidate_map = dict(candidate_rows)
+        missing = sorted(set(baseline_map) - set(candidate_map))
+        added = sorted(set(candidate_map) - set(baseline_map))
+        changed = sorted(
+            name for name in set(baseline_map) & set(candidate_map)
+            if baseline_map[name] != candidate_map[name]
+        )
+        raise DifferentialError(
+            f"{artifact_id} observation drift: missing={missing} added={added} "
+            f"changed={changed}"
+        )
+
+
+def build_receipt(closure_path: Path, codemod_path: Path) -> dict[str, Any]:
+    closure = _json(closure_path, "artifact closure")
+    if (
+        closure.get("format") != "lisp65-v2-workbench-artifact-closure-v1"
+        or closure.get("target_abi_profile") != "dialect-v2"
+    ):
+        raise DifferentialError("artifact closure identity drift")
+    artifacts = closure.get("artifacts")
+    if (
+        not isinstance(artifacts, list)
+        or tuple(item.get("id") for item in artifacts) != ARTIFACT_IDS
+    ):
+        raise DifferentialError("artifact closure is not the exact four-artifact set")
+
+    codemod = _json(codemod_path, "codemod receipt")
+    if (
+        codemod.get("format") != "lisp65-v2-workbench-codemod-receipt-v1"
+        or codemod.get("abi_profile") != "dialect-v2"
+        or codemod.get("strict_arity") is not True
+    ):
+        raise DifferentialError("codemod receipt identity drift")
+    codemod_outputs = {
+        item.get("path"): item.get("sha256") for item in codemod.get("outputs", [])
+        if isinstance(item, dict) and item.get("role") == "suite"
+    }
+
+    rows = []
+    total_cases = 0
+    for spec in artifacts:
+        source_path = _path(spec.get("source_suite"), f"{spec['id']} source suite")
+        candidate_path = _path(spec.get("suite"), f"{spec['id']} candidate suite")
+        candidate_rel = _relative(candidate_path)
+        if codemod_outputs.get(candidate_rel) != _sha(candidate_path.read_bytes()):
+            raise DifferentialError(f"{spec['id']} suite is not bound by the codemod receipt")
+
+        source_suite = Stdlib._read_suite(str(source_path))
+        candidate_suite = Stdlib._read_suite(str(candidate_path))
+        baseline = Stdlib.check_suite(str(source_path), source_suite)
+        candidate = Stdlib.check_suite(str(candidate_path), candidate_suite)
+        _compare(spec["id"], baseline["observations"], candidate["observations"])
+
+        manifest_path = _path(spec.get("manifest"), f"{spec['id']} manifest")
+        manifest = _json(manifest_path, f"{spec['id']} manifest")
+        if (
+            manifest.get("suite") != candidate_rel
+            or manifest.get("abi_profile") != "dialect-v2"
+            or manifest.get("strict_arity") is not True
+        ):
+            raise DifferentialError(f"{spec['id']} manifest profile/suite drift")
+        observations = [
+            {"name": row["name"], "result": row["result"]}
+            for row in candidate["observations"]
+        ]
+        total_cases += len(observations)
+        rows.append({
+            "id": spec["id"],
+            "source_suite": _relative(source_path),
+            "source_suite_sha256": _sha(source_path.read_bytes()),
+            "candidate_suite": candidate_rel,
+            "candidate_suite_sha256": _sha(candidate_path.read_bytes()),
+            "manifest": _relative(manifest_path),
+            "manifest_sha256": _sha(manifest_path.read_bytes()),
+            "blob_sha256": manifest.get("blob_sha256"),
+            "cases": len(observations),
+            "observations": observations,
+        })
+
+    abi_path = _path(closure.get("abi_ledger"), "ABI ledger")
+    return {
+        "format": FORMAT,
+        "version": 1,
+        "status": "passed",
+        "profile": "v2-capability-candidate",
+        "abi_profile": "dialect-v2",
+        "closure": _relative(closure_path),
+        "closure_sha256": _sha(closure_path.read_bytes()),
+        "abi_ledger": _relative(abi_path),
+        "abi_ledger_sha256": _sha(abi_path.read_bytes()),
+        "codemod_receipt": _relative(codemod_path),
+        "codemod_receipt_sha256": _sha(codemod_path.read_bytes()),
+        "artifacts": rows,
+        "summary": {
+            "artifacts": len(rows), "cases": total_cases,
+            "observation_differences": 0,
+        },
+    }
+
+
+def selftest() -> None:
+    baseline = [{"name": "a", "result": "1"}, {"name": "b", "result": "nil"}]
+    _compare("fixture", baseline, list(baseline))
+    for label, candidate in (
+        ("missing", baseline[:-1]),
+        ("added", baseline + [{"name": "c", "result": "2"}]),
+        ("changed", [{"name": "a", "result": "2"}, baseline[1]]),
+    ):
+        try:
+            _compare("fixture", baseline, candidate)
+        except DifferentialError as exc:
+            if label not in str(exc):
+                raise DifferentialError(f"unclear {label} diagnostic: {exc}") from exc
+        else:
+            raise DifferentialError(f"{label} observation mutation was accepted")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--closure", type=Path, default=DEFAULT_CLOSURE)
+    parser.add_argument("--codemod-receipt", type=Path, default=DEFAULT_CODEMOD_RECEIPT)
+    parser.add_argument("--out", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    try:
+        if args.selftest:
+            selftest()
+            print("v2-workbench-differential: SELFTEST PASS mutations=3")
+            return 0
+        receipt = build_receipt(args.closure.resolve(), args.codemod_receipt.resolve())
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(
+            json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+    except (DifferentialError, Stdlib.StdlibCheckError, AssertionError, OSError) as exc:
+        print(f"v2-workbench-differential: FAIL: {exc}", file=sys.stderr)
+        return 1
+    print(
+        "v2-workbench-differential: PASS "
+        f"artifacts={receipt['summary']['artifacts']} "
+        f"cases={receipt['summary']['cases']} differences=0"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

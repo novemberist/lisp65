@@ -1,0 +1,97 @@
+{
+  "format": "lisp65-dialect-v2-eval-apply-funcall-cases-v1",
+  "profile": "dialect-v1-v2-differential",
+  "family": "eval-apply-funcall",
+  "cases": [
+    {
+      "id": "apply-bcode-result",
+      "forms": ["(defun eaf (x y) (+ x y))", "(apply (function eaf) 40 (quote (2)))"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"}
+      }
+    },
+    {
+      "id": "apply-bcode-too-few",
+      "forms": ["(defun eaf (x y) (cons x (cons y nil)))", "(apply (function eaf) (quote (7)))"],
+      "migration_anchor": "decision:strict-arity-codeobject",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(7 nil)", "native-c-compiler-vm": "(7 nil)"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "apply-closure-result",
+      "forms": ["(let ((x 40)) (apply (lambda (y) (+ x y)) (quote (2))))"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"}
+      }
+    },
+    {
+      "id": "direct-bcode-too-few",
+      "forms": ["(defun eaf (x y) (cons x (cons y nil)))", "(eaf 7)"],
+      "migration_anchor": "decision:strict-arity-codeobject",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(7 nil)", "native-c-compiler-vm": "(7 nil)"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "direct-eval-atom",
+      "forms": ["(eval 42)"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "42", "native-c-compiler-vm": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"}
+      }
+    },
+    {
+      "id": "direct-eval-form",
+      "forms": ["(eval (quote (+ 40 2)))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "42", "native-c-compiler-vm": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"}
+      }
+    },
+    {
+      "id": "funcall-bcode-too-many",
+      "forms": ["(defun eaf (x y) (cons x (cons y nil)))", "(funcall (function eaf) 7 8 9)"],
+      "migration_anchor": "decision:strict-arity-codeobject",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(7 8)", "native-c-compiler-vm": "(7 8)"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "funcall-closure-too-many",
+      "forms": ["(funcall (lambda (x y) (cons x (cons y nil))) 7 8 9)"],
+      "migration_anchor": "decision:strict-arity-codeobject",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(7 8)", "native-c-compiler-vm": "(7 8)"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "funcall-eval-form",
+      "forms": ["(funcall (function eval) (quote (+ 40 2)))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "42", "native-c-compiler-vm": "!error:runtime"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42"}
+      }
+    },
+    {
+      "id": "funcall-primitive-too-many",
+      "forms": ["(funcall (function string-length) \"abc\" 9)"],
+      "migration_anchor": "decision:strict-arity-codeobject",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "3", "native-c-compiler-vm": "3"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    }
+  ]
+}

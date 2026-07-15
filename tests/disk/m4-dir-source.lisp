@@ -1,0 +1,8 @@
+(defun m4-dir-a () 111)
+(defun m4-dir-b () 222)
+(defun m4-dir-c (x) (+ x 333))
+(defun m4-dir-d () (+ (m4-dir-a) (m4-dir-b)))
+(defun m4-dir-e (x y) (+ x y))
+(defun m4-dir-f () (m4-dir-e 50 51))
+(defun m4-dir-pad () 0)
+(defun m4-dir-run () (+ (m4-dir-c (m4-dir-d)) (m4-dir-f)))

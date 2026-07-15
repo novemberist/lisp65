@@ -1,0 +1,356 @@
+{
+  "format": "lisp65-bytecode-p0-program-vectors-v1",
+  "programs": [
+    {
+      "name": "tailcall-directory-call",
+      "source": "(defun id (x) x)\n(defun passthrough (x) (id x))",
+      "entry": "passthrough",
+      "code_objects": {
+        "id": "b5 01 00 00 02 00 00 0b 05",
+        "passthrough": "b5 01 00 00 04 00 01 04 00 0b 3e 00 01"
+      },
+      "args": [42],
+      "expect": "42",
+      "expect_obj": "0x0055"
+    },
+    {
+      "name": "nested-directory-call",
+      "source": "(defun inc (x) (+ x 1))\n(defun inc2 (x) (inc (inc x)))",
+      "entry": "inc2",
+      "code_objects": {
+        "inc": "b5 01 00 00 05 00 00 0b 01 01 02 05",
+        "inc2": "b5 01 00 00 07 00 01 04 00 0b 3c 00 01 3e 00 01"
+      },
+      "args": [40],
+      "expect": "42",
+      "expect_obj": "0x0055"
+    },
+    {
+      "name": "recursive-helper-call",
+      "source": "(defun len (xs) (if (eq xs nil) 0 (+ 1 (len (cdr xs)))))\n(defun len-plus-one (xs) (+ (len xs) 1))",
+      "entry": "len-plus-one",
+      "code_objects": {
+        "len": "b5 01 00 00 11 00 01 04 00 0b 2b 1e 1d 03 01 00 05 01 01 0b 35 3c 00 01 02 05",
+        "len-plus-one": "b5 01 00 00 08 00 01 04 00 0b 3c 00 01 01 01 02 05"
+      },
+      "args": [[1, 2, 3]],
+      "expect": "4",
+      "expect_obj": "0x0009"
+    },
+    {
+      "name": "multi-body-drop-call",
+      "source": "(defun keep-second (a b) a b)\n(defun choose (x y) (keep-second x y))",
+      "entry": "choose",
+      "code_objects": {
+        "keep-second": "b5 02 00 00 04 00 00 0b 3b 0c 05",
+        "choose": "b5 02 00 00 05 00 01 04 00 0b 0c 3e 00 02"
+      },
+      "args": [17, 23],
+      "expect": "23",
+      "expect_obj": "0x002f"
+    },
+    {
+      "name": "let-local-arithmetic",
+      "source": "(defun calc (a b) (let ((sum (+ a b)) (diff (- b a))) (* sum diff)))",
+      "entry": "calc",
+      "code_objects": {
+        "calc": "b5 02 02 00 10 00 00 0b 0c 02 3a 02 0c 0b 0e 3a 03 39 02 39 03 0f 05"
+      },
+      "args": [2, 7],
+      "expect": "45",
+      "expect_obj": "0x005b"
+    },
+    {
+      "name": "let-shadowing-parallel",
+      "source": "(defun shadow (x) (let ((x (+ x 1)) (y x)) (+ x y)))",
+      "entry": "shadow",
+      "code_objects": {
+        "shadow": "b5 01 02 00 0f 00 00 0b 01 01 02 3a 01 0b 3a 02 39 01 39 02 02 05"
+      },
+      "args": [10],
+      "expect": "21",
+      "expect_obj": "0x002b"
+    },
+    {
+      "name": "opcode-forms",
+      "source": "(defun ops (a b) (if (not (> a b)) (remainder (* a b) 5) (/ (- a b) 2)))",
+      "entry": "ops",
+      "code_objects": {
+        "ops": "b5 02 00 00 14 00 00 0b 0c 13 2a 1d 07 0b 0c 0f 01 05 18 05 0b 0c 0e 01 02 10 05"
+      },
+      "args": [3, 4],
+      "expect": "2",
+      "expect_obj": "0x0005"
+    },
+    {
+      "name": "eql-null-local",
+      "source": "(defun same-or-null (a b) (let ((same (eql a b))) (if same 1 (if (null b) 2 3))))",
+      "entry": "same-or-null",
+      "code_objects": {
+        "same-or-null": "b5 02 01 00 16 00 00 0b 0c 37 3a 02 39 02 1d 03 01 01 05 0c 2a 1d 03 01 02 05 01 03 05"
+      },
+      "args": [0, null],
+      "expect": "2",
+      "expect_obj": "0x0005"
+    },
+    {
+      "name": "variadic-less-equal-chain",
+      "source": "(defun ordered (a b c) (<= a b c))",
+      "entry": "ordered",
+      "code_objects": {
+        "ordered": "b5 03 00 00 0e 00 00 0b 0c 13 2a 1d 06 0c 0d 13 2a 1c 01 2b 05"
+      },
+      "args": [1, 2, 2],
+      "expect": "t",
+      "expect_obj": "0x0002"
+    },
+    {
+      "name": "variadic-greater-equal-chain",
+      "source": "(defun descending (a b c) (>= a b c))",
+      "entry": "descending",
+      "code_objects": {
+        "descending": "b5 03 00 00 0e 00 00 0b 0c 12 2a 1d 06 0c 0d 12 2a 1c 01 2b 05"
+      },
+      "args": [3, 2, 2],
+      "expect": "t",
+      "expect_obj": "0x0002"
+    },
+    {
+      "name": "degenerate-less-equal-chain",
+      "source": "(defun degenerate-le () (<=))",
+      "entry": "degenerate-le",
+      "code_objects": {
+        "degenerate-le": "b5 00 00 00 02 00 00 2c 05"
+      },
+      "args": [],
+      "expect": "t",
+      "expect_obj": "0x0002"
+    },
+    {
+      "name": "single-greater-equal-chain",
+      "source": "(defun single-ge (x) (>= x))",
+      "entry": "single-ge",
+      "code_objects": {
+        "single-ge": "b5 01 00 00 02 00 00 2c 05"
+      },
+      "args": [99],
+      "expect": "t",
+      "expect_obj": "0x0002"
+    },
+    {
+      "name": "strict-optional-nil-fill",
+      "source": "(defun optional-pair (a &optional b) (cons a (cons b nil)))",
+      "strict_arity": true,
+      "entry": "optional-pair",
+      "code_objects": {
+        "optional-pair": "b5 02 00 06 06 00 00 0b 0c 2b 33 33 05"
+      },
+      "args": [7],
+      "expect": "(7 nil)"
+    },
+    {
+      "name": "strict-optional-present",
+      "source": "(defun optional-pair (a &optional b) (cons a (cons b nil)))",
+      "strict_arity": true,
+      "entry": "optional-pair",
+      "code_objects": {
+        "optional-pair": "b5 02 00 06 06 00 00 0b 0c 2b 33 33 05"
+      },
+      "args": [7, 8],
+      "expect": "(7 8)"
+    },
+    {
+      "name": "strict-optional-rest-nil-fill",
+      "source": "(defun optional-rest (a &optional b &rest xs) (cons a (cons b (cons xs nil))))",
+      "strict_arity": true,
+      "entry": "optional-rest",
+      "code_objects": {
+        "optional-rest": "b5 02 01 07 09 00 00 0b 0c 39 02 2b 33 33 33 05"
+      },
+      "args": [1],
+      "expect": "(1 nil nil)"
+    },
+    {
+      "name": "strict-optional-rest-collects-tail",
+      "source": "(defun optional-rest (a &optional b &rest xs) (cons a (cons b (cons xs nil))))",
+      "strict_arity": true,
+      "entry": "optional-rest",
+      "code_objects": {
+        "optional-rest": "b5 02 01 07 09 00 00 0b 0c 39 02 2b 33 33 33 05"
+      },
+      "args": [1, 2, 3, 4],
+      "expect": "(1 2 (3 4))"
+    },
+    {
+      "name": "strict-optional-lambda-helper",
+      "source": "(defun call-helper (x) (funcall (lambda (a &optional b) (cons a (cons b nil))) x))",
+      "strict_arity": true,
+      "entry": "call-helper",
+      "code_objects": {
+        "call-helper": "b5 01 00 02 07 00 01 06 00 06 00 0b 3d 08 02 05",
+        "__p0_lambda_call_helper_1": "b5 02 00 06 06 00 00 0b 0c 2b 33 33 05"
+      },
+      "args": [9],
+      "expect": "(9 nil)"
+    },
+    {
+      "name": "strict-optional-immediate-lambda",
+      "source": "(defun call-immediate () ((lambda (a &optional b) (cons a (cons b nil))) 5))",
+      "strict_arity": true,
+      "entry": "call-immediate",
+      "args": [],
+      "expect": "(5 nil)"
+    },
+    {
+      "name": "strict-optional-too-few",
+      "source": "(defun optional-range (a b &optional c) c)",
+      "strict_arity": true,
+      "entry": "optional-range",
+      "args": [1],
+      "expect_vm_error": "ArityError"
+    },
+    {
+      "name": "strict-optional-too-many",
+      "source": "(defun optional-range (a &optional b) b)",
+      "strict_arity": true,
+      "entry": "optional-range",
+      "args": [1, 2, 3],
+      "expect_vm_error": "ArityError"
+    },
+    {
+      "name": "legacy-optional-remains-symbol",
+      "source": "(defun legacy-optional (a &optional b) (cons a (cons b nil)))",
+      "entry": "legacy-optional",
+      "code_objects": {
+        "legacy-optional": "b5 03 00 00 06 00 00 0b 0d 2b 33 33 05"
+      },
+      "args": [1, 2, 3],
+      "expect": "(1 3)"
+    },
+    {
+      "name": "optional-default-form-rejected",
+      "source": "(defun optional-default (a &optional (b 3)) b)",
+      "strict_arity": true,
+      "entry": "optional-default",
+      "expect_compile_error": "bad parameter"
+    },
+    {
+      "name": "optional-after-rest-rejected",
+      "source": "(defun optional-order (a &rest xs &optional b) b)",
+      "strict_arity": true,
+      "entry": "optional-order",
+      "expect_compile_error": "&rest must be followed by exactly one parameter"
+    },
+    {
+      "name": "variadic-rest-slot-list",
+      "source": "(defun rest-tail (a b &rest xs) xs)",
+      "entry": "rest-tail",
+      "code_objects": {
+        "rest-tail": "b5 02 01 01 03 00 00 39 02 05"
+      },
+      "args": [1, 2, 3, 4],
+      "expect": "(3 4)",
+      "expect_obj": "0x0008"
+    },
+    {
+      "name": "variadic-missing-fixed-arg",
+      "source": "(defun collect-missing (a b &rest xs) (cons a (cons b xs)))",
+      "entry": "collect-missing",
+      "code_objects": {
+        "collect-missing": "b5 02 01 01 07 00 00 0b 0c 39 02 33 33 05"
+      },
+      "args": [7],
+      "expect": "(7 nil)",
+      "expect_obj": "0x0008"
+    },
+    {
+      "name": "nonvariadic-extra-args-ignored",
+      "source": "(defun ignore-extra (a) a)",
+      "entry": "ignore-extra",
+      "code_objects": {
+        "ignore-extra": "b5 01 00 00 02 00 00 0b 05"
+      },
+      "args": [11, 22, 33],
+      "expect": "11",
+      "expect_obj": "0x0017"
+    },
+    {
+      "name": "tailcall-to-variadic-callee",
+      "source": "(defun collect-rest (a &rest xs) xs)\n(defun tail-to-rest (x y z) (collect-rest x y z))",
+      "entry": "tail-to-rest",
+      "code_objects": {
+        "collect-rest": "b5 01 01 01 03 00 00 39 01 05",
+        "tail-to-rest": "b5 03 00 00 06 00 01 04 00 0b 0c 0d 3e 00 03"
+      },
+      "args": [1, 2, 3],
+      "expect": "(2 3)",
+      "expect_obj": "0x000a"
+    },
+    {
+      "name": "tailcall-from-variadic-caller",
+      "source": "(defun first-rest (xs) (car xs))\n(defun tail-from-rest (a &rest xs) (first-rest xs))",
+      "entry": "tail-from-rest",
+      "code_objects": {
+        "first-rest": "b5 01 00 00 03 00 00 0b 34 05",
+        "tail-from-rest": "b5 01 01 01 05 00 01 04 00 39 01 3e 00 01"
+      },
+      "args": [9, 8, 7],
+      "expect": "8",
+      "expect_obj": "0x0011"
+    },
+    {
+      "name": "local-setq-return",
+      "source": "(defun bump (x) (setq x (+ x 1)))",
+      "entry": "bump",
+      "args": [41],
+      "expect": "42",
+      "expect_obj": "0x0055"
+    },
+    {
+      "name": "dotimes-accumulator-loop",
+      "source": "(defun collect () (let ((acc nil)) (dotimes (i 5 acc) (setq acc (cons i acc)))))",
+      "entry": "collect",
+      "args": [],
+      "expect": "(4 3 2 1 0)"
+    },
+    {
+      "name": "dotimes-result-var-is-count",
+      "source": "(defun done () (dotimes (i 3 i)))",
+      "entry": "done",
+      "args": [],
+      "expect": "3",
+      "expect_obj": "0x0007"
+    },
+    {
+      "name": "dolist-sum-loop",
+      "source": "(defun sum () (let ((s 0)) (dolist (x (quote (1 2 3)) s) (setq s (+ s x)))))",
+      "entry": "sum",
+      "args": [],
+      "expect": "6",
+      "expect_obj": "0x000d"
+    },
+    {
+      "name": "dolist-result-var-is-nil",
+      "source": "(defun done () (dolist (x (quote (1 2 3)) x)))",
+      "entry": "done",
+      "args": [],
+      "expect": "nil",
+      "expect_obj": "0x0000"
+    },
+    {
+      "name": "nested-dotimes-dolist",
+      "source": "(defun nested () (let ((s 0)) (dotimes (i 3 s) (dolist (x (quote (10 20)) nil) (setq s (+ s (+ i x)))))))",
+      "entry": "nested",
+      "args": [],
+      "expect": "96",
+      "expect_obj": "0x00c1"
+    },
+    {
+      "name": "mutation-primitive-fallbacks",
+      "source": "(defun mutate () (let ((x (cons 1 (cons 2 nil)))) (rplaca x 9) (rplacd x (cons 3 nil)) x))",
+      "entry": "mutate",
+      "args": [],
+      "expect": "(9 3)"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "format": "lisp65-directory-only-l65m-v2-contract-draft-v1",
+  "version": 1,
+  "id": "directory-only-l65m-v2",
+  "status": "approved-for-implementation",
+  "prerequisites": [],
+  "scope": {
+    "includes": [
+      "L65M-v2 format and dual-version validation",
+      "anonymous directory entries",
+      "local entry references by artifact ordinal",
+      "host-side diagnostic name map",
+      "IDE and IDEX composition measurement"
+    ],
+    "excludes": [
+      "export-only interning for require",
+      "library unload policy",
+      "first-class buffers",
+      "changes to the user-visible IDE command surface"
+    ]
+  },
+  "format_contract": {
+    "magic": "L65M",
+    "new_version": 2,
+    "v1_decoder_in_v2_profile": "required-unchanged",
+    "v2_decoder_in_v1_profile": "reject-unsupported-version-with-L65M_ERR_HEADER",
+    "unknown_versions": "reject-unsupported-version-with-L65M_ERR_HEADER",
+    "v1_reinterpretation": "forbidden",
+    "anonymous_entry": {
+      "name_off": "0xffff",
+      "legal_name_off_range": "0x0000-through-0xfffe-and-within-decoded-string-table",
+      "sentinel_capacity_invariant": "all-namepool-layouts-must-fail-before-any-legal-name-offset-can-reach-0xffff",
+      "identity": "zero-based-entry-ordinal-within-artifact",
+      "macro_flag": "forbidden",
+      "global_symbol_install": "forbidden",
+      "directory_slot": "required"
+    },
+    "local_reference": {
+      "representation": "new-v2-literal-node-kind-entry-ref",
+      "target": "zero-based-entry-ordinal-within-same-artifact",
+      "commit_result": "BCODE-immediate-for-allocated-directory-index",
+      "vm_call_rule": "OP_CALL-and-OP_TAILCALL-accept-symbol-or-BCODE-literal",
+      "function_designator_rule": "entry-ref-materializes-BCODE-and-native-apply-funcall-accept-BCODE",
+      "cross_artifact_reference": "forbidden",
+      "cross_container_call": "named-export-reference-only"
+    },
+    "late_bound_export": {
+      "purpose": "general contract for a named core hook whose function cell may be replaced by a later-loaded tier",
+      "publication": "the provider and every overrider emit a named entry and publish the same symbol function cell",
+      "local_call_binding": "symbolic-only; entry-ref conversion is forbidden in providers and overriders",
+      "declaration": "late_bound_exports is an explicit unique subset of exports; override_exports is a subset of late_bound_exports",
+      "parity_gates": [
+        "exports-intersect-anonymous-is-empty",
+        "override-exports-are-named-in-provider-and-overrider",
+        "late-bound-exports-have-zero-entry-ref-edges"
+      ],
+      "hook_audit": "every cross-tier duplicate definition must be declared as an override and late-bound; undeclared duplicate definitions fail the product gate",
+      "current_hooks": ["%ide-x"],
+      "extension_rule": "future optional tiers such as screen, graphics, or sound use this mechanism rather than an emitter special case"
+    },
+    "version_strictness": {
+      "v1_entry_with_anonymous_sentinel": "reject-with-L65M_ERR_ENTRIES",
+      "v1_emitter_output": "version-1-only-never-v2",
+      "v2_emitter_output": "version-2-when-v2-only-constructs-are-present",
+      "decoder_policy": "version-bound-never-feature-sniffing"
+    }
+  },
+  "validator_contract": {
+    "named_entry_duplicates": "reject-by-decoded-name-as-v1",
+    "anonymous_entry_duplicates": "not-applicable-ordinals-are-structurally-unique",
+    "mixed_named_anonymous_entries": "allowed",
+    "entry_ref_range": "must-target-an-entry-in-the-same-artifact",
+    "entry_ref_to_named_entry": "allowed",
+    "entry_ref_to_macro": "forbidden",
+    "phase_05_rule": "hash-and-compare-only-named-entries; anonymous-entries-skip-name-hash-without-skipping-ordinal-and-range-validation",
+    "anonymous_ordinal_validation": "phase-05-enumerates-every-entry-index-exactly-once-and-validates-every-entry-ref-against-entry-count",
+    "host_device_parity": "all-v1-and-v2-valid-invalid-fixtures-must-match-exact-status",
+    "transactionality": "any-v2-validation-or-commit-error-publishes-no-directory-or-symbol-state"
+  },
+  "diagnostics_contract": {
+    "product_device_names_for_anonymous_entries": "absent",
+    "stable_runtime_address": "artifact-sha256-plus-entry-ordinal-plus-code-object-offset",
+    "host_manifest_map": "required-helper-name-source-path-and-code-sha256",
+    "receipt_binding": "manifest-map-sha256-bound-to-L65M-artifact-sha256",
+    "diagnostic_build": "may-carry-a-separate-name-table-not-addressable-by-product-runtime",
+    "support_rule": "product-diagnostic-build-reports-global-directory-index-resolved-by-product-receipt-and-sha-bound-host-map",
+    "runtime_message_format": "entry #{zero-based-global-directory-index}",
+    "deferred_device_attribution": "lib-{artifact-id}-entry-local-ordinal-is-1.1-diagnostic-polish-because-loader-identity-bookkeeping-costs-resident-bytes"
+  },
+  "measurement_contract": {
+    "baseline_artifacts": [
+      "IDE",
+      "IDEX"
+    ],
+    "provisional_census": {
+      "ide_percent_directory_entries": 87,
+      "idex_percent_directory_entries": 13,
+      "directory_only_candidates": 100,
+      "already_private_inline_helpers": 40,
+      "combined_private_helpers": 140,
+      "candidate_namepool_bytes": 2006
+    },
+    "promotion_projection": {
+      "directory_only_entries": 100,
+      "additional_inline_entries": 0,
+      "gross_symbol_intern_savings": 100,
+      "gross_namepool_savings_bytes": 2006,
+      "directory_entry_delta": 0,
+      "ide_family_net_projection_source": "config/dialect-migration-contract.json"
+    },
+    "required_probe_outputs": [
+      "exact named-versus-anonymous entry inventory for IDE and IDEX",
+      "exact private-inline inventory with overlap proof",
+      "L65M container byte delta",
+      "loaded symbol and namepool delta",
+      "IDE-plus-IDEX-plus-M65D composition headroom",
+      "bound-v2 stack-guard VMA and post-boot reserve delta"
+    ]
+  },
+  "promotion_gate": {
+    "required_profiles": [
+      "dialect-v1-v1-artifact",
+      "dialect-v2-v1-artifact",
+      "dialect-v2-v2-artifact"
+    ],
+    "required_validators": [
+      "python-host-contract",
+      "native-host-loader",
+      "workbench-overlay-validator"
+    ],
+    "required_negative_classes": [
+      "v1-reinterpretation",
+      "unknown-version",
+      "anonymous-macro",
+      "entry-ref-out-of-range",
+      "entry-ref-cross-artifact",
+      "duplicate-named-entry",
+      "phase-05-mixed-name-collision",
+      "partial-publish-on-failure"
+    ],
+    "hardware_effect": "none-until-IDE-family-candidate",
+    "promotion_requires_r2_known_open_count": 0,
+    "required_known_open_resolution": [
+      "r2-canonical-stack-guard-profile-binding"
+    ],
+    "bank_delta_receipt": "required-zero-or-preauthorized"
+  }
+}

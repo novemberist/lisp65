@@ -1,0 +1,53 @@
+{
+  "format": "lisp65-runtime-known-open-v2",
+  "description": "Runtime repro lifecycle registry. Open cases remain explicit; resolved-g5 cases require a manifest-bound, hashed hardware receipt.",
+  "historical_diagnostic_harness": {
+    "target": "make hw-known-open-diagnostic-dry-run",
+    "prg_target": "make mvp-vm-stdlib-known-open-diagnostic",
+    "embedded_suite": "tests/bytecode/runtime/p0-known-open-diagnostic-stdlib.json",
+    "flags": ["-DVM_STEP_LIMIT", "-DLISP65_VM_DIAGNOSTICS"],
+    "note": "This minimal diagnostic isolated the old symptom but is not the product proof. Resolution authority is the verified Workbench G5 receipt."
+  },
+  "native_repl_surface_handoff": "docs/repl-surface-handoff.md",
+  "native_repl_surface_forms": [],
+  "resolution_receipts": [
+    {
+      "path": "tests/bytecode/runtime/evidence/ap8.1-g5-78083d6/receipt.json",
+      "sha256": "f2c4b8091827a0da58e1e7625ee3ab802f66760ed39a770d557893408f366c32"
+    }
+  ],
+  "cases": [
+    {
+      "name": "hw-higher-order-every-plusp-true",
+      "surface": "mega65-hw",
+      "status": "resolved-g5",
+      "expr": "(every (function plusp) '(1 2 3))",
+      "expect": "t",
+      "reason": "Previously hung position-/heap-timing-dependently in long varying hardware sequences.",
+      "resolution": {
+        "receipt": "tests/bytecode/runtime/evidence/ap8.1-g5-78083d6/receipt.json",
+        "receipt_case": "hw-higher-order-every-plusp-true",
+        "phase_ids": [
+          "higher-order-remount-every",
+          "higher-order-idex-every"
+        ]
+      }
+    },
+    {
+      "name": "hw-higher-order-some-inline-lambda",
+      "surface": "mega65-hw",
+      "status": "resolved-g5",
+      "expr": "(some (function (lambda (x) (if (> x 2) x nil))) '(1 2 3))",
+      "expect": "3",
+      "reason": "Previously belonged to the same long-sequence hardware hang class as every.",
+      "resolution": {
+        "receipt": "tests/bytecode/runtime/evidence/ap8.1-g5-78083d6/receipt.json",
+        "receipt_case": "hw-higher-order-some-inline-lambda",
+        "phase_ids": [
+          "higher-order-remount-some",
+          "higher-order-idex-some"
+        ]
+      }
+    }
+  ]
+}

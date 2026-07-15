@@ -1,0 +1,7 @@
+(defun m3-chain-a () 300)
+(defun m3-chain-b () 400)
+(defun m3-chain-e (x y) (+ x y))
+(defun m3-chain-f () (m3-chain-e 3 4))
+(defun m3-chain-c (x) (+ x 30))
+(defun m3-chain-d () (+ (m3-chain-a) (m3-chain-b)))
+(defun m3-chain-run () (+ (m3-chain-c (m3-chain-d)) (m3-chain-f)))

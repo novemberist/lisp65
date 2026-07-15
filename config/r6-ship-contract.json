@@ -1,0 +1,103 @@
+{
+  "format": "lisp65-r6-ship-contract-v2",
+  "version": 2,
+  "id": "r6-archive-to-ship",
+  "status": "approved-for-packer",
+  "hardware_profile": {
+    "path": "config/g6-hardware-profile.json",
+    "sha256": "85468bfe857227ed0adcd0712f53b9dd73767781573f331fadc04db8f59d0d88"
+  },
+  "input": {
+    "r4_promotion_id": "r4-product-candidate-5942e0c",
+    "r4_archive_sha256": "900c067c54aa76c5957ae51d2d78141f589186af55c3b415b73aa17d92339651",
+    "r5_promotion_id": "r5-global-g5-b40cbe2",
+    "r5_archive_sha256": "be7b3f17ccad94628a7cbddec5a46d3619af423cb794b2f352468fe2173b74cf",
+    "product_artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "product_build_id": "f6faad87",
+    "artifact_count": 13
+  },
+  "policy": {
+    "operation": "transform-and-package-only",
+    "build_tools": "forbidden",
+    "product_byte_source": "embedded-R5-hardware-acceptance-archive-only",
+    "g3_evidence_source": "embedded-R4-product-candidate-archive-only",
+    "live_tree_product_authority": false,
+    "artifact_mapping": "every-R5-product-role-exactly-once",
+    "byte_identity": "required-for-every-product-artifact-and-every-L65SYS-entry",
+    "new_bytes": "manifest-readme-verifier-packer-provenance-and-receipt-only"
+  },
+  "package": {
+    "format": "lisp65-r6-ship-v1",
+    "output": "build/r6/ship",
+    "self_contained": true,
+    "offline_verification": "package-alone-no-repository-no-network",
+    "ship_media_ready": true,
+    "release_authorization": "none-until-G6",
+    "packaging_runtime": "CPython-3.14.6"
+  },
+  "artifact_mapping": [
+    {"role": "linked-product-elf", "ship_path": "proof/lisp65-workbench-product.elf", "d81_entry": null},
+    {"role": "workbench-prg", "ship_path": "components/lisp65.prg", "d81_entry": "lisp65.prg"},
+    {"role": "attic-catalog", "ship_path": "components/overlays.bin", "d81_entry": "overlays.bin"},
+    {"role": "bank5-preload", "ship_path": "components/bank5.bin", "d81_entry": "bank5.bin"},
+    {"role": "resolved-profile", "ship_path": "components/profile", "d81_entry": "profile"},
+    {"role": "library-ide", "ship_path": "components/ide", "d81_entry": "ide"},
+    {"role": "library-idex", "ship_path": "components/idex", "d81_entry": "idex"},
+    {"role": "library-m65d", "ship_path": "components/m65d", "d81_entry": "m65d"},
+    {"role": "cold-stager", "ship_path": "components/autoboot.c65", "d81_entry": "autoboot.c65"},
+    {"role": "boot-descriptor", "ship_path": "components/boot.id", "d81_entry": "boot.id"},
+    {"role": "product-d81", "ship_path": "media/lisp65-product.d81", "d81_entry": null},
+    {"role": "work-d81", "ship_path": "media/lisp65-work.d81", "d81_entry": null},
+    {"role": "product-mount-descriptor", "ship_path": "media/lisp65-product.mount.json", "d81_entry": null}
+  ],
+  "media": {
+    "product": {
+      "path": "media/lisp65-product.d81",
+      "disk_name": "L65SYS",
+      "disk_id": "65",
+      "mode": "0444",
+      "write_protect_profile": "physical-floppy-required-if-used-stock-core-SD-D81-unavailable",
+      "boot_structure_signature": {
+        "format": "l65sys-boot-marker-v1",
+        "header_offset": 29,
+        "ascii": "L65B",
+        "bound_entries": ["autoboot.c65", "boot.id", "lisp65.prg"]
+      },
+      "entries": ["autoboot.c65", "bank5.bin", "boot.id", "ide", "idex", "lisp65.prg", "m65d", "overlays.bin", "profile"]
+    },
+    "work": {
+      "path": "media/lisp65-work.d81",
+      "disk_name": "L65WORK",
+      "disk_id": "65",
+      "mode": "0644",
+      "entries": [],
+      "provisioning": "shipped-preformatted-blank"
+    },
+    "single_drive_flow": "boot-L65SYS-stage-chain-load-composition-swap-once-to-any-valid-non-product-1581"
+  },
+  "first_session": {
+    "readme": "README-FIRST.txt",
+    "forms": ["(+ 20 22)", "(load-lib \"ide\")", "(dir)", "(edit)"],
+    "on_device_formatter": "not-in-1.0",
+    "additional_work_media": "any-valid-1581-media-no-rename-required-L65WORK-is-convenience-copy"
+  },
+  "negative_tests": ["product-byte", "manifest", "r5-archive"],
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed-for-product-artifact-set",
+    "G6": "not-run(5/5-applicable); product-medium-physical-write-protect=n/a-no-physical-medium-in-SD-D81-configuration",
+    "hardware_boot_cases": "not-run(5/5-applicable); n/a(1/1-profile-bound)",
+    "release": "not-release-capable"
+  },
+  "capacity_delta": {
+    "baseline_identity_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "candidate_identity_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "dimensions": {
+      "bank": {"baseline": 332, "candidate": 332, "delta": 0, "authorization": null},
+      "ext": {"baseline": 16385, "candidate": 16385, "delta": 0, "authorization": null},
+      "symbols": {"baseline": 120, "candidate": 120, "delta": 0, "authorization": null},
+      "namepool": {"baseline": 2160, "candidate": 2160, "delta": 0, "authorization": null},
+      "directory": {"baseline": 32, "candidate": 32, "delta": 0, "authorization": null}
+    }
+  }
+}

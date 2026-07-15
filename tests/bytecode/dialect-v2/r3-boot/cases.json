@@ -1,0 +1,172 @@
+{
+  "format": "lisp65-r3-boot-case-matrix-v1",
+  "version": 1,
+  "contract_id": "workbench-r3-g3-g6",
+  "cases": [
+    {
+      "id": "arbitrary-user-media-save-remount-read",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "media-policy",
+      "setup": "drive 8 has a structurally valid 1581 medium with an arbitrary non-L65WORK name and arbitrary disk ID, and no product boot signature",
+      "action": "remount, replace a file through COW, remount again and read the committed sector chain",
+      "expected": "the complete save/remount/read roundtrip succeeds; no L65WORK naming rule is consulted; T40/S0 is never a write target and remains byte-identical; BAM allocation exactly equals the externally visible file chains for create, replace and multi-sector writes",
+      "oracle": "media-policy receipt plus independent full-D81 parser and BAM-sanity observation report; M65D self-readback is not authoritative",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "artifact-preflight-exact-set",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "preflight",
+      "setup": "product-built candidate manifest, two media manifests and capacity-delta receipt",
+      "action": "validate every target, verifier, artifact SHA, ROM SHA, emulator SHA, media identity and all five capacity dimensions before launch",
+      "expected": "exact 15-case closure accepted; missing, foreign, unbound or unauthorized-capacity content rejected",
+      "oracle": "static preflight receipt",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "catalog-crc-reject-restage",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "stager",
+      "setup": "Attic catalog present with a bad catalog or record CRC",
+      "action": "run the stager decision and validation path",
+      "expected": "catalog is never chained; complete product-media restage is followed by re-verification, with at most two attempts and then the pinned media-error halt",
+      "oracle": "stager phase receipt plus post-stage SHA readback",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "catalog-missing-restage",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "stager",
+      "setup": "Bank 5 and Attic catalog absent as after a power loss",
+      "action": "run the stager decision and staging path against deterministic media input",
+      "expected": "Bank 5 and Attic are fully restaged and re-verified before the product chain step",
+      "oracle": "stager phase receipt plus post-stage SHA readback",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "catalog-valid-stage-chain",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "stager",
+      "setup": "valid build-id- and profile-bound Bank-5 preload and Attic catalog already staged",
+      "action": "validate descriptor build identity and both regions, then continue through the chain-control path",
+      "expected": "restage is skipped and only the exact descriptor-bound Workbench PRG is selected",
+      "oracle": "stager phase receipt and product-entry marker",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "disk-swap-resident-composition",
+      "fidelity": "hardware-only",
+      "required_gate": "G6",
+      "phase": "media-swap",
+      "setup": "product D81 booted on drive 8 and IDE plus IDEX plus M65D loaded",
+      "action": "replace the product D81 with the work D81 without resetting",
+      "expected": "the full composition remains callable and the media prompt clears for any valid non-product 1581 medium after exact name-plus-ID binding with a fresh mount-generation token",
+      "oracle": "hardware transcript plus composition counters and media identity receipt",
+      "core_binding": "hardware-receipt"
+    },
+    {
+      "id": "drive9-rejected",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "media-policy",
+      "setup": "a load or save request explicitly names drive 9",
+      "action": "run media preflight",
+      "expected": "request is rejected as unverified non-scope before any device operation",
+      "oracle": "media-policy receipt",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "mid-write-media-swap-abort",
+      "fidelity": "hardware-only",
+      "required_gate": "G6",
+      "phase": "persistence",
+      "setup": "clean valid user media A and B have different exact name-plus-ID identities; B is restored byteidentical from the protected G6B.D81 baseline before every use; the owner accepts the measured non-atomic stock-core D68B-D68F residual window as a documented contract limit",
+      "action": "after token capture inject one D68B-D68F change during a failing planning read and repeat the same read failure with a stable token; inject token changes before the data, BAM and directory writes; separately inject one change after the last guard but before each of those three commands; then attempt exactly one real Freezer media replacement during a disposable write",
+      "expected": "the changed-token planning read becomes terminal status 12 while the stable-token read failure remains status 6, both with zero writes; the three normal write injections return terminal status 12 with no automatic remount or retry and leave B byteidentical; each adversarial residual-window characterization changes at most one sector on B, leaves A byteidentical for the isolated command, then returns status 12 and performs no further writes; this is not a safety PASS; the real Freezer result and persistent status must both be 12, must remain within the same one sector bound and require checking both disks before an explicit restart",
+      "oracle": "the planning-read classification pair plus six-phase independent full-image reports prove zero-write classification, three rejections and one-sector maximum damage for data, BAM and directory separately, plus synchronized return-and-persistent-status transcript and one real-Freezer boundary confirmation",
+      "core_binding": "hardware-receipt"
+    },
+    {
+      "id": "power-cycle-autoboot-restage-repl",
+      "fidelity": "hardware-only",
+      "required_gate": "G6",
+      "phase": "cold-start",
+      "setup": "machine unpowered, product D81 mounted on drive 8, Bank 5 and Attic power-volatile",
+      "action": "apply power with no host, JTAG, Etherload or typed BOOT command",
+      "expected": "AUTOBOOT enters the stager, restages Bank 5 and Attic, chains the bound product and reaches the REPL",
+      "oracle": "hardware cold-start receipt with physical cycle id and staged-region SHA readback",
+      "core_binding": "hardware-receipt"
+    },
+    {
+      "id": "product-media-identity-write-reject",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "media-policy",
+      "setup": "the exact product D81 remains mounted when a save is requested",
+      "action": "classify the medium by the conjunction L65SYS name plus ID 65 plus the packer-verified L65B boot-structure marker at header offset 29 before the first write operation",
+      "expected": "the multifactor product identity is rejected as product-media-read-only before BAM, data or directory mutation; header-only lookalikes are not misclassified",
+      "oracle": "media-policy receipt plus byte-identical product-D81 comparison",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "product-medium-physical-write-protect",
+      "fidelity": "hardware-only",
+      "required_gate": "G6",
+      "phase": "media-protection",
+      "setup": "profile applicability check distinguishes a physical write-protect-capable 1581 medium from the stock-core SD-backed D81-image configuration",
+      "action": "for physical media attempt a raw device-level write independent of M65D; for the SD-D81 profile emit an explicit manifest-bound not-applicable receipt and perform no synthetic write-protect manipulation",
+      "expected": "physical media rejects the write and remains SHA-identical; the stock-core SD-D81 profile records n/a because no physical medium or virtual-image write-protect control exists",
+      "oracle": "hardware write-protect receipt for a physical medium or a profile-applicability receipt bound to the exact Ship manifest",
+      "core_binding": "hardware-receipt"
+    },
+    {
+      "id": "product-prg-byte-identity",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "packaging",
+      "setup": "baseline Workbench artifact set and candidate set with a separate stager artifact",
+      "action": "compare the Workbench PRG, ELF, Bank-5 preload and Attic catalog SHAs",
+      "expected": "all existing core product-artifact SHAs are unchanged, bank_delta is zero and boot-overlay delta is zero",
+      "oracle": "R3 product-block receipt",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "stager-entry-chain-control",
+      "fidelity": "emulator-valid",
+      "required_gate": "G3",
+      "phase": "boot-control",
+      "setup": "the exact stager PRG is entered through the controlled emulator launcher",
+      "action": "execute stager-to-descriptor build-ID validation, staging decision, bounded re-verification and product selection without claiming physical media timing",
+      "expected": "ordered phase markers reach the bound product-entry handoff exactly once",
+      "oracle": "emulator phase trace and product-entry marker",
+      "core_binding": "emulator-stack"
+    },
+    {
+      "id": "warm-reset-valid-catalog-fastpath",
+      "fidelity": "hardware-only",
+      "required_gate": "G6",
+      "phase": "reset-recovery",
+      "setup": "valid profile-bound Bank-5 preload and Attic catalog followed by a physical reset that preserves both",
+      "action": "restart through the product boot chain",
+      "expected": "catalog validation succeeds, restaging is skipped and the same product reaches the REPL",
+      "oracle": "hardware reset receipt with before and after region SHAs",
+      "core_binding": "hardware-receipt"
+    },
+    {
+      "id": "work-media-save-remount-read",
+      "fidelity": "hardware-only",
+      "required_gate": "G6",
+      "phase": "persistence",
+      "setup": "a disposable copy of the shipped preformatted blank work D81 is mounted after the one-time disk swap; immediately before save D689 is forced to 0x80 and its one-byte readback is captured",
+      "action": "create, read, replace, remount and read the user file again through transactions that must reclaim the complete F011 register context",
+      "expected": "the forced D689=0x80 precondition is accepted, the driver selects the F011 buffer, D689 reads 0x00 after the transaction and all disk oracles pass while the product medium remains unchanged",
+      "oracle": "hardware persistence receipt, exact full-medium disk oracle and bound one-byte D689 precondition/postcondition evidence",
+      "core_binding": "hardware-receipt"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "strings-extra",
+  "d81_name": "STRX",
+  "provides": [
+    "string-left-trim",
+    "string-right-trim"
+  ],
+  "requires": [
+    "core"
+  ],
+  "description": "String polish pilot bytecode disk library. Trim helpers packaged separately while einsuite-core string primitives remain resident.",
+  "sources": [
+    "lib/stdlib-strings-polish.lisp"
+  ],
+  "functions_from_sources": [
+    "lib/stdlib-strings-polish.lisp"
+  ],
+  "require_all_defuns": true,
+  "resident_suite": "../stdlib/p0-stdlib-einsuite-core-subset.json",
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "string-left-trim-basic",
+      "expr": "(string-left-trim \" -\" \" --hi- \")",
+      "expect": "\"hi- \""
+    },
+    {
+      "name": "string-right-trim-basic",
+      "expr": "(string-right-trim \" -\" \" --hi- \")",
+      "expect": "\" --hi\""
+    },
+    {
+      "name": "string-left-trim-noop",
+      "expr": "(string-left-trim \" -\" \"hi- \")",
+      "expect": "\"hi- \""
+    },
+    {
+      "name": "string-right-trim-all",
+      "expr": "(string-right-trim \" -\" \" ---\")",
+      "expect": "\"\""
+    }
+  ]
+}

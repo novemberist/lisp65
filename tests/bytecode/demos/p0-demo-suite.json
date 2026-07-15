@@ -1,0 +1,113 @@
+{
+ "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+ "description": "Readable demo programs.  These are packaged as source on the demo D81, compiled on the MEGA65 with compile-file, and checked here against the resident Ein-Suite surface.",
+ "extends": "../stdlib/p0-stdlib-einsuite-subset.json",
+ "vm_dir_max": 512,
+ "sources": [
+  "demos/d00-simplify.lisp",
+  "demos/d01-strings.lisp",
+  "demos/d02-lambda.lisp",
+  "demos/d03-screen.lisp",
+  "demos/d04-adventure.lisp",
+  "demos/d05-ide-buffer.lisp",
+  "demos/d06-numbers.lisp",
+  "demos/demo-index.lisp"
+ ],
+ "functions": [
+  "demo-simplify-add",
+  "demo-simplify-mul",
+  "demo-simplify-left",
+  "demo-simplify-right",
+  "demo-simplify",
+  "demo-simplify-run",
+  "demo-str-space",
+  "demo-str-colon",
+  "demo-str-ok",
+  "demo-str-low",
+  "demo-str-lisp65",
+  "demo-str-lisp",
+  "demo-str-65",
+  "demo-str-ok-suffix",
+  "demo-str-demo-suite-padded",
+  "demo-str-demo",
+  "demo-string-label",
+  "demo-string-window",
+  "demo-string-good-p",
+  "demo-strings-run",
+  "demo-apply-twice",
+  "demo-lambda-bump-list",
+  "demo-lambda-sum",
+  "demo-lambda-run",
+  "demo-screen-ruler",
+  "demo-screen-string-at",
+  "demo-screen-title",
+  "demo-screen-compiled",
+  "demo-screen-index",
+  "demo-screen-draw",
+  "demo-screen-run",
+  "demo-adv-start",
+  "demo-adv-room",
+  "demo-adv-key-p",
+  "demo-adv-door-p",
+  "demo-adv-state",
+  "demo-adv-command",
+  "demo-adv-script",
+  "demo-adv-score",
+  "demo-adv-run",
+  "demo-ide-name",
+  "demo-ide-abc",
+  "demo-ide-def",
+  "demo-ide-abc-bang",
+  "demo-ide-open-paren",
+  "demo-ide-seed",
+  "demo-ide-edit",
+  "demo-ide-run",
+  "demo-number-row",
+  "demo-number-score",
+  "demo-numbers-run",
+  "demo-index",
+  "demo-expected-result"
+ ],
+ "cases": [
+  {
+   "name": "demo-simplifier",
+   "expr": "(demo-simplify-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-strings",
+   "expr": "(demo-strings-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-lambda",
+   "expr": "(demo-lambda-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-screen",
+   "expr": "(demo-screen-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-adventure",
+   "expr": "(demo-adv-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-ide-buffer",
+   "expr": "(demo-ide-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-numbers",
+   "expr": "(demo-numbers-run)",
+   "expect": "42"
+  },
+  {
+   "name": "demo-index-length",
+   "expr": "(length (demo-index))",
+   "expect": "7"
+  }
+ ]
+}

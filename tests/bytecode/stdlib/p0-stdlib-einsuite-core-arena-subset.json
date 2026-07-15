@@ -1,0 +1,15 @@
+{
+ "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+ "description": "Arena-IDE Dev-Core (no-FASL): einsuite-core + Packed-Byte-String-Arena (-DLISP65_STRING_ARENA), aber compile-file/FASL aus dem Produktvertrag genommen. Grund: Bank-0-Budget — die Arena kostet ~628 B .text/.data; Codex-Messung 2026-07-08 zeigte, dass allein das Entfernen von LISP65_FASL reicht (bank0_reserve -620 -> +630). REPL/lcc, Disk-load/save, load-lib/load-libs und der residente (edit)-Launcher bleiben. Konsistenz (Codex-Punkt): die Quelle lib/lcc-fasl.lisp (compile-file/%fasl-*/fasl-emit-scratch) wird komplett entfernt, damit diese Funktionen nicht als scheinbar verfuegbare, aber ohne den C-FASL-Prim laufzeit-kaputte Funktionen registriert werden. `load` (Quell-Load aus lib/stdlib-load.lisp) bleibt (haengt nicht an LISP65_FASL).",
+ "extends": "p0-stdlib-einsuite-core-subset.json",
+ "remove_sources": [
+  "lib/lcc-fasl.lisp"
+ ],
+ "remove_functions_from_sources": [
+  "lib/lcc-fasl.lisp"
+ ],
+ "remove_cases": [
+  "fasl-compile-file-bytecode",
+  "fasl-emit-scratch-bytecode"
+ ]
+}

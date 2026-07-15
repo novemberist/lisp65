@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-r6-g6-seal-contract-v1",
+  "version": 1,
+  "id": "r6-g6-hardware-acceptance",
+  "status": "authorized",
+  "kind": "hardware-acceptance",
+  "input": {
+    "run_id": "run-20260715-02-preflight-212f957",
+    "product_artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "ship_manifest_sha256": "323d6f497c1849af3916cfbe9c3f0d73936eaa72f271d97412666f25369f6764",
+    "preflight_sha256": "0583090c0b2bdc370a0d24e940e7d4a9ddb89f2f60afb0db208598034cf77b6c",
+    "top_receipt_sha256": "edcca70cc747be2b42ab20ee96c74dceb46e490125dc4c6d740a7d1b4c369b7d"
+  },
+  "receipt": {
+    "format": "lisp65-r6-g6-hardware-receipt-v2",
+    "applicable_cases": 5,
+    "profile_not_applicable_cases": 1,
+    "coverage": "exactly-once-per-applicable-case",
+    "physical_power_or_reset_cycles": 2
+  },
+  "archive": {
+    "format": "lisp65-r6-g6-hardware-archive-v1",
+    "self_contained": true,
+    "immutability": "append-only-never-amend",
+    "offline_verification": "archive-alone-no-repository-no-network",
+    "double_pack": "byte-identical-varied-environment"
+  },
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed-for-product-artifact-set",
+    "G6": "G6: 5/5 anwendbare Hardwarefälle bestanden; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration",
+    "release": "not-promoted-until-R7"
+  },
+  "capacity_delta": {
+    "baseline_identity_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "candidate_identity_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "dimensions": {
+      "bank": {"baseline": 332, "candidate": 332, "delta": 0, "authorization": null},
+      "ext": {"baseline": 16385, "candidate": 16385, "delta": 0, "authorization": null},
+      "symbols": {"baseline": 120, "candidate": 120, "delta": 0, "authorization": null},
+      "namepool": {"baseline": 2160, "candidate": 2160, "delta": 0, "authorization": null},
+      "directory": {"baseline": 32, "candidate": 32, "delta": 0, "authorization": null}
+    }
+  }
+}

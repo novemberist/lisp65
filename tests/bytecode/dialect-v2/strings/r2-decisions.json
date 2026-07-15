@@ -1,0 +1,43 @@
+{
+  "format": "lisp65-dialect-v2-r2-decision-fixture-v1",
+  "family": "strings",
+  "status": "normative",
+  "cases": [
+    {
+      "id": "index-basis-zero-cross-section",
+      "decision": "string-contains-search-result",
+      "forms": ["(search \"a\" \"abc\")", "(position (function numberp) '(1 a))", "(string-ref \"abc\" 0)", "(buffer-ref buffer 0)"],
+      "expected": {
+        "basis": "zero",
+        "search_first_match": 0,
+        "position_first_match": 0,
+        "string_ref_first_value": 97,
+        "buffer_ref": "must-use-zero-basis-when-buffer-block-lands"
+      }
+    },
+    {
+      "id": "list-to-string-public-removal",
+      "decision": "string-list-conversion-removal",
+      "forms": ["(list->string '(97 98))"],
+      "expected": {"dialect_v2": "undefined-public-name", "prim_id": 2, "prim_state": "tombstone", "replacement": null}
+    },
+    {
+      "id": "search-no-match",
+      "decision": "string-contains-search-result",
+      "forms": ["(search \"z\" \"abc\")"],
+      "expected": {"result": "nil"}
+    },
+    {
+      "id": "string-contains-source-rewrite",
+      "decision": "string-contains-search-result",
+      "forms": ["(string-contains-p needle haystack)"],
+      "expected": {"runtime_alias": false, "rewrite": "(if (search needle haystack) t nil)"}
+    },
+    {
+      "id": "string-to-list-public-removal",
+      "decision": "string-list-conversion-removal",
+      "forms": ["(string->list \"ab\")"],
+      "expected": {"dialect_v2": "undefined-public-name", "prim_id": 1, "prim_state": "tombstone", "replacement": null}
+    }
+  ]
+}

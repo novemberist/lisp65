@@ -1,0 +1,84 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "format",
+  "d81_name": "FMT",
+  "provides": [
+    "format",
+    "integer->string"
+  ],
+  "requires": [
+    "core"
+  ],
+  "description": "FORMAT pilot bytecode disk library. The artifact contains the small format subset and links against the resident einsuite-core suite.",
+  "sources": [
+    "lib/stdlib-format.lisp",
+    "lib/stdlib-format-extra.lisp"
+  ],
+  "functions": [
+    "%quotient",
+    "%nonnegative-digits",
+    "integer->string",
+    "%format-display-list",
+    "%format-readable-list",
+    "%format-display-code-p",
+    "%format-readable-code-p",
+    "%format-directive",
+    "%format-chars",
+    "format"
+  ],
+  "require_all_defuns": true,
+  "resident_suite": "../stdlib/p0-stdlib-einsuite-core-subset.json",
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "integer-to-string-zero",
+      "expr": "(integer->string 0)",
+      "expect": "\"0\""
+    },
+    {
+      "name": "integer-to-string-positive",
+      "expr": "(integer->string 123)",
+      "expect": "\"123\""
+    },
+    {
+      "name": "integer-to-string-negative",
+      "expr": "(integer->string -42)",
+      "expect": "\"-42\""
+    },
+    {
+      "name": "format-a-decimal",
+      "expr": "(format nil \"~A\" 42)",
+      "expect": "\"42\""
+    },
+    {
+      "name": "format-d-directive",
+      "expr": "(format nil \"n=~D\" 42)",
+      "expect": "\"n=42\""
+    },
+    {
+      "name": "format-string-arg",
+      "expr": "(format nil \"hi ~A\" \"bob\")",
+      "expect": "\"hi bob\""
+    },
+    {
+      "name": "format-s-string-readable",
+      "expr": "(format nil \"~S\" \"bob\")",
+      "expect": "\"\"bob\"\""
+    },
+    {
+      "name": "format-newline",
+      "expr": "(format nil \"a~%b\")",
+      "expect": "\"a\nb\""
+    },
+    {
+      "name": "format-tilde",
+      "expr": "(format nil \"~~\")",
+      "expect": "\"~\""
+    },
+    {
+      "name": "format-destination-output-return",
+      "expr": "(format t \"x=~D\" 5)",
+      "expect": "nil"
+    }
+  ]
+}

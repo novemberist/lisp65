@@ -1,0 +1,165 @@
+{
+  "format": "lisp65-eval-surface-v1",
+  "description": "Normative host-side eval intersection for Python P0, native Treewalk, native C compiler/VM and Lisp lcc; this fixture makes no target-product claim.",
+  "cases": [
+    {
+      "name": "truthiness-zero",
+      "forms": [
+        "(if 0 11 22)"
+      ],
+      "expect": "11"
+    },
+    {
+      "name": "quote-list-dotted",
+      "forms": [
+        "'(alpha (1 2) . omega)"
+      ],
+      "expect": "(alpha (1 2) . omega)"
+    },
+    {
+      "name": "arithmetic-nesting",
+      "forms": [
+        "(+ (* 6 7) (- 10 4))"
+      ],
+      "expect": "48"
+    },
+    {
+      "name": "mod-negative-signs",
+      "forms": [
+        "(cons (mod -5 3) (cons (mod 5 -3) nil))"
+      ],
+      "expect": "(1 -1)"
+    },
+    {
+      "name": "remainder-negative-signs",
+      "forms": [
+        "(cons (remainder -5 3) (cons (remainder 5 -3) nil))"
+      ],
+      "expect": "(-2 2)"
+    },
+    {
+      "name": "funcall-mod-remainder-negative-signs",
+      "forms": [
+        "(cons (funcall (function mod) -5 3) (cons (funcall (function remainder) 5 -3) nil))"
+      ],
+      "expect": "(1 2)"
+    },
+    {
+      "name": "mod-zero-divisor",
+      "forms": [
+        "(mod 5 0)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "remainder-zero-divisor",
+      "forms": [
+        "(remainder 5 0)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "comparison-values",
+      "forms": [
+        "(cons (< 1 2) (cons (> 1 2) (cons (= 5 5) nil)))"
+      ],
+      "expect": "(t nil t)"
+    },
+    {
+      "name": "if-progn",
+      "forms": [
+        "(if (> 3 2) (progn 1 42) 0)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "let-letstar-setq",
+      "forms": [
+        "(let ((x 1)) (let* ((y (+ x 2))) (progn (setq x (+ y 4)) x)))"
+      ],
+      "expect": "7"
+    },
+    {
+      "name": "dotimes-result",
+      "forms": [
+        "(let ((sum 0)) (dotimes (i 5 sum) (setq sum (+ sum i))))"
+      ],
+      "expect": "10"
+    },
+    {
+      "name": "dolist-result",
+      "forms": [
+        "(let ((sum 0)) (dolist (x '(1 2 3) sum) (setq sum (+ sum x))))"
+      ],
+      "expect": "6"
+    },
+    {
+      "name": "fixed-lambda",
+      "forms": [
+        "((lambda (x y) (* x y)) 6 7)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "closure-immediate-lexical",
+      "forms": [
+        "(let ((x 40)) ((lambda (y) (+ x y)) 2))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "closure-multistage-immediate",
+      "forms": [
+        "((lambda (x) ((lambda (y) ((lambda (z) (+ x (+ y z))) 2)) 10)) 30)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "funcall-named",
+      "forms": [
+        "(defun twice (x) (+ x x))",
+        "(funcall (function twice) 21)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "apply-primitive",
+      "forms": [
+        "(apply (function +) '(40 2))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "defun-recursion",
+      "forms": [
+        "(defun factorial (n) (if (< n 2) 1 (* n (factorial (- n 1)))))",
+        "(factorial 6)"
+      ],
+      "expect": "720"
+    },
+    {
+      "name": "defun-redefinition",
+      "forms": [
+        "(defun transform (x) (+ x 1))",
+        "(transform 1)",
+        "(defun transform (x) (* x 2))",
+        "(transform 21)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "string-value",
+      "forms": [
+        "\"lisp65\""
+      ],
+      "expect": "\"lisp65\""
+    },
+    {
+      "name": "string-operations",
+      "forms": [
+        "(+ (string-length \"abcde\") (string-ref \"Az\" 1))"
+      ],
+      "expect": "127"
+    }
+  ]
+}

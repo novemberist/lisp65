@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-block-bank-delta-policy-v1",
+  "version": 1,
+  "status": "active",
+  "effective_on": "2026-07-13",
+  "scope": "all-future-architecture-block-and-family-promotion-receipts",
+  "receipt_field": "bank_delta",
+  "rules": {
+    "arithmetic": "candidate_banked_headroom_bytes-minus-baseline_banked_headroom_bytes-equals-delta_bytes",
+    "zero_or_credit": "authorization-must-be-null",
+    "debit": "exact-pre-existing-product-sha-and-amount-authorization-binding-required",
+    "unauthorized_drift": "fail",
+    "sealed_history": "never-amend"
+  },
+  "historical_receipt_exceptions": [
+    {
+      "id": "lists-malformed-type-errors",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/lists-malformed-type-errors-receipt.json",
+      "sha256": "da277ceb87d5858d1d7753fbf7653e5f1d3155a2f8b1272e9458c51269f960c5"
+    },
+    {
+      "id": "public-error-channel",
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/public-error-channel-receipt.json",
+      "sha256": "21b608007b419f98580c711189987215984d04060652f4462e143ab4d1b23e5c"
+    }
+  ],
+  "one_time_retroactive_resolution": {
+    "id": "r2-system-runtime-120-byte-debit",
+    "authorization": "tests/bytecode/dialect-v2/evidence/architecture-blocks/r2-bank-debit-authorization.json",
+    "precedent": "none"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "format": "lisp65-code-object-arity-contract-v1",
+  "version": 1,
+  "header": {
+    "flags_offset": 3,
+    "flags_width_bits": 8
+  },
+  "flags": {
+    "rest": {
+      "mask": 1,
+      "requires_local_slot": true
+    },
+    "strict_arity": {
+      "mask": 2
+    },
+    "optional_count": {
+      "mask": 252,
+      "shift": 2,
+      "width_bits": 6,
+      "maximum": 63,
+      "requires_strict_arity": true,
+      "must_not_exceed_nargs": true
+    }
+  },
+  "semantics": {
+    "required_count": "nargs - optional_count",
+    "strict_fixed": "required_count <= actual_count <= nargs",
+    "strict_rest": "required_count <= actual_count",
+    "legacy": "without STRICT_ARITY and with optional_count zero, missing fixed arguments are NIL-filled and excess arguments are ignored unless REST collects them",
+    "malformed": "optional_count without STRICT_ARITY, optional_count greater than nargs, or REST without a local slot is invalid bytecode"
+  },
+  "profiles": {
+    "dialect-v1": {
+      "emits_strict_arity": false,
+      "requires_strict_arity": false,
+      "compatibility": "frozen-evidence"
+    },
+    "dialect-v2": {
+      "emits_strict_arity": true,
+      "requires_strict_arity": true,
+      "compatibility": "hard-profile-cut"
+    }
+  },
+  "flag_spaces": {
+    "code_object": "this contract",
+    "directory_entry": "separate bit space; bit 0 marks a macro entry and all other bits remain reserved"
+  },
+  "consumers": [
+    {"path": "src/compile.c", "role": "native-emitter"},
+    {"path": "tools/host-lisp/bytecode_p0_compiler.py", "role": "host-emitter"},
+    {"path": "lib/lcc.lisp", "role": "device-v1-emitter"},
+    {"path": "lib/dialect-v2/lcc-profile.lisp", "role": "device-v2-emitter-profile"},
+    {"path": "lib/lcc-fasl.lisp", "role": "opaque-carrier"},
+    {"path": "src/lcc_install_overlay.c", "role": "device-emitter-gate"},
+    {"path": "tools/host-lisp/l65m_contract.py", "role": "host-artifact-gate"},
+    {"path": "src/l65m_validate.c", "role": "device-artifact-gate"},
+    {"path": "tools/host-lisp/bytecode_p0.py", "role": "host-executor"},
+    {"path": "src/vm.c", "role": "device-executor"}
+  ],
+  "cost_gate": {
+    "artifact_header_delta_bytes": 0,
+    "arity_checks_per_function_entry": 1,
+    "native_static_call_sites": 2,
+    "native_helper_max_text_bytes": 72,
+    "native_call_wrapper_max_text_bytes": 8,
+    "runtime_cycle_claim": "not-measured"
+  }
+}

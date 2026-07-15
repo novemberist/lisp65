@@ -1,0 +1,100 @@
+{
+  "format": "lisp65-ide-capacity-contract-v1",
+  "inputs": {
+    "resident_manifest": "build/bytecode/profiles/workbench/stdlib-p0.manifest.json",
+    "monolith_manifest": "build/bytecode/libs/ide-full.manifest.json"
+  },
+  "partition": {
+    "mode": "manifests",
+    "core_manifest": "build/bytecode/libs/ide.manifest.json",
+    "extra_manifest": "build/bytecode/libs/idex.manifest.json",
+    "overrides": [
+      "%ide-x"
+    ],
+    "omitted_private": [
+      "%ide-fill-column",
+      "%ide-join-codes",
+      "%ide-buffers-remove",
+      "%ide-persist-state",
+      "%ide-take-lines",
+      "%ide-dir-code",
+      "%ide-state-with-row-offset",
+      "%ide-current-buffer",
+      "%ide-dir-first-entry",
+      "%ide-disk-read-string",
+      "%ide-buffers-names",
+      "%ide-lines-insert",
+      "%ide-quit-key-p",
+      "%ide-budget-string",
+      "%ide-join",
+      "%ide-render-code-line-at",
+      "%ide-min",
+      "%ide-selected-buffer",
+      "%ide-buffer-source",
+      "%ide-char-take",
+      "%ide-save-message",
+      "%ide-disk-current-file",
+      "%ide-write-file-named",
+      "%ide-mini-status-line",
+      "%ide-mini-history-input",
+      "%ide-buffers-alist",
+      "%ide-yank-line-list",
+      "%ide-buffer-with-point",
+      "%ide-buffer-flush-cache",
+      "%ide-clamp-line",
+      "%ide-point<=",
+      "%ide-page-rows",
+      "%ide-execute-command-key",
+      "%ide-page-command-p",
+      "%ide-region-command-p",
+      "%ide-word-edit-command-p",
+      "%ide-region-bounds",
+      "%ide-kill-region-single",
+      "%ide-region-parts",
+      "%ide-command-named"
+    ]
+  },
+  "runtime_model": {
+    "symbol_correction": 44,
+    "namepool_correction_bytes": 654,
+    "expected_monolith_runtime_symbols": 721,
+    "expected_monolith_runtime_namepool_bytes": 9943
+  },
+  "limits": {
+    "vm_dir_max": 608,
+    "max_symbols": 752,
+    "namepool_bytes": 10208,
+    "ext_code_bytes": 51680,
+    "disk_lib_image_bytes": 38400
+  },
+  "ap6_reserve": {
+    "basis": "measured-manifest-v1",
+    "measurement_scope": "component",
+    "measurement_manifest": "build/bytecode/libs/m65d.manifest.json",
+    "measurement_base_manifest": "build/bytecode/libs/ide.manifest.json",
+    "measured_added_entries": 35,
+    "measured_added_symbols": 37,
+    "measured_added_namepool_bytes": 623,
+    "measured_net_code_bytes": 3857,
+    "measured_net_image_bytes": 6719,
+    "entries": 35,
+    "symbols": 37,
+    "namepool_bytes": 623,
+    "code_bytes": 3857,
+    "image_bytes": 6719
+  },
+  "gates": {
+    "core_max_entries_before_ap6": 152,
+    "min_directory_headroom_after_ap6": 32,
+    "min_all_directory_headroom_after_ap6": 32,
+    "min_symbol_headroom_after_ap6": 32,
+    "min_all_symbol_headroom_after_ap6": 32,
+    "min_namepool_headroom_after_ap6": 384,
+    "min_all_namepool_headroom_after_ap6": 384,
+    "min_ext_code_peak_headroom_after_ap6": 512,
+    "min_ext_code_post_headroom_after_ap6": 512,
+    "min_all_ext_code_peak_headroom_after_ap6": 512,
+    "min_all_ext_code_post_headroom_after_ap6": 512,
+    "min_disk_image_headroom_after_ap6": 512
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "format": "lisp65-r7-release-contract-v1",
+  "version": 1,
+  "id": "lisp65-private-release-v1.0.0",
+  "status": "owner-authorized",
+  "release": {
+    "product": "lisp65",
+    "version": "1.0.0",
+    "tag": "v1.0.0",
+    "tag_type": "annotated",
+    "tag_target": "589729471b39ef218397663480905a36fd03dd16",
+    "bundle": "releases/lisp65-1.0.0.tar.gz",
+    "visibility": "private-mirror"
+  },
+  "product": {
+    "dialect": "v2",
+    "artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "artifact_count": 13,
+    "product_sha_changes": 0
+  },
+  "input": {
+    "promotion_id": "r6-g6-hardware-acceptance-aed1595",
+    "archive": "tests/bytecode/dialect-v2/evidence/promotions/r6-g6-hardware-acceptance-aed1595.tar.gz",
+    "archive_sha256": "b339a274a97c947025ce66b09cd54ce5af73e24d8a99328fcb0659ffa605ddba",
+    "ship_manifest_sha256": "323d6f497c1849af3916cfbe9c3f0d73936eaa72f271d97412666f25369f6764",
+    "g6_receipt_sha256": "edcca70cc747be2b42ab20ee96c74dceb46e490125dc4c6d740a7d1b4c369b7d"
+  },
+  "prerequisites": {
+    "manifest": "tests/bytecode/dialect-v2/evidence/r7/public-manifest-prerequisites.json",
+    "manifest_sha256": "b21df10257621134a1b36b432f54d34475ff3b1ffeaf6935fdb2f7561f91627f",
+    "receipt": "tests/bytecode/dialect-v2/evidence/r7/public-manifest-prerequisites-receipt.json",
+    "receipt_sha256": "95a3b216a76e53ced43abcb1ff03b859bfdea2633e23518cd2dc161ff20303e8"
+  },
+  "policy": {
+    "operation": "transform-and-package-only",
+    "product_byte_source": "registered-r6-g6-seal-only",
+    "live_tree_product_authority": false,
+    "product_byte_identity": "required-against-sealed-r6-ship-for-all-13-artifacts",
+    "self_contained": true,
+    "offline_verification": "bundle-alone-no-repository-no-network",
+    "double_pack_axes": ["PYTHONHASHSEED", "TZ"],
+    "negative_tests": ["product-byte", "manifest", "source-seal"],
+    "tag_after_bundle_verification": true
+  },
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed-for-product-artifact-set",
+    "G6": "G6: 5/5 anwendbare Hardwarefälle bestanden; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration",
+    "release": "private-release-v1.0.0"
+  }
+}

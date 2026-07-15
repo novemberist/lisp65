@@ -1,0 +1,116 @@
+{
+  "format": "lisp65-f011-transaction-context-v1",
+  "version": 1,
+  "status": "permanent-product-contract",
+  "rule": "every F011 or direct-SD transaction establishes its complete register context and inherits no mutable hardware state",
+  "scope": [
+    "workbench-product",
+    "cold-stager",
+    "hardware-disk-carriers"
+  ],
+  "register_audit": {
+    "D02F": {
+      "owner": "transaction",
+      "required": "unlock-I/O-before-every-F011-operation"
+    },
+    "D080": {
+      "owner": "transaction",
+      "required": "write-0x60-for-drive-0-motor-context"
+    },
+    "D081": {
+      "owner": "transaction",
+      "required": "issue-explicit-spinup-read-or-write-command"
+    },
+    "D082": {
+      "owner": "transaction",
+      "required": "wait-for-not-busy; write-path-remains-fail-closed-by-readback"
+    },
+    "D084-D086": {
+      "owner": "transaction",
+      "required": "write-track-sector-side-before-each-read-and-write-command"
+    },
+    "D680": {
+      "owner": "transaction",
+      "required": "unmap-0x82-before-claim; map-0x81-only-while-copying; unmap-0x82-after-copy",
+      "direct_sd_commands": "forbidden-in-F011-product-path"
+    },
+    "D681-D684": {
+      "owner": "not-applicable",
+      "required": "no-raw-SD-sector-address-in-F011-product-path"
+    },
+    "D689": {
+      "owner": "transaction",
+      "required": "write-0x00-before-every-F011-command",
+      "forbidden_inheritance": "freezer-or-monitor-may-leave-0x80"
+    },
+    "D68B": {
+      "owner": "hypervisor-mount-authority",
+      "required": "never-write-from-product; bind-exact-byte-as-transaction-token-and-compare-at-every-write-boundary"
+    },
+    "D68C-D68F": {
+      "owner": "hypervisor-mount-authority",
+      "required": "never-write-from-product; bind-exact-drive0-image-base-as-transaction-token-and-compare-at-every-write-boundary"
+    },
+    "SD-slot": {
+      "owner": "not-applicable",
+      "required": "no-direct-SD-transaction-in-product-or-stager-disk-path"
+    }
+  },
+  "mount_token_guard": {
+    "token": "exact-D68B-plus-D68C-D68F",
+    "capture": "after-valid-media-classification-before-transaction-bound-planning-or-first-write",
+    "planning_read_failure": "status-6-with-token-mismatch-reclassified-to-terminal-status-12-before-any-retry-or-write",
+    "stable_planning_read_failure": "status-6-preserved-when-token-still-matches",
+    "planning_status_state": "classified-return-is-published-through-m65d-status-from-the-same-value-planning-precedes-all-writes-so-partial-write-latch-remains-clear",
+    "pretrigger": "final-predicate-before-D081-write-command",
+    "posttrigger": "after-BUSY-before-readback-or-next-transaction-step",
+    "readback": "guard-after-independent-F011-readback-before-accepting-verification",
+    "mismatch_status": 12,
+    "mismatch_semantics": "terminal-no-automatic-remount-or-retry-explicit-user-restart-only",
+    "residual_window_gate": {
+      "report": "build/products/workbench/overlay-stack-guard/f011-mount-window-audit.json",
+      "source": "final-linked-product-disassembly",
+      "cycles_including_last_D68F_read_and_D081_store": 30,
+      "cycles_after_last_read_completion": 26,
+      "nominal_nanoseconds_at_40_5_mhz": 740.741
+    },
+    "freezer_preemption_model": "RESTORE-hypervisor-trap-may-be-accepted-at-any-guest-instruction-fetch-boundary",
+    "window_classification": "non-atomic-and-therefore-principally-Freezer-reachable",
+    "owner_residual_risk_decision": {
+      "accepted": true,
+      "date": "2026-07-14",
+      "stock_core_required": true,
+      "atomicity_claim": false,
+      "damage_bound": "one-sector-maximum-on-newly-mounted-medium-then-terminal-status-12",
+      "user_message": "medium changed during write; check both disks",
+      "upstream_candidate": "official-mega65-core-drive0-mount-lock-no-project-fork",
+      "promotion_effect": "not-blocking-after-three-boundary-characterizations-and-normal-phase-oracles-pass"
+    }
+  },
+  "permanent_hardware_case": {
+    "id": "work-media-save-remount-read",
+    "precondition": "write-0x80-to-D689-immediately-before-save",
+    "precondition_evidence": "one-byte-0x80-readback",
+    "postcondition": "one-byte-0x00-readback-after-transaction",
+    "medium": "disposable-valid-non-product-1581-derived-from-L65WORK.D81",
+    "oracle": "create-read-replace-remount-read-plus-exact-full-medium-diff"
+  },
+  "permanent_media_change_cases": {
+    "automated": [
+      "token-change-during-post-capture-planning-read-status-12-zero-writes",
+      "stable-token-planning-read-invalid-status-6-zero-writes",
+      "token-change-before-data-write",
+      "token-change-before-BAM-write",
+      "token-change-before-directory-write"
+    ],
+    "residual_window_characterization": [
+      "one-foreign-data-sector-source-unchanged-status-12-stop",
+      "one-foreign-BAM-sector-source-unchanged-status-12-stop",
+      "one-foreign-directory-sector-source-unchanged-status-12-stop"
+    ],
+    "injection": "direct-D68B-D68F-register-state-change-at-guarded-write-operation",
+    "oracle": "independent-full-image-check-of-source-and-target-media",
+    "residual_window_claim": "known-contract-boundary-characterized-not-a-safety-pass",
+    "manual": "one-real-Freezer-confirmation-after-normal-and-boundary-phase-cases-pass"
+  }
+}

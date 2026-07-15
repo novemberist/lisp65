@@ -1,0 +1,191 @@
+{
+  "format": "lisp65-reader-cases-v1",
+  "description": "CL-near MVP reader cases for lisp65. Expected values are canonical printed forms.",
+  "cases": [
+    {
+      "name": "nil-symbol-is-empty-list",
+      "input": "nil",
+      "expect": "NIL"
+    },
+    {
+      "name": "true-symbol-upcases",
+      "input": "t",
+      "expect": "T"
+    },
+    {
+      "name": "ordinary-symbol-upcases",
+      "input": "hello-world",
+      "expect": "HELLO-WORLD"
+    },
+    {
+      "name": "keyword-upcases",
+      "input": ":mode",
+      "expect": ":MODE"
+    },
+    {
+      "name": "integers",
+      "input": "-42",
+      "expect": "-42"
+    },
+    {
+      "name": "strings-preserve-case",
+      "input": "\"Mega65 Lisp\"",
+      "expect": "\"Mega65 Lisp\""
+    },
+    {
+      "name": "string-escapes",
+      "input": "\"say \\\"hi\\\"\"",
+      "expect": "\"say \\\"hi\\\"\""
+    },
+    {
+      "name": "proper-list",
+      "input": "(+ 1 2)",
+      "expect": "(+ 1 2)"
+    },
+    {
+      "name": "star-is-symbol-not-comment",
+      "input": "(* 2 3)",
+      "expect": "(* 2 3)"
+    },
+    {
+      "name": "star-form-is-not-comment",
+      "input": "(* this is not a comment)",
+      "expect": "(* THIS IS NOT A COMMENT)"
+    },
+    {
+      "name": "semicolon-line-comment",
+      "input": "(+ 1 2) ; ignored",
+      "expect": "(+ 1 2)"
+    },
+    {
+      "name": "leading-comment",
+      "input": "; ignored line\n(cons 'a '(b c))",
+      "expect": "(CONS (QUOTE A) (QUOTE (B C)))"
+    },
+    {
+      "name": "quote-symbol",
+      "input": "'alpha",
+      "expect": "(QUOTE ALPHA)"
+    },
+    {
+      "name": "quote-list",
+      "input": "'(a b c)",
+      "expect": "(QUOTE (A B C))"
+    },
+    {
+      "name": "quasiquote-list",
+      "input": "`(a ,b ,@c)",
+      "expect": "(QUASIQUOTE (A (UNQUOTE B) (UNQUOTE-SPLICING C)))"
+    },
+    {
+      "name": "explicit-quasiquote-list",
+      "input": "(quasiquote (a (unquote b)))",
+      "expect": "(QUASIQUOTE (A (UNQUOTE B)))"
+    },
+    {
+      "name": "empty-list",
+      "input": "()",
+      "expect": "NIL"
+    },
+    {
+      "name": "dotted-pair",
+      "input": "(a . b)",
+      "expect": "(A . B)"
+    },
+    {
+      "name": "dotted-tail",
+      "input": "(a b . c)",
+      "expect": "(A B . C)"
+    },
+    {
+      "name": "comparison-symbols",
+      "input": "(<= x 10)",
+      "expect": "(<= X 10)"
+    },
+    {
+      "name": "slash-symbol",
+      "input": "(/ 20 4)",
+      "expect": "(/ 20 4)"
+    },
+    {
+      "name": "reject-unclosed-list",
+      "input": "(a b",
+      "error": true
+    },
+    {
+      "name": "reject-extra-after-dotted-tail",
+      "input": "(a . b c)",
+      "error": true
+    },
+    {
+      "name": "reject-unclosed-string",
+      "input": "\"unterminated",
+      "error": true
+    },
+    {
+      "name": "mixed-case-symbol-folds",
+      "input": "MiXeD-Case",
+      "expect": "MIXED-CASE"
+    },
+    {
+      "name": "maximum-symbol-length",
+      "input": "abcdefghijklmnopqrstuvwxyz123456",
+      "expect": "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
+    },
+    {
+      "name": "minimum-fixnum",
+      "input": "-16384",
+      "expect": "-16384"
+    },
+    {
+      "name": "maximum-fixnum",
+      "input": "+16383",
+      "expect": "16383"
+    },
+    {
+      "name": "string-backslash-roundtrip",
+      "input": "\"a\\\\b\"",
+      "expect": "\"a\\\\b\""
+    },
+    {
+      "name": "reject-unexpected-rparen",
+      "input": ")",
+      "error": true
+    },
+    {
+      "name": "reject-dot-outside-list",
+      "input": ".",
+      "error": true
+    },
+    {
+      "name": "reject-dot-without-head",
+      "input": "(. a)",
+      "error": true
+    },
+    {
+      "name": "reject-unfinished-string-escape",
+      "input": "\"unfinished\\",
+      "error": true
+    },
+    {
+      "name": "reject-token-too-long",
+      "input": "abcdefghijklmnopqrstuvwxyz12345678",
+      "error": true
+    },
+    {
+      "name": "reject-positive-fixnum-overflow",
+      "input": "16384",
+      "error": true
+    },
+    {
+      "name": "reject-negative-fixnum-overflow",
+      "input": "-16385",
+      "error": true
+    },
+    {
+      "name": "reject-quote-without-form",
+      "input": "'",
+      "error": true
+    }
+  ]
+}

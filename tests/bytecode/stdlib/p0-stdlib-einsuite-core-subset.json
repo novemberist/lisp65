@@ -1,0 +1,76 @@
+{
+ "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+ "description": "Dev-Core-Pin (B4-Basis): Ein-Suite-Strip ohne residente IDE, aber mit REPL/lcc, Disk-load/save, load-lib/load-libs, compile-file/FASL und residentem (edit)-Launcher. Die IDE kommt on demand als L65M-Disk-Lib. Das native Produktprofil laesst user-level eval/eval-string aus Budgetgruenden weg; Full bleibt unveraendert.",
+ "extends": "p0-stdlib-einsuite-fasl-subset.json",
+ "vm_dir_max": 448,
+ "vm_dir_align8_after_boot": true,
+ "min_vm_dir_headroom": 8,
+ "sources": [
+  "lib/stdlib-load-lib.lisp",
+  "lib/ide-launch.lisp"
+ ],
+ "functions_from_sources": [
+  "lib/stdlib-load-lib.lisp",
+  "lib/ide-launch.lisp"
+ ],
+ "cases": [
+  {
+   "name": "dev-core-load-lib-bytecode",
+   "expr": "(function-kind 'load-lib)",
+   "expect": "bytecode"
+  },
+  {
+   "name": "dev-core-load-libs-bytecode",
+   "expr": "(function-kind 'load-libs)",
+   "expect": "bytecode"
+  },
+  {
+   "name": "dev-core-edit-bytecode",
+   "expr": "(function-kind 'edit)",
+   "expect": "bytecode"
+  },
+  {
+   "name": "dev-core-ide-unloaded",
+   "expr": "(ide-loaded-p)",
+   "expect": "nil"
+  },
+  {
+   "name": "dev-core-load-lib-testlib",
+   "expr": "(load-lib \"testlib\")",
+   "expect": "t"
+  },
+  {
+   "name": "dev-core-load-lib-registry-after-testlib",
+   "expr": "(progn (load-lib \"testlib\") (%load-lib-loaded-p (string->list \"testlib\") (symbol-value '*loaded-libs*)))",
+   "expect": "t"
+  },
+  {
+   "name": "dev-core-load-lib-missing",
+   "expr": "(load-lib \"missing\")",
+   "expect": "nil"
+  },
+  {
+   "name": "dev-core-load-libs-empty",
+   "expr": "(load-libs)",
+   "expect": "t"
+  }
+ ],
+ "remove_functions": [
+  "%ide-hint-merge",
+  "%ide-state-with-message",
+  "%ide-mini-set",
+  "%ide-mini-status-line",
+  "%ide-mini-start",
+  "%ide-mini-history-input",
+  "%ide-mini-input-value",
+  "%ide-mini-step",
+  "%ide-state-with-row-offset",
+  "%ide-scrolled",
+  "%ide-status-cached",
+  "%ide-empty-str",
+  "%ide-render-code-suffix-at"
+ ],
+ "remove_cases": [
+  "ide-delta-render-helpers"
+ ]
+}

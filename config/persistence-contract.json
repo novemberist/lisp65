@@ -1,0 +1,237 @@
+{
+  "format": "lisp65-persistence-contract-v1",
+  "scope": {
+    "operations": [
+      "upsert",
+      "create-new"
+    ],
+    "mutation_model": "copy-on-write",
+    "min_payload_bytes": 1,
+    "max_payload_bytes": 8192,
+    "writer_model": "exclusive-single-writer-mounted-d81"
+  },
+  "name_contract": {
+    "encoding": "ascii",
+    "min_bytes": 1,
+    "max_bytes": 16,
+    "printable_byte_min": 33,
+    "printable_byte_max": 126,
+    "case_mapping": "ascii-upper",
+    "forbidden_bytes": [
+      34,
+      42,
+      47,
+      58,
+      63,
+      92
+    ],
+    "invalid_status": "bad-name"
+  },
+  "directory_contract": {
+    "start_track": 40,
+    "start_sector": 0,
+    "root_sector_role": "link-and-header-only-no-directory-entries",
+    "first_entry_sector_min": 3,
+    "scan": "full-existing-directory-chain",
+    "growth": "forbidden",
+    "upsert_commit": "reuse-single-match-or-free-entry",
+    "create_commit": "free-entry-in-existing-chain",
+    "create_existing_status": "duplicate",
+    "no_free_entry_status": "directory-full",
+    "invalid_chain_status": "read-invalid"
+  },
+  "allocation_contract": {
+    "source_of_truth": "validated-bam",
+    "candidate_sectors": "free-data-sectors-only",
+    "directory_track_excluded": 40,
+    "new_chain_excludes_old_chain": true,
+    "new_chain_single_bam_half": true,
+    "claim_granularity": "one-bam-sector-image-for-new-chain",
+    "halves": [
+      {
+        "id": "low",
+        "first_track": 1,
+        "last_track": 39,
+        "bam_track": 40,
+        "bam_sector": 1
+      },
+      {
+        "id": "high",
+        "first_track": 41,
+        "last_track": 80,
+        "bam_track": 40,
+        "bam_sector": 2
+      }
+    ],
+    "insufficient_single_half_status": "no-space"
+  },
+  "transaction_contract": {
+    "ordered_steps": [
+      "plan",
+      "write-data-verify",
+      "claim-new-chain-bam",
+      "commit-directory",
+      "release-old-chain"
+    ],
+    "commit_point": "commit-directory",
+    "data_verify": "every-logical-sector-before-bam-claim",
+    "directory_commit": "publish-create-or-switch-upsert",
+    "old_chain_untouched_before_commit": true,
+    "old_chain_release": "upsert-replacement-only-after-directory-commit",
+    "create_release_step": "not-applicable",
+    "precommit_visibility": "none",
+    "postcommit_release_failure_status": "committed-with-leak"
+  },
+  "fault_contract": {
+    "injection_model": "operation-boundaries-plus-mounted-image-token-at-F011-command",
+    "operation_unit": "completed-and-verified-logical-or-metadata-sector-operation",
+    "mid_operation_faults": "mounted-image-change-detected-before-command-or-after-completion",
+    "planning_read_guard": "after-token-capture-status-6-is-reclassified-to-terminal-status-12-iff-D68B-D68F-changed-stable-token-preserves-status-6-zero-writes-in-both-cases",
+    "command_guard": "D68B-drive0-media-bits-plus-D68C-D68F-token-final-check-before-D081-trigger-postcheck-after-BUSY-and-after-readback",
+    "publish_guard": "BAM-and-directory-writes-guarded-before-command-after-completion-and-before-next-transaction-step",
+    "residual_window": "per-sector-30-cycles-including-final-D68F-read-and-D081-store-26-after-read-completion-740.741ns-nominal-at-40.5MHz",
+    "freezer_atomicity": "not-claimed-RESTORE-hypervisor-trap-can-interpose-at-an-instruction-boundary",
+    "residual_window_policy": "owner-accepted-stock-core-contract-limit-no-atomicity-claim",
+    "residual_damage_bound": "at-most-one-data-BAM-or-directory-sector-can-hit-newly-mounted-medium-source-unchanged-by-that-command-then-status-12-stops-all-writes",
+    "residual_detection": "post-command-token-check-terminal-status-12-check-both-media-before-any-explicit-restart",
+    "power_loss": "not-claimed",
+    "rollback": "none",
+    "precommit_safety": "leak-safe-no-visible-partial-file",
+    "postcommit_safety": "new-version-visible-old-allocation-may-leak",
+    "write_verify_failure": "medium-state-indeterminate-latch-required",
+    "recovery": "explicit-remount-and-validate"
+  },
+  "write_latch": {
+    "initial_state": "ready",
+    "latched_state": "needs-remount",
+    "triggers": [
+      "write-verify-failed",
+      "read-invalid-after-first-write",
+      "media-changed-during-transaction"
+    ],
+    "mutation_while_latched": "forbidden",
+    "status_while_latched": "needs-remount",
+    "clear_event": "explicit-remount",
+    "remount_validation": "both-bam-halves-count-bitmaps-full-directory-link-chain-and-used-entry-structure",
+    "cross_file_sector_ownership_validation": "not-claimed",
+    "automatic_retry": "forbidden-for-terminal-or-latched-status; one-remount-retry-only-for-pretransaction-status-8"
+  },
+  "media_policy": {
+    "writable_media": "any-valid-non-product-1581",
+    "product_identity": "disk-name-plus-id-plus-packer-verified-boot-structure-marker",
+    "product_disk_name": "L65SYS",
+    "product_disk_id": "65",
+    "product_boot_signature": {
+      "format": "l65sys-boot-marker-v1",
+      "header_offset": 29,
+      "ascii": "L65B",
+      "bound_entries": ["autoboot.c65", "boot.id", "lisp65.prg"]
+    },
+    "mount_write_protect": "independent-second-line-of-defense-when-the-active-profile-provides-physical-or-virtual-read-only-media-stock-core-SD-D81-profile-explicitly-does-not",
+    "transaction_identity": "complete-canonical-disk-name-plus-exact-id-plus-fresh-mount-generation-plus-D68B-D68F-mounted-image-token",
+    "pretransaction_identity_change": "status-8-needs-remount-one-automatic-remount-retry-allowed-before-any-transaction-write",
+    "midtransaction_identity_change": "status-12-terminal-no-automatic-remount-or-retry-user-must-explicitly-restart-save",
+    "post_capture_planning_read_change": "status-6-with-D68B-D68F-mismatch-reclassified-to-status-12-before-retry-or-write-stable-token-status-6-preserved",
+    "invalid_status": "read-invalid",
+    "product_status": "product-media-read-only",
+    "retired_status": "wrong-work-media"
+  },
+  "external_integrity_oracle": {
+    "authority": "independent-full-d81-parser-never-m65d-self-readback",
+    "implementations": [
+      "tools/host-lisp/d81_persistence_fault.py",
+      "tools/host-lisp/d81_bam_sanity.py"
+    ],
+    "fixture_classes": [
+      "blank-create",
+      "blank-create-replace",
+      "blank-multisector-create",
+      "blank-multisector-replace",
+      "two-media-swap-before-data-write",
+      "two-media-swap-before-bam-write",
+      "two-media-swap-before-directory-write"
+    ],
+    "two_media_invariant": "independent-full-image-oracle-for-source-and-target-at-each-injected-phase-target-never-mutated",
+    "header_invariant": "T40-S0-never-written-and-byte-identical-link-and-header-only",
+    "directory_invariant": "entries-only-in-linked-sectors-T40-S3-or-later",
+    "bam_invariants": [
+      "allocated-data-sectors-equal-visible-file-chains",
+      "no-orphan-allocation",
+      "no-double-allocation",
+      "directory-block-count-equals-visible-chain-blocks",
+      "free-data-plus-visible-file-blocks-equals-3160"
+    ]
+  },
+  "status_contract": {
+    "namespace": "lisp65-persistence-status-v1",
+    "dense": true,
+    "stable_across_builds": true,
+    "codes": [
+      {
+        "code": 0,
+        "id": "ok",
+        "outcome": "committed"
+      },
+      {
+        "code": 1,
+        "id": "bad-name",
+        "outcome": "rejected"
+      },
+      {
+        "code": 2,
+        "id": "duplicate",
+        "outcome": "rejected"
+      },
+      {
+        "code": 3,
+        "id": "too-large",
+        "outcome": "rejected"
+      },
+      {
+        "code": 4,
+        "id": "no-space",
+        "outcome": "rejected"
+      },
+      {
+        "code": 5,
+        "id": "directory-full",
+        "outcome": "rejected"
+      },
+      {
+        "code": 6,
+        "id": "read-invalid",
+        "outcome": "failed"
+      },
+      {
+        "code": 7,
+        "id": "write-verify-failed",
+        "outcome": "failed-needs-remount"
+      },
+      {
+        "code": 8,
+        "id": "needs-remount",
+        "outcome": "latched"
+      },
+      {
+        "code": 9,
+        "id": "committed-with-leak",
+        "outcome": "committed-warning"
+      },
+      {
+        "code": 10,
+        "id": "product-media-read-only",
+        "outcome": "rejected"
+      },
+      {
+        "code": 11,
+        "id": "wrong-work-media",
+        "outcome": "retired-never-emitted"
+      },
+      {
+        "code": 12,
+        "id": "media-changed-during-transaction",
+        "outcome": "failed-terminal-explicit-restart-after-remount"
+      }
+    ]
+  }
+}

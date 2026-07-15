@@ -1,0 +1,96 @@
+{
+  "format": "lisp65-r4-product-candidate-assertions-v1",
+  "version": 1,
+  "id": "r4-final-product-candidate",
+  "status": "seal-authorized",
+  "candidate": {
+    "artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "product_build_id": "f6faad87",
+    "artifact_count": 13
+  },
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "emulator_valid": "9/9-pass",
+    "hardware_only": "6/6-not-run",
+    "G5": "not-run",
+    "G6": "not-run",
+    "release": "not-release-capable",
+    "hardware_started": false,
+    "forbidden_hardware_claims": [
+      "F011-timing",
+      "SD-buffer-address",
+      "DMA-timing",
+      "physical-reset-semantics"
+    ]
+  },
+  "bindings": {
+    "g3_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/g3-emulator-receipt.json",
+      "sha256": "78ac3ac4cf5c488f95f119815ba3f616729561d800712d1dcdce2db307b210c7"
+    },
+    "static_preflight": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/g3-static-preflight-receipt.json",
+      "sha256": "88fa012d6d93d78216e015dd64f274c548f7c092a205b5ef6841109059dc78c0"
+    },
+    "product_block_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/r3/product-block-receipt.json",
+      "sha256": "83df6aff98f64f168c914cabe93aa8bbcd81d22511d83658a978299354692c39"
+    },
+    "r3_contract_snapshot": {
+      "path": "config/r3-g3-g6-contract.json",
+      "sha256": "19d76dfda5cbf17fccf85cfa8bac685b2f2480bcc216350b00b7ae28d7d9b82a"
+    },
+    "boot_matrix": {
+      "path": "tests/bytecode/dialect-v2/r3-boot/cases.json",
+      "sha256": "376af59f7d32dbbd93ee124daf6238dfeb62f810bd6ae8ab907f8c3032164a58"
+    }
+  },
+  "capacity_delta": {
+    "baseline_identity_sha256": "44163b315c17ea2915be9929108db513d73315927dc9ac15043a0daa59d5a6d9",
+    "candidate_identity_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "dimensions": {
+      "bank": {
+        "baseline": 553,
+        "candidate": 332,
+        "delta": -221,
+        "authorization": {
+          "path": "config/post-capture-planning-capacity-authorization.json",
+          "sha256": "ccf55f8591d93f212e6f7afcb6cdaa36d69e9a00b296bc45ec753c6b5b51eee4"
+        }
+      },
+      "ext": {
+        "baseline": 16419,
+        "candidate": 16385,
+        "delta": -34,
+        "authorization": {
+          "path": "config/post-capture-planning-capacity-authorization.json",
+          "sha256": "ccf55f8591d93f212e6f7afcb6cdaa36d69e9a00b296bc45ec753c6b5b51eee4"
+        }
+      },
+      "symbols": {
+        "baseline": 120,
+        "candidate": 120,
+        "delta": 0,
+        "authorization": null
+      },
+      "namepool": {
+        "baseline": 2160,
+        "candidate": 2160,
+        "delta": 0,
+        "authorization": null
+      },
+      "directory": {
+        "baseline": 32,
+        "candidate": 32,
+        "delta": 0,
+        "authorization": null
+      }
+    }
+  },
+  "boot_overlay_delta_bytes": 0,
+  "r5_handoff": {
+    "input_authority": "sealed-r4-product-candidate-archive",
+    "live_tree": "not-an-authority",
+    "required_artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165"
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "description": "Evaluation contract for lib/stdlib-strings.lisp on top of the M1 Prelude and K-A string primitives.",
+  "cases": [
+    {
+      "name": "stdlib-string-equal-true",
+      "input": "(string= \"abc\" (list->string (quote (97 98 99))))",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-equal-false",
+      "input": "(string= \"abc\" \"abd\")",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-string-not-equal",
+      "input": "(string/= \"abc\" \"abd\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-less-true",
+      "input": "(string< \"abc\" \"abd\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-less-prefix",
+      "input": "(string< \"ab\" \"abc\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-less-false",
+      "input": "(string< \"abd\" \"abc\")",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-string-less-equal-equal",
+      "input": "(string<= \"abc\" \"abc\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-greater",
+      "input": "(string> \"abd\" \"abc\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-greater-equal-less-false",
+      "input": "(string>= \"abc\" \"abd\")",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-string-equal-case-fold",
+      "input": "(string-equal \"Az\" \"aZ\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-prefix-true",
+      "input": "(string-prefix-p \"ab\" \"abcd\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-prefix-false",
+      "input": "(string-prefix-p \"ac\" \"abcd\")",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-string-suffix-true",
+      "input": "(string-suffix-p \"cd\" \"abcd\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-suffix-too-long",
+      "input": "(string-suffix-p \"abcdef\" \"abcd\")",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-string-search-hit",
+      "input": "(search \"bc\" \"abcd\")",
+      "expect": "1"
+    },
+    {
+      "name": "stdlib-string-search-miss",
+      "input": "(search \"zz\" \"abcd\")",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-string-contains",
+      "input": "(string-contains-p \"bc\" \"abcd\")",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-string-trim",
+      "input": "(string-trim \" -\" \" --hi- \")",
+      "expect": "\"hi\""
+    },
+    {
+      "name": "stdlib-string-append",
+      "input": "(string-append \"ab\" \"\" \"cd\")",
+      "expect": "\"abcd\""
+    },
+    {
+      "name": "stdlib-substring-with-end",
+      "input": "(substring \"abcdef\" 2 5)",
+      "expect": "\"cde\""
+    },
+    {
+      "name": "stdlib-substring-without-end",
+      "input": "(substring \"abcdef\" 3)",
+      "expect": "\"def\""
+    },
+    {
+      "name": "stdlib-string-upcase",
+      "input": "(string-upcase \"Az-09\")",
+      "expect": "\"AZ-09\""
+    },
+    {
+      "name": "stdlib-string-downcase",
+      "input": "(string-downcase \"Az-09\")",
+      "expect": "\"az-09\""
+    },
+    {
+      "name": "stdlib-char-upcase",
+      "input": "(char-upcase 122)",
+      "expect": "90"
+    },
+    {
+      "name": "stdlib-char-downcase",
+      "input": "(char-downcase 65)",
+      "expect": "97"
+    },
+    {
+      "name": "stdlib-char-to-string",
+      "input": "(char->string 65)",
+      "expect": "\"A\""
+    },
+    {
+      "name": "stdlib-char-code",
+      "input": "(char \"Az\" 1)",
+      "expect": "122"
+    }
+  ]
+}

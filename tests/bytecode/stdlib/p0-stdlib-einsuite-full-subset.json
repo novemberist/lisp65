@@ -1,0 +1,49 @@
+{
+ "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+ "description": "M4-Full-Profil: Ein-Suite-Strip plus Disk-load/save und nativer Bulk-Render; screen-bulk-p bleibt native Capability statt Bytecode-Fallback. Plus Regel-B-Bytecode-(load) (lib/stdlib-load.lisp) fuer den Disk-Roundtrip.",
+ "extends": "p0-stdlib-einsuite-subset.json",
+ "vm_dir_max": 512,
+ "vm_dir_align8_after_boot": true,
+ "min_vm_dir_headroom": 8,
+ "remove_sources": [
+  "lib/stdlib-screen-fallback.lisp"
+ ],
+ "remove_functions": [
+  "screen-bulk-p"
+ ],
+ "remove_cases": [
+  "screen-bulk-p-fallback"
+ ],
+ "cases": [
+  {
+   "name": "screen-bulk-p-native",
+   "expr": "(screen-bulk-p)",
+   "expect": "t"
+  },
+  {
+   "name": "load-missing",
+   "expr": "(load \"missing\")",
+   "expect": "nil"
+  },
+  {
+   "name": "load-non-string",
+   "expr": "(load 7)",
+   "expect": "nil"
+  }
+ ],
+ "sources": [
+  "lib/stdlib-load.lisp"
+ ],
+ "functions": [
+  "%load-fold-code",
+  "%load-name-code-at",
+  "%load-entry-byte",
+  "%load-entry-used-p",
+  "%load-name-match-at",
+  "%load-entry-match-p",
+  "%load-from-entry",
+  "%load-scan-entries",
+  "%load-scan-directory",
+  "load"
+ ]
+}

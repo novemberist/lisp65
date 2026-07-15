@@ -1,0 +1,22 @@
+{
+  "format": "lisp65-dialect-v2-r2-decision-fixture-v1",
+  "family": "ide",
+  "status": "normative",
+  "cases": [
+    {
+      "id": "edit-autoload-entry",
+      "decision": "edit-autoload",
+      "forms": ["(edit)"],
+      "expected": {"resident": true, "load_if_missing": "ide", "entry_after_load": "ide", "already_loaded_is_idempotent": true, "load_failure": "preserve-existing-loader-diagnostic"}
+    },
+    {
+      "id": "ide-command-public-surface",
+      "decision": "ide-command-short-names",
+      "forms": ["(function-kind 'compile-buffer-to-lib)", "(function-kind 'compile-file-to-lib)", "(function-kind 'dir)", "(function-kind 'eval-buffer)", "(function-kind 'ide)", "(function-kind 'ide-buffers)", "(function-kind 'load-file-to-buffer)", "(function-kind 'save-buffer-to)"],
+      "expected": {
+        "public_names": ["compile-buffer-to-lib", "compile-file-to-lib", "dir", "eval-buffer", "ide", "ide-buffers", "load-file-to-buffer", "save-buffer-to"],
+        "additional_short_aliases": []
+      }
+    }
+  ]
+}

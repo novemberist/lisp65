@@ -1,0 +1,55 @@
+{
+  "description": "Host-only IDE completion/apropos/describe contract. This does not imply hardware UI or MVP embedding.",
+  "cases": [
+    {
+      "name": "ide-apropos-finds-substring",
+      "input": "(ide-apropos \"str\" '(\"string=\" \"format\" \"substring\" \"symbolp\"))",
+      "expect": "(\"string=\" \"substring\")"
+    },
+    {
+      "name": "ide-prefix-matches",
+      "input": "(ide-prefix-matches \"str\" '(\"string=\" \"stream\" \"format\" \"substring\"))",
+      "expect": "(\"string=\" \"stream\")"
+    },
+    {
+      "name": "ide-complete-unique",
+      "input": "(ide-complete-symbol \"sub\" '(\"string=\" \"substring\" \"symbolp\"))",
+      "expect": "\"substring\""
+    },
+    {
+      "name": "ide-complete-common-prefix",
+      "input": "(ide-complete-symbol \"str\" '(\"string=\" \"string<\" \"string-trim\" \"symbolp\"))",
+      "expect": "\"string\""
+    },
+    {
+      "name": "ide-complete-no-match",
+      "input": "(ide-complete-symbol \"zzz\" '(\"string=\" \"format\"))",
+      "expect": "NIL"
+    },
+    {
+      "name": "ide-describe-symbol-hit",
+      "input": "(ide-describe-symbol \"length\" '((\"length\" function 1 \"list length\") (\"when\" macro rest \"conditional body\")))",
+      "expect": "(\"length\" FUNCTION 1 \"list length\")"
+    },
+    {
+      "name": "ide-describe-symbol-miss",
+      "input": "(ide-describe-symbol \"missing\" '((\"length\" function 1 \"list length\")))",
+      "expect": "NIL"
+    },
+    {
+      "name": "ide-describe-kind",
+      "input": "(ide-describe-kind (ide-describe-symbol \"when\" '((\"when\" macro rest \"conditional body\"))))",
+      "expect": "MACRO"
+    },
+    {
+      "name": "ide-describe-arity",
+      "input": "(ide-describe-arity (ide-describe-symbol \"length\" '((\"length\" function 1 \"list length\"))))",
+      "expect": "1"
+    },
+    {
+      "name": "ide-describe-doc",
+      "input": "(ide-describe-doc (ide-describe-symbol \"length\" '((\"length\" function 1 \"list length\"))))",
+      "expect": "\"list length\""
+    }
+  ]
+}

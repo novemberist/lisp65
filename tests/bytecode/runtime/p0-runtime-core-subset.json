@@ -1,0 +1,25 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "Evaluator-free Runtime Core prototype with a named zero-argument entry and native BCODE funcall.",
+  "sources": [
+    "lib/runtime-core.lisp"
+  ],
+  "functions": [
+    "runtime-inc",
+    "runtime-twice",
+    "runtime-main"
+  ],
+  "max_call_args": 2,
+  "cases": [
+    {
+      "name": "runtime-core-entry",
+      "expr": "(runtime-main)",
+      "expect": "42"
+    },
+    {
+      "name": "runtime-core-native-funcall",
+      "expr": "(runtime-twice (function runtime-inc) 40)",
+      "expect": "42"
+    }
+  ]
+}

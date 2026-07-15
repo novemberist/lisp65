@@ -1,0 +1,74 @@
+{
+ "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+ "description": "Workbench-Kandidat: Arena-IDE + compile-string-Slow-Path. Basis einsuite-core (mit lcc + lcc-fasl.lisp-Emitter), aber der teure native Disk-Source-Compile-Pfad ist DRAUSSEN: compile-file (nutzt %fasl-src -> io_fasl_open_source -> disk_dir_find) und der Diagnose-Entry fasl-emit-scratch werden entfernt (Codex-Handoff 2026-07-08). compile-string(source-text dst) liest die Formen aus dem IDE-Buffer-STRING (Prim %cs-read-open, kein Disk), kompiliert via lcc und schreibt FASL/L65M nach dst. Gebaut mit -DLISP65_COMPILE_STRING statt -DLISP65_FASL (spart ~die Disk-Source-C-Schicht).",
+ "extends": "p0-stdlib-einsuite-core-subset.json",
+ "remove_functions": [
+  "compile-file",
+  "fasl-emit-scratch"
+ ],
+ "allow_omitted_defuns": [
+  {
+   "name": "screen-write-string",
+   "reason": "provided by the resident Workbench screen runtime"
+  },
+  {
+   "name": "compile-file",
+   "reason": "excluded from the compile-string Workbench profile"
+  },
+  {
+   "name": "fasl-emit-scratch",
+   "reason": "excluded from the compile-string Workbench profile"
+  }
+ ],
+ "remove_cases": [
+  "fasl-compile-file-bytecode",
+  "fasl-emit-scratch-bytecode"
+ ],
+ "cases": [
+  {
+   "name": "workbench-mod-remainder-bytecode",
+   "expr": "(list (function-kind 'mod) (function-kind 'remainder))",
+   "expect": "(bytecode bytecode)"
+  },
+  {
+   "name": "workbench-mod-remainder-funcall",
+   "expr": "(list (funcall (function mod) -5 3) (funcall (function remainder) 5 -3))",
+   "expect": "(1 2)"
+  },
+  {
+   "name": "workbench-compile-string-bytecode",
+   "expr": "(function-kind 'compile-string)",
+   "expect": "bytecode"
+  },
+  {
+   "name": "workbench-compile-error-bytecode",
+   "expr": "(function-kind 'compile-error)",
+   "expect": "bytecode"
+  },
+  {
+   "name": "workbench-compile-string-bad-source",
+   "expr": "(compile-string 7 \"noslot\")",
+   "expect": "nil"
+  },
+  {
+   "name": "workbench-compile-string-bad-source-error",
+   "expr": "(progn (compile-string 7 \"noslot\") (compile-error))",
+   "expect": "\"bad source\""
+  },
+  {
+   "name": "workbench-compile-string-missing-slot",
+   "expr": "(compile-string \"(defun x () 1)\" \"noslot\")",
+   "expect": "nil"
+  },
+  {
+   "name": "workbench-compile-string-missing-slot-error",
+   "expr": "(progn (compile-string \"(defun x () 1)\" \"noslot\") (compile-error))",
+   "expect": "\"slot missing\""
+  },
+  {
+   "name": "workbench-compile-slot-capacity-host",
+   "expr": "(let ((slot (%compile-slot-find (string->list \"work\") 40 0 64))) (%compile-slot-capacity (car slot) (cdr slot) 255 0))",
+   "expect": "254"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+  "format": "lisp65-dialect-v2-r2-decision-fixture-v1",
+  "family": "system-runtime",
+  "status": "normative",
+  "cases": [
+    {
+      "id": "key-event-blocking-mode",
+      "decision": "key-event-blocking-semantics",
+      "forms": ["(key-event 1)"],
+      "expected": {"behavior": "wait-for-event", "result_format": "(key code modifiers)"}
+    },
+    {
+      "id": "key-event-default-empty-queue",
+      "decision": "key-event-blocking-semantics",
+      "forms": ["(key-event)"],
+      "expected": {"default_mode": 0, "empty_queue": "nil", "strict_arity": {"required": 0, "optional": 1}}
+    },
+    {
+      "id": "key-event-invalid-mode",
+      "decision": "key-event-blocking-semantics",
+      "forms": ["(key-event 'blocking)", "(key-event 2)"],
+      "expected": {"result": "type-or-value-error"}
+    },
+    {
+      "id": "key-event-normalized-format",
+      "decision": "key-event-blocking-semantics",
+      "forms": ["(key-event 0)"],
+      "expected": {
+        "result_format": "(key code modifiers)",
+        "code": "normalized-fixnum",
+        "modifiers": "nil-or-symbol-list",
+        "shift_modifier": "shift",
+        "empty_queue": "nil"
+      }
+    },
+    {
+      "id": "load-libs-first-failure",
+      "decision": "load-libs-migration",
+      "forms": ["(load-libs \"a\" \"missing\" \"c\")"],
+      "expected": {"load_order": ["a", "missing"], "c_attempted": false, "result": "nil", "rollback_loaded_libraries": false}
+    },
+    {
+      "id": "load-libs-source-expansion",
+      "decision": "load-libs-migration",
+      "forms": ["(load-libs \"a\" \"b\")", "(load-libs '(\"a\" \"b\"))"],
+      "expected": {"runtime_alias": false, "rewrite": "ordered-load-lib-calls", "stop_on_first_failure": true}
+    },
+    {
+      "id": "save-explicit-m65d-migration",
+      "decision": "save-m65d-contract",
+      "forms": ["(save name source)"],
+      "expected": {"runtime_alias": false, "rewrite": "(m65d-save name source)", "library": "m65d"}
+    },
+    {
+      "id": "screen-library-and-composition-boundary",
+      "decision": "screen-library-boundary",
+      "forms": ["(screen-clear)", "(screen-put-char x y code attr)", "(screen-size)", "(screen-write-string x y text attr)"],
+      "expected": {"library": "m65-screen", "guaranteed_session_member": false, "ide_render_route": "native-callprim"}
+    },
+    {
+      "id": "set-non-symbol-type-error",
+      "decision": "set-public-semantics",
+      "forms": ["(set 1 2)"],
+      "expected": {"result": "type-error"}
+    },
+    {
+      "id": "set-strict-two-and-value-result",
+      "decision": "set-public-semantics",
+      "forms": ["(set 'answer 42)", "(set 'answer)", "(set 'answer 42 43)"],
+      "expected": {"arity": 2, "success_result": 42, "symbol_value_after": 42, "wrong_arity": "arity-error"}
+    }
+  ]
+}

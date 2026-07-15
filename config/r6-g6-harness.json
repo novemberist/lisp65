@@ -1,0 +1,51 @@
+{
+  "format": "lisp65-r6-g6-harness-v2",
+  "version": 2,
+  "id": "r6-exact-15-case-preflight-and-g6",
+  "status": "approved-for-static-preflight",
+  "hardware_profile": {
+    "path": "config/g6-hardware-profile.json",
+    "sha256": "85468bfe857227ed0adcd0712f53b9dd73767781573f331fadc04db8f59d0d88"
+  },
+  "ship": {
+    "path": "build/r6/ship",
+    "manifest_sha256": "323d6f497c1849af3916cfbe9c3f0d73936eaa72f271d97412666f25369f6764",
+    "package_set_sha256": "925cda9ab833e58cac7d8dbf5d5902d7b3145814951f0a46823e6e57c2c3ab97",
+    "product_artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "product_d81_sha256": "90efed69721cf7470091408a512b70bbd043f081ff16d7739ea3a173d266ff3a",
+    "work_d81_sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3",
+    "r4_archive_sha256": "900c067c54aa76c5957ae51d2d78141f589186af55c3b415b73aa17d92339651",
+    "r5_archive_sha256": "be7b3f17ccad94628a7cbddec5a46d3619af423cb794b2f352468fe2173b74cf"
+  },
+  "execution": {
+    "device": "/dev/ttyUSB1",
+    "machine_serial_source": "/sys/bus/usb/devices/3-2/serial",
+    "expected_machine_serial": "TE0000B18447",
+    "m65": "tools/m65tools/m65",
+    "mega65_ftp": "tools/m65tools/mega65_ftp",
+    "repl_runner": "scripts/hw-jtag-repl.sh",
+    "repl_verifier": "tools/host-lisp/repl_screen_check.py",
+    "case_verifier": "tools/host-lisp/r6_g6.py",
+    "two_media_oracle": "tools/host-lisp/g6_two_media_oracle.py",
+    "core_binding": "first-passed-G6-receipt-pins-core-id-and-version-for-all-six",
+    "host_free_cold_start": "no-host-command-between-physical-power-on-and-visible-lisp65-prompt"
+  },
+  "cases": [
+    {"id":"arbitrary-user-media-save-remount-read","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["work-d81","library-m65d"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"artifact-preflight-exact-set","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["linked-product-elf","workbench-prg","attic-catalog","bank5-preload","resolved-profile","library-ide","library-idex","library-m65d","cold-stager","boot-descriptor","product-d81","work-d81","product-mount-descriptor"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"catalog-crc-reject-restage","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["cold-stager","boot-descriptor","product-d81","bank5-preload","attic-catalog"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"catalog-missing-restage","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["cold-stager","boot-descriptor","product-d81","bank5-preload","attic-catalog"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"catalog-valid-stage-chain","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["cold-stager","boot-descriptor","workbench-prg","bank5-preload","attic-catalog"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"disk-swap-resident-composition","fidelity":"hardware-only","gate":"G6","target":"operator-assisted-hardware","procedure":"composition-swap","required_roles":["product-d81","work-d81","library-ide","library-idex","library-m65d"],"required_evidence":["core-registers","pre-swap-transcript","post-swap-transcript","media-identity-transcript","screen"]},
+    {"id":"drive9-rejected","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["library-m65d"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"mid-write-media-swap-abort","fidelity":"hardware-only","gate":"G6","target":"operator-assisted-hardware","procedure":"phase-injection-plus-freezer-boundary","required_roles":["work-d81","product-d81","library-m65d"],"required_evidence":["core-registers","user-media-a-identity","user-media-b-identity","phase-injection-report","clean-media-b-baseline","manual-pre-media-a","manual-pre-media-b","manual-expected-content","freezer-boundary-transcript","manual-post-media-a","manual-post-media-b","two-media-oracle"]},
+    {"id":"power-cycle-autoboot-restage-repl","fidelity":"hardware-only","gate":"G6","target":"operator-assisted-hardware","procedure":"cold-power-autoboot","required_roles":["product-d81","cold-stager","boot-descriptor","workbench-prg","bank5-preload","attic-catalog"],"required_evidence":["core-registers","screen","bank5-readback","bank5-oracle","attic-readback","hyppo-status","device-discovery"]},
+    {"id":"product-media-identity-write-reject","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["product-d81","library-m65d"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"product-medium-physical-write-protect","fidelity":"hardware-only","gate":"G6","target":"profile-applicability-receipt","procedure":"profile-not-applicable","required_roles":["product-d81","product-mount-descriptor"],"required_evidence":["profile-applicability-receipt"]},
+    {"id":"product-prg-byte-identity","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["linked-product-elf","workbench-prg","bank5-preload","attic-catalog","resolved-profile","cold-stager","boot-descriptor"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"stager-entry-chain-control","fidelity":"emulator-valid","gate":"G3","target":"sealed-r4-g3","procedure":"sealed-pass","required_roles":["cold-stager","boot-descriptor","workbench-prg","product-d81"],"required_evidence":["sealed-g3-receipt"]},
+    {"id":"warm-reset-valid-catalog-fastpath","fidelity":"hardware-only","gate":"G6","target":"operator-assisted-hardware","procedure":"warm-reset-fastpath","required_roles":["product-d81","cold-stager","boot-descriptor","workbench-prg","bank5-preload","attic-catalog"],"required_evidence":["core-registers","pre-reset-bank5","pre-reset-attic","post-reset-bank5","post-reset-attic","screen"]},
+    {"id":"work-media-save-remount-read","fidelity":"hardware-only","gate":"G6","target":"operator-assisted-hardware","procedure":"work-persistence","required_roles":["work-d81","library-ide","library-m65d"],"required_evidence":["core-registers","pre-write-disk","bufsel-precondition","persistence-transcript","bufsel-postcondition","post-write-disk","disk-oracle"]}
+  ],
+  "claims_before_execution": {"G3":"passed-emulator-prefilter-only","G5":"passed-for-product-artifact-set","G6":"not-run(5/5-applicable); product-medium-physical-write-protect=n/a-no-physical-medium-in-SD-D81-configuration","hardware_boot_cases":"not-run(5/5-applicable); n/a(1/1-profile-bound)","release":"not-release-capable"}
+}

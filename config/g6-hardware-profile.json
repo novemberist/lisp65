@@ -1,0 +1,46 @@
+{
+  "format": "lisp65-g6-hardware-profile-v1",
+  "version": 1,
+  "id": "stock-core-sd-d81",
+  "status": "owner-approved",
+  "decided_on": "2026-07-15",
+  "transport": {
+    "product_medium": "SD-backed-D81-image",
+    "physical_floppy_present": false,
+    "stock_freezer_virtual_image_write_protect_control": false,
+    "stock_core_source_commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "core_behavior": "D81-attach-enables-image-writes-and-the-stock-Freezer-exposes-no-read-only-attach-control"
+  },
+  "G6": {
+    "applicable_hardware_cases": [
+      "disk-swap-resident-composition",
+      "mid-write-media-swap-abort",
+      "power-cycle-autoboot-restage-repl",
+      "warm-reset-valid-catalog-fastpath",
+      "work-media-save-remount-read"
+    ],
+    "not_applicable": {
+      "case_id": "product-medium-physical-write-protect",
+      "reason": "no-physical-medium-in-the-stock-core-SD-D81-configuration",
+      "prohibited_substitute": "no-JTAG-poke-core-modification-or-synthetic-PASS"
+    },
+    "claim": "G6: 5/5 anwendbare Hardwarefälle bestanden; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration"
+  },
+  "product_code_path_audit": {
+    "physical_write_protect_signal_branches": [],
+    "result": "no-product-code-path-reads-or-branches-on-a-dedicated-F011-write-protect-signal",
+    "D68B_note": "D68B-is-compared-only-as-part-of-the-opaque-five-byte-mounted-image-transaction-token-not-as-a-write-protect-decision",
+    "remaining_write_defense": "M65D-multifactor-product-identity-denylist-plus-transaction-token-guards-and-readback-verification"
+  },
+  "receipt_policy": {
+    "profile_receipt_required": true,
+    "profile_receipt_must_bind_ship_manifest": true,
+    "hardware_receipts_must_bind_same_product_set_and-profile": true,
+    "resume_allowed_only_when_product_artifact_set_sha256_is-unchanged": true
+  },
+  "upstream": {
+    "register": "docs/upstream-findings.md",
+    "entry": "C6",
+    "request": "stock-core-virtual-D81-read-only-attach-toggle"
+  }
+}

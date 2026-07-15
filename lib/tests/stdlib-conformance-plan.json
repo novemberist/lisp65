@@ -1,0 +1,135 @@
+{
+  "description": "ABI-aware conformance plan for the full lisp65 standard library surface from docs/parallel-plan.md.",
+  "minimum_surface": "basic10-or-better",
+  "abi_gate": {
+    "name": "K-A-ABI",
+    "status": "ready",
+    "evidence": [
+      "String object and the five kernel primitives are fixed in docs/kernel-abi.md.",
+      "Symbol indices are uint16 with MAX_SYM/NAMEPOOL build-time overrides.",
+      "Native disk load is deferred; interim shipping uses embedded load_source."
+    ]
+  },
+  "categories": [
+    {
+      "name": "control-macros",
+      "symbols": ["cond", "case", "when", "unless", "do", "dolist", "dotimes"],
+      "cases": [
+        {"name": "cond-selects-clause", "input": "(cond ((eq 1 2) 'a) ((eq 2 2) 'b) (t 'c))", "expect": "B", "status": "active"},
+        {"name": "when-true", "input": "(when t 42)", "expect": "42", "status": "active"},
+        {"name": "unless-false", "input": "(unless nil 42)", "expect": "42", "status": "active"},
+        {"name": "case-list-key", "input": "(case 'b ((a b) 7) (otherwise 9))", "expect": "7", "status": "active"},
+        {"name": "do-counting-loop", "input": "(do ((i 0 (1+ i))) ((= i 3) i))", "expect": "3", "status": "active"},
+        {"name": "dotimes-counting-loop", "input": "(dotimes (i 3 i))", "expect": "3", "status": "active"},
+        {"name": "dolist-sum", "input": "(let ((s 0)) (dolist (x '(1 2 3) s) (setq s (+ s x))))", "expect": "6", "status": "active"}
+      ]
+    },
+    {
+      "name": "lists-and-sequences",
+      "symbols": ["list", "list*", "append", "length", "reverse", "nth", "nthcdr", "last", "butlast", "member", "assoc", "assq", "copy-list", "remove", "remove-if", "remove-if-not", "find", "find-if", "position", "position-if", "count", "count-if", "reduce", "every", "some"],
+      "cases": [
+        {"name": "append-basic", "input": "(append '(1 2) '(3))", "expect": "(1 2 3)", "status": "active"},
+        {"name": "list-star", "input": "(list* 1 2 '(3))", "expect": "(1 2 3)", "status": "active"},
+        {"name": "butlast-default", "input": "(butlast '(a b c))", "expect": "(A B)", "status": "active"},
+        {"name": "assq-basic", "input": "(assq 'b '((a 1) (b 2)))", "expect": "(B 2)", "status": "active"},
+        {"name": "remove-if-basic", "input": "(remove-if (lambda (x) (> x 2)) '(1 2 3 4))", "expect": "(1 2)", "status": "active"},
+        {"name": "remove-if-not-basic", "input": "(remove-if-not (lambda (x) (> x 2)) '(1 2 3 4))", "expect": "(3 4)", "status": "active"},
+        {"name": "copy-list-basic", "input": "(copy-list '(a b c))", "expect": "(A B C)", "status": "active"},
+        {"name": "find-if-basic", "input": "(find-if (lambda (x) (> x 2)) '(1 2 3 4))", "expect": "3", "status": "active"},
+        {"name": "position-if-basic", "input": "(position-if (lambda (x) (> x 2)) '(1 2 3 4))", "expect": "2", "status": "active"},
+        {"name": "count-basic", "input": "(count 'a '(a b a c))", "expect": "2", "status": "active"},
+        {"name": "count-if-basic", "input": "(count-if (lambda (x) (> x 1)) '(1 2 3))", "expect": "2", "status": "active"},
+        {"name": "reduce-plus", "input": "(reduce (function +) '(1 2 3))", "expect": "6", "status": "active"},
+        {"name": "every-positive", "input": "(every (lambda (x) (> x 0)) '(1 2 3))", "expect": "T", "status": "active"},
+        {"name": "some-finds", "input": "(some (lambda (x) (if (> x 2) x nil)) '(1 2 3))", "expect": "3", "status": "active"}
+      ]
+    },
+    {
+      "name": "strings",
+      "symbols": ["stringp", "string->list", "list->string", "string-length", "string-ref", "string=", "string/=", "string<", "string>", "string<=", "string>=", "string-equal", "string-prefix-p", "string-suffix-p", "search", "string-contains-p", "string-trim", "string-append", "substring", "string-upcase", "string-downcase", "char-upcase", "char-downcase", "char->string", "char"],
+      "cases": [
+        {"name": "string-length-primitive", "input": "(string-length \"abc\")", "expect": "3", "status": "active"},
+        {"name": "string-ref-primitive", "input": "(string-ref \"abc\" 1)", "expect": "98", "status": "active"},
+        {"name": "string-equality", "input": "(string= \"abc\" \"abc\")", "expect": "T", "status": "active"},
+        {"name": "string-less", "input": "(string< \"abc\" \"abd\")", "expect": "T", "status": "active"},
+        {"name": "string-greater", "input": "(string> \"abd\" \"abc\")", "expect": "T", "status": "active"},
+        {"name": "string-case-fold", "input": "(string-equal \"Az\" \"aZ\")", "expect": "T", "status": "active"},
+        {"name": "string-prefix", "input": "(string-prefix-p \"ab\" \"abcd\")", "expect": "T", "status": "active"},
+        {"name": "string-suffix", "input": "(string-suffix-p \"cd\" \"abcd\")", "expect": "T", "status": "active"},
+        {"name": "string-search", "input": "(search \"bc\" \"abcd\")", "expect": "1", "status": "active"},
+        {"name": "string-trim", "input": "(string-trim \" -\" \" --hi- \")", "expect": "\"hi\"", "status": "active"},
+        {"name": "string-append", "input": "(string-append \"a\" \"b\")", "expect": "\"ab\"", "status": "active"},
+        {"name": "substring", "input": "(substring \"abc\" 1)", "expect": "\"bc\"", "status": "active"},
+        {"name": "string-upcase", "input": "(string-upcase \"Az\")", "expect": "\"AZ\"", "status": "active"},
+        {"name": "char-upcase", "input": "(char-upcase 122)", "expect": "90", "status": "active"},
+        {"name": "char-downcase", "input": "(char-downcase 65)", "expect": "97", "status": "active"},
+        {"name": "char-code", "input": "(char \"Az\" 1)", "expect": "122", "status": "active"}
+      ]
+    },
+    {
+      "name": "math",
+      "symbols": ["+", "-", "*", "/", "mod", "1+", "1-", "zerop", "plusp", "minusp", "/=", "max", "min", "abs", "signum", "evenp", "oddp", "integerp", "nonnegativep", "nonpositivep", "clamp"],
+      "cases": [
+        {"name": "mod-basic", "input": "(mod 17 5)", "expect": "2", "status": "active"},
+        {"name": "max-basic", "input": "(max 1 5 3)", "expect": "5", "status": "active"},
+        {"name": "min-basic", "input": "(min 1 5 3)", "expect": "1", "status": "active"},
+        {"name": "abs-negative", "input": "(abs -7)", "expect": "7", "status": "active"},
+        {"name": "signum-zero", "input": "(signum 0)", "expect": "0", "status": "active"},
+        {"name": "evenp-negative", "input": "(evenp -4)", "expect": "T", "status": "active"},
+        {"name": "oddp-negative", "input": "(oddp -3)", "expect": "T", "status": "active"},
+        {"name": "integerp-number", "input": "(integerp 7)", "expect": "T", "status": "active"},
+        {"name": "nonnegativep-zero", "input": "(nonnegativep 0)", "expect": "T", "status": "active"},
+        {"name": "nonpositivep-zero", "input": "(nonpositivep 0)", "expect": "T", "status": "active"},
+        {"name": "clamp-high", "input": "(clamp 9 1 5)", "expect": "5", "status": "active"}
+      ]
+    },
+    {
+      "name": "assoc-and-plist",
+      "symbols": ["assoc", "assq", "getf", "remf"],
+      "cases": [
+        {"name": "assoc-basic", "input": "(assoc 'b '((a 1) (b 2)))", "expect": "(B 2)", "status": "active"},
+        {"name": "assq-basic", "input": "(assq 'b '((a 1) (b 2)))", "expect": "(B 2)", "status": "active"},
+        {"name": "getf-basic", "input": "(getf '(:a 1 :b 2) ':b)", "expect": "2", "status": "active"},
+        {"name": "remf-functional", "input": "(remf '(a 1 b 2) 'a)", "expect": "(B 2)", "status": "active"}
+      ]
+    },
+    {
+      "name": "higher-order",
+      "symbols": ["mapcar", "mapcan", "mapc", "funcall", "apply", "reduce", "every", "some"],
+      "cases": [
+        {"name": "mapcar-function", "input": "(mapcar (function 1+) '(1 2 3))", "expect": "(2 3 4)", "status": "active"},
+        {"name": "mapcar-two-lists", "input": "(mapcar (function +) '(1 2) '(10 20))", "expect": "(11 22)", "status": "active"},
+        {"name": "mapcan-flattens-results", "input": "(mapcan (lambda (x) (list x (1+ x))) '(1 3))", "expect": "(1 2 3 4)", "status": "active"},
+        {"name": "mapc-side-effect", "input": "(let ((s 0)) (mapc (lambda (x) (setq s (+ s x))) '(1 2 3)) s)", "expect": "6", "status": "active"},
+        {"name": "apply-function", "input": "(apply (function +) '(1 2 3))", "expect": "6", "status": "active"},
+        {"name": "reduce-function", "input": "(reduce (function +) '(1 2 3))", "expect": "6", "status": "active"}
+      ]
+    },
+    {
+      "name": "format-subset",
+      "symbols": ["format"],
+      "cases": [
+        {"name": "format-decimal", "input": "(format nil \"~A\" 42)", "expect": "\"42\"", "status": "active"},
+        {"name": "format-string", "input": "(format nil \"hi ~A\" \"bob\")", "expect": "\"hi bob\"", "status": "active"},
+        {"name": "format-d-directive", "input": "(format nil \"~D\" 42)", "expect": "\"42\"", "status": "active"},
+        {"name": "format-s-string-readable", "input": "(format nil \"~S\" \"bob\")", "expect": "\"\\\"bob\\\"\"", "status": "active"},
+        {"name": "format-newline", "input": "(format nil \"a~%b\")", "expect": "\"a\nb\"", "status": "active"}
+      ]
+    },
+    {
+      "name": "output",
+      "symbols": ["write-char", "write-string", "terpri", "princ", "prin1", "print", "write", "write-line", "format"],
+      "cases": [
+        {"name": "write-char-return", "input": "(write-char 65)", "expect": "65", "status": "active"},
+        {"name": "write-string-return", "input": "(write-string \"ab\")", "expect": "\"ab\"", "status": "active"},
+        {"name": "terpri-return", "input": "(terpri)", "expect": "NIL", "status": "active"},
+        {"name": "princ-string-return", "input": "(princ \"raw\")", "expect": "\"raw\"", "status": "active"},
+        {"name": "prin1-symbol-return", "input": "(prin1 'abc)", "expect": "ABC", "status": "active"},
+        {"name": "write-symbol-return", "input": "(write 'abc)", "expect": "ABC", "status": "active"},
+        {"name": "print-number-return", "input": "(print 7)", "expect": "7", "status": "active"},
+        {"name": "write-line-return", "input": "(write-line \"line\")", "expect": "\"line\"", "status": "active"},
+        {"name": "format-destination-output-return", "input": "(format t \"x=~D\" 5)", "expect": "NIL", "status": "active"}
+      ]
+    }
+  ]
+}

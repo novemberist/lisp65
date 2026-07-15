@@ -1,0 +1,55 @@
+{
+  "description": "Evaluation contract for the small lib/stdlib-format.lisp subset.",
+  "cases": [
+    {
+      "name": "stdlib-integer-to-string-zero",
+      "input": "(integer->string 0)",
+      "expect": "\"0\""
+    },
+    {
+      "name": "stdlib-integer-to-string-positive",
+      "input": "(integer->string 123)",
+      "expect": "\"123\""
+    },
+    {
+      "name": "stdlib-integer-to-string-negative",
+      "input": "(integer->string -42)",
+      "expect": "\"-42\""
+    },
+    {
+      "name": "stdlib-format-decimal",
+      "input": "(format nil \"~A\" 42)",
+      "expect": "\"42\""
+    },
+    {
+      "name": "stdlib-format-literal-and-decimal",
+      "input": "(format nil \"x=~A\" -7)",
+      "expect": "\"x=-7\""
+    },
+    {
+      "name": "stdlib-format-d-directive",
+      "input": "(format nil \"n=~D\" 42)",
+      "expect": "\"n=42\""
+    },
+    {
+      "name": "stdlib-format-string-arg",
+      "input": "(format nil \"hi ~A\" \"bob\")",
+      "expect": "\"hi bob\""
+    },
+    {
+      "name": "stdlib-format-s-string-readable",
+      "input": "(format nil \"~S\" \"bob\")",
+      "expect": "\"\\\"bob\\\"\""
+    },
+    {
+      "name": "stdlib-format-newline",
+      "input": "(format nil \"a~%b\")",
+      "expect": "\"a\nb\""
+    },
+    {
+      "name": "stdlib-format-tilde",
+      "input": "(format nil \"~~\")",
+      "expect": "\"~\""
+    }
+  ]
+}

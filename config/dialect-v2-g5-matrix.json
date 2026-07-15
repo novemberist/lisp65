@@ -1,0 +1,59 @@
+{
+  "format": "lisp65-dialect-v2-g5-matrix-v1",
+  "version": 1,
+  "id": "dialect-v2-product-switch",
+  "domains": [
+    {
+      "id": "runtime-export",
+      "verifier": "tools/host-lisp/runtime_export_hw_oracle.py",
+      "verifier_sha256": "8f2d974aaab5d5624cfe9720f3aa4b2f691bce6f604cc5e026554d8587b5fb2a",
+      "cases": [
+        {"id": "bitflip", "target": "r5-global-g5-runtime-bitflip", "expected": "terminal-preload-error-detail-3", "evidence_format": "lisp65-dialect-v2-runtime-g5-case-evidence-v1"},
+        {"id": "build-id-mismatch", "target": "r5-global-g5-runtime-build-id-mismatch", "expected": "terminal-preload-error-detail-2", "evidence_format": "lisp65-dialect-v2-runtime-g5-case-evidence-v1"},
+        {"id": "clean", "target": "r5-global-g5-runtime-clean", "expected": "result-42", "evidence_format": "lisp65-dialect-v2-runtime-g5-case-evidence-v1"},
+        {"id": "truncated", "target": "r5-global-g5-runtime-truncated", "expected": "terminal-preload-error-detail-1", "evidence_format": "lisp65-dialect-v2-runtime-g5-case-evidence-v1"}
+      ]
+    },
+    {
+      "id": "workbench-persistence",
+      "verifier": "tools/host-lisp/dialect_v2_workbench_g5_verify.py",
+      "verifier_sha256": "753fa1ca417ce7436db341d5a10ebe6034194eaed334f2508fa1304e9d8a21c0",
+      "cases": [
+        {"id": "bam-alloc", "target": "r5-global-g5-workbench-bam-alloc", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "bam-read", "target": "r5-global-g5-workbench-bam-read", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "chain-write", "target": "r5-global-g5-workbench-chain-write", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "dir-write", "target": "r5-global-g5-workbench-dir-write", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "save-new", "target": "r5-global-g5-workbench-save-new", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "save-new-scan", "target": "r5-global-g5-workbench-save-new-scan", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "save-new-var", "target": "r5-global-g5-workbench-save-new-var", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"}
+      ]
+    },
+    {
+      "id": "workbench-ux",
+      "verifier": "tools/host-lisp/dialect_v2_workbench_g5_verify.py",
+      "verifier_sha256": "753fa1ca417ce7436db341d5a10ebe6034194eaed334f2508fa1304e9d8a21c0",
+      "cases": [
+        {"id": "overlay-stack-guard", "target": "r5-global-g5-workbench-overlay-stack-guard", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "stdlib-runtime", "target": "r5-global-g5-workbench-stdlib-runtime", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"},
+        {"id": "ux-complete", "target": "r5-global-g5-workbench-ux-complete", "expected": "pass", "evidence_format": "lisp65-dialect-v2-workbench-g5-case-evidence-v1"}
+      ]
+    }
+  ],
+  "receipt": {
+    "format": "lisp65-dialect-v2-g5-receipt-v1",
+    "required_bindings": [
+      "candidate-build-id",
+      "candidate-manifest-sha256",
+      "dialect-v2-contract-sha256",
+      "family-measurement-report-sha256s",
+      "matrix-contract-sha256",
+      "migration-contract-sha256",
+      "physical-cycle-ids",
+      "profile-id"
+    ],
+    "case_coverage": "exactly-once",
+    "physical_cycle_ids": "nonempty-unique-safe-identifiers",
+    "case_evidence": "path-sha-format-native-receipt-verifier-and-raw-artifact-bound",
+    "runtime_cycle_ids": "distinct-per-runtime-case"
+  }
+}

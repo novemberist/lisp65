@@ -1,0 +1,25 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "Minimal embedded bytecode set for MEGA65 known-open higher-order diagnostics. This is not the product stdlib.",
+  "sources": [
+    "lib/prelude-m1.lisp",
+    "lib/stdlib-sequences.lisp"
+  ],
+  "functions": [
+    "plusp",
+    "every",
+    "some"
+  ],
+  "cases": [
+    {
+      "name": "diag-every-plusp-true",
+      "expr": "(every (function plusp) '(1 2 3))",
+      "expect": "t"
+    },
+    {
+      "name": "diag-some-inline-lambda",
+      "expr": "(some (function (lambda (x) (if (> x 2) x nil))) '(1 2 3))",
+      "expect": "3"
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "format": "lisp65-v2-capability-carrier-block-v1",
+  "version": 1,
+  "id": "v2-capability-carrier",
+  "status": "promoted",
+  "atomic_scope": {
+    "families": ["lists", "strings"],
+    "components": ["surface-fixtures", "link-time-registry", "resident-c-semantics-carrier", "v2-prim-tombstones", "native-list-primitives", "native-string-codecs"],
+    "partial_deployment": "forbidden"
+  },
+  "promotion": {
+    "count": 1,
+    "mode": "atomic",
+    "source_profile": "dialect-v1",
+    "target_profile": "dialect-v2-capability-carrier",
+    "requires_checkpoint": 5,
+    "g5_before_promotion": true,
+    "rollback_target": "last-verified-dialect-v1-evidence"
+  },
+  "release_convergence": {
+    "release_product": "lisp65-workbench-v2",
+    "runtime_core_role": "internal-proof-only",
+    "runtime_core_release_effect": "none",
+    "runtime_core_receipt_effect": "evidence-only",
+    "dialect_v1_release": "forbidden",
+    "cp5_completion_requires": [
+      "workbench-v2-link-budget",
+      "runtime-core-proof",
+      "full-workbench-plus-runtime-g5"
+    ],
+    "active_work_lines": ["dialect-v2-family-migration"],
+    "new_language_families": "allowed-after-cp5-sequential-contracts",
+    "new_ap8_blocks": "allowed-after-cp5-explicit-block"
+  },
+  "runtime_core_proof": {
+    "status": "hardware-proof-passed",
+    "contract": {
+      "path": "config/v2-runtime-core-proof.json",
+      "sha256": "fb3a1620e6c20c55dfc8a29e0718e64dcccef19655af5684f3c6f4da6e9295c7"
+    },
+    "make_target": "v2-capability-carrier-runtime-proof-check",
+    "receipt": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/cp5-g5-67400c05/manifest.json", "sha256": "a8c7c939c29e69917521ad986e1dbd8f8efa12f13bf7e69bc87503dfc58ff805"},
+    "effect": "evidence-only",
+    "cp5_completion_effect": "supporting-evidence-satisfied",
+    "family_advancement_effect": "none",
+    "release_effect": "none",
+    "hardware_status": "passed-four-power-cycles"
+  },
+  "checkpoints": [
+    {
+      "number": 1,
+      "id": "contract-surface-fixtures",
+      "status": "passed",
+      "requires": [],
+      "make_target": "v2-capability-carrier-check-host-1",
+      "acceptance": ["contract-validated", "surface-fixtures-bound", "carrier-baseline-active"],
+      "receipt": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-1-receipt.json", "sha256": "e0ff46007517d2ba4324f47f96c97c7ee654d1091529ce7ccd1514acdb8a57db"}
+    },
+    {
+      "number": 2,
+      "id": "registry-null-miss-target",
+      "status": "passed",
+      "requires": ["contract-surface-fixtures"],
+      "make_target": "v2-capability-carrier-check-host-2",
+      "acceptance": ["link-time-registry-linked", "null-miss-target-gate-ready", "carrier-still-active"],
+      "receipt": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-2-receipt.json", "sha256": "2a45eb755de122c64b47c3da5df1ef858e8fba4077baab1b179b811b9a2093c5"}
+    },
+    {
+      "number": 3,
+      "id": "internal-native-capabilities",
+      "status": "passed",
+      "requires": ["registry-null-miss-target"],
+      "make_target": "v2-capability-carrier-check-host-3",
+      "acceptance": ["prim-1-2-26-27-v2-tombstoned", "native-lists-string-codecs-internal", "carrier-still-active"],
+      "receipt": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-3-receipt.json", "sha256": "909ad65abf7fd8dfe40182e0ea66eab3c3edeab39cfd34d46ae134a82dc5b143"}
+    },
+    {
+      "number": 4,
+      "id": "zero-miss-carrier-removal",
+      "status": "passed",
+      "requires": ["internal-native-capabilities"],
+      "make_target": "v2-capability-carrier-check-host-4",
+      "acceptance": ["registry-null-miss-zero", "carrier-removed-after-zero", "string-codec-atomicity-gates-pass", "native-designator-dispatch-parity", "native-three-route-four-engine-matrix-pass", "workbench-library-composition-gate"],
+      "receipt": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-4-receipt.json", "sha256": "2533e7a6549293c5e23aa05edfcf48550f36eee94b5bb2aac6d48d704d35eee3"}
+    },
+    {
+      "number": 5,
+      "id": "product-links-g5-promotion",
+      "status": "passed",
+      "requires": ["zero-miss-carrier-removal"],
+      "make_target": "v2-capability-carrier-check-host-5",
+      "acceptance": ["workbench-budget-pass", "runtime-budget-pass", "deployed-bank0-net-negative", "g5-pass", "single-promotion-ready"],
+      "receipt": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/checkpoint-5-receipt.json", "sha256": "5317dc43fc79c2a90580865abf8f35487dcd2b7060852910ef130871a5e3598d"}
+    }
+  ],
+  "registry": {
+    "construction": "link-time",
+    "dispatch": "direct-static-branch",
+    "per_call_function_pointers": false,
+    "lookup_before_carrier": "null-miss",
+    "unknown_capability": "null-miss",
+    "fallback_until_checkpoint": 4,
+    "zero_miss_required_before_carrier_removal": true
+  },
+  "native_function_registry": {
+    "construction": "generated-single-source",
+    "source": {"path": "config/v2-native-function-registry.json", "sha256": "ba370d3e9318a8a97a44ebe247a01938e9613a52aa87bdf0e70306c97674503e"},
+    "dispatch": {"path": "src/v2_native_function_dispatch.h", "sha256": "08e9c66bc939c62dcae4d369ffc5a01cfc27895dbacd20d7eba19252eaa3b312"},
+    "parity": "native-primitive-registry-entries-equal-generated-apply-dispatch-entries",
+    "routes": ["direct", "funcall", "apply"],
+    "engines": ["native-c-treewalk", "native-c-compiler-vm", "python-p0-compiler-vm", "lisp-lcc"],
+    "native_primitive_count": 15,
+    "generated_dispatch_count": 15,
+    "explicit_exclusion_count": 2,
+    "excluded_designator_error": "LISP65_ERR_VM_PRIMITIVE_NOT_DESIGNATOR"
+  },
+  "carrier": {
+    "kind": "existing-resident-c-semantics",
+    "symbols": ["apply", "eval_vm_apply", "eval_vm_bridge"],
+    "role": "registry-miss-fallback-through-checkpoint-3",
+    "active_through_checkpoint": 3,
+    "removal_checkpoint": 4,
+    "new_loadable_artifact": false,
+    "transport": "none",
+    "publication_protocol": "none"
+  },
+  "primitive_id_policy": {
+    "namespace": "prim-id",
+    "opcode_namespace_separate": true,
+    "v2_tombstones": [
+      {"id": 1, "canonical_name": "string->list", "v1": "legacy-decodable", "v2": "tombstone", "runtime": "reject-bad-primitive", "reuse": "forbidden"},
+      {"id": 2, "canonical_name": "list->string", "v1": "legacy-decodable", "v2": "tombstone", "runtime": "reject-bad-primitive", "reuse": "forbidden"},
+      {"id": 26, "canonical_name": "%string-slice", "v1": "reserved", "v2": "tombstone", "runtime": "reject-bad-primitive", "reuse": "forbidden", "evidence": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-26-string-slice.json", "sha256": "8ba68e6c57e01adc7f7e8ad6233bd3b6dd63ab32566b1daa1a780477b78aea74"}},
+      {"id": 27, "canonical_name": "%string-concat-list", "v1": "reserved", "v2": "tombstone", "runtime": "reject-bad-primitive", "reuse": "forbidden", "evidence": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-27-string-concat-list.json", "sha256": "cc0f664a5eee68b79d2e5e01e9910c015517fcb2b3da03b922f7d02c92506c85"}},
+      {"id": 34, "canonical_name": "%save-staged", "v1": "active", "v2": "tombstone", "runtime": "reject-bad-primitive", "reuse": "forbidden", "evidence": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-34-save-staged.json", "sha256": "0bfad9596a9b7e9f47e152d1a4016dd30a56f06a99eaf32af9737d5ac1359590"}},
+      {"id": 40, "canonical_name": "number->string", "v1": "reserved", "v2": "tombstone", "runtime": "reject-bad-primitive", "reuse": "forbidden", "evidence": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-40-number-to-string.json", "sha256": "4aaed2bafc2ed38f99d4fde415294733ad1d30884c6e68d4cf0c6b7c4215f81d"}}
+    ],
+    "v2_allocations": [
+      {"id": 23, "canonical_name": "nreverse", "arity": 1, "visibility": "public", "function_designator": true},
+      {"id": 24, "canonical_name": "rplaca", "arity": 2, "visibility": "public", "function_designator": true},
+      {"id": 25, "canonical_name": "rplacd", "arity": 2, "visibility": "public", "function_designator": true},
+      {"id": 28, "canonical_name": "%string-codes", "arity": 1, "visibility": "internal", "function_designator": false},
+      {"id": 29, "canonical_name": "%string-from-codes", "arity": 1, "visibility": "internal", "function_designator": false}
+      ,{"id": 57, "canonical_name": "boundp", "arity": 1, "visibility": "public", "function_designator": true}
+    ]
+  },
+  "string_codecs": {
+    "promotion_unit": "atomic-with-capability-block",
+    "internal_enable_checkpoint": 3,
+    "profile_visibility": "promotion-only",
+    "active_prim_ids": [28, 29],
+    "retired_prim_ids": [26, 27],
+    "construction_path": "retained-code-list-materialization",
+    "failure_atomicity": "vm-error-prevents-result-publication",
+    "arena_publication": "streaming-internal-result-returned-only-on-vm-ok",
+    "transport": "existing-streaming-codec-path",
+    "span_dma_guarantee": "deferred-to-buffer-and-string-construction-block",
+    "required_gates": ["four-engine-differential", "gc-and-oom-atomicity", "heap-and-latency-receipt", "tombstone-emission-drift"]
+  },
+  "budgets": {
+    "workbench": {"runtime_overlay_vma_max": "0xc356", "post_boot_reserve_min_bytes": 2091, "banked_abi_1_1_headroom_bytes": 555, "headroom_status": "reserved-for-abi-1.1-after-g5", "release_blocker_spend_bytes": 84, "spend_policy": "release-blocker-exception-recorded;one-abi-1-1-item-per-probe-after-g5"},
+    "runtime_core": {"post_boot_reserve_min_bytes": 8192},
+    "deployed_bank0_net_delta_bytes": {"comparison": "strictly-less-than", "limit": 0},
+    "measurement": "real-linked-product-elfs",
+    "estimates_may_promote": false
+  },
+  "cp5_measurement": {
+    "status": "g5-passed",
+    "report": {"path": "tests/bytecode/dialect-v2/evidence/capability-carrier/string-caps-cp5-product-link-report.json", "sha256": "3df9372c8fd013ee4bc2d10178a0c9a04047037c9747f2bd0840e22cdb70db09"}
+  },
+  "rollback_levels": [
+    {"level": 1, "id": "checkpoint-1", "guarantee": "contract-and-fixtures-revert-without-runtime-change"},
+    {"level": 2, "id": "checkpoint-2", "guarantee": "registry-reverts-while-resident-c-carrier-remains-active"},
+    {"level": 3, "id": "checkpoint-3", "guarantee": "internal-capabilities-and-tombstones-revert-while-carrier-remains-active"},
+    {"level": 4, "id": "checkpoint-4", "guarantee": "carrier-removal-reverts-as-one-change-after-zero-miss-proof"}
+  ],
+  "durability_levels": [
+    {"level": 1, "id": "checkpoint-1", "guarantee": "contract-and-surface-fixtures-remain-machine-checked"},
+    {"level": 2, "id": "checkpoint-2", "guarantee": "registry-and-null-miss-counter-remain-link-time-and-host-gated"},
+    {"level": 3, "id": "checkpoint-3", "guarantee": "internal-capabilities-remain-differentially-tested-with-carrier-backstop"},
+    {"level": 4, "id": "checkpoint-4", "guarantee": "zero-miss-proof-and-carrier-absence-remain-link-audited"}
+  ],
+  "frozen_layout": {
+    "slot_delta": 0,
+    "island_bytes_delta": 0,
+    "layout_change": false,
+    "forbidden": ["new-overlay-slot", "resident-island-use", "bank0-address-rebalance", "cap-reduction-as-financing"],
+    "bindings": [
+      {"path": "config/workbench.mk", "sha256": "87f779bac0e954b9eb64ffa8b58a5edfc62d402a0502084cab7ce3b0447f0185"},
+      {"path": "config/bank0-island-workbench.json", "sha256": "dbceabf24ed4e4b7c54afc07668736dfab53906feab36a62aecb8dee9b7e6be2"},
+      {"path": "config/runtime-core.mk", "sha256": "1f2e5e4361e5c4183169953978be3ac331e1e8a17c79a8b2e097b8031948d810"}
+    ]
+  }
+}

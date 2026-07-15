@@ -1,0 +1,81 @@
+{
+  "format": "lisp65-directory-only-interlibrary-api-v1",
+  "status": "classified",
+  "producer": "ide",
+  "consumer": "idex",
+  "late_bound_exports": ["%ide-x"],
+  "hook_audit": {
+    "definition_overlap": ["%ide-x"],
+    "declared_override_exports": ["%ide-x"],
+    "undeclared_hooks": [],
+    "rule": "every cross-tier definition overlap is an explicitly exported and late-bound override"
+  },
+  "baseline_drift_since_probe": {
+    "symbols": -3,
+    "namepool_bytes": -36,
+    "treatment": "separate-from-directory-only-savings"
+  },
+  "directory_only_overlap": {
+    "gross_anonymous_entries": 100,
+    "unique_anonymous_names": 99,
+    "cross_container_names": 10,
+    "net_symbol_intern_savings_before_ext_reclaim": 89,
+    "net_namepool_savings_bytes_before_ext_reclaim": 1793
+  },
+  "ext_reclaim": {
+    "v2_private_inline": ["%lcc-wrap", "%load-lib-note-loaded"],
+    "container": "resident",
+    "code_bytes": 24,
+    "final_anonymous_entries": 100,
+    "directory_alignment_effect": "zero-resident-count-347-to-345-still-aligns-to-352"
+  },
+  "composition_repin": {
+    "pre_reclaim": {"free_symbols": 125, "namepool_bytes": 2247, "post_align_directory_slots": 32},
+    "final": {"free_symbols": 127, "namepool_bytes": 2279, "post_align_directory_slots": 32},
+    "ext_post_headroom_bytes": 16384,
+    "ext_contract_floor_bytes": 16384
+  },
+  "late_binding_correction": {
+    "reopened_r4_baseline": {
+      "free_symbols": 121,
+      "namepool_bytes": 2162,
+      "anonymous_entries": 103,
+      "anonymous_unique_names": 102
+    },
+    "measured_probe": {
+      "free_symbols": 120,
+      "namepool_bytes": 2155,
+      "post_align_directory_slots": 32,
+      "ext_post_headroom_bytes": 16439,
+      "anonymous_entries": 91,
+      "anonymous_unique_names": 91
+    },
+    "capacity_delta": {
+      "bank_bytes_expected": 0,
+      "ext_bytes": 0,
+      "symbols": -1,
+      "namepool_bytes": -7,
+      "directory_slots": 0,
+      "real_product_link_status": "passed",
+      "product_artifact_set_sha256": "20760405e10f024c9d0922885093f812d2aa929a097e48095ed669227c7f8ae0",
+      "product_build_id": "d46a2bab"
+    },
+    "publication_result": "all-eleven-interlibrary-exports-named",
+    "hook_result": "percent-ide-x-symbolic-in-provider-and-overrider"
+  },
+  "entries": [
+    {"name": "%ide-buffer-with-lines-point", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-char-drop", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-char-take-into", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-dispatch-command", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-line-at", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-lines-replace", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-lines-replace-range", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-mini-start", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-state-with-buffer", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-state-with-message", "classification": "explicit-export", "producer": "ide", "consumers": ["idex"]},
+    {"name": "%ide-x", "classification": "explicit-override-hook", "producer": "ide", "overrider": "idex", "consumers": ["ide", "idex"]}
+  ],
+  "restructuring_candidates": [],
+  "future_owner": "1.1-export-only-interning"
+}

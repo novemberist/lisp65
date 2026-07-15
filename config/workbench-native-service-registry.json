@@ -1,0 +1,299 @@
+{
+  "format": "lisp65-workbench-native-service-registry-v1",
+  "version": 1,
+  "abi_ledger": "config/bytecode-abi-ledger.json",
+  "staging_closure": "config/v2-workbench-artifact-closure.json",
+  "staging_only_targets": ["%lcc-error-invalid-parameter-list"],
+  "staging_retired_targets": ["%save-staged"],
+  "policies": {
+    "current_mode": "exact-allowlist",
+    "zero_miss_mode": "no-unresolved-call-or-tailcall",
+    "new_miss": "reject",
+    "binding": "static-build-time",
+    "runtime_function_pointer_registry": "forbidden"
+  },
+  "artifacts": [
+    {
+      "id": "resident",
+      "manifest": "build/bytecode/profiles/workbench/stdlib-p0.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-stdlib-artifacts-v1",
+      "artifact_role": "stdlib",
+      "name": null,
+      "suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+      "abi_profile": "dialect-v1",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    },
+    {
+      "id": "ide",
+      "manifest": "build/bytecode/libs/ide.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+      "artifact_role": "disk-lib",
+      "name": "ide",
+      "suite": "tests/bytecode/libs/p0-ide-core-lib.json",
+      "abi_profile": "dialect-v1",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    },
+    {
+      "id": "idex",
+      "manifest": "build/bytecode/libs/idex.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+      "artifact_role": "disk-lib",
+      "name": "ide-extra",
+      "suite": "tests/bytecode/libs/p0-ide-extra-lib.json",
+      "abi_profile": "dialect-v1",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    },
+    {
+      "id": "m65d",
+      "manifest": "build/bytecode/libs/m65d.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+      "artifact_role": "disk-lib",
+      "name": "m65d",
+      "suite": "tests/bytecode/libs/p0-m65d-lib.json",
+      "abi_profile": "dialect-v1",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    }
+  ],
+  "current_misses": [
+    {
+      "name": "%cs-read-open",
+      "classification": "native-service",
+      "owner": "compile-string",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 1, "ide": 1}
+    },
+    {
+      "name": "%fasl-error-entries-overflow",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-nodes-overflow",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-not-a-defun",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-output-overflow",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-patches-overflow",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-strings-overflow",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-too-many-helpers",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-unsupported-literal",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-error-window-overflow",
+      "classification": "intentional-error-sentinel",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-read-form",
+      "classification": "native-service",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 1, "ide": 1}
+    },
+    {
+      "name": "%fasl-stage",
+      "classification": "native-service",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%fasl-stage-get",
+      "classification": "native-service",
+      "owner": "fasl",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%lcc-error-do-body-too-big",
+      "classification": "intentional-error-sentinel",
+      "owner": "lcc",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "explicit-error-service",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%save-staged",
+      "classification": "native-service",
+      "owner": "persistence",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "%set-macro",
+      "classification": "native-service",
+      "owner": "compiler",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 1}
+    },
+    {
+      "name": "boundp",
+      "classification": "native-service",
+      "owner": "symbols",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim",
+      "expected_calls": {"m65d": 2}
+    },
+    {
+      "name": "function-kind",
+      "classification": "native-service",
+      "owner": "compiler",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 2, "ide": 1}
+    },
+    {
+      "name": "gensym",
+      "classification": "native-service",
+      "owner": "compiler",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 4}
+    },
+    {
+      "name": "lcc-install",
+      "classification": "native-service",
+      "owner": "lcc",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 3}
+    },
+    {
+      "name": "macroexpand-1",
+      "classification": "native-service",
+      "owner": "compiler",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 2}
+    },
+    {
+      "name": "nreverse",
+      "classification": "native-service",
+      "owner": "lists",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim",
+      "expected_calls": {"ide": 5}
+    },
+    {
+      "name": "number->string",
+      "classification": "native-service",
+      "owner": "printer",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "static-directory",
+      "expected_calls": {"ide": 4}
+    },
+    {
+      "name": "prin1",
+      "classification": "native-service",
+      "owner": "printer",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 3}
+    },
+    {
+      "name": "rplaca",
+      "classification": "native-service",
+      "owner": "lists",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim",
+      "expected_calls": {"resident": 8, "ide": 2}
+    },
+    {
+      "name": "rplacd",
+      "classification": "native-service",
+      "owner": "lists",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim",
+      "expected_calls": {"resident": 2, "ide": 1}
+    },
+    {
+      "name": "symbol-count",
+      "classification": "native-service",
+      "owner": "symbols",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"ide": 1}
+    },
+    {
+      "name": "symbol-max",
+      "classification": "native-service",
+      "owner": "symbols",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"ide": 1}
+    },
+    {
+      "name": "symbol-name",
+      "classification": "native-service",
+      "owner": "symbols",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 3}
+    },
+    {
+      "name": "write-char",
+      "classification": "native-service",
+      "owner": "printer",
+      "current_lowering": "op-call-carrier",
+      "target_lowering": "callprim-or-static-directory",
+      "expected_calls": {"resident": 3}
+    }
+  ]
+}

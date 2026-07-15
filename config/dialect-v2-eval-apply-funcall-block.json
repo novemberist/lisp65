@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-dialect-v2-block-v1",
+  "version": 1,
+  "id": "dialect-v2-eval-apply-funcall",
+  "status": "pre-carrier-contract",
+  "family": "system-runtime",
+  "fixture": {
+    "path": "tests/bytecode/dialect-v2/eval-apply-funcall/cases.json",
+    "format": "lisp65-dialect-v2-eval-apply-funcall-cases-v1"
+  },
+  "decision_anchors": [
+    "decision:eval-apply-funcall-surface",
+    "decision:strict-arity-codeobject"
+  ],
+  "surface": {
+    "public_names": ["apply", "eval", "funcall"],
+    "callable_kinds": ["bcode", "closure", "primitive-designator"],
+    "routes": ["apply", "direct", "funcall"],
+    "eval_inputs": ["atom", "form"]
+  },
+  "classification_gap": {
+    "name": "eval",
+    "current_state": "native-product-surface-missing-from-source-derived-dialect-contract",
+    "required_resolution": "classify-in-system-runtime-before-profile-promotion",
+    "blocks_profile_switch": true
+  },
+  "carrier": {
+    "status": "not-implemented",
+    "forbidden_in_this_stage": ["src/eval.c", "src/mem.c", "src/vm.c"]
+  },
+  "acceptance": {
+    "schema_and_mutation_gate": "dialect-v2-eval-apply-funcall-check",
+    "live_matrix_gate": "dialect-v2-eval-apply-funcall-matrix",
+    "required_engines": ["native-c-treewalk", "native-c-compiler-vm"],
+    "profile_switch": "blocked-until-live-matrix-and-classification-gap-pass"
+  }
+}

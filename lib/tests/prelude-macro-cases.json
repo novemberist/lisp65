@@ -1,0 +1,169 @@
+{
+  "description": "Macroexpansion contract for the first lisp65 Prelude. These are expansion tests, not runtime tests.",
+  "cases": [
+    {
+      "name": "defun-one-body",
+      "macro": "defun",
+      "input": "(defun square (x) (* x x))",
+      "expect": "(set-symbol-function (quote square) (lambda (x) (* x x)))"
+    },
+    {
+      "name": "defun-multiple-body-uses-progn",
+      "macro": "defun",
+      "input": "(defun f (x) (setq x (+ x 1)) x)",
+      "expect": "(set-symbol-function (quote f) (lambda (x) (progn (setq x (+ x 1)) x)))"
+    },
+    {
+      "name": "defparameter-always-assigns-and-returns-name",
+      "macro": "defparameter",
+      "input": "(defparameter *answer* 42)",
+      "expect": "(progn (setq *answer* 42) (quote *answer*))"
+    },
+    {
+      "name": "defvar-assigns-only-when-unbound",
+      "macro": "defvar",
+      "input": "(defvar *answer* (+ 40 2))",
+      "expect": "(progn (if (boundp (quote *answer*)) nil (setq *answer* (+ 40 2))) (quote *answer*))"
+    },
+    {
+      "name": "defvar-without-init-does-not-assign",
+      "macro": "defvar",
+      "input": "(defvar *declared*)",
+      "expect": "(progn (if (boundp (quote *declared*)) nil nil) (quote *declared*))"
+    },
+    {
+      "name": "when-one-body",
+      "macro": "when",
+      "input": "(when ready (write-char 65))",
+      "expect": "(if ready (write-char 65) nil)"
+    },
+    {
+      "name": "when-multiple-body-uses-progn",
+      "macro": "when",
+      "input": "(when ready (write-char 65) (write-char 66))",
+      "expect": "(if ready (progn (write-char 65) (write-char 66)) nil)"
+    },
+    {
+      "name": "unless-one-body",
+      "macro": "unless",
+      "input": "(unless done (write-char 46))",
+      "expect": "(if done nil (write-char 46))"
+    },
+    {
+      "name": "and-zero-args",
+      "macro": "and",
+      "input": "(and)",
+      "expect": "t"
+    },
+    {
+      "name": "and-one-arg",
+      "macro": "and",
+      "input": "(and x)",
+      "expect": "x"
+    },
+    {
+      "name": "and-nested-short-circuit",
+      "macro": "and",
+      "input": "(and a b c)",
+      "expect": "(if a (if b c nil) nil)"
+    },
+    {
+      "name": "or-zero-args",
+      "macro": "or",
+      "input": "(or)",
+      "expect": "nil"
+    },
+    {
+      "name": "or-one-arg",
+      "macro": "or",
+      "input": "(or x)",
+      "expect": "x"
+    },
+    {
+      "name": "or-nested-single-eval",
+      "macro": "or",
+      "input": "(or a b c)",
+      "expect": "(let ((#:or0 a)) (if #:or0 #:or0 (or b c)))"
+    },
+    {
+      "name": "or-temp-does-not-use-user-symbol",
+      "macro": "or",
+      "input": "(or %or fallback)",
+      "expect": "(let ((#:or0 %or)) (if #:or0 #:or0 (or fallback)))"
+    },
+    {
+      "name": "cond-empty",
+      "macro": "cond",
+      "input": "(cond)",
+      "expect": "nil"
+    },
+    {
+      "name": "cond-test-only",
+      "macro": "cond",
+      "input": "(cond (x))",
+      "expect": "(or x nil)"
+    },
+    {
+      "name": "cond-multiple-clauses",
+      "macro": "cond",
+      "input": "(cond ((eq x 1) (quote one)) (t (quote other)))",
+      "expect": "(if (eq x 1) (quote one) (if t (quote other) nil))"
+    },
+    {
+      "name": "let-empty",
+      "macro": "let",
+      "input": "(let () body)",
+      "expect": "((lambda () body))"
+    },
+    {
+      "name": "let-parallel-bindings",
+      "macro": "let",
+      "input": "(let ((x 1) (y (+ 2 3))) (+ x y))",
+      "expect": "((lambda (x y) (+ x y)) 1 (+ 2 3))"
+    },
+    {
+      "name": "let-multiple-body-uses-progn",
+      "macro": "let",
+      "input": "(let ((x 1)) (write-char x) x)",
+      "expect": "((lambda (x) (progn (write-char x) x)) 1)"
+    },
+    {
+      "name": "let-star-empty",
+      "macro": "let*",
+      "input": "(let* () body)",
+      "expect": "(let () body)"
+    },
+    {
+      "name": "let-star-nests",
+      "macro": "let*",
+      "input": "(let* ((x 1) (y (+ x 1))) (+ x y))",
+      "expect": "(let ((x 1)) (let* ((y (+ x 1))) (+ x y)))"
+    },
+    {
+      "name": "case-expands-through-let-and-cond",
+      "macro": "case",
+      "input": "(case key ((a b) 1) (c 2) (otherwise 3))",
+      "expect": "(let ((#:case0 key)) (cond ((or (eql #:case0 (quote a)) (eql #:case0 (quote b))) 1) ((eql #:case0 (quote c)) 2) (t 3)))"
+    },
+    {
+      "name": "case-temp-does-not-use-user-symbol",
+      "macro": "case",
+      "input": "(case %case (a %case) (otherwise fallback))",
+      "expect": "(let ((#:case0 %case)) (cond ((eql #:case0 (quote a)) %case) (t fallback)))"
+    },
+    {
+      "name": "function-form-keeps-lisp-2-function-reference",
+      "macro": "function",
+      "input": "(function f)",
+      "expect": "(function f)",
+      "note": "Reader/parser fixture only: function is a core special form, not a Prelude macro."
+    },
+    {
+      "name": "funcall-is-not-operator-variable",
+      "macro": "let",
+      "input": "(let ((f (function square))) (funcall f 4))",
+      "expect": "((lambda (f) (funcall f 4)) (function square))",
+      "note": "Pins Lisp-2 style: function object is explicit in value position."
+    }
+  ]
+}

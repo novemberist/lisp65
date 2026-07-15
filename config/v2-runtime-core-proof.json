@@ -1,0 +1,103 @@
+{
+  "format": "lisp65-v2-runtime-core-proof-contract-v1",
+  "version": 1,
+  "id": "dialect-v2-runtime-core-proof",
+  "status": "host-proof",
+  "profile": {
+    "id": "dialect-v2-runtime-core-proof",
+    "abi_profile": "dialect-v2",
+    "scope": "internal-evidence-only",
+    "shippable": false,
+    "release_authorization": "none",
+    "workbench_release_effect": "none",
+    "cp5_completion_effect": "none",
+    "hardware_g5_claim": "none"
+  },
+  "provenance": {
+    "artifact_emitter": "python-p0-generator",
+    "supporting_evidence": "cp4-workbench-artifact-differential-335-of-335",
+    "workbench_emitted": false,
+    "pc_free_claim": false,
+    "language_family_promotion": false
+  },
+  "inputs": [
+    {
+      "id": "abi-ledger",
+      "path": "config/bytecode-abi-ledger.json",
+      "sha256": "58a19c68ab67a3f0ceea117810cb5cc836c80c704bc3438e0c55ee710267a8ba"
+    },
+    {
+      "id": "cp4-differential",
+      "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-artifact-differential-receipt.json",
+      "sha256": "3b585a4c864ed77f99a244b331f09a39b97223d7b62349caa0652f81cbb6d478"
+    },
+    {
+      "id": "linker-script",
+      "path": "scripts/lisp65-mega65-runtime-core-inline-overlay.ld",
+      "sha256": "140f89cdf4795a5cccaabc9937fddf2aa0194e2338db7c98c74e24562733cbbe"
+    },
+    {
+      "id": "p0-generator",
+      "path": "tools/host-lisp/bytecode_p0_stdlib.py",
+      "sha256": "3d5048cedfe08e2a507b221dacc61071e33a92c152ce0086648cdd15a970b8ad"
+    },
+    {
+      "id": "runtime-suite",
+      "path": "tests/bytecode/runtime/p0-runtime-export-app-v2.json",
+      "sha256": "c0c5d225bcbea2e76f8de5105c72c961485bf6f0a78315c235cfbc1f93320b7d"
+    },
+    {
+      "id": "service-inventory-tool",
+      "path": "tools/host-lisp/runtime_core_service_inventory.py",
+      "sha256": "14711668b99469908956d4a2b61ffea7df44f22a250d8fabd96aeb7476ea8c84"
+    },
+    {
+      "id": "service-registry",
+      "path": "config/runtime-core-v2-service-registry.json",
+      "sha256": "1741364d79d5aeee2cf66eb9126cc74597583aae8d1559a70f64dd2151ebb27e"
+    }
+  ],
+  "build": {
+    "entry": "runtime-main",
+    "suite": "tests/bytecode/runtime/p0-runtime-export-app-v2.json",
+    "layout": "inline-boot-overlay",
+    "carrier": "cut",
+    "service_registry": "closed-product-specific",
+    "treewalk": "stripped",
+    "strict_arity": true,
+    "reproducibility": "byte-identical-prg-and-elf"
+  },
+  "budgets": {
+    "post_boot_reserve_hard_min_bytes": 8192,
+    "post_boot_reserve_target_bytes": 12288,
+    "target_policy": "report-only-not-promotion",
+    "expected_post_boot_reserve_bytes": 14106,
+    "expected_target_shortfall_bytes": -1818,
+    "expected_resident_bytes": 22757,
+    "expected_prg_bytes": 26274,
+    "expected_boot_overlay_bytes": 3513,
+    "max_prg_file_end": "0xb000"
+  },
+  "candidate": {
+    "format": "lisp65-v2-runtime-core-proof-candidate-v1",
+    "status": "sealed-host-proof",
+    "shippable": false,
+    "release_authorization": "none",
+    "hardware_g5_claim": "none",
+    "artifact_names": [
+      "audit.txt",
+      "elf-audit.json",
+      "footprint.txt",
+      "host-smoke.txt",
+      "reproducibility.json",
+      "resolved-profile.txt",
+      "runtime-preload.bin",
+      "runtime.prg",
+      "runtime.prg.elf",
+      "service-inventory.json",
+      "stdlib-p0.ext.bin",
+      "stdlib-p0.manifest.json",
+      "toolchain.txt"
+    ]
+  }
+}

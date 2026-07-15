@@ -1,0 +1,145 @@
+{
+  "description": "Evaluation contract for the concrete M1 bootstrap Prelude functions in lib/prelude-m1.lisp.",
+  "cases": [
+    {
+      "name": "m1-list-rest-args",
+      "input": "(list 1 2 3)",
+      "expect": "(1 2 3)"
+    },
+    {
+      "name": "m1-increment",
+      "input": "(1+ 41)",
+      "expect": "42"
+    },
+    {
+      "name": "m1-decrement",
+      "input": "(1- 0)",
+      "expect": "-1"
+    },
+    {
+      "name": "m1-zerop-true",
+      "input": "(zerop 0)",
+      "expect": "T"
+    },
+    {
+      "name": "m1-plusp-false",
+      "input": "(plusp -1)",
+      "expect": "NIL"
+    },
+    {
+      "name": "m1-minusp-true",
+      "input": "(minusp -1)",
+      "expect": "T"
+    },
+    {
+      "name": "m1-not-equal-all-distinct",
+      "input": "(/= 1 2 3)",
+      "expect": "T"
+    },
+    {
+      "name": "m1-not-equal-detects-duplicate",
+      "input": "(/= 1 2 1)",
+      "expect": "NIL"
+    },
+    {
+      "name": "m1-append-variadic",
+      "input": "(append (quote (1 2)) (quote (3)) nil (quote (4 5)))",
+      "expect": "(1 2 3 4 5)"
+    },
+    {
+      "name": "m1-length",
+      "input": "(length (quote (a b c)))",
+      "expect": "3"
+    },
+    {
+      "name": "m1-nth",
+      "input": "(nth 2 (quote (a b c d)))",
+      "expect": "C"
+    },
+    {
+      "name": "m1-nthcdr",
+      "input": "(nthcdr 2 (quote (a b c d)))",
+      "expect": "(C D)"
+    },
+    {
+      "name": "m1-reverse",
+      "input": "(reverse (quote (1 2 3)))",
+      "expect": "(3 2 1)"
+    },
+    {
+      "name": "m1-last",
+      "input": "(last (quote (a b c)))",
+      "expect": "(C)"
+    },
+    {
+      "name": "m1-member-finds-tail",
+      "input": "(member (quote b) (quote (a b c)))",
+      "expect": "(B C)"
+    },
+    {
+      "name": "m1-member-misses",
+      "input": "(member (quote z) (quote (a b c)))",
+      "expect": "NIL"
+    },
+    {
+      "name": "m1-assoc-finds-pair",
+      "input": "(assoc (quote b) (quote ((a 1) (b 2) (c 3))))",
+      "expect": "(B 2)"
+    },
+    {
+      "name": "m1-cond-multiple-clauses",
+      "input": "(cond ((eq 1 2) (quote a)) ((eq 2 2) (quote b)) (t (quote c)))",
+      "expect": "B"
+    },
+    {
+      "name": "m1-case-list-key-match",
+      "input": "(case (quote b) ((a b) 7) (otherwise 9))",
+      "expect": "7"
+    },
+    {
+      "name": "m1-case-evaluates-key-once",
+      "input": "(let ((n 0)) (case (progn (setq n (1+ n)) (quote b)) (a 10) (b n) (otherwise 99)))",
+      "expect": "1"
+    },
+    {
+      "name": "m1-remove",
+      "input": "(remove 2 (quote (1 2 3 2)))",
+      "expect": "(1 3)"
+    },
+    {
+      "name": "m1-find",
+      "input": "(find (quote c) (quote (a b c)))",
+      "expect": "C"
+    },
+    {
+      "name": "m1-position",
+      "input": "(position (quote c) (quote (a b c d)))",
+      "expect": "2"
+    },
+    {
+      "name": "m1-mapcar-function-reference",
+      "input": "(mapcar (function 1+) (quote (1 2 3)))",
+      "expect": "(2 3 4)"
+    },
+    {
+      "name": "m1-mapc-returns-input-list",
+      "input": "(mapc (function identity) (quote (a b)))",
+      "expect": "(A B)"
+    },
+    {
+      "name": "m1-apply-function-reference",
+      "input": "(apply (function +) (quote (1 2 3)))",
+      "expect": "6"
+    },
+    {
+      "name": "m1-defvar-expanded-without-init-leaves-unbound",
+      "input": "(progn (if (boundp (quote *declared*)) nil nil) (boundp (quote *declared*)))",
+      "expect": "NIL"
+    },
+    {
+      "name": "m1-defvar-expanded-does-not-overwrite-bound-symbol",
+      "input": "(progn (if (boundp (quote *once*)) nil (setq *once* 1)) (if (boundp (quote *once*)) nil (setq *once* 2)) *once*)",
+      "expect": "1"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "format": "lisp65-directory-only-l65m-v2-implementation-v1",
+  "status": "implemented-product-link-authorized-awaiting-promotion",
+  "budget_projection": {
+    "projected_bank0_debit_ceiling_bytes": 96,
+    "components_bytes": {
+      "vm_call_tailcall_bcode": 28,
+      "loader_commit_ordinal": 36,
+      "validator_version_sentinel_node": 32
+    },
+    "authorization": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-bank-debit-authorization.json",
+      "sha256": "de51b2a2a1697f59a14ad4c70725323a3e308d4a26b2c328ff90727dd87f6f5d"
+    },
+    "acceptance": "measured-debit-zero-may-proceed; measured-debit-positive-stops-for-exact-preauthorization-before-ledger-or-promotion"
+  },
+  "designator_matrix": [
+    {"id": "compile-key-fasl-slot", "caller": "%ide-compile-key", "target": "%ide-fasl-slot-p", "routes": ["apply", "direct", "funcall"]},
+    {"id": "directory-key-source-file", "caller": "%ide-directory-key", "target": "%ide-source-file-p", "routes": ["apply", "direct", "funcall"]},
+    {"id": "find-key-source-file", "caller": "%ide-find-key", "target": "%ide-source-file-p", "routes": ["apply", "direct", "funcall"]},
+    {"id": "write-key-source-file", "caller": "%ide-write-key", "target": "%ide-source-file-p", "routes": ["apply", "direct", "funcall"]}
+  ],
+  "transaction_matrix": [
+    "abort-after-each-validation-phase",
+    "abort-after-each-commit-phase",
+    "gc-during-commit",
+    "latch-recovery",
+    "oom-after-ext-allocation",
+    "source-read-failure-during-commit"
+  ],
+  "diagnostic_binding": "container-receipt-binds-container-sha256-and-diagnostic-map-sha256",
+  "late_binding_contract": {
+    "mechanism": "late_bound_exports",
+    "current_hooks": ["%ide-x"],
+    "audit_result": "one-declared-hook-zero-undeclared-hooks",
+    "required_sequence_proof": "commit-ide-check-core-hook-commit-idex-check-function-cell-change-and-M-x-marker",
+    "measured_product_link": {
+      "ide_anonymous_entries": 76,
+      "idex_anonymous_entries": 15,
+      "ide_entry_refs": 228,
+      "idex_entry_refs": 25,
+      "all_exports_named": 11,
+      "late_bound_entry_ref_edges": 0,
+      "hook_audit_undeclared": 0,
+      "free_symbols": 120,
+      "free_namepool_bytes": 2155,
+      "post_align_directory_slots": 32,
+      "ext_post_headroom_bytes": 16439
+    }
+  },
+  "actual_product_link": {
+    "report": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/directory-only-l65m-v2-product-link-report.json",
+      "sha256": "367c8ad6f0308e5c6e8c2b7ab8ff325f010ded63ab9acc84dbaf1e1ea01cc8fc"
+    },
+    "baseline_product_sha256": "9d8e4d0ec8886c66dbe59383d32f010b1e99706c6e8f23b0b70b15af5968aa1f",
+    "candidate_product_sha256": "01fcdddd96ff898f9a4206703f40a2ae8699a21245bf6f33e35bcdb69b5d1110",
+    "measured_bank0_debit_bytes": 166,
+    "banked_headroom_bytes": 269,
+    "composition": {
+      "free_symbols": 127,
+      "free_namepool_bytes": 2279,
+      "post_align_directory_slots": 32,
+      "ext_post_headroom_bytes": 16384
+    }
+  },
+  "next_stop": "run-nine-case-g3-emulator-prefilter"
+}

@@ -1,0 +1,40 @@
+{
+  "description": "Evaluation contract for lib/stdlib-plists.lisp on top of the M1 Prelude.",
+  "cases": [
+    {
+      "name": "stdlib-getf-keyword-symbol",
+      "input": "(getf (quote (:a 1 :b 2)) (quote :b))",
+      "expect": "2"
+    },
+    {
+      "name": "stdlib-getf-first",
+      "input": "(getf (quote (a 1 b 2)) (quote a))",
+      "expect": "1"
+    },
+    {
+      "name": "stdlib-getf-missing-nil",
+      "input": "(getf (quote (a 1 b 2)) (quote c))",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-getf-missing-default",
+      "input": "(getf (quote (a 1 b 2)) (quote c) 99)",
+      "expect": "99"
+    },
+    {
+      "name": "stdlib-remf-first",
+      "input": "(remf (quote (a 1 b 2)) (quote a))",
+      "expect": "(B 2)"
+    },
+    {
+      "name": "stdlib-remf-middle",
+      "input": "(remf (quote (a 1 b 2 c 3)) (quote b))",
+      "expect": "(A 1 C 3)"
+    },
+    {
+      "name": "stdlib-remf-missing",
+      "input": "(remf (quote (a 1 b 2)) (quote c))",
+      "expect": "(A 1 B 2)"
+    }
+  ]
+}

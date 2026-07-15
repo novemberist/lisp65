@@ -1,0 +1,129 @@
+{
+  "format": "lisp65-v2-workbench-artifact-closure-v1",
+  "version": 1,
+  "abi_ledger": "config/bytecode-abi-ledger.json",
+  "target_abi_profile": "dialect-v2",
+  "policies": {
+    "artifact_set": "exact-four",
+    "classification": "dense-exact-partition",
+    "new_classification": "reject",
+    "tombstone_callprim": "reject",
+    "unresolved_call_or_tailcall": "reject",
+    "runtime_function_pointer_registry": "forbidden"
+  },
+  "target_counts": {
+    "callprim": 4,
+    "native-service": 14,
+    "error-service": 11,
+    "total": 29
+  },
+  "artifacts": [
+    {
+      "id": "resident",
+      "manifest": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-stdlib-artifacts-v1",
+      "artifact_role": "stdlib",
+      "name": null,
+      "source_suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+      "suite": "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+      "abi_profile": "dialect-v2",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    },
+    {
+      "id": "ide",
+      "manifest": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+      "artifact_role": "disk-lib",
+      "name": "ide",
+      "source_suite": "tests/bytecode/libs/p0-ide-core-lib.json",
+      "suite": "build/bytecode/dialect-v2/suites/p0-ide-core-lib.json",
+      "abi_profile": "dialect-v2",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    },
+    {
+      "id": "idex",
+      "manifest": "build/bytecode/dialect-v2/libs/idex.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+      "artifact_role": "disk-lib",
+      "name": "ide-extra",
+      "source_suite": "tests/bytecode/libs/p0-ide-extra-lib.json",
+      "suite": "build/bytecode/dialect-v2/suites/p0-ide-extra-lib.json",
+      "abi_profile": "dialect-v2",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    },
+    {
+      "id": "m65d",
+      "manifest": "build/bytecode/dialect-v2/libs/m65d.manifest.json",
+      "manifest_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+      "artifact_role": "disk-lib",
+      "name": "m65d",
+      "source_suite": "tests/bytecode/libs/p0-m65d-lib.json",
+      "suite": "build/bytecode/dialect-v2/suites/p0-m65d-lib.json",
+      "abi_profile": "dialect-v2",
+      "visible_artifacts": ["resident", "ide", "idex", "m65d"]
+    }
+  ],
+  "classifications": {
+    "callprim": ["boundp", "nreverse", "rplaca", "rplacd"],
+    "native-service": [
+      "%cs-read-open",
+      "%fasl-read-form",
+      "%fasl-stage",
+      "%fasl-stage-get",
+      "%set-macro",
+      "function-kind",
+      "gensym",
+      "lcc-install",
+      "macroexpand-1",
+      "prin1",
+      "symbol-count",
+      "symbol-max",
+      "symbol-name",
+      "write-char"
+    ],
+    "error-service": [
+      "%fasl-error-entries-overflow",
+      "%fasl-error-nodes-overflow",
+      "%fasl-error-not-a-defun",
+      "%fasl-error-output-overflow",
+      "%fasl-error-patches-overflow",
+      "%fasl-error-strings-overflow",
+      "%fasl-error-too-many-helpers",
+      "%fasl-error-unsupported-literal",
+      "%fasl-error-window-overflow",
+      "%lcc-error-do-body-too-big",
+      "%lcc-error-invalid-parameter-list"
+    ]
+  },
+  "implemented_bindings": {
+    "native-service": [
+      {"name": "%cs-read-open", "id": 30},
+      {"name": "%fasl-read-form", "id": 31},
+      {"name": "%fasl-stage", "id": 32},
+      {"name": "%fasl-stage-get", "id": 33},
+      {"name": "%set-macro", "id": 35},
+      {"name": "function-kind", "id": 36},
+      {"name": "gensym", "id": 37},
+      {"name": "lcc-install", "id": 38},
+      {"name": "macroexpand-1", "id": 39},
+      {"name": "prin1", "id": 41},
+      {"name": "symbol-count", "id": 42},
+      {"name": "symbol-max", "id": 43},
+      {"name": "symbol-name", "id": 44},
+      {"name": "write-char", "id": 45}
+    ],
+    "error-service": [
+      {"name": "%fasl-error-entries-overflow", "id": 46},
+      {"name": "%fasl-error-nodes-overflow", "id": 47},
+      {"name": "%fasl-error-not-a-defun", "id": 48},
+      {"name": "%fasl-error-output-overflow", "id": 49},
+      {"name": "%fasl-error-patches-overflow", "id": 50},
+      {"name": "%fasl-error-strings-overflow", "id": 51},
+      {"name": "%fasl-error-too-many-helpers", "id": 52},
+      {"name": "%fasl-error-unsupported-literal", "id": 53},
+      {"name": "%fasl-error-window-overflow", "id": 54},
+      {"name": "%lcc-error-do-body-too-big", "id": 55},
+      {"name": "%lcc-error-invalid-parameter-list", "id": 56}
+    ]
+  }
+}

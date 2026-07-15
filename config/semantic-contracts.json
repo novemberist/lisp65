@@ -1,0 +1,929 @@
+{
+  "format": "lisp65-semantic-contract-registry-v1",
+  "engines": [
+    {
+      "id": "python-reader-model",
+      "class": "model"
+    },
+    {
+      "id": "native-c-reader",
+      "class": "native"
+    },
+    {
+      "id": "python-p0-source-parser",
+      "class": "model"
+    },
+    {
+      "id": "workbench-reader",
+      "class": "product"
+    },
+    {
+      "id": "python-bytecode-vm",
+      "class": "model"
+    },
+    {
+      "id": "python-bytecode-compiler",
+      "class": "model"
+    },
+    {
+      "id": "python-p0-compiler-vm",
+      "class": "model"
+    },
+    {
+      "id": "native-c-vm",
+      "class": "native"
+    },
+    {
+      "id": "native-c-compiler",
+      "class": "native"
+    },
+    {
+      "id": "lisp-lcc",
+      "class": "model"
+    },
+    {
+      "id": "python-p0-eval",
+      "class": "model"
+    },
+    {
+      "id": "native-c-treewalk",
+      "class": "native"
+    },
+    {
+      "id": "native-c-compiler-vm",
+      "class": "native"
+    },
+    {
+      "id": "workbench-eval",
+      "class": "product"
+    },
+    {
+      "id": "python-l65m-validator",
+      "class": "model"
+    },
+    {
+      "id": "native-c-disk-lib-loader",
+      "class": "native"
+    },
+    {
+      "id": "workbench-disk-lib-loader",
+      "class": "product"
+    },
+    {
+      "id": "python-persistence-contract",
+      "class": "model"
+    },
+    {
+      "id": "python-d81-fault-oracle",
+      "class": "model"
+    },
+    {
+      "id": "workbench-m65d",
+      "class": "product"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "reader",
+      "kind": "behavior",
+      "status": "normative",
+      "fixture": {
+        "path": "lib/tests/mvp-reader-cases.json",
+        "format": "lisp65-reader-cases-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "python-reader-model",
+        "native-c-reader"
+      ],
+      "adapters": [
+        {
+          "id": "reader-python-model",
+          "engine": "python-reader-model",
+          "stage": "G0",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/mvp_cl_reader_oracle.py",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "reader-native-char-root",
+          "engine": "native-c-reader",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/native_reader_conformance.py",
+            "--driver",
+            "build/reader-conformance-host",
+            "--root-driver",
+            "build/reader-root-guard-host",
+            "--fixture",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "reader-native-arena",
+          "engine": "native-c-reader",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/native_reader_conformance.py",
+            "--driver",
+            "build/reader-conformance-arena-host",
+            "--fixture",
+            "{fixture}"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "python-p0-source-parser",
+          "target_stage": "G1",
+          "reason": "The P0 source parser does not yet consume the normative reader cases."
+        },
+        {
+          "engine": "workbench-reader",
+          "target_stage": "G2",
+          "reason": "The live Workbench reader remains a G5 validation; G2 is the highest stage represented by this registry version."
+        }
+      ],
+      "legacy_references": [
+        "tools/host-lisp/lisp64.py"
+      ]
+    },
+    {
+      "id": "eval-surface-v1",
+      "kind": "behavior",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/runtime/p0-eval-surface.json",
+        "format": "lisp65-eval-surface-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "python-p0-eval",
+        "native-c-treewalk",
+        "native-c-compiler-vm",
+        "lisp-lcc"
+      ],
+      "adapters": [
+        {
+          "id": "eval-surface-python-p0",
+          "engine": "python-p0-eval",
+          "stage": "G0",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/eval_surface_contract.py",
+            "--engine",
+            "python-p0-compiler-vm",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "eval-surface-native-treewalk",
+          "engine": "native-c-treewalk",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/eval_surface_contract.py",
+            "--engine",
+            "native-treewalk",
+            "--binary",
+            "build/equivalence/equivalence-check",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "eval-surface-native-compiler-vm",
+          "engine": "native-c-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/eval_surface_contract.py",
+            "--engine",
+            "native-c-compiler-vm",
+            "--binary",
+            "build/equivalence/equivalence-check",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "eval-surface-lisp-lcc",
+          "engine": "lisp-lcc",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/eval_surface_contract.py",
+            "--engine",
+            "lisp-lcc",
+            "--binary",
+            "build/equivalence/equivalence-check",
+            "{fixture}"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-eval",
+          "target_stage": "G2",
+          "reason": "The separate G2 surface contract proves the shipped route and build binding only; it does not execute these behavior cases on the 45GS02, which remains a G5 acceptance gap."
+        }
+      ],
+      "legacy_references": [
+        "lib/tests/mvp-eval-cases.json"
+      ]
+    },
+    {
+      "id": "workbench-eval-surface-v1",
+      "kind": "surface",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/runtime/workbench-eval-surface.json",
+        "format": "lisp65-workbench-eval-surface-v1"
+      },
+      "claims": [
+        "product"
+      ],
+      "required_engines": [
+        "workbench-eval"
+      ],
+      "adapters": [
+        {
+          "id": "workbench-eval-surface-binding",
+          "engine": "workbench-eval",
+          "stage": "G2",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/workbench_eval_surface.py",
+            "{fixture}",
+            "--ship-dir",
+            "build/ship-candidate"
+          ]
+        }
+      ],
+      "coverage_gaps": [],
+      "legacy_references": []
+    },
+    {
+      "id": "bytecode-p0",
+      "kind": "abi",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/p0-golden-vectors.json",
+        "format": "lisp65-bytecode-p0-golden-vectors-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "python-bytecode-vm",
+        "python-bytecode-compiler",
+        "native-c-vm",
+        "native-c-compiler",
+        "lisp-lcc"
+      ],
+      "adapters": [
+        {
+          "id": "bytecode-p0-python-vm",
+          "engine": "python-bytecode-vm",
+          "stage": "G0",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/bytecode_p0_oracle.py",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "bytecode-p0-python-compiler",
+          "engine": "python-bytecode-compiler",
+          "stage": "G0",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/bytecode_p0_compiler.py",
+            "--check",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "bytecode-p0-drift",
+          "engine": "python-bytecode-vm",
+          "stage": "G1",
+          "mode": "drift",
+          "fixture_binding": "generated",
+          "argv": [
+            "python3",
+            "tools/host-lisp/bytecode_p0_drift_check.py"
+          ]
+        },
+        {
+          "id": "bytecode-p0-native-c-vm",
+          "engine": "native-c-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "generated",
+          "argv": [
+            "build/vm-smoke-host"
+          ]
+        },
+        {
+          "id": "bytecode-p0-native-c-compiler",
+          "engine": "native-c-compiler",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "generated",
+          "argv": [
+            "build/bytecode-p0-native-compiler-host"
+          ]
+        },
+        {
+          "id": "bytecode-p0-lisp-lcc",
+          "engine": "lisp-lcc",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "scripts/lcc-oracle.py",
+            "--binary",
+            "build/equivalence/equivalence-check",
+            "--fixture",
+            "{fixture}"
+          ]
+        }
+      ],
+      "coverage_gaps": [],
+      "legacy_references": [
+        "docs/reference/bytecode-v1.md",
+        "tools/host-lisp/host_bcvm.py"
+      ]
+    },
+    {
+      "id": "dialect-v2-prelude-control",
+      "kind": "semantics",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/dialect-v2/prelude-control/cases.json",
+        "format": "lisp65-dialect-v2-prelude-control-cases-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "native-c-treewalk",
+        "native-c-compiler-vm"
+      ],
+      "adapters": [
+        {
+          "id": "dialect-v2-prelude-control-treewalk-cases",
+          "engine": "native-c-treewalk",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_prelude_control.py",
+            "--fixture",
+            "{fixture}",
+            "run",
+            "--engine",
+            "native-c-treewalk",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-prelude-control"
+          ]
+        },
+        {
+          "id": "dialect-v2-prelude-control-compiler-vm-cases",
+          "engine": "native-c-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_prelude_control.py",
+            "--fixture",
+            "{fixture}",
+            "run",
+            "--engine",
+            "native-c-compiler-vm",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-prelude-control"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-eval",
+          "target_stage": "G2",
+          "reason": "The v2 product switch remains blocked until every family is migrated and the full Workbench hardware matrix passes."
+        }
+      ],
+      "legacy_references": [
+        "lib/prelude-m1.lisp",
+        "lib/stdlib-control.lisp"
+      ]
+    },
+    {
+      "id": "dialect-v2-eval-apply-funcall",
+      "kind": "semantics",
+      "status": "candidate",
+      "fixture": {
+        "path": "tests/bytecode/dialect-v2/eval-apply-funcall/cases.json",
+        "format": "lisp65-dialect-v2-eval-apply-funcall-cases-v1"
+      },
+      "claims": [],
+      "required_engines": [],
+      "adapters": [],
+      "coverage_gaps": [
+        {
+          "engine": "native-c-treewalk",
+          "target_stage": "G1",
+          "reason": "Checkpoint 1 validates the normative fixture only; the full differential remains blocked until the v2 carrier is implemented."
+        },
+        {
+          "engine": "native-c-compiler-vm",
+          "target_stage": "G1",
+          "reason": "The v2 compiler/VM route does not yet expose the public eval carrier or primitive-designator strict arity required by the fixture."
+        }
+      ],
+      "legacy_references": [
+        "tests/bytecode/runtime/p0-eval-surface.json",
+        "tests/bytecode/runtime/workbench-eval-surface.json"
+      ]
+    },
+    {
+      "id": "dialect-v2-ide",
+      "kind": "semantics",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/dialect-v2/ide/cases.json",
+        "format": "lisp65-dialect-v2-ide-cases-v1"
+      },
+      "claims": ["host"],
+      "required_engines": [
+        "native-c-compiler-vm",
+        "python-p0-compiler-vm"
+      ],
+      "adapters": [
+        {
+          "id": "dialect-v2-ide-native-product-cases",
+          "engine": "native-c-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_ide_evidence.py",
+            "check",
+            "--fixture",
+            "{fixture}",
+            "--engine",
+            "native-c-compiler-vm"
+          ]
+        },
+        {
+          "id": "dialect-v2-ide-python-p0-cases",
+          "engine": "python-p0-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_ide_evidence.py",
+            "check",
+            "--fixture",
+            "{fixture}",
+            "--engine",
+            "python-p0-compiler-vm"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-eval",
+          "target_stage": "G2",
+          "reason": "The final profile-switch candidate remains subject to the cold-start hardware chapter; R2 binds the already proven Workbench surface and the new Directory-only product link separately."
+        }
+      ],
+      "legacy_references": [
+        "lib/ide-launch.lisp",
+        "tests/bytecode/libs/p0-ide-lib.json",
+        "tests/bytecode/libs/p0-ide-extra-lib.json"
+      ]
+    },
+    {
+      "id": "dialect-v2-lists",
+      "kind": "semantics",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/dialect-v2/lists/cases.json",
+        "format": "lisp65-dialect-v2-lists-cases-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "native-c-treewalk",
+        "native-c-compiler-vm",
+        "python-p0-compiler-vm",
+        "lisp-lcc"
+      ],
+      "adapters": [
+        {
+          "id": "dialect-v2-lists-treewalk-cases",
+          "engine": "native-c-treewalk",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_prelude_control.py",
+            "--fixture",
+            "{fixture}",
+            "run",
+            "--engine",
+            "native-c-treewalk",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-lists"
+          ]
+        },
+        {
+          "id": "dialect-v2-lists-compiler-vm-cases",
+          "engine": "native-c-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_prelude_control.py",
+            "--fixture",
+            "{fixture}",
+            "run",
+            "--engine",
+            "native-c-compiler-vm",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-lists"
+          ]
+        },
+        {
+          "id": "dialect-v2-lists-python-p0-cases",
+          "engine": "python-p0-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_lists_p0.py",
+            "--fixture",
+            "{fixture}",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-lists"
+          ]
+        },
+        {
+          "id": "dialect-v2-lists-lcc-cases",
+          "engine": "lisp-lcc",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_lcc_surface.py",
+            "--lists",
+            "--lists-fixture",
+            "{fixture}",
+            "--lists-output-dir",
+            "build/semantic-contracts/dialect-v2-lists"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-eval",
+          "target_stage": "G2",
+          "reason": "The active Workbench remains dialect-v1 until every family and the dialect-v2 G5 matrix pass."
+        }
+      ],
+      "legacy_references": [
+        "lib/prelude-m1.lisp",
+        "lib/stdlib-lists.lisp",
+        "lib/stdlib-sequences.lisp",
+        "lib/stdlib-plists.lisp"
+      ]
+    },
+    {
+      "id": "dialect-v2-system-runtime",
+      "kind": "semantics",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/dialect-v2/system-runtime/cases.json",
+        "format": "lisp65-dialect-v2-system-runtime-cases-v1"
+      },
+      "claims": ["host"],
+      "required_engines": [
+        "native-c-treewalk",
+        "native-c-compiler-vm",
+        "python-p0-compiler-vm",
+        "lisp-lcc"
+      ],
+      "adapters": [
+        {
+          "id": "dialect-v2-system-runtime-treewalk-cases",
+          "engine": "native-c-treewalk",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": ["python3", "tools/host-lisp/dialect_v2_system_runtime.py", "--fixture", "{fixture}", "--engine", "native-c-treewalk", "check"]
+        },
+        {
+          "id": "dialect-v2-system-runtime-compiler-vm-cases",
+          "engine": "native-c-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": ["python3", "tools/host-lisp/dialect_v2_system_runtime.py", "--fixture", "{fixture}", "--engine", "native-c-compiler-vm", "check"]
+        },
+        {
+          "id": "dialect-v2-system-runtime-python-p0-cases",
+          "engine": "python-p0-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": ["python3", "tools/host-lisp/dialect_v2_system_runtime.py", "--fixture", "{fixture}", "--engine", "python-p0-compiler-vm", "check"]
+        },
+        {
+          "id": "dialect-v2-system-runtime-lcc-cases",
+          "engine": "lisp-lcc",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": ["python3", "tools/host-lisp/dialect_v2_system_runtime.py", "--fixture", "{fixture}", "--engine", "lisp-lcc", "check"]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-eval",
+          "target_stage": "G2",
+          "reason": "The active Workbench remains dialect-v1 until every family and the dialect-v2 G5 matrix pass."
+        }
+      ],
+      "legacy_references": ["lib/stdlib-load-lib.lisp", "lib/stdlib-output.lisp"]
+    },
+    {
+      "id": "dialect-v2-strings",
+      "kind": "semantics",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/dialect-v2/strings/cases.json",
+        "format": "lisp65-dialect-v2-strings-cases-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "native-c-treewalk",
+        "native-c-compiler-vm",
+        "python-p0-compiler-vm",
+        "lisp-lcc"
+      ],
+      "adapters": [
+        {
+          "id": "dialect-v2-strings-treewalk-cases",
+          "engine": "native-c-treewalk",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_prelude_control.py",
+            "--fixture",
+            "{fixture}",
+            "run",
+            "--engine",
+            "native-c-treewalk",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-strings"
+          ]
+        },
+        {
+          "id": "dialect-v2-strings-compiler-vm-cases",
+          "engine": "native-c-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_prelude_control.py",
+            "--fixture",
+            "{fixture}",
+            "run",
+            "--engine",
+            "native-c-compiler-vm",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-strings"
+          ]
+        },
+        {
+          "id": "dialect-v2-strings-python-p0-cases",
+          "engine": "python-p0-compiler-vm",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_strings_p0.py",
+            "--fixture",
+            "{fixture}",
+            "--output-dir",
+            "build/semantic-contracts/dialect-v2-strings"
+          ]
+        },
+        {
+          "id": "dialect-v2-strings-lcc-cases",
+          "engine": "lisp-lcc",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/dialect_v2_lcc_surface.py",
+            "--strings",
+            "--strings-fixture",
+            "{fixture}",
+            "--strings-output-dir",
+            "build/semantic-contracts/dialect-v2-strings"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-eval",
+          "target_stage": "G2",
+          "reason": "The active Workbench remains dialect-v1 until every family and the dialect-v2 G5 matrix pass."
+        }
+      ],
+      "legacy_references": [
+        "lib/stdlib-strings.lisp",
+        "lib/dialect-v2/strings-core.lisp",
+        "lib/dialect-v2/strings-library.lisp"
+      ]
+    },
+    {
+      "id": "disk-lib-v1",
+      "kind": "format",
+      "status": "normative",
+      "fixture": {
+        "path": "tests/bytecode/formats/p0-disk-lib-v1.json",
+        "format": "lisp65-disk-lib-container-cases-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "python-l65m-validator",
+        "native-c-disk-lib-loader",
+        "lisp-lcc"
+      ],
+      "adapters": [
+        {
+          "id": "disk-lib-v1-python-cases",
+          "engine": "python-l65m-validator",
+          "stage": "G0",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/l65m_contract.py",
+            "check-fixture",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "disk-lib-v1-native-loader-cases",
+          "engine": "native-c-disk-lib-loader",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "generated",
+          "argv": [
+            "build/l65m-native-loader-host"
+          ]
+        },
+        {
+          "id": "disk-lib-v1-host-packer-drift",
+          "engine": "python-l65m-validator",
+          "stage": "G1",
+          "mode": "drift",
+          "fixture_binding": "generated",
+          "argv": [
+            "python3",
+            "tools/host-lisp/l65m_contract.py",
+            "validate",
+            "build/bytecode/libs/testlib.ext.bin"
+          ]
+        },
+        {
+          "id": "disk-lib-v1-lisp-lcc-cases",
+          "engine": "lisp-lcc",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "generated",
+          "argv": [
+            "python3",
+            "tools/host-lisp/l65m_contract.py",
+            "validate",
+            "build/equivalence/fasl-test.bin"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-disk-lib-loader",
+          "target_stage": "G2",
+          "reason": "The Ship-v5 loader is live-tested, but the registry still has no separately approved fixture-bound G2 product adapter."
+        }
+      ],
+      "legacy_references": [
+        "scripts/fasl-validate.py",
+        "docs/disk-bytecode-libs-design.md"
+      ]
+    },
+    {
+      "id": "persistence-v1",
+      "kind": "transaction",
+      "status": "normative",
+      "fixture": {
+        "path": "config/persistence-contract.json",
+        "format": "lisp65-persistence-contract-v1"
+      },
+      "claims": [
+        "host"
+      ],
+      "required_engines": [
+        "python-persistence-contract",
+        "python-d81-fault-oracle"
+      ],
+      "adapters": [
+        {
+          "id": "persistence-contract-validator",
+          "engine": "python-persistence-contract",
+          "stage": "G0",
+          "mode": "cases",
+          "fixture_binding": "argument",
+          "argv": [
+            "python3",
+            "tools/host-lisp/persistence_contract.py",
+            "--contract",
+            "{fixture}"
+          ]
+        },
+        {
+          "id": "persistence-d81-fault-oracle",
+          "engine": "python-d81-fault-oracle",
+          "stage": "G1",
+          "mode": "cases",
+          "fixture_binding": "generated",
+          "argv": [
+            "python3",
+            "tools/host-lisp/d81_persistence_fault.py",
+            "--selftest"
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "engine": "workbench-m65d",
+          "target_stage": "G2",
+          "reason": "The registry has no product adapter yet; reset, remount and readback remain a disposable-D81 G5 acceptance run."
+        }
+      ],
+      "legacy_references": [
+        "lib/m65-disk-alloc-var.lisp",
+        "tools/host-lisp/d81_save_new_diff.py"
+      ]
+    }
+  ]
+}

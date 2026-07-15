@@ -1,0 +1,331 @@
+{
+  "format": "lisp65-dialect-v2-strings-cases-v1",
+  "profile": "dialect-v1-v2-differential",
+  "family": "strings",
+  "cases": [
+    {
+      "id": "internal-concat-apply-not-designator",
+      "forms": ["(apply (function %string-concat-list) (quote ((\"a\" \"b\"))))"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "internal-concat-funcall-not-designator",
+      "forms": ["(funcall (function %string-concat-list) (quote (\"a\" \"b\")))"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "internal-slice-apply-not-designator",
+      "forms": ["(apply (function %string-slice) \"abcd\" (quote (1 3)))"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "internal-slice-funcall-not-designator",
+      "forms": ["(funcall (function %string-slice) \"abcd\" 1 3)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "list-to-string-public-name-removed",
+      "forms": ["(list->string (quote (97 98)))"],
+      "migration_anchor": "decision:string-character-list-removal",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"ab\"", "native-c-compiler-vm": "\"ab\"", "python-p0-compiler-vm": "\"ab\"", "lisp-lcc": "\"ab\""},
+        "dialect-v2": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "string-append-apply-multi",
+      "forms": ["(apply (function string-append) \"a\" (quote (\"b\" \"c\")))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "\"abc\"", "python-p0-compiler-vm": "\"abc\"", "lisp-lcc": "\"abc\""},
+        "dialect-v2": {"native-c-treewalk": "\"abc\"", "native-c-compiler-vm": "\"abc\"", "python-p0-compiler-vm": "\"abc\"", "lisp-lcc": "\"abc\""}
+      }
+    },
+    {
+      "id": "string-append-empty",
+      "forms": ["(string-append)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"\"", "native-c-compiler-vm": "\"\"", "python-p0-compiler-vm": "\"\"", "lisp-lcc": "\"\""},
+        "dialect-v2": {"native-c-treewalk": "\"\"", "native-c-compiler-vm": "\"\"", "python-p0-compiler-vm": "\"\"", "lisp-lcc": "\"\""}
+      }
+    },
+    {
+      "id": "string-append-funcall-one",
+      "forms": ["(funcall (function string-append) \"abc\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"abc\"", "native-c-compiler-vm": "\"abc\"", "python-p0-compiler-vm": "\"abc\"", "lisp-lcc": "\"abc\""},
+        "dialect-v2": {"native-c-treewalk": "\"abc\"", "native-c-compiler-vm": "\"abc\"", "python-p0-compiler-vm": "\"abc\"", "lisp-lcc": "\"abc\""}
+      }
+    },
+    {
+      "id": "string-append-multi",
+      "forms": ["(string-append \"ab\" \"\" \"cd\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"abcd\"", "native-c-compiler-vm": "\"abcd\"", "python-p0-compiler-vm": "\"abcd\"", "lisp-lcc": "\"abcd\""},
+        "dialect-v2": {"native-c-treewalk": "\"abcd\"", "native-c-compiler-vm": "\"abcd\"", "python-p0-compiler-vm": "\"abcd\"", "lisp-lcc": "\"abcd\""}
+      }
+    },
+    {
+      "id": "string-equal-apply",
+      "forms": ["(apply (function string=) \"same\" (quote (\"same\")))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-equal-empty",
+      "forms": ["(string= \"\" \"\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-equal-false",
+      "forms": ["(string= \"abc\" \"abd\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"},
+        "dialect-v2": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"}
+      }
+    },
+    {
+      "id": "string-equal-funcall",
+      "forms": ["(funcall (function string=) \"abc\" \"abc\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-equal-true",
+      "forms": ["(string= \"abc\" \"abc\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-length-apply",
+      "forms": ["(apply (function string-length) (quote (\"abcd\")))"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "4", "native-c-compiler-vm": "4", "python-p0-compiler-vm": "4", "lisp-lcc": "4"},
+        "dialect-v2": {"native-c-treewalk": "4", "native-c-compiler-vm": "4", "python-p0-compiler-vm": "4", "lisp-lcc": "4"}
+      }
+    },
+    {
+      "id": "string-length-direct",
+      "forms": ["(string-length \"abcd\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "4", "native-c-compiler-vm": "4", "python-p0-compiler-vm": "4", "lisp-lcc": "4"},
+        "dialect-v2": {"native-c-treewalk": "4", "native-c-compiler-vm": "4", "python-p0-compiler-vm": "4", "lisp-lcc": "4"}
+      }
+    },
+    {
+      "id": "string-length-funcall",
+      "forms": ["(funcall (function string-length) \"abcd\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "4", "native-c-compiler-vm": "4", "python-p0-compiler-vm": "4", "lisp-lcc": "4"},
+        "dialect-v2": {"native-c-treewalk": "4", "native-c-compiler-vm": "4", "python-p0-compiler-vm": "4", "lisp-lcc": "4"}
+      }
+    },
+    {
+      "id": "string-less-apply",
+      "forms": ["(apply (function string<) \"abc\" (quote (\"abd\")))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-less-equal-false",
+      "forms": ["(string< \"abc\" \"abc\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"},
+        "dialect-v2": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"}
+      }
+    },
+    {
+      "id": "string-less-funcall",
+      "forms": ["(funcall (function string<) \"abc\" \"abd\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-less-lexicographic",
+      "forms": ["(string< \"abd\" \"aca\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-less-prefix",
+      "forms": ["(string< \"ab\" \"abc\")"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t", "python-p0-compiler-vm": "t", "lisp-lcc": "t"}
+      }
+    },
+    {
+      "id": "string-ref-apply",
+      "forms": ["(apply (function string-ref) \"abc\" (quote (1)))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "98", "python-p0-compiler-vm": "98", "lisp-lcc": "98"},
+        "dialect-v2": {"native-c-treewalk": "98", "native-c-compiler-vm": "98", "python-p0-compiler-vm": "98", "lisp-lcc": "98"}
+      }
+    },
+    {
+      "id": "string-ref-direct",
+      "forms": ["(string-ref \"abc\" 1)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "98", "native-c-compiler-vm": "98", "python-p0-compiler-vm": "98", "lisp-lcc": "98"},
+        "dialect-v2": {"native-c-treewalk": "98", "native-c-compiler-vm": "98", "python-p0-compiler-vm": "98", "lisp-lcc": "98"}
+      }
+    },
+    {
+      "id": "string-ref-funcall",
+      "forms": ["(funcall (function string-ref) \"abc\" 1)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "98", "native-c-compiler-vm": "98", "python-p0-compiler-vm": "98", "lisp-lcc": "98"},
+        "dialect-v2": {"native-c-treewalk": "98", "native-c-compiler-vm": "98", "python-p0-compiler-vm": "98", "lisp-lcc": "98"}
+      }
+    },
+    {
+      "id": "string-to-list-public-name-removed",
+      "forms": ["(string->list \"ab\")"],
+      "migration_anchor": "decision:string-character-list-removal",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(97 98)", "native-c-compiler-vm": "(97 98)", "python-p0-compiler-vm": "(97 98)", "lisp-lcc": "(97 98)"},
+        "dialect-v2": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "substring-apply-default",
+      "forms": ["(apply (function substring) \"abcd\" (quote (1)))"],
+      "migration_anchor": "decision:eval-apply-funcall-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "\"bcd\"", "python-p0-compiler-vm": "\"bcd\"", "lisp-lcc": "\"bcd\""},
+        "dialect-v2": {"native-c-treewalk": "\"bcd\"", "native-c-compiler-vm": "\"bcd\"", "python-p0-compiler-vm": "\"bcd\"", "lisp-lcc": "\"bcd\""}
+      }
+    },
+    {
+      "id": "substring-bounds-end-too-large",
+      "forms": ["(substring \"abcd\" 1 9)"],
+      "migration_anchor": "decision:string-bounds-contract",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"bcd\"", "native-c-compiler-vm": "\"bcd\"", "python-p0-compiler-vm": "\"bcd\"", "lisp-lcc": "\"bcd\""},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "!error:runtime"}
+      }
+    },
+    {
+      "id": "substring-bounds-negative-start",
+      "forms": ["(substring \"abcd\" -1 2)"],
+      "migration_anchor": "decision:string-bounds-contract",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"ab\"", "native-c-compiler-vm": "\"ab\"", "python-p0-compiler-vm": "\"ab\"", "lisp-lcc": "\"ab\""},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "!error:runtime"}
+      }
+    },
+    {
+      "id": "substring-bounds-reversed",
+      "forms": ["(substring \"abcd\" 3 1)"],
+      "migration_anchor": "decision:string-bounds-contract",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"\"", "native-c-compiler-vm": "\"\"", "python-p0-compiler-vm": "\"\"", "lisp-lcc": "\"\""},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "!error:runtime"}
+      }
+    },
+    {
+      "id": "substring-empty",
+      "forms": ["(substring \"abcd\" 2 2)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"\"", "native-c-compiler-vm": "\"\"", "python-p0-compiler-vm": "\"\"", "lisp-lcc": "\"\""},
+        "dialect-v2": {"native-c-treewalk": "\"\"", "native-c-compiler-vm": "\"\"", "python-p0-compiler-vm": "\"\"", "lisp-lcc": "\"\""}
+      }
+    },
+    {
+      "id": "substring-explicit-nil-default",
+      "forms": ["(substring \"abcd\" 1 nil)"],
+      "migration_anchor": "decision:optional-source-lowering",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"\"", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "\"\""},
+        "dialect-v2": {"native-c-treewalk": "\"bcd\"", "native-c-compiler-vm": "\"bcd\"", "python-p0-compiler-vm": "\"bcd\"", "lisp-lcc": "\"bcd\""}
+      }
+    },
+    {
+      "id": "substring-full-default",
+      "forms": ["(substring \"abcd\" 0)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"abcd\"", "native-c-compiler-vm": "\"abcd\"", "python-p0-compiler-vm": "\"abcd\"", "lisp-lcc": "\"abcd\""},
+        "dialect-v2": {"native-c-treewalk": "\"abcd\"", "native-c-compiler-vm": "\"abcd\"", "python-p0-compiler-vm": "\"abcd\"", "lisp-lcc": "\"abcd\""}
+      }
+    },
+    {
+      "id": "substring-funcall-explicit",
+      "forms": ["(funcall (function substring) \"abcd\" 1 3)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"bc\"", "native-c-compiler-vm": "\"bc\"", "python-p0-compiler-vm": "\"bc\"", "lisp-lcc": "\"bc\""},
+        "dialect-v2": {"native-c-treewalk": "\"bc\"", "native-c-compiler-vm": "\"bc\"", "python-p0-compiler-vm": "\"bc\"", "lisp-lcc": "\"bc\""}
+      }
+    },
+    {
+      "id": "substring-middle",
+      "forms": ["(substring \"abcd\" 1 3)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"bc\"", "native-c-compiler-vm": "\"bc\"", "python-p0-compiler-vm": "\"bc\"", "lisp-lcc": "\"bc\""},
+        "dialect-v2": {"native-c-treewalk": "\"bc\"", "native-c-compiler-vm": "\"bc\"", "python-p0-compiler-vm": "\"bc\"", "lisp-lcc": "\"bc\""}
+      }
+    },
+    {
+      "id": "substring-too-many",
+      "forms": ["(substring \"abcd\" 1 3 4)"],
+      "migration_anchor": "decision:strict-arity-codeobject",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "\"bc\"", "native-c-compiler-vm": "\"bc\"", "python-p0-compiler-vm": "\"bc\"", "lisp-lcc": "\"bc\""},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity", "python-p0-compiler-vm": "!error:arity", "lisp-lcc": "!error:arity"}
+      }
+    }
+  ]
+}

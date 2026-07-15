@@ -1,0 +1,216 @@
+{
+  "format": "lisp65-bytecode-abi-ledger-v1",
+  "version": 1,
+  "id_bits": 8,
+  "profile_order": [
+    "dialect-v1",
+    "dialect-v2"
+  ],
+  "policies": {
+    "id_reuse": "forbidden",
+    "canonical_name_change": "forbidden",
+    "tombstone_reactivation": "forbidden",
+    "tombstone_operand_change": "forbidden",
+    "decoder_name_retention": "required",
+    "disassembler_name_retention": "required"
+  },
+  "diagnostics": {
+    "opcode_active": "abi-opcode-active",
+    "opcode_tombstone": "abi-opcode-tombstone",
+    "opcode_reserved": "abi-opcode-reserved",
+    "prim_active": "abi-prim-active",
+    "prim_tombstone": "abi-prim-tombstone",
+    "prim_reserved": "abi-prim-reserved"
+  },
+  "staging_prim_dispatch": {
+    "profile": "dialect-v2",
+    "first_id": 30,
+    "last_id": 56,
+    "retired_ids": [34, 40],
+    "runtime_status": "implemented",
+    "required_gate": "bytecode-abi-ledger --require-staging-dispatch"
+  },
+  "prim_retirements": [
+    {
+      "id": 26,
+      "canonical_name": "%string-slice",
+      "profile": "dialect-v2",
+      "transition": "active-to-tombstone",
+      "runtime": "reject-bad-primitive",
+      "reuse": "forbidden",
+      "evidence": {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-26-string-slice.json",
+        "sha256": "8ba68e6c57e01adc7f7e8ad6233bd3b6dd63ab32566b1daa1a780477b78aea74"
+      }
+    },
+    {
+      "id": 27,
+      "canonical_name": "%string-concat-list",
+      "profile": "dialect-v2",
+      "transition": "active-to-tombstone",
+      "runtime": "reject-bad-primitive",
+      "reuse": "forbidden",
+      "evidence": {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-27-string-concat-list.json",
+        "sha256": "cc0f664a5eee68b79d2e5e01e9910c015517fcb2b3da03b922f7d02c92506c85"
+      }
+    },
+    {
+      "id": 34,
+      "canonical_name": "%save-staged",
+      "profile": "dialect-v2",
+      "transition": "active-to-tombstone",
+      "runtime": "reject-bad-primitive",
+      "reuse": "forbidden",
+      "evidence": {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-34-save-staged.json",
+        "sha256": "0bfad9596a9b7e9f47e152d1a4016dd30a56f06a99eaf32af9737d5ac1359590"
+      }
+    },
+    {
+      "id": 40,
+      "canonical_name": "number->string",
+      "profile": "dialect-v2",
+      "transition": "active-to-tombstone",
+      "runtime": "reject-bad-primitive",
+      "reuse": "forbidden",
+      "evidence": {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/abi-retirements/prim-40-number-to-string.json",
+        "sha256": "4aaed2bafc2ed38f99d4fde415294733ad1d30884c6e68d4cf0c6b7c4215f81d"
+      }
+    }
+  ],
+  "opcode_identities": [
+    {"id": 0, "canonical_name": "HALT", "operand": "none"},
+    {"id": 1, "canonical_name": "PUSHI8", "operand": "s8"},
+    {"id": 2, "canonical_name": "ADD", "operand": "none"},
+    {"id": 5, "canonical_name": "RET", "operand": "none"},
+    {"id": 6, "canonical_name": "PUSHLIT", "operand": "idx"},
+    {"id": 11, "canonical_name": "PUSHARG0", "operand": "none"},
+    {"id": 12, "canonical_name": "PUSHARG1", "operand": "none"},
+    {"id": 13, "canonical_name": "PUSHARG2", "operand": "none"},
+    {"id": 14, "canonical_name": "SUB", "operand": "none"},
+    {"id": 15, "canonical_name": "MUL", "operand": "none"},
+    {"id": 16, "canonical_name": "DIV", "operand": "none"},
+    {"id": 17, "canonical_name": "MOD", "operand": "none"},
+    {"id": 18, "canonical_name": "LESS", "operand": "none"},
+    {"id": 19, "canonical_name": "GREATER", "operand": "none"},
+    {"id": 24, "canonical_name": "REMAINDER", "operand": "none"},
+    {"id": 28, "canonical_name": "JMPREL", "operand": "rel8"},
+    {"id": 29, "canonical_name": "JFALSEREL", "operand": "rel8"},
+    {"id": 30, "canonical_name": "EQ", "operand": "none"},
+    {"id": 42, "canonical_name": "NOT", "operand": "none"},
+    {"id": 43, "canonical_name": "PUSHNIL", "operand": "none"},
+    {"id": 44, "canonical_name": "PUSHT", "operand": "none"},
+    {"id": 51, "canonical_name": "CONS", "operand": "none"},
+    {"id": 52, "canonical_name": "CAR", "operand": "none"},
+    {"id": 53, "canonical_name": "CDR", "operand": "none"},
+    {"id": 54, "canonical_name": "CONSP", "operand": "none"},
+    {"id": 55, "canonical_name": "EQL", "operand": "none"},
+    {"id": 56, "canonical_name": "PUSHARGN", "operand": "u8"},
+    {"id": 57, "canonical_name": "LOADL", "operand": "u8"},
+    {"id": 58, "canonical_name": "STOREL", "operand": "u8"},
+    {"id": 59, "canonical_name": "DROP", "operand": "none"},
+    {"id": 60, "canonical_name": "CALL", "operand": "idx+u8"},
+    {"id": 61, "canonical_name": "CALLPRIM", "operand": "pid+u8"},
+    {"id": 62, "canonical_name": "TAILCALL", "operand": "idx+u8"},
+    {"id": 63, "canonical_name": "CLOSURE", "operand": "idx+u8"},
+    {"id": 64, "canonical_name": "UPVAL", "operand": "u8"},
+    {"id": 65, "canonical_name": "SETUPVAL", "operand": "u8"}
+  ],
+  "prim_identities": [
+    {"id": 0, "canonical_name": "stringp"},
+    {"id": 1, "canonical_name": "string->list"},
+    {"id": 2, "canonical_name": "list->string"},
+    {"id": 3, "canonical_name": "string-length"},
+    {"id": 4, "canonical_name": "string-ref"},
+    {"id": 5, "canonical_name": "symbolp"},
+    {"id": 6, "canonical_name": "numberp"},
+    {"id": 7, "canonical_name": "apply"},
+    {"id": 8, "canonical_name": "funcall"},
+    {"id": 9, "canonical_name": "screen-size"},
+    {"id": 10, "canonical_name": "screen-clear"},
+    {"id": 11, "canonical_name": "screen-put-char"},
+    {"id": 12, "canonical_name": "screen-write-string"},
+    {"id": 13, "canonical_name": "read-key"},
+    {"id": 14, "canonical_name": "poll-key"},
+    {"id": 15, "canonical_name": "%disk-read-sector"},
+    {"id": 16, "canonical_name": "%disk-byte"},
+    {"id": 17, "canonical_name": "%disk-load-file"},
+    {"id": 18, "canonical_name": "%disk-load-lib"},
+    {"id": 19, "canonical_name": "symbol-value"},
+    {"id": 20, "canonical_name": "set-symbol-value"},
+    {"id": 21, "canonical_name": "%disk-poke"},
+    {"id": 22, "canonical_name": "%disk-write-sector"},
+    {"id": 23, "canonical_name": "nreverse"},
+    {"id": 24, "canonical_name": "rplaca"},
+    {"id": 25, "canonical_name": "rplacd"},
+    {"id": 26, "canonical_name": "%string-slice"},
+    {"id": 27, "canonical_name": "%string-concat-list"},
+    {"id": 28, "canonical_name": "%string-codes"},
+    {"id": 29, "canonical_name": "%string-from-codes"},
+    {"id": 30, "canonical_name": "%cs-read-open"},
+    {"id": 31, "canonical_name": "%fasl-read-form"},
+    {"id": 32, "canonical_name": "%fasl-stage"},
+    {"id": 33, "canonical_name": "%fasl-stage-get"},
+    {"id": 34, "canonical_name": "%save-staged"},
+    {"id": 35, "canonical_name": "%set-macro"},
+    {"id": 36, "canonical_name": "function-kind"},
+    {"id": 37, "canonical_name": "gensym"},
+    {"id": 38, "canonical_name": "lcc-install"},
+    {"id": 39, "canonical_name": "macroexpand-1"},
+    {"id": 40, "canonical_name": "number->string"},
+    {"id": 41, "canonical_name": "prin1"},
+    {"id": 42, "canonical_name": "symbol-count"},
+    {"id": 43, "canonical_name": "symbol-max"},
+    {"id": 44, "canonical_name": "symbol-name"},
+    {"id": 45, "canonical_name": "write-char"},
+    {"id": 46, "canonical_name": "%fasl-error-entries-overflow"},
+    {"id": 47, "canonical_name": "%fasl-error-nodes-overflow"},
+    {"id": 48, "canonical_name": "%fasl-error-not-a-defun"},
+    {"id": 49, "canonical_name": "%fasl-error-output-overflow"},
+    {"id": 50, "canonical_name": "%fasl-error-patches-overflow"},
+    {"id": 51, "canonical_name": "%fasl-error-strings-overflow"},
+    {"id": 52, "canonical_name": "%fasl-error-too-many-helpers"},
+    {"id": 53, "canonical_name": "%fasl-error-unsupported-literal"},
+    {"id": 54, "canonical_name": "%fasl-error-window-overflow"},
+    {"id": 55, "canonical_name": "%lcc-error-do-body-too-big"},
+    {"id": 56, "canonical_name": "%lcc-error-invalid-parameter-list"},
+    {"id": 57, "canonical_name": "boundp"},
+    {"id": 58, "canonical_name": "%list-malformed-error"},
+    {"id": 59, "canonical_name": "set"},
+    {"id": 60, "canonical_name": "key-event"},
+    {"id": 61, "canonical_name": "peek"},
+    {"id": 62, "canonical_name": "poke"}
+  ],
+  "profiles": [
+    {
+      "id": "dialect-v1",
+      "parent": null,
+      "opcodes": {
+        "active": [0, 1, 2, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 28, 29, 30, 42, 43, 44, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65],
+        "tombstone": [],
+        "reserved_ranges": [[3, 4], [7, 10], [20, 23], [25, 27], [31, 41], [45, 50], [66, 255]]
+      },
+      "prim_ids": {
+        "active": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        "tombstone": [],
+        "reserved_ranges": [[23, 255]]
+      }
+    },
+    {
+      "id": "dialect-v2",
+      "parent": "dialect-v1",
+      "opcodes": {
+        "active": [0, 1, 2, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19, 24, 28, 29, 30, 42, 43, 44, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65],
+        "tombstone": [],
+        "reserved_ranges": [[3, 4], [7, 10], [20, 23], [25, 27], [31, 41], [45, 50], [66, 255]]
+      },
+      "prim_ids": {
+        "active": [0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62],
+        "tombstone": [1, 2, 26, 27, 34, 40],
+        "reserved_ranges": [[63, 255]]
+      }
+    }
+  ]
+}

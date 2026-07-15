@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "Post-MVP string polish slice. Host/bytecode checked, intentionally not part of the embedded MVP product suite.",
+  "sources": [
+    "lib/prelude-m1.lisp",
+    "lib/stdlib-strings.lisp",
+    "lib/stdlib-strings-polish.lisp"
+  ],
+  "functions": [
+    "%reverse-into",
+    "reverse",
+    "%char-member-p",
+    "%trim-left-list",
+    "%trim-right-list",
+    "string-left-trim",
+    "string-right-trim"
+  ],
+  "cases": [
+    {
+      "name": "string-left-trim-basic",
+      "expr": "(string-left-trim \" -\" \" --hi- \")",
+      "expect": "\"hi- \""
+    },
+    {
+      "name": "string-right-trim-basic",
+      "expr": "(string-right-trim \" -\" \" --hi- \")",
+      "expect": "\" --hi\""
+    },
+    {
+      "name": "string-left-trim-noop",
+      "expr": "(string-left-trim \" -\" \"hi- \")",
+      "expect": "\"hi- \""
+    },
+    {
+      "name": "string-right-trim-all",
+      "expr": "(string-right-trim \" -\" \" ---\")",
+      "expect": "\"\""
+    }
+  ]
+}

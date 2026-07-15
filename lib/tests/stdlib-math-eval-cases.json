@@ -1,0 +1,115 @@
+{
+  "description": "Evaluation contract for lib/stdlib-math.lisp on top of the M1 Prelude.",
+  "cases": [
+    {
+      "name": "stdlib-max-single",
+      "input": "(max 7)",
+      "expect": "7"
+    },
+    {
+      "name": "stdlib-max-many",
+      "input": "(max 1 5 3 4)",
+      "expect": "5"
+    },
+    {
+      "name": "stdlib-max-negative",
+      "input": "(max -7 -2 -9)",
+      "expect": "-2"
+    },
+    {
+      "name": "stdlib-min-single",
+      "input": "(min 7)",
+      "expect": "7"
+    },
+    {
+      "name": "stdlib-min-many",
+      "input": "(min 1 5 3 4)",
+      "expect": "1"
+    },
+    {
+      "name": "stdlib-min-negative",
+      "input": "(min -7 -2 -9)",
+      "expect": "-9"
+    },
+    {
+      "name": "stdlib-abs-negative",
+      "input": "(abs -7)",
+      "expect": "7"
+    },
+    {
+      "name": "stdlib-abs-positive",
+      "input": "(abs 7)",
+      "expect": "7"
+    },
+    {
+      "name": "stdlib-signum-negative",
+      "input": "(signum -12)",
+      "expect": "-1"
+    },
+    {
+      "name": "stdlib-signum-zero",
+      "input": "(signum 0)",
+      "expect": "0"
+    },
+    {
+      "name": "stdlib-signum-positive",
+      "input": "(signum 12)",
+      "expect": "1"
+    },
+    {
+      "name": "stdlib-evenp-negative",
+      "input": "(evenp -4)",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-oddp-negative",
+      "input": "(oddp -3)",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-plusp-zero",
+      "input": "(plusp 0)",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-minusp-zero",
+      "input": "(minusp 0)",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-integerp-number",
+      "input": "(integerp 7)",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-integerp-symbol",
+      "input": "(integerp 'a)",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-nonnegativep-zero",
+      "input": "(nonnegativep 0)",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-nonpositivep-zero",
+      "input": "(nonpositivep 0)",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-clamp-low",
+      "input": "(clamp -2 1 5)",
+      "expect": "1"
+    },
+    {
+      "name": "stdlib-clamp-high",
+      "input": "(clamp 9 1 5)",
+      "expect": "5"
+    },
+    {
+      "name": "stdlib-clamp-inside",
+      "input": "(clamp 3 1 5)",
+      "expect": "3"
+    }
+  ]
+}

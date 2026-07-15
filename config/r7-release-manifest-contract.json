@@ -1,0 +1,30 @@
+{
+  "format": "lisp65-r7-release-manifest-contract-v1",
+  "version": 1,
+  "id": "r7-public-manifest-prerequisites",
+  "status": "authorized-for-prerequisite-proof",
+  "input": {
+    "promotion_id": "r6-g6-hardware-acceptance-aed1595",
+    "archive_sha256": "b339a274a97c947025ce66b09cd54ce5af73e24d8a99328fcb0659ffa605ddba",
+    "product_artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "ship_manifest_sha256": "323d6f497c1849af3916cfbe9c3f0d73936eaa72f271d97412666f25369f6764"
+  },
+  "public_toolchain_roles": {
+    "c1541.artifact": "c1541-host-binary",
+    "rom": "mega65-rom",
+    "sd_base": "mega65-sd-base-image",
+    "xmega65.artifact": "xmega65-launcher",
+    "xmega65.inner_artifact": "xmega65-emulator-binary"
+  },
+  "determinism": {
+    "packed_on_source": "bound-source-commit-committer-timestamp",
+    "wall_clock_source": "forbidden",
+    "double_pack_axes": ["PYTHONHASHSEED", "TZ"],
+    "cross_midnight": "required-two-observed-local-dates"
+  },
+  "claims": {
+    "product_sha_changes": 0,
+    "G6_source": "registered-r6-hardware-acceptance-seal",
+    "release_effect": "none-prerequisite-proof-only"
+  }
+}

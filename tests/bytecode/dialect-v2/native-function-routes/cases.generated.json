@@ -1,0 +1,1458 @@
+{
+  "format": "lisp65-eval-surface-v1",
+  "description": "Generated primitive x route matrix plus peek/poke safety negatives.",
+  "cases": [
+    {
+      "name": "native-00-prim-0-direct",
+      "forms": [
+        "(+ 20 22)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-00-prim-0-funcall",
+      "forms": [
+        "(funcall (function +) 20 22)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-00-prim-0-apply",
+      "forms": [
+        "(apply (function +) (cons 20 (cons 22 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-01-prim-1-direct",
+      "forms": [
+        "(* 6 7)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-01-prim-1-funcall",
+      "forms": [
+        "(funcall (function *) 6 7)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-01-prim-1-apply",
+      "forms": [
+        "(apply (function *) (cons 6 (cons 7 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-02-prim-2-direct",
+      "forms": [
+        "(- 50 8)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-02-prim-2-funcall",
+      "forms": [
+        "(funcall (function -) 50 8)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-02-prim-2-apply",
+      "forms": [
+        "(apply (function -) (cons 50 (cons 8 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-03-prim-3-direct",
+      "forms": [
+        "(/ 84 2)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-03-prim-3-funcall",
+      "forms": [
+        "(funcall (function /) 84 2)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-03-prim-3-apply",
+      "forms": [
+        "(apply (function /) (cons 84 (cons 2 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-04-car-direct",
+      "forms": [
+        "(car (cons 42 nil))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-04-car-funcall",
+      "forms": [
+        "(funcall (function car) (cons 42 nil))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-04-car-apply",
+      "forms": [
+        "(apply (function car) (cons (cons 42 nil) nil))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-05-cdr-direct",
+      "forms": [
+        "(cdr (cons 1 42))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-05-cdr-funcall",
+      "forms": [
+        "(funcall (function cdr) (cons 1 42))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-05-cdr-apply",
+      "forms": [
+        "(apply (function cdr) (cons (cons 1 42) nil))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-06-consp-direct",
+      "forms": [
+        "(consp (cons 1 2))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-06-consp-funcall",
+      "forms": [
+        "(funcall (function consp) (cons 1 2))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-06-consp-apply",
+      "forms": [
+        "(apply (function consp) (cons (cons 1 2) nil))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-07-cons-direct",
+      "forms": [
+        "(cons 1 2)"
+      ],
+      "expect": "(1 . 2)"
+    },
+    {
+      "name": "native-07-cons-funcall",
+      "forms": [
+        "(funcall (function cons) 1 2)"
+      ],
+      "expect": "(1 . 2)"
+    },
+    {
+      "name": "native-07-cons-apply",
+      "forms": [
+        "(apply (function cons) (cons 1 (cons 2 nil)))"
+      ],
+      "expect": "(1 . 2)"
+    },
+    {
+      "name": "native-08-eq-direct",
+      "forms": [
+        "(eq 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-08-eq-funcall",
+      "forms": [
+        "(funcall (function eq) 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-08-eq-apply",
+      "forms": [
+        "(apply (function eq) (cons 42 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-09-eql-direct",
+      "forms": [
+        "(eql 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-09-eql-funcall",
+      "forms": [
+        "(funcall (function eql) 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-09-eql-apply",
+      "forms": [
+        "(apply (function eql) (cons 42 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-10-prim-10-direct",
+      "forms": [
+        "(= 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-10-prim-10-funcall",
+      "forms": [
+        "(funcall (function =) 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-10-prim-10-apply",
+      "forms": [
+        "(apply (function =) (cons 42 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-11-prim-11-direct",
+      "forms": [
+        "(< 41 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-11-prim-11-funcall",
+      "forms": [
+        "(funcall (function <) 41 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-11-prim-11-apply",
+      "forms": [
+        "(apply (function <) (cons 41 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-12-prim-12-direct",
+      "forms": [
+        "(> 43 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-12-prim-12-funcall",
+      "forms": [
+        "(funcall (function >) 43 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-12-prim-12-apply",
+      "forms": [
+        "(apply (function >) (cons 43 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-13-mod-direct",
+      "forms": [
+        "(mod 85 43)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-13-mod-funcall",
+      "forms": [
+        "(funcall (function mod) 85 43)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-13-mod-apply",
+      "forms": [
+        "(apply (function mod) (cons 85 (cons 43 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-14-prim-14-direct",
+      "forms": [
+        "(<= 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-14-prim-14-funcall",
+      "forms": [
+        "(funcall (function <=) 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-14-prim-14-apply",
+      "forms": [
+        "(apply (function <=) (cons 42 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-15-prim-15-direct",
+      "forms": [
+        "(>= 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-15-prim-15-funcall",
+      "forms": [
+        "(funcall (function >=) 42 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-15-prim-15-apply",
+      "forms": [
+        "(apply (function >=) (cons 42 (cons 42 nil)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-16-stringp-direct",
+      "forms": [
+        "(stringp \"abc\")"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-16-stringp-funcall",
+      "forms": [
+        "(funcall (function stringp) \"abc\")"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-16-stringp-apply",
+      "forms": [
+        "(apply (function stringp) (cons \"abc\" nil))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-17-string-length-direct",
+      "forms": [
+        "(string-length \"abc\")"
+      ],
+      "expect": "3"
+    },
+    {
+      "name": "native-17-string-length-funcall",
+      "forms": [
+        "(funcall (function string-length) \"abc\")"
+      ],
+      "expect": "3"
+    },
+    {
+      "name": "native-17-string-length-apply",
+      "forms": [
+        "(apply (function string-length) (cons \"abc\" nil))"
+      ],
+      "expect": "3"
+    },
+    {
+      "name": "native-18-string-ref-direct",
+      "forms": [
+        "(string-ref \"abc\" 1)"
+      ],
+      "expect": "98"
+    },
+    {
+      "name": "native-18-string-ref-funcall",
+      "forms": [
+        "(funcall (function string-ref) \"abc\" 1)"
+      ],
+      "expect": "98"
+    },
+    {
+      "name": "native-18-string-ref-apply",
+      "forms": [
+        "(apply (function string-ref) (cons \"abc\" (cons 1 nil)))"
+      ],
+      "expect": "98"
+    },
+    {
+      "name": "native-19-symbolp-direct",
+      "forms": [
+        "(symbolp (quote abc))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-19-symbolp-funcall",
+      "forms": [
+        "(funcall (function symbolp) (quote abc))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-19-symbolp-apply",
+      "forms": [
+        "(apply (function symbolp) (cons (quote abc) nil))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-20-numberp-direct",
+      "forms": [
+        "(numberp 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-20-numberp-funcall",
+      "forms": [
+        "(funcall (function numberp) 42)"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-20-numberp-apply",
+      "forms": [
+        "(apply (function numberp) (cons 42 nil))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-21-apply-direct",
+      "forms": [
+        "(apply (function +) (cons 20 (cons 22 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-21-apply-funcall",
+      "forms": [
+        "(funcall (function apply) (function +) (cons 20 (cons 22 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-21-apply-apply",
+      "forms": [
+        "(apply (function apply) (cons (function +) (cons (cons 20 (cons 22 nil)) nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-22-funcall-direct",
+      "forms": [
+        "(funcall (function +) 20 22)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-22-funcall-funcall",
+      "forms": [
+        "(funcall (function funcall) (function +) 20 22)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-22-funcall-apply",
+      "forms": [
+        "(apply (function funcall) (cons (function +) (cons 20 (cons 22 nil))))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-23-screen-size-direct",
+      "forms": [
+        "(screen-size)"
+      ],
+      "expect": "(80 25)"
+    },
+    {
+      "name": "native-23-screen-size-funcall",
+      "forms": [
+        "(funcall (function screen-size))"
+      ],
+      "expect": "(80 25)"
+    },
+    {
+      "name": "native-23-screen-size-apply",
+      "forms": [
+        "(apply (function screen-size) nil)"
+      ],
+      "expect": "(80 25)"
+    },
+    {
+      "name": "native-24-screen-clear-direct",
+      "forms": [
+        "(screen-clear)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-24-screen-clear-funcall",
+      "forms": [
+        "(funcall (function screen-clear))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-24-screen-clear-apply",
+      "forms": [
+        "(apply (function screen-clear) nil)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-25-screen-put-char-direct",
+      "forms": [
+        "(screen-put-char 1 2 65 1)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-25-screen-put-char-funcall",
+      "forms": [
+        "(funcall (function screen-put-char) 1 2 65 1)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-25-screen-put-char-apply",
+      "forms": [
+        "(apply (function screen-put-char) (cons 1 (cons 2 (cons 65 (cons 1 nil)))))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-26-screen-write-string-direct",
+      "forms": [
+        "(screen-write-string 0 1 \"x\" 1)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-26-screen-write-string-funcall",
+      "forms": [
+        "(funcall (function screen-write-string) 0 1 \"x\" 1)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-26-screen-write-string-apply",
+      "forms": [
+        "(apply (function screen-write-string) (cons 0 (cons 1 (cons \"x\" (cons 1 nil)))))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-27-symbol-value-direct",
+      "forms": [
+        "(set (quote registry-symbol-value) 42)",
+        "(symbol-value (quote registry-symbol-value))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-27-symbol-value-funcall",
+      "forms": [
+        "(set (quote registry-symbol-value) 42)",
+        "(funcall (function symbol-value) (quote registry-symbol-value))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-27-symbol-value-apply",
+      "forms": [
+        "(set (quote registry-symbol-value) 42)",
+        "(apply (function symbol-value) (cons (quote registry-symbol-value) nil))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-28-nreverse-direct",
+      "forms": [
+        "(nreverse (cons 1 (cons 2 nil)))"
+      ],
+      "expect": "(2 1)"
+    },
+    {
+      "name": "native-28-nreverse-funcall",
+      "forms": [
+        "(funcall (function nreverse) (cons 1 (cons 2 nil)))"
+      ],
+      "expect": "(2 1)"
+    },
+    {
+      "name": "native-28-nreverse-apply",
+      "forms": [
+        "(apply (function nreverse) (cons (cons 1 (cons 2 nil)) nil))"
+      ],
+      "expect": "(2 1)"
+    },
+    {
+      "name": "native-29-rplaca-direct",
+      "forms": [
+        "(rplaca (cons 1 2) 3)"
+      ],
+      "expect": "(3 . 2)"
+    },
+    {
+      "name": "native-29-rplaca-funcall",
+      "forms": [
+        "(funcall (function rplaca) (cons 1 2) 3)"
+      ],
+      "expect": "(3 . 2)"
+    },
+    {
+      "name": "native-29-rplaca-apply",
+      "forms": [
+        "(apply (function rplaca) (cons (cons 1 2) (cons 3 nil)))"
+      ],
+      "expect": "(3 . 2)"
+    },
+    {
+      "name": "native-30-rplacd-direct",
+      "forms": [
+        "(rplacd (cons 1 2) 3)"
+      ],
+      "expect": "(1 . 3)"
+    },
+    {
+      "name": "native-30-rplacd-funcall",
+      "forms": [
+        "(funcall (function rplacd) (cons 1 2) 3)"
+      ],
+      "expect": "(1 . 3)"
+    },
+    {
+      "name": "native-30-rplacd-apply",
+      "forms": [
+        "(apply (function rplacd) (cons (cons 1 2) (cons 3 nil)))"
+      ],
+      "expect": "(1 . 3)"
+    },
+    {
+      "name": "native-31-gensym-direct",
+      "forms": [
+        "(symbolp (gensym))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-31-gensym-funcall",
+      "forms": [
+        "(symbolp (funcall (function gensym)))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-31-gensym-apply",
+      "forms": [
+        "(symbolp (apply (function gensym) nil))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-32-prin1-direct",
+      "forms": [
+        "(prin1 (quote abc))"
+      ],
+      "expect": "abc"
+    },
+    {
+      "name": "native-32-prin1-funcall",
+      "forms": [
+        "(funcall (function prin1) (quote abc))"
+      ],
+      "expect": "abc"
+    },
+    {
+      "name": "native-32-prin1-apply",
+      "forms": [
+        "(apply (function prin1) (cons (quote abc) nil))"
+      ],
+      "expect": "abc"
+    },
+    {
+      "name": "native-33-write-char-direct",
+      "forms": [
+        "(write-char 65)"
+      ],
+      "expect": "65"
+    },
+    {
+      "name": "native-33-write-char-funcall",
+      "forms": [
+        "(funcall (function write-char) 65)"
+      ],
+      "expect": "65"
+    },
+    {
+      "name": "native-33-write-char-apply",
+      "forms": [
+        "(apply (function write-char) (cons 65 nil))"
+      ],
+      "expect": "65"
+    },
+    {
+      "name": "native-34-boundp-direct",
+      "forms": [
+        "(boundp (quote registry-unbound))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-34-boundp-funcall",
+      "forms": [
+        "(funcall (function boundp) (quote registry-unbound))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-34-boundp-apply",
+      "forms": [
+        "(apply (function boundp) (cons (quote registry-unbound) nil))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-35-set-direct",
+      "forms": [
+        "(set (quote registry-value) 42)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-35-set-funcall",
+      "forms": [
+        "(funcall (function set) (quote registry-value) 42)"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-35-set-apply",
+      "forms": [
+        "(apply (function set) (cons (quote registry-value) (cons 42 nil)))"
+      ],
+      "expect": "42"
+    },
+    {
+      "name": "native-36-key-event-direct",
+      "forms": [
+        "(key-event 0)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-36-key-event-funcall",
+      "forms": [
+        "(funcall (function key-event) 0)"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-36-key-event-apply",
+      "forms": [
+        "(apply (function key-event) (cons 0 nil))"
+      ],
+      "expect": "nil"
+    },
+    {
+      "name": "native-37-peek-direct",
+      "forms": [
+        "(peek 208 137)"
+      ],
+      "expect": "0"
+    },
+    {
+      "name": "native-37-peek-funcall",
+      "forms": [
+        "(funcall (function peek) 208 137)"
+      ],
+      "expect": "0"
+    },
+    {
+      "name": "native-37-peek-apply",
+      "forms": [
+        "(apply (function peek) (cons 208 (cons 137 nil)))"
+      ],
+      "expect": "0"
+    },
+    {
+      "name": "native-38-poke-direct",
+      "forms": [
+        "(poke 208 137 128)"
+      ],
+      "expect": "128"
+    },
+    {
+      "name": "native-38-poke-funcall",
+      "forms": [
+        "(funcall (function poke) 208 137 128)"
+      ],
+      "expect": "128"
+    },
+    {
+      "name": "native-38-poke-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons 137 (cons 128 nil))))"
+      ],
+      "expect": "128"
+    },
+    {
+      "name": "safety-peek-arity-low-direct",
+      "forms": [
+        "(peek 208)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-arity-low-funcall",
+      "forms": [
+        "(funcall (function peek) 208)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-arity-low-apply",
+      "forms": [
+        "(apply (function peek) (cons 208 nil))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-arity-high-direct",
+      "forms": [
+        "(peek 208 137 0)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-arity-high-funcall",
+      "forms": [
+        "(funcall (function peek) 208 137 0)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-arity-high-apply",
+      "forms": [
+        "(apply (function peek) (cons 208 (cons 137 (cons 0 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-type-direct",
+      "forms": [
+        "(peek (quote x) 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-type-funcall",
+      "forms": [
+        "(funcall (function peek) (quote x) 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-type-apply",
+      "forms": [
+        "(apply (function peek) (cons (quote x) (cons 137 nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-type-direct",
+      "forms": [
+        "(peek 208 (quote x))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-type-funcall",
+      "forms": [
+        "(funcall (function peek) 208 (quote x))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-type-apply",
+      "forms": [
+        "(apply (function peek) (cons 208 (cons (quote x) nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-range-low-direct",
+      "forms": [
+        "(peek -1 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-range-low-funcall",
+      "forms": [
+        "(funcall (function peek) -1 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-range-low-apply",
+      "forms": [
+        "(apply (function peek) (cons -1 (cons 137 nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-range-high-direct",
+      "forms": [
+        "(peek 256 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-range-high-funcall",
+      "forms": [
+        "(funcall (function peek) 256 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-hi-range-high-apply",
+      "forms": [
+        "(apply (function peek) (cons 256 (cons 137 nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-range-low-direct",
+      "forms": [
+        "(peek 208 -1)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-range-low-funcall",
+      "forms": [
+        "(funcall (function peek) 208 -1)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-range-low-apply",
+      "forms": [
+        "(apply (function peek) (cons 208 (cons -1 nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-range-high-direct",
+      "forms": [
+        "(peek 208 256)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-range-high-funcall",
+      "forms": [
+        "(funcall (function peek) 208 256)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-peek-lo-range-high-apply",
+      "forms": [
+        "(apply (function peek) (cons 208 (cons 256 nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-arity-low-direct",
+      "forms": [
+        "(poke 208 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-arity-low-funcall",
+      "forms": [
+        "(funcall (function poke) 208 137)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-arity-low-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons 137 nil)))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-arity-high-direct",
+      "forms": [
+        "(poke 208 137 128 0)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-arity-high-funcall",
+      "forms": [
+        "(funcall (function poke) 208 137 128 0)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-arity-high-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons 137 (cons 128 (cons 0 nil)))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-hi-type-direct",
+      "forms": [
+        "(poke (quote x) 137 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-hi-type-funcall",
+      "forms": [
+        "(funcall (function poke) (quote x) 137 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-hi-type-apply",
+      "forms": [
+        "(apply (function poke) (cons (quote x) (cons 137 (cons 128 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-lo-type-direct",
+      "forms": [
+        "(poke 208 (quote x) 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-lo-type-funcall",
+      "forms": [
+        "(funcall (function poke) 208 (quote x) 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-lo-type-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons (quote x) (cons 128 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-type-direct",
+      "forms": [
+        "(poke 208 137 (quote x))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-type-funcall",
+      "forms": [
+        "(funcall (function poke) 208 137 (quote x))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-type-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons 137 (cons (quote x) nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-hi-range-direct",
+      "forms": [
+        "(poke 256 137 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-hi-range-funcall",
+      "forms": [
+        "(funcall (function poke) 256 137 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-hi-range-apply",
+      "forms": [
+        "(apply (function poke) (cons 256 (cons 137 (cons 128 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-lo-range-direct",
+      "forms": [
+        "(poke 208 -1 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-lo-range-funcall",
+      "forms": [
+        "(funcall (function poke) 208 -1 128)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-lo-range-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons -1 (cons 128 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-range-low-direct",
+      "forms": [
+        "(poke 208 137 -1)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-range-low-funcall",
+      "forms": [
+        "(funcall (function poke) 208 137 -1)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-range-low-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons 137 (cons -1 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-range-high-direct",
+      "forms": [
+        "(poke 208 137 256)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-range-high-funcall",
+      "forms": [
+        "(funcall (function poke) 208 137 256)"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "safety-poke-value-range-high-apply",
+      "forms": [
+        "(apply (function poke) (cons 208 (cons 137 (cons 256 nil))))"
+      ],
+      "expect_error": "!error"
+    },
+    {
+      "name": "view-00-prim-0-function-kind",
+      "forms": [
+        "(eq (function-kind (quote +)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-01-prim-1-function-kind",
+      "forms": [
+        "(eq (function-kind (quote *)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-02-prim-2-function-kind",
+      "forms": [
+        "(eq (function-kind (quote -)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-03-prim-3-function-kind",
+      "forms": [
+        "(eq (function-kind (quote /)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-04-car-function-kind",
+      "forms": [
+        "(eq (function-kind (quote car)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-05-cdr-function-kind",
+      "forms": [
+        "(eq (function-kind (quote cdr)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-06-consp-function-kind",
+      "forms": [
+        "(eq (function-kind (quote consp)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-07-cons-function-kind",
+      "forms": [
+        "(eq (function-kind (quote cons)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-08-eq-function-kind",
+      "forms": [
+        "(eq (function-kind (quote eq)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-09-eql-function-kind",
+      "forms": [
+        "(eq (function-kind (quote eql)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-10-prim-10-function-kind",
+      "forms": [
+        "(eq (function-kind (quote =)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-11-prim-11-function-kind",
+      "forms": [
+        "(eq (function-kind (quote <)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-12-prim-12-function-kind",
+      "forms": [
+        "(eq (function-kind (quote >)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-13-mod-function-kind",
+      "forms": [
+        "(eq (function-kind (quote mod)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-14-prim-14-function-kind",
+      "forms": [
+        "(eq (function-kind (quote <=)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-15-prim-15-function-kind",
+      "forms": [
+        "(eq (function-kind (quote >=)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-16-stringp-function-kind",
+      "forms": [
+        "(eq (function-kind (quote stringp)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-17-string-length-function-kind",
+      "forms": [
+        "(eq (function-kind (quote string-length)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-18-string-ref-function-kind",
+      "forms": [
+        "(eq (function-kind (quote string-ref)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-19-symbolp-function-kind",
+      "forms": [
+        "(eq (function-kind (quote symbolp)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-20-numberp-function-kind",
+      "forms": [
+        "(eq (function-kind (quote numberp)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-21-apply-function-kind",
+      "forms": [
+        "(eq (function-kind (quote apply)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-22-funcall-function-kind",
+      "forms": [
+        "(eq (function-kind (quote funcall)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-23-screen-size-function-kind",
+      "forms": [
+        "(eq (function-kind (quote screen-size)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-24-screen-clear-function-kind",
+      "forms": [
+        "(eq (function-kind (quote screen-clear)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-25-screen-put-char-function-kind",
+      "forms": [
+        "(eq (function-kind (quote screen-put-char)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-26-screen-write-string-function-kind",
+      "forms": [
+        "(eq (function-kind (quote screen-write-string)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-27-symbol-value-function-kind",
+      "forms": [
+        "(eq (function-kind (quote symbol-value)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-28-nreverse-function-kind",
+      "forms": [
+        "(eq (function-kind (quote nreverse)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-29-rplaca-function-kind",
+      "forms": [
+        "(eq (function-kind (quote rplaca)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-30-rplacd-function-kind",
+      "forms": [
+        "(eq (function-kind (quote rplacd)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-31-gensym-function-kind",
+      "forms": [
+        "(eq (function-kind (quote gensym)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-32-prin1-function-kind",
+      "forms": [
+        "(eq (function-kind (quote prin1)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-33-write-char-function-kind",
+      "forms": [
+        "(eq (function-kind (quote write-char)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-34-boundp-function-kind",
+      "forms": [
+        "(eq (function-kind (quote boundp)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-35-set-function-kind",
+      "forms": [
+        "(eq (function-kind (quote set)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-36-key-event-function-kind",
+      "forms": [
+        "(eq (function-kind (quote key-event)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-37-peek-function-kind",
+      "forms": [
+        "(eq (function-kind (quote peek)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-38-poke-function-kind",
+      "forms": [
+        "(eq (function-kind (quote poke)) (quote primitive))"
+      ],
+      "expect": "t"
+    }
+  ]
+}

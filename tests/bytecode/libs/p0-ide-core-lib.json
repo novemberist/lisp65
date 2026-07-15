@@ -1,0 +1,300 @@
+{
+  "extends": "p0-ide-lib.json",
+  "name": "ide",
+  "d81_name": "IDE",
+  "description": "Workbench IDE core tier; optional word/page/region/search/M-x commands live in IDEX.",
+  "private_inline_functions": [
+    "%ide-fill-column",
+    "%ide-join-codes",
+    "%ide-buffers-remove",
+    "%ide-persist-state",
+    "%ide-take-lines",
+    "%ide-dir-code",
+    "%ide-state-with-row-offset",
+    "%ide-current-buffer",
+    "%ide-dir-first-entry",
+    "%ide-disk-read-string",
+    "%ide-buffers-names",
+    "%ide-lines-insert",
+    "%ide-quit-key-p",
+    "%ide-budget-string",
+    "%ide-join",
+    "%ide-render-code-line-at",
+    "%ide-min",
+    "%ide-selected-buffer",
+    "%ide-buffer-source",
+    "%ide-char-take",
+    "%ide-save-message",
+    "%ide-disk-current-file",
+    "%ide-write-file-named",
+    "%ide-mini-status-line",
+    "%ide-mini-history-input",
+    "%ide-buffers-alist",
+    "%ide-yank-line-list",
+    "%ide-buffer-with-point",
+    "%ide-buffer-flush-cache"
+  ],
+  "min_private_inline_functions": 29,
+  "remove_functions": [
+    "ide-buffer-modified-p",
+    "ide-buffer-mode",
+    "ide-buffer-diagnostics",
+    "ide-defun-region",
+    "%ide-top-level-line-p",
+    "%ide-find-defun-start",
+    "%ide-find-defun-end",
+    "ide-region-lines",
+    "ide-save",
+    "ide-open",
+    "ide-buffer-mark",
+    "%ide-buffer-with-mark",
+    "%ide-point<=",
+    "%ide-region-bounds",
+    "%ide-region-parts-tail",
+    "%ide-region-parts",
+    "ide-region-text",
+    "ide-set-mark",
+    "ide-exchange-point-and-mark",
+    "%ide-kill-region-single",
+    "%ide-kill-region-lines",
+    "ide-kill-region",
+    "ide-copy-region-as-kill",
+    "%ide-clamp-line",
+    "ide-move-line-relative",
+    "ide-buffer-start",
+    "ide-buffer-end",
+    "ide-page-down",
+    "ide-page-up",
+    "%ide-word-scan",
+    "ide-move-word-right",
+    "ide-move-word-left",
+    "ide-kill-word",
+    "ide-backward-kill-word",
+    "%ide-page-rows",
+    "%ide-word-edit-command-p",
+    "%ide-region-command-p",
+    "%ide-page-command-p",
+    "%ide-apply-word-edit-command",
+    "%ide-apply-region-command",
+    "%ide-apply-page-command",
+    "%ide-apply-rare-edit-command",
+    "%ide-search-lines",
+    "%ide-search-lines-from",
+    "%ide-mini-search-submit",
+    "ide-command-names",
+    "%ide-command-named",
+    "%ide-execute-command-key",
+    "%ide-execute-command-submit"
+  ],
+  "allow_omitted_defuns": [
+    {
+      "name": "ide-buffer-modified-p",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-buffer-mode",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-buffer-diagnostics",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-defun-region",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-top-level-line-p",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-find-defun-start",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-find-defun-end",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-region-lines",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-save",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-open",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-buffer-mark",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-buffer-with-mark",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-point<=",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-region-bounds",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-region-parts-tail",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-region-parts",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-region-text",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-set-mark",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-exchange-point-and-mark",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-kill-region-single",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-kill-region-lines",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-kill-region",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-copy-region-as-kill",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-clamp-line",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-move-line-relative",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-buffer-start",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-buffer-end",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-page-down",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-page-up",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-word-scan",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-move-word-right",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-move-word-left",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-kill-word",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-backward-kill-word",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-page-rows",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-word-edit-command-p",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-region-command-p",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-page-command-p",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-apply-word-edit-command",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-apply-region-command",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-apply-page-command",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-apply-rare-edit-command",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-search-lines",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-search-lines-from",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-mini-search-submit",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "ide-command-names",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-command-named",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-execute-command-key",
+      "reason": "deferred to the IDE extra library profile"
+    },
+    {
+      "name": "%ide-execute-command-submit",
+      "reason": "deferred to the IDE extra library profile"
+    }
+  ],
+  "remove_cases": [
+    "ide-step-cx-x-starts-mx",
+    "ide-step-ctrl-s-finds-text",
+    "ide-step-ctrl-s-repeat-finds-next",
+    "ide-step-ctrl-s-reports-miss"
+  ],
+  "cases": [
+    {
+      "name": "ide-core-kill-line-and-yank",
+      "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"abc\")))) (s1 (ide-apply-command s0 (quote kill-line) nil)) (s2 (ide-apply-command s1 (quote yank) nil))) (list (ide-buffer-lines (ide-state-buffer s2)) (ide-buffer-point (ide-state-buffer s2))))",
+      "expect": "((\"abc\") (0 . 3))"
+    }
+  ]
+}

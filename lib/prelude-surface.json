@@ -1,0 +1,372 @@
+{
+  "description": "Target surface for the first lisp65 Prelude. This follows docs/core-vs-library.md: only irreducible forms and raw primitives are core; derived CL-near surface belongs here.",
+  "lisp_model": "lisp-2",
+  "function_reference_forms": [
+    "function",
+    "#'"
+  ],
+  "core": {
+    "special_forms": [
+      "quote",
+      "function",
+      "if",
+      "lambda",
+      "setq",
+      "progn",
+      "defmacro",
+      "quasiquote",
+      "unquote",
+      "unquote-splicing"
+    ],
+    "macro_mechanism": [
+      "macro-expansion-hook"
+    ],
+    "primitives": [
+      "cons",
+      "car",
+      "cdr",
+      "rplaca",
+      "rplacd",
+      "eq",
+      "eql",
+      "consp",
+      "symbolp",
+      "numberp",
+      "null",
+      "atom",
+      "+",
+      "-",
+      "*",
+      "/",
+      "mod",
+      "=",
+      "<",
+      ">",
+      "<=",
+      ">=",
+      "apply",
+      "funcall",
+      "eval",
+      "intern",
+      "gensym",
+      "set-symbol-function",
+      "set",
+      "symbol-value",
+      "boundp",
+      "stringp",
+      "string->list",
+      "list->string",
+      "string-length",
+      "string-ref",
+      "write-char",
+      "read-char",
+      "peek",
+      "poke",
+      "sys"
+    ]
+  },
+  "library": [
+    {
+      "stage": "bootstrap-macros",
+      "kind": "macro",
+      "symbols": {
+        "defun": ["set-symbol-function", "lambda", "quasiquote", "unquote", "quote"],
+        "defparameter": ["setq", "progn", "quote"],
+        "defvar": ["boundp", "if", "setq", "progn", "quote"],
+        "when": ["if", "progn"],
+        "unless": ["if", "progn"],
+        "and": ["if", "quote"],
+        "or": ["if", "let", "gensym", "quote"],
+        "cond": ["if", "progn", "quote"],
+        "let": ["lambda"],
+        "let*": ["let"],
+        "case": ["let", "cond", "eql", "gensym", "quote"]
+      }
+    },
+    {
+      "stage": "small-functions",
+      "kind": "function",
+      "symbols": {
+        "not": ["if", "quote"],
+        "identity": [],
+        "list": ["lambda"],
+        "caar": ["car"],
+        "cadr": ["car", "cdr"],
+        "cdar": ["car", "cdr"],
+        "cddr": ["cdr"],
+        "first": ["car"],
+        "rest": ["cdr"],
+        "second": ["cadr"],
+        "zerop": ["="],
+        "plusp": [">"],
+        "minusp": ["<"],
+        "1+": ["+"],
+        "1-": ["-"],
+        "/=": ["=", "not"]
+      }
+    },
+    {
+      "stage": "lists",
+      "kind": "function",
+      "symbols": {
+        "%append2": ["reverse", "%append2-rev"],
+        "%append2-rev": ["if", "cdr", "cons", "car", "%append2-rev"],
+        "append": ["reverse", "%append-lists", "cdr", "car"],
+        "%append-lists": ["if", "cdr", "car", "%append2", "%append-lists"],
+        "length": ["%length-from"],
+        "%length-from": ["if", "cdr", "1+", "%length-from"],
+        "reverse": ["%reverse-into"],
+        "%reverse-into": ["null", "cdr", "cons", "car", "%reverse-into"],
+        "nth": ["zerop", "car", "cdr", "1-", "nth"],
+        "nthcdr": ["zerop", "cdr", "1-", "nthcdr"],
+        "last": ["cdr", "null", "last"],
+        "member": ["eql", "car", "cdr", "member"],
+        "assoc": ["eql", "caar", "car", "cdr", "assoc"],
+        "assq": ["assoc"],
+        "%take": ["%take-into"],
+        "%take-into": ["if", "<=", "reverse", "cons", "car", "cdr", "1-", "%take-into"],
+        "butlast": ["%take", "-", "length", "if", "car"],
+        "%any-null": ["if", "car", "cdr", "%any-null"],
+        "%cars": ["if", "cons", "car", "cdr", "%cars"],
+        "%cdrs": ["if", "cons", "car", "cdr", "%cdrs"],
+        "mapcar": ["if", "%mapcar-into"],
+        "%mapcar-into": ["if", "%any-null", "reverse", "cons", "apply", "%cars", "%cdrs", "%mapcar-into"],
+        "mapcan": ["apply", "function", "append", "mapcar", "cons"],
+        "mapc": ["null", "car", "cdr", "funcall", "mapc"],
+        "remove": ["%remove-into"],
+        "%remove-into": ["if", "eql", "car", "cdr", "cons", "reverse", "%remove-into"],
+        "remove-if": ["%remove-if-into"],
+        "%remove-if-into": ["if", "funcall", "car", "cdr", "cons", "reverse", "%remove-if-into"],
+        "remove-if-not": ["%remove-if-not-into"],
+        "%remove-if-not-into": ["if", "funcall", "car", "cdr", "cons", "reverse", "%remove-if-not-into"],
+        "copy-list": ["reverse"],
+        "find": ["if", "eql", "car", "cdr", "find"],
+        "find-if": ["if", "funcall", "car", "cdr", "find-if"],
+        "position": ["%position-from"],
+        "%position-from": ["if", "eql", "car", "cdr", "1+", "%position-from"],
+        "position-if": ["%position-if-from"],
+        "%position-if-from": ["if", "funcall", "car", "cdr", "1+", "%position-if-from"],
+        "count": ["%count-from"],
+        "%count-from": ["if", "eql", "car", "cdr", "1+", "%count-from"],
+        "count-if": ["%count-if-from"],
+        "%count-if-from": ["if", "funcall", "car", "cdr", "1+", "%count-if-from"]
+      }
+    },
+    {
+      "stage": "strings",
+      "kind": "function",
+      "symbols": {
+        "%char-list=": ["if", "=", "car", "cdr", "%char-list="],
+        "string=": ["string->list", "%char-list="],
+        "string-append": ["list->string", "apply", "function", "append", "mapcar", "string->list"],
+        "%subseq-list": ["%subseq-list-into"],
+        "%subseq-list-into": ["if", "<", "1+", "car", "cdr", "cons", "reverse", "%subseq-list-into"],
+        "substring": ["list->string", "string->list", "string-length", "%subseq-list"],
+        "%upcase-code": ["if", "and", ">=", "<=", "-"],
+        "%downcase-code": ["if", "and", ">=", "<=", "+"],
+        "%case-fold-list": ["%case-fold-list-into"],
+        "%case-fold-list-into": ["if", "cdr", "cons", "car", "%upcase-code", "reverse", "%case-fold-list-into"],
+        "string-upcase": ["list->string", "mapcar", "function", "%upcase-code", "string->list"],
+        "string-downcase": ["list->string", "mapcar", "function", "%downcase-code", "string->list"],
+        "char-upcase": ["%upcase-code"],
+        "char-downcase": ["%downcase-code"],
+        "char->string": ["list->string", "list"]
+      }
+    },
+    {
+      "stage": "sequences",
+      "kind": "function",
+      "symbols": {
+        "%list*-from": ["if", "car", "cdr", "cons", "%list*-from"],
+        "list*": ["%list*-from"],
+        "%reduce-from": ["if", "funcall", "car", "cdr", "%reduce-from"],
+        "reduce": ["if", "car", "cdr", "%reduce-from"],
+        "every": ["if", "funcall", "car", "cdr", "every"],
+        "some": ["if", "lambda", "funcall", "car", "cdr", "some"]
+      }
+    },
+    {
+      "stage": "math",
+      "kind": "function",
+      "symbols": {
+        "%max-from": ["if", ">", "car", "cdr", "%max-from"],
+        "max": ["%max-from"],
+        "%min-from": ["if", "<", "car", "cdr", "%min-from"],
+        "min": ["%min-from"]
+      }
+    },
+    {
+      "stage": "plists",
+      "kind": "function",
+      "symbols": {
+        "%getf": ["if", "eql", "car", "cadr", "cdr", "%getf"],
+        "getf": ["%getf", "if", "car"],
+        "remf": ["%remf-into"],
+        "%remf-into": ["if", "eql", "car", "cadr", "cdr", "%append2-rev", "cons", "reverse", "%remf-into"]
+      }
+    },
+    {
+      "stage": "format-subset",
+      "kind": "function",
+      "symbols": {
+        "%quotient": ["if", "<", "-", "1+", "%quotient"],
+        "%nonnegative-digits": ["if", "<", "cons", "+", "%quotient", "mod", "%nonnegative-digits"],
+        "integer->string": ["list->string", "if", "<", "cons", "%nonnegative-digits"],
+        "%format-arg-list": ["if", "stringp", "string->list", "integer->string"],
+        "%format-display-list": ["if", "stringp", "string->list", "integer->string"],
+        "%format-readable-list": ["if", "stringp", "cons", "append", "string->list", "list", "%format-display-list"],
+        "%format-display-code-p": ["if", "="],
+        "%format-readable-code-p": ["if", "="],
+        "%format-directive": ["if", "%format-display-code-p", "append", "%format-display-list", "%format-readable-code-p", "%format-readable-list", "%format-chars", "car", "cdr", "cons", "="],
+        "%format-chars": ["if", "=", "car", "%format-directive", "cons", "cdr", "%format-chars"],
+        "format": ["if", "list->string", "%format-chars", "string->list"]
+      }
+    },
+    {
+      "stage": "control-iteration",
+      "kind": "macro",
+      "symbols": {
+        "%binding-var": ["car"],
+        "%binding-init": ["cadr"],
+        "%binding-step": ["if", "car", "cdr"],
+        "%optional-third": ["if", "car", "cdr"],
+        "do": ["lambda", "setq", "if", "progn", "funcall"],
+        "dotimes": ["do", "1+", ">=", "%optional-third"],
+        "dolist": ["lambda", "setq", "if", "progn", "funcall", "car", "cdr", "%optional-third"]
+      }
+    }
+  ],
+  "deferred": [
+    {
+      "stage": "post-mvp-control",
+      "kind": "macro",
+      "symbols": {
+        "loop": {
+          "category": "iteration",
+          "depends_on": ["do", "dolist", "dotimes"],
+          "blocked_by": ["block", "return", "parser-for-loop-clauses"],
+          "reason": "LOOP is a reader/parser-heavy macro family; defer until smaller iteration forms and block exits are stable."
+        }
+      }
+    },
+    {
+      "stage": "post-mvp-io",
+      "kind": "function",
+      "symbols": {
+        "format-destination-output": {
+          "category": "printing",
+          "depends_on": ["write-char", "mapc"],
+          "blocked_by": ["stream-destination-policy"],
+          "reason": "The small FORMAT subset returns native strings. Writing to non-NIL destinations waits for a stream/output convention."
+        }
+      }
+    },
+    {
+      "stage": "post-mvp-records",
+      "kind": "macro",
+      "symbols": {
+        "defstruct": {
+          "category": "records",
+          "depends_on": ["defun", "gensym", "list", "cons", "car", "cdr"],
+          "blocked_by": ["setf-place-protocol", "keyword-init-policy"],
+          "reason": "DEFSTRUCT can be Lisp-built, but accessors, constructors, predicates and updates need a stable place/init convention."
+        }
+      }
+    },
+    {
+      "stage": "post-mvp-conditions",
+      "kind": "macro/function",
+      "symbols": {
+        "error": {
+          "category": "conditions",
+          "depends_on": ["format"],
+          "requires_core": ["condition-signal-primitive"],
+          "reason": "ERROR needs a core escape/signal primitive; the formatting layer can remain in Lisp."
+        },
+        "signal": {
+          "category": "conditions",
+          "requires_core": ["condition-signal-primitive"],
+          "reason": "SIGNAL crosses into dynamic handler lookup and therefore needs a small core hook."
+        },
+        "handler-bind": {
+          "category": "conditions",
+          "depends_on": ["signal"],
+          "requires_core": ["dynamic-handler-stack"],
+          "reason": "Handler binding is dynamic extent state; Lisp can own syntax once the core exposes the stack mechanism."
+        },
+        "handler-case": {
+          "category": "conditions",
+          "depends_on": ["handler-bind"],
+          "requires_core": ["non-local-exit"],
+          "reason": "HANDLER-CASE is derived syntax over handler binding plus non-local exits."
+        },
+        "ignore-errors": {
+          "category": "conditions",
+          "depends_on": ["handler-case"],
+          "requires_core": ["non-local-exit"],
+          "reason": "IGNORE-ERRORS is a small macro after HANDLER-CASE is specified."
+        }
+      }
+    },
+    {
+      "stage": "post-mvp-object-system",
+      "kind": "macro/function",
+      "symbols": {
+        "mini-clos": {
+          "category": "object-system",
+          "depends_on": ["defstruct", "assoc", "member", "funcall"],
+          "blocked_by": ["setf-place-protocol", "condition-system"],
+          "reason": "Mini-CLOS should build on records and conditions rather than forcing object support into the C core."
+        }
+      }
+    },
+    {
+      "stage": "needs-machine-primitives",
+      "kind": "function",
+      "symbols": {
+        "plot": {
+          "category": "graphics",
+          "depends_on": ["poke", "peek"],
+          "requires_core": ["mega65-register-map"],
+          "reason": "Graphics helpers are Lisp wrappers over raw machine primitives plus stable register constants."
+        },
+        "line": {
+          "category": "graphics",
+          "depends_on": ["plot"],
+          "requires_core": ["mega65-register-map"],
+          "reason": "LINE is derived drawing logic over PLOT and machine register access."
+        },
+        "rect": {
+          "category": "graphics",
+          "depends_on": ["line"],
+          "requires_core": ["mega65-register-map"],
+          "reason": "RECT is derived drawing logic over LINE."
+        },
+        "circle": {
+          "category": "graphics",
+          "depends_on": ["plot"],
+          "requires_core": ["mega65-register-map"],
+          "reason": "CIRCLE is derived drawing logic over PLOT."
+        },
+        "tone": {
+          "category": "sound",
+          "depends_on": ["poke"],
+          "requires_core": ["mega65-register-map"],
+          "reason": "Sound helpers are Lisp wrappers over raw register writes."
+        },
+        "play": {
+          "category": "sound",
+          "depends_on": ["tone"],
+          "requires_core": ["timer-or-yield-policy"],
+          "reason": "PLAY needs sequencing timing before its surface can be pinned."
+        },
+        "sprite": {
+          "category": "graphics",
+          "depends_on": ["poke", "peek"],
+          "requires_core": ["mega65-register-map"],
+          "reason": "Sprite helpers are Lisp wrappers over VIC/MEGA65 register access."
+        }
+      }
+    }
+  ]
+}

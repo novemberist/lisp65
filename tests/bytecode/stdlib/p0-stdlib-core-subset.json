@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "Resident core profile for disk-lib builds: p0-stdlib-subset without IDE buffer/UI code; shared IDE deps and IDE status helpers stay resident, plus load/load-lib/load-libs/edit so disk libraries and the IDE launcher can be loaded.",
+  "extends": "p0-stdlib-subset.json",
+  "allow_omitted_defuns": [],
+  "sources": [
+    "lib/stdlib-load.lisp",
+    "lib/stdlib-load-lib.lisp",
+    "lib/ide-launch.lisp"
+  ],
+  "functions_from_sources": [
+    "lib/stdlib-load.lisp",
+    "lib/stdlib-load-lib.lisp",
+    "lib/ide-launch.lisp"
+  ],
+  "remove_sources": [
+    "lib/ide-buffer.lisp",
+    "lib/ide-ui.lisp"
+  ],
+  "remove_functions_from_sources": [
+    "lib/ide-buffer.lisp",
+    "lib/ide-ui.lisp"
+  ],
+  "remove_cases_prefixes": [
+    "ide-"
+  ],
+  "cases": [
+    {
+      "name": "core-load-directory-name-match",
+      "expr": "(progn (%disk-read-sector 40 3) (%load-name-match-at (string->list \"testlib\") 0 0))",
+      "expect": "t"
+    },
+    {
+      "name": "core-load-testlib",
+      "expr": "(load \"testlib\")",
+      "expect": "t"
+    },
+    {
+      "name": "core-load-missing",
+      "expr": "(load \"missing\")",
+      "expect": "nil"
+    },
+    {
+      "name": "core-load-lib-testlib",
+      "expr": "(load-lib \"testlib\")",
+      "expect": "t"
+    },
+    {
+      "name": "core-load-lib-registry-after-testlib",
+      "expr": "(progn (load-lib \"testlib\") (%load-lib-loaded-p (string->list \"testlib\") (symbol-value '*loaded-libs*)))",
+      "expect": "t"
+    },
+    {
+      "name": "core-load-lib-missing",
+      "expr": "(load-lib \"missing\")",
+      "expect": "nil"
+    },
+    {
+      "name": "core-function-kind-bytecode",
+      "expr": "(function-kind 'load-lib)",
+      "expect": "bytecode"
+    },
+    {
+      "name": "core-function-kind-primitive",
+      "expr": "(function-kind '+)",
+      "expect": "primitive"
+    },
+    {
+      "name": "core-ide-loaded-p-initial",
+      "expr": "(ide-loaded-p)",
+      "expect": "nil"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "format": "lisp65-dialect-v2-system-runtime-cases-v1",
+  "profile": "dialect-v1-v2-differential",
+  "family": "system-runtime",
+  "cases": [
+    {
+      "id": "key-event-apply-empty",
+      "forms": ["(apply (function key-event) nil)"],
+      "decision": "key-event-blocking-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"}
+      }
+    },
+    {
+      "id": "key-event-default-empty",
+      "forms": ["(key-event)"],
+      "decision": "key-event-blocking-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"}
+      }
+    },
+    {
+      "id": "key-event-funcall-empty",
+      "forms": ["(funcall (function key-event) 0)"],
+      "decision": "key-event-blocking-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil", "python-p0-compiler-vm": "nil", "lisp-lcc": "nil"}
+      }
+    },
+    {
+      "id": "key-event-invalid-mode-symbol",
+      "forms": ["(key-event 'blocking)"],
+      "decision": "key-event-blocking-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "!error:runtime"}
+      }
+    },
+    {
+      "id": "key-event-invalid-mode-value",
+      "forms": ["(key-event 2)"],
+      "decision": "key-event-blocking-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "!error:runtime"}
+      }
+    },
+    {
+      "id": "key-event-too-many",
+      "forms": ["(key-event 0 1)"],
+      "decision": "key-event-blocking-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity", "python-p0-compiler-vm": "!error:arity", "lisp-lcc": "!error:arity"}
+      }
+    },
+    {
+      "id": "set-apply-value",
+      "forms": ["(apply (function set) (cons 'answer (cons 42 nil)))"],
+      "decision": "set-public-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42", "python-p0-compiler-vm": "42", "lisp-lcc": "42"}
+      }
+    },
+    {
+      "id": "set-direct-value",
+      "forms": ["(set 'answer 42)"],
+      "decision": "set-public-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42", "python-p0-compiler-vm": "42", "lisp-lcc": "42"}
+      }
+    },
+    {
+      "id": "set-funcall-value",
+      "forms": ["(funcall (function set) 'answer 42)"],
+      "decision": "set-public-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "42", "native-c-compiler-vm": "42", "python-p0-compiler-vm": "42", "lisp-lcc": "42"}
+      }
+    },
+    {
+      "id": "set-non-symbol",
+      "forms": ["(set 1 2)"],
+      "decision": "set-public-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:runtime", "native-c-compiler-vm": "!error:runtime", "python-p0-compiler-vm": "!error:runtime", "lisp-lcc": "!error:runtime"}
+      }
+    },
+    {
+      "id": "set-too-few",
+      "forms": ["(set 'answer)"],
+      "decision": "set-public-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity", "python-p0-compiler-vm": "!error:arity", "lisp-lcc": "!error:arity"}
+      }
+    },
+    {
+      "id": "set-too-many",
+      "forms": ["(set 'answer 42 43)"],
+      "decision": "set-public-semantics",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name", "python-p0-compiler-vm": "!error:undefined-public-name", "lisp-lcc": "!error:undefined-public-name"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity", "python-p0-compiler-vm": "!error:arity", "lisp-lcc": "!error:arity"}
+      }
+    }
+  ]
+}

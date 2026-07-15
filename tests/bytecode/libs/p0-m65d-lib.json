@@ -1,0 +1,312 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "m65d",
+  "d81_name": "M65D",
+  "provides": [
+    "m65d-save",
+    "m65d-save-new",
+    "m65d-status",
+    "m65d-remount"
+  ],
+  "requires": ["core"],
+  "description": "AP6 pure-Lisp D81 copy-on-write persistence prototype.",
+  "sources": ["lib/m65-disk.lisp"],
+  "functions_from_sources": ["lib/m65-disk.lisp"],
+  "require_all_defuns": true,
+  "private_inline_functions": [
+    "%m65d-latched-p",
+    "%m65d-valid-ts-p",
+    "%m65d-bam-sector",
+    "%m65d-bam-base",
+    "%m65d-track-ok-p",
+    "%m65d-name-ok-p",
+    "%m65d-find-dir",
+    "%m65d-find-new-chain",
+    "%m65d-old-plan",
+    "%m65d-run-source",
+    "%m65d-run-unlatched",
+    "%m65d-remount-finish",
+    "%m65d-release-old"
+  ],
+  "min_private_inline_functions": 13,
+  "resident_suite": "../stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+  "d81_bam_model": true,
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "m65d-status-default",
+      "expr": "(m65d-status)",
+      "expect": "0"
+    },
+    {
+      "name": "m65d-terminal-media-change-outranks-postcommit-warning",
+      "expr": "(progn (%m65d-set 12 t) (%m65d-set 9 t) (m65d-status))",
+      "expect": "12"
+    },
+    {
+      "name": "m65d-save-bad-empty-name",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"\" \"x\"))",
+      "expect": "1"
+    },
+    {
+      "name": "m65d-save-bad-name-character",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"bad/name\" \"x\"))",
+      "expect": "1"
+    },
+    {
+      "name": "m65d-save-bad-backslash",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"bad\\\\name\" \"x\"))",
+      "expect": "1"
+    },
+    {
+      "name": "m65d-save-source-type",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"source\" 42))",
+      "expect": "3"
+    },
+    {
+      "name": "m65d-save-empty-source",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"source\" \"\"))",
+      "expect": "3"
+    },
+    {
+      "name": "m65d-save-latched",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) t) (m65d-save \"source\" \"x\"))",
+      "expect": "8"
+    },
+    {
+      "name": "m65d-product-media-read-only",
+      "expr": "(progn (%disk-read-sector 40 0) (%disk-poke 7 83) (%disk-poke 8 89) (%disk-poke 9 83) (%disk-poke 10 160) (%disk-poke 29 76) (%disk-poke 30 54) (%disk-poke 31 53) (%disk-poke 32 66) (%disk-write-sector 40 0) (m65d-remount))",
+      "expect": "10"
+    },
+    {
+      "name": "m65d-product-header-without-boot-signature-is-user-media",
+      "expr": "(progn (%disk-read-sector 40 0) (%disk-poke 7 83) (%disk-poke 8 89) (%disk-poke 9 83) (%disk-poke 10 160) (%disk-write-sector 40 0) (m65d-remount))",
+      "expect": "0",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-arbitrary-user-media-roundtrip",
+      "expr": "(list (progn (%disk-read-sector 40 0) (%disk-poke 4 88) (%disk-poke 22 65) (%disk-poke 23 66) (%disk-write-sector 40 0) (m65d-remount)) (m65d-save \"testlib\" \"roundtrip\") (m65d-remount) ((lambda (record) (if (%disk-read-sector (car (cdr (cdr (cdr (cdr record))))) (car (cdr (cdr (cdr (cdr (cdr record))))))) (list (%disk-byte 0) (%disk-byte 1) (%disk-byte 2) (%disk-byte 3) (%disk-byte 4) (%disk-byte 5) (%disk-byte 6) (%disk-byte 7) (%disk-byte 8) (%disk-byte 9) (%disk-byte 10)) nil)) (%m65d-find-dir \"testlib\")) (m65d-status))",
+      "expect": "(0 0 0 (0 10 114 111 117 110 100 116 114 105 112) 0)",
+      "max_steps": 1000000
+    },
+    {
+      "name": "m65d-different-user-media-latches-before-write",
+      "expr": "(progn (m65d-remount) (%m65d-set 0 nil) (%disk-read-sector 40 0) (%disk-write-sector) (set-symbol-value (quote %m65d-txn-generation) (cons (symbol-value (quote %m65d-latch)) (cons (%disk-byte 22) (cons (%disk-byte 23) (%m65d-media-detail 15 nil))))) (%disk-poke 4 88) (%disk-poke 22 65) (%disk-poke 23 66) (%disk-write-sector 40 0) (%m65d-before-write nil nil) (list (m65d-status) (%m65d-latched-p)))",
+      "expect": "(12 t)",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-generation-change-latches-before-write",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) (cons nil nil)) (%disk-read-sector 40 0) (%disk-write-sector) (set-symbol-value (quote %m65d-txn-generation) (cons (symbol-value (quote %m65d-latch)) (cons (%disk-byte 22) (cons (%disk-byte 23) (%m65d-media-detail 15 nil))))) (set-symbol-value (quote %m65d-latch) (cons t nil)) (%m65d-before-write nil nil) (list (m65d-status) (%m65d-latched-p)))",
+      "expect": "(12 t)"
+    },
+    {
+      "name": "m65d-media-change-during-planning-read-terminal",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) (cons nil nil)) (let ((status (m65d-save \"plan\" \"x\"))) (if (if (= status (m65d-status)) (not (%m65d-latched-p)) nil) status 99)))",
+      "expect": "12",
+      "disk_read_fail_ops": [2],
+      "disk_mount_token_change_before_read_ops": {"2": [3, 1, 0, 0, 0]},
+      "expect_disk_write_count": 0,
+      "planning_read_guard_oracle": "token-changed-terminal-12",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-planning-read-failure-with-stable-token-stays-invalid",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) (cons nil nil)) (let ((status (m65d-save \"plan\" \"x\"))) (if (if (= status (m65d-status)) (not (%m65d-latched-p)) nil) status 99)))",
+      "expect": "6",
+      "disk_read_fail_ops": [2],
+      "expect_disk_write_count": 0,
+      "planning_read_guard_oracle": "stable-token-preserves-6",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-claim-read-invalid-latches",
+      "expr": "(progn (%m65d-clear) (%disk-write-sector 40 1) (%m65d-claim-new (list (cons 1 0))) (m65d-save \"\" \"x\"))",
+      "expect": "8"
+    },
+    {
+      "name": "m65d-remount-invalid-keeps-latch",
+      "expr": "(progn (%m65d-clear) (%disk-write-sector 40 1) (set-symbol-value (quote %m65d-latch) t) (m65d-remount) (m65d-save \"\" \"x\"))",
+      "expect": "8"
+    },
+    {
+      "name": "m65d-remount-invalid-entry-keeps-latch",
+      "expr": "(progn (%disk-read-sector 40 3) (%disk-poke 2 129) (%disk-poke 3 40) (%disk-write-sector 40 3) (set-symbol-value (quote %m65d-latch) t) (m65d-remount) (m65d-save \"\" \"x\"))",
+      "expect": "8",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-directory-recheck-invalid-is-read-status",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) 0) (set-symbol-value (quote %m65d-txn-generation) 0) (%m65d-set 0 nil) (%m65d-commit-dir (list 1 40 3 0 99 99 1 0) \"testlib\" (cons 1 2) 1) (list (m65d-status) (%m65d-latched-p)))",
+      "expect": "(6 t)"
+    },
+    {
+      "name": "m65d-status-tracks-last-result",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"\" \"x\") (m65d-status))",
+      "expect": "1"
+    },
+    {
+      "name": "m65d-remount-clears-latch",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) t) (m65d-remount) (m65d-save \"source\" \"\"))",
+      "expect": "3",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-save-new-success",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"newsrc\" \"abc\"))",
+      "expect": "0",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-blank-d81-create-external",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"g6save\" \"create\"))",
+      "expect": "0",
+      "max_steps": 500000,
+      "disk_files": {},
+      "external_d81_oracle": {
+        "name": "g6save",
+        "content": "create",
+        "expected_blocks": 1
+      }
+    },
+    {
+      "name": "m65d-blank-d81-create-replace-external",
+      "expr": "(list (progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"g6save\" \"create\")) (m65d-save \"g6save\" \"replace\"))",
+      "expect": "(0 0)",
+      "max_steps": 1000000,
+      "disk_files": {},
+      "external_d81_oracle": {
+        "name": "g6save",
+        "content": "replace",
+        "expected_blocks": 1
+      }
+    },
+    {
+      "name": "m65d-blank-d81-multisector-create-external",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"multi\" \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"))",
+      "expect": "0",
+      "max_steps": 1500000,
+      "disk_files": {},
+      "external_d81_oracle": {
+        "name": "multi",
+        "content_repeat": {"text": "a", "count": 255},
+        "expected_blocks": 2
+      }
+    },
+    {
+      "name": "m65d-blank-d81-multisector-replace-external",
+      "expr": "(list (progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"multi\" \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\")) (m65d-save \"multi\" \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"))",
+      "expect": "(0 0)",
+      "max_steps": 3000000,
+      "disk_files": {},
+      "external_d81_oracle": {
+        "name": "multi",
+        "content_repeat": {"text": "b", "count": 509},
+        "expected_blocks": 3
+      }
+    },
+    {
+      "name": "m65d-media-change-before-data-write-terminal",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"swapdata\" \"abc\") (list (m65d-status) (%m65d-latched-p)))",
+      "expect": "(12 t)",
+      "max_steps": 500000,
+      "disk_files": {},
+      "disk_mount_token_change_before_write_ops": {"1": [3, 1, 0, 0, 0]},
+      "expect_terminal_media_change_at_write": 1,
+      "two_media_phase_oracle": "before-data-write"
+    },
+    {
+      "name": "m65d-media-change-before-bam-write-terminal",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"swapbam\" \"abc\") (list (m65d-status) (%m65d-latched-p)))",
+      "expect": "(12 t)",
+      "max_steps": 500000,
+      "disk_files": {},
+      "disk_mount_token_change_before_write_ops": {"2": [3, 1, 0, 0, 0]},
+      "expect_terminal_media_change_at_write": 2,
+      "two_media_phase_oracle": "before-bam-write"
+    },
+    {
+      "name": "m65d-media-change-before-directory-write-terminal",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"swapdir\" \"abc\") (list (m65d-status) (%m65d-latched-p)))",
+      "expect": "(12 t)",
+      "max_steps": 500000,
+      "disk_files": {},
+      "disk_mount_token_change_before_write_ops": {"3": [3, 1, 0, 0, 0]},
+      "expect_terminal_media_change_at_write": 3,
+      "two_media_phase_oracle": "before-directory-write"
+    },
+    {
+      "name": "m65d-residual-window-data-boundary",
+      "expr": "(progn (%disk-write-sector) (%disk-poke 2 65) (%disk-write-sector 1 0 1))",
+      "expect": "12",
+      "disk_files": {},
+      "disk_mount_token_change_after_guard_before_write_ops": {"1": [3, 1, 0, 0, 0]},
+      "residual_window_boundary_oracle": "data"
+    },
+    {
+      "name": "m65d-residual-window-bam-boundary",
+      "expr": "(progn (%disk-write-sector) (%disk-poke 2 65) (%disk-write-sector 40 1 1))",
+      "expect": "12",
+      "disk_files": {},
+      "disk_mount_token_change_after_guard_before_write_ops": {"1": [3, 1, 0, 0, 0]},
+      "residual_window_boundary_oracle": "bam"
+    },
+    {
+      "name": "m65d-residual-window-directory-boundary",
+      "expr": "(progn (%disk-write-sector) (%disk-poke 2 65) (%disk-write-sector 40 3 1))",
+      "expect": "12",
+      "disk_files": {},
+      "disk_mount_token_change_after_guard_before_write_ops": {"1": [3, 1, 0, 0, 0]},
+      "residual_window_boundary_oracle": "directory"
+    },
+    {
+      "name": "m65d-save-new-duplicate",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save-new \"testlib\" \"abc\"))",
+      "expect": "2",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-save-rejects-duplicate-directory-name",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (%disk-read-sector 40 3) (%m65d-dir-write-name 32 \"testlib\" 7 0) (%disk-write-sector 40 3) (m65d-save \"testlib\" \"abc\"))",
+      "expect": "6",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-save-new-directory-full",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (%disk-read-sector 40 3) (%disk-poke 98 129) (%disk-poke 99 1) (%disk-poke 100 10) (%disk-poke 126 1) (%disk-poke 130 129) (%disk-poke 131 1) (%disk-poke 132 11) (%disk-poke 158 1) (%disk-poke 162 129) (%disk-poke 163 1) (%disk-poke 164 12) (%disk-poke 190 1) (%disk-poke 194 129) (%disk-poke 195 1) (%disk-poke 196 13) (%disk-poke 222 1) (%disk-poke 226 129) (%disk-poke 227 1) (%disk-poke 228 14) (%disk-poke 254 1) (%disk-write-sector 40 3) (m65d-save-new \"newsrc\" \"abc\"))",
+      "expect": "5",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-save-replace-success",
+      "expr": "(progn (set-symbol-value (quote %m65d-latch) nil) (m65d-save \"testlib\" \"replacement\"))",
+      "expect": "0",
+      "max_steps": 500000
+    },
+    {
+      "name": "m65d-block-count-empty",
+      "expr": "(%m65d-blocks-for 0 0)",
+      "expect": "1"
+    },
+    {
+      "name": "m65d-block-count-max",
+      "expr": "(%m65d-blocks-for 8192 0)",
+      "expect": "33"
+    }
+  ],
+  "tailcall_self": [
+    "%m65d-count-free",
+    "%m65d-bam-validate-tracks",
+    "%m65d-name-chars-ok-p",
+    "%m65d-dir-entries",
+    "%m65d-bam-find",
+    "%m65d-pair-member-p",
+    "%m65d-read-old-chain",
+    "%m65d-chain-state",
+    "%m65d-write-chain",
+    "%m65d-bam-change",
+    "%m65d-dir-write-name",
+    "%m65d-blocks-for"
+  ]
+}

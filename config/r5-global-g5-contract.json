@@ -1,0 +1,69 @@
+{
+  "format": "lisp65-r5-global-g5-contract-v2",
+  "version": 2,
+  "id": "workbench-r5-global-g5",
+  "status": "static-preflight-passed-hardware-not-run",
+  "product_candidate": {
+    "input_authority": "sealed-r4-product-candidate-archive",
+    "live_tree_product_authority": false,
+    "promotion_id": "r4-product-candidate-5942e0c",
+    "source_commit": "5942e0cf81a47f762059fee99d81d27f5bbc7620",
+    "archive": "tests/bytecode/dialect-v2/evidence/promotions/r4-product-candidate-5942e0c.tar.gz",
+    "archive_sha256": "900c067c54aa76c5957ae51d2d78141f589186af55c3b415b73aa17d92339651",
+    "artifact_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165",
+    "product_build_id": "f6faad87",
+    "artifact_count": 13
+  },
+  "preflight": {
+    "status": "passed",
+    "required_before_hardware": true,
+    "binding_authority": "registered-R4-archive-manifest",
+    "receipt": "tests/bytecode/dialect-v2/evidence/r5/global-g5-static-preflight-receipt.json",
+    "product_artifacts_verified_before_cases": 13,
+    "runtime_carrier_double_builds": 2,
+    "workbench_verifier_negative_mutations_rejected": 6,
+    "case_receipt_chains_static_verified": 14,
+    "hardware_side_effects": "none"
+  },
+  "dialect_contract": {
+    "path": "config/dialect-v2-contract.json",
+    "sha256": "f6c04949527da095ff504b96b45edf2f96bcb3373278db7c265fe9de77f16c12",
+    "source_commit": "5942e0cf81a47f762059fee99d81d27f5bbc7620",
+    "public_names": 126
+  },
+  "execution_layer": {
+    "status": "complete-static-verified-hardware-not-run",
+    "policy": "raw-evidence-to-defined-native-receipt-to-defined-case-receipt-to-immediate-offline-verification",
+    "format_invention": "forbidden",
+    "product_failure_marker": "R5_PRODUCT_RESULT=FAIL",
+    "harness_failure_marker": "R5 receipt chain: FAIL kind=harness",
+    "resume": "passed-receipts-are-offline-reverifiable-after-test-closure-fixes-unreceipted-raw-evidence-is-never-promotable",
+    "evidence_run_id": "r5-run-20260715-13",
+    "workbench_boot_wait_seconds": 8,
+    "case_count": 14
+  },
+  "test_closure": {
+    "policy": "config/r5-global-g5-test-closure.json",
+    "product_membership": "forbidden",
+    "runtime_core_role": "internal-proof-only-test-carrier",
+    "change_policy": {
+      "product_artifact_sha_change": "invalidate-all-cases-and-require-new-r4-seal",
+      "test_closure_change": "repack-closure-and-offline-reverify-passed-case-receipts",
+      "hardware_rerun": "only-missing-or-offline-unverifiable-cases"
+    }
+  },
+  "matrix": {
+    "status": "ready-not-run",
+    "cases": 14,
+    "physical_power_cycles": 4,
+    "receipt_resume_policy": "preserve-SHA-bound-cases-for-harness-only-fixes"
+  },
+  "promotion": null,
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "not-run",
+    "G6": "not-run",
+    "hardware_boot_cases": "not-run(6/6)",
+    "release": "not-release-capable"
+  }
+}

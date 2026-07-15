@@ -1,0 +1,133 @@
+{
+  "description": "MVP evaluator cases for lisp65. These pin the Phase-1/M1.2 semantic surface before environments, lambda and let exist.",
+  "cases": [
+    {
+      "name": "self-eval-nil",
+      "input": "nil",
+      "expect": "NIL"
+    },
+    {
+      "name": "self-eval-fixnum",
+      "input": "42",
+      "expect": "42"
+    },
+    {
+      "name": "symbol-self-evals-until-env-exists",
+      "input": "alpha",
+      "expect": "ALPHA",
+      "m1_2_limit": "Symbols evaluate to themselves until environments are implemented."
+    },
+    {
+      "name": "quote-symbol",
+      "input": "(quote alpha)",
+      "expect": "ALPHA"
+    },
+    {
+      "name": "quote-list",
+      "input": "(quote (a b c))",
+      "expect": "(A B C)"
+    },
+    {
+      "name": "if-true",
+      "input": "(if t 1 2)",
+      "expect": "1"
+    },
+    {
+      "name": "if-false",
+      "input": "(if nil 1 2)",
+      "expect": "2"
+    },
+    {
+      "name": "plus-zero-args",
+      "input": "(+)",
+      "expect": "0"
+    },
+    {
+      "name": "plus-many",
+      "input": "(+ 1 2 3)",
+      "expect": "6"
+    },
+    {
+      "name": "multiply-zero-args",
+      "input": "(*)",
+      "expect": "1"
+    },
+    {
+      "name": "multiply-many",
+      "input": "(* 2 3 4)",
+      "expect": "24"
+    },
+    {
+      "name": "minus-zero-args-m1-2",
+      "input": "(-)",
+      "expect": "0",
+      "m1_2_limit": "M1.2 returns 0 for zero-argument -, not a Common Lisp arity error."
+    },
+    {
+      "name": "unary-minus",
+      "input": "(- 7)",
+      "expect": "-7"
+    },
+    {
+      "name": "binary-minus",
+      "input": "(- 10 3)",
+      "expect": "7"
+    },
+    {
+      "name": "nary-minus",
+      "input": "(- 20 3 4)",
+      "expect": "13"
+    },
+    {
+      "name": "nested-arithmetic",
+      "input": "(+ 1 (* 2 3))",
+      "expect": "7"
+    },
+    {
+      "name": "cons-pair",
+      "input": "(cons 1 2)",
+      "expect": "(1 . 2)"
+    },
+    {
+      "name": "cons-list",
+      "input": "(cons 1 (cons 2 nil))",
+      "expect": "(1 2)"
+    },
+    {
+      "name": "car",
+      "input": "(car (cons 1 (cons 2 nil)))",
+      "expect": "1"
+    },
+    {
+      "name": "cdr",
+      "input": "(cdr (cons 1 (cons 2 nil)))",
+      "expect": "(2)"
+    },
+    {
+      "name": "eq-same-fixnum",
+      "input": "(eq 4 4)",
+      "expect": "T"
+    },
+    {
+      "name": "eq-different-fixnum",
+      "input": "(eq 4 5)",
+      "expect": "NIL"
+    },
+    {
+      "name": "eq-same-symbol",
+      "input": "(eq (quote a) (quote a))",
+      "expect": "T"
+    },
+    {
+      "name": "eq-fresh-conses",
+      "input": "(eq (cons 1 nil) (cons 1 nil))",
+      "expect": "NIL"
+    },
+    {
+      "name": "unknown-operator-m1-2",
+      "input": "(unknown 1 2)",
+      "expect": "NIL",
+      "m1_2_limit": "M1.2 returns NIL for unknown operators; later evaluators should signal an error."
+    }
+  ]
+}

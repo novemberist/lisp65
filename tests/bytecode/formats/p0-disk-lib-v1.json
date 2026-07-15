@@ -1,0 +1,834 @@
+{
+  "format": "lisp65-disk-lib-container-cases-v1",
+  "description": "Normative byte and mutation cases for the runtime-relative P0 disk-lib container and L65M v1 metadata.",
+  "goldens": [
+    {
+      "id": "minimal",
+      "image_hex": "09003200b50000000200002b054c36354d012600000000000009003200010000000000000026002e002e002e002e0003000000000000000000090069640000",
+      "sha256": "beab078ee3d29f6be65bddee606586b6593e289947c1e30e6c0e59204b5189b3",
+      "expect": {
+        "bytes": 63,
+        "blob_bytes": 9,
+        "metadata_bytes": 50,
+        "entry_names": [
+          "id"
+        ],
+        "macro_entries": [],
+        "literal_indices": 0,
+        "literal_nodes": 0,
+        "literal_patches": 0,
+        "max_literal_depth": 0
+      }
+    },
+    {
+      "id": "all-kinds",
+      "image_hex": "1f00b200b5000000010007000000000000000000000000000000b50000000200002b054c36354d01260000000000001f00b20002000500070007002600360040008600a2000f000000000000000000160004000001160009000000010000000200030001002a0000000000ffff0200000000000000ffff0300000000000000ffff040000000000000008000500000000000200ffff0600000002000300ffff07000000000000000c0007000000090001000b0002000d0003000f0004001100050013000600616c6c006d616300666f6f0068690000",
+      "sha256": "867c39c921b5b997a0ff9140847576d36f9614d110721cb79d8c0ebbf2224cd2",
+      "expect": {
+        "bytes": 213,
+        "blob_bytes": 31,
+        "metadata_bytes": 178,
+        "entry_names": [
+          "all",
+          "mac"
+        ],
+        "macro_entries": [
+          "mac"
+        ],
+        "literal_indices": 5,
+        "literal_nodes": 7,
+        "literal_patches": 7,
+        "max_literal_depth": 2
+      }
+    },
+    {
+      "id": "literal-depth-9",
+      "image_hex": "0900b000b500000000000100004c36354d01260000000000000900b000010009000a00010026002e004000a400a8000700000000000000000009000100090002000300040005000600070008000600000000000200ffff0600000002000100ffff0600000003000100ffff0600000004000100ffff0600000005000100ffff0600000006000100ffff0600000007000100ffff0600000008000100ffff0200000000000000ffff0200000000000000ffff070000006465707468390000",
+      "sha256": "f89c17ef7c15d895f15912e38386b1637486d7c6e111e4220e2eb374deb1bc29",
+      "expect": {
+        "bytes": 189,
+        "blob_bytes": 9,
+        "metadata_bytes": 176,
+        "entry_names": [
+          "depth9"
+        ],
+        "macro_entries": [],
+        "literal_indices": 9,
+        "literal_nodes": 10,
+        "literal_patches": 1,
+        "max_literal_depth": 9
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "valid-minimal",
+      "base": "minimal",
+      "mutations": [],
+      "expect": {
+        "status": "valid"
+      }
+    },
+    {
+      "id": "valid-all-kinds",
+      "base": "all-kinds",
+      "mutations": [],
+      "expect": {
+        "status": "valid"
+      }
+    },
+    {
+      "id": "valid-literal-depth-9",
+      "base": "literal-depth-9",
+      "mutations": [],
+      "expect": {
+        "status": "valid"
+      }
+    },
+    {
+      "id": "literal-depth-10",
+      "base": "literal-depth-9",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 157,
+          "hex": "0600000001000100ffff"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "literal-graph-too-deep"
+      }
+    },
+    {
+      "id": "truncated-prefix",
+      "base": "minimal",
+      "mutations": [
+        {
+          "op": "truncate",
+          "length": 3
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "container-too-short"
+      }
+    },
+    {
+      "id": "prefix-length-mismatch",
+      "base": "minimal",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 0,
+          "hex": "0800"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "container-length-mismatch"
+      }
+    },
+    {
+      "id": "trailing-byte",
+      "base": "minimal",
+      "mutations": [
+        {
+          "op": "append",
+          "hex": "00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "container-length-mismatch"
+      }
+    },
+    {
+      "id": "metadata-too-short",
+      "base": "minimal",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 2,
+          "hex": "2500"
+        },
+        {
+          "op": "truncate",
+          "length": 50
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "metadata-too-short"
+      }
+    },
+    {
+      "id": "metadata-not-aligned",
+      "base": "minimal",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 2,
+          "hex": "3100"
+        },
+        {
+          "op": "replace",
+          "offset": 27,
+          "hex": "3100"
+        },
+        {
+          "op": "truncate",
+          "length": 62
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "metadata-not-aligned"
+      }
+    },
+    {
+      "id": "bad-magic",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 35,
+          "hex": "00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "bad-magic"
+      }
+    },
+    {
+      "id": "unsupported-version",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 39,
+          "hex": "02"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "unsupported-version"
+      }
+    },
+    {
+      "id": "bad-header-size",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 40,
+          "hex": "24"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "bad-header-size"
+      }
+    },
+    {
+      "id": "nonzero-header-flags",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 41,
+          "hex": "0100"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "nonzero-header-flags"
+      }
+    },
+    {
+      "id": "nonzero-code-base",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 43,
+          "hex": "01000000"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "nonzero-code-base"
+      }
+    },
+    {
+      "id": "header-code-length-mismatch",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 47,
+          "hex": "1e00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "header-code-length-mismatch"
+      }
+    },
+    {
+      "id": "header-metadata-length-mismatch",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 49,
+          "hex": "b000"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "header-metadata-length-mismatch"
+      }
+    },
+    {
+      "id": "nonzero-header-reserved",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 71,
+          "hex": "0100"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "nonzero-header-reserved"
+      }
+    },
+    {
+      "id": "empty-entry-table",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 51,
+          "hex": "0000"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "empty-entry-table"
+      }
+    },
+    {
+      "id": "noncanonical-section-layout",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 59,
+          "hex": "2800"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "noncanonical-section-layout"
+      }
+    },
+    {
+      "id": "noncanonical-metadata-size",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 69,
+          "hex": "1100"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "noncanonical-metadata-size"
+      }
+    },
+    {
+      "id": "nonzero-metadata-padding",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 212,
+          "hex": "ff"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "nonzero-metadata-padding"
+      }
+    },
+    {
+      "id": "unterminated-string",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 211,
+          "hex": "78"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "unterminated-string"
+      }
+    },
+    {
+      "id": "invalid-utf8",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 197,
+          "hex": "ff"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-utf8"
+      }
+    },
+    {
+      "id": "entry-name-offset-not-start",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 73,
+          "hex": "0100"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-string-offset"
+      }
+    },
+    {
+      "id": "empty-entry-name",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 197,
+          "hex": "00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "empty-entry-name"
+      }
+    },
+    {
+      "id": "duplicate-entry-name",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 81,
+          "hex": "0000"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "duplicate-entry-name"
+      }
+    },
+    {
+      "id": "nonzero-entry-bank",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 75,
+          "hex": "05"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "nonzero-entry-bank"
+      }
+    },
+    {
+      "id": "unknown-entry-flags",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 76,
+          "hex": "02"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "unknown-entry-flags"
+      }
+    },
+    {
+      "id": "noncontiguous-entry",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 85,
+          "hex": "1700"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "noncontiguous-entry"
+      }
+    },
+    {
+      "id": "entry-out-of-bounds",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 87,
+          "hex": "0a00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "entry-out-of-bounds"
+      }
+    },
+    {
+      "id": "blob-not-covered",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 30,
+          "hex": "0100"
+        },
+        {
+          "op": "replace",
+          "offset": 87,
+          "hex": "0800"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "blob-not-covered"
+      }
+    },
+    {
+      "id": "bad-code-magic",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 4,
+          "hex": "00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "bad-code-magic"
+      }
+    },
+    {
+      "id": "optional-without-strict-arity",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 7,
+          "hex": "04"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "optional-without-strict-arity"
+      }
+    },
+    {
+      "id": "optional-count-exceeds-nargs",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 7,
+          "hex": "06"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "optional-count-exceeds-nargs"
+      }
+    },
+    {
+      "id": "variadic-without-rest-local",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 7,
+          "hex": "01"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "variadic-without-rest-local"
+      }
+    },
+    {
+      "id": "code-object-length-mismatch",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 8,
+          "hex": "0200"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "code-object-length-mismatch"
+      }
+    },
+    {
+      "id": "literal-index-out-of-range",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 89,
+          "hex": "0700"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "literal-index-out-of-range"
+      }
+    },
+    {
+      "id": "invalid-node-kind",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 99,
+          "hex": "00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-node-kind"
+      }
+    },
+    {
+      "id": "nonzero-node-reserved",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 100,
+          "hex": "01"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "nonzero-node-reserved"
+      }
+    },
+    {
+      "id": "invalid-fixnum",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 101,
+          "hex": "0040"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-fixnum"
+      }
+    },
+    {
+      "id": "invalid-node-fields",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 111,
+          "hex": "0100"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-node-fields"
+      }
+    },
+    {
+      "id": "empty-symbol-name",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 205,
+          "hex": "00"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-node-name"
+      }
+    },
+    {
+      "id": "cons-count-not-two",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 145,
+          "hex": "0100"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "invalid-node-fields"
+      }
+    },
+    {
+      "id": "node-index-range",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 153,
+          "hex": "0500"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "node-index-range"
+      }
+    },
+    {
+      "id": "literal-graph-cycle",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 89,
+          "hex": "0400"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "literal-graph-cycle"
+      }
+    },
+    {
+      "id": "patch-coverage-mismatch",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 2,
+          "hex": "ae00"
+        },
+        {
+          "op": "replace",
+          "offset": 49,
+          "hex": "ae00"
+        },
+        {
+          "op": "replace",
+          "offset": 57,
+          "hex": "0600"
+        },
+        {
+          "op": "replace",
+          "offset": 67,
+          "hex": "9e00"
+        },
+        {
+          "op": "replace",
+          "offset": 193,
+          "hex": "616c6c006d616300666f6f00686900"
+        },
+        {
+          "op": "truncate",
+          "length": 209
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "patch-coverage-mismatch"
+      }
+    },
+    {
+      "id": "patch-target-not-literal",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 169,
+          "hex": "0600"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "patch-target-not-literal"
+      }
+    },
+    {
+      "id": "duplicate-patch-target",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 173,
+          "hex": "0700"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "duplicate-patch-target"
+      }
+    },
+    {
+      "id": "patch-order-mismatch",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 169,
+          "hex": "0900"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "patch-order-mismatch"
+      }
+    },
+    {
+      "id": "patch-node-out-of-range",
+      "base": "all-kinds",
+      "mutations": [
+        {
+          "op": "replace",
+          "offset": 171,
+          "hex": "0700"
+        }
+      ],
+      "expect": {
+        "status": "invalid",
+        "error": "patch-node-out-of-range"
+      }
+    }
+  ]
+}

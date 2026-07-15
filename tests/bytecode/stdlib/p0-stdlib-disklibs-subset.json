@@ -1,0 +1,90 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "Slim resident F011 disk-libs profile: enough bytecode stdlib to find and load standalone bytecode libs.",
+  "sources": [
+    "lib/prelude-m1.lisp",
+    "lib/stdlib-load.lisp",
+    "lib/stdlib-load-lib.lisp"
+  ],
+  "functions": [
+    "1+",
+    "1-",
+    "%load-fold-code",
+    "%load-name-code-at",
+    "%load-entry-byte",
+    "%load-entry-used-p",
+    "%load-name-match-at",
+    "%load-entry-match-p",
+    "%load-from-entry",
+    "%load-scan-entries",
+    "%load-scan-directory",
+    "load",
+    "%load-lib-from-entry",
+    "%load-lib-scan-entries",
+    "%load-lib-scan-directory",
+    "%load-lib-codes-equal-p",
+    "%load-lib-loaded-p",
+    "%load-lib-note-loaded",
+    "load-lib",
+    "%load-libs-seq",
+    "load-libs"
+  ],
+  "max_call_args": 4,
+  "cases": [
+    {
+      "name": "disklib-directory-name-match",
+      "expr": "(progn (%disk-read-sector 40 3) (%load-name-match-at (string->list \"testlib\") 0 0))",
+      "expect": "t"
+    },
+    {
+      "name": "load-lib-header-is-not-directory-entry",
+      "expr": "(progn (%disk-read-sector 40 0) (%disk-poke 2 130) (%disk-poke 3 1) (%disk-poke 4 2) (%disk-poke 20 160) (%disk-write-sector 40 0) (load-lib \"65work\"))",
+      "expect": "nil"
+    },
+    {
+      "name": "load-lib-testlib",
+      "expr": "(load-lib \"testlib\")",
+      "expect": "t"
+    },
+    {
+      "name": "load-lib-registry-after-testlib",
+      "expr": "(progn (load-lib \"testlib\") (%load-lib-loaded-p (string->list \"testlib\") (symbol-value '*loaded-libs*)))",
+      "expect": "t"
+    },
+    {
+      "name": "load-lib-missing",
+      "expr": "(load-lib \"missing\")",
+      "expect": "nil"
+    },
+    {
+      "name": "load-missing",
+      "expr": "(load \"missing\")",
+      "expect": "nil"
+    },
+    {
+      "name": "load-lib-non-string",
+      "expr": "(load-lib 7)",
+      "expect": "nil"
+    },
+    {
+      "name": "load-libs-empty",
+      "expr": "(load-libs)",
+      "expect": "t"
+    },
+    {
+      "name": "load-libs-testlib",
+      "expr": "(load-libs \"testlib\")",
+      "expect": "t"
+    },
+    {
+      "name": "load-libs-multi-missing",
+      "expr": "(load-libs \"missing\" \"nope\")",
+      "expect": "nil"
+    },
+    {
+      "name": "load-libs-list-missing",
+      "expr": "(load-libs '(\"missing\"))",
+      "expect": "nil"
+    }
+  ]
+}

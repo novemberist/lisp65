@@ -1,0 +1,138 @@
+{
+  "format": "lisp65-r3-g3-harness-v1",
+  "version": 1,
+  "id": "r3-exact-15-case-static-harness",
+  "status": "static-preflight-only-no-execution",
+  "contract_id": "workbench-r3-g3-g6",
+  "contract_path": "config/r3-g3-g6-contract.json",
+  "matrix": {
+    "path": "tests/bytecode/dialect-v2/r3-boot/cases.json",
+    "sha256": "376af59f7d32dbbd93ee124daf6238dfeb62f810bd6ae8ab907f8c3032164a58"
+  },
+  "product_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/r3/product-block-receipt.json",
+    "sha256": "83df6aff98f64f168c914cabe93aa8bbcd81d22511d83658a978299354692c39"
+  },
+  "targets": {
+    "host-static": {"kind": "read-only-static", "executes_product": false},
+    "bytecode-host": {"kind": "host-model", "executes_product": false},
+    "xmega65-controlled": {"kind": "emulator", "executes_product": true},
+    "hardware-receipt": {"kind": "physical-hardware", "executes_product": true}
+  },
+  "verifiers": {
+    "hardware-oracle": {"path": "tools/host-lisp/r3_g3_harness.py", "sha256": "7e4e5522387fdb8c82fa13b97f7990992b30c2b1342532146db336589975480e"},
+    "media-policy": {"path": "tools/host-lisp/bytecode_p0_stdlib.py", "sha256": "1b6fc1b1a0860002b1e00b7eed0edeab8e782d06a4da37c8ef4788d3f9c33703"},
+    "process-cleanup": {"path": "scripts/kill-xmega65-by-token.py", "sha256": "811c61452c8751a809052d22232d1bf66264cbd91cf2ae901977e7b70dc80d17"},
+    "product-block": {"path": "tools/host-lisp/r3_product_block.py", "sha256": "cc9ff01fcc7a68be9e7c71152389f7e78f96b2aee516fb8fc530df1f67e79923"},
+    "safe-runner": {"path": "scripts/xmega65-safe-run.sh", "sha256": "2fe74233a672df091e77a95617bf1152fe31ff710d45a1fd73d023deb8e92baa"},
+    "smoke-verifier": {"path": "scripts/smoke-xmega65.sh", "sha256": "c8ba5e2fdfa9ea63207c9f7af7b5739fd22ff133d8c9bc7317273888be2943a0"},
+    "stager-trace": {"path": "tools/host-lisp/r3_g3_run.py", "sha256": "be0e5037da7691c3eacf22173f1be2825273ddb937dd30e37be62d77d7738c58"}
+  },
+  "cases": [
+    {
+      "id": "arbitrary-user-media-save-remount-read",
+      "fidelity": "emulator-valid",
+      "target": "bytecode-host",
+      "verifier": "media-policy",
+      "artifact_roles": ["work-d81", "library-m65d"]
+    },
+    {
+      "id": "artifact-preflight-exact-set",
+      "fidelity": "emulator-valid",
+      "target": "host-static",
+      "verifier": "product-block",
+      "artifact_roles": ["candidate-manifest", "rom", "xmega65", "sd-base", "linked-product-elf", "workbench-prg", "attic-catalog", "bank5-preload", "resolved-profile", "library-ide", "library-idex", "library-m65d", "cold-stager", "boot-descriptor", "product-d81", "work-d81", "product-mount-descriptor"]
+    },
+    {
+      "id": "catalog-crc-reject-restage",
+      "fidelity": "emulator-valid",
+      "target": "xmega65-controlled",
+      "verifier": "stager-trace",
+      "artifact_roles": ["cold-stager", "boot-descriptor", "product-d81", "bank5-preload", "attic-catalog"]
+    },
+    {
+      "id": "catalog-missing-restage",
+      "fidelity": "emulator-valid",
+      "target": "xmega65-controlled",
+      "verifier": "stager-trace",
+      "artifact_roles": ["cold-stager", "boot-descriptor", "product-d81", "bank5-preload", "attic-catalog"]
+    },
+    {
+      "id": "catalog-valid-stage-chain",
+      "fidelity": "emulator-valid",
+      "target": "xmega65-controlled",
+      "verifier": "stager-trace",
+      "artifact_roles": ["cold-stager", "boot-descriptor", "workbench-prg", "bank5-preload", "attic-catalog"]
+    },
+    {
+      "id": "disk-swap-resident-composition",
+      "fidelity": "hardware-only",
+      "target": "hardware-receipt",
+      "verifier": "hardware-oracle",
+      "artifact_roles": ["product-d81", "work-d81", "library-ide", "library-idex", "library-m65d"]
+    },
+    {
+      "id": "drive9-rejected",
+      "fidelity": "emulator-valid",
+      "target": "bytecode-host",
+      "verifier": "media-policy",
+      "artifact_roles": ["library-m65d"]
+    },
+    {
+      "id": "mid-write-media-swap-abort",
+      "fidelity": "hardware-only",
+      "target": "hardware-receipt",
+      "verifier": "hardware-oracle",
+      "artifact_roles": ["work-d81", "library-m65d"]
+    },
+    {
+      "id": "power-cycle-autoboot-restage-repl",
+      "fidelity": "hardware-only",
+      "target": "hardware-receipt",
+      "verifier": "hardware-oracle",
+      "artifact_roles": ["product-d81", "cold-stager", "boot-descriptor", "workbench-prg", "bank5-preload", "attic-catalog"]
+    },
+    {
+      "id": "product-media-identity-write-reject",
+      "fidelity": "emulator-valid",
+      "target": "bytecode-host",
+      "verifier": "media-policy",
+      "artifact_roles": ["product-d81", "library-m65d"]
+    },
+    {
+      "id": "product-medium-physical-write-protect",
+      "fidelity": "hardware-only",
+      "target": "hardware-receipt",
+      "verifier": "hardware-oracle",
+      "artifact_roles": ["product-d81", "product-mount-descriptor"]
+    },
+    {
+      "id": "product-prg-byte-identity",
+      "fidelity": "emulator-valid",
+      "target": "host-static",
+      "verifier": "product-block",
+      "artifact_roles": ["linked-product-elf", "workbench-prg", "bank5-preload", "attic-catalog", "resolved-profile", "cold-stager", "boot-descriptor"]
+    },
+    {
+      "id": "stager-entry-chain-control",
+      "fidelity": "emulator-valid",
+      "target": "xmega65-controlled",
+      "verifier": "stager-trace",
+      "artifact_roles": ["cold-stager", "boot-descriptor", "workbench-prg", "product-d81"]
+    },
+    {
+      "id": "warm-reset-valid-catalog-fastpath",
+      "fidelity": "hardware-only",
+      "target": "hardware-receipt",
+      "verifier": "hardware-oracle",
+      "artifact_roles": ["product-d81", "cold-stager", "boot-descriptor", "workbench-prg", "bank5-preload", "attic-catalog"]
+    },
+    {
+      "id": "work-media-save-remount-read",
+      "fidelity": "hardware-only",
+      "target": "hardware-receipt",
+      "verifier": "hardware-oracle",
+      "artifact_roles": ["work-d81", "library-ide", "library-m65d"]
+    }
+  ]
+}

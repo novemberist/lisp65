@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-dialect-v2-ide-cases-v1",
+  "profile": "dialect-v1-v2-differential",
+  "family": "ide",
+  "cases": [
+    {
+      "id": "command-surface",
+      "forms": ["(ide-family-public-surface)"],
+      "migration_anchor": "decision:ide-command-short-names",
+      "observations": {
+        "dialect-v1": {
+          "native-c-compiler-vm": "loaded=81;commands=8;legacy-public=72",
+          "python-p0-compiler-vm": "loaded=81;commands=8;legacy-public=72"
+        },
+        "dialect-v2": {
+          "native-c-compiler-vm": "loaded=9;commands=8;legacy-public=0",
+          "python-p0-compiler-vm": "loaded=9;commands=8;legacy-public=0"
+        }
+      }
+    },
+    {
+      "id": "directory-only-runtime",
+      "forms": ["(ide-family-directory-only-runtime)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {
+          "native-c-compiler-vm": "l65m=load-pass;designator-routes=12;transaction-classes=6",
+          "python-p0-compiler-vm": "l65m=load-pass;designator-routes=12;transaction-classes=6"
+        },
+        "dialect-v2": {
+          "native-c-compiler-vm": "l65m=load-pass;designator-routes=12;transaction-classes=6",
+          "python-p0-compiler-vm": "l65m=load-pass;designator-routes=12;transaction-classes=6"
+        }
+      }
+    },
+    {
+      "id": "edit-autoload-entry",
+      "forms": ["(edit)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {
+          "native-c-compiler-vm": "edit=resident-autoload-ide;failure=loader-diagnostic",
+          "python-p0-compiler-vm": "edit=resident-autoload-ide;failure=loader-diagnostic"
+        },
+        "dialect-v2": {
+          "native-c-compiler-vm": "edit=resident-autoload-ide;failure=loader-diagnostic",
+          "python-p0-compiler-vm": "edit=resident-autoload-ide;failure=loader-diagnostic"
+        }
+      }
+    },
+    {
+      "id": "interlibrary-api",
+      "forms": ["(ide-family-interlibrary-api)"],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {
+          "native-c-compiler-vm": "interlibrary-exports=11;cross-container=named",
+          "python-p0-compiler-vm": "interlibrary-exports=11;cross-container=named"
+        },
+        "dialect-v2": {
+          "native-c-compiler-vm": "interlibrary-exports=11;cross-container=named",
+          "python-p0-compiler-vm": "interlibrary-exports=11;cross-container=named"
+        }
+      }
+    }
+  ]
+}

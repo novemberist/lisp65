@@ -1,0 +1,40 @@
+{
+  "description": "Evaluation contract for lib/stdlib-control.lisp on top of the M1 Prelude.",
+  "cases": [
+    {
+      "name": "stdlib-do-counting-loop",
+      "input": "(do ((i 0 (1+ i))) ((= i 3) i))",
+      "expect": "3"
+    },
+    {
+      "name": "stdlib-do-body-side-effect",
+      "input": "(let ((s 0)) (do ((i 0 (1+ i))) ((= i 4) s) (setq s (+ s i))))",
+      "expect": "6"
+    },
+    {
+      "name": "stdlib-dotimes-result",
+      "input": "(dotimes (i 3 i))",
+      "expect": "3"
+    },
+    {
+      "name": "stdlib-dotimes-body-side-effect",
+      "input": "(let ((s 0)) (dotimes (i 4 s) (setq s (+ s i))))",
+      "expect": "6"
+    },
+    {
+      "name": "stdlib-dolist-result",
+      "input": "(dolist (x (quote (1 2 3)) 7) nil)",
+      "expect": "7"
+    },
+    {
+      "name": "stdlib-dolist-result-var-is-nil",
+      "input": "(dolist (x (quote (1 2 3)) x) nil)",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-dolist-body-side-effect",
+      "input": "(let ((s 0)) (dolist (x (quote (1 2 3)) s) (setq s (+ s x))))",
+      "expect": "6"
+    }
+  ]
+}

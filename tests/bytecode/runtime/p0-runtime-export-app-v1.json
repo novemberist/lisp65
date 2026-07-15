@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "runtime-adventure",
+  "d81_name": "RTAPP",
+  "provides": [
+    "runtime-adventure"
+  ],
+  "requires": [
+    "core"
+  ],
+  "description": "AP8.2 evaluator-free Runtime Export adventure emitted by the Workbench.",
+  "sources": [
+    "lib/runtime-core.lisp"
+  ],
+  "functions": [
+    "runtime-step",
+    "runtime-main"
+  ],
+  "max_call_args": 2,
+  "cases": [
+    {
+      "name": "runtime-export-entry",
+      "expr": "(runtime-main)",
+      "expect": "42"
+    },
+    {
+      "name": "runtime-export-state-machine",
+      "expr": "(if (eq (runtime-step (quote hall-key) (quote open-door)) (quote treasure)) 42 0)",
+      "expect": "42"
+    }
+  ]
+}

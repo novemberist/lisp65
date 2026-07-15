@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-host-eval-cases-v1",
+  "cases": [
+    {
+      "name": "lines-to-source-joins-with-newline",
+      "input": "(ide-lines->source '(\"(+ 1 2)\" \"(* 3 4)\"))",
+      "expect": "\"(+ 1 2)\n(* 3 4)\""
+    },
+    {
+      "name": "region-source-spans-buffer-lines",
+      "input": "(ide-region-source (ide-make-buffer 'scratch '(\"a\" \"b\" \"c\")) 1 3)",
+      "expect": "\"b\nc\""
+    },
+    {
+      "name": "region-eval-request-carries-buffer-span-and-source",
+      "input": "(ide-region-eval-request (ide-make-buffer 'scratch '(\"(+ 1 2)\" \"(* 3 4)\" \"tail\")) 0 2)",
+      "expect": "(EVAL-SOURCE SCRATCH 0 2 \"(+ 1 2)\n(* 3 4)\")"
+    },
+    {
+      "name": "defun-eval-request-first-top-level-form",
+      "input": "(ide-defun-eval-request (ide-make-buffer 'scratch '(\"(defun a ()\" \"  1)\" \"(defun b ()\" \"  2)\")) 1)",
+      "expect": "(EVAL-SOURCE SCRATCH 0 2 \"(defun a ()\n  1)\")"
+    },
+    {
+      "name": "defun-eval-request-second-top-level-form",
+      "input": "(ide-defun-eval-request (ide-make-buffer 'scratch '(\"(defun a ()\" \"  1)\" \"(defun b ()\" \"  2)\")) 3)",
+      "expect": "(EVAL-SOURCE SCRATCH 2 4 \"(defun b ()\n  2)\")"
+    },
+    {
+      "name": "defun-eval-request-without-top-level-form",
+      "input": "(ide-defun-eval-request (ide-make-buffer 'scratch '(\"  orphan\" \"  body\")) 1)",
+      "expect": "NIL"
+    },
+    {
+      "name": "eval-request-accessors",
+      "input": "((lambda (request) (list (ide-eval-request-buffer request) (ide-eval-request-start request) (ide-eval-request-end request) (ide-eval-request-source request))) (ide-region-eval-request (ide-make-buffer 'scratch '(\"a\" \"b\" \"c\")) 1 3))",
+      "expect": "(SCRATCH 1 3 \"b\nc\")"
+    }
+  ]
+}

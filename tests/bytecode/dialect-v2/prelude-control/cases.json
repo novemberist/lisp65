@@ -1,0 +1,231 @@
+{
+  "format": "lisp65-dialect-v2-prelude-control-cases-v1",
+  "profile": "dialect-v1-v2-differential",
+  "family": "prelude-control",
+  "cases": [
+    {
+      "id": "defparameter-always-evaluates-init",
+      "forms": [
+        "(setq *ap84-p-count* 0)",
+        "(defparameter *ap84-p* (progn (setq *ap84-p-count* (+ *ap84-p-count* 1)) *ap84-p-count*))",
+        "(defparameter *ap84-p* (progn (setq *ap84-p-count* (+ *ap84-p-count* 1)) *ap84-p-count*))",
+        "(cons *ap84-p* (cons *ap84-p-count* nil))"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(2 2)", "native-c-compiler-vm": "(2 2)"},
+        "dialect-v2": {"native-c-treewalk": "(2 2)", "native-c-compiler-vm": "(2 2)"}
+      }
+    },
+    {
+      "id": "defparameter-overwrites-reloaded-value",
+      "forms": [
+        "(defparameter *ap84-p-reload* 1)",
+        "(setq *ap84-p-reload* 9)",
+        "(defparameter *ap84-p-reload* 2)",
+        "*ap84-p-reload*"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "2", "native-c-compiler-vm": "2"},
+        "dialect-v2": {"native-c-treewalk": "2", "native-c-compiler-vm": "2"}
+      }
+    },
+    {
+      "id": "defvar-bound-skips-init",
+      "forms": [
+        "(setq *ap84-v-count* 0)",
+        "(defvar *ap84-v* 7)",
+        "(defvar *ap84-v* (progn (setq *ap84-v-count* (+ *ap84-v-count* 1)) 8))",
+        "(cons *ap84-v* (cons *ap84-v-count* nil))"
+      ],
+      "migration_anchor": "decision:defparameter-defvar-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(7 0)", "native-c-compiler-vm": "(8 1)"},
+        "dialect-v2": {"native-c-treewalk": "(7 0)", "native-c-compiler-vm": "(7 0)"}
+      }
+    },
+    {
+      "id": "defvar-extra-init-arity",
+      "forms": [
+        "(defvar *ap84-extra* 1 2)"
+      ],
+      "migration_anchor": "decision:defparameter-defvar-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "*ap84-extra*", "native-c-compiler-vm": "1"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "defvar-no-init-leaves-unbound",
+      "forms": [
+        "(setq *ap84-declared-count* 0)",
+        "(defvar *ap84-declared*)",
+        "(defvar *ap84-declared* (progn (setq *ap84-declared-count* (+ *ap84-declared-count* 1)) 7))",
+        "(cons *ap84-declared* (cons *ap84-declared-count* nil))"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "(7 1)", "native-c-compiler-vm": "(7 1)"},
+        "dialect-v2": {"native-c-treewalk": "(7 1)", "native-c-compiler-vm": "(7 1)"}
+      }
+    },
+    {
+      "id": "defvar-reload-preserves-current-value",
+      "forms": [
+        "(defvar *ap84-v-reload* 1)",
+        "(setq *ap84-v-reload* 9)",
+        "(defvar *ap84-v-reload* 2)",
+        "*ap84-v-reload*"
+      ],
+      "migration_anchor": "decision:defparameter-defvar-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "9", "native-c-compiler-vm": "2"},
+        "dialect-v2": {"native-c-treewalk": "9", "native-c-compiler-vm": "9"}
+      }
+    },
+    {
+      "id": "do-public-form-removed",
+      "forms": [
+        "(do ((i 0 (+ i 1))) ((= i 3) i))"
+      ],
+      "migration_anchor": "decision:do-removal",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "3", "native-c-compiler-vm": "!error:runtime"},
+        "dialect-v2": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "dolist-survives-do-removal",
+      "forms": [
+        "(let ((sum 0)) (dolist (x (quote (1 2 3)) sum) (setq sum (+ sum x))))"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "6", "native-c-compiler-vm": "6"},
+        "dialect-v2": {"native-c-treewalk": "6", "native-c-compiler-vm": "6"}
+      }
+    },
+    {
+      "id": "dotimes-survives-do-removal",
+      "forms": [
+        "(let ((sum 0)) (dotimes (i 5 sum) (setq sum (+ sum i))))"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "10", "native-c-compiler-vm": "10"},
+        "dialect-v2": {"native-c-treewalk": "10", "native-c-compiler-vm": "10"}
+      }
+    },
+    {
+      "id": "mod-negative-keeps-divisor-sign",
+      "forms": [
+        "(mod -5 3)"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "1", "native-c-compiler-vm": "1"},
+        "dialect-v2": {"native-c-treewalk": "1", "native-c-compiler-vm": "1"}
+      }
+    },
+    {
+      "id": "not-equal-apply-arity-one",
+      "forms": [
+        "(apply (function /=) (quote (1)))"
+      ],
+      "migration_anchor": "decision:not-equal-binary-arity",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "not-equal-arity-one",
+      "forms": [
+        "(/= 1)"
+      ],
+      "migration_anchor": "decision:not-equal-binary-arity",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "not-equal-arity-three",
+      "forms": [
+        "(/= 1 2 3)"
+      ],
+      "migration_anchor": "decision:not-equal-binary-arity",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "not-equal-arity-zero",
+      "forms": [
+        "(/=)"
+      ],
+      "migration_anchor": "decision:not-equal-binary-arity",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "not-equal-binary-distinct",
+      "forms": [
+        "(/= 4 5)"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"},
+        "dialect-v2": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"}
+      }
+    },
+    {
+      "id": "not-equal-binary-equal",
+      "forms": [
+        "(/= 4 4)"
+      ],
+      "migration_anchor": null,
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil"},
+        "dialect-v2": {"native-c-treewalk": "nil", "native-c-compiler-vm": "nil"}
+      }
+    },
+    {
+      "id": "not-equal-funcall-arity-three",
+      "forms": [
+        "(funcall (function /=) 1 2 3)"
+      ],
+      "migration_anchor": "decision:not-equal-binary-arity",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "t", "native-c-compiler-vm": "t"},
+        "dialect-v2": {"native-c-treewalk": "!error:arity", "native-c-compiler-vm": "!error:arity"}
+      }
+    },
+    {
+      "id": "remainder-negative-keeps-dividend-sign",
+      "forms": [
+        "(remainder -5 3)"
+      ],
+      "migration_anchor": "decision:remainder-v2-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "-2", "native-c-compiler-vm": "-2"},
+        "dialect-v2": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name"}
+      }
+    },
+    {
+      "id": "remainder-public-funcall-removed",
+      "forms": [
+        "(funcall (function remainder) 5 3)"
+      ],
+      "migration_anchor": "decision:remainder-v2-surface",
+      "observations": {
+        "dialect-v1": {"native-c-treewalk": "2", "native-c-compiler-vm": "2"},
+        "dialect-v2": {"native-c-treewalk": "!error:undefined-public-name", "native-c-compiler-vm": "!error:undefined-public-name"}
+      }
+    }
+  ]
+}

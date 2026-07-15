@@ -1,0 +1,105 @@
+{
+  "description": "Evaluation contract for lib/stdlib-sequences.lisp on top of the M1 Prelude.",
+  "cases": [
+    {
+      "name": "stdlib-list-star-proper-tail",
+      "input": "(list* 1 2 (quote (3 4)))",
+      "expect": "(1 2 3 4)"
+    },
+    {
+      "name": "stdlib-list-star-dotted-tail",
+      "input": "(list* 1 2 3)",
+      "expect": "(1 2 . 3)"
+    },
+    {
+      "name": "stdlib-assq-symbol-key",
+      "input": "(assq 'b '((a 1) (b 2) (c 3)))",
+      "expect": "(B 2)"
+    },
+    {
+      "name": "stdlib-butlast-default",
+      "input": "(butlast '(a b c d))",
+      "expect": "(A B C)"
+    },
+    {
+      "name": "stdlib-butlast-count",
+      "input": "(butlast '(a b c d) 2)",
+      "expect": "(A B)"
+    },
+    {
+      "name": "stdlib-mapcar-two-lists",
+      "input": "(mapcar (function +) '(1 2 3) '(10 20 30))",
+      "expect": "(11 22 33)"
+    },
+    {
+      "name": "stdlib-mapcan-flattens-results",
+      "input": "(mapcan (lambda (x) (list x (1+ x))) '(1 3))",
+      "expect": "(1 2 3 4)"
+    },
+    {
+      "name": "stdlib-remove-if",
+      "input": "(remove-if (lambda (x) (> x 2)) '(1 2 3 4))",
+      "expect": "(1 2)"
+    },
+    {
+      "name": "stdlib-remove-if-not",
+      "input": "(remove-if-not (lambda (x) (> x 2)) '(1 2 3 4))",
+      "expect": "(3 4)"
+    },
+    {
+      "name": "stdlib-copy-list",
+      "input": "(copy-list '(a b c))",
+      "expect": "(A B C)"
+    },
+    {
+      "name": "stdlib-find-if",
+      "input": "(find-if (lambda (x) (> x 2)) '(1 2 3 4))",
+      "expect": "3"
+    },
+    {
+      "name": "stdlib-position-if",
+      "input": "(position-if (lambda (x) (> x 2)) '(1 2 3 4))",
+      "expect": "2"
+    },
+    {
+      "name": "stdlib-count",
+      "input": "(count 'a '(a b a c))",
+      "expect": "2"
+    },
+    {
+      "name": "stdlib-count-if",
+      "input": "(count-if (lambda (x) (> x 1)) '(1 2 3))",
+      "expect": "2"
+    },
+    {
+      "name": "stdlib-reduce-plus",
+      "input": "(reduce (function +) (quote (1 2 3 4)))",
+      "expect": "10"
+    },
+    {
+      "name": "stdlib-reduce-empty",
+      "input": "(reduce (function +) nil)",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-every-positive-true",
+      "input": "(every (lambda (x) (> x 0)) (quote (1 2 3)))",
+      "expect": "T"
+    },
+    {
+      "name": "stdlib-every-positive-false",
+      "input": "(every (lambda (x) (> x 0)) (quote (1 0 3)))",
+      "expect": "NIL"
+    },
+    {
+      "name": "stdlib-some-finds-truthy",
+      "input": "(some (lambda (x) (if (> x 2) x nil)) (quote (1 2 3 4)))",
+      "expect": "3"
+    },
+    {
+      "name": "stdlib-some-misses",
+      "input": "(some (lambda (x) (if (> x 9) x nil)) (quote (1 2 3 4)))",
+      "expect": "NIL"
+    }
+  ]
+}

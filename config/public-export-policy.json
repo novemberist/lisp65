@@ -1,0 +1,105 @@
+{
+  "format": "lisp65-public-export-policy-v1",
+  "version": 1,
+  "mode": "curated-snapshot-without-private-history",
+  "source_repository": {
+    "role": "private-proof-authority",
+    "history_rewrite_permitted": false
+  },
+  "public_repository": {
+    "role": "source-and-user-documentation",
+    "release_tarballs_in_git": false,
+    "release_assets": [
+      {
+        "tag": "v1.0.0",
+        "source_path": "releases/lisp65-1.0.0.tar.gz",
+        "sha256": "5bea5ca90c8b6c5a709065aa625e6ff8b28dea5b16026cd618d1780dd508b0f8"
+      }
+    ]
+  },
+  "include": [
+    ".gitignore",
+    "LICENSE",
+    "LICENSE-SCOPE.md",
+    "Makefile",
+    "README.md",
+    "RUNTIME-REDISTRIBUTION.md",
+    "THIRD-PARTY-NOTICES.md",
+    "config/*.json",
+    "config/*.mk",
+    "demos/**",
+    "docs/README.md",
+    "docs/architecture-overview.md",
+    "docs/development.md",
+    "docs/implementation-contracts.md",
+    "docs/language-reference.md",
+    "docs/releases/**",
+    "docs/upstream-findings.md",
+    "docs/user-guide.md",
+    "lib/**",
+    "mk/**",
+    "products/runtime-core/**",
+    "releases/lisp65-1.0.0-manifest.json",
+    "releases/lisp65-1.0.0-receipt.json",
+    "scripts/**",
+    "src/**",
+    "tests/bytecode/**",
+    "tests/disk/**",
+    "tests/equivalence/**",
+    "tools/host-lisp/**"
+  ],
+  "exclude": [
+    ".gitattributes",
+    "config/document-index.json",
+    "config/history-transport-rewrite.json",
+    "config/promotion-archive-policy.json",
+    "config/promotion-register.json",
+    "config/r2-known-open.json",
+    "config/r3-g3-g6-contract.json",
+    "config/r7-release-prerequisites.json",
+    "docs/archive/**",
+    "docs/decision-log.md",
+    "docs/planning/**",
+    "docs/project-status.md",
+    "docs/reference/**",
+    "releases/*.tar.gz",
+    "salvage/**",
+    "spike/**",
+    "tests/**/evidence/**",
+    "tests/**/promotions/**",
+    "tools/llvm-mos/**",
+    "tools/m65tools/**",
+    "tools/host-lisp/history_*.py",
+    "tools/host-lisp/promotion_*.py",
+    "tools/host-lisp/r3_*.py",
+    "tools/host-lisp/r4_*.py",
+    "tools/host-lisp/r5_*.py",
+    "tools/host-lisp/r6_*.py",
+    "tools/host-lisp/r7_*.py"
+  ],
+  "required": [
+    "LICENSE",
+    "LICENSE-SCOPE.md",
+    "README.md",
+    "RUNTIME-REDISTRIBUTION.md",
+    "THIRD-PARTY-NOTICES.md",
+    "src/main.c",
+    "lib/dialect-v2/lcc-profile.lisp",
+    "docs/user-guide.md",
+    "docs/language-reference.md",
+    "docs/releases/1.0.0.md",
+    "releases/lisp65-1.0.0-manifest.json",
+    "releases/lisp65-1.0.0-receipt.json"
+  ],
+  "gates": {
+    "maximum_file_bytes": 5000000,
+    "forbid_git_lfs_pointers": true,
+    "forbid_elf_binaries": true,
+    "forbid_private_absolute_paths": true,
+    "forbid_non_fixture_email_addresses": true,
+    "allowed_email_domains": [
+      "example.invalid"
+    ],
+    "forbid_high_confidence_secret_patterns": true
+  }
+}

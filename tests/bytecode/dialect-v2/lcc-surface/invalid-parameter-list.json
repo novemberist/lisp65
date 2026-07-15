@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-dialect-v2-lcc-compile-error-case-v1",
+  "id": "arity-invalid-duplicate-marker-code59",
+  "source": "(lcc-compile-obj '(lambda (a &optional &optional b) b))",
+  "expected": {
+    "error_code": 59,
+    "sentinel": "%lcc-error-invalid-parameter-list",
+    "prim_id": 56
+  },
+  "engines": {
+    "native-c-treewalk": {
+      "mode": "tree",
+      "coverage": "live-code-and-sentinel",
+      "expected_observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+    },
+    "native-c-compiler-vm": {
+      "mode": "vm",
+      "coverage": "live-code-and-sentinel",
+      "expected_observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+    },
+    "python-p0-compiler-vm": {
+      "mode": "python-p0",
+      "coverage": "live-code-and-sentinel",
+      "expected_observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+    },
+    "lisp-lcc": {
+      "mode": "lcc",
+      "coverage": "live-code-and-sentinel",
+      "expected_observation": "!error:code=59:symbol=%lcc-error-invalid-parameter-list"
+    }
+  }
+}

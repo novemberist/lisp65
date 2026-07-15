@@ -1,0 +1,70 @@
+{
+  "description": "Evaluation contract for lib/stdlib-fixed.lisp Q8.7 fixed-point helpers on top of the M1 Prelude.",
+  "cases": [
+    {
+      "name": "stdlib-fixed-scale",
+      "input": "(fx-scale)",
+      "expect": "128"
+    },
+    {
+      "name": "stdlib-fixed-integer-convert",
+      "input": "(integer->fx 3)",
+      "expect": "384"
+    },
+    {
+      "name": "stdlib-fixed-construct-fraction",
+      "input": "(fx 1 64)",
+      "expect": "192"
+    },
+    {
+      "name": "stdlib-fixed-to-integer-positive",
+      "input": "(fx->integer (fx 3 100))",
+      "expect": "3"
+    },
+    {
+      "name": "stdlib-fixed-to-integer-negative",
+      "input": "(fx->integer (fx -3 -100))",
+      "expect": "-3"
+    },
+    {
+      "name": "stdlib-fixed-add",
+      "input": "(fx+ (fx 1 64) (fx 2 32))",
+      "expect": "480"
+    },
+    {
+      "name": "stdlib-fixed-subtract",
+      "input": "(fx- (fx 2 0) (fx 0 64))",
+      "expect": "192"
+    },
+    {
+      "name": "stdlib-fixed-negate",
+      "input": "(fx- (fx 1 0))",
+      "expect": "-128"
+    },
+    {
+      "name": "stdlib-fixed-multiply-positive",
+      "input": "(fx* (fx 1 64) (fx 2 0))",
+      "expect": "384"
+    },
+    {
+      "name": "stdlib-fixed-multiply-negative",
+      "input": "(fx* (fx -1 -64) (fx 2 0))",
+      "expect": "-384"
+    },
+    {
+      "name": "stdlib-fixed-divide-half",
+      "input": "(fx/ (fx 7 0) (fx 2 0))",
+      "expect": "448"
+    },
+    {
+      "name": "stdlib-fixed-divide-quarter",
+      "input": "(fx/ (fx 1 0) (fx 4 0))",
+      "expect": "32"
+    },
+    {
+      "name": "stdlib-fixed-less-true",
+      "input": "(fx< (fx 1 0) (fx 1 64))",
+      "expect": "T"
+    }
+  ]
+}

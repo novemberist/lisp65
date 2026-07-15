@@ -1,0 +1,49 @@
+{
+  "format": "lisp65-asm-c-constant-contract-v1",
+  "assembler_sources": [
+    {
+      "authority": "src/l65m_batch_contract.h",
+      "generated_symbols": [
+        "ASM_L65M_OK",
+        "ASM_L65M_PREFLIGHT_ABI",
+        "ASM_L65M_COMMIT_ABI",
+        "ASM_L65M_PREFLIGHT_SLOT_BASE",
+        "ASM_L65M_COMMIT_SLOT_BASE",
+        "ASM_L65M_ABI_VERSION_OFFSET",
+        "ASM_L65M_ABI_VERSION_HIGH_OFFSET",
+        "ASM_L65M_EXPECTED_PHASE_OFFSET",
+        "ASM_L65M_BUSY_OFFSET",
+        "ASM_L65M_REPEAT_PHASE_OFFSET"
+      ],
+      "kind": "generated-c-contract",
+      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1"],
+      "path": "src/l65m_batch_repeat.s"
+    },
+    {
+      "authority": "scripts/r3-cold-stager-contract.h",
+      "generated_symbols": [
+        "ASM_R3_CHAIN_JOB_ADDR_LO",
+        "ASM_R3_CHAIN_JOB_ADDR_HI",
+        "ASM_R3_PRODUCT_ENTRY"
+      ],
+      "kind": "generated-c-contract",
+      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1"],
+      "path": "scripts/r3-cold-stager-chain.s"
+    },
+    {
+      "authority": "scripts/mega65-math-override-check.py",
+      "gate": "mega65-math-override-check",
+      "kind": "hardware-algorithm-contract",
+      "path": "src/mega65_math.s"
+    },
+    {
+      "authority": "config/f011-transaction-context.json",
+      "gate": "f011-transaction-context-check",
+      "kind": "f011-transaction-context-contract",
+      "path": "src/f011_guarded_write.s"
+    }
+  ],
+  "generated_include": "build/generated/asm-c-contract.inc",
+  "generator": "scripts/asm-c-contract-values-main.c",
+  "scan_roots": ["src", "scripts"]
+}

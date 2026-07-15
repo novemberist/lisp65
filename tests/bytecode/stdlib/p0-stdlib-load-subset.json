@@ -1,0 +1,47 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "F011 LOAD product suite: MVP bytecode stdlib plus Rule-B bytecode Lisp load.",
+  "extends": "p0-stdlib-subset.json",
+  "sources": [
+    "lib/stdlib-load.lisp"
+  ],
+  "functions": [
+    "%load-fold-code",
+    "%load-name-code-at",
+    "%load-entry-byte",
+    "%load-entry-used-p",
+    "%load-name-match-at",
+    "%load-entry-match-p",
+    "%load-from-entry",
+    "%load-scan-entries",
+    "%load-scan-directory",
+    "load"
+  ],
+  "cases": [
+    {
+      "name": "load-directory-name-match",
+      "expr": "(progn (%disk-read-sector 40 3) (%load-name-match-at (string->list \"testlib\") 0 0))",
+      "expect": "t"
+    },
+    {
+      "name": "load-header-is-not-directory-entry",
+      "expr": "(progn (%disk-read-sector 40 0) (%disk-poke 2 130) (%disk-poke 3 1) (%disk-poke 4 2) (%disk-poke 20 160) (%disk-write-sector 40 0) (load \"65work\"))",
+      "expect": "nil"
+    },
+    {
+      "name": "load-testlib",
+      "expr": "(load \"testlib\")",
+      "expect": "t"
+    },
+    {
+      "name": "load-missing",
+      "expr": "(load \"missing\")",
+      "expect": "nil"
+    },
+    {
+      "name": "load-non-string",
+      "expr": "(load 7)",
+      "expect": "nil"
+    }
+  ]
+}

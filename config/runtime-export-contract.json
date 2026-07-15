@@ -1,0 +1,93 @@
+{
+  "format": "lisp65-runtime-export-contract-v2",
+  "status": "candidate",
+  "claims": {
+    "interactive_product": false,
+    "language_semantics": false,
+    "release": false,
+    "runtime_export": true
+  },
+  "profile": {
+    "id": "runtime-export-v2-candidate",
+    "layout": "inline-boot-overlay",
+    "entry_abi": "named-zero-argument-p0",
+    "application_preload": "bank5-build-bound",
+    "runtime_disk_loader": false
+  },
+  "application": {
+    "descriptor": "tests/bytecode/runtime/runtime-app-v1.json",
+    "descriptor_format": "lisp65-runtime-app-v1",
+    "artifact_format": "lisp65-bytecode-p0-disk-lib-artifacts-v1",
+    "bytecode_abi": "P0",
+    "l65m_version": 1
+  },
+  "package": {
+    "format": "lisp65-runtime-export-ship-v2",
+    "files": [
+      "manifest.json",
+      "resolved-profile.txt",
+      "runtime-app.json",
+      "runtime-app.l65m",
+      "runtime-preload.bin",
+      "runtime.prg",
+      "toolchain-report.txt"
+    ]
+  },
+  "capabilities": {
+    "required": [
+      "gc",
+      "native-apply",
+      "symbols",
+      "vm"
+    ],
+    "forbidden_native_symbols": [
+      "compile_top_form",
+      "crepl_boot_init",
+      "eval",
+      "eval_env",
+      "eval_init",
+      "eval_vm_bridge",
+      "lcc_install_obj",
+      "load_source_stream",
+      "read_atom",
+      "read_expr",
+      "read_expr_1",
+      "repl"
+    ]
+  },
+  "budgets": {
+    "min_boot_stack_gap": 512,
+    "min_post_boot_reserve": 8192,
+    "post_boot_reserve_target": 12288,
+    "max_prg_file_end": 45056,
+    "min_symbol_headroom": 64
+  },
+  "gates": {
+    "G0": [
+      "schema",
+      "l65m-preflight",
+      "dependency-closure"
+    ],
+    "G1": [
+      "python-vm",
+      "native-host-vm"
+    ],
+    "G2": [
+      "elf-surface",
+      "budgets",
+      "package-verifier",
+      "reproducibility"
+    ],
+    "G4": [
+      "deploy-dry-run"
+    ],
+    "G5": [
+      "cold-boot",
+      "exact-result",
+      "preload-corruption"
+    ]
+  },
+  "open_gaps": [
+    "cold-boot-hardware"
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "format": "lisp65-v2-capability-carrier-g5-contract-v1",
+  "version": 1,
+  "id": "v2-capability-carrier-internal-g5",
+  "status": "verifier-bound",
+  "profile": {
+    "id": "dialect-v2-capability-carrier",
+    "scope": "internal-hardware-acceptance-only",
+    "shippable": false,
+    "selection_effect": "none",
+    "global_g5_effect": "none"
+  },
+  "separation": {
+    "global_matrix": {
+      "path": "config/dialect-v2-g5-matrix.json",
+      "sha256": "8730941fbd06f985539604f1ad45ea14bcede3b4a00846c4158b2b594da123f5"
+    },
+    "normal_ship_guard": {
+      "path": "tools/host-lisp/dialect_ship_guard.py",
+      "sha256": "ee3667fd7a6751825601be8c7123cf9c9b95b1c3d549896bef7556c3b84ac15d"
+    },
+    "global_profile_switch": "forbidden",
+    "normal_ship_packaging": "forbidden",
+    "global_matrix_reuse": "forbidden"
+  },
+  "candidate": {
+    "manifest_format": "lisp65-v2-capability-carrier-g5-candidate-v1",
+    "status": "hardware-candidate",
+    "seal": "sha256-all-artifacts-and-policy",
+    "g5_claim_before_receipts": "none",
+    "required_artifact_ids": [
+      "product-link-budget-report",
+      "g5-domain-verifier",
+      "runtime-hardware-verifier",
+      "runtime-preload-verifier",
+      "runtime-ship-verifier",
+      "runtime-core-audit",
+      "runtime-core-elf",
+      "runtime-core-footprint",
+      "runtime-core-preload",
+      "runtime-core-prg",
+      "runtime-hw-manifest",
+      "runtime-hw-oracle",
+      "runtime-stage-clean",
+      "runtime-stage-truncated",
+      "runtime-effective-truncated",
+      "runtime-clear-truncated",
+      "runtime-stage-bitflip",
+      "runtime-stage-build-id-mismatch",
+      "runtime-foreign-profile",
+      "workbench-attic-catalog",
+      "workbench-d81",
+      "workbench-elf",
+      "workbench-footprint",
+      "workbench-preload",
+      "workbench-prg",
+      "persistence-bam-alloc-prg",
+      "persistence-chain-write-prg",
+      "persistence-dir-write-prg",
+      "persistence-save-new-prg",
+      "persistence-save-new-scan-prg",
+      "persistence-save-new-var-prg"
+    ],
+    "policy_artifact_ids": [
+      "product-link-budget-report",
+      "g5-domain-verifier",
+      "runtime-hardware-verifier",
+      "runtime-preload-verifier",
+      "runtime-ship-verifier",
+      "runtime-core-audit",
+      "runtime-core-footprint",
+      "workbench-footprint"
+    ],
+    "artifact_completeness": "case-union-plus-policy-equals-candidate-artifacts",
+    "product_artifact_ids": [
+      "runtime-core-preload",
+      "runtime-core-prg",
+      "workbench-attic-catalog",
+      "workbench-d81",
+      "workbench-preload",
+      "workbench-prg"
+    ],
+    "receipt_identity": "product-artifact-sha-set"
+  },
+  "matrix": {
+    "id": "v2-capability-carrier-internal-hardware",
+    "case_coverage": "exactly-once",
+    "domains": [
+      {
+        "id": "runtime-export",
+        "verifier": "tools/host-lisp/v2_g5_domain_verifiers.py",
+        "verifier_sha256": "cf696bfcf2b1b359b68330f0fee495dbef2731f4eb9fdb3b035dc3728e316000",
+        "status": "implemented",
+        "cases": [
+          {"id": "bitflip", "target": "v2-capability-carrier-g5-runtime-bitflip", "expected": "terminal-preload-error-detail-3", "artifact_ids": ["runtime-core-elf", "runtime-core-preload", "runtime-core-prg", "runtime-hw-manifest", "runtime-hw-oracle", "runtime-stage-bitflip"]},
+          {"id": "build-id-mismatch", "target": "v2-capability-carrier-g5-runtime-build-id-mismatch", "expected": "terminal-preload-error-detail-2", "artifact_ids": ["runtime-core-elf", "runtime-core-preload", "runtime-core-prg", "runtime-hw-manifest", "runtime-hw-oracle", "runtime-stage-build-id-mismatch", "runtime-foreign-profile"]},
+          {"id": "clean", "target": "v2-capability-carrier-g5-runtime-clean", "expected": "result-42", "artifact_ids": ["runtime-core-elf", "runtime-core-preload", "runtime-core-prg", "runtime-hw-manifest", "runtime-hw-oracle", "runtime-stage-clean"]},
+          {"id": "truncated", "target": "v2-capability-carrier-g5-runtime-truncated", "expected": "terminal-preload-error-detail-1", "artifact_ids": ["runtime-core-elf", "runtime-core-preload", "runtime-core-prg", "runtime-hw-manifest", "runtime-hw-oracle", "runtime-stage-truncated", "runtime-effective-truncated", "runtime-clear-truncated"]}
+        ]
+      },
+      {
+        "id": "workbench-persistence",
+        "verifier": "tools/host-lisp/v2_g5_domain_verifiers.py",
+        "verifier_sha256": "cf696bfcf2b1b359b68330f0fee495dbef2731f4eb9fdb3b035dc3728e316000",
+        "status": "implemented",
+        "cases": [
+          {"id": "bam-alloc", "target": "v2-capability-carrier-g5-workbench-bam-alloc", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "persistence-bam-alloc-prg"]},
+          {"id": "bam-read", "target": "v2-capability-carrier-g5-workbench-bam-read", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg"]},
+          {"id": "chain-write", "target": "v2-capability-carrier-g5-workbench-chain-write", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "persistence-chain-write-prg"]},
+          {"id": "dir-write", "target": "v2-capability-carrier-g5-workbench-dir-write", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "persistence-dir-write-prg"]},
+          {"id": "save-new", "target": "v2-capability-carrier-g5-workbench-save-new", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "persistence-save-new-prg"]},
+          {"id": "save-new-scan", "target": "v2-capability-carrier-g5-workbench-save-new-scan", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "persistence-save-new-scan-prg"]},
+          {"id": "save-new-var", "target": "v2-capability-carrier-g5-workbench-save-new-var", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "persistence-save-new-var-prg"]}
+        ]
+      },
+      {
+        "id": "workbench-ux",
+        "verifier": "tools/host-lisp/v2_g5_domain_verifiers.py",
+        "verifier_sha256": "cf696bfcf2b1b359b68330f0fee495dbef2731f4eb9fdb3b035dc3728e316000",
+        "status": "implemented",
+        "cases": [
+          {"id": "overlay-stack-guard", "target": "v2-capability-carrier-g5-workbench-overlay-stack-guard", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg", "workbench-elf"]},
+          {"id": "stdlib-runtime", "target": "v2-capability-carrier-g5-workbench-stdlib-runtime", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg"]},
+          {"id": "ux-complete", "target": "v2-capability-carrier-g5-workbench-ux-complete", "expected": "pass", "artifact_ids": ["workbench-attic-catalog", "workbench-d81", "workbench-preload", "workbench-prg"]}
+        ]
+      }
+    ]
+  },
+  "receipt": {
+    "format": "lisp65-v2-capability-carrier-g5-receipt-v1",
+    "verification_status": "verifier-bound-hardware-required",
+    "hardware_required": true,
+    "dry_run_may_pass_g5": false,
+    "product_identity_required": true,
+    "case_evidence_required": true,
+    "preflight_required": true,
+    "harness_fixes_preserve_case_receipts": true,
+    "full_rerun_trigger": "product-artifact-sha-change-only"
+  },
+  "retry_policy": {
+    "allowed_scope": "transport-before-semantic-execution-only",
+    "semantic_execution": "must-be-false",
+    "media_content_mutation": "must-be-false",
+    "retry_limit": 1,
+    "fresh_evidence": true,
+    "fresh_throwaway_media": true,
+    "receipt_requirement": "both-attempts-recorded"
+  },
+  "dry_run": {
+    "format": "lisp65-v2-capability-carrier-g5-plan-v1",
+    "side_effects": "forbidden",
+    "hardware_claim": "none",
+    "g5_claim": "none"
+  }
+}

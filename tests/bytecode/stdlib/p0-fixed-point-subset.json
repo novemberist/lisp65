@@ -1,0 +1,109 @@
+{
+  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
+  "description": "Post-MVP Q8.7 fixed-point helpers compiled from lib/stdlib-fixed.lisp to P0 bytecode. Kept separate from the embedded MVP stdlib.",
+  "require_all_defuns": false,
+  "sources": [
+    "lib/prelude-m1.lisp",
+    "lib/stdlib-fixed.lisp"
+  ],
+  "functions": [
+    "not",
+    "identity",
+    "list",
+    "caar",
+    "cadr",
+    "cdar",
+    "cddr",
+    "first",
+    "rest",
+    "second",
+    "1+",
+    "1-",
+    "zerop",
+    "plusp",
+    "minusp",
+    "fx-scale",
+    "integer->fx",
+    "fx",
+    "%fx-nonnegative-quotient",
+    "%fx-abs",
+    "fx->integer",
+    "fx+",
+    "%fx-subtract-from",
+    "fx-",
+    "%fx-mul-unsigned-loop",
+    "%fx-mul-unsigned",
+    "fx*",
+    "%fx-div-scale-loop",
+    "%fx-div-unsigned",
+    "fx/",
+    "fx<"
+  ],
+  "cases": [
+    {
+      "name": "fx-scale",
+      "expr": "(fx-scale)",
+      "expect": "128"
+    },
+    {
+      "name": "integer-to-fx",
+      "expr": "(integer->fx 3)",
+      "expect": "384"
+    },
+    {
+      "name": "fx-fraction",
+      "expr": "(fx 1 64)",
+      "expect": "192"
+    },
+    {
+      "name": "fx-to-integer-positive",
+      "expr": "(fx->integer (fx 3 100))",
+      "expect": "3"
+    },
+    {
+      "name": "fx-to-integer-negative",
+      "expr": "(fx->integer (fx -3 -100))",
+      "expect": "-3"
+    },
+    {
+      "name": "fx-add",
+      "expr": "(fx+ (fx 1 64) (fx 2 32))",
+      "expect": "480"
+    },
+    {
+      "name": "fx-subtract",
+      "expr": "(fx- (fx 2 0) (fx 0 64))",
+      "expect": "192"
+    },
+    {
+      "name": "fx-negate",
+      "expr": "(fx- (fx 1 0))",
+      "expect": "-128"
+    },
+    {
+      "name": "fx-multiply-positive",
+      "expr": "(fx* (fx 1 64) (fx 2 0))",
+      "expect": "384"
+    },
+    {
+      "name": "fx-multiply-negative",
+      "expr": "(fx* (fx -1 -64) (fx 2 0))",
+      "expect": "-384"
+    },
+    {
+      "name": "fx-divide-half",
+      "expr": "(fx/ (fx 7 0) (fx 2 0))",
+      "expect": "448"
+    },
+    {
+      "name": "fx-divide-quarter",
+      "expr": "(fx/ (fx 1 0) (fx 4 0))",
+      "expect": "32"
+    },
+    {
+      "name": "fx-less-true",
+      "expr": "(fx< (fx 1 0) (fx 1 64))",
+      "expect": "t"
+    }
+  ]
+}

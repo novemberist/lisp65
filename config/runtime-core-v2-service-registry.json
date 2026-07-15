@@ -1,0 +1,28 @@
+{
+  "format": "lisp65-runtime-core-v2-service-registry-v1",
+  "version": 1,
+  "abi_ledger": "config/bytecode-abi-ledger.json",
+  "artifact": {
+    "manifest": "build/bytecode/dialect-v2/runtime-core/stdlib-p0.manifest.json",
+    "format": "lisp65-bytecode-p0-stdlib-artifacts-v1",
+    "role": "stdlib",
+    "suite": "tests/bytecode/runtime/p0-runtime-export-app-v2.json",
+    "abi_profile": "dialect-v2"
+  },
+  "policies": {
+    "binding": "static-build-time",
+    "new_call": "reject-unless-explicitly-classified",
+    "runtime_function_pointer_registry": "forbidden",
+    "workbench_service_ids": "forbidden"
+  },
+  "allowed_callprim_ids": [0, 3, 4, 5, 6, 7, 8, 19, 20, 23, 24, 25, 28, 29],
+  "forbidden_callprim_ids": [1, 2, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
+  "classifications": [
+    {
+      "kind": "directory",
+      "target": "runtime-step",
+      "owner": "runtime-application",
+      "expected_calls": 4
+    }
+  ]
+}

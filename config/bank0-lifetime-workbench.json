@@ -1,0 +1,234 @@
+{
+  "schema": "lisp65-bank0-lifetime-policy-v1",
+  "profile": "mvp-vm-stdlib-einsuite-core-workbench",
+  "large_symbol_min_bytes": 80,
+  "sections": [
+    ".basic_header",
+    ".text",
+    ".rodata",
+    ".data",
+    ".bss",
+    ".noinit"
+  ],
+  "section_groups": {
+    "text_data": [
+      ".basic_header",
+      ".text",
+      ".rodata",
+      ".data"
+    ],
+    "bss": [
+      ".bss",
+      ".noinit"
+    ]
+  },
+  "pins": {
+    "max_bank0_text_data_bytes": 41078,
+    "max_bank0_bss_bytes": 2384,
+    "min_bank0_reserve_bytes": 192,
+    "max_unattributed_section_bytes": 2116
+  },
+  "rules": [
+    {
+      "id": "bootstrap-code",
+      "match": {
+        "names": [
+          "vm_load_embedded_stdlib",
+          "eval_init",
+          "defprim",
+          "gc_freeze_boot"
+        ],
+        "expected_allocations": 4
+      },
+      "class": "boot-only",
+      "feature": "bootstrap",
+      "source": [
+        "src/main.c",
+        "src/eval.c",
+        "src/mem.c",
+        "src/vm_embed.c"
+      ],
+      "reason": "Called by the Workbench startup path before the REPL; theoretical overlay candidates only."
+    },
+    {
+      "id": "development-surface",
+      "match": {
+        "names": [
+          "apply",
+          "lcc_cons_p",
+          "lcc_enter",
+          "lcc_install_phase_00",
+          "lcc_install_phase_01",
+          "lcc_install_phase_02",
+          "lcc_resolve_literal",
+          "repl",
+          "read_expr_1",
+          "read_atom",
+          "eval_vm_bridge",
+          "sugar",
+          "read_string",
+          "eval",
+          "cs_fetch",
+          "skip_ws"
+        ],
+        "expected_allocations": 16
+      },
+      "class": "dev-only",
+      "feature": "workbench-development",
+      "source": [
+        "src/eval.c",
+        "src/lcc_install_overlay.c",
+        "src/reader.c",
+        "src/repl.c"
+      ],
+      "reason": "Interactive reader, Treewalk bridge, REPL, and on-device compiler surface; removable only by an explicit runtime profile split."
+    },
+    {
+      "id": "cold-runtime-services",
+      "match": {
+        "names": [
+          "md_lit_node",
+          "md_name",
+          "print_obj",
+          "io_disk_save_named",
+          "disk_chain_to_scratch",
+          "io_disk_write_sector",
+          "vm_dir_add",
+          "scr_putc",
+          "symname",
+          "vm_ext_code_alloc",
+          "set_sym_function",
+          "vm_dir_align8",
+          "f011_read_at",
+          "io_disk_read_sector",
+          "md_idx",
+          "symfn_ext_set"
+        ],
+        "expected_allocations": 16
+      },
+      "class": "runtime-cold",
+      "feature": "runtime-services",
+      "source": [
+        "src/io.c",
+        "src/printer.c",
+        "src/screen.c",
+        "src/symbol.c",
+        "src/vm.c",
+        "src/vm_embed.c"
+      ],
+      "reason": "Required after boot for output, persistence, disk libraries, directory registration, and symbol mutation, but outside the interpreter hot loop."
+    },
+    {
+      "id": "hot-runtime-core",
+      "match": {
+        "names": [
+          "vm_run",
+          "vm_run_inner",
+          "vm_callprim",
+          "gc_collect",
+          "intern",
+          "vm_frame_fill",
+          "str_putc",
+          "vm_key_event",
+          "alloc",
+          "cons",
+          "gc_mark1",
+          "str_relocate",
+          "lisp65_hw_udivmodhi4",
+          "str_copy_out",
+          "str_open",
+          "vm_fixbinop",
+          "lisp65_hw_udivhi3",
+          "lisp65_hw_umodhi3",
+          "lisp65_hw_mulhi3",
+          "gc_mark_spine",
+          "str_from_bytes",
+          "vm_run_dir",
+          "dir_off_get",
+          "sidx",
+          "lisp65_hw_divhi3",
+          "sym_value",
+          "sym_function",
+          "nameoff_get",
+          "lisp65_hw_modhi3",
+          "vm_upval_nth",
+          "set_sym_value",
+          "symval_set",
+          "str_byte"
+        ],
+        "expected_allocations": 33
+      },
+      "class": "runtime-hot",
+      "feature": "runtime-core",
+      "source": [
+        "src/mem.c",
+        "src/mega65_math.s",
+        "src/obj.h",
+        "src/symbol.c",
+        "src/vm.c"
+      ],
+      "reason": "Interpreter, primitive dispatch, allocation, GC, string, arithmetic, and symbol-access paths used repeatedly during normal execution."
+    },
+    {
+      "id": "hot-cell-b",
+      "match": {
+        "base": "cell_b",
+        "expected_allocations": 1
+      },
+      "class": "runtime-hot",
+      "feature": "cell-access",
+      "source": "src/obj.h",
+      "reason": "ICF aliases of the same physical hot Cell accessor."
+    },
+    {
+      "id": "hot-cell-set-b",
+      "match": {
+        "base": "cell_set_b",
+        "expected_allocations": 1
+      },
+      "class": "runtime-hot",
+      "feature": "cell-access",
+      "source": "src/obj.h",
+      "reason": "ICF aliases of the same physical hot Cell mutator."
+    },
+    {
+      "id": "hot-cell-a",
+      "match": {
+        "base": "cell_a",
+        "expected_allocations": 1
+      },
+      "class": "runtime-hot",
+      "feature": "cell-access",
+      "source": "src/obj.h",
+      "reason": "ICF aliases of the same physical hot Cell accessor."
+    },
+    {
+      "id": "capacity-bss",
+      "match": {
+        "names": [
+          "dir_len",
+          "namelen4",
+          "gc_rootstack",
+          "heap",
+          "repl.buf",
+          "dir_off_base",
+          "marks",
+          "symbnd",
+          "symfnptr",
+          "lcc_resident_work"
+        ],
+        "expected_allocations": 10
+      },
+      "class": "bss-cap",
+      "feature": "capacity-state",
+      "source": [
+        "src/lcc_install_overlay.c",
+        "src/mem.c",
+        "src/repl.c",
+        "src/symbol.c",
+        "src/vm.c"
+      ],
+      "reason": "Resident capacity arrays governed by explicit Workbench limits; reductions require product-headroom evidence."
+    }
+  ]
+}

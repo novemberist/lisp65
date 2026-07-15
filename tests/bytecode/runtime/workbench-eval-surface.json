@@ -1,0 +1,66 @@
+{
+  "format": "lisp65-workbench-eval-surface-v1",
+  "product": "lisp65-workbench",
+  "profile": "mvp-vm-stdlib-einsuite-core-workbench",
+  "ship_manifest_format": "lisp65-workbench-ship-v5",
+  "bound_inputs": [
+    "config/semantic-contracts.json",
+    "tests/bytecode/runtime/workbench-eval-surface.json",
+    "tools/host-lisp/semantic_contracts.py",
+    "tools/host-lisp/workbench_eval_surface.py"
+  ],
+  "route": {
+    "entry": "TREEWALK_STRIP",
+    "compiler": "lcc-run",
+    "installer": "lcc-install",
+    "executor": "P0-VM"
+  },
+  "resolved_profile": {
+    "required_flags": [
+      "-DLISP65_TREEWALK_STRIP",
+      "-DLISP65_LCC_INSTALL",
+      "-DLISP65_LCC_INSTALL_CLOSURES",
+      "-DLISP65_VM_GLOBAL_PRIMS"
+    ],
+    "forbidden_flags": [
+      "-DLISP65_EVAL_PRIMS",
+      "-DLISP65_EVAL_CONTROL_SF"
+    ]
+  },
+  "native_symbols": {
+    "required": [
+      "eval",
+      "eval_init",
+      "lcc_enter",
+      "lcc_install_phase_00",
+      "vm_run",
+      "vm_run_dir"
+    ],
+    "forbidden": [
+      "eval_env",
+      "eval_string",
+      "workbench_boot_name_eval",
+      "workbench_boot_name_eval_string"
+    ]
+  },
+  "stdlib": {
+    "suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+    "required_sources": [
+      "lib/lcc.lisp"
+    ],
+    "required_functions": [
+      "lcc-compile-obj",
+      "lcc-run"
+    ],
+    "forbidden_functions": [
+      "eval",
+      "eval-string"
+    ],
+    "required_entry_literals": {
+      "lcc-run": [
+        "lcc-compile-obj",
+        "lcc-install"
+      ]
+    }
+  }
+}

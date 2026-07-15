@@ -1,0 +1,9 @@
+; m5 new-file payload, intentionally spans two sectors.
+(defun m5-new-a () 120)
+(defun m5-new-b () 230)
+(defun m5-new-c (x) (+ x 340))
+(defun m5-new-d () (+ (m5-new-a) (m5-new-b)))
+(defun m5-new-e (x y) (+ x y))
+(defun m5-new-f () (m5-new-e 60 47))
+(defun m5-new-pad (n) (if (< n 1) 0 (+ 1 (m5-new-pad (- n 1)))))
+(defun m5-new-run () (+ (m5-new-c (m5-new-d)) (m5-new-f)))

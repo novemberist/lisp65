@@ -1,0 +1,65 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "place",
+  "d81_name": "PLACE",
+  "provides": [
+    "setf",
+    "incf",
+    "decf",
+    "push",
+    "pop"
+  ],
+  "requires": [
+    "core"
+  ],
+  "description": "PLACE pilot bytecode disk library. Fixed setf/incf/decf/push/pop macro expanders packaged as L65M macro entries against the resident einsuite-core suite.",
+  "sources": [
+    "lib/stdlib-places.lisp"
+  ],
+  "functions": [
+    "%places-consp",
+    "%putf",
+    "%setf-expand",
+    "setf",
+    "incf",
+    "decf",
+    "push",
+    "pop"
+  ],
+  "require_all_defuns": true,
+  "require_all_defmacros": true,
+  "resident_suite": "../stdlib/p0-stdlib-einsuite-core-subset.json",
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "place-function-kind-setf",
+      "expr": "(function-kind 'setf)",
+      "expect": "macro"
+    },
+    {
+      "name": "place-function-kind-incf",
+      "expr": "(function-kind 'incf)",
+      "expect": "macro"
+    },
+    {
+      "name": "place-function-kind-putf",
+      "expr": "(function-kind '%putf)",
+      "expect": "bytecode"
+    },
+    {
+      "name": "place-putf-replace",
+      "expr": "(%putf '(:a 1 :b 2) ':b 9)",
+      "expect": "(:a 1 :b 9)"
+    },
+    {
+      "name": "place-putf-append",
+      "expr": "(%putf '(:a 1) ':b 2)",
+      "expect": "(:a 1 :b 2)"
+    },
+    {
+      "name": "place-setf-expand-symbol",
+      "expr": "(%setf-expand 'x 4)",
+      "expect": "(setq x 4)"
+    }
+  ]
+}

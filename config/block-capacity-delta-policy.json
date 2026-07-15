@@ -1,0 +1,26 @@
+{
+  "format": "lisp65-block-capacity-delta-policy-v1",
+  "version": 1,
+  "status": "active",
+  "effective_on": "2026-07-13",
+  "scope": "all-future-architecture-block-family-and-release-promotion-receipts",
+  "receipt_field": "capacity_delta",
+  "dimensions": {
+    "bank": {"unit": "bytes", "direction": "larger-is-better"},
+    "ext": {"unit": "bytes", "direction": "larger-is-better"},
+    "symbols": {"unit": "entries", "direction": "larger-is-better"},
+    "namepool": {"unit": "bytes", "direction": "larger-is-better"},
+    "directory": {"unit": "entries", "direction": "larger-is-better"}
+  },
+  "rules": {
+    "arithmetic": "candidate-minus-baseline-equals-delta",
+    "zero_or_credit": "authorization-must-be-null",
+    "debit": "pre-existing-bound-authorization-covering-dimension-amount-and-floor-required",
+    "unauthorized_drift": "fail",
+    "sealed_history": "never-amend"
+  },
+  "legacy_bank_policy": {
+    "path": "config/block-bank-delta-policy.json",
+    "sha256": "dfce823fb6eabcadd78701bfecf372cfe4b1257b41560e9999377d1bf482748b"
+  }
+}

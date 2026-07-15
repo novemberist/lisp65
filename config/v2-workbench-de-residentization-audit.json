@@ -1,0 +1,114 @@
+{
+  "format": "lisp65-v2-workbench-de-residentization-audit-v2",
+  "version": 2,
+  "id": "cp5-workbench-de-residentization",
+  "status": "removable-class-sweep-complete",
+  "scope": {
+    "release_path": "workbench-v2",
+    "runtime_core": "internal-proof-only",
+    "new_language_families": false,
+    "new_ap8_blocks": false,
+    "implementation_included": true,
+    "sweep_implementation_included": false,
+    "architecture_decision_pending": true
+  },
+  "provenance": {
+    "source_commit": "bb889020ec5a401db8344e17a85b169d7103757d",
+    "metric": "real-mos-lto-icf-marginal-runtime-overlay-vma-drop",
+    "candidate_values": "upper-bounds-before-semantic-replacement",
+    "durable_bindings": [
+      {
+        "path": "config/v2-workbench-symbol-diff-policy.json",
+        "sha256": "c5b496c4697044a03e3bb2735cf3be8269350833a0700808b2069847151910c4"
+      },
+      {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-symbol-diff-report.json",
+        "sha256": "ca48f1ccbb6302cdc6bda3ba9b9b80f5db8a0f81caac2c5a9c8f7428443c962e"
+      },
+      {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/fasl-save-prototype-report.json",
+        "sha256": "97d7e2b79314f4c6dcab1b6ea6bcf59cf640d5034fe887c8fc363eca340f9e2b"
+      },
+      {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/lcc-installer-gateway-stop-report.json",
+        "sha256": "0d079952db8f21ea943442d6439ee5ddbc984e9a8be62d583ee699b327860499"
+      },
+      {
+        "path": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-removable-class-sweep-report.json",
+        "sha256": "90029bb672d712eefac6ea7229ecb7dea0a2cd4a09faa36d7de1b21f70c7e7bf"
+      }
+    ]
+  },
+  "gap": {
+    "candidate_bss_end": "0xc9ce",
+    "candidate_heap_start": "0xc9ce",
+    "candidate_runtime_overlay_vma": "0xc9d0",
+    "runtime_overlay_vma_limit": "0xc356",
+    "vma_reclaim_required_bytes": 1658,
+    "post_boot_reserve_bytes": 136,
+    "post_boot_reserve_min_bytes": 1536,
+    "reserve_reclaim_required_bytes": 1400
+  },
+  "accepted_burn_down": [
+    {"id": "cp5-start", "net_reclaim_bytes": 0, "vma_gap_bytes": 2338, "reserve_gap_bytes": 2082},
+    {"id": "number-to-string", "net_reclaim_bytes": 80, "vma_gap_bytes": 2258, "reserve_gap_bytes": 2000},
+    {"id": "fasl-save", "net_reclaim_bytes": 600, "vma_gap_bytes": 1658, "reserve_gap_bytes": 1400}
+  ],
+  "corrected_findings": {
+    "boot_lifetime": {
+      "old_nonfunctional_ceiling_bytes": 1371,
+      "functional_diagnostic_vma_reclaim_bytes": 110,
+      "promotable_planning_bytes": 0,
+      "status": "rejected-non-independent"
+    },
+    "island": {
+      "capacity_bytes": 2048,
+      "code_bytes": 1108,
+      "annex_bytes": 260,
+      "free_bytes": 680,
+      "previous_932_byte_value": "obsolete-before-annex"
+    },
+    "slice_cap": {
+      "current_contract_bytes": 1396,
+      "current_payload_bytes": 1369,
+      "proposed_contract_bytes": 1024,
+      "independent_reclaim_bytes": 0,
+      "status": "not-an-independent-lever"
+    }
+  },
+  "sweep": {
+    "report": "tests/bytecode/dialect-v2/evidence/capability-carrier/workbench-removable-class-sweep-report.json",
+    "timebox_complete": true,
+    "candidates": [
+      {"id": "string-builders-prim-26-27", "vma_reclaim_bytes": 2542, "heap_reclaim_bytes": 2540, "risk": "high-contract-change", "closes_current_budget": true},
+      {"id": "interactive-lcc-install-coordinator", "vma_reclaim_bytes": 1058, "heap_reclaim_bytes": 1056, "risk": "critical-product-function-loss", "closes_current_budget": false},
+      {"id": "repl-comfort-leaves", "vma_reclaim_bytes": 460, "heap_reclaim_bytes": 458, "risk": "medium-high-ux-regression", "closes_current_budget": false},
+      {"id": "boot-lifetime-cluster", "vma_reclaim_bytes": 110, "heap_reclaim_bytes": 108, "risk": "critical-trust-and-diagnostics", "closes_current_budget": false, "promotable_planning_bytes": 0}
+    ]
+  },
+  "recommendation": {
+    "id": "split-string-builders-from-codecs",
+    "decision_status": "architecture-approval-required",
+    "retain_prim_ids": [28, 29],
+    "retire_to_permanent_tombstones_if_approved": [26, 27],
+    "defer_atomic_builder_contract_to": "buffer-and-string-construction-block",
+    "expected_vma_headroom_bytes": 884,
+    "expected_post_boot_reserve_bytes": 2676,
+    "expected_reserve_headroom_above_target_bytes": 1140,
+    "new_runtime_slots": 0,
+    "permanent_island_bytes": 0,
+    "slice_cap_change": false,
+    "v1_1_layout_reserve_preserved": true
+  },
+  "acceptance": {
+    "runtime_overlay_vma_max": "0xc356",
+    "post_boot_reserve_min_bytes": 1536,
+    "runtime_slot_delta": 0,
+    "permanent_island_bytes_delta": 0,
+    "strict_arity_preserved": true,
+    "current_product_string_atomicity_unchanged": true,
+    "recommended_contract_change_pending": true,
+    "full_workbench_g5_required": true,
+    "ship_remains_blocked": true
+  }
+}

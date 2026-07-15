@@ -1,0 +1,38 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "private-inline-test",
+  "d81_name": "PITEST",
+  "provides": ["private-inline-test"],
+  "requires": ["core"],
+  "sources": ["tests/bytecode/libs/private-inline-test.lisp"],
+  "functions_from_sources": ["tests/bytecode/libs/private-inline-test.lisp"],
+  "require_all_defuns": true,
+  "private_inline_functions": [
+    "%private-inline-leaf",
+    "%private-inline-middle",
+    "%private-inline-pair"
+  ],
+  "min_private_inline_functions": 3,
+  "cases": [
+    {
+      "name": "private-inline-isolates-former-global",
+      "expr": "(progn (set-symbol-value (quote private-inline-global) 39) (private-inline-run 2))",
+      "expect": "42"
+    },
+    {
+      "name": "private-inline-functions-have-no-runtime-entry",
+      "expr": "(function-kind (quote %private-inline-leaf))",
+      "expect": "nil"
+    },
+    {
+      "name": "private-inline-arguments-are-once-left-to-right",
+      "expr": "(private-inline-order)",
+      "expect": "(1 2)"
+    },
+    {
+      "name": "private-inline-preserves-variable-binder",
+      "expr": "(progn (set-symbol-value (quote private-inline-global) 39) (private-inline-binder))",
+      "expect": "(7 40)"
+    }
+  ]
+}

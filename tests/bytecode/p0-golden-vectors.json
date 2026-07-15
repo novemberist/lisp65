@@ -1,0 +1,463 @@
+{
+  "format": "lisp65-bytecode-p0-golden-vectors-v1",
+  "symbols": ["length"],
+  "vectors": [
+    {
+      "name": "identity-arg0",
+      "source": "(lambda (a) a)",
+      "code": {
+        "nargs": 1,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 05"
+      },
+      "code_object_hex": "b5 01 00 00 02 00 00 0b 05",
+      "args": [7],
+      "expect": "7",
+      "expect_obj": "0x000f",
+      "expect_disasm": [
+        "code nargs=1 nlocals=0 flags=0 nlits=0 payload=2",
+        "0000 PUSHARG0",
+        "0001 RET"
+      ]
+    },
+    {
+      "name": "add-two-args",
+      "source": "(lambda (a b) (+ a b))",
+      "code": {
+        "nargs": 2,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 0c 02 05"
+      },
+      "code_object_hex": "b5 02 00 00 04 00 00 0b 0c 02 05",
+      "args": [2, 40],
+      "expect": "42",
+      "expect_obj": "0x0055",
+      "expect_disasm": [
+        "code nargs=2 nlocals=0 flags=0 nlits=0 payload=4",
+        "0000 PUSHARG0",
+        "0001 PUSHARG1",
+        "0002 ADD",
+        "0003 RET"
+      ]
+    },
+    {
+      "name": "min-if-less-true",
+      "source": "(lambda (a b) (if (< a b) a b))",
+      "code": {
+        "nargs": 2,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 0c 12 1d 03 0b 1c 01 0c 05"
+      },
+      "code_object_hex": "b5 02 00 00 0a 00 00 0b 0c 12 1d 03 0b 1c 01 0c 05",
+      "args": [2, 5],
+      "expect": "2",
+      "expect_obj": "0x0005",
+      "expect_disasm": [
+        "code nargs=2 nlocals=0 flags=0 nlits=0 payload=10",
+        "0000 PUSHARG0",
+        "0001 PUSHARG1",
+        "0002 LESS",
+        "0003 JFALSEREL +3 -> 0008",
+        "0005 PUSHARG0",
+        "0006 JMPREL +1 -> 0009",
+        "0008 PUSHARG1",
+        "0009 RET"
+      ]
+    },
+    {
+      "name": "min-if-less-false",
+      "source": "(lambda (a b) (if (< a b) a b))",
+      "code": {
+        "nargs": 2,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 0c 12 1d 03 0b 1c 01 0c 05"
+      },
+      "code_object_hex": "b5 02 00 00 0a 00 00 0b 0c 12 1d 03 0b 1c 01 0c 05",
+      "args": [9, 3],
+      "expect": "3",
+      "expect_obj": "0x0007",
+      "expect_disasm": [
+        "code nargs=2 nlocals=0 flags=0 nlits=0 payload=10",
+        "0000 PUSHARG0",
+        "0001 PUSHARG1",
+        "0002 LESS",
+        "0003 JFALSEREL +3 -> 0008",
+        "0005 PUSHARG0",
+        "0006 JMPREL +1 -> 0009",
+        "0008 PUSHARG1",
+        "0009 RET"
+      ]
+    },
+    {
+      "name": "cons-car",
+      "source": "(lambda (a b) (car (cons a b)))",
+      "code": {
+        "nargs": 2,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 0c 33 34 05"
+      },
+      "code_object_hex": "b5 02 00 00 05 00 00 0b 0c 33 34 05",
+      "args": [1, 2],
+      "expect": "1",
+      "expect_obj": "0x0003",
+      "expect_disasm": [
+        "code nargs=2 nlocals=0 flags=0 nlits=0 payload=5",
+        "0000 PUSHARG0",
+        "0001 PUSHARG1",
+        "0002 CONS",
+        "0003 CAR",
+        "0004 RET"
+      ]
+    },
+    {
+      "name": "cons-cdr",
+      "source": "(lambda (a b) (cdr (cons a b)))",
+      "code": {
+        "nargs": 2,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 0c 33 35 05"
+      },
+      "code_object_hex": "b5 02 00 00 05 00 00 0b 0c 33 35 05",
+      "args": [1, 2],
+      "expect": "2",
+      "expect_obj": "0x0005",
+      "expect_disasm": [
+        "code nargs=2 nlocals=0 flags=0 nlits=0 payload=5",
+        "0000 PUSHARG0",
+        "0001 PUSHARG1",
+        "0002 CONS",
+        "0003 CDR",
+        "0004 RET"
+      ]
+    },
+    {
+      "name": "consp-cons",
+      "source": "(lambda (a b) (consp (cons a b)))",
+      "code": {
+        "nargs": 2,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 0c 33 36 05"
+      },
+      "code_object_hex": "b5 02 00 00 05 00 00 0b 0c 33 36 05",
+      "args": [1, 2],
+      "expect": "t",
+      "expect_obj": "0x0002",
+      "expect_disasm": [
+        "code nargs=2 nlocals=0 flags=0 nlits=0 payload=5",
+        "0000 PUSHARG0",
+        "0001 PUSHARG1",
+        "0002 CONS",
+        "0003 CONSP",
+        "0004 RET"
+      ]
+    },
+    {
+      "name": "callprim-numberp-fixnum",
+      "source": "(lambda (a) (numberp a))",
+      "code": {
+        "nargs": 1,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 3d 06 01 05"
+      },
+      "code_object_hex": "b5 01 00 00 05 00 00 0b 3d 06 01 05",
+      "args": [42],
+      "expect": "t",
+      "expect_obj": "0x0002",
+      "expect_disasm": [
+        "code nargs=1 nlocals=0 flags=0 nlits=0 payload=5",
+        "0000 PUSHARG0",
+        "0001 CALLPRIM prim=6:numberp argc=1",
+        "0004 RET"
+      ]
+    },
+    {
+      "name": "callprim-symbolp-symbol",
+      "source": "(lambda (a) (symbolp a))",
+      "code": {
+        "nargs": 1,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "0b 3d 05 01 05"
+      },
+      "code_object_hex": "b5 01 00 00 05 00 00 0b 3d 05 01 05",
+      "args": [{"symbol": "foo"}],
+      "expect": "t",
+      "expect_obj": "0x0002",
+      "expect_disasm": [
+        "code nargs=1 nlocals=0 flags=0 nlits=0 payload=5",
+        "0000 PUSHARG0",
+        "0001 CALLPRIM prim=5:symbolp argc=1",
+        "0004 RET"
+      ]
+    },
+    {
+      "name": "large-fixnum-literal",
+      "source": "(lambda () 128)",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [128],
+        "payload_hex": "06 00 05"
+      },
+      "code_object_hex": "b5 00 00 00 03 00 01 01 01 06 00 05",
+      "args": [],
+      "expect": "128",
+      "expect_obj": "0x0101",
+      "expect_disasm": [
+        "code nargs=0 nlocals=0 flags=0 nlits=1 payload=3",
+        "lit[0] = 0x0101",
+        "0000 PUSHLIT 0",
+        "0002 RET"
+      ]
+    },
+    {
+      "name": "screen-size-callprim",
+      "source": "(lambda () (screen-size))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "3d 09 00 05"
+      },
+      "code_object_hex": "b5 00 00 00 04 00 00 3d 09 00 05",
+      "args": [],
+      "expect": "(80 25)"
+    },
+    {
+      "name": "screen-clear-callprim",
+      "source": "(lambda () (screen-clear))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "3d 0a 00 05"
+      },
+      "code_object_hex": "b5 00 00 00 04 00 00 3d 0a 00 05",
+      "args": [],
+      "expect": "nil"
+    },
+    {
+      "name": "screen-put-char-callprim",
+      "source": "(lambda () (screen-put-char 1 2 65 129))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [129],
+        "payload_hex": "01 01 01 02 01 41 06 00 3d 0b 04 05"
+      },
+      "code_object_hex": "b5 00 00 00 0c 00 01 03 01 01 01 01 02 01 41 06 00 3d 0b 04 05",
+      "args": [],
+      "expect": "nil"
+    },
+    {
+      "name": "screen-write-string-callprim",
+      "source": "(lambda (s) (screen-write-string 0 1 s 71))",
+      "code": {
+        "nargs": 1,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 00 01 01 0b 01 47 3d 0c 04 05"
+      },
+      "code_object_hex": "b5 01 00 00 0b 00 00 01 00 01 01 0b 01 47 3d 0c 04 05",
+      "args": [{"string": "hi"}],
+      "expect": "nil"
+    },
+    {
+      "name": "read-key-callprim",
+      "source": "(lambda () (read-key))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "3d 0d 00 05"
+      },
+      "code_object_hex": "b5 00 00 00 04 00 00 3d 0d 00 05",
+      "args": [],
+      "expect": "(key 0 nil)"
+    },
+    {
+      "name": "poll-key-callprim",
+      "source": "(lambda () (poll-key))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "3d 0e 00 05"
+      },
+      "code_object_hex": "b5 00 00 00 04 00 00 3d 0e 00 05",
+      "args": [],
+      "expect": "nil"
+    },
+    {
+      "name": "disk-read-sector-callprim",
+      "source": "(lambda () (%disk-read-sector 40 0))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 28 01 00 3d 0f 02 05"
+      },
+      "code_object_hex": "b5 00 00 00 08 00 00 01 28 01 00 3d 0f 02 05",
+      "args": [],
+      "expect": "t",
+      "native_c_vm": {
+        "status": "omitted",
+        "reason": "the native VM smoke has no disk transport stub; native compilation is still required"
+      }
+    },
+    {
+      "name": "disk-byte-callprim",
+      "source": "(lambda () (%disk-byte 5))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 05 3d 10 01 05"
+      },
+      "code_object_hex": "b5 00 00 00 06 00 00 01 05 3d 10 01 05",
+      "args": [],
+      "expect": "0",
+      "native_c_vm": {
+        "status": "omitted",
+        "reason": "the native VM smoke has no disk transport stub; native compilation is still required"
+      }
+    },
+    {
+      "name": "disk-poke-callprim",
+      "source": "(lambda () (%disk-poke 5 99))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 05 01 63 3d 15 02 05"
+      },
+      "code_object_hex": "b5 00 00 00 08 00 00 01 05 01 63 3d 15 02 05",
+      "args": [],
+      "expect": "99",
+      "native_c_vm": {
+        "status": "omitted",
+        "reason": "the native VM smoke has no disk transport stub; native compilation is still required"
+      }
+    },
+    {
+      "name": "disk-write-sector-callprim",
+      "source": "(lambda () (%disk-write-sector 79 0))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 4f 01 00 3d 16 02 05"
+      },
+      "code_object_hex": "b5 00 00 00 08 00 00 01 4f 01 00 3d 16 02 05",
+      "args": [],
+      "expect": "t",
+      "native_c_vm": {
+        "status": "omitted",
+        "reason": "the native VM smoke has no disk transport stub; native compilation is still required"
+      }
+    },
+    {
+      "name": "disk-load-file-callprim",
+      "source": "(lambda () (%disk-load-file 1 2))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 01 01 02 3d 11 02 05"
+      },
+      "code_object_hex": "b5 00 00 00 08 00 00 01 01 01 02 3d 11 02 05",
+      "args": [],
+      "expect": "t",
+      "native_c_vm": {
+        "status": "omitted",
+        "reason": "the native VM smoke has no disk transport stub; native compilation is still required"
+      }
+    },
+    {
+      "name": "disk-load-lib-callprim",
+      "source": "(lambda () (%disk-load-lib 1 2))",
+      "code": {
+        "nargs": 0,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [],
+        "payload_hex": "01 01 01 02 3d 12 02 05"
+      },
+      "code_object_hex": "b5 00 00 00 08 00 00 01 01 01 02 3d 12 02 05",
+      "args": [],
+      "expect": "t",
+      "native_c_vm": {
+        "status": "omitted",
+        "reason": "the native VM smoke has no disk transport stub; native compilation is still required"
+      }
+    },
+    {
+      "name": "length-recursive-call",
+      "source": "(defun length (xs) (if (eq xs nil) 0 (+ 1 (length (cdr xs)))))",
+      "entry": "length",
+      "code": {
+        "nargs": 1,
+        "nlocals": 0,
+        "flags": 0,
+        "literals": [
+          {"symbol": "length"}
+        ],
+        "payload_hex": "0b 2b 1e 1d 03 01 00 05 01 01 0b 35 3c 00 01 02 05"
+      },
+      "code_object_hex": "b5 01 00 00 11 00 01 04 00 0b 2b 1e 1d 03 01 00 05 01 01 0b 35 3c 00 01 02 05",
+      "args": [[1, 2, 3]],
+      "expect": "3",
+      "expect_obj": "0x0007",
+      "expect_disasm": [
+        "code nargs=1 nlocals=0 flags=0 nlits=1 payload=17",
+        "lit[0] = 0x0004",
+        "0000 PUSHARG0",
+        "0001 PUSHNIL",
+        "0002 EQ",
+        "0003 JFALSEREL +3 -> 0008",
+        "0005 PUSHI8 0",
+        "0007 RET",
+        "0008 PUSHI8 1",
+        "000a PUSHARG0",
+        "000b CDR",
+        "000c CALL lit=0 argc=1",
+        "000f ADD",
+        "0010 RET"
+      ]
+    },
+    {
+      "name": "dotimes-rel8-overflow-diagnostic",
+      "source": "(lambda () (dotimes (i 1 nil) 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))",
+      "expect_compile_error": "branch offset out of rel8 range in dotimes"
+    }
+  ]
+}

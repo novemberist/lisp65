@@ -1,0 +1,78 @@
+{
+  "format": "lisp65-dialect-v2-block-v1",
+  "version": 1,
+  "id": "v2-native-list-primitives",
+  "status": "deferred",
+  "family": "lists",
+  "reason": "The single approved layout-neutral prototype exceeds the Workbench VMA ceiling and misses the 1536-byte reserve target.",
+  "correctness_mitigation": {
+    "treewalk_exact_arity": {
+      "nreverse": 1,
+      "rplaca": 2,
+      "rplacd": 2
+    },
+    "covers": ["apply", "direct", "funcall"],
+    "runtime_core_portability": "blocked",
+    "profile_switch": "blocked"
+  },
+  "prototype": {
+    "v1": {
+      "runtime_overlay_vma": "0xc350",
+      "post_boot_reserve_bytes": 1800
+    },
+    "three_native_primitives": {
+      "runtime_overlay_vma": "0xc4da",
+      "vma_deficit_bytes": 388,
+      "hypothetical_post_boot_reserve_bytes": 1406
+    },
+    "bytecode_nreverse_two_native_setters": {
+      "runtime_overlay_vma": "0xc46a",
+      "vma_deficit_bytes": 276,
+      "hypothetical_post_boot_reserve_bytes": 1518,
+      "reserve_target_deficit_bytes": 18
+    }
+  },
+  "performance": {
+    "filter_100": {
+      "copy_reverse_steps": 2365,
+      "bytecode_nreverse_steps": 2520,
+      "step_delta": 155,
+      "copy_reverse_cons_allocations": 100,
+      "bytecode_nreverse_cons_allocations": 50
+    },
+    "direct_nreverse_100": {
+      "native_visible_vm_steps": 2,
+      "bytecode_visible_vm_steps": 1310,
+      "classification": "diagnostic-only"
+    }
+  },
+  "exit_criteria": {
+    "workbench_vma_max": "0xc356",
+    "workbench_post_boot_reserve_min_bytes": 1536,
+    "runtime_core_hard_minimum": "must-pass-existing-gate",
+    "cross_engine_semantics": "direct-funcall-apply-equivalent",
+    "portable_artifact_semantics": "workbench-and-runtime-core",
+    "evidence": "regenerated-after-product-links-pass"
+  },
+  "reopening_paths": [
+    "combined-lists-strings-native-capability-budget",
+    "user-approved-colour-ram-attic-rebalance"
+  ],
+  "exhausted_or_forbidden_paths": [
+    {
+      "id": "primitive-name-table-relocation",
+      "status": "exhausted",
+      "measurement": ".lisp65_boot.names is already in the reclaimed boot overlay at 0xc741, size 0x17d; another relocation saves 0 resident bytes"
+    },
+    {
+      "id": "resident-island",
+      "status": "forbidden",
+      "reason": "The island remains frozen to cold L65M and Batch coordinators"
+    },
+    {
+      "id": "layout-relaxation",
+      "status": "requires-new-user-scope"
+    }
+  ],
+  "stop_memo": "docs/ap85-native-list-primitives-stop-memo-2026-07-12.md"
+}

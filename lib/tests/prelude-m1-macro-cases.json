@@ -1,0 +1,119 @@
+{
+  "description": "Macroexpansion contract for the concrete M1 bootstrap Prelude in lib/prelude-m1.lisp.",
+  "cases": [
+    {
+      "name": "m1-defun-one-body",
+      "macro": "defun",
+      "input": "(defun square (x) (* x x))",
+      "expect": "(set-symbol-function (quote square) (lambda (x) (* x x)))"
+    },
+    {
+      "name": "m1-defun-multiple-body",
+      "macro": "defun",
+      "input": "(defun f (x) (setq x (+ x 1)) x)",
+      "expect": "(set-symbol-function (quote f) (lambda (x) (setq x (+ x 1)) x))"
+    },
+    {
+      "name": "m1-defparameter-always-assigns-and-returns-name",
+      "macro": "defparameter",
+      "input": "(defparameter *answer* 42)",
+      "expect": "(progn (setq *answer* 42) (quote *answer*))"
+    },
+    {
+      "name": "m1-defvar-assigns-only-when-unbound",
+      "macro": "defvar",
+      "input": "(defvar *answer* (+ 40 2))",
+      "expect": "(progn (if (boundp (quote *answer*)) nil (setq *answer* (+ 40 2))) (quote *answer*))"
+    },
+    {
+      "name": "m1-defvar-without-init-does-not-assign",
+      "macro": "defvar",
+      "input": "(defvar *declared*)",
+      "expect": "(progn (if (boundp (quote *declared*)) nil nil) (quote *declared*))"
+    },
+    {
+      "name": "m1-when-zero-body",
+      "macro": "when",
+      "input": "(when ready)",
+      "expect": "(if ready (progn) nil)"
+    },
+    {
+      "name": "m1-when-multiple-body",
+      "macro": "when",
+      "input": "(when ready (write-char 65) (write-char 66))",
+      "expect": "(if ready (progn (write-char 65) (write-char 66)) nil)"
+    },
+    {
+      "name": "m1-unless-zero-body",
+      "macro": "unless",
+      "input": "(unless done)",
+      "expect": "(if done nil (progn))"
+    },
+    {
+      "name": "m1-unless-multiple-body",
+      "macro": "unless",
+      "input": "(unless done (write-char 46) (write-char 10))",
+      "expect": "(if done nil (progn (write-char 46) (write-char 10)))"
+    },
+    {
+      "name": "m1-and-empty",
+      "macro": "and",
+      "input": "(and)",
+      "expect": "t"
+    },
+    {
+      "name": "m1-and-nested",
+      "macro": "and",
+      "input": "(and a b c)",
+      "expect": "(if a (and b c) nil)"
+    },
+    {
+      "name": "m1-or-empty",
+      "macro": "or",
+      "input": "(or)",
+      "expect": "nil"
+    },
+    {
+      "name": "m1-or-hygienic-temp",
+      "macro": "or",
+      "input": "(or a b c)",
+      "expect": "((lambda (#:or0) (if #:or0 #:or0 (or b c))) a)"
+    },
+    {
+      "name": "m1-cond-empty",
+      "macro": "cond",
+      "input": "(cond)",
+      "expect": "nil"
+    },
+    {
+      "name": "m1-cond-multiple-clauses",
+      "macro": "cond",
+      "input": "(cond ((eq x 1) (quote one)) (t (quote other)))",
+      "expect": "(if (eq x 1) (progn (quote one)) (cond (t (quote other))))"
+    },
+    {
+      "name": "m1-let-parallel",
+      "macro": "let",
+      "input": "(let ((x 1) (y (+ 2 3))) (+ x y))",
+      "expect": "((lambda (x y) (+ x y)) 1 (+ 2 3))"
+    },
+    {
+      "name": "m1-let-star-nests",
+      "macro": "let*",
+      "input": "(let* ((x 1) (y (+ x 1))) (+ x y))",
+      "expect": "(let ((x 1)) (let* ((y (+ x 1))) (+ x y)))"
+    },
+    {
+      "name": "m1-case-expands-through-let-and-cond",
+      "macro": "case",
+      "input": "(case key ((a b) 1) (c 2) (otherwise 3))",
+      "expect": "(let ((#:case0 key)) (cond ((or (eql #:case0 (quote a)) (eql #:case0 (quote b))) 1) ((eql #:case0 (quote c)) 2) (t 3)))"
+    },
+    {
+      "name": "m1-case-temp-does-not-use-user-symbol",
+      "macro": "case",
+      "input": "(case %case (a %case) (otherwise fallback))",
+      "expect": "(let ((#:case0 %case)) (cond ((eql #:case0 (quote a)) %case) (t fallback)))"
+    }
+  ]
+}

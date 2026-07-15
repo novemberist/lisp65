@@ -1,0 +1,240 @@
+{
+  "description": "Host-only IDE buffer operation contract. This does not imply hardware UI or MVP embedding.",
+  "cases": [
+    {
+      "name": "ide-buffer-lines-accessor",
+      "input": "(ide-buffer-lines (ide-make-buffer 'scratch '(\"a\" \"b\")))",
+      "expect": "(\"a\" \"b\")"
+    },
+    {
+      "name": "ide-set-point",
+      "input": "(ide-buffer-point (ide-set-point (ide-make-buffer 'scratch '(\"abc\")) 0 2))",
+      "expect": "(0 . 2)"
+    },
+    {
+      "name": "ide-insert-char-at-point",
+      "input": "(ide-buffer-lines (ide-insert-char (ide-set-point (ide-make-buffer 'scratch '(\"ac\")) 0 1) 98))",
+      "expect": "(\"abc\")"
+    },
+    {
+      "name": "ide-insert-char-advances-point",
+      "input": "(ide-buffer-point (ide-insert-char (ide-set-point (ide-make-buffer 'scratch '(\"ac\")) 0 1) 98))",
+      "expect": "(0 . 2)"
+    },
+    {
+      "name": "ide-insert-char-eol-cache-materializes-line",
+      "input": "(ide-buffer-lines (ide-insert-char (ide-set-point (ide-make-buffer 'scratch '(\"hello\")) 0 5) 33))",
+      "expect": "(\"hello!\")"
+    },
+    {
+      "name": "ide-insert-char-eol-cache-tracks-length",
+      "input": "(car (cdr (cdr (ide-buffer-locals (ide-insert-char (ide-set-point (ide-make-buffer 'scratch '(\"hello\")) 0 5) 33)))))",
+      "expect": "6"
+    },
+    {
+      "name": "ide-split-line",
+      "input": "(ide-buffer-lines (ide-split-line (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 2)))",
+      "expect": "(\"ab\" \"cd\")"
+    },
+    {
+      "name": "ide-split-line-point",
+      "input": "(ide-buffer-point (ide-split-line (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 2)))",
+      "expect": "(1 . 0)"
+    },
+    {
+      "name": "ide-delete-backward-char",
+      "input": "(ide-buffer-lines (ide-delete-backward-char (ide-set-point (ide-make-buffer 'scratch '(\"abc\")) 0 2)))",
+      "expect": "(\"ac\")"
+    },
+    {
+      "name": "ide-delete-backward-eol-cache-materializes-line",
+      "input": "(ide-buffer-lines (ide-delete-backward-char (ide-insert-char (ide-set-point (ide-make-buffer 'scratch '(\"hello\")) 0 5) 33)))",
+      "expect": "(\"hello\")"
+    },
+    {
+      "name": "ide-delete-backward-eol-cache-tracks-length",
+      "input": "(car (cdr (cdr (ide-buffer-locals (ide-delete-backward-char (ide-insert-char (ide-set-point (ide-make-buffer 'scratch '(\"hello\")) 0 5) 33))))))",
+      "expect": "5"
+    },
+    {
+      "name": "ide-delete-backward-joins-lines",
+      "input": "(ide-buffer-lines (ide-delete-backward-char (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 1 0)))",
+      "expect": "(\"abcd\")"
+    },
+    {
+      "name": "ide-delete-backward-join-point",
+      "input": "(ide-buffer-point (ide-delete-backward-char (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 1 0)))",
+      "expect": "(0 . 2)"
+    },
+    {
+      "name": "ide-delete-forward-char",
+      "input": "(ide-buffer-lines (ide-delete-forward-char (ide-set-point (ide-make-buffer 'scratch '(\"abc\")) 0 1)))",
+      "expect": "(\"ac\")"
+    },
+    {
+      "name": "ide-delete-forward-keeps-point",
+      "input": "(ide-buffer-point (ide-delete-forward-char (ide-set-point (ide-make-buffer 'scratch '(\"abc\")) 0 1)))",
+      "expect": "(0 . 1)"
+    },
+    {
+      "name": "ide-delete-forward-joins-lines",
+      "input": "(ide-buffer-lines (ide-delete-forward-char (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 0 2)))",
+      "expect": "(\"abcd\")"
+    },
+    {
+      "name": "ide-delete-forward-eof-noop",
+      "input": "(ide-buffer-lines (ide-delete-forward-char (ide-set-point (ide-make-buffer 'scratch '(\"ab\")) 0 2)))",
+      "expect": "(\"ab\")"
+    },
+    {
+      "name": "ide-kill-line-removes-suffix",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 2)) (k (ide-kill-line b))) (list (ide-buffer-lines k) (ide-buffer-point k) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"ab\") (0 . 2) \"cd\")"
+    },
+    {
+      "name": "ide-kill-line-joins-next-line",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 0 2)) (k (ide-kill-line b)) (r (symbol-value (quote *ide-kill-ring*)))) (list (ide-buffer-lines k) (ide-buffer-point k) (string-length r) (string-ref r 0))))",
+      "expect": "((\"abcd\") (0 . 2) 1 10)"
+    },
+    {
+      "name": "ide-yank-inserts-kill-ring",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"XY\") (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 2)) (y (ide-yank b))) (list (ide-buffer-lines y) (ide-buffer-point y))))",
+      "expect": "((\"abXYcd\") (0 . 4))"
+    },
+    {
+      "name": "ide-yank-newline-splits-line",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) (list->string (list 10))) (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 2)) (y (ide-yank b))) (list (ide-buffer-lines y) (ide-buffer-point y))))",
+      "expect": "((\"ab\" \"cd\") (1 . 0))"
+    },
+    {
+      "name": "ide-set-mark-stores-point",
+      "input": "(ide-buffer-mark (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"ab\")) 0 1)))",
+      "expect": "(0 . 1)"
+    },
+    {
+      "name": "ide-exchange-point-and-mark",
+      "input": "(let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 0 1))) (b2 (ide-set-point b 1 1)) (x (ide-exchange-point-and-mark b2))) (list (ide-buffer-point x) (ide-buffer-mark x)))",
+      "expect": "((0 . 1) (1 . 1))"
+    },
+    {
+      "name": "ide-region-text-single-line",
+      "input": "(let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 1))) (b2 (ide-set-point b 0 3))) (ide-region-text b2))",
+      "expect": "\"bc\""
+    },
+    {
+      "name": "ide-kill-region-single-line",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 1))) (b2 (ide-set-point b 0 3)) (k (ide-kill-region b2))) (list (ide-buffer-lines k) (ide-buffer-point k) (ide-buffer-mark k) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"ad\") (0 . 1) NIL \"bc\")"
+    },
+    {
+      "name": "ide-copy-region-as-kill",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"abcd\")) 0 1))) (b2 (ide-set-point b 0 3)) (c (ide-copy-region-as-kill b2))) (list (ide-buffer-lines c) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"abcd\") \"bc\")"
+    },
+    {
+      "name": "ide-region-text-multi-line",
+      "input": "(let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"abcd\" \"ef\" \"ghij\")) 0 2))) (b2 (ide-set-point b 2 1))) (ide-region-text b2))",
+      "expect": "(\"cd\" \"ef\" \"g\")"
+    },
+    {
+      "name": "ide-kill-region-multi-line",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"abcd\" \"ef\" \"ghij\")) 0 2))) (b2 (ide-set-point b 2 1)) (k (ide-kill-region b2))) (list (ide-buffer-lines k) (ide-buffer-point k) (ide-buffer-mark k) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"abhij\") (0 . 2) NIL (\"cd\" \"ef\" \"g\"))"
+    },
+    {
+      "name": "ide-copy-region-as-kill-multi-line",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-mark (ide-set-point (ide-make-buffer 'scratch '(\"abcd\" \"ef\" \"ghij\")) 0 2))) (b2 (ide-set-point b 2 1)) (c (ide-copy-region-as-kill b2))) (list (ide-buffer-lines c) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"abcd\" \"ef\" \"ghij\") (\"cd\" \"ef\" \"g\"))"
+    },
+    {
+      "name": "ide-yank-line-list",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) '(\"cd\" \"ef\" \"g\")) (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"ij\")) 0 1)) (y (ide-yank b))) (list (ide-buffer-lines y) (ide-buffer-point y))))",
+      "expect": "((\"acd\" \"ef\" \"gb\" \"ij\") (2 . 1))"
+    },
+    {
+      "name": "ide-move-word-right-skips-delimiter",
+      "input": "(ide-buffer-point (ide-move-word-right (ide-set-point (ide-make-buffer 'scratch '(\"(foo bar)\")) 0 0)))",
+      "expect": "(0 . 4)"
+    },
+    {
+      "name": "ide-move-word-right-crosses-line",
+      "input": "(ide-buffer-point (ide-move-word-right (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 0 2)))",
+      "expect": "(1 . 2)"
+    },
+    {
+      "name": "ide-move-word-left-current-word",
+      "input": "(ide-buffer-point (ide-move-word-left (ide-set-point (ide-make-buffer 'scratch '(\"ab cd\")) 0 5)))",
+      "expect": "(0 . 3)"
+    },
+    {
+      "name": "ide-move-word-left-crosses-line",
+      "input": "(ide-buffer-point (ide-move-word-left (ide-set-point (ide-make-buffer 'scratch '(\"ab\" \"cd\")) 1 0)))",
+      "expect": "(0 . 0)"
+    },
+    {
+      "name": "ide-kill-word-removes-word",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"ab cd\")) 0 3)) (k (ide-kill-word b))) (list (ide-buffer-lines k) (ide-buffer-point k) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"ab \") (0 . 3) \"cd\")"
+    },
+    {
+      "name": "ide-backward-kill-word-removes-word",
+      "input": "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (let* ((b (ide-set-point (ide-make-buffer 'scratch '(\"ab cd\")) 0 5)) (k (ide-backward-kill-word b))) (list (ide-buffer-lines k) (ide-buffer-point k) (symbol-value (quote *ide-kill-ring*)))))",
+      "expect": "((\"ab \") (0 . 3) \"cd\")"
+    },
+    {
+      "name": "ide-move-line-relative-clamps-down",
+      "input": "(ide-buffer-point (ide-move-line-relative (ide-set-point (ide-make-buffer 'scratch '(\"a\" \"bb\" \"ccc\")) 0 2) 9))",
+      "expect": "(2 . 2)"
+    },
+    {
+      "name": "ide-move-line-relative-clamps-up",
+      "input": "(ide-buffer-point (ide-move-line-relative (ide-set-point (ide-make-buffer 'scratch '(\"a\" \"bb\" \"ccc\")) 2 2) -9))",
+      "expect": "(0 . 1)"
+    },
+    {
+      "name": "ide-buffer-start",
+      "input": "(ide-buffer-point (ide-buffer-start (ide-set-point (ide-make-buffer 'scratch '(\"a\" \"bb\")) 1 2)))",
+      "expect": "(0 . 0)"
+    },
+    {
+      "name": "ide-buffer-end",
+      "input": "(ide-buffer-point (ide-buffer-end (ide-set-point (ide-make-buffer 'scratch '(\"a\" \"bb\")) 0 0)))",
+      "expect": "(1 . 2)"
+    },
+    {
+      "name": "ide-page-down",
+      "input": "(ide-buffer-point (ide-page-down (ide-set-point (ide-make-buffer 'scratch '(\"a\" \"bb\" \"ccc\")) 0 1) 2))",
+      "expect": "(2 . 1)"
+    },
+    {
+      "name": "ide-page-up",
+      "input": "(ide-buffer-point (ide-page-up (ide-set-point (ide-make-buffer 'scratch '(\"a\" \"bb\" \"ccc\")) 2 2) 2))",
+      "expect": "(0 . 1)"
+    },
+    {
+      "name": "ide-move-down-clamps-column",
+      "input": "(ide-buffer-point (ide-move-down (ide-set-point (ide-make-buffer 'scratch '(\"abcd\" \"x\")) 0 3)))",
+      "expect": "(1 . 1)"
+    },
+    {
+      "name": "ide-region-lines",
+      "input": "(ide-region-lines (ide-make-buffer 'scratch '(\"a\" \"b\" \"c\" \"d\")) 1 3)",
+      "expect": "(\"b\" \"c\")"
+    },
+    {
+      "name": "ide-defun-region-first",
+      "input": "(ide-defun-region (ide-make-buffer 'scratch '(\"(defun a ()\" \"  1)\" \"(defun b ()\" \"  2)\")) 1)",
+      "expect": "(0 . 2)"
+    },
+    {
+      "name": "ide-defun-region-second",
+      "input": "(ide-defun-region (ide-make-buffer 'scratch '(\"(defun a ()\" \"  1)\" \"(defun b ()\" \"  2)\")) 3)",
+      "expect": "(2 . 4)"
+    },
+    {
+      "name": "ide-defun-region-missing",
+      "input": "(ide-defun-region (ide-make-buffer 'scratch '(\"  no top\")) 0)",
+      "expect": "NIL"
+    }
+  ]
+}

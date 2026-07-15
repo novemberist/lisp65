@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+"""Generate native C-compiler fixtures from the normative P0 golden vectors."""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import json
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import bytecode_p0 as B  # noqa: E402
+import bytecode_p0_c_vectors as CV  # noqa: E402
+import bytecode_p0_compiler as C  # noqa: E402
+
+
+FORMAT = "lisp65-bytecode-p0-golden-vectors-v1"
+POSITIVE_COUNT = 23
+NEGATIVE_COUNT = 1
+
+
+def _load(path: str) -> dict:
+    with open(path, "r", encoding="utf-8") as source:
+        data = json.load(source)
+    validate(data)
+    return data
+
+
+def _form_kind(source: str) -> str:
+    form = C.parse_one(source)
+    if isinstance(form, list) and form and form[0] in ("lambda", "defun"):
+        return form[0]
+    raise ValueError("native compiler vector must be lambda or defun: %s" % source)
+
+
+def _expected_parts(vector: dict) -> tuple[bytes, bytes]:
+    spec = vector["code"]
+    encoded = B.parse_hex(vector["code_object_hex"])
+    payload = B.parse_hex(spec["payload_hex"])
+    literals = spec.get("literals", [])
+    if len(encoded) < 7:
+        raise ValueError("%s: short code object" % vector["name"])
+    header = bytes(
+        (
+            0xB5,
+            spec.get("nargs", 0),
+            spec.get("nlocals", 0),
+            spec.get("flags", 0),
+            len(payload) & 0xFF,
+            len(payload) >> 8,
+            len(literals),
+        )
+    )
+    if encoded[:7] != header:
+        raise ValueError("%s: structured/header golden mismatch" % vector["name"])
+    payload_offset = 7 + 2 * len(literals)
+    if len(encoded) != payload_offset + len(payload):
+        raise ValueError("%s: code-object length mismatch" % vector["name"])
+    if encoded[payload_offset:] != payload:
+        raise ValueError("%s: structured/payload golden mismatch" % vector["name"])
+    return header, payload
+
+
+def validate(data: dict) -> tuple[list[dict], dict]:
+    if data.get("format") != FORMAT:
+        raise ValueError("unexpected golden-vector format")
+    vectors = data.get("vectors")
+    if not isinstance(vectors, list):
+        raise ValueError("vectors must be a list")
+    names = [vector.get("name") for vector in vectors]
+    if any(not isinstance(name, str) or not name for name in names):
+        raise ValueError("every vector needs a non-empty name")
+    if len(names) != len(set(names)):
+        raise ValueError("duplicate vector name")
+    positives = [vector for vector in vectors if "expect_compile_error" not in vector]
+    negatives = [vector for vector in vectors if "expect_compile_error" in vector]
+    if len(positives) != POSITIVE_COUNT or len(negatives) != NEGATIVE_COUNT:
+        raise ValueError(
+            "expected %d positive and %d negative vectors, got %d/%d"
+            % (POSITIVE_COUNT, NEGATIVE_COUNT, len(positives), len(negatives))
+        )
+    for vector in positives:
+        kind = _form_kind(vector["source"])
+        if kind == "defun" and not vector.get("entry"):
+            raise ValueError("%s: defun vector needs entry" % vector["name"])
+        if kind == "lambda" and vector.get("entry"):
+            raise ValueError("%s: lambda vector must not declare entry" % vector["name"])
+        _expected_parts(vector)
+    negative = negatives[0]
+    if _form_kind(negative["source"]) != "lambda":
+        raise ValueError("negative Rel8 vector must compile through lambda fn[1]")
+    error = negative.get("expect_compile_error")
+    if not isinstance(error, str) or "rel8" not in error:
+        raise ValueError("negative vector must pin a Rel8 compile error")
+    if "code" in negative or "code_object_hex" in negative:
+        raise ValueError("negative vector must not carry accepted code")
+    return positives, negative
+
+
+def _cstr(value: str | None) -> str:
+    return "0" if value is None else json.dumps(value)
+
+
+def _bytes(data: bytes) -> str:
+    return ", ".join("0x%02x" % byte for byte in data)
+
+
+def emit_header(data: dict, out) -> None:
+    positives, negative = validate(data)
+    pool = CV.ArgPool()
+    meta = []
+    literal_roots_by_vector: dict[str, list[int]] = {}
+    for vector in positives:
+        roots = [pool.add(spec) for spec in vector["code"].get("literals", [])]
+        first = len(pool.index)
+        pool.index.extend(roots)
+        literal_roots_by_vector[vector["name"]] = roots
+        header, payload = _expected_parts(vector)
+        meta.append((vector, first, len(roots), header, payload))
+
+    good_roots = literal_roots_by_vector.get("large-fixnum-literal", [])
+    wrong_roots = literal_roots_by_vector.get("screen-put-char-callprim", [])
+    if len(good_roots) != 1 or len(wrong_roots) != 1:
+        raise ValueError("mutation controls require the 128 and 129 literal vectors")
+    mutation_vector = next(
+        index for index, vector in enumerate(positives)
+        if vector["name"] == "large-fixnum-literal"
+    )
+
+    print("/* generated by bytecode_p0_native_compile_vectors.py; do not edit */", file=out)
+    print("#ifndef LISP65_BYTECODE_P0_NATIVE_COMPILE_VECTORS_H", file=out)
+    print("#define LISP65_BYTECODE_P0_NATIVE_COMPILE_VECTORS_H", file=out)
+    print("#include <stdint.h>", file=out)
+    print("", file=out)
+    for name, value in (
+        ("BC_NATIVE_FIX", CV.K_FIX),
+        ("BC_NATIVE_NIL", CV.K_NIL),
+        ("BC_NATIVE_T", CV.K_T),
+        ("BC_NATIVE_SYMBOL", CV.K_SYMBOL),
+        ("BC_NATIVE_CONS", CV.K_CONS),
+        ("BC_NATIVE_LIST", CV.K_LIST),
+        ("BC_NATIVE_STRING", CV.K_STRING),
+    ):
+        print("#define %s %d" % (name, value), file=out)
+    print("#define BC_NATIVE_TARGET_DEFUN 0", file=out)
+    print("#define BC_NATIVE_TARGET_LAMBDA_HELPER 1", file=out)
+    print("", file=out)
+    print("typedef struct {", file=out)
+    print("    uint8_t kind; int16_t value; uint16_t first, count; const char *name;", file=out)
+    print("} bc_native_lit_node;", file=out)
+    print("typedef struct {", file=out)
+    print("    const char *name, *source, *entry;", file=out)
+    print("    uint8_t target;", file=out)
+    print("    const uint8_t *header, *payload;", file=out)
+    print("    uint16_t payload_len, lit_first;", file=out)
+    print("    uint8_t nlit;", file=out)
+    print("} bc_native_compile_vector;", file=out)
+    print("", file=out)
+
+    print("static const char *const bc_native_global_symbols[] = {", file=out)
+    for symbol in data.get("symbols", []):
+        print("    %s," % _cstr(symbol), file=out)
+    print("};", file=out)
+    print("#define BC_NATIVE_GLOBAL_SYMBOL_COUNT %d" % len(data.get("symbols", [])), file=out)
+
+    for index, (_vector, _first, _nlit, header, payload) in enumerate(meta):
+        print("static const uint8_t bc_native_header_%d[] = { %s };" % (index, _bytes(header)), file=out)
+        print("static const uint8_t bc_native_payload_%d[] = { %s };" % (index, _bytes(payload)), file=out)
+    print("", file=out)
+
+    print("static const uint16_t bc_native_lit_index[] = {", file=out)
+    print("    %s" % (", ".join(str(index) for index in pool.index) or "0"), file=out)
+    print("};", file=out)
+    print("static const bc_native_lit_node bc_native_lit_nodes[] = {", file=out)
+    for node in pool.nodes:
+        print(
+            "    { %d, %d, %d, %d, %s },"
+            % (node["kind"], node["value"], node["first"], node["count"], _cstr(node["name"])),
+            file=out,
+        )
+    print("};", file=out)
+    print("", file=out)
+    print("static const bc_native_compile_vector bc_native_compile_vectors[] = {", file=out)
+    for index, (vector, first, nlit, _header, payload) in enumerate(meta):
+        target = "BC_NATIVE_TARGET_DEFUN" if _form_kind(vector["source"]) == "defun" else "BC_NATIVE_TARGET_LAMBDA_HELPER"
+        print(
+            "    { %s, %s, %s, %s, bc_native_header_%d, bc_native_payload_%d, %d, %d, %d },"
+            % (
+                _cstr(vector["name"]),
+                _cstr(vector["source"]),
+                _cstr(vector.get("entry")),
+                target,
+                index,
+                index,
+                len(payload),
+                first,
+                nlit,
+            ),
+            file=out,
+        )
+    print("};", file=out)
+    print("#define BC_NATIVE_COMPILE_VECTOR_COUNT %d" % len(meta), file=out)
+    print("#define BC_NATIVE_MUTATION_VECTOR %d" % mutation_vector, file=out)
+    print("#define BC_NATIVE_MUTATION_WRONG_LITERAL_ROOT %d" % wrong_roots[0], file=out)
+    print("static const char bc_native_rel8_source[] = %s;" % _cstr(negative["source"]), file=out)
+    print("static const char bc_native_rel8_error[] = %s;" % _cstr(negative["expect_compile_error"]), file=out)
+    print("#endif", file=out)
+
+
+def selftest(data: dict) -> int:
+    validate(data)
+    mutations = []
+
+    missing_negative = copy.deepcopy(data)
+    missing_negative["vectors"] = missing_negative["vectors"][:-1]
+    mutations.append(("missing-negative", missing_negative))
+
+    duplicate = copy.deepcopy(data)
+    duplicate["vectors"][1]["name"] = duplicate["vectors"][0]["name"]
+    mutations.append(("duplicate-name", duplicate))
+
+    header = copy.deepcopy(data)
+    header["vectors"][0]["code"]["nargs"] += 1
+    mutations.append(("header", header))
+
+    payload = copy.deepcopy(data)
+    payload["vectors"][0]["code"]["payload_hex"] = "00 05"
+    mutations.append(("payload", payload))
+
+    literals = copy.deepcopy(data)
+    literals["vectors"][9]["code"]["literals"].append(129)
+    mutations.append(("literal-count", literals))
+
+    for label, mutation in mutations:
+        try:
+            validate(mutation)
+        except (KeyError, TypeError, ValueError):
+            continue
+        raise AssertionError("mutation was accepted: %s" % label)
+    print("bytecode-p0-native-compile-vectors: PASS vectors=24 mutations=%d" % len(mutations))
+    return 0
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("json_path")
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    try:
+        data = _load(args.json_path)
+        if args.selftest:
+            return selftest(data)
+        emit_header(data, sys.stdout)
+    except (AssertionError, KeyError, TypeError, ValueError) as exc:
+        print("bytecode-p0-native-compile-vectors: FAIL: %s" % exc, file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

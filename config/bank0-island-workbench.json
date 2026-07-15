@@ -1,0 +1,80 @@
+{
+  "schema": "lisp65-bank0-island-policy-v1",
+  "profile": "mvp-vm-stdlib-einsuite-core-workbench",
+  "allowed_coordinator_classes": [
+    "l65m-coordinator",
+    "batch-coordinator"
+  ],
+  "screen_contract": {
+    "base": "0x0800",
+    "columns": 80,
+    "rows": 50,
+    "bytes_per_cell": 1,
+    "end_exclusive": "0x17a0",
+    "seam": false
+  },
+  "island": {
+    "section": ".lisp65_resident_island",
+    "start": "0x1800",
+    "end_exclusive": "0x2000",
+    "boundary_symbols": {
+      "start": "__lisp65_resident_island_start",
+      "end": "__lisp65_resident_island_end"
+    },
+    "allowed_symbol_types": [
+      "t",
+      "T"
+    ],
+    "max_unattributed_bytes": 32
+  },
+  "allowed_symbols": [
+    {
+      "name": "rtov_run_batch",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "batch-coordinator"
+    },
+    {
+      "name": "vm_runtime_overlay_exec_batch_island",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "batch-coordinator"
+    },
+    {
+      "name": "vm_l65m_batch_repeat",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "l65m-coordinator"
+    },
+    {
+      "name": "lcc_install_batch_repeat",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "batch-coordinator"
+    },
+    {
+      "name": "lcc_enter",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "batch-coordinator"
+    },
+    {
+      "name": "lcc_cons_p",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "batch-coordinator"
+    },
+    {
+      "name": "lib_symbol_exists",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "l65m-coordinator"
+    },
+    {
+      "name": "l65m_overlay_record",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "l65m-coordinator"
+    }
+  ]
+}

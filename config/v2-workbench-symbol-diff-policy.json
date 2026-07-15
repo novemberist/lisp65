@@ -1,0 +1,150 @@
+{
+  "format": "lisp65-v2-workbench-symbol-diff-policy-v1",
+  "version": 1,
+  "id": "cp5-workbench-resident-growth",
+  "status": "product-link-blocked",
+  "product_measurement": {
+    "metric": "real-lto-icf-product-link-resident-floor",
+    "baseline_bss_end": "0xc34e",
+    "baseline_runtime_overlay_vma": "0xc350",
+    "baseline_post_boot_reserve_bytes": 1800,
+    "candidate_bss_end": "0xd094",
+    "candidate_runtime_overlay_vma": "0xd096",
+    "candidate_post_boot_reserve_bytes": -1598,
+    "resident_floor_delta_bytes": 3398,
+    "runtime_overlay_vma_limit": "0xc356",
+    "runtime_overlay_vma_deficit_bytes": 3392,
+    "post_boot_reserve_min_bytes": 1536,
+    "post_boot_reserve_deficit_bytes": 3134,
+    "physical_ram_overflow_bytes": 148,
+    "boot_overlay_end_overflow_bytes": 1766,
+    "candidate_elf_state": "link-failed-before-product-elf"
+  },
+  "layout_neutral_attempt": {
+    "status": "closed-insufficient-reclaim",
+    "scope": "single-layout-neutral-attempt",
+    "accepted_changes": [
+      "shared-string-construction-transaction",
+      "array-based-vm-native-call"
+    ],
+    "rejected_changes": [
+      {
+        "id": "service-dispatch-table",
+        "reason": "real-mos-no-lto-net-growth",
+        "delta_bytes": 61
+      }
+    ],
+    "measurement": {
+      "metric": "real-lto-icf-product-link-resident-floor",
+      "baseline_bss_end": "0xc34c",
+      "baseline_runtime_overlay_vma": "0xc34e",
+      "baseline_post_boot_reserve_bytes": 1800,
+      "baseline_elf_sha256": "0c231afb6e1fbcd193654d972b760a235c8c1a5bc3039d0625f8ae120c385f56",
+      "candidate_bss_end": "0xcc77",
+      "candidate_runtime_overlay_vma": "0xcc78",
+      "candidate_post_boot_reserve_bytes": -546,
+      "candidate_elf_sha256": "70d6585a59f6a18969a56d3d6e73a32a9822fd00128889a0b7a387b6c1f041a4",
+      "resident_floor_delta_bytes": 2347,
+      "resident_delta_reclaim_bytes": 1051,
+      "candidate_endpoint_reclaim_bytes": 1053,
+      "minimum_reclaim_shortfall_bytes": 2348,
+      "runtime_overlay_vma_deficit_bytes": 2338,
+      "post_boot_reserve_deficit_bytes": 2082,
+      "physical_ram_headroom_bytes": 904,
+      "candidate_elf_state": "relaxed-limit-diagnostic-elf"
+    },
+    "correctness": {
+      "strict_arity_preserved": true,
+      "string_atomicity_preserved": true,
+      "layout_changed": false,
+      "resident_island_changed": false,
+      "runtime_slot_changed": false
+    }
+  },
+  "attribution": {
+    "metric": "paired-real-mos-relocatable-elf-named-symbol-delta",
+    "optimization": "-Oz-fno-lto",
+    "limitations": [
+      "no-lto",
+      "no-icf",
+      "no-product-section-gc",
+      "indicator-not-product-footprint"
+    ],
+    "required_positive_deltas": {
+      "eval_v2_workbench_service": 2273,
+      "vm_native_apply": 1305,
+      "vm_callprim": 1182,
+      "str_v2_concat": 950,
+      "str_v2_slice": 812,
+      "str_v2_concat_shape": 406,
+      "str_v2_source_span": 283,
+      "str_v2_reserve": 216,
+      "str_v2_append_span": 213,
+      "vm_init": 187,
+      "lisp65_embed": 168,
+      "str_v2_destination": 73
+    },
+    "required_negative_deltas": {
+      "apply": -3677,
+      "eval_vm_bridge": -417
+    },
+    "groups": {
+      "string-capabilities": "^str_v2_",
+      "vm-dispatch": "^(vm_native_apply|vm_callprim|vm_arity_accepts|vm_apply_primitive)",
+      "service-dispatch": "^(eval_v2_workbench_service|eval_vm_native_apply_checked)$",
+      "generated-artifact": "^lisp65_"
+    },
+    "rank_limit": 40
+  },
+  "planning": {
+    "policy": "pessimistic-power-of-two-headroom",
+    "minimum_measured_reclaim_for_net_negative_bytes": 3399,
+    "pinned_planning_reclaim_bytes": 4096,
+    "estimates_may_promote": false,
+    "promotion_metric": "real-lto-icf-product-link-resident-floor"
+  },
+  "selected_strategy": {
+    "id": "runtime-proof-parallel-workbench-de-residentization",
+    "runtime_core": "internal-proof-only",
+    "release_path": "workbench-de-residentization",
+    "release_product": "lisp65-workbench-v2",
+    "active_work_lines": [
+      "runtime-core-proof",
+      "workbench-de-residentization"
+    ],
+    "layout_option": {
+      "status": "rejected-insufficient",
+      "available_bytes": 1302,
+      "vma_deficit_bytes": 2338,
+      "reserve_deficit_bytes": 2082
+    },
+    "new_language_families": "forbidden",
+    "new_ap8_blocks": "forbidden"
+  },
+  "failure_menu": [
+    {
+      "id": "a-layout-island-slice-cap",
+      "kind": "rejected-layout-decision",
+      "scope": "resident-island-plus-runtime-slice-cap-insufficient",
+      "status": "rejected-insufficient",
+      "release_effect": "none",
+      "requires_user_approval": true
+    },
+    {
+      "id": "b-de-residentization",
+      "kind": "resident-code-reduction",
+      "scope": "move-or-rewrite-cold-capability-and-service-code-without-layout-drift",
+      "status": "selected-release-path",
+      "release_effect": "none-before-workbench-g5",
+      "requires_user_approval": true
+    },
+    {
+      "id": "c-runtime-core-first",
+      "kind": "internal-proof-sequencing",
+      "scope": "prove-runtime-core-while-workbench-de-residentization-remains-release-critical",
+      "status": "selected-proof-line",
+      "release_effect": "none",
+      "requires_user_approval": true
+    }
+  ]
+}

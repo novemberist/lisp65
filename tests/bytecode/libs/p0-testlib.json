@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "testlib",
+  "d81_name": "TESTLIB",
+  "provides": [
+    "sq",
+    "disk-add3",
+    "disk-tag"
+  ],
+  "requires": [],
+  "sources": [
+    "tests/bytecode/libs/testlib.lisp"
+  ],
+  "functions": [
+    "sq",
+    "disk-add3",
+    "disk-tag"
+  ],
+  "max_call_args": 4,
+  "cases": [
+    {
+      "name": "sq-5",
+      "expr": "(sq 5)",
+      "expect": "25"
+    },
+    {
+      "name": "add3-42",
+      "expr": "(disk-add3 10 20 12)",
+      "expect": "42"
+    },
+    {
+      "name": "literal-list",
+      "expr": "(disk-tag)",
+      "expect": "(disk-lib \"ok\" 7)"
+    }
+  ]
+}

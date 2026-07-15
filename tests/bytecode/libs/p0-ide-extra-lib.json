@@ -1,0 +1,105 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "ide-extra",
+  "d81_name": "IDEX",
+  "provides": ["ide-extra"],
+  "requires": ["core", "ide"],
+  "description": "Optional Workbench IDE word/page/region/search/M-x comfort tier.",
+  "sources": [
+    "lib/ide-status.lisp",
+    "lib/ide-syntax.lisp",
+    "lib/ide-buffer.lisp",
+    "lib/ide-ui.lisp",
+    "lib/ide-disk.lisp",
+    "lib/ide-extra.lisp"
+  ],
+  "functions": [
+    "ide-buffer-mark",
+    "%ide-buffer-with-mark",
+    "%ide-point<=",
+    "%ide-region-bounds",
+    "%ide-region-parts-tail",
+    "%ide-region-parts",
+    "ide-region-text",
+    "ide-set-mark",
+    "ide-exchange-point-and-mark",
+    "%ide-kill-region-single",
+    "%ide-kill-region-lines",
+    "ide-kill-region",
+    "ide-copy-region-as-kill",
+    "%ide-clamp-line",
+    "ide-move-line-relative",
+    "ide-buffer-start",
+    "ide-buffer-end",
+    "ide-page-down",
+    "ide-page-up",
+    "%ide-word-scan",
+    "ide-move-word-right",
+    "ide-move-word-left",
+    "ide-kill-word",
+    "ide-backward-kill-word",
+    "%ide-page-rows",
+    "%ide-word-edit-command-p",
+    "%ide-region-command-p",
+    "%ide-page-command-p",
+    "%ide-apply-word-edit-command",
+    "%ide-apply-region-command",
+    "%ide-apply-page-command",
+    "%ide-apply-rare-edit-command",
+    "%ide-search-lines",
+    "%ide-search-lines-from",
+    "%ide-mini-search-submit",
+    "ide-command-names",
+    "%ide-command-named",
+    "%ide-execute-command-key",
+    "%ide-execute-command-submit",
+    "%ide-x"
+  ],
+  "resident_suite": "p0-ide-core-lib.json",
+  "resident_overrides": ["%ide-x"],
+  "resident_private_inline_functions": [
+    "%ide-buffer-with-point",
+    "%ide-min",
+    "%ide-char-take",
+    "%ide-mini-history-input"
+  ],
+  "private_inline_functions": [
+    "%ide-clamp-line",
+    "%ide-point<=",
+    "%ide-execute-command-key",
+    "%ide-page-command-p",
+    "%ide-region-command-p",
+    "%ide-word-edit-command-p",
+    "%ide-kill-region-single",
+    "%ide-command-named"
+  ],
+  "min_private_inline_functions": 8,
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "ide-extra-hook-overrides-core",
+      "expr": "(function-kind (quote %ide-x))",
+      "expect": "bytecode"
+    },
+    {
+      "name": "ide-extra-word-right",
+      "expr": "(ide-buffer-point (ide-move-word-right (ide-make-buffer \"scratch\" (list \"abc def\"))))",
+      "expect": "(0 . 3)"
+    },
+    {
+      "name": "ide-extra-page-down",
+      "expr": "(ide-buffer-point (ide-page-down (ide-make-buffer \"scratch\" (list \"a\" \"b\" \"c\")) 2))",
+      "expect": "(2 . 0)"
+    },
+    {
+      "name": "ide-extra-mx",
+      "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 120 nil)))) (%ide-mini-status-line)))",
+      "expect": "\"M-x [find-file]\""
+    },
+    {
+      "name": "ide-extra-search",
+      "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"abc\" \"needle\" \"tail\")))) (s1 (ide-step s0 (list (quote key) 19 nil))) (s2 (ide-step s1 (list (quote key) 110 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-buffer-point (ide-state-buffer s3)) (ide-state-message s3)))",
+      "expect": "((1 . 0) \"found\")"
+    }
+  ]
+}

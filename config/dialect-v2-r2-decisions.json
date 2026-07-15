@@ -1,0 +1,82 @@
+{
+  "format": "lisp65-dialect-v2-r2-decisions-v1",
+  "version": 1,
+  "status": "decided",
+  "composition_contract": {
+    "path": "config/v2-workbench-composition-contract.json",
+    "sha256": "66d865e1694ff37b0492b2ef83c9bdbc69ae5190eb6c2242e0713a555378ed73"
+  },
+  "fixtures": [
+    {
+      "family": "ide",
+      "path": "tests/bytecode/dialect-v2/ide/r2-decisions.json",
+      "sha256": "8188e74420b649b3a5865caa5a9992a19b4d9ea958883425fa5a4e602029f0dd"
+    },
+    {
+      "family": "strings",
+      "path": "tests/bytecode/dialect-v2/strings/r2-decisions.json",
+      "sha256": "b7b0a9ef1889a42f3c934e2b8fedb18166d4475005e048a46ee20806f6a0d7bf"
+    },
+    {
+      "family": "system-runtime",
+      "path": "tests/bytecode/dialect-v2/system-runtime/r2-decisions.json",
+      "sha256": "93a7ce0a75bd0d4588693674b7f0e4881d9078571b2137701bde30315f4989e2"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "edit-autoload",
+      "family": "ide",
+      "resolution": "keep-resident-edit-autoload-wrapper",
+      "fixture_cases": ["edit-autoload-entry"]
+    },
+    {
+      "id": "ide-command-short-names",
+      "family": "ide",
+      "resolution": "keep-eight-explicit-command-names-without-short-aliases",
+      "fixture_cases": ["ide-command-public-surface"]
+    },
+    {
+      "id": "key-event-blocking-semantics",
+      "family": "system-runtime",
+      "resolution": "optional-fixnum-mode-default-zero-normalized-event",
+      "fixture_cases": ["key-event-blocking-mode", "key-event-default-empty-queue", "key-event-invalid-mode", "key-event-normalized-format"]
+    },
+    {
+      "id": "load-libs-migration",
+      "family": "system-runtime",
+      "resolution": "source-expand-in-order-stop-first-failure-no-rollback",
+      "fixture_cases": ["load-libs-first-failure", "load-libs-source-expansion"]
+    },
+    {
+      "id": "save-m65d-contract",
+      "family": "system-runtime",
+      "resolution": "remove-generic-save-and-source-rewrite-to-m65d-save",
+      "fixture_cases": ["save-explicit-m65d-migration"]
+    },
+    {
+      "id": "screen-library-boundary",
+      "family": "system-runtime",
+      "resolution": "move-public-screen-surface-to-optional-m65-screen-library",
+      "fixture_cases": ["screen-library-and-composition-boundary"]
+    },
+    {
+      "id": "set-public-semantics",
+      "family": "system-runtime",
+      "resolution": "strict-two-symbol-required-return-value",
+      "fixture_cases": ["set-non-symbol-type-error", "set-strict-two-and-value-result"]
+    },
+    {
+      "id": "string-contains-search-result",
+      "family": "strings",
+      "resolution": "search-returns-zero-based-first-index-or-nil-and-contains-is-source-rewrite",
+      "fixture_cases": ["index-basis-zero-cross-section", "search-no-match", "string-contains-source-rewrite"]
+    },
+    {
+      "id": "string-list-conversion-removal",
+      "family": "strings",
+      "resolution": "remove-public-character-list-converters-without-replacement",
+      "fixture_cases": ["list-to-string-public-removal", "string-to-list-public-removal"]
+    }
+  ]
+}

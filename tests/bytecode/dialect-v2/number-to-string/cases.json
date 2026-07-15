@@ -1,0 +1,21 @@
+{
+  "format": "lisp65-dialect-v2-number-to-string-bytecode-cases-v1",
+  "profile": "dialect-v2",
+  "cases": [
+    {"id": "apply-negative", "invoke": "apply", "args": [-123], "expect": "\"-123\""},
+    {"id": "apply-wrong-arity-empty", "invoke": "apply", "args": [], "expect_error": "ArityError"},
+    {"id": "direct-fixnum-max", "invoke": "direct", "args": [16383], "expect": "\"16383\""},
+    {"id": "direct-fixnum-min", "invoke": "direct", "args": [-16384], "expect": "\"-16384\""},
+    {"id": "direct-negative-one", "invoke": "direct", "args": [-1], "expect": "\"-1\""},
+    {"id": "direct-one-digit", "invoke": "direct", "args": [9], "expect": "\"9\""},
+    {"id": "direct-three-digits", "invoke": "direct", "args": [100], "expect": "\"100\""},
+    {"id": "direct-two-digits", "invoke": "direct", "args": [10], "expect": "\"10\""},
+    {"id": "direct-type-error", "invoke": "direct", "args": ["not-a-fixnum"], "expect_error": "TypeError"},
+    {"id": "direct-wrong-arity-extra", "invoke": "direct", "args": [1, 2], "expect_error": "ArityError"},
+    {"id": "funcall-five-digits", "invoke": "funcall", "args": [10000], "expect": "\"10000\""},
+    {"id": "funcall-four-digits", "invoke": "funcall", "args": [1000], "expect": "\"1000\""},
+    {"id": "funcall-three-digit-max", "invoke": "funcall", "args": [999], "expect": "\"999\""},
+    {"id": "funcall-two-digit-max", "invoke": "funcall", "args": [99], "expect": "\"99\""},
+    {"id": "funcall-zero", "invoke": "funcall", "args": [0], "expect": "\"0\""}
+  ]
+}
