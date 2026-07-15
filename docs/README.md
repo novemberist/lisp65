@@ -16,6 +16,7 @@ instructions for release 1.0.1.
 ## Contributors
 
 - [Development Guide](development.md) — build, test, evidence, and change rules
+- [External Toolchain Setup](toolchain-setup.md) — exact compiler/tool pins and fetch/verify workflow
 - [Upstream Findings](upstream-findings.md) — MEGA65 core/tooling requests
 - [Implementation Contracts](implementation-contracts.md) — authorities and gates
 

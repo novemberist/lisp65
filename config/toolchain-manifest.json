@@ -1,0 +1,94 @@
+{
+  "schema": "lisp65-external-toolchain-manifest-v1",
+  "status": "v1.0.1-proof-equivalent-binary-pins",
+  "product_baseline": {
+    "tag": "v1.0.1",
+    "product_set_sha256": "c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165"
+  },
+  "policy": {
+    "binary_identity_is_primary": true,
+    "source_commit_alone_is_proof_equivalent": false,
+    "source_rebuild_becomes_proof_equivalent_after_product_reproduction": true,
+    "public_repository_contains_third_party_binaries": false
+  },
+  "packages": {
+    "llvm_mos": {
+      "role": "compiler-linker-binary-utilities-and-mega65-sdk",
+      "install_directory": "tools/llvm-mos",
+      "upstream": {
+        "sdk_url": "https://github.com/llvm-mos/llvm-mos-sdk",
+        "sdk_tag": "v23.0.1",
+        "sdk_commit": "95bf367e953f6da89371e18c72791f8a8738fdac",
+        "compiler_url": "https://github.com/llvm-mos/llvm-mos",
+        "compiler_commit": "c798c31416f72b395c658b5502d281a162387ab1"
+      },
+      "exact_archive": {
+        "name": "llvm-mos-linux.tar.xz",
+        "url": "https://github.com/llvm-mos/llvm-mos-sdk/releases/download/v23.0.1/llvm-mos-linux.tar.xz",
+        "bytes": 100731804,
+        "sha256": "bd76dd5a826b83e438bf55dbdd512d65d4600ba80fda919dca633cad76f023cc"
+      },
+      "installed_tree": {
+        "regular_files": 817,
+        "symlinks": 140,
+        "regular_file_bytes": 416868059,
+        "sha256": "dedb6453515f9434a003174fb9cdaf623472c513325626735c1143d34811e458"
+      },
+      "required_files": {
+        "bin/clang-23": "2a831e2abeabb9c6e0605a197ff39903c1326b528f82a7f787bc353ef652309c",
+        "bin/lld": "97ce10b224bc2a4d4aba989a58038aac94159dc3105c0a7248c08b3bce52633c",
+        "bin/llvm-nm": "2e4c324094c6bcd0845f57e9a7b1aa05033f5707dd8b803189d3c8b986b3a2fe",
+        "bin/llvm-objcopy": "b629e8602f62ba4e5f61efe83b609534f0355289c7173ebe411dfc6a3d5ce47b",
+        "bin/llvm-size": "c196bb67c1ba111faf013fc43edfa84c5ad9b48a982f8053b14903848c044f70",
+        "bin/mos-mega65.cfg": "d0ffae3fe3b6481dcddae393d2869b3d8ecc32eb322b57ded773b50ce9c876c1",
+        "mos-platform/mega65/lib/link.ld": "a079ff5e61ad9f41226dce914421564f088dcbe89740cf2de0b1e691faa29a21"
+      },
+      "version_output": "clang-23.0.0git-llvm-mos-c798c31416f72b395c658b5502d281a162387ab1"
+    },
+    "mega65_tools": {
+      "role": "hardware-transfer-and-image-utilities",
+      "install_directory": "tools/m65tools",
+      "required_for_product_build": false,
+      "required_for_hardware_deployment": true,
+      "upstream": {
+        "url": "https://github.com/MEGA65/mega65-tools",
+        "commit": "c5bf0ccd7ec6398290176f8af928d0780482577f",
+        "source_build_path": "README.md and the repository build workflow at the pinned commit"
+      },
+      "exact_archive": {
+        "name": "m65tools-develo-207-c5bf0c-linux.7z",
+        "public_url": null,
+        "availability": "private-mirror-release-asset",
+        "bytes": 380210,
+        "sha256": "a8f66aa478a75a791d13712954994a9bbe356135d91da565aad6536d6c69799c"
+      },
+      "installed_tree": {
+        "regular_files": 9,
+        "symlinks": 0,
+        "regular_file_bytes": 1297349,
+        "sha256": "eafa49f55fe626e4d88ce1524800dea8c0051043611daf733f8d098945395638"
+      },
+      "required_files": {
+        "Changelog.md": "8e1d2bc6edc012bc7ef4f7b259aa7eefde8dd52a79bf00b7a2642b2a0f92c399",
+        "README.md": "72f0d38a667a7e0a6baa6419c4bcf5d610a21d484f18a5609e28237926302c87",
+        "bit2core": "ae94a39c737253e17efe314f23fcdc5da5b7610608855a11576eb833620a4c7d",
+        "bit2mcs": "594bb7db9db3823dad35b57146acba7eb439bf10d032fe61ccf210844456c442",
+        "coretool": "2e58ae39d89638349a37b7fb8e78f737ed2d5639a22d9438667dc05d39afeb17",
+        "etherload": "57496ea52eea4593065438a276b0800528e1837a0b10addb68f187ed84b1ffde",
+        "m65": "2feeaa69bdcd52ee61644212673b05df41bcaa93b0a515133e5947a5f47e3097",
+        "mega65_ftp": "d39a7fe880d3037a1b57ecfc84aed14fd7f931e6fe05d57392cce5ab2cac17c4",
+        "romdiff": "fae391f0dbdab7e0fef89ef2b18fed53e7453f6c9f12cf508422d322c0073a84"
+      },
+      "version_output": "20260608.07-develo-c5bf0cc"
+    }
+  },
+  "private_archive_release": {
+    "repository_role": "private-proof-mirror",
+    "tag": "toolchain-v1.0.1",
+    "assets": [
+      "llvm-mos-linux.tar.xz",
+      "m65tools-develo-207-c5bf0c-linux.7z"
+    ]
+  },
+  "host_requirements": ["GNU Make", "Python 3", "C99 compiler", "c1541", "tar with xz support", "7-Zip for the optional MEGA65 tools archive"]
+}

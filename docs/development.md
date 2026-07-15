@@ -23,9 +23,10 @@ The normal source gates require:
   deployment
 
 These third-party bundles are present in the private development environment
-but are deliberately absent from the curated public repository. Download them
-from their upstream projects and create local symlinks at the paths above; both
-paths are ignored by Git.
+but are deliberately absent from the curated public repository. Use the
+[external toolchain setup](toolchain-setup.md) to fetch and verify the pinned
+LLVM-MOS release and to install the optional hardware tools. Both local paths
+are ignored by Git; `LLVM_MOS_ROOT` and `M65TOOLS_ROOT` may point elsewhere.
 
 Run the read-only prerequisite check first:
 
