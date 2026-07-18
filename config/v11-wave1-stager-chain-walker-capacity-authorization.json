@@ -1,0 +1,26 @@
+{
+  "format": "lisp65-capacity-debit-authorization-v1",
+  "id": "v11-wave1-stager-chain-walker-fix-capacity",
+  "status": "authorized",
+  "authorized_on": "2026-07-17",
+  "timing": "pre-authorized",
+  "scope": "r3-cold-start-product-block",
+  "authorized_debits": {
+    "bank": 15,
+    "ext": 277,
+    "symbols": 3,
+    "namepool": 73
+  },
+  "required_floors": {
+    "bank": 0,
+    "ext": 16384,
+    "symbols": 32,
+    "namepool": 384,
+    "directory": 32
+  },
+  "attribution": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/wave1-stager-chain-walker-fix-capacity-probe-receipt.json",
+    "sha256": "09bd0a2a8cf44ac6747ec6a3ab037e4ed15907d840c51c1dcfb7ef6d1b84a7d8"
+  },
+  "decision": "Owner-authorized on 2026-07-17: consume 15 bytes of Bank headroom, 277 bytes of EXT headroom, three symbol entries and 73 name-pool bytes for the length-derived 16-bit cold-stager fuel and the complete fail-closed C/Lisp chain-walker guards. Directory and all four structural watch dimensions remain unchanged; the standalone stager remains within its independent 16 KiB ceiling."
+}

@@ -16,6 +16,12 @@ import tempfile
 ADDRESS = 0x1800
 LIMIT = 0x2000
 CAPACITY = 2048
+# The bootstrap link must compile the installer with the same non-trivial
+# memcpy shape as the materialized island. A one-byte placeholder can suppress
+# LLVM-MOS's static-stack allocation and move the shared overlay VMA between
+# the seed and final links. 0x600 remains below the Slot-37 payload ceiling
+# together with the installer while exercising the real copy path.
+PREPARE_LENGTH = 0x600
 SECTION = ".lisp65_resident_island"
 START_SYMBOL = "__lisp65_resident_island_start"
 END_SYMBOL = "__lisp65_resident_island_end"
@@ -175,9 +181,15 @@ def _write(path: Path, data: bytes) -> None:
 
 
 def prepare(args: argparse.Namespace) -> None:
-    content = _header(build_id=_build_id(args.abi_contract), data=b"\x00")
+    content = _header(
+        build_id=_build_id(args.abi_contract), data=bytes(PREPARE_LENGTH)
+    )
     _write(args.header, content)
-    print(f"resident-island-prepare: PASS capacity={CAPACITY} build_id={_build_id(args.abi_contract):08x}")
+    print(
+        "resident-island-prepare: PASS "
+        f"capacity={CAPACITY} sentinel={PREPARE_LENGTH} "
+        f"build_id={_build_id(args.abi_contract):08x}"
+    )
 
 
 def materialize(args: argparse.Namespace) -> None:
@@ -217,6 +229,8 @@ def selftest() -> None:
     )
     if any(item not in text for item in required):
         raise IslandError("generated header contract is incomplete")
+    if not 1 < PREPARE_LENGTH <= CAPACITY:
+        raise IslandError("prepare sentinel does not exercise the bounded bulk copy")
     values = re.findall(r"0x([0-9a-f]{2})(?:,| })", text.split("LISP65_RESIDENT_ISLAND_BYTES", 1)[1])
     if len(values) != 3 or bytes.fromhex("".join(values)) != b"\x01\x02\x03":
         raise IslandError("length-exact initializer is malformed")

@@ -45,6 +45,9 @@ typedef int16_t obj;
 #define SYMI_IDX(o)    ((uint16_t)((((uint16_t)(o)) >> 1) - SYMI_BASE))
 
 enum { T_CONS, T_SYM, T_PRIM, T_CLOSURE, T_MACRO, T_STR, T_BCODE };
+/* Existing enum range is optimizer-sensitive under LLVM-MOS LTO. Keep the
+ * historical enum intact and allocate the next ABI value explicitly. */
+#define T_BUF 7u
 
 /* Zell-Layout je Typ:
  *   CONS:    a=car                   b=cdr
@@ -53,7 +56,8 @@ enum { T_CONS, T_SYM, T_PRIM, T_CLOSURE, T_MACRO, T_STR, T_BCODE };
  *   CLOSURE: a=(params . body)       b=captured env   (lambda)
  *   MACRO:   a=(params . body)       b=captured env   (defmacro)
  *   STR:     a=Zeichenliste(Fixnums) b=ungenutzt      ("…"; GC traversiert a wie CONS)
- *   BCODE:   a=Code-Directory-Index  b=ungenutzt      (kompilierte Fn; apply -> VM; GC: nicht traversieren) */
+ *   BCODE:   a=Code-Directory-Index  b=ungenutzt      (kompilierte Fn; apply -> VM; GC: nicht traversieren)
+ *   BUF:     a=byte length            b=arena offset   (mutable contiguous bytes; GC leaf) */
 typedef struct {
     uint8_t type;
     obj a;

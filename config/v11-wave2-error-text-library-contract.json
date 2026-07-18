@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-v11-wave2-error-text-library-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "existing-l65e-runtime-overlay-is-canonical-delivery",
+  "public_surface": "No new Lisp function. Stable error codes remain internal machine identities; the REPL renders their profile-selected text.",
+  "truth_source": "config/error-texts.json",
+  "delivery": {
+    "format": "L65E-v1",
+    "runtime_overlay_slice": 36,
+    "runtime_overlay_name": "error-text-renderer",
+    "roles": ["runtime", "reusable"],
+    "resident_text_bytes": 0,
+    "shelf_records": 0,
+    "reason": "The existing reusable runtime-overlay library already maps stable resident error codes to plain text without consuming resident or L65S catalog capacity."
+  },
+  "required_gates": [
+    "all linked user-reachable error codes have Workbench text",
+    "not-built paths are absent from the Workbench profile",
+    "unknown or omitted codes fall back to the stable Ehh channel",
+    "the generated table is build-ID and CRC bound",
+    "renderer reentry is fail-closed",
+    "generation and mutation selftests pass",
+    "resident, shelf, symbol, Namepool and Directory deltas are all zero"
+  ],
+  "claim_limit": "This receipt closes the Wave-2 delivery item by proving the already shipped L65E architecture. It adds no public condition system, user handler, dynamic payload, or error lookup primitive."
+}

@@ -29,7 +29,27 @@ BRIDGE_SOURCE = "lib/stdlib-einsuite-bridges.lisp"
 LCC_PROFILE = "lib/dialect-v2/lcc-profile.lisp"
 EVAL_RUNTIME = "lib/dialect-v2/eval-runtime.lisp"
 EVAL_RUNTIME_PRIVATE_INLINE = ("%number->string-result",)
-DIRECTORY_ONLY_EXT_RECLAIM_INLINE = ("%lcc-wrap", "%load-lib-note-loaded")
+FILTER_CANONICAL_SOURCE = "lib/dialect-v2/lists-core.lisp"
+FILTER_RESIDENT_FUNCTIONS = ("%v2-reverse-into", "%v2-filter-into", "filter")
+FILTER_TAILCALL_SELF = ("%v2-reverse-into", "%v2-filter-into")
+FILTER_PRODUCT_CASES_PATH = "config/v11-filter-product-cases.json"
+DIRECTORY_ONLY_EXT_RECLAIM_INLINE = ("%load-lib-note-loaded",)
+COMPILER_TIER_SOURCES = (
+    "lib/lcc.lisp",
+    "lib/lcc-fasl.lisp",
+    "lib/dialect-v2/lcc-profile.lisp",
+)
+C1_RESIDENT_COMPILER_SEAM = (
+    "%c1-compile-detached",
+    "%c1-compile-save",
+    "compile-error",
+    "compile-string",
+    "lcc-run",
+)
+EXPORT_ONLY_PRIVATE_INLINE = {
+    "ide": ("%ide-m65d-message",),
+    "m65d": ("%m65d-dir-target-ok-p", "%m65d-remount-work"),
+}
 DIRECTORY_ONLY_IDE_EXPORTS = (
     "%ide-buffer-with-lines-point",
     "%ide-char-drop",
@@ -296,6 +316,28 @@ def remove_bridge_defuns(text: str) -> tuple[str, dict[str, int]]:
     return "".join(output), removals
 
 
+def select_resident_filter_defuns(text: str) -> str:
+    selected: list[str] = []
+    counts = {name: 0 for name in FILTER_RESIDENT_FUNCTIONS}
+    for start, end in _top_level_forms(text):
+        form = text[start:end]
+        atoms = _form_atoms(form)
+        if len(atoms) >= 2 and atoms[0] == "defun" and atoms[1] in counts:
+            counts[atoms[1]] += 1
+            selected.append(form)
+    wrong = {name: count for name, count in counts.items() if count != 1}
+    if wrong:
+        raise CodemodError(
+            "resident filter source must contain exactly one canonical defun: "
+            + ", ".join(f"{name}={count}" for name, count in sorted(wrong.items()))
+        )
+    return (
+        "; Generated from lib/dialect-v2/lists-core.lisp; do not edit.\n\n"
+        + "\n\n".join(selected)
+        + "\n"
+    )
+
+
 def _require_bridge_defuns(counts: dict[str, int]) -> None:
     wrong = {name: count for name, count in counts.items() if count != 1}
     if wrong:
@@ -361,6 +403,23 @@ def generate(closure_path: Path, output_root: Path) -> Path:
     _relative(output_root)
     closure = _read_json(closure_path, "v2 Workbench artifact closure")
     specs = _artifact_specs(closure)
+    filter_case_path = _repo_path(FILTER_PRODUCT_CASES_PATH)
+    filter_case_contract = _read_json(filter_case_path, "filter product cases")
+    filter_cases = filter_case_contract.get("cases")
+    if (
+        filter_case_contract.get("format") != "lisp65-v11-filter-product-cases-v1"
+        or not isinstance(filter_cases, list)
+        or [case.get("name") for case in filter_cases if isinstance(case, dict)]
+        != sorted({case.get("name") for case in filter_cases if isinstance(case, dict)})
+        or any(
+            not isinstance(case, dict)
+            or set(case) != {"name", "invoke", "expr", "expect"}
+            or case.get("invoke") not in {"apply", "direct", "funcall"}
+            or not all(isinstance(case.get(key), str) and case.get(key) for key in ("name", "expr", "expect"))
+            for case in filter_cases
+        )
+    ):
+        raise CodemodError("filter product case contract drift")
 
     resolved: dict[str, dict[str, Any]] = {}
     suite_inputs: set[Path] = set()
@@ -411,12 +470,52 @@ def generate(closure_path: Path, output_root: Path) -> Path:
     resolved["resident"]["min_private_inline_functions"] = max(
         old_private_minimum, len(resolved["resident"]["private_inline_functions"])
     )
+    compiler_functions: set[str] = set()
+    for source in COMPILER_TIER_SOURCES:
+        compiler_functions.update(Stdlib._defun_names([source]))
+    resident_keep = set(C1_RESIDENT_COMPILER_SEAM)
+    resolved["resident"]["sources"] = [
+        source for source in resolved["resident"]["sources"]
+        if source not in COMPILER_TIER_SOURCES
+    ]
+    resolved["resident"]["functions"] = Stdlib._append_unique(
+        [
+            name for name in resolved["resident"].get("functions", [])
+            if name not in compiler_functions or name in resident_keep
+        ],
+        C1_RESIDENT_COMPILER_SEAM,
+    )
+    resolved["resident"]["allow_omitted_defuns"] = [
+        row for row in resolved["resident"].get("allow_omitted_defuns", [])
+        if not isinstance(row, dict)
+        or row.get("name") not in compiler_functions
+        or row.get("name") in resident_keep
+    ]
     old_tailcalls = resolved["resident"].get("tailcall_self", [])
     if not isinstance(old_tailcalls, list):
         raise CodemodError("resolved resident suite has invalid tailcall_self")
+    resolved["resident"]["tailcall_self"] = [
+        name for name in old_tailcalls
+        if name in set(resolved["resident"]["functions"])
+    ]
+    resolved["resident"]["sources"] = Stdlib._append_unique(
+        resolved["resident"]["sources"], (FILTER_CANONICAL_SOURCE,)
+    )
+    resolved["resident"]["functions"] = Stdlib._append_unique(
+        resolved["resident"]["functions"], FILTER_RESIDENT_FUNCTIONS
+    )
     resolved["resident"]["tailcall_self"] = Stdlib._append_unique(
-        [name for name in old_tailcalls if name not in profile_functions],
-        LCC_PROFILE_TAILCALL_SELF,
+        resolved["resident"]["tailcall_self"], FILTER_TAILCALL_SELF
+    )
+    resident_case_names = {
+        case.get("name") for case in resolved["resident"].get("cases", [])
+        if isinstance(case, dict)
+    }
+    if resident_case_names.intersection(case["name"] for case in filter_cases):
+        raise CodemodError("resident filter product case name collision")
+    resolved["resident"]["cases"].extend(
+        {key: case[key] for key in ("name", "expr", "expect")}
+        for case in filter_cases
     )
 
     source_names: set[str] = set()
@@ -438,6 +537,8 @@ def generate(closure_path: Path, output_root: Path) -> Path:
         if source == BRIDGE_SOURCE:
             text, bridge_counts = remove_bridge_defuns(text)
             _require_bridge_defuns(bridge_counts)
+        if source == FILTER_CANONICAL_SOURCE:
+            text = select_resident_filter_defuns(text)
         rewritten, counts = rewrite_tokens(text)
         for name, count in counts.items():
             source_counts[name] += count
@@ -488,6 +589,15 @@ def generate(closure_path: Path, output_root: Path) -> Path:
     )
     resolved["ide"]["directory_only_prefixes"] = ["%"]
     resolved["idex"]["directory_only_prefixes"] = ["%"]
+    resolved["m65d"]["directory_only_prefixes"] = ["%"]
+    for artifact_id, names in EXPORT_ONLY_PRIVATE_INLINE.items():
+        resolved[artifact_id]["private_inline_functions"] = Stdlib._append_unique(
+            resolved[artifact_id].get("private_inline_functions", []), names
+        )
+        resolved[artifact_id]["min_private_inline_functions"] = max(
+            resolved[artifact_id].get("min_private_inline_functions", 0),
+            len(resolved[artifact_id]["private_inline_functions"]),
+        )
     resolved["ide"]["exports"] = list(DIRECTORY_ONLY_IDE_EXPORTS)
     resolved["idex"]["exports"] = ["%ide-x"]
     resolved["idex"]["override_exports"] = ["%ide-x"]
@@ -523,6 +633,7 @@ def generate(closure_path: Path, output_root: Path) -> Path:
         })
 
     input_paths = suite_inputs | {_repo_path(source) for source in source_names}
+    input_paths.add(filter_case_path)
     input_paths.update({closure_path, Path(__file__).resolve()})
     input_records = [
         {
@@ -708,6 +819,17 @@ def selftest() -> None:
         or not designator.endswith("'string->list")
     ):
         raise CodemodError("function-designator or quoted-symbol rewrite drift")
+    filter_source = select_resident_filter_defuns(
+        "(defun keep (x) x)\n"
+        "(defun %v2-reverse-into (xs acc) acc)\n"
+        "(defun %v2-filter-into (predicate xs acc) acc)\n"
+        "(defun filter (predicate xs) xs)\n"
+    )
+    if "(defun keep" in filter_source or any(
+        filter_source.count(f"(defun {name} ") != 1
+        for name in FILTER_RESIDENT_FUNCTIONS
+    ):
+        raise CodemodError("resident filter extraction drift")
 
     bridges = (
         "; (defun string->list (x) x)\n"

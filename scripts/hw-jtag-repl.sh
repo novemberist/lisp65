@@ -275,8 +275,11 @@ send_form_verified() {
       capture_status=$?
     fi
     if [ "$capture_status" -ne 0 ]; then
+      capture_failure_status=$capture_status
       discard_active_input "$form" "$prefix-capture-failure-clear" || :
-      return "$capture_status"
+      # Shell variables are global across these helper functions.  The cleanup
+      # capture must never overwrite the status of the capture that failed.
+      return "$capture_failure_status"
     fi
     if [ "$dry_run" = "1" ]; then
       echo "DRY-RUN: verify active input echo for attempt $input_attempt/3"

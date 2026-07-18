@@ -3,7 +3,7 @@
 #define LISP65_V2_NATIVE_FUNCTION_DISPATCH_H
 
 #define LISP65_V2_NATIVE_FUNCTION_COUNT 39
-#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 34
+#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 38
 #define LISP65_V2_NATIVE_KIND_FOLD_IDENTITY 1
 #define LISP65_V2_NATIVE_KIND_FOLD_REQUIRED 2
 #define LISP65_V2_NATIVE_KIND_CALLPRIM 3
@@ -173,7 +173,7 @@
 #define LISP65_V2_NATIVE_FUNCTION_BOUNDP_COUNT 0
 #define LISP65_V2_NATIVE_FUNCTION_BOUNDP_ROWS(X)
 
-#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 34
+#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 38
 #define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_ROWS(X) \
     X("read-key", 13) \
     X("poll-key", 14) \
@@ -208,6 +208,10 @@
     X("%fasl-error-window-overflow", 54) \
     X("%lcc-error-do-body-too-big", 55) \
     X("%lcc-error-invalid-parameter-list", 56) \
-    X("%list-malformed-error", 58)
+    X("%list-malformed-error", 58) \
+    X("%buffer-read", 63) \
+    X("%buffer-write", 64) \
+    X("%buffer-alloc", 65) \
+    X("%c1-control", 66)
 
 #endif

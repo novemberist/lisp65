@@ -17,9 +17,17 @@
 #include "eval.h"
 #include "interrupt.h"
 #include "repl.h"
+#ifdef LISP65_REPL_BANNER_REQUIRED
+#include "stdlib-p0.h"
+#ifndef LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY
+#error "Workbench REPL banner is required but absent from the generated stdlib directory"
+#endif
+#endif
+#if defined(LISP65_COMPILE_REPL) || defined(LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY)
+#include "vm.h"
+#endif
 #ifdef LISP65_COMPILE_REPL
 #include "compile_repl.h"   /* compile_run_top_form: REPL wertet via geraeteseitigem Compiler aus (M6, Design §4a) */
-#include "vm.h"             /* vm_status / VM_OK */
 #endif
 
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
@@ -32,6 +40,9 @@
 
 #ifndef REPL_BUF_MAX
 #define REPL_BUF_MAX 250
+#endif
+#if REPL_BUF_MAX < 2 || REPL_BUF_MAX > 255
+#error "REPL_BUF_MAX must fit the byte-sized REPL cursor contract (2..255)"
 #endif
 #define BUF_MAX REPL_BUF_MAX
 
@@ -80,8 +91,9 @@ static void echo_char(char ch) {
 
 /* Liest eine Zeile, haengt ab buf[*np] an, aktualisiert *np.
  * return: 1 = mit RETURN beendet, 0 = EOF (Host), 2 = CLR/HOME (Screen geloescht). */
-static int read_line(char *buf, int *np, int max) {
-    int n = *np, floor = *np, c;
+static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
+    uint8_t n = *np, floor = *np;
+    int c;
     for (;;) {
 #ifdef DEVICE_KB
         kb_cursor_on();
@@ -154,7 +166,7 @@ static int read_line(char *buf, int *np, int max) {
 }
 
 void repl(void) {
-    static char buf[BUF_MAX + 2];
+    static char buf[BUF_MAX];
     int aborted = 0;
 
 #ifdef LISP65_COMPILE_REPL
@@ -195,11 +207,16 @@ void repl(void) {
         emit('\n');
     }
 #else
-    if (!aborted) emit_str("lisp65\n");   /* Banner NACH dem CLR, sonst unsichtbar */
+#ifdef LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY
+    if (!aborted)
+        (void)vm_run_dir(LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY, NULL, 0);
+#else
+    if (!aborted) emit_str("lisp65\n");
+#endif
 #endif
 
     for (;;) {
-        int n = 0, st;
+        uint8_t n = 0, st;
         emit_str("lisp65> ");
         st = read_line(buf, &n, BUF_MAX);
         if (st == 1) emit('\n');

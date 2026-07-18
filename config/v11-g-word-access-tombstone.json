@@ -1,0 +1,11 @@
+{
+  "format": "lisp65-v11-g-feature-tombstone-v1",
+  "version": 1,
+  "status": "owner-decided",
+  "recorded_on": "2026-07-17",
+  "names": ["peekw", "pokew"],
+  "decision": "not-delivered",
+  "reason": "The current signed 15-bit fixnum representation cannot represent the required full unsigned 16-bit peekw result range 0..65535. The owner rule admitted these helpers only if nearly free; a representation change is not nearly free.",
+  "replacement": "Use byte-sized peek/poke operations in 1.1. Full unsigned word composition is not available because the required ash/logior bit operations are deferred with the shelf-format work to C2.2.",
+  "revisit_condition": "C2.2 must revisit word composition after delivering the deferred bit operations. A future word or wider integer representation may then reopen peekw/pokew through a new explicit contract; no runtime tombstone symbol is allocated now."
+}

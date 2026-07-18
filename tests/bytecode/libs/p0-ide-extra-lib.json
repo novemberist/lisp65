@@ -93,8 +93,13 @@
     },
     {
       "name": "ide-extra-mx",
-      "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 120 nil)))) (%ide-mini-status-line)))",
+      "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 120 nil)))) (%ide-mini-status-line)))",
       "expect": "\"M-x [find-file]\""
+    },
+    {
+      "name": "ide-extra-unknown-mx-command-rejected",
+      "expr": "(%ide-command-named \"not-a-command\")",
+      "expect": "nil"
     },
     {
       "name": "ide-extra-search",

@@ -25,6 +25,8 @@ preload="${WORKBENCH_OVERLAY_PRELOAD:-build/products/workbench/overlay-stack-pro
 preload_addr="${WORKBENCH_OVERLAY_PRELOAD_ADDR:-0x050000}"
 runtime_overlay="${WORKBENCH_RUNTIME_OVERLAY:-build/products/workbench/overlay-stack-probe/lisp65-mvp-workbench.overlays.bin}"
 runtime_overlay_addr="${WORKBENCH_RUNTIME_OVERLAY_ADDR:-0x08000000}"
+attic_shelf="${WORKBENCH_ATTIC_SHELF:-}"
+attic_shelf_addr="${WORKBENCH_ATTIC_SHELF_ADDR:-0x08100000}"
 elf="${WORKBENCH_OVERLAY_ELF:-build/products/workbench/overlay-stack-probe/lisp65-workbench-overlay-linked.prg.elf}"
 d81="${WORKBENCH_OVERLAY_D81:-build/ship/lisp65-mvp-workbench.d81}"
 remote_d81="${WORKBENCH_OVERLAY_REMOTE_D81:-L65OVL.D81}"
@@ -39,6 +41,7 @@ wait_sec="${WAIT_SEC:-1}"
 form_wait_sec="${FORM_WAIT_SEC:-3}"
 load_ide_budget_sec="${LOAD_IDE_BUDGET_SEC:-12}"
 timeout_sec="${TIMEOUT_SEC:-20}"
+input_retry_wait_sec="${JTAG_INPUT_RETRY_WAIT_SEC:-1}"
 deploy_timeout_sec="${DEPLOY_TIMEOUT_SEC:-180}"
 readback_timeout_sec="${READBACK_TIMEOUT_SEC:-120}"
 
@@ -56,6 +59,9 @@ usage: $0 [options]
   --runtime-overlay <file>  immutable runtime-overlay catalog
   --runtime-overlay-addr <address>
                             catalog address (default: $runtime_overlay_addr)
+  --attic-shelf <file>      optional reset-stable library shelf
+  --attic-shelf-addr <address>
+                            shelf address (default: $attic_shelf_addr)
   --elf <file>              final linked overlay ELF for probes/island binding
   --d81 <file>              local Workbench/IDE D81 (default: $d81)
   --remote-d81 <name>       D81 filename on MEGA65 SD (default: $remote_d81)
@@ -100,6 +106,8 @@ while [ "$#" -gt 0 ]; do
     --preload-addr) shift; need_value "$@"; preload_addr=$1 ;;
     --runtime-overlay) shift; need_value "$@"; runtime_overlay=$1 ;;
     --runtime-overlay-addr) shift; need_value "$@"; runtime_overlay_addr=$1 ;;
+    --attic-shelf) shift; need_value "$@"; attic_shelf=$1 ;;
+    --attic-shelf-addr) shift; need_value "$@"; attic_shelf_addr=$1 ;;
     --elf) shift; need_value "$@"; elf=$1 ;;
     --d81) shift; need_value "$@"; d81=$1 ;;
     --remote-d81) shift; need_value "$@"; remote_d81=$1 ;;
@@ -161,17 +169,25 @@ if [ -n "$ship_manifest" ]; then
     echo "Fehler: Ship-v5 Attic-Ziel muss 0x08000000 sein: $runtime_overlay_addr" >&2
     exit 2
   fi
+  if [ -n "$attic_shelf" ] && [ "$attic_shelf_addr" != "0x08100000" ]; then
+    echo "Fehler: Ship-v5 Attic-Regal muss bei 0x08100000 gebunden sein" >&2
+    exit 2
+  fi
   for artifact in "$resident_prg" "$preload" "$runtime_overlay"; do
     case "$artifact" in
       *@*) echo "error: G5 staging path must not contain @: $artifact" >&2; exit 2 ;;
     esac
   done
+  case "$attic_shelf" in
+    *@*) echo "error: G5 staging path must not contain @: $attic_shelf" >&2; exit 2 ;;
+  esac
 fi
 
 echo "==> Workbench-Overlay-Artefaktvertrag"
 printf '    resident_prg=%s\n' "$resident_prg"
 printf '    preload=%s@%s\n' "$preload" "$preload_addr"
 printf '    runtime_overlay=%s@%s\n' "$runtime_overlay" "$runtime_overlay_addr"
+[ -z "$attic_shelf" ] || printf '    attic_shelf=%s@%s\n' "$attic_shelf" "$attic_shelf_addr"
 printf '    elf=%s\n' "$elf"
 printf '    d81=%s -> %s\n' "$d81" "$remote_d81"
 if [ -n "$ship_manifest" ]; then
@@ -191,6 +207,7 @@ if [ "$dry_run" != "1" ]; then
   for artifact in "$resident_prg" "$preload" "$runtime_overlay" "$d81"; do
     [ -f "$artifact" ] || { echo "Fehler: Artefakt fehlt: $artifact" >&2; exit 3; }
   done
+  [ -z "$attic_shelf" ] || [ -f "$attic_shelf" ] || { echo "Fehler: Attic-Regal fehlt: $attic_shelf" >&2; exit 3; }
   if [ "$readback" = "1" ]; then
     [ -f "$elf" ] || { echo "Fehler: Artefakt fehlt: $elf" >&2; exit 3; }
     [ -f "$readback_script" ] || { echo "Fehler: Artefakt fehlt: $readback_script" >&2; exit 3; }
@@ -233,13 +250,19 @@ if [ "$deploy" = "1" ]; then
 
   if [ -n "$ship_manifest" ]; then
     echo "==> G5 Stage A: Attic und Bank 5 per JTAG laden, Resident-PRG ungelaufen halten"
+    [ -z "$attic_shelf" ] || echo "==> G5 Stage A: manifestgebundenes Attic-Regal mitladen"
     if [ "$dry_run" = "1" ]; then
       echo "DRY-RUN: timeout ${deploy_timeout_sec}s $tools_dir/m65 -l $device -H -@ $runtime_overlay@$runtime_overlay_addr"
+      [ -z "$attic_shelf" ] || echo "DRY-RUN: timeout ${deploy_timeout_sec}s $tools_dir/m65 -l $device -H -@ $attic_shelf@$attic_shelf_addr"
       echo "DRY-RUN: timeout ${deploy_timeout_sec}s $tools_dir/m65 -l $device -H -@ $preload@$preload_addr"
       echo "DRY-RUN: timeout ${deploy_timeout_sec}s $tools_dir/m65 -l $device -H -1 $resident_prg"
     else
       timeout "${deploy_timeout_sec}s" "$tools_dir/m65" -l "$device" -H \
         -@ "$runtime_overlay@$runtime_overlay_addr"
+      if [ -n "$attic_shelf" ]; then
+        timeout "${deploy_timeout_sec}s" "$tools_dir/m65" -l "$device" -H \
+          -@ "$attic_shelf@$attic_shelf_addr"
+      fi
       timeout "${deploy_timeout_sec}s" "$tools_dir/m65" -l "$device" -H \
         -@ "$preload@$preload_addr"
       timeout "${deploy_timeout_sec}s" "$tools_dir/m65" -l "$device" -H -1 "$resident_prg"
@@ -248,6 +271,7 @@ if [ "$deploy" = "1" ]; then
     set -- --tools "$tools_dir" --mount "$remote_d81" \
       --preload-bin "$runtime_overlay_addr" "$runtime_overlay" \
       --preload-bin "$preload_addr" "$preload" --run
+    [ -z "$attic_shelf" ] || set -- "$@" --preload-bin "$attic_shelf_addr" "$attic_shelf"
     [ -n "$ip" ] && set -- "$@" --ip "$ip"
     [ "$dry_run" = "1" ] && set -- "$@" --dry-run
     set -- "$@" "$resident_prg"
@@ -280,6 +304,7 @@ run_ship_readback() {
     --device "$device" --tools "$tools_dir" --out-dir "$out_dir" \
     --prefix "$prefix-ship-$phase" \
     --receipt "$out_dir/$prefix-ship-manifest-receipt.json"
+  [ -z "$attic_shelf" ] || set -- "$@" --shelf "$attic_shelf"
   [ "$dry_run" = "1" ] && set -- "$@" --dry-run
   if [ "$dry_run" = "1" ]; then
     "$@"
@@ -359,39 +384,107 @@ run_stack_readback() {
 
 run_stack_readback "Runtime-Stack/Wipe-Readback" "stack"
 
-run_phase() {
+run_forms_phase() {
   phase=$1
   expect=$2
+  forms=$3
   phase_wait=$wait_sec
   phase_poll=0
-  shift 2
   case "$phase" in
     load-ide) phase_wait=0; phase_poll=$load_ide_budget_sec ;;
     vm-bridges|gc-allocation) phase_wait=12 ;;
   esac
-  forms="$out_dir/$prefix-$phase.forms"
-  : > "$forms"
-  while [ "$#" -gt 0 ]; do
-    printf '%s\n' "$1" >> "$forms"
-    shift
-  done
 
-  set -- --file "$forms" --expect "$expect" --tools "$tools_dir" \
+  set -- --file "$forms" --tools "$tools_dir" \
     --device "$device" --out-dir "$out_dir" --prefix "$prefix-$phase" \
     --wait "$phase_wait" --form-wait "$form_wait_sec" --timeout "$timeout_sec" \
-    --verified-input
+    --input-retry-wait "$input_retry_wait_sec" --verified-input
+  [ -z "$expect" ] || set -- "$@" --expect "$expect"
   [ "$phase_poll" -eq 0 ] || set -- "$@" --expect-poll "$phase_poll"
   [ "$dry_run" = "1" ] && set -- "$@" --dry-run
   echo "==> JTAG-REPL-Probe: $phase"
   sh scripts/hw-jtag-repl.sh "$@"
 }
 
+run_phase() {
+  phase=$1
+  expect=$2
+  shift 2
+  forms="$out_dir/$prefix-$phase.forms"
+  : > "$forms"
+  while [ "$#" -gt 0 ]; do
+    printf '%s\n' "$1" >> "$forms"
+    shift
+  done
+  run_forms_phase "$phase" "$expect" "$forms"
+}
+
+run_measured_phase() {
+  phase=$1
+  shift
+  forms="$out_dir/$prefix-$phase.forms"
+  : > "$forms"
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      *"'"*)
+        echo "Fehler: gemessene JTAG-Form verwendet nicht uebertragbare Quote-Kurzsyntax: $phase" >&2
+        exit 2
+        ;;
+    esac
+    [ "${#1}" -le 144 ] || {
+      echo "Fehler: gemessene JTAG-Form ueberschreitet das sichere 144-Zeichen-Budget: $phase" >&2
+      exit 2
+    }
+    printf '%s\n' "$1" >> "$forms"
+    shift
+  done
+  # The structured result is the measurement input.  Do not compare it with a
+  # scalar here; v11_c1_repl_latency.py is the sole semantic/range oracle.
+  run_forms_phase "$phase" "" "$forms"
+}
+
+# C1 is loaded on demand by the first interactive form.  Keep this as its own
+# asserted phase: a later marker must never turn a failed first load into a
+# false PASS by warming the symbol/namepool state for the retry.
+run_phase c1-first-form '"overlay-c1-first-form-42"' \
+  "(if (= (+ 20 22) 42) \"overlay-c1-first-form-42\" \"overlay-c1-first-form-fail\")"
+
 run_phase arith-42 '"overlay-arith-42"' \
   "(+ 20 22)" \
   "(if (= (+ 20 22) 42) \"overlay-arith-42\" \"overlay-arith-fail\")"
 
+# Bind latency in product time, never in JTAG/harness time.  The arithmetic
+# phase above warms C1.  Measure the direct resident-equivalent seam, the
+# definitions-free nested eval seam, and the core developer cycle separately.
+# The definition must retire C1 before the timer starts so the following call
+# includes the identity-bound reload/commit that the old warm-only gate missed.
+run_measured_phase c1-repl-direct \
+  '(let((a(peek 215 250)))(let((x(%c1-compile 0(quote(+ 20 22))nil)))(let((r(lcc-install x(quote t))))(list r a(peek 215 250)))))'
+run_measured_phase c1-repl-warm \
+  '(let((a(peek 215 250)))(let((r(eval(quote(+ 20 22)))))(list r a(peek 215 250))))'
+run_measured_phase c1-repl-definition-call \
+  '(progn(eval(quote(defun %c1l()(quote t))))(let((a(peek 215 250)))(let((r(eval(quote(%c1l)))))(list r a(peek 215 250)))))'
+if [ "$dry_run" = "1" ]; then
+  echo "DRY-RUN: verify C1 REPL latency direct<=13 warm<=13 delta<=3 plus owner-bound definition-call ceiling"
+else
+  python3 tools/host-lisp/v11_c1_repl_latency.py \
+    --direct "$out_dir/$prefix-c1-repl-direct.txt" \
+    --warm "$out_dir/$prefix-c1-repl-warm.txt" \
+    --definition-call "$out_dir/$prefix-c1-repl-definition-call.txt" \
+    --out "$out_dir/$prefix-c1-repl-latency.txt"
+fi
+
 run_phase load-ide '"overlay-ide-ok"' \
   "(if (load-lib \"ide\") \"overlay-ide-ok\" \"overlay-ide-fail\")"
+
+# The owner-bound C1 entry-seam contract is the single case list.  Each row
+# gets an independent transcript and oracle; the R5 receipt binds all four.
+c1_seam_dir="$out_dir/$prefix-c1-seams"
+python3 tools/host-lisp/v11_c1_entry_seams.py --emit "$c1_seam_dir"
+tab=$(printf '\t')
+while IFS="$tab" read -r seam expect forms; do
+  run_forms_phase "c1-seam-$seam" "$expect" "$forms"
+done < "$c1_seam_dir/cases.tsv"
 
 run_stack_readback "Post-IDE-Stack/Wipe-Readback" "stack-post-ide"
 

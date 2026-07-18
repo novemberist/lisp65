@@ -1,0 +1,71 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-wave1-c1-first-form-capacity-truth-correction",
+  "status": "owner-authorized-for-product-promotion",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "f5a58e7c1990df778d05f08684e7884b41ce0f7b",
+  "probe_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-wave1-c1-first-form-correction-probe.json",
+    "sha256": "1ac95bf1969138f52e7ed232d70c034704c18632a97125a2af116331901e9f41"
+  },
+  "classification": "capacity-claim-truth-correction-not-a-product-debit",
+  "capacity": {
+    "bank": {
+      "previously_claimed_headroom_bytes": 337,
+      "corrected_headroom_bytes": 337,
+      "authorized_product_delta_bytes": 0
+    },
+    "ext": {
+      "previously_claimed_headroom_bytes": 25161,
+      "corrected_headroom_bytes": 25161,
+      "floor_bytes": 16384,
+      "corrected_margin_bytes": 8777,
+      "authorized_product_delta_bytes": 0
+    },
+    "symbols": {
+      "previously_claimed_headroom": 388,
+      "corrected_headroom": 297,
+      "required_headroom": 32,
+      "claim_correction": -91,
+      "authorized_product_delta": 0
+    },
+    "namepool": {
+      "previously_claimed_headroom_bytes": 5625,
+      "corrected_headroom_bytes": 4594,
+      "required_headroom_bytes": 384,
+      "claim_correction_bytes": -1031,
+      "authorized_product_delta_bytes": 0
+    },
+    "directory": {
+      "previously_claimed_headroom": 168,
+      "corrected_headroom": 168,
+      "authorized_product_delta": 0
+    },
+    "overlay": {
+      "previously_claimed_headroom_bytes": 80,
+      "corrected_headroom_bytes": 80,
+      "authorized_product_delta_bytes": 0
+    }
+  },
+  "proof": {
+    "cold_first_form_result": 42,
+    "c1_plan_new_symbols": 53,
+    "c1_plan_new_name_bytes": 418,
+    "identical_second_form_symbol_delta": 0,
+    "identical_second_form_namepool_delta_bytes": 0,
+    "standard_composition_used_symbols": 455,
+    "standard_composition_used_namepool_bytes": 5614,
+    "resident_prg_size_delta_bytes": 0,
+    "boot_overlay_byte_identical": true
+  },
+  "owner_decision": "Authorize the ledger repin to 297 free symbols and 4594 free namepool bytes as a truth correction, not a debit. The old values were understated usage caused by zero-validation; future planning and promotion claims use the measured steady-state values.",
+  "promotion_conditions": {
+    "correction_receipt_sha_binding": "required",
+    "first_cold_c1_form_hardware_assertion": "permanent",
+    "repeat_leak_delta": "zero",
+    "regular_repin_chain": "R4-R5-R6-and-single-device-G6-required",
+    "historical_seals": "never-amend"
+  },
+  "claim_limit": "This authorization corrects capacity claims and permits promotion of the measured C1 first-form fixes. It does not preserve stopped receipts, promote a product set, or claim R4/R5/R6/G6 acceptance."
+}

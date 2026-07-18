@@ -1,0 +1,75 @@
+{
+  "format": "lisp65-v11-surface-delivery-parity-v1",
+  "version": 1,
+  "status": "active",
+  "profile": "dialect-v2",
+  "surface": "config/dialect-v2-surface.json",
+  "dialect_contract": "config/dialect-v2-contract.json",
+  "language_reference": "docs/language-reference.md",
+  "native_registry": "config/v2-native-function-registry.json",
+  "artifact_closure": "config/v2-workbench-artifact-closure.json",
+  "workbench_profile": "config/workbench.mk",
+  "resident_manifest": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+  "library_manifests": [
+    "build/bytecode/dialect-v2/libs/ide.manifest.json",
+    "build/bytecode/dialect-v2/libs/idex.manifest.json",
+    "build/bytecode/dialect-v2/libs/m65d.manifest.json"
+  ],
+  "profile_exclusions": [
+    {
+      "name": "screen-write-string",
+      "kind": "callprim",
+      "value": 12,
+      "required_define": "LISP65_SCREEN_WRITE_STRING",
+      "fallback_resident_name": "screen-bulk-p",
+      "reason": "Dialect-wide optional m65-screen capability; the canonical Workbench profile deliberately ships the per-character fallback instead of the resident bulk primitive."
+    }
+  ],
+  "claims": [
+    {
+      "name": "eval",
+      "kind": "function",
+      "authority": {
+        "kind": "capability-surface",
+        "path": "config/dialect-v2-eval-apply-funcall-block.json",
+        "resolution": {
+          "path": "config/dialect-migration-contract.json",
+          "decision_id": "eval-apply-funcall-surface",
+          "status": "resolved"
+        }
+      }
+    },
+    {
+      "name": "filter",
+      "kind": "function",
+      "authority": {
+        "kind": "migration-new-name",
+        "path": "config/dialect-migration-contract.json",
+        "target_role": "core",
+        "target_delivery": "bank5-preload",
+        "target_library": null
+      },
+      "implementation": {
+        "path": "lib/dialect-v2/lists-core.lisp",
+        "required_defuns": [
+          "%v2-filter-into",
+          "%v2-reverse-into",
+          "filter"
+        ]
+      }
+    },
+    {
+      "name": "read-from-string",
+      "kind": "function",
+      "authority": {
+        "kind": "owner-feature-contract",
+        "path": "config/v11-g-green-surface-contract.json",
+        "status": "owner-approved-wave2-scope-corrected"
+      },
+      "implementation": {
+        "path": "lib/dialect-v2/eval-runtime.lisp",
+        "required_defuns": ["read-from-string"]
+      }
+    }
+  ]
+}

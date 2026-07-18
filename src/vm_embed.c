@@ -59,6 +59,37 @@ static uint16_t vm_ext_code_initial(void) {
 uint16_t vm_ext_code_watermark(void) {
     return ext_code_init ? ext_code_hw : vm_ext_code_initial();
 }
+#ifdef LISP65_C1_COMPILER_TIER
+#if defined(__mos__) && defined(LISP65_RUNTIME_OVERLAY)
+#define C1_EXT_FN __attribute__((section(".lisp65_rt_c1_compiler"), noinline))
+#else
+#define C1_EXT_FN
+#endif
+C1_EXT_FN uint8_t vm_ext_code_truncate(uint16_t watermark) {
+    uint16_t initial = vm_ext_code_initial();
+    uint16_t current = vm_ext_code_watermark();
+    /* A running expression occupies [ext_code_tsp, VM_EXT_CODE_LIMIT), while
+     * persistent code occupies [initial, current).  C1 retirement is safe
+     * under a nested eval frame precisely while those ranges do not overlap.
+     * Keep the transient stack intact: only the persistent high-water mark is
+     * rolled back. */
+    if (watermark < initial || watermark > current ||
+        (ext_code_tsp && current > ext_code_tsp))
+        return 0;
+    ext_code_init = 1; /* also clears the probe-only lease ownership bit */
+    ext_code_hw = watermark;
+    return 1;
+}
+#ifdef LISP65_C1_LEASE_ALLOC_GUARD
+C1_EXT_FN void vm_ext_code_lease_begin(void) {
+    ext_code_init |= 0x80u;
+}
+C1_EXT_FN uint8_t vm_ext_code_lease_active(void) {
+    return (uint8_t)((ext_code_init & 0x80u) != 0);
+}
+#endif
+#undef C1_EXT_FN
+#endif
 uint8_t vm_ext_code_preview(uint16_t len, uint16_t *base) {
     uint16_t at = vm_ext_code_watermark();
     if (!base || (uint32_t)at + len > (uint32_t)(ext_code_tsp ? ext_code_tsp : VM_EXT_CODE_LIMIT))
@@ -73,6 +104,13 @@ uint16_t vm_ext_code_alloc(uint16_t len, uint8_t persist) {
         ext_code_hw = vm_ext_code_initial();
     }
     at = ext_code_hw;
+#if defined(LISP65_C1_COMPILER_TIER) && defined(LISP65_C1_LEASE_ALLOC_GUARD)
+    /* The overlay sets bit 7 only after exact compiler validation. Persistent
+     * callers must retire first; appending above a lease would make rollback
+     * erase foreign code. The tag reuses the existing init byte. */
+    if (persist && (ext_code_init & 0x80u))
+        return 0xFFFF;
+#endif
     if ((unsigned long)at + len > (unsigned long)(ext_code_tsp ? ext_code_tsp : VM_EXT_CODE_LIMIT))
         return 0xFFFF;   /* Kreuzung: nie in einen LAUFENDEN transienten Main schreiben */
     if (persist) ext_code_hw = (uint16_t)(at + len);
@@ -96,11 +134,31 @@ void vm_ext_code_pop_transient(uint16_t at, uint16_t len) {
         if (ext_code_tsp >= VM_EXT_CODE_LIMIT) ext_code_tsp = 0;   /* Stapel leer */
     }
 }
+#ifdef LISP65_VM_EXT_CODE_TEST
+/* Host-only negative-fixture seam.  Normal allocators cannot create an
+ * overlap; the test deliberately injects one to prove truncate fails closed. */
+void vm_ext_code_test_state(uint16_t watermark, uint16_t transient) {
+    ext_code_init = 1;
+    ext_code_hw = watermark;
+    ext_code_tsp = transient;
+}
+uint16_t vm_ext_code_test_transient(void) {
+    return ext_code_tsp;
+}
+#ifdef LISP65_C1_LEASE_ALLOC_GUARD
+uint8_t vm_ext_code_test_lease(void) {
+    return (uint8_t)((ext_code_init & 0x80u) != 0);
+}
+#endif
+#endif
 #ifdef LISP65_STDLIB_EXT_METADATA
 /* Exakten Startpunkt setzen (Boot): vm_load_ext_metadata kennt aus dem L65M-Header die Trailer-
  * Laenge -> Datei-Ende = md_base + metadata_bytes. Der lazy blob_len-Fallback oben deckt nur den
  * PRG-Metadaten-Fall (dort liegt im EXT wirklich nur der Code-Blob). */
-static void vm_ext_code_seed(uint16_t at) { ext_code_init = 1; ext_code_hw = at; }
+static void vm_ext_code_seed(uint16_t at) {
+    ext_code_init = 1;
+    ext_code_hw = at;
+}
 #ifdef LISP65_DIRECTORY_ONLY_HARNESS
 void vm_directory_only_test_reclaim_boot_metadata(void) {
     vm_ext_code_seed((uint16_t)(lisp65_stdlib_off + lisp65_stdlib_blob_len));
@@ -246,7 +304,7 @@ static void vm_resolve_littab_symbols(void) { /* keine Metadaten (Mock-Test): No
  * kein $C000-File-Problem, Heap-Budget frei. Alles kalter Boot-Pfad: viele kleine DMA-Reads ok. */
 #include "stdlib-p0.h"   /* LISP65_BC_LIT_*-Kind-Codes (ungegated im generierten Header) */
 
-#define MD_NAME_MAX 34   /* Spiegel von SYM_NAME_MAX (symbol.c): new_symbol-Deckel 32 + NUL */
+#define MD_NAME_MAX LISP65_SYMBOL_NAME_BUFFER
 
 static uint16_t md_base;                 /* Trailer-Start im Bank-Fenster (= off + blob_len)  */
 static uint16_t md_index, md_nodes, md_strings;   /* Sektions-Offsets aus dem Header          */
@@ -500,6 +558,7 @@ l65m_status vm_preflight_lib_ext(const l65m_source *source, l65m_plan *plan) {
             || work.transport_status != L65M_OV_TRANSPORT_OK)
             return L65M_ERR_STATE;
         if (result != L65M_OK) return (l65m_status)result;
+        if (work.finished) break;
         if (work.repeat_phase || work.expected_phase != (uint8_t)(phase + 1u))
             return L65M_ERR_STATE;
     }

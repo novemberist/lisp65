@@ -1,0 +1,21 @@
+{
+  "format": "lisp65-capacity-debit-authorization-v1",
+  "id": "v11-wave2-r3-aggregate-capacity",
+  "status": "authorized",
+  "authorized_on": "2026-07-18",
+  "timing": "pre-authorized",
+  "scope": "r3-cold-start-product-block",
+  "authorized_debits": {},
+  "required_floors": {
+    "bank": 0,
+    "ext": 16384,
+    "symbols": 32,
+    "namepool": 384,
+    "directory": 32
+  },
+  "attribution": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-wave2-scope-corrected-repin-receipt.json",
+    "sha256": "b4b277dbeb492ae4bdb5cbc683f72d5baccacc1f92aa019e2e2ba83cf736896c"
+  },
+  "decision": "The owner-authorized Wave-2 scope-corrected repin leaves 371 bytes of Bank reserve above the 1536-byte release floor. Against the sealed v1.0.1 baseline of 332 bytes this is a 39-byte aggregate credit, so no aggregate debit is carried; EXT, symbols, Namepool and Directory are also credits or unchanged. The owner explicitly repinned 1907 bytes of Bank reserve, 320 free symbols and 4897 Namepool bytes and authorized the fresh R3/R4/R5/R6 hardware acceptance chain on 2026-07-18."
+}

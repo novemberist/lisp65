@@ -19,7 +19,7 @@ SURFACE = ROOT / "config" / "dialect-v2-surface.json"
 HEADER = ROOT / "src" / "v2_native_function_dispatch.h"
 PY_VIEWS = ROOT / "tools" / "host-lisp" / "v2_native_function_views_generated.py"
 FIXTURE = ROOT / "tests" / "bytecode" / "dialect-v2" / "native-function-routes" / "cases.generated.json"
-REPORT = ROOT / "tests" / "bytecode" / "dialect-v2" / "evidence" / "capability-carrier" / "primitive-view-cross-parity.json"
+REPORT = ROOT / "tests" / "bytecode" / "dialect-v2" / "contracts" / "primitive-view-cross-parity.json"
 FORMAT = "lisp65-v2-native-function-registry-v2"
 KINDS = {"fold-identity": 1, "fold-required": 2, "callprim": 3, "opfn": 4, "boundp": 5}
 VIEWS = ["callprim", "apply", "function-kind", "compile-repl"]
@@ -170,7 +170,9 @@ def validate(registry: dict, ledger: dict) -> dict:
         if name in names or name in restricted or identities.get(ident) != name or ident not in active:
             raise RegistryError(f"restricted_primitives[{index}] invalid classification")
         views = row["restricted_views"]
-        if not isinstance(views, list) or not views or not set(views) <= {"apply", "function-kind"}:
+        if not isinstance(views, list) or not views or not set(views) <= {
+            "apply", "function-kind", "compile-repl"
+        }:
             raise RegistryError(f"restricted_primitives[{index}] invalid view restriction")
         if not isinstance(row["reason"], str) or not row["reason"]:
             raise RegistryError(f"restricted_primitives[{index}] missing reason")
@@ -234,8 +236,12 @@ def validate(registry: dict, ledger: dict) -> dict:
     py_ids = _literal_dict(ROOT / "tools" / "host-lisp" / "bytecode_p0.py", "PRIM_IDS")
     if {py_ids[ident]: ident for ident in active} != all_active:
         raise RegistryError("Python CALLPRIM identity mirror drift")
+    compile_repl = {
+        name: ident for name, ident in all_active.items()
+        if "compile-repl" not in set(restricted.get(name, {}).get("restricted_views", []))
+    }
     lcc_rows = _lcc_rows((ROOT / "lib" / "dialect-v2" / "lcc-profile.lisp").read_text(encoding="utf-8"))
-    if {name: ident for name, ident in lcc_rows.items() if ident in active} != all_active:
+    if {name: ident for name, ident in lcc_rows.items() if ident in active} != compile_repl:
         raise RegistryError("LCC CALLPRIM view drift")
     eval_rows = _eval_primitive_rows((ROOT / "src" / "eval.c").read_text(encoding="utf-8"))
     expected_eval_rows = {row["name"]: row["tree_id"] for row in entries}
@@ -257,6 +263,7 @@ def validate(registry: dict, ledger: dict) -> dict:
         "restricted": restricted,
         "aliases": aliases,
         "active": all_active,
+        "compile_repl": compile_repl,
         "v1_active": {identities[ident]: ident for ident in v1["prim_ids"]["active"]},
     }
 
@@ -288,7 +295,7 @@ def header_text(registry: dict, state: dict) -> str:
         "#define LISP65_V2_NATIVE_KIND_OPFN 4",
         "",
     ]
-    _rows_macro(lines, "LISP65_V2_CALLPRIM_ACTIVE", sorted(state["active"].items(), key=lambda item: item[1]))
+    _rows_macro(lines, "LISP65_V2_CALLPRIM_ACTIVE", sorted(state["compile_repl"].items(), key=lambda item: item[1]))
     lines.append("")
     lines.append("#define LISP65_V2_NATIVE_FUNCTION_TREE_ROWS(X) \\")
     for index, row in enumerate(entries):

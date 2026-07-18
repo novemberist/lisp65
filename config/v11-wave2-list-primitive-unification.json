@@ -1,0 +1,29 @@
+{
+  "format": "lisp65-v11-wave2-list-primitive-unification-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "probe-passed-awaiting-capacity-authorization",
+  "scope": [
+    "nreverse",
+    "rplaca",
+    "rplacd"
+  ],
+  "shared_core": {
+    "source": "src/mem.c",
+    "functions": [
+      "list_nreverse",
+      "list_rplaca",
+      "list_rplacd"
+    ],
+    "rule": "Treewalk apply_prim and CALLPRIM vm_callprim must delegate mutation to the same implementation. Each route retains its own strict-arity check and its established error channel."
+  },
+  "semantic_gates": {
+    "treewalker_and_p0": "43 cases across four routes/engines, 172 evaluations",
+    "python_p0": "8 cases, 16 route evaluations",
+    "lcc": "43 cases, 86 evaluations",
+    "registry_cross_parity": "61 active primitive IDs, 207 cases, four engines, 828 evaluations",
+    "type_errors": "rplaca and rplacd reject non-cons operands before entering the shared mutation core"
+  },
+  "capacity_rule": "A real candidate link must be compared with an isolated link of baseline commit 5720f16. Every frozen capacity dimension is reported even when unchanged.",
+  "claim_limit": "The probe proves shared C mutation semantics, existing route contracts, and real-link capacity only. It does not promote a product candidate or reuse hardware evidence."
+}

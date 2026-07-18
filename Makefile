@@ -177,6 +177,16 @@ M65HWBAMALLOCPRG := build/lisp65-mega65-hw-bam-alloc-smoke.prg
 M65HWCHAINWRITEPRG := build/lisp65-mega65-hw-chain-write-smoke.prg
 M65HWDIRWRITEPRG := build/lisp65-mega65-hw-dir-write-smoke.prg
 M65HWSAVENEWPRG := build/lisp65-mega65-hw-save-new-smoke.prg
+R5_PERSISTENCE_FIXTURE_TOOL := tools/host-lisp/r5_persistence_fixtures.py
+R5_PERSISTENCE_FIXTURE_CONFIG := config/r5-persistence-fixtures.json
+R5_FIXED_TRACK := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.track)
+R5_FIXED_FIRST := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.first_sector)
+R5_FIXED_SECOND := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get fixed_write.second_sector)
+R5_SAVE_NEW_FIRST := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new.first_sector)
+R5_SAVE_NEW_SECOND := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new.second_sector)
+R5_SAVE_SCAN_RESERVE := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.reserved_sector)
+R5_SAVE_SCAN_FIRST := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.first_sector)
+R5_SAVE_SCAN_SECOND := $(shell python3 $(R5_PERSISTENCE_FIXTURE_TOOL) get save_new_scan.second_sector)
 M65HWSAVENEWSCANPRG := build/lisp65-mega65-hw-save-new-scan-smoke.prg
 M65HWSAVENEWVARPRG := build/lisp65-mega65-hw-save-new-var-smoke.prg
 BYTECODE_VM_M65_OBJ := build/vm-mega65.o
@@ -231,21 +241,21 @@ R5_GLOBAL_G5_HW_PACKAGE := $(R5_GLOBAL_G5_DIR)/hw-package
 R5_GLOBAL_G5_NEGATIVE_PROOF := $(R5_GLOBAL_G5_DIR)/workbench-verifier-negative-proof.json
 R5_GLOBAL_G5_PREFLIGHT_BUILD := $(R5_GLOBAL_G5_DIR)/static-preflight-receipt.json
 R5_GLOBAL_G5_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/r5/global-g5-static-preflight-receipt.json
-R5_GLOBAL_G5_RUN_ID := r5-run-20260715-13
+R5_GLOBAL_G5_RUN_ID := r5-run-20260718-wave2-02
 R5_GLOBAL_G5_EVIDENCE := $(R5_GLOBAL_G5_DIR)/evidence/$(R5_GLOBAL_G5_RUN_ID)
 R5_GLOBAL_G5_BOOT_WAIT_SEC := 8
-R5_GLOBAL_G5_PRODUCT_SET := c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165
+R5_GLOBAL_G5_PRODUCT_SET := 5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6
 R5_GLOBAL_G5_CLOSURE_SET = $(shell python3 -c 'import json; print(json.load(open("$(R5_GLOBAL_G5_CLOSURE)"))["closure_set_sha256"])' 2>/dev/null)
 R5_GLOBAL_G5_PRODUCT_PREFIX := $(R5_GLOBAL_G5_PRODUCT)/build/products/workbench/overlay-stack-guard
 R6_SHIP_DIR := build/r6/ship
 R6_SHIP_SECOND_DIR := build/r6/ship-second
 R6_SHIP_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
 R6_SHIP_PACKED_ON ?= $(shell git show -s --format=%cs $(R6_SHIP_SOURCE_COMMIT) 2>/dev/null)
-R6_SHIP_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-ship-101-packer-receipt.json
+R6_SHIP_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-ship-wave2-packer-receipt.json
 R6_G6_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
-R6_G6_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-101-static-preflight-receipt.json
-R6_G6_PROFILE_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-101-profile-applicability-receipt.json
-R6_G6_RUN_DIR := build/r6/g6/run-20260715-02-preflight-212f957
+R6_G6_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave2-static-preflight-receipt.json
+R6_G6_PROFILE_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave2-profile-applicability-receipt.json
+R6_G6_RUN_DIR := build/r6/g6/run-20260718-wave2-02
 R6_G6_TOP_RECEIPT := $(R6_G6_RUN_DIR)/g6-hardware-receipt.json
 R6_G6_SEAL_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
 R6_G6_SEALED_ON ?= $(shell git show -s --format=%cs $(R6_G6_SEAL_SOURCE_COMMIT) 2>/dev/null)
@@ -261,12 +271,13 @@ R5_GLOBAL_G5_WORKBENCH_ENV = \
 	MVP_VM_SHIP_PRG='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.prg' \
 	MVP_VM_SHIP_BLOB='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.blob.bin' \
 	MVP_VM_SHIP_OVERLAYS='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.overlays.bin' \
+	MVP_VM_SHIP_SHELF='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.shelf.bin' \
 	MVP_VM_SHIP_D81='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.d81'
 V2_NATIVE_FUNCTION_REGISTRY := config/v2-native-function-registry.json
 V2_NATIVE_FUNCTION_FIXTURE := tests/bytecode/dialect-v2/native-function-routes/cases.generated.json
 V2_NATIVE_FUNCTION_RECEIPT := tests/bytecode/dialect-v2/evidence/capability-carrier/native-function-route-matrix.json
 V2_NATIVE_FUNCTION_VIEWS := tools/host-lisp/v2_native_function_views_generated.py
-V2_NATIVE_FUNCTION_PARITY := tests/bytecode/dialect-v2/evidence/capability-carrier/primitive-view-cross-parity.json
+V2_NATIVE_FUNCTION_PARITY := tests/bytecode/dialect-v2/contracts/primitive-view-cross-parity.json
 V2_NATIVE_FUNCTION_HOST := build/equivalence/dialect-v2-native-function-check
 V2_LCC_COMPILE_ERROR_RECEIPT := tests/bytecode/dialect-v2/evidence/capability-carrier/invalid-parameter-list-verdict.json
 V2_WORKBENCH_SYMBOL_DIFF_POLICY := config/v2-workbench-symbol-diff-policy.json
@@ -291,6 +302,7 @@ BYTECODE_IDE_BASELINE_LIB_SUITE := tests/bytecode/libs/p0-ide-full-lib.json
 BYTECODE_IDE_LIB_SUITE := tests/bytecode/libs/p0-ide-core-lib.json
 BYTECODE_IDE_EXTRA_LIB_SUITE := tests/bytecode/libs/p0-ide-extra-lib.json
 BYTECODE_M65D_LIB_SUITE := tests/bytecode/libs/p0-m65d-lib.json
+BYTECODE_BUFFER_LIB_SUITE := tests/bytecode/libs/p0-buffer-lib.json
 BYTECODE_FIXED_SUITE := tests/bytecode/stdlib/p0-fixed-point-subset.json
 BYTECODE_STRING_POLISH_SUITE := tests/bytecode/stdlib/p0-string-polish-subset.json
 BYTECODE_EQUIV_SUITES := tests/bytecode/equivalence/p0-eval-bytecode.json
@@ -319,6 +331,8 @@ BYTECODE_IDE_LIB_PREFIX := build/bytecode/libs/ide
 BYTECODE_IDE_FULL_LIB_PREFIX := build/bytecode/libs/ide-full
 BYTECODE_IDE_EXTRA_LIB_PREFIX := build/bytecode/libs/idex
 BYTECODE_M65D_LIB_PREFIX := build/bytecode/libs/m65d
+BYTECODE_BUFFER_LIB_PREFIX := build/bytecode/dialect-v2/libs/buffer
+BYTECODE_BUFFER_LIB_EXT_BLOB := $(BYTECODE_BUFFER_LIB_PREFIX).ext.bin
 BYTECODE_FORMAT_LIB_SUITE := tests/bytecode/libs/p0-format-lib.json
 BYTECODE_FIXED_LIB_SUITE := tests/bytecode/libs/p0-fixed-lib.json
 BYTECODE_STRINGS_EXTRA_LIB_SUITE := tests/bytecode/libs/p0-strings-extra-lib.json
@@ -646,7 +660,8 @@ include mk/runtime-core-v2-proof.mk
 .PHONY: legacy-c64 legacy-prelude-c64 legacy-run-c64 legacy-c64-check legacy-xc64-smoke legacy-xc64-prelude-smoke legacy-xc64-prelude-gc-smoke legacy-xc64-load-source-smoke legacy-xc64-string-smoke legacy-xc64-stdlib-smoke legacy-xc64-format-smoke legacy-xc64-control-smoke
 .PHONY: m65-disk-alloc-load-check m65-disk-alloc-var-load-check workbench-d81-dir-write-diff-selftest workbench-d81-save-new-diff-selftest workbench-d81-save-new-scan-diff-selftest workbench-d81-save-new-var-diff-selftest hw-workbench-dir-write-smoke-prg hw-workbench-dir-write-smoke hw-workbench-dir-write-smoke-dry-run hw-workbench-save-new-smoke-prg hw-workbench-save-new-smoke hw-workbench-save-new-smoke-dry-run hw-workbench-save-new-scan-smoke-prg hw-workbench-save-new-scan-smoke hw-workbench-save-new-scan-smoke-dry-run hw-workbench-save-new-var-smoke-prg hw-workbench-save-new-var-smoke hw-workbench-save-new-var-smoke-dry-run
 .PHONY: mvp-ship-artifacts mvp-ship-wip workbench-ship-artifacts-check workbench-ship-verifier-selftest workbench-reproducibility-check verify-ship print-workbench-resolved-profile bytecode-p0-workbench-stdlib-artifacts
-.PHONY: bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check ide-capacity-selftest ide-capacity-check m65d-blank-d81-oracle-selftest bytecode-p0-m65d-lib-check bytecode-p0-m65d-lib-artifacts
+.PHONY: bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check ide-capacity-selftest ide-capacity-check m65d-blank-d81-oracle-selftest bytecode-p0-m65d-lib-check bytecode-p0-m65d-lib-artifacts bytecode-p0-buffer-lib-check bytecode-p0-buffer-lib-artifacts
+.PHONY: v11-repl-banner-vm-check
 all: $(M65PRG)
 
 $(M65PRG): $(SRCS) | build
@@ -1378,8 +1393,9 @@ hw-workbench-bam-read-smoke-dry-run: mvp-ship-artifacts
 	sh scripts/hw-workbench-bam-read-smoke.sh --dry-run --no-build
 
 hw-workbench-bam-alloc-smoke-prg: $(M65HWBAMALLOCPRG)
-$(M65HWBAMALLOCPRG): scripts/hw-workbench-bam-alloc-main.c scripts/hw-mega65-hwops.h src/f011_context.h src/screen.c src/screen.h | build
-	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -Isrc -Iscripts \
+$(M65HWBAMALLOCPRG): scripts/hw-workbench-bam-alloc-main.c scripts/hw-mega65-hwops.h src/f011_context.h src/screen.c src/screen.h $(R5_PERSISTENCE_FIXTURE_TOOL) $(R5_PERSISTENCE_FIXTURE_CONFIG) | build
+	python3 $(R5_PERSISTENCE_FIXTURE_TOOL) check
+	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -DR5_FIXED_TRACK=$(R5_FIXED_TRACK) -DR5_FIXED_FIRST=$(R5_FIXED_FIRST) -Isrc -Iscripts \
 		scripts/hw-workbench-bam-alloc-main.c src/screen.c -o $@
 	@sz=$$(stat -c%s "$@"); end=$$((0x2001 + $$sz - 2)); \
 		printf 'built %s (%s bytes, prg_file_end $$%04x)' "$@" "$$sz" "$$end"; \
@@ -1395,8 +1411,9 @@ hw-workbench-bam-alloc-smoke-dry-run: mvp-ship-artifacts $(M65HWBAMALLOCPRG)
 	sh scripts/hw-workbench-bam-alloc-smoke.sh --dry-run --no-build
 
 hw-workbench-chain-write-smoke-prg: $(M65HWCHAINWRITEPRG)
-$(M65HWCHAINWRITEPRG): scripts/hw-workbench-chain-write-main.c $(M3_CHAIN_GEN) scripts/hw-mega65-hwops.h src/f011_context.h src/screen.c src/screen.h | build
-	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -Isrc -Iscripts -Ibuild/hw \
+$(M65HWCHAINWRITEPRG): scripts/hw-workbench-chain-write-main.c $(M3_CHAIN_GEN) scripts/hw-mega65-hwops.h src/f011_context.h src/screen.c src/screen.h $(R5_PERSISTENCE_FIXTURE_TOOL) $(R5_PERSISTENCE_FIXTURE_CONFIG) | build
+	python3 $(R5_PERSISTENCE_FIXTURE_TOOL) check
+	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -DR5_FIXED_TRACK=$(R5_FIXED_TRACK) -DR5_FIXED_FIRST=$(R5_FIXED_FIRST) -DR5_FIXED_SECOND=$(R5_FIXED_SECOND) -Isrc -Iscripts -Ibuild/hw \
 		scripts/hw-workbench-chain-write-main.c src/screen.c -o $@
 	@sz=$$(stat -c%s "$@"); end=$$((0x2001 + $$sz - 2)); \
 		printf 'built %s (%s bytes, prg_file_end $$%04x)' "$@" "$$sz" "$$end"; \
@@ -1412,8 +1429,9 @@ hw-workbench-chain-write-smoke-dry-run: mvp-ship-artifacts $(M65HWCHAINWRITEPRG)
 	sh scripts/hw-workbench-chain-write-smoke.sh --dry-run --no-build
 
 hw-workbench-dir-write-smoke-prg: $(M65HWDIRWRITEPRG)
-$(M65HWDIRWRITEPRG): scripts/hw-workbench-dir-write-main.c $(M4_DIR_GEN) scripts/hw-mega65-hwops.h src/f011_context.h src/screen.c src/screen.h | build
-	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -Isrc -Iscripts -Ibuild/hw \
+$(M65HWDIRWRITEPRG): scripts/hw-workbench-dir-write-main.c $(M4_DIR_GEN) scripts/hw-mega65-hwops.h src/f011_context.h src/screen.c src/screen.h $(R5_PERSISTENCE_FIXTURE_TOOL) $(R5_PERSISTENCE_FIXTURE_CONFIG) | build
+	python3 $(R5_PERSISTENCE_FIXTURE_TOOL) check
+	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -DR5_FIXED_TRACK=$(R5_FIXED_TRACK) -DR5_FIXED_FIRST=$(R5_FIXED_FIRST) -DR5_FIXED_SECOND=$(R5_FIXED_SECOND) -Isrc -Iscripts -Ibuild/hw \
 		scripts/hw-workbench-dir-write-main.c src/screen.c -o $@
 	@sz=$$(stat -c%s "$@"); end=$$((0x2001 + $$sz - 2)); \
 		printf 'built %s (%s bytes, prg_file_end $$%04x)' "$@" "$$sz" "$$end"; \
@@ -2412,7 +2430,7 @@ $(eval $(call V2_CAPABILITY_CARRIER_G5_RUNTIME_PHASE_TARGET,bitflip))
 $(eval $(call V2_CAPABILITY_CARRIER_G5_RUNTIME_PHASE_TARGET,build-id-mismatch))
 
 # R5 consumes only the registered R4 product seal.  Runtime Core and all
-# helper PRGs below are test-closure members and never extend the 13-artifact
+# helper PRGs below are test-closure members and never extend the product
 # product identity.
 .PHONY: r5-global-g5-selftest r5-global-g5-materialize r5-global-g5-runtime-carrier \
 	r5-global-g5-test-media r5-global-g5-test-closure r5-global-g5-candidate \
@@ -2422,6 +2440,7 @@ $(eval $(call V2_CAPABILITY_CARRIER_G5_RUNTIME_PHASE_TARGET,build-id-mismatch))
 
 r5-global-g5-selftest:
 	python3 tools/host-lisp/dialect_v2_workbench_g5_verify.py selftest
+	python3 tools/host-lisp/hw_jtag_repl_harness_test.py
 	python3 tools/host-lisp/r5_g5_case_receipts.py selftest
 	python3 tools/host-lisp/r5_global_g5.py selftest
 
@@ -2598,7 +2617,7 @@ r5-global-g5-preflight-check: r5-global-g5-selftest
 r5-global-g5-preflight-ready: r5-global-g5-preflight-check
 
 define R5_GLOBAL_G5_CASE_GUARD
-	@test '$(R5_GLOBAL_G5_PRODUCT_SET)' = 'c41b9643ada1195f48c384d9d582a3d870a68c4ccc3dee9500dc86a7f009c165'
+	@test '$(R5_GLOBAL_G5_PRODUCT_SET)' = '5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6'
 	@test -n '$(R5_GLOBAL_G5_CLOSURE_SET)'
 	@test -n '$(R5_GLOBAL_G5_CYCLE_ID)' || \
 		{ printf '%s\n' 'Set R5_GLOBAL_G5_CYCLE_ID to the Workbench run id or fresh Runtime power-cycle id.' >&2; exit 2; }
@@ -2635,6 +2654,7 @@ r5-global-g5-workbench-overlay-stack-guard: r5-global-g5-preflight-ready
 		WORKBENCH_OVERLAY_RESIDENT_PRG='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.prg' \
 		WORKBENCH_OVERLAY_PRELOAD='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.blob.bin' \
 		WORKBENCH_RUNTIME_OVERLAY='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.overlays.bin' \
+		WORKBENCH_ATTIC_SHELF='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.shelf.bin' \
 		WORKBENCH_OVERLAY_ELF='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-workbench-overlay-linked.prg.elf' \
 		WORKBENCH_OVERLAY_D81='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.d81' \
 		WORKBENCH_SHIP_MANIFEST='$(R5_GLOBAL_G5_HW_PACKAGE)/manifest.json' \
@@ -2645,6 +2665,14 @@ r5-global-g5-workbench-overlay-stack-guard: r5-global-g5-preflight-ready
 	$(call R5_GLOBAL_G5_PACK_WORKBENCH,workbench-ux,overlay-stack-guard,\
 		--evidence ship-receipt='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-ship-manifest-receipt.json' \
 		--evidence arith='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-arith-42.txt' \
+		--evidence c1-repl-direct='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-repl-direct.txt' \
+		--evidence c1-repl-warm='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-repl-warm.txt' \
+		--evidence c1-repl-definition-call='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-repl-definition-call.txt' \
+		--evidence c1-repl-latency='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-repl-latency.txt' \
+		--evidence c1-seam-lcc-run='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-seam-lcc-run.txt' \
+		--evidence c1-seam-eval='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-seam-eval.txt' \
+		--evidence c1-seam-eval-buffer='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-seam-eval-buffer.txt' \
+		--evidence c1-seam-compile-string='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-c1-seam-compile-string.txt' \
 		--evidence reader-recovery='$(R5_GLOBAL_G5_EVIDENCE)/workbench-overlay-stack-guard/r5-g5-overlay-stack-reader-recovery.txt')
 
 r5-global-g5-workbench-stdlib-runtime: r5-global-g5-preflight-ready
@@ -2656,7 +2684,7 @@ r5-global-g5-workbench-stdlib-runtime: r5-global-g5-preflight-ready
 		{ status=$$?; printf '%s\n' 'R5_PRODUCT_RESULT=FAIL case=workbench-ux/stdlib-runtime'; exit $$status; }
 	@printf '%s\n' 'R5 Workbench boot wait: $(R5_GLOBAL_G5_BOOT_WAIT_SEC)s before semantic input'
 	sleep '$(R5_GLOBAL_G5_BOOT_WAIT_SEC)'
-	scripts/hw-jtag-repl.sh --form '(+ 20 22)' --expect 42 --verified-input \
+	scripts/hw-jtag-repl.sh --form '(+ 20 22)' --expect 42 --expect-poll 8 --verified-input \
 		--prefix r5-g5-stdlib-runtime --out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-stdlib-runtime' || \
 		{ status=$$?; printf '%s\n' 'R5_PRODUCT_RESULT=FAIL case=workbench-ux/stdlib-runtime'; exit $$status; }
 	$(call R5_GLOBAL_G5_PRODUCT_PASS,workbench-ux/stdlib-runtime)
@@ -2699,6 +2727,7 @@ r5-global-g5-workbench-bam-alloc: r5-global-g5-preflight-ready
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/bam-alloc)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWBAMALLOCPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-bam-alloc.prg' \
 		sh scripts/hw-workbench-bam-alloc-smoke.sh --no-build --remote-d81 L65R5A.D81 \
+		--track $(R5_FIXED_TRACK) --sector $(R5_FIXED_FIRST) \
 		--out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-bam-alloc' --prefix r5-g5-bam-alloc \
 		--before-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-bam-alloc/before.d81' \
 		--after-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-bam-alloc/after.d81' || \
@@ -2715,6 +2744,7 @@ r5-global-g5-workbench-chain-write: r5-global-g5-preflight-ready
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/chain-write)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWCHAINWRITEPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-chain-write.prg' \
 		sh scripts/hw-workbench-chain-write-smoke.sh --no-build --remote-d81 L65R5C.D81 \
+		--track $(R5_FIXED_TRACK) --first-sector $(R5_FIXED_FIRST) --second-sector $(R5_FIXED_SECOND) \
 		--out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-chain-write' --prefix r5-g5-chain-write \
 		--before-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-chain-write/before.d81' \
 		--after-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-chain-write/after.d81' || \
@@ -2732,6 +2762,7 @@ r5-global-g5-workbench-dir-write: r5-global-g5-preflight-ready
 	$(call R5_GLOBAL_G5_PRODUCT_PHASE,workbench-persistence/dir-write)
 	$(R5_GLOBAL_G5_WORKBENCH_ENV) M65HWDIRWRITEPRG='$(R5_GLOBAL_G5_HW_PACKAGE)/persistence-dir-write.prg' \
 		sh scripts/hw-workbench-dir-write-smoke.sh --no-build --remote-d81 L65R5D.D81 \
+		--track $(R5_FIXED_TRACK) --first-sector $(R5_FIXED_FIRST) --second-sector $(R5_FIXED_SECOND) \
 		--out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-dir-write' --prefix r5-g5-dir-write \
 		--before-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-dir-write/before.d81' \
 		--after-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-dir-write/after.d81' || \
@@ -2752,7 +2783,7 @@ r5-global-g5-workbench-save-new: r5-global-g5-preflight-ready
 		--out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new' --prefix r5-g5-save-new \
 		--before-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new/before.d81' \
 		--after-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new/after.d81' \
-		--first-sector 27 --second-sector 28 || \
+		--first-sector $(R5_SAVE_NEW_FIRST) --second-sector $(R5_SAVE_NEW_SECOND) || \
 		{ status=$$?; printf '%s\n' 'R5_PRODUCT_RESULT=FAIL case=workbench-persistence/save-new'; exit $$status; }
 	$(call R5_GLOBAL_G5_PRODUCT_PASS,workbench-persistence/save-new)
 	$(call R5_GLOBAL_G5_PACK_WORKBENCH,workbench-persistence,save-new,\
@@ -2770,7 +2801,7 @@ r5-global-g5-workbench-save-new-scan: r5-global-g5-preflight-ready
 		--out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new-scan' --prefix r5-g5-save-new-scan \
 		--before-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new-scan/before.d81' \
 		--after-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new-scan/after.d81' \
-		--name m6src --first-sector 28 --second-sector 29 --reserve-sector 27 || \
+		--name m6src --first-sector $(R5_SAVE_SCAN_FIRST) --second-sector $(R5_SAVE_SCAN_SECOND) --reserve-sector $(R5_SAVE_SCAN_RESERVE) || \
 		{ status=$$?; printf '%s\n' 'R5_PRODUCT_RESULT=FAIL case=workbench-persistence/save-new-scan'; exit $$status; }
 	$(call R5_GLOBAL_G5_PRODUCT_PASS,workbench-persistence/save-new-scan)
 	$(call R5_GLOBAL_G5_PACK_WORKBENCH,workbench-persistence,save-new-scan,\
@@ -3047,7 +3078,7 @@ $(L65M_NATIVE_LOADER_HOST): scripts/l65m-native-loader-main.c src/l65m_commit_ov
 l65m-native-loader-check: $(L65M_NATIVE_LOADER_HOST)
 	$(L65M_NATIVE_LOADER_HOST)
 
-$(L65M_V2_PRODUCT_HEADER): v2-workbench-artifacts tools/host-lisp/l65m_v2_product_cases.py \
+$(L65M_V2_PRODUCT_HEADER): v2-workbench-artifacts v11-c1-compiler-tier-artifacts tools/host-lisp/l65m_v2_product_cases.py \
 		config/directory-only-l65m-v2-implementation.json \
 		config/directory-only-interlibrary-api.json \
 		build/bytecode/dialect-v2/libs/ide.ext.bin \
@@ -3056,6 +3087,8 @@ $(L65M_V2_PRODUCT_HEADER): v2-workbench-artifacts tools/host-lisp/l65m_v2_produc
 		build/bytecode/dialect-v2/libs/idex.ext.bin \
 		build/bytecode/dialect-v2/libs/idex.manifest.json \
 		build/bytecode/dialect-v2/libs/idex.diagnostic-map.json \
+		build/bytecode/dialect-v2/libs/lcc.ext.bin \
+		build/bytecode/dialect-v2/libs/lcc.manifest.json \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.ext.bin \
 		build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json | build
 	python3 tools/host-lisp/l65m_v2_product_cases.py --emit-c-header $@
@@ -3089,6 +3122,36 @@ directory-only-emitter-selftest:
 l65m-v2-product-check: directory-only-emitter-selftest $(L65M_V2_PRODUCT_HOST)
 	$(L65M_V2_PRODUCT_HOST)
 	$(L65M_V2_PRODUCT_HOST) --transaction-matrix
+
+V11_REPL_BANNER_VM_HOST := build/v11-repl-banner-vm-host
+$(V11_REPL_BANNER_VM_HOST): scripts/v11-repl-banner-vm-main.c \
+		build/bytecode/dialect-v2/workbench/stdlib-p0.c \
+		build/bytecode/dialect-v2/workbench/stdlib-p0.h \
+		config/workbench.mk Makefile \
+		src/vm_embed.c src/vm.c src/mem.c src/symbol.c src/interrupt.c \
+		src/screen.c | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -O1 -g \
+		-fsanitize=address,undefined -fno-omit-frame-pointer \
+		-DLISP65_VM -DLISP65_RUNTIME_CORE -DLISP65_DIALECT_V2 -DLISP65_TREEWALK_STRIP \
+		-DLISP65_V2_CARRIER_CUT -DLISP65_VM_NATIVE_APPLY \
+		-DLISP65_V2_NATIVE_CAPABILITIES -DLISP65_V2_NATIVE_STRING_CODECS \
+		-DLISP65_V2_SERVICE_REGISTRY_CLOSED \
+		-DLISP65_V2_WORKBENCH_SERVICES -DLISP65_VM_SCREEN_PRIMS \
+		$(filter -DLISP65_SCREEN_WRITE_STRING,$(WORKBENCH_DEFINES)) \
+		-DLISP65_BYTECODE_STDLIB_EMIT_METADATA \
+		-DLISP65_EXT_HEAP -DLISP65_MARK_BITMAP -DLISP65_STRING_ARENA \
+		-DHEAP_CELLS=2048 -DEXT_CELLS=4096 -DGC_ROOTS=1024 \
+		-DMAX_SYM=752 -DNAMEPOOL=10208 -DVM_DIR_MAX=608 \
+		-DSTR_ARENA_SIZE=16384 -DVM_CODEBUF=56 \
+		-Isrc -Ibuild/bytecode/dialect-v2/workbench \
+		scripts/v11-repl-banner-vm-main.c \
+		build/bytecode/dialect-v2/workbench/stdlib-p0.c \
+		src/vm_embed.c src/vm.c src/mem.c src/symbol.c src/interrupt.c \
+		src/screen.c -o $@
+
+v11-repl-banner-vm-check: $(V11_REPL_BANNER_VM_HOST)
+	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
+		$(V11_REPL_BANNER_VM_HOST)
 
 $(FASL_EMIT_CHECK_HOST): scripts/fasl-emit-check-main.c lib/lcc.lisp lib/lcc-fasl.lisp src/eval.c src/vm.c src/mem.c src/symbol.c src/reader.c src/printer.c src/io.c src/interrupt.c src/screen.c | build
 	@mkdir -p $(@D)
@@ -3156,11 +3219,18 @@ bytecode-p0-ide-extra-lib-artifacts: bytecode-p0-ide-lib-artifacts | build/bytec
 m65d-blank-d81-oracle-selftest:
 	python3 tools/host-lisp/m65d_blank_d81_oracle.py --selftest
 
-bytecode-p0-m65d-lib-check: m65d-blank-d81-oracle-selftest
-	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_M65D_LIB_SUITE)
+bytecode-p0-m65d-lib-check: m65d-blank-d81-oracle-selftest v2-workbench-codemod
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check \
+		$(V2_WORKBENCH_SUITE_DIR)/p0-m65d-lib.json
 
 bytecode-p0-m65d-lib-artifacts: | build/bytecode/libs
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_M65D_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(BYTECODE_M65D_LIB_SUITE)
+
+bytecode-p0-buffer-lib-check: v2-native-function-registry-check v2-workbench-artifacts
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check $(BYTECODE_BUFFER_LIB_SUITE)
+
+bytecode-p0-buffer-lib-artifacts: bytecode-p0-buffer-lib-check | build/bytecode/dialect-v2/libs
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts $(BYTECODE_BUFFER_LIB_PREFIX) --artifact-role disk-lib --base-addr 0x000000 $(BYTECODE_BUFFER_LIB_SUITE)
 
 bytecode-p0-ide-lib-d81: bytecode-p0-ide-lib-artifacts bytecode-p0-ide-extra-lib-artifacts bytecode-p0-m65d-lib-artifacts
 	BYTECODE_LIB_D81=$(BYTECODE_IDE_LIB_D81) \
@@ -3487,6 +3557,9 @@ build/bytecode:
 
 build/bytecode/libs:
 	mkdir -p build/bytecode/libs
+
+build/bytecode/dialect-v2/libs:
+	mkdir -p build/bytecode/dialect-v2/libs
 
 build/demos:
 	mkdir -p build/demos

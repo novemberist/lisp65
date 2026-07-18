@@ -247,6 +247,21 @@ def audit_matrix() -> None:
         "manual-post-media-b", "two-media-oracle",
     ):
         require(evidence_id in swap_evidence, f"R6/G6 media-change evidence missing {evidence_id}")
+    trigger = swap_row.get("manual_trigger")
+    require(isinstance(trigger, dict), "R6/G6 public Freezer trigger missing")
+    require(
+        trigger == {
+            "entrypoint": "m65d-save",
+            "form": '(m65d-save "g6swap" (progn (poke 208 32 2) g6src))',
+            "signal": "red-border-immediately-before-public-entry",
+            "operator_action": "on-red-open-freezer-and-mount-media-b",
+            "acceptance": "terminal-return-12-and-persistent-status-12-plus-two-media-oracle",
+            "nonacceptance": "any-other-result-or-private-helper-use-is-receiptless",
+            "forbidden_symbol_prefixes": ["%m65d-"],
+        },
+        "R6/G6 public Freezer trigger contract drift",
+    )
+    require("%m65d-" not in trigger["form"], "R6/G6 Freezer trigger names a private M65D helper")
 
 
 def main() -> int:

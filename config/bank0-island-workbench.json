@@ -3,7 +3,9 @@
   "profile": "mvp-vm-stdlib-einsuite-core-workbench",
   "allowed_coordinator_classes": [
     "l65m-coordinator",
-    "batch-coordinator"
+    "batch-coordinator",
+    "buffer-transport",
+    "source-stream"
   ],
   "screen_contract": {
     "base": "0x0800",
@@ -75,6 +77,24 @@
       "expected_allocations": 1,
       "kind": "cold-coordinator",
       "coordinator_class": "l65m-coordinator"
+    },
+    {
+      "name": "io_attic_load_lib",
+      "expected_allocations": 1,
+      "kind": "cold-coordinator",
+      "coordinator_class": "l65m-coordinator"
+    },
+    {
+      "name": "disk_source_fetch",
+      "expected_allocations": 1,
+      "kind": "persistent-source-reader",
+      "coordinator_class": "source-stream"
+    },
+    {
+      "name": "vm_buffer_call",
+      "expected_allocations": 1,
+      "kind": "persistent-buffer-transport",
+      "coordinator_class": "buffer-transport"
     }
   ]
 }

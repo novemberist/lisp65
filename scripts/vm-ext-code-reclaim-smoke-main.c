@@ -61,7 +61,7 @@ static int expect_true(const char *name, int value) {
 }
 
 int main(void) {
-    uint16_t transient_at;
+    uint16_t transient_at, nested_at;
     unsigned stages_before, loads_before;
     int failed = 0;
 
@@ -100,10 +100,41 @@ int main(void) {
     failed |= expect_u16("transient allocation", transient_at, 240);
     failed |= expect_u16("preview reaches transient exactly", vm_ext_code_alloc(175, 0), 65);
     failed |= expect_u16("preview cannot cross transient", vm_ext_code_alloc(176, 0), 0xffffu);
+
+    /* C1 may retire persistent code while eval/lcc-run's transient caller is
+     * live.  The two ranges are disjoint, and retirement must not pop or move
+     * the downward transient stack. */
+    failed |= expect_true("disjoint truncate under transient",
+                          vm_ext_code_truncate(48));
+    failed |= expect_u16("truncate changes persistent watermark only",
+                         vm_ext_code_watermark(), 48);
+    nested_at = vm_ext_code_alloc_transient(8);
+    failed |= expect_u16("transient stack survives truncate", nested_at, 232);
+    vm_ext_code_pop_transient(nested_at, 8);
+    failed |= expect_u16("restored transient still bounds persistent preview",
+                         vm_ext_code_alloc(192, 0), 48);
+    failed |= expect_u16("restored transient rejects overlap",
+                         vm_ext_code_alloc(193, 0), 0xffffu);
     vm_ext_code_pop_transient(transient_at, 16);
 
+    failed |= expect_true("truncate outside region rejected",
+                          !vm_ext_code_truncate(0xffffu));
+    failed |= expect_true("truncate above current rejected",
+                          !vm_ext_code_truncate(49));
+
+    /* Only a corrupted state can cross the ranges because both allocators
+     * gate the boundary.  Inject it and prove rollback does not hide it. */
+    vm_ext_code_test_state(96, 80);
+    failed |= expect_true("overlapping persistent and transient ranges rejected",
+                          !vm_ext_code_truncate(48));
+    failed |= expect_u16("overlap rejection preserves persistent watermark",
+                         vm_ext_code_watermark(), 96);
+    failed |= expect_u16("overlap rejection preserves transient watermark",
+                         vm_ext_code_test_transient(), 80);
+    vm_ext_code_test_state(48, 0);
+
     /* The region limit itself is inclusive for the end address. */
-    failed |= expect_u16("persistent exact-limit allocation", vm_ext_code_alloc(191, 1), 65);
+    failed |= expect_u16("persistent exact-limit allocation", vm_ext_code_alloc(208, 1), 48);
     failed |= expect_u16("high-water reaches limit", vm_ext_code_alloc(0, 0), 256);
     failed |= expect_u16("allocation beyond limit rejected", vm_ext_code_alloc(1, 1), 0xffffu);
     failed |= expect_u16("transient beyond full region rejected",

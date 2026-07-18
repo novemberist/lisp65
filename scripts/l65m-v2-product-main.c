@@ -486,6 +486,20 @@ static void check_product_commit(void) {
     }
 }
 
+static void check_c1_compiler_preflight(void) {
+    byte_source bytes;
+    l65m_source source;
+    l65m_plan plan;
+    l65m_status status = preflight(
+        l65m_v2_lcc_data, sizeof l65m_v2_lcc_data, &bytes, &source, &plan);
+    check("c1-preflight", "exact LCC v2 container did not validate", status == L65M_OK);
+    check("c1-preflight", "LCC format/count contract drift",
+          status == L65M_OK && plan.format_version == 2u
+          && plan.entry_count == L65M_V2_LCC_ENTRIES
+          && plan.patch_count == L65M_V2_LCC_PATCHES
+          && plan.source_length == sizeof l65m_v2_lcc_data);
+}
+
 int main(int argc, char **argv) {
     uint8_t transaction_mode = (uint8_t)(argc == 2
         && !strcmp(argv[1], "--transaction-matrix"));
@@ -499,6 +513,7 @@ int main(int argc, char **argv) {
     vm_directory_only_test_reclaim_boot_metadata();
     check("setup", "resident v2 closure did not publish string-equal",
           IS_BCODE(sym_function(intern("string-equal"))));
+    check_c1_compiler_preflight();
     check_product_commit();
     if (transaction_mode) {
         check_validation_aborts();
@@ -511,9 +526,10 @@ int main(int argc, char **argv) {
         fprintf(stderr, "l65m-v2-product: FAIL failures=%d\n", failures);
         return 1;
     }
-    printf("l65m-v2-product: PASS mode=%s entries=%u anonymous=%u entry_refs=%u designator_routes=12 hook_sequence=%u\n",
+    printf("l65m-v2-product: PASS mode=%s entries=%u anonymous=%u entry_refs=%u c1_entries=%u designator_routes=12 hook_sequence=%u\n",
            transaction_mode ? "transaction-matrix" : "late-bound-sequence",
            (unsigned)L65M_V2_IDE_ENTRIES, (unsigned)L65M_V2_IDE_ANONYMOUS,
-           (unsigned)L65M_V2_IDE_ENTRY_REFS, transaction_mode ? 0u : 1u);
+           (unsigned)L65M_V2_IDE_ENTRY_REFS, (unsigned)L65M_V2_LCC_ENTRIES,
+           transaction_mode ? 0u : 1u);
     return 0;
 }

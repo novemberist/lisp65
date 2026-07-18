@@ -40,9 +40,6 @@ Cell heap[HEAP_CELLS];
  * und dem Symbol-Namepool (ab $58000, LISP65_SYMPOOL_EXT) — der alte $50000-Default haette
  * beim ersten Ueberlauf das Code-Blob zerschrieben. Bank 4 ($40000..$4FFFF) ist frei:
  * EXT_CELLS*8 <= 64 KB. Host (kein __mos__): RAM-Simulation, macht die GC-Logik host-testbar. */
-#ifndef EXT_BANK
-#define EXT_BANK   0x04
-#endif
 #define EXT_OFF(i) ((uint16_t)(((i) - HEAP_CELLS) * 8))
 #ifndef __mos__
 /* Host-Simulation: gleiche 8-Byte-Zellen in einem Array (GC-/Ueberlauf-Logik host-testbar). */
@@ -101,9 +98,6 @@ void    ext_set_b(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uin
  * ($2000..$6bff) an. Physisch bleiben nach dem 256-B-Directory-Sektor 0x9300
  * Datei-Bytes bis Bankende; der Produktpin nutzt dieses Fenster fuer die ladbare IDE-Lib.
  * Byteweise, kalt. */
-#ifndef DISK_EXT_BASE
-#define DISK_EXT_BASE 0x6c00u
-#endif
 void    ext_disk_put(uint16_t off, uint8_t v){ ext_stg1 = v; ext_dma((uint16_t)(uintptr_t)&ext_stg1, 0, (uint16_t)(DISK_EXT_BASE + off), EXT_BANK, 1); }
 uint8_t ext_disk_get(uint16_t off){ ext_dma((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, (uint16_t)(uintptr_t)&ext_stg1, 0, 1); return ext_stg1; }
 void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len){
@@ -540,6 +534,27 @@ obj cons(obj car, obj cdr) {
     return o;
 }
 
+obj list_nreverse(obj list) {
+    obj previous = NIL;
+    while (IS_PTR(list) && cell_type(list) == T_CONS) {
+        obj next = cell_b(list);
+        cell_set_b(list, previous);
+        previous = list;
+        list = next;
+    }
+    return previous;
+}
+
+obj list_rplaca(obj cell, obj value) {
+    cell_set_a(cell, value);
+    return cell;
+}
+
+obj list_rplacd(obj cell, obj value) {
+    cell_set_b(cell, value);
+    return cell;
+}
+
 #ifdef LISP65_STRING_ARENA
 /* ---- PACKED-BYTE-STRING-ARENA -------------------------------------------------------
  * Ein T_STR ist EINE Zelle: a = Laenge (Fixnum), b = Byte-Offset (Fixnum) in die Arena.
@@ -661,7 +676,13 @@ static void str_arena_compact(void) {
         obj o;
         if (!MARK_GET(i)) continue;            /* nur lebende Zellen */
         o = (obj)(uint16_t)(i << 1);
+#ifdef LISP65_FIRST_CLASS_BUFFER
+        /* T_STR=5 and T_BUF=7 are the only current kinds whose bit-1-fold is
+         * T_BUF. This preserves one EXT-aware type read in the hot compactor. */
+        if ((uint8_t)(cell_type(o) | 2u) != T_BUF) continue;
+#else
         if (cell_type(o) != T_STR) continue;
+#endif
         if (o == str_building) continue;       /* in-Arbeit-String: kommt ZULETZT (bleibt anhaengbar) */
         ntop = str_relocate(o, ntop);
     }
@@ -705,6 +726,134 @@ uint8_t str_putc(obj s, uint8_t c) {
     return 1;
 }
 obj str_close(obj s) { str_building = NIL; return s; }
+
+#ifdef LISP65_FIRST_CLASS_BUFFER
+#if defined(__mos__) && defined(LISP65_RUNTIME_OVERLAY)
+#define BUFFER_READ_FN __attribute__((section(".lisp65_rt_buffer_read"), noinline, used))
+#define BUFFER_WRITE_FN __attribute__((section(".lisp65_rt_buffer_write"), noinline, used))
+#define BUFFER_ALLOC_FN __attribute__((section(".lisp65_rt_buffer_alloc"), noinline, used))
+#else
+#define BUFFER_READ_FN
+#define BUFFER_WRITE_FN
+#define BUFFER_ALLOC_FN
+#endif
+
+/* One allocator owns both initialized public buffers and the two C1 bulk
+ * paths.  The latter immediately overwrite every byte by DMA, so clearing
+ * first would turn the otherwise batched handoff back into O(n) device work. */
+static BUFFER_ALLOC_FN obj buf_allocate(uint16_t len, uint8_t clear) {
+    obj buffer;
+    uint16_t index, offset;
+    if (len > STR_MAX_BYTES || len > STR_ARENA_SIZE) {
+        mem_oom = 1;
+        return NIL;
+    }
+    buffer = alloc(T_BUF);
+    if (buffer == NIL) return NIL;
+    /* Keep the new cell well-formed if the capacity check triggers GC. */
+    cell_set_a(buffer, MKFIX(0));
+    cell_set_b(buffer, MKFIX(0));
+    GC_PUSH(buffer);
+    if (len > (uint16_t)(STR_ARENA_SIZE - str_top)) gc_collect();
+    if (len > (uint16_t)(STR_ARENA_SIZE - str_top)) {
+        mem_oom = 1;
+        GC_POPN(1);
+        return NIL;
+    }
+    offset = str_top;
+    cell_set_a(buffer, MKFIX((int16_t)len));
+    cell_set_b(buffer, MKFIX((int16_t)offset));
+    if (clear)
+        for (index = 0; index < len; index++)
+            str_write_byte((uint16_t)(offset + index), 0);
+    str_top = (uint16_t)(offset + len);
+    GC_POPN(1);
+    return buffer;
+}
+
+BUFFER_ALLOC_FN obj buf_make(uint16_t len) {
+    return buf_allocate(len, 1);
+}
+
+BUFFER_READ_FN uint16_t buf_len(obj buffer) { return (uint16_t)FIXVAL(cell_a(buffer)); }
+
+BUFFER_READ_FN uint8_t buf_byte(obj buffer, uint16_t index) {
+    return str_read_byte((uint16_t)(FIXVAL(cell_b(buffer)) + index));
+}
+
+BUFFER_WRITE_FN void buf_set(obj buffer, uint16_t index, uint8_t value) {
+    str_write_byte((uint16_t)(FIXVAL(cell_b(buffer)) + index), value);
+}
+
+BUFFER_READ_FN obj buf_freeze(obj buffer) {
+    uint16_t cell_index = (uint16_t)buffer >> 1;
+    /* Keep this cold mutation inside the read overlay. Calling the generic
+     * inline accessor here makes LLVM-MOS outline a 113-byte resident clone. */
+    if (cell_index < HEAP_CELLS) heap[cell_index].type = T_STR;
+#ifdef LISP65_EXT_HEAP
+    else ext_set_type(cell_index, T_STR);
+#endif
+    return buffer;
+}
+
+BUFFER_ALLOC_FN obj buf_from_string(obj string) {
+    obj buffer;
+    uint16_t index, offset, length = str_len(string);
+    GC_PUSH(string);
+    buffer = buf_allocate(length, 0);
+    if (buffer != NIL) {
+        offset = (uint16_t)FIXVAL(cell_b(buffer));
+        for (index = 0; index < length; index++)
+            str_write_byte((uint16_t)(offset + index), str_byte(string, index));
+    }
+    GC_POPN(1);
+    return buffer;
+}
+
+/* C1 bulk seam. Both functions share the allocator overlay with buf_make and
+ * reuse the established register-free EXT DMA primitive.  Each completed
+ * compiler result therefore crosses the boundary in one transfer. */
+#ifdef LISP65_EXT_HEAP
+BUFFER_ALLOC_FN obj buf_from_stage(uint16_t len) {
+    obj buffer = buf_allocate(len, 0);
+    uint16_t offset;
+    if (buffer == NIL) return NIL;
+    offset = (uint16_t)FIXVAL(cell_b(buffer));
+#ifndef __mos__
+    {
+        uint16_t index;
+        for (index = 0; index < len; index++)
+            str_write_byte((uint16_t)(offset + index),
+                           ext_disk_get((uint16_t)(256u + index)));
+    }
+#else
+    if (len) ext_dma((uint16_t)(DISK_EXT_BASE + 256u), EXT_BANK,
+                     (uint16_t)(str_cur_off + offset), EXT_BANK, len);
+#endif
+    return buffer;
+}
+
+BUFFER_ALLOC_FN uint16_t buf_to_stage(obj buffer) {
+    uint16_t length = (uint16_t)FIXVAL(cell_a(buffer));
+    uint16_t offset = (uint16_t)FIXVAL(cell_b(buffer));
+#ifndef __mos__
+    {
+        uint16_t index;
+        for (index = 0; index < length; index++)
+            ext_disk_put((uint16_t)(256u + index),
+                         str_read_byte((uint16_t)(offset + index)));
+    }
+#else
+    if (length) ext_dma((uint16_t)(str_cur_off + offset), EXT_BANK,
+                        (uint16_t)(DISK_EXT_BASE + 256u), EXT_BANK, length);
+#endif
+    return length;
+}
+#endif
+#undef BUFFER_READ_FN
+#undef BUFFER_WRITE_FN
+#undef BUFFER_ALLOC_FN
+#endif
 
 obj str_from_bytes(const uint8_t *bytes, uint16_t len) {
     obj o = str_open(); uint16_t i;

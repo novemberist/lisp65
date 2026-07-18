@@ -3,6 +3,27 @@
 (defun eval (form)
   (lcc-run form))
 
+; 1.1-C1 resident control surface. The one compiler export exists as a literal
+; before the transaction starts. Private %c1-control operations 0/1/2 own
+; checkpoint, validation and retirement; operation 2 returns its second value
+; only after the old function cell and code/directory watermarks are restored.
+(defun %c1-compile-detached (mode first second)
+  (if (%c1-control 0 (quote %c1-compile))
+      (if (%disk-load-lib "lcc")
+          (if (%c1-control 1 nil)
+              (%c1-control 2 (%c1-compile mode first second))
+              (progn (%c1-control 2 nil) nil))
+          (progn (%c1-control 2 nil) nil))
+      nil))
+
+(defun lcc-run (form)
+  (let ((compiled (%c1-compile-detached 0 form nil)))
+    (cond ((if (consp form) (eq (car form) 'defmacro) nil)
+           (%set-macro (car (cdr form)) (lcc-install compiled nil)))
+          ((if (consp form) (eq (car form) 'defun) nil)
+           (lcc-install compiled (car (cdr form))))
+          (t (lcc-install compiled 't)))))
+
 (defun %number->string-result (negative codes)
   (%string-from-codes (if negative (cons 45 codes) codes)))
 
@@ -24,102 +45,39 @@
                     nil))
               (%number->string-result negative codes))))))
 
-; v2 Workbench FASL persistence. The fixed slot chain is immutable; bytecode
-; only replaces its payload through the existing verified sector primitives.
-; The first four payload bytes are the L65M length prefix, so invalidating them
-; before the tail write and committing the complete first sector last makes a
-; stopped transaction fail closed on reload.
-(defun %compile-slot-capacity (track sector fuel cap)
-  (if (> fuel 0)
-      (if (%disk-read-sector track sector)
-          (let ((next-track (%disk-byte 0))
-                (next-sector (%disk-byte 1)))
-            (if (> next-track 0)
-                (%compile-slot-capacity next-track next-sector (1- fuel) (+ cap 254))
-                (if (> next-sector 0) (+ cap (- next-sector 1)) -1)))
-          -1)
-      -1))
+; Read exactly one object from a String through the already resident compiler
+; reader.  The explicit predicate keeps the public type contract stable while
+; malformed input continues through the existing reader error channel.
+(defun read-from-string (source)
+  (if (stringp source)
+      (progn (%cs-read-open source) (%fasl-read-form))
+      (string-length source)))
 
-(defun %fasl-save-sector (position length use)
-  (dotimes (index use t)
-    (%disk-poke (+ index 2)
-      (if (< (+ position index) length)
-          (%fasl-stage-get (+ position index))
-          32))))
+; v2 Workbench FASL persistence. The compiler returns one detached Buffer;
+; M65D owns allocation, media binding, verified writes and directory publish.
+; There is no preallocated-slot writer beside the M65D COW transaction.
+(defun compile-error ()
+  (symbol-value (quote %compile-error)))
 
-(defun %fasl-save-tail (track sector length position fuel)
-  (if (> fuel 0)
-      (if (%disk-read-sector track sector)
-          (let ((next-track (%disk-byte 0))
-                (next-sector (%disk-byte 1)))
-            (let ((use (if (> next-track 0) 254 (- next-sector 1))))
-              (if (if (> next-track 0) t (> next-sector 0))
-                  (progn
-                    (%fasl-save-sector position length use)
-                    (if (%disk-write-sector track sector)
-                        (if (> next-track 0)
-                            (%fasl-save-tail next-track next-sector length
-                              (+ position use) (- fuel 1))
-                            t)
-                        nil))
-                  nil)))
-          nil)
-      nil))
+; Compile into the detached staging Buffer, then hand that Buffer to the one
+; public persistence transaction. The buffer predicate stays resident through
+; %buffer-read; no optional comfort library is required.
+(defun %c1-compile-save (source dst)
+  (let ((output (%c1-compile-detached 1 source nil)))
+    (if (%buffer-read 0 output)
+        (let ((saved (m65d-save dst output)))
+          (if (= saved 0)
+              (progn (set-symbol-value (quote %compile-error) nil) 't)
+              (if (= saved 3)
+                  (progn (set-symbol-value (quote %compile-error) "too large") nil)
+                  (progn (set-symbol-value (quote %compile-error) "save failed") nil))))
+        (progn (set-symbol-value (quote %compile-error) "compile failed") nil))))
 
-(defun %fasl-commit-first (track sector length next-track next-sector use)
-  (if (%disk-read-sector track sector)
-      (if (if (= (%disk-byte 0) next-track)
-              (= (%disk-byte 1) next-sector)
-              nil)
-          (progn
-            (%fasl-save-sector 0 length use)
-            (%disk-write-sector track sector))
-          nil)
-      nil))
-
-(defun %fasl-save-staged-v2 (track sector length)
-  (let ((capacity (%compile-slot-capacity track sector 255 0)))
-    (if (if (>= capacity 0) (<= length capacity) nil)
-        (if (%disk-read-sector track sector)
-            (let ((next-track (%disk-byte 0))
-                  (next-sector (%disk-byte 1)))
-              (let ((use (if (> next-track 0) 254 (- next-sector 1))))
-                (progn
-                  (%disk-poke 2 0)
-                  (%disk-poke 3 0)
-                  (%disk-poke 4 0)
-                  (%disk-poke 5 0)
-                  (if (%disk-write-sector track sector)
-                      (if (if (> next-track 0)
-                              (%fasl-save-tail next-track next-sector length use 254)
-                              t)
-                          (%fasl-commit-first track sector length
-                            next-track next-sector use)
-                          nil)
-                      nil))))
-            nil)
-        (quote %fasl-too-large))))
-
-; v2 override of the shared v1 definition. The emitter and slot lookup stay
-; unchanged; only the final persistence step moves from Prim 34 to bytecode.
 (defun compile-string (source dst)
   (progn
     (set-symbol-value (quote %compile-error) nil)
     (if (stringp source)
         (if (stringp dst)
-            (let ((slot (%compile-slot-find (%string-codes dst) 40 0 64)))
-              (if slot
-                  (progn
-                    (%cs-read-open source)
-                    (let ((fs (%fasl-fs 0)))
-                      (%fasl-stream-forms fs)
-                      (let ((saved (%fasl-save-staged-v2
-                                     (car slot) (cdr slot) (%fasl-finish fs))))
-                        (if (eq saved 't)
-                            (progn (set-symbol-value (quote %compile-error) nil) 't)
-                            (if (eq saved '%fasl-too-large)
-                                (progn (set-symbol-value (quote %compile-error) "too large") nil)
-                                (progn (set-symbol-value (quote %compile-error) "save failed") nil))))))
-                  (progn (set-symbol-value (quote %compile-error) "slot missing") nil)))
-            (progn (set-symbol-value (quote %compile-error) "bad slot") nil))
+            (%c1-compile-save source dst)
+            (progn (set-symbol-value (quote %compile-error) "bad destination") nil))
         (progn (set-symbol-value (quote %compile-error) "bad source") nil))))

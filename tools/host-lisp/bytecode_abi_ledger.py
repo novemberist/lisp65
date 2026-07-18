@@ -448,6 +448,7 @@ def validate(
 
     doc_ops = D.parse_doc_ops(D.read_text(D.DOC_PATH))
     doc_prims = D.parse_doc_prims(D.read_text(D.DOC_PATH))
+    doc_prims.update(D.parse_doc_prim_extensions(D.read_text(D.DOC_EXTENSION_PATH)))
     py_ops = {spec.code: (spec.mnemonic, spec.operand) for spec in B.OP_SPECS}
     py_prims = dict(B.PRIM_IDS)
     ledger_ops = {ident: (name, operand) for ident, (name, operand) in op_ids.items()}
@@ -477,9 +478,10 @@ def validate(
     if "LISP65_V2_CALLPRIM_ACTIVE_ROWS" in compile_text:
         generated_registry = NATIVE_FUNCTIONS.load(NATIVE_FUNCTIONS.REGISTRY)
         generated_state = NATIVE_FUNCTIONS.validate(generated_registry, value)
-        compile_prims.update(generated_state["active"])
-    compiler_active_ids = set().union(
-        *(resolved[profile]["prim_ids"]["active"] for profile in order)
+        compile_prims.update(generated_state["compile_repl"])
+    compiler_active_ids = (
+        resolved["dialect-v1"]["prim_ids"]["active"]
+        | set(generated_state["compile_repl"].values())
     )
     if compile_prims != {
         ledger_prims[ident]: ident for ident in compiler_active_ids
@@ -557,10 +559,7 @@ def validate(
         if name not in prim_by_name:
             raise LedgerError(f"dialect-v2 LCC contains unknown Prim-ID mapping {name}/{ident}")
         lcc_v2_prims[name] = ident
-    expected_v2_lcc_prims = {
-        ledger_prims[ident]: ident
-        for ident in resolved["dialect-v2"]["prim_ids"]["active"]
-    }
+    expected_v2_lcc_prims = native_state["compile_repl"]
     if lcc_v2_prims != expected_v2_lcc_prims:
         raise LedgerError("dialect-v2 LCC Prim-ID mirror coverage drift")
     expected_lcc_direct_callprims = [
@@ -605,7 +604,7 @@ def selftest() -> None:
     if (
         v1_prims["active"] != list(range(23))
         or v1_prims["tombstone"]
-        or v2_prims["active"] != [0, *range(3, 26), 28, 29, *range(30, 34), *range(35, 40), *range(41, 63)]
+        or v2_prims["active"] != [0, *range(3, 26), 28, 29, *range(30, 34), *range(35, 40), *range(41, 67)]
         or v2_prims["tombstone"] != [1, 2, 26, 27, 34, 40]
     ):
         raise LedgerError("pinned dialect-v1/v2 Prim-ID allocation drift")
@@ -743,13 +742,13 @@ def selftest() -> None:
     _expect_exception(
         "real reserved Prim-ID decoder", B.DecodeError,
         lambda: B.decode_instruction(
-            bytes((61, 63, 0)), 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
+            bytes((61, 67, 0)), 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
         ),
     )
     _expect_exception(
         "real reserved Prim-ID emitter", ValueError,
         lambda: B.encode_instruction(
-            "CALLPRIM", 63, 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
+            "CALLPRIM", 67, 0, profile_id="dialect-v2", abi_ledger=prim_tombstone
         ),
     )
     if B.encode_instruction("UPVAL", 7) != bytes((64, 7)):

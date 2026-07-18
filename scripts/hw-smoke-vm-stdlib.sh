@@ -11,6 +11,7 @@ tools_dir="tools/m65tools"
 prg="${MVP_VM_SHIP_PRG:-build/ship/lisp65-mvp-workbench.prg}"
 blob="${MVP_VM_SHIP_BLOB:-build/ship/lisp65-mvp-workbench.blob.bin}"
 overlays="${MVP_VM_SHIP_OVERLAYS:-build/ship/lisp65-mvp-workbench.overlays.bin}"
+shelf="${MVP_VM_SHIP_SHELF:-}"
 d81="${MVP_VM_SHIP_D81:-build/ship/lisp65-mvp-workbench.d81}"
 remote_d81="${MVP_VM_SHIP_REMOTE_D81:-L65WB.D81}"
 
@@ -24,6 +25,7 @@ usage: $0 [options]
   --prg <file>       PRG statt $prg verwenden
   --blob <file>      Stdlib-Blob statt $blob verwenden
   --overlays <file>  Runtime-Overlay-Katalog statt $overlays verwenden
+  --shelf <file>     optionales Attic-Regal bei 0x08100000
   --d81 <file>       Workbench-D81 statt $d81 verwenden
   --remote-d81 <n>   D81-Name auf der MEGA65-SD (default: $remote_d81)
   -h|--help          diese Hilfe
@@ -40,6 +42,7 @@ while [ "$#" -gt 0 ]; do
     --prg) shift; prg="$1" ;;
     --blob) shift; blob="$1" ;;
     --overlays) shift; overlays="$1" ;;
+    --shelf) shift; shelf="$1" ;;
     --d81) shift; d81="$1" ;;
     --remote-d81) shift; remote_d81="$1" ;;
     -h|--help) usage ;;
@@ -58,6 +61,7 @@ if [ "$dry_run" != "1" ]; then
   [ -f "$prg" ] || { echo "Fehler: PRG fehlt: $prg" >&2; exit 3; }
   [ -f "$blob" ] || { echo "Fehler: Stdlib-Blob fehlt: $blob" >&2; exit 3; }
   [ -f "$overlays" ] || { echo "Fehler: Runtime-Overlay-Katalog fehlt: $overlays" >&2; exit 3; }
+  [ -z "$shelf" ] || [ -f "$shelf" ] || { echo "Fehler: Attic-Regal fehlt: $shelf" >&2; exit 3; }
   [ -f "$d81" ] || { echo "Fehler: Workbench-D81 fehlt: $d81" >&2; exit 3; }
   [ -x "$tools_dir/mega65_ftp" ] || { echo "Fehler: $tools_dir/mega65_ftp nicht ausfuehrbar/gefunden" >&2; exit 3; }
 fi
@@ -79,6 +83,7 @@ fi
 
 set -- --tools "$tools_dir" --mount "$remote_d81" \
   --preload-bin 0x08000000 "$overlays" --preload-bin 0x050000 "$blob" --run
+[ -z "$shelf" ] || set -- "$@" --preload-bin 0x08100000 "$shelf"
 [ -n "$ip" ] && set -- "$@" --ip "$ip"
 [ "$dry_run" = "1" ] && set -- "$@" --dry-run
 set -- "$@" "$prg"
@@ -86,24 +91,21 @@ set -- "$@" "$prg"
 echo "==> starte MVP-Workbench-HW-Smoke"
 echo "==> erwarteter manueller REPL-Check nach Boot (Workbench-Pfad):"
 echo "    (+ 20 22)                                                => 42"
-echo "    (load-lib \"ide\")                                       => t"
-echo "    (load-lib \"idex\")                                      => t (optional comfort tier)"
-echo "    (symbol-count) / (symbol-max)                            => roughly 648 / 720"
+echo "    (load-libs (list \"ide\" \"m65d\" \"idex\"))              => t"
 echo "    (function-kind (quote compile-buffer-to-lib))           => bytecode"
 echo "    (function-kind (quote eval-buffer))                     => bytecode"
-echo "    (dir)                                                   => list contains ide/idex/demo/work/fasl0"
+echo "    (dir)                                                   => list contains ide/idex/m65d/demo/work"
 echo "    (load-file-to-buffer \"demo\" \"demo\")                    => t"
 echo "    (eval-buffer \"demo\")                                   => t"
 echo "    (demo-numbers-run)                                      => 42"
 echo "    (edit \"demo\")                                           => inspect/edit source, RUN/STOP returns"
 echo "    (save-buffer-to \"work\" \"demo\")                         => t"
 echo "    (load-file-to-buffer \"work\" \"copy\")                    => t"
-echo "    (compile-buffer-to-lib \"fasl0\" \"demo\")                => t"
-echo "    (load-lib \"fasl0\")                                     => t"
+echo "    (compile-buffer-to-lib \"compiled\" \"demo\")             => t"
+echo "    (load-lib \"compiled\")                                  => t"
 echo "    (demo-numbers-run)                                      => 42"
-echo "    (compile-string \"(defun x () 1)\" \"noslot\")              => nil"
-echo "    (compile-error)                                         => \"slot missing\""
-echo "==> optionaler Core-Compile-Smoke: in frischer Session vor IDE laden"
+echo "==> transaktionaler Compile-Smoke nach M65D-Load und Work-Media-Mount"
+echo "    (m65d-remount)                                          => 0"
 echo "    (compile-string \"(defun a()40)(defun b()(+ (a)2))\" \"an\") => t"
 echo "    (load-lib \"an\")                                         => t"
 echo "    (b)                                                      => 42"

@@ -48,6 +48,15 @@
 ; WICHTIG: Kettenende per (> next-track 0) pruefen, NICHT per Truthiness: nur NIL ist falsch,
 ; die Fixnum 0 (MKFIX(0)=1) ist truthy -> (if next-track ...) wuerde am Kettenende (track 0)
 ; endlos weiterrekursieren (TCO'd) und Muell-Sektoren lesen (= der Hang bei fehlender Datei).
+(defun %disk-directory-link-valid-p (track sector next-track next-sector)
+  (if (= next-track 0)
+      t
+      (if (= next-track 40)
+          (if (< next-sector 40)
+              (not (and (= next-track track) (= next-sector sector)))
+              nil)
+          nil)))
+
 (defun %load-scan-directory (codes track sector fuel)
   (if (> fuel 0)
       (if (%disk-read-sector track sector)
@@ -56,8 +65,11 @@
                 loaded
                 (let ((next-track (%disk-byte 0))
                       (next-sector (%disk-byte 1)))
-                  (if (> next-track 0)
-                      (%load-scan-directory codes next-track next-sector (1- fuel))
+                  (if (%disk-directory-link-valid-p
+                       track sector next-track next-sector)
+                      (if (> next-track 0)
+                          (%load-scan-directory codes next-track next-sector (1- fuel))
+                          nil)
                       nil))))
           nil)
       nil))

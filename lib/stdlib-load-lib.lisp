@@ -22,8 +22,11 @@
                 loaded
                 (let ((next-track (%disk-byte 0))
                       (next-sector (%disk-byte 1)))
-                  (if (> next-track 0)
-                      (%load-lib-scan-directory codes next-track next-sector (1- fuel))
+                  (if (%disk-directory-link-valid-p
+                       track sector next-track next-sector)
+                      (if (> next-track 0)
+                          (%load-lib-scan-directory codes next-track next-sector (1- fuel))
+                          nil)
                       nil))))
           nil)
       nil))
@@ -52,10 +55,13 @@
       (let ((codes (string->list name)))
         (if (%load-lib-loaded-p codes (symbol-value '*loaded-libs*))
             t
-            ; T40/S0 is the 1581 header/link root, never an entry sector.
-            (if (%load-lib-scan-directory codes 40 3 64)
+            (if (%disk-load-lib name)
                 (progn (%load-lib-note-loaded codes) t)
-                nil)))
+                ; Missing/invalid volatile shelf: retain the proven 1.0 disk path.
+                ; T40/S0 is the 1581 header/link root, never an entry sector.
+                (if (%load-lib-scan-directory codes 40 3 64)
+                    (progn (%load-lib-note-loaded codes) t)
+                    nil))))
       nil))
 
 ; load-libs: mehrere (unabhaengige) Libs mit EINEM Aufruf laden -- als einzelne Argumente ODER

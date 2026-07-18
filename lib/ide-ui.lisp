@@ -1,3 +1,7 @@
+;; Container-private IDE state reuses the value cells of public function
+;; symbols. Lisp-2 keeps those cells independent from the function bindings,
+;; so no private state name consumes an interned symbol or directory entry.
+
 (defun ide-make-state (buffer)
   (list buffer nil 0 nil nil nil nil (%ide-budget-string)))
 
@@ -48,13 +52,11 @@
       (car (cdr mini))
       (car (cdr (cdr mini)))
       (car (cdr (cdr (cdr mini))))))
-   (symbol-value (quote %ide-mini))))
+   (symbol-value (quote ide-step))))
 
 (defun %ide-mini-set (state action prompt input default options)
   (progn
-    (set-symbol-value
-     (quote %ide-mini)
-     (list action prompt input default options))
+    (set-symbol-value (quote ide-step) (list action prompt input default options))
     (%ide-state-with-message state 1005)))
 
 (defun %ide-mini-start (state action prompt input default options)
@@ -113,11 +115,11 @@
                                        (list action chosen))
                      nil))
                (if (> (string-length input) 0) input default))
-              (set-symbol-value (quote %ide-mini) nil)
+              (set-symbol-value (quote ide-step) nil)
               (%ide-mini-submit (%ide-state-with-message state nil) action input default))
             (if (if (= code 7) 't (= code 27))
                 (progn
-                  (set-symbol-value (quote %ide-mini) nil)
+                  (set-symbol-value (quote ide-step) nil)
                   (%ide-state-with-message state "cancelled"))
                 ((lambda (next)
                    (if next
@@ -130,7 +132,9 @@
       (car (cdr (cdr (cdr mini))))
       (car (cdr (cdr (cdr (cdr mini)))))))
    (ide-event-code event)
-   (symbol-value (quote %ide-mini))))
+   ;; This path is reached only after %ide-mini-start initialized the carrier;
+   ;; the invariant also keeps the compiled object below its 255-byte cap.
+   (symbol-value (quote ide-step))))
 
 ;; SCROLLING (2026-07-07, Nutzerauftrag): row-offset so clampen, dass der Cursor
 ;; im Body (rows-1 Zeilen) sichtbar ist. Laeuft VOR jedem Render; ein Versatz
@@ -223,32 +227,32 @@
   (and (>= code 32) (<= code 126)))
 
 (defun %ide-prefix-command (code)
-  (cond ((= code 19) (progn (set-symbol-value (quote %ide-prefix) nil) 1001))
-        ((= code 6) (progn (set-symbol-value (quote %ide-prefix) nil) 1002))
-        ((= code 23) (progn (set-symbol-value (quote %ide-prefix) nil) 1004))
-        ((= code 2) (progn (set-symbol-value (quote %ide-prefix) nil) 1006))
-        ((= code 4) (progn (set-symbol-value (quote %ide-prefix) nil) 1007))
-        ((= code 11) (progn (set-symbol-value (quote %ide-prefix) nil) 1008))
-        ((= code 14) (progn (set-symbol-value (quote %ide-prefix) nil) 1009))
-        ((= code 16) (progn (set-symbol-value (quote %ide-prefix) nil) 1010))
-        ((= code 1) (progn (set-symbol-value (quote %ide-prefix) nil) 'buffer-start))
-        ((= code 5) (progn (set-symbol-value (quote %ide-prefix) nil) 'buffer-end))
-        ((= code 18) (progn (set-symbol-value (quote %ide-prefix) nil) 'kill-region))
-        ((= code 24) (progn (set-symbol-value (quote %ide-prefix) nil) 'exchange-point-and-mark))
-        ((= code 25) (progn (set-symbol-value (quote %ide-prefix) nil) 'copy-region-as-kill))
+  (cond ((= code 19) (progn (set-symbol-value (quote ide-event-command) nil) 1001))
+        ((= code 6) (progn (set-symbol-value (quote ide-event-command) nil) 1002))
+        ((= code 23) (progn (set-symbol-value (quote ide-event-command) nil) 1004))
+        ((= code 2) (progn (set-symbol-value (quote ide-event-command) nil) 1006))
+        ((= code 4) (progn (set-symbol-value (quote ide-event-command) nil) 1007))
+        ((= code 11) (progn (set-symbol-value (quote ide-event-command) nil) 1008))
+        ((= code 14) (progn (set-symbol-value (quote ide-event-command) nil) 1009))
+        ((= code 16) (progn (set-symbol-value (quote ide-event-command) nil) 1010))
+        ((= code 1) (progn (set-symbol-value (quote ide-event-command) nil) 'buffer-start))
+        ((= code 5) (progn (set-symbol-value (quote ide-event-command) nil) 'buffer-end))
+        ((= code 18) (progn (set-symbol-value (quote ide-event-command) nil) 'kill-region))
+        ((= code 24) (progn (set-symbol-value (quote ide-event-command) nil) 'exchange-point-and-mark))
+        ((= code 25) (progn (set-symbol-value (quote ide-event-command) nil) 'copy-region-as-kill))
         (t nil)))
 
 (defun %ide-control-command (code)
-  (cond ((= code 4) 'delete-forward)
-        ((= code 6) 'move-right)
-        ((= code 2) 'move-left)
+  (cond ((= code 4) 1102)
+        ((= code 6) 1107)
+        ((= code 2) 1106)
         ((= code 19) 1011)
         ((= code 12) 1012)
         ((= code 14) 1003)
-        ((= code 16) 'move-up)
-        ((= code 10) 'newline)
-        ((= code 1) 'line-start)
-        ((= code 5) 'line-end)
+        ((= code 16) 1108)
+        ((= code 10) 1109)
+        ((= code 1) 1104)
+        ((= code 5) 1103)
         ((= code 15) 'move-word-right)
         ((= code 21) 'move-word-left)
         ((= code 23) 'kill-word)
@@ -262,18 +266,18 @@
 
 (defun ide-event-command (event)
   ((lambda (code)
-     (cond ((eq (symbol-value (quote %ide-prefix)) 24)
+     (cond ((eq (symbol-value (quote ide-event-command)) 24)
             (if (or (= code 120) (= code 13))
-                (progn (set-symbol-value (quote %ide-prefix) nil) 1013)
+                (progn (set-symbol-value (quote ide-event-command) nil) 1013)
                 (%ide-prefix-command code)))
-           ((= code 13) 'newline)
-           ((= code 20) 'delete-backward)
-           ((= code 157) 'move-left)
-           ((= code 29) 'move-right)
-           ((= code 145) 'move-up)
+           ((= code 13) 1109)
+           ((= code 20) 1101)
+           ((= code 157) 1106)
+           ((= code 29) 1107)
+           ((= code 145) 1108)
            ((= code 17) 1003)
-           ((ide-printable-code-p code) 'self-insert)
-           ((= code 24) (progn (set-symbol-value (quote %ide-prefix) 24) nil))
+           ((ide-printable-code-p code) 1110)
+           ((= code 24) (progn (set-symbol-value (quote ide-event-command) 24) nil))
            (t (%ide-control-command code))))
    (ide-event-code event)))
 
@@ -295,20 +299,18 @@
 ;; Cursor-Abdruecke beim Schnelltippen).
 (defun %ide-hint-merge (col pad)
   (set-symbol-value
-   (quote %ide-hint)
+   (quote ide-render)
    ((lambda (h)
       (cons (if (if h (< (car h) col) nil) (car h) col)
             (+ pad (if h (cdr h) 0))))
-    (if (funcall (function boundp) (quote %ide-hint))
-        (symbol-value (quote %ide-hint))
-        nil))))
+    (if (boundp (quote ide-render)) (symbol-value (quote ide-render)) nil))))
 
 (defun %ide-self-insert (state event)
   ((lambda (buffer)
      ((lambda (col split)
         (progn
           (if split
-              (set-symbol-value (quote %ide-hint) nil)
+              (set-symbol-value (quote ide-render) nil)
               (%ide-hint-merge col 0))
           (%ide-state-with-buffer
            state
@@ -331,7 +333,7 @@
        ((lambda (point line)
           (if (< (cdr point) (string-length line))
               (%ide-hint-merge (cdr point) 1)
-              (set-symbol-value (quote %ide-hint) nil)))
+              (set-symbol-value (quote ide-render) nil)))
         (ide-buffer-point buffer)
         (ide-current-line buffer)))
      (ide-state-buffer state))
@@ -340,7 +342,7 @@
 
 (defun %ide-line-edge-command (state endp)
   (progn
-    (set-symbol-value (quote %ide-hint) nil)
+    (set-symbol-value (quote ide-render) nil)
     ((lambda (buffer)
        ((lambda (point)
           (%ide-state-with-buffer
@@ -395,14 +397,14 @@
    (%ide-command-named name)))
 
 (defun %ide-direct-p (command)
-  (cond ((eq command 'self-insert) 't)
+  (cond ((eq command 1110) 't)
         ((eq command 1003) 't)
-        ((eq command 'delete-backward) 't)
-        ((eq command 'delete-forward) 't)
-        ((eq command 'move-left) 't)
-        ((eq command 'move-right) 't)
-        ((eq command 'move-up) 't)
-        ((eq command 'newline) 't)
+        ((eq command 1101) 't)
+        ((eq command 1102) 't)
+        ((eq command 1106) 't)
+        ((eq command 1107) 't)
+        ((eq command 1108) 't)
+        ((eq command 1109) 't)
         ((eq command 'move-word-right) 't)
         ((eq command 'move-word-left) 't)
         ((eq command 'kill-word) 't)
@@ -516,31 +518,31 @@
 
 (defun ide-apply-command (state command event)
   (progn
-    (if (eq command 'self-insert)
+    (if (eq command 1110)
         nil
-        (if (eq command 'delete-backward)
+        (if (eq command 1101)
             nil
-            (set-symbol-value (quote %ide-hint) nil)))
-    (if (eq command 'self-insert)
+            (set-symbol-value (quote ide-render) nil)))
+    (if (eq command 1110)
         (%ide-self-insert state event)
-      (if (eq command 'newline)
+      (if (eq command 1109)
           (%ide-newline-command state)
-          (if (eq command 'delete-backward)
+          (if (eq command 1101)
               (progn
                 ((lambda (c)
                    (if (> c 0)
                        (%ide-hint-merge (- c 1) 1)
-                       (set-symbol-value (quote %ide-hint) nil)))
+                       (set-symbol-value (quote ide-render) nil)))
                  (cdr (ide-buffer-point (ide-state-buffer state))))
                 (%ide-state-with-buffer state
                                         (ide-delete-backward-char (ide-state-buffer state))))
-              (if (eq command 'delete-forward)
+              (if (eq command 1102)
                   (%ide-delete-forward-command state)
-                  (if (eq command 'move-left)
+                  (if (eq command 1106)
                       (%ide-state-with-buffer state (ide-move-left (ide-state-buffer state)))
-                      (if (eq command 'move-right)
+                      (if (eq command 1107)
                           (%ide-state-with-buffer state (ide-move-right (ide-state-buffer state)))
-                          (if (eq command 'move-up)
+                          (if (eq command 1108)
                               (%ide-state-with-buffer state (ide-move-up (ide-state-buffer state)))
                               (if (eq command 1003)
                                   (%ide-state-with-buffer state (ide-move-down (ide-state-buffer state)))
@@ -552,7 +554,7 @@
     ((lambda (alist)
        (%ide-mini-start
         state
-        'switch-buffer
+        1006
         "Buffer: "
         ""
         (if (cdr alist)
@@ -595,13 +597,13 @@
            ((lambda (found)
               (if found
                   (progn
-                    (set-symbol-value (quote *ide-buffers*) (cdr found))
+                    (set-symbol-value (quote ide-buffers) (cdr found))
                     (%ide-state-with-message
                      (%ide-state-with-buffer state (car found))
                      "switched"))
                   (progn
                     (set-symbol-value
-                     (quote *ide-buffers*)
+                     (quote ide-buffers)
                      (cons (cons (ide-buffer-name clean) clean) alist))
                     state)))
             (if alist
@@ -621,7 +623,7 @@
 (defun %ide-compile-key (state)
   (%ide-mini-start
    state
-   'compile-load
+   1008
    "Compile+load: "
    ""
    "fasl0"
@@ -629,7 +631,7 @@
 
 (defun %ide-motion-key (state command)
   (cond ((eq command 1012)
-         (%ide-mini-start state 'goto-line "Goto line: " "" "" nil))
+         (%ide-mini-start state 1012 "Goto line: " "" "" nil))
         ((eq command 1014)
          (progn
            (%ide-store-buffer (ide-state-buffer state))
@@ -672,9 +674,9 @@
   (if command
       (if (%ide-direct-p command)
           (ide-apply-command state command event)
-          (if (eq command 'line-start)
+          (if (eq command 1104)
               (%ide-line-edge-command state nil)
-              (if (eq command 'line-end)
+              (if (eq command 1103)
                   (%ide-line-edge-command state 't)
                   (%ide-cmd-action state command event))))
       state))
@@ -834,9 +836,7 @@
 ;; zuletzt gemalten -> der Fast-Path unten ueberspringt das Statuszeilen-Malen komplett.
 (defun %ide-status-cached (state width)
   (let* ((buffer (car state))
-         (cache (if (funcall (function boundp) (quote %ide-stcache))
-                    (symbol-value (quote %ide-stcache))
-                    nil))
+         (cache (if (boundp (quote ide-status-line)) (symbol-value (quote ide-status-line)) nil))
          (name (car buffer))
          (line (car (car (cdr (cdr (cdr buffer))))))
          (mod (car (cdr (cdr (cdr (cdr (cdr buffer)))))))
@@ -853,7 +853,7 @@
         (cdr cache)
         ((lambda (text)
            (progn
-             (set-symbol-value (quote %ide-stcache)
+             (set-symbol-value (quote ide-status-line)
                                (cons (cons name (cons mod (cons msg line))) text))
              text))
          (ide-status-line state width)))))
@@ -874,9 +874,7 @@
          (status-row (- rows 1))
          (old-status (%ide-line-at old-lines status-row))
          (status (%ide-status-cached state columns))
-         (hint (if (funcall (function boundp) (quote %ide-hint))
-                   (symbol-value (quote %ide-hint))
-                   nil)))
+         (hint (if (boundp (quote ide-render)) (symbol-value (quote ide-render)) nil)))
     (progn
       (rplaca (%ide-nth-cell old-lines cursor-row) visible)
       (if (eq status old-status)
@@ -887,7 +885,7 @@
       (if hint
           (%ide-render-code-suffix-at visible cursor-row (car hint) (cdr hint))
           (%ide-render-code-line-at visible cursor-row columns 7))
-      (set-symbol-value (quote %ide-hint) nil)
+      (set-symbol-value (quote ide-render) nil)
       (ide-render-cursor-from state lines columns rows 129)
       (%ide-state-with-render-cache state old-lines cursor-row columns rows))))
 
@@ -945,7 +943,7 @@
                                                cursor-row
                                                previous-cursor-row)))
           (progn
-            (set-symbol-value (quote %ide-hint) nil)
+            (set-symbol-value (quote ide-render) nil)
             (%ide-render-dirty-lines-at lines dirty 0 columns 7 (- rows 1))
             (ide-render-cursor-from state buffer-lines columns rows 129)
             (%ide-state-with-render-cache state lines cursor-row columns rows))))))
@@ -980,7 +978,8 @@
    (%ide-persist-state state)))
 
 ;; ---- Buffer-Persistenz + MEHRERE benannte Buffer (Nutzer-Befund/-Wunsch HW 2026-07-05) ----
-;; Alle offenen Buffer leben zwischen (ide)-Aufrufen in der GLOBALEN Variable *ide-buffers*
+;; Alle offenen Buffer leben zwischen (ide)-Aufrufen in der Wertzelle des
+;; bestehenden Funktionssymbols ide-buffers
 ;; — eine Alist ((name . buffer) …), der zuletzt aktive vorn. symval-Zellen sind GC-Roots ->
 ;; überlebt REPL-Arbeit und GC; Zeilen/Name/Cursor-Position bleiben je Buffer erhalten.
 ;; API: (ide) = zuletzt aktiver Buffer (bzw. frischer "scratch"); (ide "name") = zu Buffer
@@ -989,7 +988,7 @@
 ;; eval-Umweg (v2a-Ära) brach im Dev-Core (kein eval-Prim, Budget) und verlor beim
 ;; RUN/STOP-Exit den Buffer (B4-Handtest-Fund). Null Bank-0: beides ABI-CALLPRIMs.
 (defun %ide-buffers-alist ()
-  (symbol-value (quote *ide-buffers*)))
+  (symbol-value (quote ide-buffers)))
 
 (defun %ide-buffers-find (name alist)
   (if alist
@@ -1018,7 +1017,7 @@
         (if (and alist (string= name (car (car alist))))
             (progn (rplacd (car alist) buf) 't)
             (progn
-              (set-symbol-value (quote *ide-buffers*)
+              (set-symbol-value (quote ide-buffers)
                                 (cons (cons name buf)
                                       (%ide-buffers-remove name alist)))
               't)))

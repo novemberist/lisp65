@@ -23,6 +23,10 @@ __lisp65_workbench_required_post_boot_reserve =
 __lisp65_workbench_runtime_overlay_max_vma =
     DEFINED(__lisp65_workbench_runtime_overlay_max_vma_param)
         ? __lisp65_workbench_runtime_overlay_max_vma_param : 0xc356;
+__lisp65_workbench_runtime_overlay_fixed_vma =
+    DEFINED(__lisp65_workbench_runtime_overlay_vma_param)
+        ? __lisp65_workbench_runtime_overlay_vma_param
+        : __lisp65_workbench_runtime_overlay_max_vma;
 __lisp65_workbench_runtime_transport_max_bytes = 1792;
 __lisp65_error_overlay_max_bytes =
     DEFINED(__lisp65_error_overlay_max_bytes_param)
@@ -40,20 +44,29 @@ __lisp65_resident_island_limit = 0x2000;
 __lisp65_resident_island_payload_capacity = 2048;
 
 SECTIONS {
-    /* Boot and runtime slices are distinct load images with one intentional
-     * execution VMA. Keeping every image in the same OVERLAY construct gives
-     * LLD separate LMAs while making the lifetime reuse explicit. */
-    __lisp65_workbench_runtime_overlay_vma = __lisp65_workbench_overlay_min_start;
+    /* Boot and runtime slices are distinct load images with one intentional,
+     * fixed execution VMA.  The resident-island seed, runtime-bank bootstrap,
+     * and final product links have deliberately different LTO inputs; deriving
+     * the VMA from their private .noinit stack shapes would make otherwise
+     * identical SHA-bound slices embed different absolute addresses. */
+    __lisp65_workbench_runtime_overlay_vma =
+        __lisp65_workbench_runtime_overlay_fixed_vma;
     OVERLAY __lisp65_workbench_runtime_overlay_vma : NOCROSSREFS {
         .lisp65_workbench_overlay {
             KEEP(*(.lisp65_boot .lisp65_boot.*))
         }
         .lisp65_rt_rtov_catalog { KEEP(*(.lisp65_rt_rtov_catalog)) }
         .lisp65_rt_rtov_record { KEEP(*(.lisp65_rt_rtov_record)) }
-        .lisp65_rt_l65m_00 { KEEP(*(.lisp65_rt_l65m_00)) }
+        .lisp65_rt_l65m_00 {
+            KEEP(*(.lisp65_rt_l65m_00))
+            KEEP(*(.lisp65_rt_l65m_00_data))
+        }
         .lisp65_rt_l65m_01 { KEEP(*(.lisp65_rt_l65m_01)) }
         .lisp65_rt_l65m_02 { KEEP(*(.lisp65_rt_l65m_02)) }
-        .lisp65_rt_l65m_03 { KEEP(*(.lisp65_rt_l65m_03)) }
+        .lisp65_rt_l65m_03 {
+            KEEP(*(.lisp65_rt_l65m_03))
+            KEEP(*(.lisp65_rt_l65m_03_data))
+        }
         .lisp65_rt_l65m_04 { KEEP(*(.lisp65_rt_l65m_04)) }
         .lisp65_rt_l65m_05 { KEEP(*(.lisp65_rt_l65m_05)) }
         .lisp65_rt_l65m_06 { KEEP(*(.lisp65_rt_l65m_06)) }
@@ -92,12 +105,20 @@ SECTIONS {
             KEEP(*(.lisp65_rt_island_00))
             KEEP(*(.lisp65_rt_island_00_data))
         }
+        .lisp65_rt_l65s {
+            KEEP(*(.lisp65_rt_l65s))
+            KEEP(*(.lisp65_rt_l65s_data))
+        }
+        .lisp65_rt_l65s_name { KEEP(*(.lisp65_rt_l65s_name)) }
+        .lisp65_rt_buffer_read { KEEP(*(.lisp65_rt_buffer_read)) }
+        .lisp65_rt_buffer_write { KEEP(*(.lisp65_rt_buffer_write)) }
+        .lisp65_rt_buffer_alloc { KEEP(*(.lisp65_rt_buffer_alloc)) }
+        .lisp65_rt_c1_compiler { KEEP(*(.lisp65_rt_c1_compiler)) }
     } >ram
 } INSERT AFTER .noinit;
 
 __lisp65_resident_island_seed_lma =
-    ALIGN(LOADADDR(.lisp65_rt_island_00) +
-          SIZEOF(.lisp65_rt_island_00), 0x100);
+    ALIGN(LOADADDR(.lisp65_rt_c1_compiler) + SIZEOF(.lisp65_rt_c1_compiler), 0x100);
 
 /* Link at the final CPU address while placing the seed image after all normal
  * Bank-0 load material. The shipped resident PRG is truncated before this LMA;
@@ -163,6 +184,12 @@ __lisp65_rt_boot_00_start = ADDR(.lisp65_rt_boot_00); __lisp65_rt_boot_00_end = 
 __lisp65_rt_boot_01_start = ADDR(.lisp65_rt_boot_01); __lisp65_rt_boot_01_end = ADDR(.lisp65_rt_boot_01) + SIZEOF(.lisp65_rt_boot_01);
 __lisp65_rt_boot_02_start = ADDR(.lisp65_rt_boot_02); __lisp65_rt_boot_02_end = ADDR(.lisp65_rt_boot_02) + SIZEOF(.lisp65_rt_boot_02);
 __lisp65_rt_l65e_start = ADDR(.lisp65_rt_l65e); __lisp65_rt_l65e_end = ADDR(.lisp65_rt_l65e) + SIZEOF(.lisp65_rt_l65e);
+__lisp65_rt_l65s_start = ADDR(.lisp65_rt_l65s); __lisp65_rt_l65s_end = ADDR(.lisp65_rt_l65s) + SIZEOF(.lisp65_rt_l65s);
+__lisp65_rt_l65s_name_start = ADDR(.lisp65_rt_l65s_name); __lisp65_rt_l65s_name_end = ADDR(.lisp65_rt_l65s_name) + SIZEOF(.lisp65_rt_l65s_name);
+__lisp65_rt_buffer_read_start = ADDR(.lisp65_rt_buffer_read); __lisp65_rt_buffer_read_end = ADDR(.lisp65_rt_buffer_read) + SIZEOF(.lisp65_rt_buffer_read);
+__lisp65_rt_buffer_write_start = ADDR(.lisp65_rt_buffer_write); __lisp65_rt_buffer_write_end = ADDR(.lisp65_rt_buffer_write) + SIZEOF(.lisp65_rt_buffer_write);
+__lisp65_rt_buffer_alloc_start = ADDR(.lisp65_rt_buffer_alloc); __lisp65_rt_buffer_alloc_end = ADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc);
+__lisp65_rt_c1_compiler_start = ADDR(.lisp65_rt_c1_compiler); __lisp65_rt_c1_compiler_end = ADDR(.lisp65_rt_c1_compiler) + SIZEOF(.lisp65_rt_c1_compiler);
 __lisp65_resident_island_start = ADDR(.lisp65_resident_island); __lisp65_resident_island_end = ADDR(.lisp65_resident_island) + SIZEOF(.lisp65_resident_island);
 __lisp65_resident_island_annex_start = ADDR(.lisp65_resident_island_annex); __lisp65_resident_island_annex_end = ADDR(.lisp65_resident_island_annex) + SIZEOF(.lisp65_resident_island_annex);
 __lisp65_rt_island_00_start = ADDR(.lisp65_rt_island_00); __lisp65_rt_island_00_end = ADDR(.lisp65_rt_island_00) + SIZEOF(.lisp65_rt_island_00);
@@ -203,6 +230,12 @@ __lisp65_rt_boot_00_entry = vm_boot_fastpath_phase_verify;
 __lisp65_rt_boot_01_entry = vm_boot_fastpath_phase_patches;
 __lisp65_rt_boot_02_entry = vm_boot_fastpath_phase_entries;
 __lisp65_rt_l65e_entry = lisp65_error_overlay_entry;
+__lisp65_rt_l65s_entry = l65s_stage_entry;
+__lisp65_rt_l65s_name_entry = l65s_name_entry;
+__lisp65_rt_buffer_read_entry = lisp65_buffer_overlay_read_entry;
+__lisp65_rt_buffer_write_entry = lisp65_buffer_overlay_write_entry;
+__lisp65_rt_buffer_alloc_entry = lisp65_buffer_overlay_alloc_entry;
+__lisp65_rt_c1_compiler_entry = lisp65_c1_compiler_overlay_entry;
 __lisp65_rt_island_00_entry = vm_resident_island_install;
 
 ASSERT(__lisp65_workbench_screen_base == 0x0800 &&
@@ -266,6 +299,9 @@ ASSERT(SIZEOF(.lisp65_workbench_overlay) > 0,
 ASSERT(__lisp65_workbench_runtime_overlay_vma <
            __lisp65_workbench_runtime_overlay_limit,
        "workbench runtime-overlay window is empty");
+ASSERT(__lisp65_workbench_overlay_min_start <=
+           __lisp65_workbench_runtime_overlay_vma,
+       "resident/noinit state overlaps the fixed runtime-overlay VMA");
 ASSERT(__lisp65_workbench_runtime_overlay_vma <=
            __lisp65_workbench_runtime_overlay_max_vma,
        "workbench runtime-overlay VMA exceeds the product Bank-0 ceiling");
@@ -312,6 +348,12 @@ ASSERT(SIZEOF(.lisp65_rt_boot_02) > 0 && SIZEOF(.lisp65_rt_boot_02) <= 4096 && _
 ASSERT(SIZEOF(.lisp65_rt_l65e) > 0 && SIZEOF(.lisp65_rt_l65e) <= 1792 && __lisp65_rt_l65e_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay L65E renderer exceeds its stack-safe window");
 ASSERT(SIZEOF(.lisp65_rt_l65e) <= __lisp65_error_overlay_max_bytes,
        "runtime overlay L65E renderer exceeds its product budget");
+ASSERT(SIZEOF(.lisp65_rt_l65s) > 0 && SIZEOF(.lisp65_rt_l65s) <= 1792 && __lisp65_rt_l65s_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay L65S shelf loader exceeds its stack-safe window");
+ASSERT(SIZEOF(.lisp65_rt_l65s_name) > 0 && SIZEOF(.lisp65_rt_l65s_name) <= 1792 && __lisp65_rt_l65s_name_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay L65S name resolver exceeds its stack-safe window");
+ASSERT(SIZEOF(.lisp65_rt_buffer_read) > 0 && SIZEOF(.lisp65_rt_buffer_read) <= 1792 && __lisp65_rt_buffer_read_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay first-class buffer reader exceeds its stack-safe window");
+ASSERT(SIZEOF(.lisp65_rt_buffer_write) > 0 && SIZEOF(.lisp65_rt_buffer_write) <= 1792 && __lisp65_rt_buffer_write_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay first-class buffer writer exceeds its stack-safe window");
+ASSERT(SIZEOF(.lisp65_rt_buffer_alloc) > 0 && SIZEOF(.lisp65_rt_buffer_alloc) <= 1792 && __lisp65_rt_buffer_alloc_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay first-class buffer allocator exceeds its stack-safe window");
+ASSERT(SIZEOF(.lisp65_rt_c1_compiler) > 0 && SIZEOF(.lisp65_rt_c1_compiler) <= 1792 && __lisp65_rt_c1_compiler_end <= __lisp65_workbench_runtime_overlay_limit, "runtime overlay C1 compiler lifetime exceeds its stack-safe window");
 ASSERT(SIZEOF(.lisp65_rt_island_00) > 0 && SIZEOF(.lisp65_rt_island_00) <= 4096 && __lisp65_rt_island_00_end <= __lisp65_workbench_boot_slice_limit, "boot overlay resident-island installer exceeds its 512-byte stack window");
-ASSERT(SIZEOF(.lisp65_rt_island_00) <= 1396,
+ASSERT(SIZEOF(.lisp65_rt_island_00) <= 1792,
        "resident-island installer exceeds the product Slot-37 budget");

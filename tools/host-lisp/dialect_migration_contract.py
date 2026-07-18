@@ -367,6 +367,42 @@ def _git_blob_sha(commit: str, repository_path: str, label: str) -> str:
     return hashlib.sha256(result.stdout).hexdigest()
 
 
+def _git_binding_sha_at_contract_commit(
+    contract_path: Path, repository_path: str, label: str,
+) -> str:
+    """Read a historical binding from the commit that last changed its contract.
+
+    Migration evidence predates the sealed-archive rule and binds the G5 matrix
+    at the contract's own Git snapshot.  Later harness-only matrix changes must
+    not force that historical contract (and all family evidence derived from
+    it) to move.  The fallback is intentionally limited to the single commit
+    that last changed the contract, rather than accepting any matching blob in
+    repository history.
+    """
+    try:
+        contract_relative = contract_path.resolve().relative_to(ROOT).as_posix()
+    except ValueError as exc:
+        raise MigrationError("migration contract must be inside the repository") from exc
+    try:
+        result = subprocess.run(
+            ["git", "log", "-1", "--format=%H", "--", contract_relative],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        detail = getattr(exc, "stderr", "").strip()
+        raise MigrationError(
+            f"cannot resolve {label} contract snapshot: {detail or exc}"
+        ) from exc
+    commit = result.stdout.strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise MigrationError(f"cannot resolve {label} contract snapshot commit")
+    return _git_blob_sha(commit, repository_path, label)
+
+
 def _g5_matrix(
     path: Path, *, allow_unbound_verifiers: bool,
 ) -> tuple[dict[str, tuple[str, str, str, str, str | None]], set[str]]:
@@ -2610,8 +2646,16 @@ def validate(
         raise MigrationError("profile switch authority/effect drift")
     matrix_path = _path(switch["matrix_contract"], "switch_criteria.matrix_contract")
     matrix_sha = _sha_value(switch["matrix_contract_sha256"], "switch_criteria.matrix_contract_sha256")
-    if matrix_path is None or matrix_sha is None or _sha(matrix_path) != matrix_sha:
+    if matrix_path is None or matrix_sha is None:
         raise MigrationError("profile switch matrix SHA binding drift")
+    if _sha(matrix_path) != matrix_sha:
+        snapshot_sha = _git_binding_sha_at_contract_commit(
+            contract_path,
+            PurePosixPath(switch["matrix_contract"]).as_posix(),
+            "profile switch matrix",
+        )
+        if snapshot_sha != matrix_sha:
+            raise MigrationError("profile switch matrix SHA binding drift")
     matrix_cases, _matrix_domains = _g5_matrix(
         matrix_path, allow_unbound_verifiers=contract["status"] != "ready-for-g5"
     )

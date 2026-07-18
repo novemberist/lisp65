@@ -57,7 +57,12 @@ if screenshot is not None:
     Path(screenshot).write_bytes(b"fake screenshot\n")
     state["events"].append({"kind": "capture", "active": state["active"]})
     save_state(state_path, state)
-    if mode == "capture_failure":
+    capture_count = sum(
+        1 for event in state["events"] if event["kind"] == "capture"
+    )
+    if mode == "capture_failure" or (
+        mode == "capture_failure_once" and capture_count == 1
+    ):
         raise SystemExit(42)
     if mode == "active_stale_basic" and state["active"]:
         rows = [
@@ -357,6 +362,24 @@ def check_failure_paths(tmp: Path) -> None:
     require(state.get("active") == "", "capture failure cleanup must clear active input", result)
     require(not events_of(state, "submit"), "capture failure must not submit", result)
 
+    result, state = run_case(tmp, "capture_failure_once")
+    require(
+        result.returncode == 42,
+        "successful cleanup capture must not erase the original capture failure",
+        result,
+    )
+    require(
+        state.get("active") == "",
+        "one-shot capture failure cleanup must prove an empty prompt",
+        result,
+    )
+    require(
+        len(events_of(state, "capture")) == 2,
+        "one-shot capture failure needs failed input and successful cleanup captures",
+        result,
+    )
+    require(not events_of(state, "submit"), "one-shot capture failure must not submit", result)
+
     result, state = run_case(tmp, "clear_failure")
     require(result.returncode == 43, "clear failure status must propagate", result)
     require(state.get("active") == CORRUPTED_FORM, "failed clear must remain observable", result)
@@ -479,7 +502,7 @@ def main() -> int:
         check_unsafe_forms_rejected(tmp)
         check_result_oracle(tmp)
         check_polled_result_oracle(tmp)
-    print("hw-jtag-repl harness selftest: PASS (18 cases)")
+    print("hw-jtag-repl harness selftest: PASS (19 cases)")
     return 0
 
 

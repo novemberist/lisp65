@@ -303,7 +303,7 @@ def _check_abi_ledger() -> None:
     v2 = profiles["dialect-v2"]["prim_ids"]
     if v1["active"] != list(range(23)) or v1["tombstone"]:
         raise SurfaceError("dialect-v1 Prim-ID allocation must remain exactly 0..22 active")
-    expected_v2_active = [0, *range(3, 26), 28, 29, *range(30, 34), *range(35, 40), *range(41, 63)]
+    expected_v2_active = [0, *range(3, 26), 28, 29, *range(30, 34), *range(35, 40), *range(41, 67)]
     if v2["active"] != expected_v2_active or v2["tombstone"] != [1, 2, 26, 27, 34, 40]:
         raise SurfaceError("dialect-v2 Prim-ID active/tombstone allocation drift")
     expected_new = {

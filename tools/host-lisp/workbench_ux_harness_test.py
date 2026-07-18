@@ -92,8 +92,8 @@ phase_results = {
     "reject-fasl-open": '"not source"',
     "reject-fasl-directory-open": '"not source"',
     "reject-fasl-save": '"not source"',
-    "find-tab": '(find-file "Find file: " "DEMO")',
-    "buffer-tab": '(switch-buffer "Buffer: " "b" "a")',
+    "find-tab": '(1002 "Find file: " "DEMO")',
+    "buffer-tab": '(1006 "Buffer: " "b" "a")',
     "buffer-cycle": '"a"',
     "delete-forward": '"ac"',
     "kill-line": '(("ab") "cd")',
@@ -105,7 +105,7 @@ phase_results = {
     "yank-multiline": '(("acd" "ef" "gb") (2 . 1))',
     "compile-source-guard": '"not source"',
     "navigation-aliases": '("a" "b" "cd")',
-    "mini-history": '(find-file "Find file: " "demo")',
+    "mini-history": '(1002 "Find file: " "demo")',
     "mini-edit": '"d"',
     "search-goto": '"moved"',
     "search-repeat": '((1 . 0) "found")',
@@ -121,7 +121,7 @@ elif phase.startswith("core-arith-attempt-"):
 else:
     result = phase_results.get(phase, "nil")
 if mode == "dynamic_failure" and phase == "find-tab":
-    result = '(find-file "Find file: " "WRONG")'
+    result = '(1002 "Find file: " "WRONG")'
 if mode == "hook_failure" and phase == "idex-hook-override":
     result = '"hook not overridden"'
 if mode == "higher_order_failure" and phase == "higher-order-remount-every":
@@ -208,6 +208,16 @@ def main() -> int:
     require(
         "(set-symbol-value (quote %ide-mini) nil)" not in harness_source,
         "hardware harness must not clear the private modal global directly",
+    )
+    require(
+        "(quote %ide-mini)" not in harness_source
+        and "(quote %ide-prefix)" not in harness_source,
+        "hardware harness must use the canonical public-symbol value-cell carriers",
+    )
+    require(
+        harness_source.count("(symbol-value (quote ide-step))") == 4
+        and "(set-symbol-value (quote ide-event-command) nil)" in harness_source,
+        "hardware harness must bind all modal probes to the current carrier contract",
     )
     require(
         "restauriere unveraenderte Ship-D81" in harness_source

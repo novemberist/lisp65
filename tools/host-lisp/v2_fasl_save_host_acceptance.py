@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Host acceptance for the dialect-v2 commit-last FASL writer."""
+"""Historical acceptance and retirement gate for the v2 fixed-slot writer."""
 
 from __future__ import annotations
 
@@ -22,10 +22,12 @@ import l65m_contract as L65M  # noqa: E402
 
 TARGETS = (
     "1-",
+    "%c1-slot-link-valid-p",
     "%compile-slot-capacity",
     "%fasl-save-sector",
     "%fasl-save-tail",
     "%fasl-commit-first",
+    "%fasl-save-from-first",
     "%fasl-save-staged-v2",
 )
 REPORT = ROOT / (
@@ -391,7 +393,7 @@ def check_fuel():
     stage_bytes(vm, 4)
     result = run_save(vm, code, target, 4)
     require(vm.heap.obj_to_text(result) == "%fasl-too-large", "cyclic chain did not fail preflight")
-    require(vm.io_counters["disk_read"] == 255, "fuel budget drift on cyclic chain")
+    require(vm.io_counters["disk_read"] == 1, "self-reference was not rejected immediately")
     require(vm.io_counters["disk_write"] == 0, "cyclic chain wrote a sector")
     assert_protected(vm, target, protected)
 
@@ -437,20 +439,22 @@ def selftest():
 def check():
     report = json.loads(REPORT.read_text(encoding="utf-8"))
     validate_report(report)
-    boundary_lengths = (0, 1, 3, 4, 253, 254, 255, 256, 599, 600)
-    for length in boundary_lengths:
-        check_success(length)
-    check_real_l65m_reload()
-    check_too_large_and_malformed()
-    check_fault(write_op=1, label="first-invalidation-write-fault")
-    check_fault(write_op=2, label="mid-tail-write-fault")
-    check_fault(read_op=5, label="mid-tail-read-fault")
-    check_fault(read_op=7, label="commit-read-fault")
-    check_fault(write_op=4, label="commit-write-fault")
-    check_fuel()
+    eval_text = (ROOT / "lib" / "dialect-v2" / "eval-runtime.lisp").read_text(
+        encoding="utf-8"
+    )
+    retired = TARGETS[1:]
+    present = [name for name in retired if "(defun %s " % name in eval_text]
+    require(not present, "retired fixed-slot writer returned: %s" % ", ".join(present))
+    require("(m65d-save dst output)" in eval_text,
+            "compile-string is not routed through M65D COW")
+    m65d_text = (ROOT / "lib" / "m65-disk.lisp").read_text(encoding="utf-8")
+    require("(%fasl-stage-get (+ pos i))" in m65d_text,
+            "M65D Buffer payload path is absent")
+    require("(%buffer-read 0 src)" in m65d_text,
+            "M65D Buffer type gate is absent")
     print(
-        "v2-fasl-save-host-acceptance: PASS boundaries=%d faults=5 fuel=255"
-        % len(boundary_lengths)
+        "v2-fasl-save-host-acceptance: PASS historical-receipt=valid "
+        "fixed-slot-writer=retired current-owner=m65d-cow"
     )
 
 

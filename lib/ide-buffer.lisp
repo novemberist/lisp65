@@ -1,5 +1,5 @@
 (defun ide-make-buffer (name lines)
-  (list name nil lines (cons 0 0) nil nil 'lisp-mode nil nil))
+  (list name nil lines (cons 0 0) nil nil 1105 nil nil))
 
 (defun ide-buffer-name (buffer)
   (car buffer))

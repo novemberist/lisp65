@@ -29,8 +29,22 @@ void vm_ext_write(const uint8_t *src, uint16_t len, uint8_t bank, uint16_t off);
 uint16_t vm_ext_code_alloc(uint16_t len, uint8_t persist);
 uint8_t  vm_ext_code_preview(uint16_t len, uint16_t *base);    /* read-only reservation check */
 uint16_t vm_ext_code_watermark(void);                          /* read-only current append point */
+#ifdef LISP65_C1_COMPILER_TIER
+uint8_t  vm_ext_code_truncate(uint16_t watermark);             /* C1-only checked LIFO rollback */
+#ifdef LISP65_C1_LEASE_ALLOC_GUARD
+void     vm_ext_code_lease_begin(void);
+uint8_t  vm_ext_code_lease_active(void);
+#endif
+#endif
 uint16_t vm_ext_code_alloc_transient(uint16_t len);             /* Ausdrucks-Main: Abwaerts-Stapel, 0xFFFF = voll */
 void     vm_ext_code_pop_transient(uint16_t at, uint16_t len);  /* nach dem Lauf freigeben (LIFO) */
+#ifdef LISP65_VM_EXT_CODE_TEST
+void     vm_ext_code_test_state(uint16_t watermark, uint16_t transient);
+uint16_t vm_ext_code_test_transient(void);
+#ifdef LISP65_C1_LEASE_ALLOC_GUARD
+uint8_t  vm_ext_code_test_lease(void);
+#endif
+#endif
 
 /* Boot-Einstieg (nach mem_init + vm_init oder dem umfassenderen eval_init):
  * 1) Blob ins erw. RAM stagen, 2) Directory registrieren, 3) littab-Symbole aufloesen. */

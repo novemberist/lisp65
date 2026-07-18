@@ -1,0 +1,38 @@
+{
+  "format": "lisp65-v11-g-green-surface-contract-v4",
+  "version": 4,
+  "status": "owner-approved-wave2-scope-corrected",
+  "recorded_on": "2026-07-18",
+  "features": {
+    "read-from-string": {
+      "arity": 1,
+      "argument": "String",
+      "result": "first reader object",
+      "trailing_input": "not consumed by this call",
+      "invalid_type": "existing VM type-error channel",
+      "malformed_input": "existing reader error channel",
+      "implementation": "resident bytecode composition of %cs-read-open and %fasl-read-form",
+      "required_routes": ["direct", "funcall", "apply"]
+    }
+  },
+  "deferred_features": {
+    "restart-repl": {
+      "destination": "C2.3",
+      "reason": "All three bounded pre-C2 designs require the immutable-code/mutable-session separation defined by C2.0: platform reset exits to BASIC, CRT re-entry sees session-mutated Bank 5, and a correct whole-image verifier/restore does not fit the current resident boundary.",
+      "required_acceptance": [
+        "two consecutive public restart-repl calls on a real MEGA65",
+        "fresh Lisp65 banner and usable REPL after each call",
+        "no stack, mutable-session, symbol, directory, or shelf-state leak",
+        "valid Attic code identity remains unchanged",
+        "M65D media remains unchanged"
+      ],
+      "wave2_surface": "not-delivered"
+    }
+  },
+  "implementation_status": "Wave 2 delivers read-from-string. restart-repl is removed from the 1.1 surface by owner decision and carried explicitly by C2.3.",
+  "diagnosis_receipts": [
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-restart-repl-self-restart-probe-receipt.json",
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-restart-repl-attic-recovery-probe-receipt.json"
+  ],
+  "hardware_claim_limit": "Wave 2 makes no restart-repl claim and exports no such function. The retained failed receipts are C2 design evidence, not partial delivery evidence."
+}

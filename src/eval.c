@@ -930,9 +930,7 @@ static obj apply_prim(int16_t id, obj args) {
 #ifdef LISP65_DIALECT_V2
         if (!primitive_exact_arity(args, 1)) return NIL;
 #endif
-        obj p = car(args), prev = NIL;
-        while (IS_PTR(p) && cell_type(p) == T_CONS) { obj nx = cell_b(p); cell_set_b(p, prev); prev = p; p = nx; }
-        return prev;
+        return list_nreverse(car(args));
     }
     case P_RPLACA: {                                /* (rplaca c v) -> c */
         obj c = car(args);
@@ -940,16 +938,14 @@ static obj apply_prim(int16_t id, obj args) {
         if (!primitive_exact_arity(args, 2)) return NIL;
 #endif
         if (!(IS_PTR(c) && cell_type(c) == T_CONS)) { lisp_abort_static(LISP65_ERR_RPLACA_TYPE, "rplaca: not a cons"); return NIL; }
-        cell_set_a(c, cadr(args));
-        return c; }
+        return list_rplaca(c, cadr(args)); }
     case P_RPLACD: {                                /* (rplacd c v) -> c */
         obj c = car(args);
 #ifdef LISP65_DIALECT_V2
         if (!primitive_exact_arity(args, 2)) return NIL;
 #endif
         if (!(IS_PTR(c) && cell_type(c) == T_CONS)) { lisp_abort_static(LISP65_ERR_RPLACD_TYPE, "rplacd: not a cons"); return NIL; }
-        cell_set_b(c, cadr(args));
-        return c; }
+        return list_rplacd(c, cadr(args)); }
 #ifdef LISP65_EVAL_SCREEN_PRIMS
     case P_SCRSIZE: {                               /* (screen-size) -> (cols rows) */
         obj r = cons(MKFIX((int16_t)scr_rows()), NIL);

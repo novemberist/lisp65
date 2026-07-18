@@ -152,11 +152,29 @@ RUNTIME_OVERLAY_CANONICAL_SLICES = (
         "__lisp65_rt_island_00_entry",
         RuntimeOverlayBank.FLAG_BOOT,
     ),
+    (
+        "attic-library-shelf",
+        ".lisp65_rt_l65s",
+        "__lisp65_rt_l65s_start",
+        "__lisp65_rt_l65s_end",
+        "__lisp65_rt_l65s_entry",
+        RUNTIME_OVERLAY_SLICE_FLAGS,
+    ),
+    (
+        "attic-library-name",
+        ".lisp65_rt_l65s_name",
+        "__lisp65_rt_l65s_name_start",
+        "__lisp65_rt_l65s_name_end",
+        "__lisp65_rt_l65s_name_entry",
+        RUNTIME_OVERLAY_SLICE_FLAGS,
+    ),
 )
 RUNTIME_OVERLAY_SLICE_COUNT = len(RUNTIME_OVERLAY_CANONICAL_SLICES)
-# Ship-v5 allocates Slot 37 to the boot-only resident-island installer.  The
-# historical Ship-v4 limit remains pinned separately below.
-RUNTIME_OVERLAY_PRODUCT_SLOT_LIMIT = 38
+# Ship-v5 allocates Slot 37 to the boot-only resident-island installer; 1.1
+# adds the reset-persistent Attic shelf loader at Slot 38 and its cold name
+# resolver at Slot 39. The historical
+# Ship-v4 limit remains pinned separately below.
+RUNTIME_OVERLAY_PRODUCT_SLOT_LIMIT = 40
 STDLIB_TRUST_SCHEMA = "lisp65-workbench-stdlib-trust-v2"
 STDLIB_TRUST_MODEL = "profile-bound-preload"
 STDLIB_GATE_PRODUCER = "bytecode_p0_stdlib.py --check --emit-artifacts"
@@ -286,13 +304,13 @@ V5_RUNTIME_PROFILE_LINES = (
     "resident_island_address=0x1800",
     "resident_island_limit=0x2000",
     "resident_island_payload_capacity=2048",
-    "resident_island_immutable_bytes=1108",
+    "resident_island_immutable_bytes=1485",
     "resident_island_annex_section=.lisp65_resident_island_annex",
-    "resident_island_annex_start=0x1c54",
-    "resident_island_annex_end_exclusive=0x1d58",
+    "resident_island_annex_start=0x1dce",
+    "resident_island_annex_end_exclusive=0x1ed2",
     "resident_island_annex_bytes=260",
     "resident_island_annex_root_count=128",
-    "resident_island_annex_reserve_bytes=680",
+    "resident_island_annex_reserve_bytes=302",
     "resident_island_annex_lifetime=mutable-noload",
     "resident_island_slot=37",
     "resident_island_lifetime=boot-installed-resident",

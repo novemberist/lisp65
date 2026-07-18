@@ -1,0 +1,25 @@
+{
+  "format": "lisp65-v11-filter-product-cases-v1",
+  "version": 1,
+  "profile": "dialect-v2",
+  "cases": [
+    {
+      "name": "v11-filter-apply",
+      "invoke": "apply",
+      "expr": "(apply (function filter) (list (function numberp) '(a 2 b 3)))",
+      "expect": "(2 3)"
+    },
+    {
+      "name": "v11-filter-direct",
+      "invoke": "direct",
+      "expr": "(filter (function numberp) '(a 2 b 3))",
+      "expect": "(2 3)"
+    },
+    {
+      "name": "v11-filter-funcall",
+      "invoke": "funcall",
+      "expr": "(funcall (function filter) (function numberp) '(a 2 b 3))",
+      "expect": "(2 3)"
+    }
+  ]
+}

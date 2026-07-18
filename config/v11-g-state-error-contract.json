@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-v11-g-state-error-contract-v1",
+  "version": 1,
+  "status": "semantics-pinned-delivery-deferred-to-c2.2",
+  "recorded_on": "2026-07-17",
+  "features": {
+    "error": {
+      "arity": 1,
+      "argument": "String",
+      "result": "non-returning top-level abort",
+      "rendering": "exactly *** followed by one space, the String bytes, and newline",
+      "v1_exclusions": ["numeric user code", "handler", "restart", "resumable continuation"],
+      "required_routes": ["direct", "funcall", "apply"]
+    },
+    "gc": {
+      "arity": 0,
+      "result": "t after exactly one complete synchronous collection",
+      "required_routes": ["direct", "funcall", "apply"]
+    },
+    "room": {
+      "arity": 0,
+      "delivery": "not present in the 1.1 product profile; deferred with gc and error to C2.2",
+      "result": [
+        "heap-free", "heap-capacity", "symbol-free", "symbol-capacity",
+        "namepool-free", "namepool-capacity", "directory-free", "directory-capacity"
+      ],
+      "printing": "none",
+      "required_routes": ["direct", "funcall", "apply"]
+    }
+  },
+  "delivery_decision": {
+    "decided_on": "2026-07-17",
+    "result": "deferred-to-c2.2-after-one-authorized-architecture-attempt",
+    "reason": "The generic private-service facade attempt remained 228 bytes over the fixed resident boundary and exceeded both intended co-pack allocations; no second tuning attempt is permitted.",
+    "public_surface_rule": "None of gc, room, or error is exposed by the 1.1 profile until a C2.2 carrier passes the pinned semantics."
+  }
+}

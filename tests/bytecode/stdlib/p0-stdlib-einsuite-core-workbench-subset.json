@@ -1,7 +1,19 @@
 {
  "format": "lisp65-bytecode-p0-stdlib-subset-v1",
  "description": "Workbench-Kandidat: Arena-IDE + compile-string-Slow-Path. Basis einsuite-core (mit lcc + lcc-fasl.lisp-Emitter), aber der teure native Disk-Source-Compile-Pfad ist DRAUSSEN: compile-file (nutzt %fasl-src -> io_fasl_open_source -> disk_dir_find) und der Diagnose-Entry fasl-emit-scratch werden entfernt (Codex-Handoff 2026-07-08). compile-string(source-text dst) liest die Formen aus dem IDE-Buffer-STRING (Prim %cs-read-open, kein Disk), kompiliert via lcc und schreibt FASL/L65M nach dst. Gebaut mit -DLISP65_COMPILE_STRING statt -DLISP65_FASL (spart ~die Disk-Source-C-Schicht).",
- "extends": "p0-stdlib-einsuite-core-subset.json",
+  "extends": "p0-stdlib-einsuite-core-subset.json",
+  "sources": ["lib/repl-banner.lisp"],
+  "functions": [
+    "%banner-separator",
+    "%banner-run",
+    "%banner-runs",
+    "%banner-subtitle",
+    "%repl-banner"
+  ],
+  "private_inline_functions": [
+    "%banner-runs",
+    "%banner-subtitle"
+  ],
  "remove_functions": [
   "compile-file",
   "fasl-emit-scratch"
@@ -9,22 +21,86 @@
  "allow_omitted_defuns": [
   {
    "name": "screen-write-string",
-   "reason": "provided by the resident Workbench screen runtime"
+   "reason": "excluded from the canonical Workbench product; screen-bulk-p pins the supported fallback path"
   },
   {
    "name": "compile-file",
    "reason": "excluded from the compile-string Workbench profile"
   },
-  {
-   "name": "fasl-emit-scratch",
-   "reason": "excluded from the compile-string Workbench profile"
-  }
- ],
+    {
+      "name": "fasl-emit-scratch",
+      "reason": "excluded from the compile-string Workbench profile"
+    },
+    {
+      "name": "%c1-compile-form",
+      "reason": "temporary C1 compiler-tier entry, bound by the C1 tier manifest and block receipt"
+    }
+  ],
  "remove_cases": [
   "fasl-compile-file-bytecode",
   "fasl-emit-scratch-bytecode"
  ],
- "cases": [
+  "cases": [
+    {
+      "name": "workbench-directory-link-valid-tail",
+      "expr": "(%disk-directory-link-valid-p 40 3 0 0)",
+      "expect": "t"
+    },
+    {
+      "name": "workbench-directory-link-valid-next",
+      "expr": "(%disk-directory-link-valid-p 40 3 40 4)",
+      "expect": "t"
+    },
+    {
+      "name": "workbench-directory-link-rejects-wrong-track",
+      "expr": "(%disk-directory-link-valid-p 40 3 39 4)",
+      "expect": "nil"
+    },
+    {
+      "name": "workbench-directory-link-rejects-self-reference",
+      "expr": "(%disk-directory-link-valid-p 40 3 40 3)",
+      "expect": "nil"
+    },
+    {
+      "name": "workbench-repl-banner-return",
+      "expr": "(%repl-banner)",
+      "expect": "nil"
+    },
+    {
+      "name": "v11-g-read-from-string-direct",
+      "expr": "(read-from-string \"42\")",
+      "expect": "42"
+    },
+    {
+      "name": "v11-g-read-from-string-funcall",
+      "expr": "(funcall (function read-from-string) \"42\")",
+      "expect": "42"
+    },
+    {
+      "name": "v11-g-read-from-string-apply",
+      "expr": "(apply (function read-from-string) (list \"42\"))",
+      "expect": "42"
+    },
+    {
+      "name": "v11-g-read-from-string-first-object",
+      "expr": "(read-from-string \"42 7\")",
+      "expect": "42"
+    },
+    {
+      "name": "v11-g-read-from-string-type-error",
+      "expr": "(read-from-string 42)",
+      "expect_vm_error": "TypeError"
+    },
+    {
+      "name": "v11-g-read-from-string-arity-zero",
+      "expr": "(read-from-string)",
+      "expect_vm_error": "ArityError"
+    },
+    {
+      "name": "v11-g-read-from-string-arity-extra",
+      "expr": "(read-from-string \"42\" \"7\")",
+      "expect_vm_error": "ArityError"
+    },
   {
    "name": "workbench-mod-remainder-bytecode",
    "expr": "(list (function-kind 'mod) (function-kind 'remainder))",
@@ -56,19 +132,14 @@
    "expect": "\"bad source\""
   },
   {
-   "name": "workbench-compile-string-missing-slot",
-   "expr": "(compile-string \"(defun x () 1)\" \"noslot\")",
+   "name": "workbench-compile-string-bad-destination",
+   "expr": "(compile-string \"(defun x () 1)\" 7)",
    "expect": "nil"
   },
   {
-   "name": "workbench-compile-string-missing-slot-error",
-   "expr": "(progn (compile-string \"(defun x () 1)\" \"noslot\") (compile-error))",
-   "expect": "\"slot missing\""
-  },
-  {
-   "name": "workbench-compile-slot-capacity-host",
-   "expr": "(let ((slot (%compile-slot-find (string->list \"work\") 40 0 64))) (%compile-slot-capacity (car slot) (cdr slot) 255 0))",
-   "expect": "254"
+   "name": "workbench-compile-string-bad-destination-error",
+   "expr": "(progn (compile-string \"(defun x () 1)\" 7) (compile-error))",
+   "expect": "\"bad destination\""
   }
  ]
 }

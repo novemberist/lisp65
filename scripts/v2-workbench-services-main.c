@@ -26,6 +26,13 @@ void io_disk_scratch_poke(unsigned char index, unsigned char value) {
 unsigned char io_disk_write_sector(unsigned char track, unsigned char sector) {
     (void)track; (void)sector; return 0;
 }
+void io_disk_transaction_capture_mount_token(void) {}
+unsigned char io_disk_transaction_classify_status(unsigned char status) {
+    return status;
+}
+unsigned char io_disk_write_sector_guarded(unsigned char track, unsigned char sector) {
+    return io_disk_write_sector(track, sector);
+}
 unsigned char io_disk_stage_put(unsigned int index, unsigned char value) {
     ext_disk_put((uint16_t)index, value); return 1;
 }

@@ -7,6 +7,7 @@ lisp65 16-bit `obj` value model. It does not depend on the tree-walker.
 """
 
 from dataclasses import dataclass
+import os
 
 
 CO_MAGIC = 0xB5
@@ -19,6 +20,7 @@ NIL = 0
 T_CONS = "cons"
 T_SYM = "sym"
 T_STR = "str"
+T_BUF = "buf"
 
 
 class BytecodeError(Exception):
@@ -188,6 +190,10 @@ PRIM_IDS = {
     60: "key-event",
     61: "peek",
     62: "poke",
+    63: "%buffer-read",
+    64: "%buffer-write",
+    65: "%buffer-alloc",
+    66: "%c1-control",
 }
 
 PRIM_NAME_IDS = {name: prim_id for prim_id, name in PRIM_IDS.items()}
@@ -431,6 +437,9 @@ class Heap:
     def stringp(self, o):
         return is_ptr(o) and self.cell(o).type == T_STR
 
+    def bufferp(self, o):
+        return is_ptr(o) and self.cell(o).type == T_BUF
+
     def list_from_py(self, values):
         out = NIL
         for item in reversed(values):
@@ -461,6 +470,8 @@ class Heap:
             return self._list_text(o)
         if c.type == T_STR:
             return '"%s"' % self._string_text(c.a)
+        if c.type == T_BUF:
+            return "#<buffer>"
         return "#<%s>" % c.type
 
     def _list_text(self, o):
@@ -800,6 +811,8 @@ class P0VM:
         self.disk_files = self._init_disk_files(disk_files)
         self.d81_bam_model = bool(d81_bam_model)
         self.fasl_stage = [0] * 16384
+        self.compile_source_forms = []
+        self.compile_source_index = 0
         self.io_counters = {}
         self.disk_read_trace = []
         self.disk_write_trace = []
@@ -1624,8 +1637,13 @@ class P0VM:
             self.disk_loaded.append((track, sector))
             return self.heap.t_obj
         if prim_id == 18:
+            if argc == 1 and self.heap.stringp(args[0]):
+                # Host suites model the reset-persistent shelf as absent unless
+                # a focused shelf fixture supplies it; load-lib must then take
+                # the proven D81 fallback path.
+                return NIL
             if argc != 2 or not all(is_fix(arg) for arg in args):
-                raise VMError("TypeError", "%disk-load-lib expects track and sector")
+                raise VMError("TypeError", "%disk-load-lib expects name or track and sector")
             track, sector = fixval(args[0]), fixval(args[1])
             if (track, sector) != (1, 2):
                 return NIL
@@ -1743,6 +1761,27 @@ class P0VM:
             if any(not is_fix(ch) or not 0 <= fixval(ch) <= 255 for ch in chars):
                 raise VMError("TypeError", "%string-from-codes expects byte fixnums")
             return self.heap.string_from_text("".join(chr(fixval(ch)) for ch in chars))
+        if prim_id == 30:
+            if argc != 1 or not self.heap.stringp(args[0]):
+                raise VMError("TypeError", "%cs-read-open expects one string")
+            # Imported lazily to avoid the compiler<->VM module cycle at load.
+            import bytecode_p0_compiler as compiler
+            try:
+                self.compile_source_forms = compiler.parse_all(
+                    self.heap.string_to_text(args[0])
+                )
+            except compiler.CompileError as exc:
+                raise VMError("ReaderError", str(exc))
+            self.compile_source_index = 0
+            return self.heap.t_obj
+        if prim_id == 31:
+            if argc != 0:
+                raise VMError("ArityError", "%fasl-read-form expects no arguments")
+            if self.compile_source_index >= len(self.compile_source_forms):
+                return self.heap.intern("%fasl-eof")
+            form = self.compile_source_forms[self.compile_source_index]
+            self.compile_source_index += 1
+            return self._compiler_form_obj(form)
         if prim_id == 32:
             if argc != 2 or not all(is_fix(arg) for arg in args):
                 raise VMError("TypeError", "%fasl-stage expects index and byte")
@@ -1810,7 +1849,118 @@ class P0VM:
                 raise VMError("TypeError", "poke arguments must be in 0..255")
             self.memory[(values[0] << 8) | values[1]] = values[2]
             return args[2]
+        if prim_id == 63:
+            if argc < 1 or not is_fix(args[0]):
+                raise VMError("TypeError", "%buffer-read expects an operation")
+            operation = fixval(args[0])
+            if operation == 0:
+                if argc != 2:
+                    raise VMError("ArityError", "%buffer-read predicate expects one value")
+                return self.heap.t_obj if self.heap.bufferp(args[1]) else NIL
+            if operation in (1, 3):
+                if argc != 2:
+                    raise VMError("ArityError", "%buffer-read operation expects one buffer")
+                if not self.heap.bufferp(args[1]):
+                    raise VMError("TypeError", "%buffer-read expects a buffer")
+                cell = self.heap.cell(args[1])
+                if operation == 1:
+                    return cell.b
+                cell.type = T_STR
+                return args[1]
+            if operation == 2:
+                if argc != 3:
+                    raise VMError("ArityError", "%buffer-read ref expects buffer and index")
+                if not self.heap.bufferp(args[1]) or not is_fix(args[2]):
+                    raise VMError("TypeError", "%buffer-read ref expects buffer and index")
+                index = fixval(args[2])
+                values = self._list_to_objs(self.heap.cell(args[1]).a, "%buffer-read")
+                if index < 0 or index >= len(values):
+                    raise VMError("TypeError", "%buffer-read index out of range")
+                return values[index]
+            raise VMError("TypeError", "%buffer-read operation out of range")
+        if prim_id == 64:
+            if argc != 3:
+                raise VMError("ArityError", "%buffer-write expects buffer index byte")
+            if not self.heap.bufferp(args[0]) or not is_fix(args[1]) or not is_fix(args[2]):
+                raise VMError("TypeError", "%buffer-write expects buffer index byte")
+            index, value = fixval(args[1]), fixval(args[2])
+            values = self._list_to_objs(self.heap.cell(args[0]).a, "%buffer-write")
+            if index < 0 or index >= len(values) or value < 0 or value > 255:
+                raise VMError("TypeError", "%buffer-write argument out of range")
+            cursor = self.heap.cell(args[0]).a
+            for _ in range(index):
+                cursor = self.heap.cell(cursor).b
+            self.heap.cell(cursor).a = args[2]
+            return args[2]
+        if prim_id == 65:
+            if argc != 2 or not is_fix(args[0]):
+                raise VMError("TypeError", "%buffer-alloc expects operation and source")
+            operation = fixval(args[0])
+            if operation == 0:
+                if not is_fix(args[1]) or fixval(args[1]) < 0:
+                    raise VMError("TypeError", "%buffer-alloc length must be nonnegative")
+                length = fixval(args[1])
+                values = self.heap.list_from_py([0] * length)
+            elif operation == 1:
+                if not self.heap.stringp(args[1]):
+                    raise VMError("TypeError", "%buffer-alloc source must be a string")
+                values = self.heap.list_from_py(
+                    [ord(ch) for ch in self.heap.string_to_text(args[1])]
+                )
+                length = len(self.heap.string_to_text(args[1]))
+            elif operation == 2:
+                if not is_fix(args[1]) or fixval(args[1]) < 0:
+                    raise VMError("TypeError", "%buffer-alloc stage length must be nonnegative")
+                length = fixval(args[1])
+                if length > len(self.fasl_stage):
+                    raise VMError("TypeError", "%buffer-alloc stage length out of range")
+                values = self.heap.list_from_py(self.fasl_stage[:length])
+            elif operation == 3:
+                if not self.heap.bufferp(args[1]):
+                    raise VMError("TypeError", "%buffer-alloc stage source must be a buffer")
+                staged = self._list_to_objs(self.heap.cell(args[1]).a, "%buffer-alloc")
+                if len(staged) > len(self.fasl_stage):
+                    raise VMError("TypeError", "%buffer-alloc stage source out of range")
+                self.fasl_stage[:len(staged)] = [fixval(value) for value in staged]
+                return mkfix(len(staged))
+            else:
+                raise VMError("TypeError", "%buffer-alloc operation out of range")
+            return self.heap.alloc(T_BUF, values, mkfix(length))
+        if prim_id == 66:
+            if argc != 2 or not is_fix(args[0]):
+                raise VMError("TypeError", "%c1-control expects operation and value")
+            operation = fixval(args[0])
+            if operation in (0, 1):
+                return args[0]
+            if operation == 2:
+                return args[1]
+            if operation == 30:
+                return self.heap.t_obj  # host witness; device transfer is non-returning
+            raise VMError("TypeError", "%c1-control operation out of range")
         raise VMError("DirMiss", "unsupported CALLPRIM id=%d argc=%d" % (prim_id, argc))
+
+    def _compiler_form_obj(self, form):
+        """Materialize the source parser's AST as a runtime Lisp object."""
+        import bytecode_p0_compiler as compiler
+        if isinstance(form, compiler.StringLit):
+            return self.heap.string_from_text(form.value)
+        if isinstance(form, compiler.DottedList):
+            tail = self._compiler_form_obj(form.tail)
+            for item in reversed(form.items):
+                tail = self.heap.cons(self._compiler_form_obj(item), tail)
+            return tail
+        if isinstance(form, list):
+            tail = NIL
+            for item in reversed(form):
+                tail = self.heap.cons(self._compiler_form_obj(item), tail)
+            return tail
+        if isinstance(form, int):
+            return mkfix(form)
+        if isinstance(form, str):
+            if form == "nil":
+                return NIL
+            return self.heap.intern(form)
+        raise VMError("ReaderError", "unsupported compiler source form")
 
     def _disk_read_sector(self, track, sector):
         self.io_counters["disk_read"] += 1

@@ -49,6 +49,7 @@ SECTION_PINS = {
     "eval_init": BOOT_SECTION,
     "defprim": BOOT_SECTION,
     INSTALLER: ".text",
+    "io_attic_load_lib": ".lisp65_resident_island",
     **BOOT_SLICE_FUNCTION_SECTIONS,
     **BOOT_SLICE_LINKER_SECTIONS,
 }
@@ -67,7 +68,10 @@ REQUIRED_RESIDENT = (
     "str_arena_freeze",
     "lisp_stack_low",
 )
-TOP_LEVEL_RESIDENT_CALLERS = ("io_disk_lib_staged", "io_disk_load_lib")
+TOP_LEVEL_RESIDENT_CALLERS = (
+    "io_disk_lib_staged",
+    "io_disk_load_lib",
+)
 RUNTIME_CRC = "rtov_crc_mem"
 RUNTIME_CATALOG_VERIFIER = "vm_runtime_overlay_catalog_verifier"
 RUNTIME_CATALOG_SECTION = ".lisp65_rt_rtov_catalog"
@@ -438,6 +442,7 @@ def _selftest() -> int:
         OVERLAY_ENTRY: symbol(0x9100, section=BOOT_SECTION),
         ENTRY: symbol(0x9100, 0x03, BOOT_SECTION),
         INSTALLER: symbol(0x7000, 0x100),
+        "io_attic_load_lib": symbol(0x1840, 0x80, ".lisp65_resident_island"),
         "eval_init": symbol(0x9200, 0x80, BOOT_SECTION),
         "defprim": symbol(0x9300, 0x20, BOOT_SECTION),
         "vm_boot_fastpath_phase_verify": symbol(0x9000, 0x100, ".lisp65_rt_boot_00"),
@@ -523,6 +528,8 @@ def _selftest() -> int:
     mutations = [
         ("entry-alias", {**symbols, OVERLAY_ENTRY: symbol(0x9101, section=BOOT_SECTION)}, controls),
         ("entry-section", {**symbols, ENTRY: symbol(0x9100, 3, ".text")}, controls),
+        ("attic-loader-section", {**symbols,
+            "io_attic_load_lib": symbol(0x1840, 0x80, ".text")}, controls),
         ("extra-boot-function", {**symbols, "surprise": symbol(0x9400, 0x10, BOOT_SECTION)}, controls),
         ("missing-inbound", symbols, controls[1:]),
         ("extra-inbound", symbols, controls + [

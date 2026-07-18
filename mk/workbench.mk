@@ -1,8 +1,37 @@
 # Canonical Workbench product, packaging, and release rules.
 
+.PHONY: v11-c1-repl-latency-check v11-source-stream-lifetime-selftest v11-source-stream-lifetime-check v11-wave2-error-text-library-check v11-wave2-list-unification-selftest v11-wave2-list-unification-check v11-wave2-policy-name-implementation-collect v11-wave2-policy-name-implementation-check v11-wave2-common-repin-collect v11-wave2-common-repin-check v11-function-metadata-selftest v11-function-metadata-check
+
+v11-wave2-error-text-library-check:
+	python3 tools/host-lisp/v11_wave2_error_text_library.py check
+
+v11-wave2-list-unification-selftest:
+	python3 tools/host-lisp/v11_wave2_list_unification.py selftest
+
+v11-wave2-list-unification-check: v11-wave2-list-unification-selftest
+	python3 tools/host-lisp/v11_wave2_list_unification.py check
+
+v11-wave2-policy-name-implementation-collect: v2-workbench-artifacts
+	python3 tools/host-lisp/v11_wave2_policy_name_implementation.py collect
+
+v11-wave2-policy-name-implementation-check: v2-workbench-artifacts
+	python3 tools/host-lisp/v11_wave2_policy_name_implementation.py check
+
+v11-wave2-common-repin-collect: workbench-overlay-stack-guard v2-workbench-library-composition-check
+	python3 tools/host-lisp/v11_wave2_common_repin.py collect
+
+v11-wave2-common-repin-check: workbench-overlay-stack-guard v2-workbench-library-composition-check
+	python3 tools/host-lisp/v11_wave2_common_repin.py check
+
+v11-function-metadata-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-artifacts
+	python3 tools/host-lisp/v11_function_metadata.py selftest
+
+v11-function-metadata-check: v11-function-metadata-selftest
+	python3 tools/host-lisp/v11_function_metadata.py check
+
 .PHONY: l65m-verdict-equivalence-selftest l65m-verdict-equivalence-gate asm-c-constant-contract-selftest asm-c-constant-contract-check f011-transaction-context-selftest f011-transaction-context-check f011-mount-window-selftest workbench-f011-mount-window-audit
 
-.PHONY: bank0-lifetime-report bank0-lifetime-selftest bank0-island-inventory-report bank0-island-inventory-selftest vm-ext-code-reclaim-smoke mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-error-code-contract-check resident-island-selftest runtime-overlay-bank-selftest runtime-overlay-transport-smoke l65m-bulkread-fixture-check workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-runtime-overlay-package-verify workbench-disk-lib-budget-selftest persistence-contract-check d81-persistence-fault-selftest workbench-product-contract-selftest workbench-product-contract-check workbench-product-contract-ship-check workbench-deploy workbench-deploy-dry-run workbench-product workbench-product-footprint-report workbench-product-input-ready workbench-reference workbench-reference-footprint-report workbench-overlay-link-prototype workbench-overlay-prototype workbench-overlay-package-verify workbench-overlay-footprint-audit workbench-overlay-control-audit workbench-overlay-control-audit-selftest workbench-overlay-bootstrap-smoke workbench-overlay-reproducibility-check workbench-overlay-stage-selftest workbench-overlay-stack-probe workbench-overlay-stack-probe-smoke workbench-overlay-stack-guard hw-stack-probe-readback-selftest hw-ship-memory-readback-selftest hw-workbench-overlay-stack-readback hw-workbench-overlay-stack-readback-dry-run hw-workbench-overlay-stack-smoke hw-workbench-overlay-stack-smoke-dry-run hw-workbench-overlay-stack-guard-smoke hw-workbench-overlay-stack-guard-smoke-dry-run hw-workbench-overlay-stack-guard-verified-smoke print-workbench-profile-common print-workbench-reference-resolved-profile print-workbench-resolved-profile print-workbench-overlay-resolved-profile mvp-ship-candidate-artifacts
+.PHONY: bank0-lifetime-report bank0-lifetime-selftest bank0-island-inventory-report bank0-island-inventory-selftest vm-ext-code-reclaim-smoke mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-error-code-contract-check resident-island-selftest runtime-overlay-bank-selftest runtime-overlay-transport-smoke attic-library-shelf-selftest attic-library-shelf-check v11-c1-compiler-tier-artifacts v11-c1-compiler-lifetime-check v11-c1-entry-seam-check v11-c1-gate-check v11-wave1-c1-first-form-selftest v11-wave1-c1-first-form-check v11-first-class-buffer-check l65m-bulkread-fixture-check workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-runtime-overlay-package-verify workbench-disk-lib-budget-selftest persistence-contract-check d81-persistence-fault-selftest workbench-product-contract-selftest workbench-product-contract-check workbench-product-contract-ship-check workbench-deploy workbench-deploy-dry-run workbench-product workbench-product-footprint-report workbench-product-input-ready workbench-reference workbench-reference-footprint-report workbench-overlay-link-prototype workbench-overlay-prototype workbench-overlay-package-verify workbench-overlay-footprint-audit workbench-overlay-control-audit workbench-overlay-control-audit-selftest workbench-overlay-bootstrap-smoke workbench-overlay-reproducibility-check workbench-overlay-stage-selftest workbench-overlay-stack-probe workbench-overlay-stack-probe-smoke workbench-overlay-stack-guard hw-stack-probe-readback-selftest hw-ship-memory-readback-selftest hw-workbench-overlay-stack-readback hw-workbench-overlay-stack-readback-dry-run hw-workbench-overlay-stack-smoke hw-workbench-overlay-stack-smoke-dry-run hw-workbench-overlay-stack-guard-smoke hw-workbench-overlay-stack-guard-smoke-dry-run hw-workbench-overlay-stack-guard-verified-smoke print-workbench-profile-common print-workbench-reference-resolved-profile print-workbench-resolved-profile print-workbench-overlay-resolved-profile mvp-ship-candidate-artifacts
 
 workbench-product-contract-selftest:
 	python3 tools/host-lisp/workbench_product_contract.py --selftest
@@ -14,6 +43,8 @@ VM_EXT_CODE_RECLAIM_SMOKE_HOST := build/vm-ext-code-reclaim-smoke-host
 WORKBENCH_OVERLAY_BOOTSTRAP_SMOKE_HOST := build/workbench-overlay-bootstrap-smoke-host
 WORKBENCH_OVERLAY_STACK_PROBE_SMOKE_HOST := build/workbench-overlay-stack-probe-smoke-host
 WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST := build/runtime-overlay-smoke-host
+V11_BUFFER_MEMORY_HOST := build/v11-buffer-smoke-host
+V11_BUFFER_CARRIER_HOST := build/v11-buffer-carrier-host
 F011_TRANSACTION_CONTEXT_HOST := build/f011-transaction-context-host
 WORKBENCH_L65M_TRANSPORT_OPS_HOST := build/l65m-transport-ops-host
 WORKBENCH_L65M_TRANSPORT_OPS_REPORT ?= build/bytecode/workbench-l65m-transport-ops.txt
@@ -54,7 +85,8 @@ f011-mount-window-selftest:
 
 $(VM_EXT_CODE_RECLAIM_SMOKE_HOST): scripts/vm-ext-code-reclaim-smoke-main.c src/vm_embed.c src/vm_embed.h mk/workbench.mk | build
 	$(HOSTCC) -std=c99 -Wall -Wextra -Wno-unused-function -ffunction-sections -fdata-sections \
-		-DLISP65_VM -DLISP65_DISK_LIBS -DLISP65_SYMPOOL_EXT -DSYMPOOL_EXT_OFF=0x0100 \
+		-DLISP65_VM -DLISP65_DISK_LIBS -DLISP65_C1_COMPILER_TIER \
+		-DLISP65_VM_EXT_CODE_TEST -DLISP65_SYMPOOL_EXT -DSYMPOOL_EXT_OFF=0x0100 \
 		-Isrc scripts/vm-ext-code-reclaim-smoke-main.c src/vm_embed.c \
 		-Wl,--gc-sections -o $@
 
@@ -89,6 +121,160 @@ $(WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST): scripts/runtime-overlay-smoke-main.c sr
 
 runtime-overlay-transport-smoke: $(WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST)
 	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST)
+
+$(V11_BUFFER_MEMORY_HOST): scripts/v11-buffer-smoke-main.c src/mem.c src/mem.h src/obj.h src/printer.c src/printer.h src/symbol.c src/interrupt.c | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -O1 -g \
+		-fsanitize=address,undefined -fno-omit-frame-pointer \
+		-DLISP65_STRING_ARENA -DLISP65_FIRST_CLASS_BUFFER \
+		-DHEAP_CELLS=128 -DGC_ROOTS=64 -DSTR_ARENA_SIZE=256 \
+		-DMAX_SYM=64 -DNAMEPOOL=512 -Isrc \
+		scripts/v11-buffer-smoke-main.c src/mem.c src/printer.c src/symbol.c src/interrupt.c -o '$@'
+
+$(V11_BUFFER_CARRIER_HOST): scripts/v11-buffer-carrier-main.c src/buffer_overlay.c src/buffer_overlay.h src/mem.c src/mem.h src/obj.h src/symbol.c src/interrupt.c | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -O1 -g \
+		-fsanitize=address,undefined -fno-omit-frame-pointer \
+		-DLISP65_STRING_ARENA -DLISP65_FIRST_CLASS_BUFFER \
+		-DHEAP_CELLS=128 -DGC_ROOTS=64 -DSTR_ARENA_SIZE=256 \
+		-DMAX_SYM=64 -DNAMEPOOL=512 -Isrc \
+		scripts/v11-buffer-carrier-main.c src/buffer_overlay.c src/mem.c \
+		src/symbol.c src/interrupt.c -o '$@'
+
+v11-first-class-buffer-check: v2-native-function-registry-check bytecode-p0-buffer-lib-artifacts attic-library-shelf-check v11-buffer-library-composition-check $(V11_BUFFER_MEMORY_HOST) $(V11_BUFFER_CARRIER_HOST)
+	output="$$(ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(V11_BUFFER_MEMORY_HOST))"; \
+		test "$$output" = '?' || { echo "v11-buffer-printer: FAIL output=$$output" >&2; exit 1; }; \
+		echo 'v11-buffer-printer: PASS output=?'
+	python3 tools/host-lisp/v11_buffer_oracle.py --selftest --binary $(V11_BUFFER_CARRIER_HOST)
+
+V11_C1_FASTPATH_VALIDATOR_HOST := build/v11-c1-fastpath-validator-host
+
+$(V11_C1_FASTPATH_VALIDATOR_HOST): scripts/l65m-transport-ops-main.c src/l65m_validate.c \
+		src/vm_runtime_overlay.c src/l65m_overlay_abi.h src/l65m_validate.h \
+		src/vm_runtime_overlay.h $(WORKBENCH_L65M_BULKREAD_FIXTURE_HEADER) | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror \
+		-DLISP65_VM -DLISP65_DISK_LIBS -DLISP65_DIALECT_V2 \
+		-DLISP65_RUNTIME_OVERLAY_HOST_TEST \
+		-DLISP65_RUNTIME_OVERLAY_CATALOG_VERIFIER_FILE_OFF=0x1000u \
+		-DLISP65_RUNTIME_OVERLAY_RECORD_VERIFIER_FILE_OFF=0x1100u \
+		-Isrc -Ibuild scripts/l65m-transport-ops-main.c src/l65m_validate.c \
+		src/vm_runtime_overlay.c -o '$@'
+
+v11-c1-compiler-tier-artifacts: v2-workbench-codemod $(V11_C1_FASTPATH_VALIDATOR_HOST)
+	python3 $(WORKBENCH_C1_COMPILER_TOOL) --selftest
+	python3 $(WORKBENCH_C1_COMPILER_CONTRACT_TOOL) --selftest
+	python3 $(WORKBENCH_C1_COMPILER_TOOL) --out '$(WORKBENCH_C1_COMPILER_SUITE)' \
+		--receipt '$(WORKBENCH_C1_COMPILER_GENERATION)'
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts \
+		'$(WORKBENCH_C1_COMPILER_PREFIX)' --artifact-role disk-lib --base-addr 0x000000 \
+		'$(WORKBENCH_C1_COMPILER_SUITE)'
+	$(V11_C1_FASTPATH_VALIDATOR_HOST) \
+		--image '$(WORKBENCH_C1_COMPILER_PREFIX).ext.bin' \
+		--integration src/vm_embed.c --scratch-source src/io.c \
+		--out '$(WORKBENCH_C1_COMPILER_VALIDATOR_REPORT)'
+	python3 $(WORKBENCH_C1_COMPILER_CONTRACT_TOOL) \
+		--manifest '$(WORKBENCH_C1_COMPILER_PREFIX).manifest.json' \
+		--container '$(WORKBENCH_C1_COMPILER_PREFIX).ext.bin' \
+		--shelf-contract '$(WORKBENCH_ATTIC_SHELF_CONTRACT)' \
+		--validator-report '$(WORKBENCH_C1_COMPILER_VALIDATOR_REPORT)' \
+		--header '$(WORKBENCH_C1_COMPILER_CONTRACT_HEADER)' \
+		--receipt '$(WORKBENCH_C1_COMPILER_CONTRACT_RECEIPT)'
+
+V11_C1_COMPILER_LIFETIME_HOST := build/v11-c1-compiler-lifetime-host
+
+V11_C1_TRUST_FASTPATH_HOST := build/v11-c1-trust-fastpath-host
+
+$(V11_C1_TRUST_FASTPATH_HOST): v11-c1-compiler-tier-artifacts \
+		scripts/l65m-transport-ops-main.c src/l65m_validate.c \
+		src/vm_runtime_overlay.c src/l65m_overlay_abi.h src/l65m_validate.h \
+		src/vm_runtime_overlay.h $(WORKBENCH_L65M_BULKREAD_FIXTURE_HEADER) | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror \
+		-DLISP65_VM -DLISP65_DISK_LIBS -DLISP65_DIALECT_V2 \
+		-DLISP65_C1_TRUST_FASTPATH_PROBE \
+		-DLISP65_RUNTIME_OVERLAY_HOST_TEST \
+		-DLISP65_RUNTIME_OVERLAY_CATALOG_VERIFIER_FILE_OFF=0x1000u \
+		-DLISP65_RUNTIME_OVERLAY_RECORD_VERIFIER_FILE_OFF=0x1100u \
+		-Isrc -Ibuild -Ibuild/bytecode scripts/l65m-transport-ops-main.c \
+		src/l65m_validate.c src/vm_runtime_overlay.c -o '$@'
+
+v11-c1-trust-fastpath-check: $(V11_C1_TRUST_FASTPATH_HOST)
+	$(V11_C1_TRUST_FASTPATH_HOST) --fastpath-selftest \
+		--image '$(WORKBENCH_C1_COMPILER_PREFIX).ext.bin'
+
+$(V11_C1_COMPILER_LIFETIME_HOST): v11-c1-compiler-tier-artifacts scripts/v11-c1-compiler-lifetime-main.c src/c1_compiler_overlay.c src/c1_compiler_overlay.h src/buffer_overlay.h src/io.h src/symbol.h src/vm.h src/vm_embed.c src/vm_embed.h | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -Wno-unused-function \
+		-ffunction-sections -fdata-sections -fsanitize=address,undefined \
+		-DLISP65_VM -DLISP65_DISK_LIBS -DLISP65_C1_COMPILER_TIER \
+		-DLISP65_VM_EXT_CODE_TEST -DLISP65_SYMPOOL_EXT -DSYMPOOL_EXT_OFF=0xf000 \
+		-DHEAP_CELLS=64 \
+		-Isrc -Ibuild/bytecode scripts/v11-c1-compiler-lifetime-main.c \
+		src/c1_compiler_overlay.c src/vm_embed.c -Wl,--gc-sections -o '$@'
+
+v11-c1-compiler-lifetime-check: v11-c1-compiler-tier-artifacts $(V11_C1_COMPILER_LIFETIME_HOST)
+	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
+		$(V11_C1_COMPILER_LIFETIME_HOST)
+
+V11_C1_LEASE_HOST := build/v11-c1-lease-host
+
+$(V11_C1_LEASE_HOST): v11-c1-compiler-tier-artifacts scripts/v11-c1-lease-main.c src/c1_compiler_overlay.c src/c1_compiler_overlay.h src/vm_embed.c src/vm_embed.h | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -Wno-unused-function \
+		-ffunction-sections -fdata-sections -fsanitize=address,undefined \
+		-DLISP65_VM -DLISP65_DISK_LIBS -DLISP65_C1_COMPILER_TIER \
+		-DLISP65_C1_LEASE_ALLOC_GUARD \
+		-DLISP65_VM_EXT_CODE_TEST \
+		-DLISP65_SYMPOOL_EXT -DSYMPOOL_EXT_OFF=0xf000 -DHEAP_CELLS=64 \
+		-Isrc -Ibuild/bytecode scripts/v11-c1-lease-main.c \
+		src/c1_compiler_overlay.c src/vm_embed.c -Wl,--gc-sections -o '$@'
+
+v11-c1-lease-check: $(V11_C1_LEASE_HOST)
+	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(V11_C1_LEASE_HOST)
+
+v11-c1-entry-seam-check: config/v11-c1-entry-seams.json config/v11-c1-architecture-decision.json tools/host-lisp/v11_c1_entry_seams.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_c1_entry_seams.py --selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_c1_entry_seams.py
+
+v11-c1-repl-latency-check: config/v11-c1-architecture-decision.json tools/host-lisp/v11_c1_repl_latency.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_c1_repl_latency.py --selftest
+
+v11-wave1-c1-first-form-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_wave1_c1_first_form.py --selftest
+
+v11-wave1-c1-first-form-check: v11-wave1-c1-first-form-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_wave1_c1_first_form.py --verify
+
+v11-source-stream-lifetime-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_source_stream_lifetime.py --selftest
+
+v11-source-stream-lifetime-check: workbench-overlay-stack-guard
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_source_stream_lifetime.py
+
+v11-c1-gate-check: v2-native-function-registry-check bytecode-abi-ledger-check \
+	v11-first-class-buffer-check v11-c1-compiler-lifetime-check v11-c1-entry-seam-check \
+	v11-c1-repl-latency-check \
+	v2-workbench-library-composition-check v2-workbench-differential \
+	bank0-island-inventory-report workbench-product
+	python3 $(WORKBENCH_C1_GATE_TOOL) --selftest
+	python3 $(WORKBENCH_C1_GATE_TOOL) --out '$(WORKBENCH_C1_GATE_RECEIPT)'
+
+$(WORKBENCH_ATTIC_SHELF_IMAGE) $(WORKBENCH_ATTIC_SHELF_MANIFEST) &: \
+		$(WORKBENCH_ATTIC_SHELF_TOOL) $(WORKBENCH_ATTIC_SHELF_CONTRACT) \
+		v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts \
+		v11-c1-compiler-tier-artifacts
+	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
+
+$(WORKBENCH_ATTIC_SHELF_HOST): scripts/attic-library-shelf-smoke-main.c src/attic_library_shelf.c src/attic_library_shelf.h src/io.h | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -fsanitize=address,undefined \
+		-DLISP65_ATTIC_LIBRARY_SHELF -DLISP65_ATTIC_LIBRARY_SHELF_HOST_TEST \
+		-DDISK_EXT_FILE_MAX=0x9600u -Isrc \
+		scripts/attic-library-shelf-smoke-main.c src/attic_library_shelf.c -o '$@'
+
+attic-library-shelf-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-artifacts
+	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --selftest \
+		--out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
+
+attic-library-shelf-check: attic-library-shelf-selftest $(WORKBENCH_ATTIC_SHELF_IMAGE) $(WORKBENCH_ATTIC_SHELF_MANIFEST) $(WORKBENCH_ATTIC_SHELF_HOST)
+	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --verify \
+		--out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
+	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
+		$(WORKBENCH_ATTIC_SHELF_HOST) '$(WORKBENCH_ATTIC_SHELF_IMAGE)'
 
 $(WORKBENCH_L65M_BULKREAD_FIXTURE_HEADER): $(WORKBENCH_L65M_BULKREAD_FIXTURE_TOOL) tools/host-lisp/l65m_contract.py | build
 	python3 $(WORKBENCH_L65M_BULKREAD_FIXTURE_TOOL) --emit-c-header '$@'
@@ -290,6 +476,7 @@ $(WORKBENCH_RESIDENT_ISLAND_SEED_LINKED_PRG): $(SRCS) $(VM_SRCS) $(WORKBENCH_TAR
 		-Wl,--defsym=__lisp65_workbench_required_boot_stack_param=$(WORKBENCH_OVERLAY_MIN_BOOT_STACK_GAP) \
 		-Wl,--defsym=__lisp65_workbench_required_runtime_stack_param=$(WORKBENCH_MIN_STACK_GAP) \
 		-Wl,--defsym=__lisp65_workbench_required_post_boot_reserve_param=$(WORKBENCH_OVERLAY_MIN_POST_BOOT_RESERVE) \
+		-Wl,--defsym=__lisp65_workbench_runtime_overlay_vma_param=$(WORKBENCH_RUNTIME_OVERLAY_VMA) \
 		-Wl,--defsym=__lisp65_workbench_runtime_overlay_max_vma_param=$(WORKBENCH_RUNTIME_OVERLAY_MAX_VMA) \
 		-Wl,--defsym=__lisp65_error_overlay_max_bytes_param=$(WORKBENCH_ERROR_OVERLAY_MAX_BYTES) \
 		$(WORKBENCH_RESIDENT_ISLAND_LINK_ARGS) -Wl,-Map='$@.map' -o '$@'
@@ -316,6 +503,7 @@ $(WORKBENCH_RUNTIME_OVERLAY_BOOTSTRAP_LINKED_PRG): $(SRCS) $(VM_SRCS) $(WORKBENC
 		-Wl,--defsym=__lisp65_workbench_required_boot_stack_param=$(WORKBENCH_OVERLAY_MIN_BOOT_STACK_GAP) \
 		-Wl,--defsym=__lisp65_workbench_required_runtime_stack_param=$(WORKBENCH_MIN_STACK_GAP) \
 		-Wl,--defsym=__lisp65_workbench_required_post_boot_reserve_param=$(WORKBENCH_OVERLAY_MIN_POST_BOOT_RESERVE) \
+		-Wl,--defsym=__lisp65_workbench_runtime_overlay_vma_param=$(WORKBENCH_RUNTIME_OVERLAY_VMA) \
 		-Wl,--defsym=__lisp65_workbench_runtime_overlay_max_vma_param=$(WORKBENCH_RUNTIME_OVERLAY_MAX_VMA) \
 		-Wl,--defsym=__lisp65_error_overlay_max_bytes_param=$(WORKBENCH_ERROR_OVERLAY_MAX_BYTES) \
 		$(WORKBENCH_RESIDENT_ISLAND_LINK_ARGS) \
@@ -362,6 +550,7 @@ $(WORKBENCH_OVERLAY_LINKED_PRG): $(SRCS) $(VM_SRCS) $(WORKBENCH_TARGET_SRCS) $(W
 		-Wl,--defsym=__lisp65_workbench_required_boot_stack_param=$(WORKBENCH_OVERLAY_MIN_BOOT_STACK_GAP) \
 		-Wl,--defsym=__lisp65_workbench_required_runtime_stack_param=$(WORKBENCH_MIN_STACK_GAP) \
 		-Wl,--defsym=__lisp65_workbench_required_post_boot_reserve_param=$(WORKBENCH_OVERLAY_MIN_POST_BOOT_RESERVE) \
+		-Wl,--defsym=__lisp65_workbench_runtime_overlay_vma_param=$(WORKBENCH_RUNTIME_OVERLAY_VMA) \
 		-Wl,--defsym=__lisp65_workbench_runtime_overlay_max_vma_param=$(WORKBENCH_RUNTIME_OVERLAY_MAX_VMA) \
 		-Wl,--defsym=__lisp65_error_overlay_max_bytes_param=$(WORKBENCH_ERROR_OVERLAY_MAX_BYTES) \
 		$(WORKBENCH_RESIDENT_ISLAND_LINK_ARGS) \
@@ -409,13 +598,6 @@ workbench-runtime-overlay-package-verify: resident-island-selftest $(WORKBENCH_R
 	python3 $(WORKBENCH_RESIDENT_ISLAND_TOOL) verify \
 		--elf '$(WORKBENCH_OVERLAY_LINKED_PRG).elf' \
 		$(WORKBENCH_RESIDENT_ISLAND_TOOL_ARGS) --header '$(WORKBENCH_RESIDENT_ISLAND_HEADER)'
-	@set -eu; temp="$$(mktemp -d)"; trap 'rm -rf "$$temp"' 0 1 2 15; \
-		$(WORKBENCH_OVERLAY_OBJCOPY) -O binary --only-section=.lisp65_rt_island_00 \
-			'$(WORKBENCH_RUNTIME_OVERLAY_BOOTSTRAP_LINKED_PRG).elf' "$$temp/bootstrap.bin"; \
-		$(WORKBENCH_OVERLAY_OBJCOPY) -O binary --only-section=.lisp65_rt_island_00 \
-			'$(WORKBENCH_OVERLAY_LINKED_PRG).elf' "$$temp/final.bin"; \
-		cmp "$$temp/bootstrap.bin" "$$temp/final.bin"; \
-		printf '%s\n' 'resident-island-installer-binding: PASS (bootstrap/final byte-identical)'
 	@set -eu; \
 		vma="$$( $(M65VMSTDLIB_NM) --defined-only '$(WORKBENCH_OVERLAY_LINKED_PRG).elf' | \
 			awk '$$3 == "$(WORKBENCH_RUNTIME_OVERLAY_VMA_SYMBOL)" { print "0x" $$1 }')"; \
@@ -428,7 +610,19 @@ workbench-runtime-overlay-package-verify: resident-island-selftest $(WORKBENCH_R
 			$(WORKBENCH_RUNTIME_OVERLAY_SLICE_ARGS) \
 			--image '$(WORKBENCH_RUNTIME_OVERLAY_IMAGE)' \
 			--manifest '$(WORKBENCH_RUNTIME_OVERLAY_MANIFEST)' \
-			--header '$(WORKBENCH_RUNTIME_OVERLAY_HEADER)'
+			--header '$(WORKBENCH_RUNTIME_OVERLAY_HEADER)'; \
+		bss_end="$$( $(M65VMSTDLIB_NM) --defined-only '$(WORKBENCH_OVERLAY_LINKED_PRG).elf' | \
+			awk '$$3 == "__bss_end" { print $$1 }')"; \
+		noinit_end="$$( $(M65VMSTDLIB_NM) --defined-only '$(WORKBENCH_OVERLAY_LINKED_PRG).elf' | \
+			awk '$$3 == "__lisp65_workbench_noinit_end" { print $$1 }')"; \
+		call_context="$$( $(M65VMSTDLIB_NM) --defined-only '$(WORKBENCH_OVERLAY_LINKED_PRG).elf' | \
+			awk '$$3 == "rtov_call_context" { print $$1 }')"; \
+		[ -n "$$bss_end" ] && [ -n "$$noinit_end" ] && [ -n "$$call_context" ] || \
+			{ echo 'runtime-overlay-installer-shape: missing structural symbol' >&2; exit 1; }; \
+		[ "$$bss_end" = "$$noinit_end" ] || \
+			{ echo "runtime-overlay-installer-shape: anonymous cross-call spill detected (__bss_end=$$bss_end noinit_end=$$noinit_end)" >&2; exit 1; }; \
+		printf '%s\n' "runtime-overlay-installer-shape: PASS explicit-context=$$call_context anonymous-noinit-bytes=0"; \
+		printf '%s\n' 'runtime-overlay-final-binding: PASS (44 final-ELF slices, including resident-island installer, exactly match packed image and manifest)'
 
 workbench-error-code-contract-check: workbench-product
 	python3 '$(WORKBENCH_ERROR_CODE_TOOL)' check \
@@ -546,18 +740,47 @@ workbench-overlay-stack-probe: workbench-overlay-stack-probe-smoke hw-stack-prob
 		WORKBENCH_OVERLAY_EXTRA_DEFINES='$(WORKBENCH_OVERLAY_PROBE_DEFINES)' \
 		workbench-overlay-footprint-audit
 
-workbench-overlay-stack-guard: asm-c-constant-contract-check v2-workbench-artifacts
+workbench-overlay-stack-guard: asm-c-constant-contract-check v2-workbench-artifacts attic-library-shelf-check
 	$(MAKE) --no-print-directory \
 		WORKBENCH_PROFILE_ID=dialect-v2-capability-carrier-workbench-staging \
 		WORKBENCH_SUITE=build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json \
 		WORKBENCH_BYTECODE_DIR=build/bytecode/dialect-v2/workbench \
 		WORKBENCH_OVERLAY_DIR='$(WORKBENCH_OVERLAY_GUARD_DIR)' \
-		WORKBENCH_OVERLAY_EXTRA_DEFINES='-DLISP65_STACK_GUARD $(V2_CAPABILITY_CARRIER_G5_V2_DEFINES)' \
+		WORKBENCH_OVERLAY_EXTRA_DEFINES='-DLISP65_STACK_GUARD $(V2_CAPABILITY_CARRIER_G5_V2_DEFINES) $(WORKBENCH_C1_PHASE_PROBE_DEFINES)' \
 		workbench-overlay-footprint-audit
+
+workbench-c1-phase-probe:
+	@set -eu; \
+	for probe in 1 2 3 4 5 6 7 8 9; do \
+		$(MAKE) --no-print-directory \
+			WORKBENCH_OVERLAY_GUARD_DIR='$(WORKBENCH_C1_PHASE_PROBE_DIR)-'$$probe \
+			WORKBENCH_C1_PHASE_PROBE_DEFINES='-DLISP65_C1_PHASE_TIMING='$$probe \
+			workbench-overlay-stack-guard; \
+	done
+
+workbench-c1-phase-probe-check: workbench-c1-phase-probe
+	python3 scripts/hw-c1-phase-probe.py --selftest
+
+workbench-c1-lease-probe: v11-c1-lease-check
+	LISP65_C1_LEASE_PROBE=1 $(MAKE) --no-print-directory \
+		V2_WORKBENCH_CODEMOD_TOOL='tools/host-lisp/v11_c1_lease_codemod.py' \
+		WORKBENCH_OVERLAY_GUARD_DIR='$(WORKBENCH_C1_PHASE_PROBE_DIR)-10' \
+		WORKBENCH_C1_PHASE_PROBE_DEFINES='' \
+		workbench-overlay-stack-guard
+
+workbench-c1-fastpath-probe: v11-c1-lease-check v11-c1-trust-fastpath-check
+	LISP65_C1_LEASE_PROBE=1 $(MAKE) --no-print-directory \
+		V2_WORKBENCH_CODEMOD_TOOL='tools/host-lisp/v11_c1_lease_codemod.py' \
+		WORKBENCH_OVERLAY_GUARD_DIR='$(WORKBENCH_C1_PHASE_PROBE_DIR)-11' \
+		WORKBENCH_C1_PHASE_PROBE_DEFINES='-DLISP65_C1_TRUST_FASTPATH_PROBE' \
+		workbench-overlay-stack-guard
+
+hw-workbench-c1-phase-probe-dry-run: workbench-c1-phase-probe-check
+	python3 scripts/hw-c1-phase-probe.py --probe 1 --dry-run
 
 # Canonical product. The recursive generic builder is isolated behind one
 # target so G2, candidate packaging and hardware gates share the same files.
-workbench-product: asm-c-constant-contract-check f011-transaction-context-check mega65-math-override-check workbench-overlay-stack-guard
+workbench-product: asm-c-constant-contract-check f011-transaction-context-check mega65-math-override-check v11-source-stream-lifetime-check
 
 workbench-product-footprint-report: workbench-product
 	@test -f '$(WORKBENCH_FOOTPRINT_REPORT)'
@@ -566,6 +789,8 @@ workbench-product-footprint-report: workbench-product
 # product. Deliberately check-only to avoid a second FORCE-driven overlay link.
 workbench-product-input-ready:
 	@test -f '$(WORKBENCH_PRG)'
+	@test -f '$(WORKBENCH_ATTIC_SHELF_IMAGE)'
+	@test -f '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
 	@test -f '$(WORKBENCH_PRODUCT_PRELOAD)'
 	@test -f '$(WORKBENCH_PRODUCT_RUNTIME_OVERLAY)'
 	@test -f '$(WORKBENCH_PRODUCT_RUNTIME_OVERLAY_MANIFEST)'
@@ -690,8 +915,10 @@ workbench-disk-lib-budget-check: mvp-ship-artifacts
 		--extra-cflags "$(WORKBENCH_DEFINES)" \
 		--native-c src/vm.c \
 		--native-c src/symbol.c \
-		--symbol-correction "$(WORKBENCH_COMPOSITION_SYMBOL_CORRECTION)" \
-		--namepool-correction "$(WORKBENCH_COMPOSITION_NAMEPOOL_CORRECTION)" \
+		--boot-symbol-calibration "$(WORKBENCH_COMPOSITION_BOOT_SYMBOL_CALIBRATION)" \
+		--boot-namepool-calibration "$(WORKBENCH_COMPOSITION_BOOT_NAMEPOOL_CALIBRATION)" \
+		--retained-symbols "$(WORKBENCH_COMPOSITION_RETAINED_SYMBOLS)" \
+		--retained-namepool-bytes "$(WORKBENCH_COMPOSITION_RETAINED_NAMEPOOL_BYTES)" \
 		--boot-align8 \
 		--min-load-headroom "$(WORKBENCH_MIN_LOAD_HEADROOM)" \
 		--min-post-align-headroom "$(WORKBENCH_MIN_POST_ALIGN_HEADROOM)" \
@@ -779,6 +1006,7 @@ print-workbench-overlay-resolved-profile: print-workbench-profile-common
 		'runtime_overlay_storage_persistence=reset-stable-power-volatile' \
 		'runtime_overlay_slice_count=$(WORKBENCH_RUNTIME_OVERLAY_SLICE_COUNT)' \
 		'runtime_overlay_max_slices=$(WORKBENCH_RUNTIME_OVERLAY_MAX_SLICES)' \
+		'runtime_overlay_vma=$(WORKBENCH_RUNTIME_OVERLAY_VMA)' \
 		'runtime_overlay_max_vma=$(WORKBENCH_RUNTIME_OVERLAY_MAX_VMA)' \
 		'runtime_overlay_max_slice_bytes=$(WORKBENCH_RUNTIME_OVERLAY_MAX_SLICE_BYTES)' \
 		'runtime_overlay_entry_abi=$(WORKBENCH_RUNTIME_OVERLAY_ENTRY_ABI)' \
@@ -787,13 +1015,13 @@ print-workbench-overlay-resolved-profile: print-workbench-profile-common
 		'resident_island_address=$(WORKBENCH_RESIDENT_ISLAND_BASE)' \
 		'resident_island_limit=$(WORKBENCH_RESIDENT_ISLAND_LIMIT)' \
 		'resident_island_payload_capacity=$(WORKBENCH_RESIDENT_ISLAND_CAPACITY)' \
-		'resident_island_immutable_bytes=1108' \
+		'resident_island_immutable_bytes=1485' \
 		'resident_island_annex_section=.lisp65_resident_island_annex' \
-		'resident_island_annex_start=0x1c54' \
-		'resident_island_annex_end_exclusive=0x1d58' \
+		'resident_island_annex_start=0x1dce' \
+		'resident_island_annex_end_exclusive=0x1ed2' \
 		'resident_island_annex_bytes=260' \
 		'resident_island_annex_root_count=128' \
-		'resident_island_annex_reserve_bytes=680' \
+		'resident_island_annex_reserve_bytes=302' \
 		'resident_island_annex_lifetime=mutable-noload' \
 		'resident_island_slot=37' \
 		'resident_island_lifetime=boot-installed-resident' \

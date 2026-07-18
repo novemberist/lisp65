@@ -1,0 +1,54 @@
+{
+  "format": "lisp65-v11-m-transactional-fasl-implementation-contract-v1",
+  "version": 1,
+  "id": "v11-m-transactional-fasl-composition",
+  "decision": {
+    "recorded_on": "2026-07-17",
+    "choice": "composition",
+    "authority": "owner-approved after comparison-probe review",
+    "probe_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-m-transactional-fasl-comparison-probe-receipt.json"
+  },
+  "baseline": {
+    "product_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "capacity_source": "comparison probe baseline"
+  },
+  "surface": {
+    "transaction_owner": "m65d-save",
+    "accepted_payloads": ["String", "Buffer"],
+    "m65d_save_new_payloads": ["String"],
+    "compiler_entry": "compile-string",
+    "compiler_result": "detached Buffer",
+    "required_loaded_transaction_owner": "m65d-save",
+    "single_drive_precondition": "load m65d from L65SYS before swapping to the writable medium"
+  },
+  "transaction": {
+    "allocation": "new chain",
+    "payload_copy": "Buffer to the existing FASL staging window, then verified sector writes",
+    "publish": "directory entry last",
+    "retire": "old chain after publish",
+    "media_binding": "name+id+mount-generation for the complete transaction",
+    "product_media_policy": "L65SYS denylist remains active",
+    "max_payload_bytes": 8192
+  },
+  "retirements": {
+    "preallocated_fasl_slots": true,
+    "fixed_slot_writer": true,
+    "legacy_function_count": 9,
+    "replacement": "M65D copy-on-write transaction"
+  },
+  "acceptance": {
+    "m65d_cases": 40,
+    "buffer_cases": 2,
+    "independent_witnesses": ["d81_persistence_fault", "d81_bam_sanity"],
+    "chain_walkers": 18,
+    "chain_walker_deviations": 0,
+    "compiler_tier_sha256": "daa5a5636cb8d57aa76582486ac22afa486279fa83e14a6182c4892eef2abe43",
+    "critical_dimensions": [
+      "fixed_overlay_bytes",
+      "resident_island_reserve_bytes",
+      "runtime_overlay_max_slice_bytes",
+      "installer_slice_bytes"
+    ]
+  },
+  "claim_limit": "Host and real-link implementation acceptance only. compile-string end-to-end and the new arbitrary-name persistence path require fresh Wave-2 hardware evidence after product-SHA promotion."
+}

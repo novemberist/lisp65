@@ -172,6 +172,26 @@ def selftest() -> None:
             0,
         ),
         (
+            "banner-prefix-pass",
+            [
+                "lambda row 0",
+                "lambda row 1",
+                "lambda row 2",
+                "lambda row 3",
+                "lambda row 4",
+                "lambda row 5",
+                "separator row 6",
+                "WORKBENCH - DIALECT V2",
+                "",
+                "lisp65> (+ 20 22)",
+                "42",
+                "lisp65>",
+            ],
+            "(+ 20 22)",
+            "42",
+            0,
+        ),
+        (
             "wrapped-pass",
             [
                 "lisp65> " + "x" * 72,

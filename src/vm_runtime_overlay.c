@@ -1,5 +1,8 @@
 /* Resident bootstrap and Attic-backed catalog verifier for runtime overlays. */
 #include "vm_runtime_overlay.h"
+#ifdef LISP65_C1_COMPILER_TIER
+#include "c1_compiler_overlay.h"
+#endif
 
 #include <stddef.h>
 #include <stdint.h>
@@ -264,9 +267,6 @@ typedef struct {
 } rtov_verifier_tuple;
 
 typedef struct {
-    uint16_t abi_version;
-    uint16_t cookie;
-    uint16_t capacity;
     uint8_t status;
 } rtov_island_install_context;
 
@@ -303,8 +303,15 @@ static uint16_t rtov_loaded_len;
 static uint8_t rtov_fault;
 static uint8_t rtov_busy;
 static vm_runtime_overlay_repeat_predicate_fn rtov_repeat;
-static void *rtov_batch_context;
-static uint8_t *rtov_batch_result;
+/* The installer and the resident batch loop cannot run concurrently: the
+ * installer completes before the island becomes ready, while batches require
+ * the ready state. Keep their context and result/target in these named slots;
+ * installer-only volatile accesses below prevent anonymous cross-call spills
+ * without changing the resident batch-loop code shape. */
+static void *rtov_call_context;
+static uint8_t *rtov_call_result;
+#define RTOV_INSTALL_CONTEXT (*(void * volatile *)&rtov_call_context)
+#define RTOV_INSTALL_TARGET (*(uint8_t * volatile *)&rtov_call_result)
 static uint16_t rtov_batch_entry;
 static uint16_t rtov_batch_crc;
 static uint8_t rtov_batch_slot_id;
@@ -341,39 +348,26 @@ static RTOV_NOINLINE uint16_t rtov_crc_mem(
 }
 
 RTOV_ISLANDFN uint8_t vm_resident_island_install(void *opaque) {
-    rtov_island_install_context *context =
-        (rtov_island_install_context *)opaque;
-    uint8_t *target = (uint8_t *)RTOV_ISLAND_TARGET;
-    if (!context) return VM_RUNTIME_ISLAND_ERR_CONTEXT;
-    if (context->abi_version != LISP65_RUNTIME_ISLAND_ABI_VERSION) {
-        context->status = VM_RUNTIME_ISLAND_ERR_ABI;
-        return context->status;
-    }
-    if (context->cookie != LISP65_RUNTIME_ISLAND_COOKIE) {
-        context->status = VM_RUNTIME_ISLAND_ERR_COOKIE;
-        return context->status;
-    }
-    if (context->capacity != LISP65_RESIDENT_ISLAND_CAPACITY
-        || context->capacity != LISP65_RUNTIME_ISLAND_CAPACITY) {
-        context->status = VM_RUNTIME_ISLAND_ERR_BINDING;
-        return context->status;
-    }
-    if (rtov_crc_mem(rtov_island_image, LISP65_RESIDENT_ISLAND_LENGTH) !=
-        LISP65_RESIDENT_ISLAND_CRC16) {
-        context->status = VM_RUNTIME_ISLAND_ERR_CRC;
-        return context->status;
-    }
-    memcpy(target, rtov_island_image, LISP65_RESIDENT_ISLAND_LENGTH);
+    uint8_t status;
+    if (!opaque) return VM_RUNTIME_ISLAND_ERR_CONTEXT;
+    RTOV_INSTALL_CONTEXT = opaque;
+    RTOV_INSTALL_TARGET = (uint8_t *)RTOV_ISLAND_TARGET;
+    /* Profile/build identity, entry ABI, source bounds, and source CRC are
+     * already checked by vm_runtime_overlay_exec before this boot-only entry.
+     * The installer owns only the destination copy and its independent CRC. */
+    memcpy(RTOV_INSTALL_TARGET, rtov_island_image,
+           LISP65_RESIDENT_ISLAND_LENGTH);
 #ifdef LISP65_RUNTIME_OVERLAY_HOST_TEST
-    if (rtov_island_copy_fault) target[0] ^= 1u;
+    if (rtov_island_copy_fault) RTOV_INSTALL_TARGET[0] ^= 1u;
 #endif
-    if (rtov_crc_mem(target, LISP65_RESIDENT_ISLAND_LENGTH) !=
-        LISP65_RESIDENT_ISLAND_CRC16) {
-        context->status = VM_RUNTIME_ISLAND_ERR_CRC;
-        return context->status;
-    }
-    context->status = VM_RUNTIME_ISLAND_OK;
-    return context->status;
+    status = rtov_crc_mem(RTOV_INSTALL_TARGET,
+                          LISP65_RESIDENT_ISLAND_LENGTH) ==
+                     LISP65_RESIDENT_ISLAND_CRC16
+                 ? VM_RUNTIME_ISLAND_OK
+                 : VM_RUNTIME_ISLAND_ERR_CRC;
+    opaque = RTOV_INSTALL_CONTEXT;
+    ((rtov_island_install_context *)opaque)->status = status;
+    return status;
 }
 
 static void rtov_read(uint16_t relative, uint8_t *dst, uint16_t length) {
@@ -594,9 +588,9 @@ static LISP65_RESIDENT_ISLAND_FN
 vm_runtime_overlay_status rtov_run_batch(void) {
     uint16_t remaining = 0xffffu;
     do {
-        *rtov_batch_result = RTOV_CALL(rtov_batch_entry, rtov_batch_context);
-        if (!rtov_repeat(rtov_batch_context, rtov_batch_slot_id,
-                         *rtov_batch_result))
+        *rtov_call_result = RTOV_CALL(rtov_batch_entry, rtov_call_context);
+        if (!rtov_repeat(rtov_call_context, rtov_batch_slot_id,
+                         *rtov_call_result))
             break;
     } while (--remaining);
     if (rtov_crc_mem((const uint8_t *)RTOV_TARGET, rtov_loaded_len) !=
@@ -698,8 +692,8 @@ vm_runtime_overlay_status vm_runtime_overlay_exec_batch_island(
     vm_runtime_overlay_status status;
     if (rtov_busy) return vm_runtime_overlay_exec(slot, context, entry_result);
     rtov_repeat = repeat;
-    rtov_batch_context = context;
-    rtov_batch_result = entry_result;
+    rtov_call_context = context;
+    rtov_call_result = entry_result;
     rtov_batch_slot_id = slot;
     status = vm_runtime_overlay_exec(slot, context, entry_result);
     rtov_repeat = 0;
@@ -716,9 +710,6 @@ vm_runtime_overlay_status vm_runtime_overlay_install_island(void) {
     if (rtov_island_state == RTOV_ISLAND_FAILED)
         return VM_RUNTIME_OVERLAY_ERR_ISLAND;
     rtov_island_state = RTOV_ISLAND_INSTALLING;
-    context.abi_version = LISP65_RUNTIME_ISLAND_ABI_VERSION;
-    context.cookie = LISP65_RUNTIME_ISLAND_COOKIE;
-    context.capacity = LISP65_RESIDENT_ISLAND_CAPACITY;
     context.status = VM_RUNTIME_ISLAND_ERR_CONTEXT;
     transport = vm_runtime_overlay_exec(
         LISP65_RUNTIME_ISLAND_INSTALL_SLOT, &context, &result);
@@ -741,7 +732,9 @@ uint8_t vm_runtime_overlay_island_ready(void) {
 }
 
 vm_runtime_overlay_status vm_runtime_overlay_abort_cleanup(void) {
+#ifndef LISP65_C1_COMPILER_TIER
     uint8_t was_busy = rtov_busy;
+#endif
     rtov_repeat = 0;
     if (!rtov_wipe()) {
         rtov_fault = VM_RUNTIME_OVERLAY_ERR_WIPE;
@@ -749,8 +742,17 @@ vm_runtime_overlay_status vm_runtime_overlay_abort_cleanup(void) {
         return VM_RUNTIME_OVERLAY_ERR_WIPE;
     }
     rtov_busy = 0;
+#ifdef LISP65_C1_COMPILER_TIER
+    /* A longjmp bypasses the Lisp retirement call.  Reuse the generic abort
+     * landing and a transport-global byte that is dead outside batch mode;
+     * this keeps the cleanup trigger out of both the copied island and a new
+     * resident checkpoint. */
+    return vm_runtime_overlay_exec(
+        LISP65_C1_COMPILER_OVERLAY_SLOT, 0, &rtov_batch_slot_id);
+#else
     if (rtov_fault) return VM_RUNTIME_OVERLAY_ERR_LATCHED;
     return was_busy ? VM_RUNTIME_OVERLAY_ERR_ABORTED : VM_RUNTIME_OVERLAY_OK;
+#endif
 }
 
 uint8_t vm_runtime_overlay_fault_latched(void) {

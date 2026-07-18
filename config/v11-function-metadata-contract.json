@@ -1,0 +1,69 @@
+{
+  "format": "lisp65-v11-function-metadata-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "wave2-host-contract-active-device-delivery-deferred-to-c2",
+  "record_key": "case-folded public name",
+  "required_fields": [
+    "name",
+    "kind",
+    "visibility",
+    "arity",
+    "signature",
+    "docstring",
+    "authority"
+  ],
+  "field_contract": {
+    "name": "The public, case-folded spelling.",
+    "kind": "function, primitive, or macro from the public-surface authority.",
+    "visibility": "public in this index version.",
+    "arity": "An exact required/optional/rest/max object when a shipped code object is authoritative; otherwise an explicit unresolved object. Unresolved arity blocks help delivery.",
+    "signature": "Optional human-readable signature. Null means no separate signature authority exists; argument names must never be invented from counts.",
+    "docstring": "Optional documentation string. Null means absent; source comments are not silently promoted to API text.",
+    "authority": "The SHA-bound source of kind and, where exact, the library plus ordinal and code-object bytes that prove arity."
+  },
+  "public_authorities": {
+    "dialect_surface": "config/dialect-v2-surface.json",
+    "buffer_addition": {
+      "contract": "docs/contracts/first-class-buffer.md",
+      "names": [
+        "bufferp",
+        "make-buffer",
+        "buffer-length",
+        "buffer-ref",
+        "buffer-set!",
+        "string->buffer",
+        "buffer->string"
+      ],
+      "kind": "function"
+    }
+  },
+  "bytecode_authorities": [
+    ["resident", "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json"],
+    ["ide", "build/bytecode/dialect-v2/libs/ide.manifest.json"],
+    ["idex", "build/bytecode/dialect-v2/libs/idex.manifest.json"],
+    ["m65d", "build/bytecode/dialect-v2/libs/m65d.manifest.json"],
+    ["buffer", "build/bytecode/dialect-v2/libs/buffer.manifest.json"],
+    ["lcc", "build/bytecode/dialect-v2/libs/lcc.manifest.json"]
+  ],
+  "unresolved_authority_rule": {
+    "native": "Native arity must eventually come from the native-function registry rather than a duplicated help table.",
+    "macro": "Evaluator and macro arity needs its own generated authority; source-text guessing is forbidden.",
+    "delivery_gate": "No ide-help or device-side metadata delivery may claim complete parameter help while any public record has unresolved arity."
+  },
+  "delivery": {
+    "wave2": "Deterministic SHA-bound host index and receipt only; no resident, shelf, symbol, Namepool, Directory, island, installer, or overlay bytes.",
+    "device": "Deferred with ide-help behind C2 after the single L65S-v4 attempt failed its stage-slice and fixed-overlay gates.",
+    "media_rule": "A future device index must remain in the reset-persistent, product-identity-bound Attic artifact. A product-D81-only side file is forbidden by the one-swap contract."
+  },
+  "gates": [
+    "records are canonical-JSON sorted and unique by name",
+    "public kind comes from a named public authority",
+    "exact arity is decoded from the exact SHA-bound code object",
+    "anonymous container entries cannot satisfy public metadata",
+    "signature and docstring stay null until an explicit authority supplies them",
+    "unresolved records are counted and block complete help claims",
+    "all current capacity deltas are zero"
+  ],
+  "claim_limit": "This contract proves a deterministic host projection and identifies its unresolved arity authorities. It does not claim an on-device index, complete parameter help, shelf capacity, or a shipped Wave-3 help module."
+}

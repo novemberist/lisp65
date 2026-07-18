@@ -14,6 +14,7 @@ import bytecode_p0_stdlib as S  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DOC_PATH = os.path.join(ROOT, "docs", "archive", "pre-1.0", "contracts", "bytecode-abi.md")
+DOC_EXTENSION_PATH = os.path.join(ROOT, "docs", "contracts", "bytecode-abi.md")
 EMBED_DOC_PATH = os.path.join(ROOT, "docs", "archive", "pre-1.0", "reference", "bytecode-embed-loader.md")
 VM_H_PATH = os.path.join(ROOT, "src", "vm.h")
 VM_C_PATH = os.path.join(ROOT, "src", "vm.c")
@@ -90,6 +91,20 @@ def expand_doc_mnemonics(cell, count):
 
 def parse_doc_prims(text):
     sec = section(text, r"^## 4a\. Gefrorene Prim-ID-Tabelle", r"^## 5\.")
+    prims = {}
+    for line in sec.splitlines():
+        line = line.strip()
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) < 2 or cells[0].startswith("---") or cells[0] == "Prim-ID":
+            continue
+        prims[int(strip_md(cells[0]))] = strip_md(cells[1])
+    return prims
+
+
+def parse_doc_prim_extensions(text):
+    sec = section(text, r"^## Prim-ID extensions", r"^## Compatibility")
     prims = {}
     for line in sec.splitlines():
         line = line.strip()
@@ -286,6 +301,7 @@ def compare_maps(label, expected, actual, errors):
 
 def run(verbose=False):
     doc_text = read_text(DOC_PATH)
+    doc_extension_text = read_text(DOC_EXTENSION_PATH)
     embed_doc_text = read_text(EMBED_DOC_PATH)
     vm_h_text = read_text(VM_H_PATH)
     vm_c_text = read_text(VM_C_PATH)
@@ -298,6 +314,10 @@ def run(verbose=False):
 
     doc_ops = parse_doc_ops(doc_text)
     doc_prims = parse_doc_prims(doc_text)
+    for prim_id, name in parse_doc_prim_extensions(doc_extension_text).items():
+        if prim_id in doc_prims:
+            raise ValueError("duplicate Prim-ID in live ABI extension: %d" % prim_id)
+        doc_prims[prim_id] = name
     py_ops = python_ops()
     py_prims = python_prims()
     c_ops = parse_vm_h_ops(vm_h_text)
@@ -314,7 +334,7 @@ def run(verbose=False):
     expected_prim_profiles = {
         "dialect-v1": {"active": list(range(23)), "tombstone": []},
         "dialect-v2": {
-            "active": [0] + list(range(3, 26)) + [28, 29] + list(range(30, 34)) + list(range(35, 40)) + list(range(41, 63)),
+            "active": [0] + list(range(3, 26)) + [28, 29] + list(range(30, 34)) + list(range(35, 40)) + list(range(41, 66)),
             "tombstone": [1, 2, 26, 27, 34, 40],
         },
     }

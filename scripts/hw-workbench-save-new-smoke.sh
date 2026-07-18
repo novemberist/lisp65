@@ -10,6 +10,10 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+fixture_get() {
+  python3 tools/host-lisp/r5_persistence_fixtures.py get "$1"
+}
+
 dry_run=0
 build=1
 ip="${MEGA65_IP:-}"
@@ -21,6 +25,7 @@ prefix="${PREFIX:-hw-workbench-save-new}"
 wait_sec="${WAIT_SEC:-10}"
 boot_wait_sec="${BOOT_WAIT_SEC:-3}"
 form_wait_sec="${FORM_WAIT_SEC:-3}"
+expect_poll_sec="${EXPECT_POLL_SEC:-30}"
 timeout_sec="${TIMEOUT_SEC:-20}"
 deploy_timeout="${DEPLOY_TIMEOUT_SEC:-180}"
 remote_d81="${WORKBENCH_M5_REMOTE_D81:-L65M5.D81}"
@@ -32,12 +37,12 @@ source_lisp="${WORKBENCH_M5_SOURCE:-tests/disk/m5-new-source.lisp}"
 alloc_lisp="${WORKBENCH_M5_ALLOC_SOURCE:-lib/m65-disk-alloc.lisp}"
 target_name="${WORKBENCH_M5_NAME:-m5src}"
 alloc_name="${WORKBENCH_M5_ALLOC_NAME:-m5alloc}"
-target_track="${WORKBENCH_M5_TRACK:-45}"
-first_sector="${WORKBENCH_M5_FIRST_SECTOR:-26}"
-second_sector="${WORKBENCH_M5_SECOND_SECTOR:-27}"
-dir_track="${WORKBENCH_M5_DIR_TRACK:-40}"
-dir_sector="${WORKBENCH_M5_DIR_SECTOR:-4}"
-dir_entry="${WORKBENCH_M5_DIR_ENTRY:-3}"
+target_track="${WORKBENCH_M5_TRACK:-$(fixture_get save_new.track)}"
+first_sector="${WORKBENCH_M5_FIRST_SECTOR:-$(fixture_get save_new.first_sector)}"
+second_sector="${WORKBENCH_M5_SECOND_SECTOR:-$(fixture_get save_new.second_sector)}"
+dir_track="${WORKBENCH_M5_DIR_TRACK:-$(fixture_get save_new.directory_track)}"
+dir_sector="${WORKBENCH_M5_DIR_SECTOR:-$(fixture_get save_new.directory_sector)}"
+dir_entry="${WORKBENCH_M5_DIR_ENTRY:-$(fixture_get save_new.directory_entry)}"
 expect="save new pass 5/5"
 restore=1
 restore_armed=0
@@ -64,6 +69,7 @@ usage: $0 [options]
   --wait <seconds>      wait before screenshot (default: $wait_sec)
   --boot-wait <seconds> wait after Workbench oracle deploy (default: $boot_wait_sec)
   --form-wait <seconds> wait after each REPL form (default: $form_wait_sec)
+  --expect-poll <sec>   poll exact oracle result (default: $expect_poll_sec)
   --timeout <seconds>   timeout for m65 commands (default: $timeout_sec)
   --deploy-timeout <s>  timeout for Workbench deploy wrapper (default: $deploy_timeout)
   --remote-d81 <name>   throwaway D81 name on MEGA65 SD (default: $remote_d81)
@@ -107,6 +113,7 @@ while [ "$#" -gt 0 ]; do
     --wait) shift; [ "$#" -gt 0 ] || usage; wait_sec="$1" ;;
     --boot-wait) shift; [ "$#" -gt 0 ] || usage; boot_wait_sec="$1" ;;
     --form-wait) shift; [ "$#" -gt 0 ] || usage; form_wait_sec="$1" ;;
+    --expect-poll) shift; [ "$#" -gt 0 ] || usage; expect_poll_sec="$1" ;;
     --timeout) shift; [ "$#" -gt 0 ] || usage; timeout_sec="$1" ;;
     --deploy-timeout) shift; [ "$#" -gt 0 ] || usage; deploy_timeout="$1" ;;
     --remote-d81) shift; [ "$#" -gt 0 ] || usage; remote_d81="$1" ;;
@@ -142,6 +149,8 @@ done
 case "$wait_sec" in ''|*[!0-9]*) echo "Fehler: --wait muss numerisch sein" >&2; exit 2 ;; esac
 case "$boot_wait_sec" in ''|*[!0-9]*) echo "Fehler: --boot-wait muss numerisch sein" >&2; exit 2 ;; esac
 case "$form_wait_sec" in ''|*[!0-9]*) echo "Fehler: --form-wait muss numerisch sein" >&2; exit 2 ;; esac
+case "$expect_poll_sec" in ''|*[!0-9]*) echo "Fehler: --expect-poll muss numerisch sein" >&2; exit 2 ;; esac
+[ "$expect_poll_sec" -gt 0 ] || { echo "Fehler: --expect-poll muss groesser als 0 sein" >&2; exit 2; }
 case "$timeout_sec" in ''|*[!0-9]*) echo "Fehler: --timeout muss numerisch sein" >&2; exit 2 ;; esac
 case "$deploy_timeout" in ''|*[!0-9]*) echo "Fehler: --deploy-timeout muss numerisch sein" >&2; exit 2 ;; esac
 case "$diff_mode" in fixed|generic) ;; *) echo "Fehler: Diff-Modus muss fixed oder generic sein" >&2; exit 2 ;; esac
@@ -357,7 +366,7 @@ run_oracle_phase() {
   set -- --form "$form" --prefix "$prefix-$phase" --out-dir "$out_dir" \
     --tools "$tools_dir" --device "$device" --wait "$wait_sec" \
     --form-wait "$form_wait_sec" --timeout "$timeout_sec" --expect "$marker" \
-    --verified-input
+    --expect-poll "$expect_poll_sec" --verified-input
   [ "$dry_run" = "1" ] && set -- "$@" --dry-run
   echo "==> JTAG-REPL-Oracle: $phase"
   scripts/hw-jtag-repl.sh "$@"

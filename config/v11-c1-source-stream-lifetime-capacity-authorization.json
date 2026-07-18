@@ -1,0 +1,63 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-c1-source-stream-lifetime-correction",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "3b24d28947c2099e5166553176efcee7c862f4b4",
+  "probe_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-source-stream-lifetime-correction-probe-receipt.json",
+    "sha256": "d25e4b01ddf5e8e568d1e9b9b8722495c28fbf535eb67f7d03df80901f4b0272"
+  },
+  "capacity": {
+    "resident_island": {
+      "capacity_bytes": 2048,
+      "annex_bytes": 260,
+      "baseline_payload_bytes": 1531,
+      "candidate_payload_bytes": 1668,
+      "baseline_reserve_bytes": 256,
+      "candidate_reserve_bytes": 120,
+      "authorized_reserve_delta_bytes": -136,
+      "attribution": "A 137-byte persistent sector fetcher separates the unread source lifetime from C1 compiler-container staging; removal of the former one-byte alignment pad accounts for the reserve arithmetic."
+    },
+    "resident_island_installer_slice": {
+      "hard_limit_bytes": 1792,
+      "sealed_baseline_bytes": 1743,
+      "sealed_baseline_headroom_bytes": 49,
+      "latest_owner_authorized_headroom_pin_bytes": 27,
+      "candidate_bytes": 1770,
+      "candidate_headroom_bytes": 22,
+      "authorized_delta_from_latest_owner_pin_bytes": -5,
+      "sealed_comparison_delta_bytes": -27,
+      "attribution": "The 137-byte source fetcher is included in the installed island image while consolidation of duplicate installer context checks reclaims 110 bytes; net slice growth is 27 bytes."
+    },
+    "other_dimensions": {
+      "bank_post_boot_reserve_bytes": 1905,
+      "banked_headroom_over_target_bytes": 369,
+      "ext_standard_composition_headroom_bytes": 25073,
+      "boot_overlay_bytes": 1669,
+      "overlay_vma_headroom_bytes": 0,
+      "runtime_overlay_bank_bytes": 65472,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "symbols_headroom": 298,
+      "namepool_headroom_bytes": 4602,
+      "directory_post_align_headroom": 168,
+      "delta": "Bank headroom gains 103 bytes; all other listed dimensions are unchanged."
+    }
+  },
+  "watch_policy": {
+    "resident_island": "watch-listed at 120 bytes reserve; every future capacity_delta must state its island delta explicitly",
+    "wave_1_1_m": "The transactional FASL-save probe must measure and report all resident-island demand before authorization.",
+    "existing_critical_dimensions": [
+      "overlay VMA: 0 bytes",
+      "runtime-overlay bank: 64 bytes"
+    ]
+  },
+  "owner_decision": "Authorize the exact resident-island reserve repin from 256 to 120 bytes and the resident-island installer-slice repin from the latest 27-byte owner pin to 22 bytes, while preserving the sealed 49-to-22-byte comparison.",
+  "rejected_shortcuts": [
+    "Do not reduce the public 38,400-byte source-load ceiling.",
+    "Do not relax the 1,792-byte installer-slice limit.",
+    "Do not remove product/build identity or either CRC boundary."
+  ],
+  "claim_limit": "This authorization permits only the measured resident-island and installer-slice repins. It does not prove the canonical varied fresh-clone build, promote product bytes, reuse any G5 receipt, or claim R3/R4/R5/R6/G5/G6 acceptance."
+}

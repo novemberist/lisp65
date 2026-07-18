@@ -1,5 +1,6 @@
 /* On-demand L65M commit slices. Validation and blob staging precede this unit. */
 #include "l65m_commit_overlay.h"
+#include "c1_phase_probe.h"
 
 #if defined(LISP65_VM) && defined(LISP65_STDLIB_EXT_METADATA) && \
     defined(LISP65_DISK_LIBS)
@@ -8,6 +9,9 @@
 #include "symbol.h"
 #include "vm.h"
 #include "vm_embed.h"
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+#include "io.h"
+#endif
 
 enum { LIT_FIX=1, LIT_NIL, LIT_T, LIT_SYMBOL, LIT_CONS, LIT_LIST, LIT_STRING,
        LIT_ENTRY_REF };
@@ -23,7 +27,7 @@ enum { LIT_FIX=1, LIT_NIL, LIT_T, LIT_SYMBOL, LIT_CONS, LIT_LIST, LIT_STRING,
 #define COMMIT_HELP(n) static __attribute__((noinline))
 #endif
 
-#define MD_NAME_MAX 34u
+#define MD_NAME_MAX LISP65_SYMBOL_NAME_BUFFER
 
 /* The pointer-free slice ABI keeps one minimal synchronous resident binding. */
 static const l65m_source *commit_source_ref;
@@ -190,6 +194,10 @@ COMMIT_SLICE(00) uint8_t l65m_commit_phase_verify(void *context) {
     uint8_t status = L65M_OK, count, i, bits;
     uint16_t off = 0, end, lo, hi, j, crc = 0xffffu;
     if (!commit_begin(work, L65M_COMMIT_PHASE_VERIFY)) return L65M_ERR_STATE;
+    lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT_ONLY,
+                             LISP65_C1_PROBE_EDGE_BEGIN);
+    lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT_VERIFY,
+                             LISP65_C1_PROBE_EDGE_BEGIN);
     if (commit_source_ref->length != work->source_length
         || vm_ext_code_watermark() != work->code_base
         || vm_dir_count() != work->dir_before
@@ -245,6 +253,12 @@ COMMIT_SLICE(00) uint8_t l65m_commit_phase_verify(void *context) {
                 work->dir_before = (uint16_t)MK_BCODE(
                     (uint16_t)((work->dir_before + 7u) & ~7u));
         }
+    }
+    if (status == L65M_OK) {
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT_VERIFY,
+                                 LISP65_C1_PROBE_EDGE_END);
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT_APPLY,
+                                 LISP65_C1_PROBE_EDGE_BEGIN);
     }
     return commit_leave(work, status, work->patch_count
                         ? L65M_COMMIT_PHASE_PATCH_RECORD : L65M_COMMIT_PHASE_ENTRIES);
@@ -740,6 +754,25 @@ COMMIT_SLICE(06) uint8_t l65m_commit_phase_entries(void *context) {
             }
         }
     }
+    if (status == L65M_OK && !work->repeat_phase) {
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+        if (lisp65_disk_lib_plan.max_graph_depth & 0x80u) {
+            lisp65_disk_lib_plan.new_symbols = (uint16_t)
+                (sym_count() - lisp65_disk_lib_plan.symbols_before);
+            lisp65_disk_lib_plan.new_name_bytes = (uint16_t)
+                (sym_pool_used() - lisp65_disk_lib_plan.namepool_before);
+            lisp65_disk_lib_plan.max_graph_depth &= 0x7fu;
+        }
+#endif
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT,
+                                 LISP65_C1_PROBE_EDGE_END);
+    }
+    if (status == L65M_OK && !work->repeat_phase)
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT_ONLY,
+                                 LISP65_C1_PROBE_EDGE_END);
+    if (status == L65M_OK && !work->repeat_phase)
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_COMMIT_APPLY,
+                                 LISP65_C1_PROBE_EDGE_END);
     return commit_leave(work, status, work->repeat_phase
                         ? L65M_COMMIT_PHASE_ENTRIES : L65M_COMMIT_PHASE_COUNT);
 }

@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-v11-m-transactional-fasl-probe-contract-v1",
+  "id": "v11-m-transactional-fasl-comparison",
+  "status": "probe-only",
+  "baseline": {
+    "wave": "1.1-wave-1",
+    "product_set_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f"
+  },
+  "question": "Should detached compiler Buffers extend m65d-save or use a second named transaction entry?",
+  "variants": {
+    "composition": {
+      "compiler_entry": "m65d-save",
+      "contract": "m65d-save accepts String or Buffer and owns the existing COW/media transaction"
+    },
+    "dedicated": {
+      "compiler_entry": "m65d-save-buffer",
+      "contract": "m65d-save remains String-only and a second named entry owns Buffer payloads"
+    }
+  },
+  "common_cut": [
+    "retire the preallocated FASL slot discovery and sector writer",
+    "copy one detached Buffer to the established staging window with the existing DMA seam",
+    "publish through M65D COW with media binding, denylist, readback verification, BAM claim and directory commit-last",
+    "retain all existing String-payload behavior and failure cases"
+  ],
+  "mandatory_gates": {
+    "candidate_status": "passed-not-promoted",
+    "m65d_existing_cases_min": 38,
+    "buffer_cases_per_candidate": 2,
+    "independent_d81_witnesses": [
+      "d81_persistence_fault",
+      "d81_bam_sanity"
+    ],
+    "compiler_tier_byte_identity": true,
+    "legacy_slot_functions_absent": true,
+    "critical_capacity_deltas": {
+      "resident_island": 0,
+      "runtime_overlay_bank": "nonnegative-headroom-only; every alignment credit must be attributed",
+      "fixed_overlay": 0,
+      "installer_slice": 0
+    }
+  },
+  "decision_rule": "Prefer composition when both variants satisfy the same transaction and critical-capacity gates; a second public entry must buy a measured property rather than merely duplicate payload dispatch.",
+  "claim_limit": "This comparison may recommend an implementation cut. It does not promote product bytes, authorize capacity deltas, prove compile-string end-to-end on hardware, or reuse Wave-1 hardware receipts."
+}

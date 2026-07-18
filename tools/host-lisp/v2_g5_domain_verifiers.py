@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "tools" / "host-lisp"))
 
 import runtime_export_hw_oracle as RUNTIME_HW  # noqa: E402
 import runtime_export_preload as PRELOAD  # noqa: E402
+import r5_persistence_fixtures as R5_FIXTURES  # noqa: E402
 
 
 RUNTIME_PACKAGE_FORMAT = "lisp65-v2-runtime-core-g5-package-v1"
@@ -30,6 +31,7 @@ WORKBENCH_CASE_FORMAT = "lisp65-v2-capability-carrier-g5-workbench-case-v1"
 PREFLIGHT_FORMAT = "lisp65-v2-capability-carrier-g5-preflight-v1"
 CANDIDATE_FORMAT = "lisp65-v2-capability-carrier-g5-candidate-v1"
 VERIFIER_PATH = "tools/host-lisp/v2_g5_domain_verifiers.py"
+PERSISTENCE_FIXTURES = R5_FIXTURES.load_fixtures()
 
 EXPECTED = {
     "runtime-export": {
@@ -434,23 +436,35 @@ def _workbench_diff(case_id: str, evidence: dict[str, Path]) -> None:
     before = str(evidence["before-d81"])
     after = str(evidence["after-d81"])
     py = sys.executable
+    fixed = PERSISTENCE_FIXTURES["fixed_write"]
+    save = PERSISTENCE_FIXTURES["save_new"]
+    scan = PERSISTENCE_FIXTURES["save_new_scan"]
     if case_id == "bam-alloc":
-        command = [py, "tools/host-lisp/d81_bam_alloc_diff.py", before, after, "--track", "45", "--sector", "8"]
+        command = [
+            py, "tools/host-lisp/d81_bam_alloc_diff.py", before, after,
+            "--track", str(fixed["track"]), "--sector", str(fixed["first_sector"]),
+        ]
     elif case_id == "chain-write":
         command = [py, "tools/host-lisp/d81_chain_write_diff.py", before, after,
-                   "--source", "tests/disk/m3-chain-source.lisp", "--track", "45",
-                   "--first-sector", "8", "--second-sector", "9"]
+                   "--source", "tests/disk/m3-chain-source.lisp", "--track", str(fixed["track"]),
+                   "--first-sector", str(fixed["first_sector"]), "--second-sector", str(fixed["second_sector"])]
     elif case_id == "dir-write":
         command = [py, "tools/host-lisp/d81_dir_write_diff.py", before, after,
                    "--source", "tests/disk/m4-dir-source.lisp", "--name", "m4src",
-                   "--track", "45", "--first-sector", "8", "--second-sector", "9",
-                   "--dir-track", "40", "--dir-sector", "4", "--dir-entry", "2"]
+                   "--track", str(fixed["track"]), "--first-sector", str(fixed["first_sector"]),
+                   "--second-sector", str(fixed["second_sector"]),
+                   "--dir-track", str(fixed["directory_track"]),
+                   "--dir-sector", str(fixed["directory_sector"]),
+                   "--dir-entry", str(fixed["directory_entry"])]
     elif case_id in ("save-new", "save-new-scan"):
-        first, second, name = ("26", "27", "m5src") if case_id == "save-new" else ("27", "28", "m6src")
+        row, name = (save, "m5src") if case_id == "save-new" else (scan, "m6src")
         command = [py, "tools/host-lisp/d81_dir_write_diff.py", before, after,
                    "--source", "tests/disk/m5-new-source.lisp", "--name", name,
-                   "--track", "45", "--first-sector", first, "--second-sector", second,
-                   "--dir-track", "40", "--dir-sector", "4", "--dir-entry", "3"]
+                   "--track", str(row["track"]), "--first-sector", str(row["first_sector"]),
+                   "--second-sector", str(row["second_sector"]),
+                   "--dir-track", str(row["directory_track"]),
+                   "--dir-sector", str(row["directory_sector"]),
+                   "--dir-entry", str(row["directory_entry"])]
     elif case_id == "save-new-var":
         command = [py, "tools/host-lisp/d81_save_new_diff.py", before, after,
                    "--source", "tests/disk/m7-var-source.lisp", "--name", "m7src",

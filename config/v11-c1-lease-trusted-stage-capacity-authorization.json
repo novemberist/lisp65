@@ -1,0 +1,104 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-c1-lease-trusted-stage-reopening",
+  "status": "owner-authorization-reissued-under-dated-latency-exception",
+  "authorized_on": "2026-07-16",
+  "suspended_on": "2026-07-16",
+  "reissued_on": "2026-07-16",
+  "suspension_reason": "The exact definition-to-first-call product measurement is 95 frames or 1900 ms, and the single authorized identity-restore attempt failed the fixed slice and runtime-bank capacity gates. The previous 260-ms acceptance covered only definitions-free warm sequences; promotion now requires the owner's explicit dated-exception-or-C1-rollback decision.",
+  "authorization_source_commit": "350166c77208b5b6f598eedef20a799784bce703",
+  "probe_receipts": [
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-lease-trusted-stage-probe-receipt.json",
+      "sha256": "2e3b9622928bba3fd15c8edff4e8770f75f1b5c929b751d56f92fe5b5a55d47a"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-interactive-path-options-probe-receipt.json",
+      "sha256": "7bc843b893c3fbd773ff70d6793b7fc6001e8943924fcc28c62fe2af8ad6b28e"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-definition-call-reopening-probe-receipt.json",
+      "sha256": "c224f4000d78b096e7d31bb1548831fa5aa7fedc9f005c1d18b7aeb564868925"
+    },
+    {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-identity-restore-capacity-probe-receipt.json",
+      "sha256": "eaa7f48cb9678a5abff29660df3c4c2270d92d289ea3227bea1a1f7e2d22d527"
+    }
+  ],
+  "resolution_bindings": {
+    "latency_exception": {
+      "path": "config/v11-c1-definition-call-latency-exception.json",
+      "sha256": "655f8af443edfac81721a3eb406f7f22d366b2682008ee4a7677c90cf79e47aa"
+    },
+    "poke_differential_diagnosis": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-poke-differential-diagnosis.json",
+      "sha256": "ab44e599025916bcfa8ba1f9b724379b9899d033440f6d92643b853644cf4961"
+    }
+  },
+  "performance_decision": {
+    "load_lib_seconds": 6.0,
+    "load_lib_limit_seconds": 6.9,
+    "warm_nested_entry_milliseconds": 260,
+    "direct_resident_equivalent_milliseconds": 200,
+    "delta_milliseconds": 60,
+    "delta_percent": 30,
+    "definitions_free_owner_result": "accepted-as-imperceptible-enough",
+    "definition_call_frames": 95,
+    "definition_call_milliseconds": 1900,
+    "definition_call_owner_result": "documented-limitation-not-performance-pass-owner-dated-2026-07-16",
+    "bounded_restore_result": "capacity-red-no-hardware-run-one-attempt-exhausted",
+    "combined_result": "performance-bar-not-passed-dated-exception-authorizes-promotion-with-C2-1.2-cure",
+    "measurement_rule": "future latency gates separate in-product time from transport and harness time"
+  },
+  "capacity": {
+    "bank": {
+      "baseline_margin_over_target_bytes": 288,
+      "candidate_margin_over_target_bytes": 266,
+      "authorized_delta_bytes": -22
+    },
+    "ext": {
+      "authorized_delta_bytes": 0
+    },
+    "symbols": {
+      "authorized_delta": 0
+    },
+    "namepool": {
+      "authorized_delta_bytes": 0
+    },
+    "directory": {
+      "authorized_delta": 0
+    },
+    "boot_overlay": {
+      "authorized_delta_bytes": 0
+    },
+    "overlay_vma": {
+      "baseline_headroom_bytes": 30,
+      "candidate_headroom_bytes": 0,
+      "authorized_delta_bytes": -30,
+      "rule_after_authorization": "frozen-at-zero-no-further-debit-without-simultaneous-structural-relief"
+    },
+    "runtime_overlay_bank": {
+      "baseline_bytes": 64192,
+      "candidate_bytes": 65472,
+      "hard_limit_bytes": 65536,
+      "authorized_delta_bytes": 1280,
+      "candidate_margin_bytes": 64,
+      "rule_after_authorization": "effectively-frozen"
+    }
+  },
+  "rejected_alternatives": {
+    "independent_install_region": "strict link overlaps the fixed overlay by 92 bytes; size-neutral shared-stack variant fails the nested eval seam and was fully rolled back",
+    "resident_compiler_default": "leaves 15741 bytes EXT and misses the 16384-byte floor by 643 bytes",
+    "identity_bound_restore": "the one bounded attempt grows l65m-commit-00 to 1895 bytes and the C1 lifetime to 1908 bytes against independent 1792-byte limits; l65m-commit-01 also adds 512 packed bytes to a runtime bank with only 64 bytes free"
+  },
+  "promotion_conditions": {
+    "authorization_state": "reissued-the-measured-deltas-may-be-promoted-only-with-the-bound-dated-exception-and-LIMITATION-STABLE-gate-value",
+    "probe_11_implementation_and_capacity": "required; canonical promotion repins provenance-bound build IDs and therefore creates a new product identity for the mandatory fresh evidence chain",
+    "regular_reproducible_product_build": "required",
+    "full_R4_R5_R6_repin": "required",
+    "full_fresh_G5_G6": "required",
+    "wave_3_1_1_L": "blocked-until-measured-structural-overlay-relief"
+  },
+  "claim_limit": "This document reissues the measured C1 capacity deltas under the bound dated latency exception. The 1.90-second definition-call path remains a failed performance target whose stability—not acceptability—is gated. This authorization does not itself promote a product set, preserve the stopped G5 run, or claim R4/R5/R6/G6 acceptance."
+}

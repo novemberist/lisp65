@@ -1,0 +1,87 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-m-transactional-fasl-composition-capacity",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-17",
+  "source_baseline_commit": "16e0b6b77b1e606d792ead983322f0944f937f23",
+  "implementation_receipt_before_authorization": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-m-transactional-fasl-implementation-receipt.json",
+    "sha256": "1ddeccf62d9199cb098844f4f517eb932b31301aa776b3a1b6a34f861a14cd0d"
+  },
+  "capacity": {
+    "baseline": {
+      "bank_post_boot_reserve_bytes": 1890,
+      "boot_fastpath_verify_slice_bytes": 1866,
+      "directory_load_headroom": 170,
+      "directory_post_align_headroom": 168,
+      "ext_post_load_headroom_bytes": 24796,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4529,
+      "resident_island_annex_bytes": 260,
+      "resident_island_immutable_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65472,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "symbol_headroom": 295
+    },
+    "candidate": {
+      "bank_post_boot_reserve_bytes": 1898,
+      "boot_fastpath_verify_slice_bytes": 1783,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176,
+      "ext_post_load_headroom_bytes": 25523,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4732,
+      "resident_island_annex_bytes": 260,
+      "resident_island_immutable_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65216,
+      "runtime_overlay_bank_headroom_bytes": 320,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "symbol_headroom": 305
+    },
+    "authorized_delta": {
+      "bank_post_boot_reserve_bytes": 8,
+      "boot_fastpath_verify_slice_bytes": -83,
+      "directory_load_headroom": 7,
+      "directory_post_align_headroom": 8,
+      "ext_post_load_headroom_bytes": 727,
+      "fixed_overlay_bytes": 0,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "namepool_headroom_bytes": 203,
+      "resident_island_annex_bytes": 0,
+      "resident_island_immutable_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "runtime_overlay_bank_bytes": -256,
+      "runtime_overlay_bank_headroom_bytes": 256,
+      "runtime_overlay_max_slice_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "symbol_headroom": 10
+    }
+  },
+  "capacity_interpretation": {
+    "directory": "+7 load-headroom entries and +8 post-alignment entries; the nine retired fixed-slot objects reduce the raw resident inventory by nine while composition alignment accounts for the headroom difference",
+    "runtime_overlay_bank": "the retired fixed-slot metadata reduces boot-fastpath-verify by 83 bytes and crosses one 256-byte packing page, increasing runtime-overlay-bank headroom from 64 to 320 bytes",
+    "critical_dimensions": "fixed overlay, resident-island reserve, maximum reusable runtime slice and installer slice are unchanged"
+  },
+  "promotion_gate": {
+    "m65d_cases": "pass: 40/40",
+    "independent_d81_bam_oracle": "pass",
+    "chain_walker_inventory": "pass: 18/18, zero deviations",
+    "compiler_tier_byte_identical_to_probe": true,
+    "capacity_delta_complete": true
+  },
+  "claim_limit": "This authorization accepts the measured 1.1-M composition repin and permits inclusion in the next Wave-2 product candidate. It does not promote a Wave-2 product set or claim end-to-end compile-string hardware evidence."
+}

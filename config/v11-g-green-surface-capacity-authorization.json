@@ -1,0 +1,89 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-g-green-surface-capacity",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-17",
+  "source_baseline_commit": "4a1b0267ae3a7d23a9fa82b30ef4a23567b4e30a",
+  "implementation_receipt_before_authorization": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-g-green-surface-implementation-receipt.json",
+    "sha256": "4f8d7b21a2d104c262656c72302d744b4f8426bd6738ecaa8547f43424294b9d"
+  },
+  "capacity": {
+    "baseline": {
+      "bank_post_boot_reserve_bytes": 1898,
+      "boot_fastpath_verify_slice_bytes": 1783,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176,
+      "ext_post_load_headroom_bytes": 25523,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4732,
+      "resident_island_annex_bytes": 260,
+      "resident_island_immutable_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65216,
+      "runtime_overlay_bank_headroom_bytes": 320,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "symbol_headroom": 305
+    },
+    "candidate": {
+      "bank_post_boot_reserve_bytes": 1849,
+      "boot_fastpath_verify_slice_bytes": 1806,
+      "directory_load_headroom": 177,
+      "directory_post_align_headroom": 176,
+      "ext_post_load_headroom_bytes": 25482,
+      "fixed_overlay_bytes": 1669,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 1770,
+      "installer_slice_headroom_bytes": 22,
+      "namepool_headroom_bytes": 4702,
+      "resident_island_annex_bytes": 260,
+      "resident_island_immutable_bytes": 1668,
+      "resident_island_reserve_bytes": 120,
+      "runtime_overlay_bank_bytes": 65472,
+      "runtime_overlay_bank_headroom_bytes": 64,
+      "runtime_overlay_max_slice_bytes": 1783,
+      "runtime_overlay_max_slice_headroom_bytes": 9,
+      "symbol_headroom": 303
+    },
+    "authorized_delta": {
+      "bank_post_boot_reserve_bytes": -49,
+      "boot_fastpath_verify_slice_bytes": 23,
+      "directory_load_headroom": 0,
+      "directory_post_align_headroom": 0,
+      "ext_post_load_headroom_bytes": -41,
+      "fixed_overlay_bytes": 0,
+      "fixed_overlay_vma_headroom_bytes": 0,
+      "installer_slice_bytes": 0,
+      "installer_slice_headroom_bytes": 0,
+      "namepool_headroom_bytes": -30,
+      "resident_island_annex_bytes": 0,
+      "resident_island_immutable_bytes": 0,
+      "resident_island_reserve_bytes": 0,
+      "runtime_overlay_bank_bytes": 256,
+      "runtime_overlay_bank_headroom_bytes": -256,
+      "runtime_overlay_max_slice_bytes": 0,
+      "runtime_overlay_max_slice_headroom_bytes": 0,
+      "symbol_headroom": -2
+    }
+  },
+  "capacity_interpretation": {
+    "bank_and_ext": "The two canonical resident functions cost 49 bytes of post-boot Bank reserve and 41 bytes of post-load EXT headroom; both pinned floors remain satisfied.",
+    "runtime_overlay_bank": "The whole-program boot-fastpath-verify slice moves from 1783 to 1806 bytes and crosses one 256-byte pack boundary, reducing runtime-overlay-bank headroom from 320 to 64 bytes. The 23-byte linker movement is not assigned a stronger isolated cause.",
+    "critical_dimensions": "Directory, fixed overlay, resident island, maximum reusable runtime slice and installer slice are unchanged."
+  },
+  "promotion_gate": {
+    "read_from_string_routes": "pass: direct/funcall/apply",
+    "read_from_string_negative_cases": "pass: type and both arity boundaries",
+    "restart_repl_host_witness": "pass",
+    "restart_repl_real_link_reset_vector_jump": "pass: exactly one jmp ($fffc)",
+    "restart_repl_hardware": "not-run until Wave-2 G6",
+    "surface_delivery_parity": "pass",
+    "capacity_delta_complete": true
+  },
+  "claim_limit": "This authorization permits read-from-string and restart-repl in the next Wave-2 product candidate. It does not promote a Wave-2 product set or claim restart-repl device behavior before the fresh Wave-2 G6 case."
+}

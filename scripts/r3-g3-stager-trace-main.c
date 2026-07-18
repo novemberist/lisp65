@@ -40,7 +40,7 @@ static const char *case_name(void) {
 }
 
 int main(void) {
-    uint8_t index;
+    uint16_t index;
     uint8_t initial_valid = R3_G3_SCENARIO == 3 ? 1u : 0u;
     uint8_t restaged;
     uint8_t ok = 1;
@@ -82,9 +82,10 @@ int main(void) {
     if (r3_g3_handoffs != 1u || r3_g3_product_selected != 1u ||
         r3_g3_media_checks != (uint8_t)(restaged ? 2u : 1u)) ok = 0;
     if (restaged) {
-        if (r3_g3_stage_count != 2u || r3_g3_stage_mask != 3u ||
+        if (r3_g3_stage_count != 3u || r3_g3_stage_mask != 7u ||
             r3_g3_stage_order[0] != R3_ROLE_BANK5 ||
-            r3_g3_stage_order[1] != R3_ROLE_ATTIC) ok = 0;
+            r3_g3_stage_order[1] != R3_ROLE_ATTIC ||
+            r3_g3_stage_order[2] != R3_ROLE_SHELF) ok = 0;
     } else if (r3_g3_stage_count || r3_g3_stage_mask) ok = 0;
 
     if (!ok) {

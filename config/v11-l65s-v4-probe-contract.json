@@ -1,0 +1,71 @@
+{
+  "format": "lisp65-v11-l65s-v4-one-attempt-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "owner-authorized-one-attempt",
+  "input_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-shelf-metadata-audit-receipt.json",
+  "baseline": {
+    "format": "L65S-v3",
+    "shelf_bytes": 65368,
+    "u16_limit": 65535,
+    "headroom_bytes": 167,
+    "records": 5
+  },
+  "shared_v4_contract": {
+    "header_bytes": 32,
+    "record_bytes": 32,
+    "record_count_max": 255,
+    "source_offset_encoding": "unsigned-little-endian-u24-relative-to-0x08100000",
+    "maximum_relative_source_offset": 7340031,
+    "container_length_encoding": "u16",
+    "staging_limit_bytes": 38400,
+    "version_strictness": "v4 decoders reject v3 and unknown v4 flags; historical v3 evidence is not rewritten",
+    "identity": "catalog CRC32 plus per-region CRC32 on device; complete shelf and reconstructed-container SHA256 on host",
+    "execution_semantics": "reconstruct the original L65M container in the existing scratch and use the unchanged L65M validator and commit path"
+  },
+  "variants": [
+    {
+      "id": "catalog-widening-only",
+      "header_flag": 0,
+      "record": "name[8], container_off_u24, container_len_u16, container_crc32, sha256_prefix[12], flags_u8, reserved[2]",
+      "payload": "unchanged contiguous L65M containers",
+      "c2_reuse": "u24 reset-persistent staging source address only"
+    },
+    {
+      "id": "catalog-widening-plus-metadata-regions",
+      "header_flag": 1,
+      "record": "name[8], code_region_off_u24, code_region_len_u16, metadata_region_off_u24, metadata_region_len_u16, code_crc32, metadata_crc32, reconstructed_container_crc32, flags_u8, reserved_u8",
+      "payload": "immutable prefix-plus-code regions followed by load-time metadata regions in the same reset-persistent shelf artifact",
+      "c2_reuse": "u24 source address and the immutable-code/load-time-metadata region distinction",
+      "selected_for_real_link": true
+    }
+  ],
+  "media_rule": "No variant may require the product D81 after staging. A D81-only metadata side file is forbidden because it regresses the single-swap contract.",
+  "wave3_projection": {
+    "probe_shelf_envelope_bytes": 524288,
+    "envelope_basis": "A bounded probe envelope: u24-addressable, fits the current product D81 together with the existing files, and leaves at least 379 current 1581 blocks free. It is not a release capacity authorization.",
+    "future_records_reserved": 4,
+    "roles": [
+      "ide-lisp",
+      "editing-safety",
+      "ide-help",
+      "metadata-index"
+    ],
+    "success": "The selected v4 variant must report its exact current bytes and remaining combined region bytes after reserving four records inside the probe envelope. No unbuilt module-size claim is permitted."
+  },
+  "one_attempt_rule": {
+    "real_product_links": 1,
+    "required_hard_gates": [
+      "bank0",
+      "ext-floor",
+      "fixed-overlay",
+      "runtime-overlay-bank",
+      "maximum-runtime-slice",
+      "resident-island",
+      "installer-slice",
+      "shelf-envelope"
+    ],
+    "on_any_red_gate": "rollback product changes byte-for-byte; choose Wave-3 L-lite and move H/I/J behind C2; no tuning or reclaim round"
+  },
+  "separate_follow_up": "The authorized 17-name review is bundled with the Wave-2 repin and is not part of this format probe."
+}

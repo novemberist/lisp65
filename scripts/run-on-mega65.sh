@@ -32,6 +32,8 @@ preload_addr_1=""
 preload_file_1=""
 preload_addr_2=""
 preload_file_2=""
+preload_addr_3=""
+preload_file_3=""
 prg=""
 
 usage() {
@@ -44,7 +46,7 @@ usage: $0 [options] <program.prg>
   --jump <hexaddr>       PRG laden und nach <hexaddr> springen (SYS-artig)
   --mount <NAME.D81>     D81 von der SD-Karte mounten
   --preload-bin <addr> <file>
-                         binaeres Artefakt vor dem PRG laden (maximal zweimal)
+                         binaeres Artefakt vor dem PRG laden (maximal dreimal)
   --result <SDFILE>      diese Datei nach dem Lauf von der SD-Karte holen
   --out <localfile>      Ablageort der geholten Datei (default: build/mega65/<SDFILE>)
   --expect <string>      PASS (Exit 0) genau dann, wenn <string> in der Datei steht
@@ -69,7 +71,8 @@ while [ "$#" -gt 0 ]; do
       case "$preload_count" in
         1) preload_addr_1=$preload_addr; preload_file_1=$preload_file ;;
         2) preload_addr_2=$preload_addr; preload_file_2=$preload_file ;;
-        *) echo "zu viele --preload-bin-Optionen (maximal zwei)" >&2; usage ;;
+        3) preload_addr_3=$preload_addr; preload_file_3=$preload_file ;;
+        *) echo "zu viele --preload-bin-Optionen (maximal drei)" >&2; usage ;;
       esac
       ;;
     --result)  shift; result_remote="$1" ;;
@@ -104,6 +107,8 @@ if [ "$dry_run" != "1" ]; then
     { echo "Fehler: Preload-Binaer fehlt: $preload_file_1" >&2; exit 3; }
   [ -z "$preload_file_2" ] || [ -f "$preload_file_2" ] || \
     { echo "Fehler: Preload-Binaer fehlt: $preload_file_2" >&2; exit 3; }
+  [ -z "$preload_file_3" ] || [ -f "$preload_file_3" ] || \
+    { echo "Fehler: Preload-Binaer fehlt: $preload_file_3" >&2; exit 3; }
 fi
 
 # --- optionale binaere Preload-Artefakte, in angegebener Reihenfolge ---
@@ -112,6 +117,7 @@ while [ "$preload_index" -le "$preload_count" ]; do
   case "$preload_index" in
     1) preload_addr=$preload_addr_1; preload_file=$preload_file_1 ;;
     2) preload_addr=$preload_addr_2; preload_file=$preload_file_2 ;;
+    3) preload_addr=$preload_addr_3; preload_file=$preload_file_3 ;;
     *) echo "interner Preload-Indexfehler: $preload_index" >&2; exit 2 ;;
   esac
   set --

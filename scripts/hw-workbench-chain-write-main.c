@@ -1,7 +1,7 @@
 /* lisp65 -- M3 throwaway-D81 two-sector chain-write smoke.
  *
- * Writes a source chain to T45/S8 -> T45/S9 and allocates both sectors in the
- * BAM. The shell harness verifies the downloaded D81 byte-for-byte and then
+ * Writes a source chain to the shared R5 fixture sectors and allocates both in
+ * the BAM. The shell harness verifies the downloaded D81 byte-for-byte and then
  * boots the Workbench against that throwaway image to call %disk-load-file.
  */
 #include <stdint.h>
@@ -14,9 +14,25 @@
 #define COLOR_GREEN  5u
 #define COLOR_YELLOW 7u
 
-#define DATA_TRACK 45u
-#define DATA_FIRST 8u
-#define DATA_SECOND 9u
+#ifndef R5_FIXED_TRACK
+#error R5_FIXED_TRACK must come from the R5 persistence-fixture contract
+#endif
+#ifndef R5_FIXED_FIRST
+#error R5_FIXED_FIRST must come from the R5 persistence-fixture contract
+#endif
+#ifndef R5_FIXED_SECOND
+#error R5_FIXED_SECOND must come from the R5 persistence-fixture contract
+#endif
+
+#define DATA_TRACK ((uint8_t)R5_FIXED_TRACK)
+#define DATA_FIRST ((uint8_t)R5_FIXED_FIRST)
+#define DATA_SECOND ((uint8_t)R5_FIXED_SECOND)
+#define BAM_ENTRY ((uint8_t)(16u + 6u * (DATA_TRACK - 41u)))
+#define BAM_COUNT BAM_ENTRY
+#define BAM_BITMAP ((uint8_t)(BAM_ENTRY + 1u + DATA_FIRST / 8u))
+#define BAM_FIRST_MASK ((uint8_t)(1u << (DATA_FIRST & 7u)))
+#define BAM_SECOND_MASK ((uint8_t)(1u << (DATA_SECOND & 7u)))
+#define BAM_MASK ((uint8_t)(BAM_FIRST_MASK | BAM_SECOND_MASK))
 
 enum {
     CASE_READ_BAM = 0,
@@ -154,17 +170,19 @@ static void fill_second_sector(uint16_t len) {
 
 static void run_m3(void) {
     uint16_t len;
-    uint8_t ok, before_count, after_count;
+    uint8_t ok, before_count, after_count, before_bitmap, after_bitmap;
     m65_io_enable();
 
     len = payload_len();
     read_sector(40, 2);
     record(CASE_READ_BAM, scratch[0] == 0 && scratch[1] == 255, scratch[0], 0);
-    before_count = scratch[40];
+    before_count = scratch[BAM_COUNT];
+    before_bitmap = scratch[BAM_BITMAP];
     after_count = (uint8_t)(before_count - 2u);
-    ok = before_count >= 2 && scratch[42] == 255;
-    record(CASE_BEFORE_BAM, ok, ((uint16_t)before_count << 8) | scratch[42],
-           ((uint16_t)before_count << 8) | 255u);
+    after_bitmap = (uint8_t)(before_bitmap & (uint8_t)~BAM_MASK);
+    ok = before_count >= 2 && (before_bitmap & BAM_MASK) == BAM_MASK;
+    record(CASE_BEFORE_BAM, ok, ((uint16_t)before_count << 8) | before_bitmap,
+           ((uint16_t)before_count << 8) | before_bitmap);
     if (!ok) return;
     ok = len > 254 && len <= 508;
     record(CASE_PAYLOAD_LEN, ok, len, 255);
@@ -179,15 +197,15 @@ static void run_m3(void) {
     record(CASE_WRITE_SECOND, ok, ok, 1);
 
     read_sector(40, 2);
-    scratch[40] = after_count;
-    scratch[42] = 252;
+    scratch[BAM_COUNT] = after_count;
+    scratch[BAM_BITMAP] = after_bitmap;
     ok = write_sector(40, 2);
     record(CASE_WRITE_BAM, ok, ok, 1);
 
     read_sector(40, 2);
-    ok = scratch[40] == after_count && scratch[42] == 252;
-    record(CASE_AFTER_BAM, ok, ((uint16_t)scratch[40] << 8) | scratch[42],
-           ((uint16_t)after_count << 8) | 252u);
+    ok = scratch[BAM_COUNT] == after_count && scratch[BAM_BITMAP] == after_bitmap;
+    record(CASE_AFTER_BAM, ok, ((uint16_t)scratch[BAM_COUNT] << 8) | scratch[BAM_BITMAP],
+           ((uint16_t)after_count << 8) | after_bitmap);
 }
 
 static void show_result(void) {
@@ -199,7 +217,13 @@ static void show_result(void) {
     scr_putc('/');
     put_u16(hw_chain_write_total);
     scr_putc('\n');
-    puts_scr("target T45/S8 -> T45/S9\n");
+    puts_scr("target T");
+    put_u16(DATA_TRACK);
+    puts_scr("/S");
+    put_u16(DATA_FIRST);
+    puts_scr(" -> S");
+    put_u16(DATA_SECOND);
+    scr_putc('\n');
     puts_scr("payload bytes ");
     put_u16(payload_len());
     scr_putc('\n');

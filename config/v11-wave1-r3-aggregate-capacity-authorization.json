@@ -1,0 +1,21 @@
+{
+  "format": "lisp65-capacity-debit-authorization-v1",
+  "id": "v11-wave1-r3-aggregate-capacity",
+  "status": "authorized",
+  "authorized_on": "2026-07-16",
+  "timing": "pre-authorized",
+  "scope": "r3-cold-start-product-block",
+  "authorized_debits": {},
+  "required_floors": {
+    "bank": 0,
+    "ext": 16384,
+    "symbols": 32,
+    "namepool": 384,
+    "directory": 32
+  },
+  "attribution": {
+    "path": "config/v11-wave1-stager-chain-walker-capacity-authorization.json",
+    "sha256": "289b70482d53e9fa4fc1ca83b4a7ad1d956116ccd6ef976e9f3fd0206b5ea571"
+  },
+  "decision": "The historical Wave-1 aggregate debit was 332 -> 266 B (-66 B). The source-stream lifetime correction raised the candidate to 369 B over the release target; the owner-authorized stager and chain-walker correction consumes 15 B and pins the current candidate at 354 B. Against the sealed v1.0.1 baseline this remains a 22 B credit, so the current R3 capacity delta carries no authorization; both historical debits remain visible in their bound receipts."
+}

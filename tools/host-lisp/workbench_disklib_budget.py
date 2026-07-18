@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import re
+import tempfile
 from pathlib import Path
 
 import mvp_vm_stdlib_boot_budget as BB
@@ -88,14 +89,28 @@ def ext_code_gate_failures(budget, min_peak_headroom, min_post_headroom):
     return failures
 
 
-def corrected_symbol_usage(
-    static_symbols, static_namepool_bytes, symbol_correction, namepool_correction
+def accounted_symbol_usage(
+    static_symbols,
+    static_namepool_bytes,
+    boot_symbol_calibration,
+    boot_namepool_calibration,
+    retained_symbols,
+    retained_namepool_bytes,
 ):
-    if symbol_correction < 0 or namepool_correction < 0:
-        raise ValueError("composition corrections must be non-negative")
+    values = (
+        boot_symbol_calibration,
+        boot_namepool_calibration,
+        retained_symbols,
+        retained_namepool_bytes,
+    )
+    if any(value < 0 for value in values):
+        raise ValueError("composition accounting fields must be non-negative")
     return {
-        "symbols": static_symbols + symbol_correction,
-        "namepool_bytes": static_namepool_bytes + namepool_correction,
+        "symbols": static_symbols + boot_symbol_calibration + retained_symbols,
+        "namepool_bytes": (
+            static_namepool_bytes + boot_namepool_calibration
+            + retained_namepool_bytes
+        ),
     }
 
 
@@ -178,16 +193,37 @@ def selftest():
     assert align8(used) == 520
     cases += 1
 
-    assert corrected_symbol_usage(672, 9060, 5, 51) == {
-        "symbols": 677,
-        "namepool_bytes": 9111,
+    assert accounted_symbol_usage(672, 9060, 5, 51, 7, 83) == {
+        "symbols": 684,
+        "namepool_bytes": 9194,
     }
     cases += 1
     try:
-        corrected_symbol_usage(1, 1, -1, 0)
-        raise AssertionError("negative composition correction was accepted")
+        accounted_symbol_usage(1, 1, -1, 0, 0, 0)
+        raise AssertionError("negative composition accounting was accepted")
     except ValueError:
         pass
+    cases += 1
+
+    # Product eval_init names live behind BOOTNAME(id) declarations in the
+    # reclaimed boot section.  The capacity census must resolve them, while
+    # preserving the same preprocessor guard as the product registration.
+    with tempfile.TemporaryDirectory(prefix="workbench-symbol-budget-") as raw:
+        source = Path(raw) / "native.c"
+        source.write_text(
+            '#ifdef ACTIVE\n'
+            'WORKBENCH_BOOTNAME(foo, "boot-foo");\n'
+            'void init(void) { defprim(BOOTNAME(foo), 1); }\n'
+            '#endif\n'
+            'void later(void) { intern("late-name"); }\n',
+            encoding="utf-8",
+        )
+        names, prims, interns = BB.native_symbols(source, {"ACTIVE"})
+        assert names == {"boot-foo", "late-name", "t"}
+        assert prims == {"boot-foo"} and interns == {"late-name"}
+        names, prims, interns = BB.native_symbols(source, set())
+        assert names == {"late-name", "t"} and not prims
+        assert interns == {"late-name"}
     cases += 1
 
     print("workbench-disk-lib-budget selftest: PASS cases=%d" % cases)
@@ -200,8 +236,10 @@ def combined_runtime_symbol_budget(
     extra_cflags,
     eval_c,
     native_sources,
-    symbol_correction,
-    namepool_correction,
+    boot_symbol_calibration,
+    boot_namepool_calibration,
+    retained_symbols,
+    retained_namepool_bytes,
 ):
     defines = BB.d_flags(extra_cflags)
     active_defines = set(defines)
@@ -220,17 +258,20 @@ def combined_runtime_symbol_budget(
     all_runtime = resident_runtime | disk_runtime
     disk_new = disk_runtime - resident_runtime
     static_namepool_bytes = BB.namepool_bytes(all_runtime)
-    corrected = corrected_symbol_usage(
+    corrected = accounted_symbol_usage(
         len(all_runtime), static_namepool_bytes,
-        symbol_correction, namepool_correction,
+        boot_symbol_calibration, boot_namepool_calibration,
+        retained_symbols, retained_namepool_bytes,
     )
     return {
         "symbols": corrected["symbols"],
         "static_symbols": len(all_runtime),
-        "symbol_correction": symbol_correction,
+        "boot_symbol_calibration": boot_symbol_calibration,
+        "retained_symbols": retained_symbols,
         "namepool_bytes": corrected["namepool_bytes"],
         "static_namepool_bytes": static_namepool_bytes,
-        "namepool_correction": namepool_correction,
+        "boot_namepool_calibration": boot_namepool_calibration,
+        "retained_namepool_bytes": retained_namepool_bytes,
         "native_symbols": len(native),
         "resident_symbols": len(resident_entries | resident_literals),
         "disk_symbols": len(disk_runtime),
@@ -251,8 +292,10 @@ def main(argv=None):
     ap.add_argument("--boot-align8", action="store_true")
     ap.add_argument("--eval-c", type=Path, default=Path("src/eval.c"))
     ap.add_argument("--native-c", type=Path, action="append", default=[])
-    ap.add_argument("--symbol-correction", type=int, default=0)
-    ap.add_argument("--namepool-correction", type=int, default=0)
+    ap.add_argument("--boot-symbol-calibration", type=int, default=0)
+    ap.add_argument("--boot-namepool-calibration", type=int, default=0)
+    ap.add_argument("--retained-symbols", type=int, default=0)
+    ap.add_argument("--retained-namepool-bytes", type=int, default=0)
     ap.add_argument("--min-load-headroom", type=int, default=0)
     ap.add_argument("--min-post-align-headroom", type=int, default=0)
     ap.add_argument("--min-codebuf-headroom", type=int, default=0)
@@ -421,34 +464,38 @@ def main(argv=None):
         args.extra_cflags,
         args.eval_c,
         args.native_c,
-        args.symbol_correction,
-        args.namepool_correction,
+        args.boot_symbol_calibration,
+        args.boot_namepool_calibration,
+        args.retained_symbols,
+        args.retained_namepool_bytes,
     )
     symbol_headroom = max_sym - int(symbols["symbols"])
     namepool_headroom = namepool - int(symbols["namepool_bytes"])
     if symbol_headroom < args.min_symbol_headroom:
         raise SystemExit(
             "workbench-disk-lib-budget: FAIL runtime_symbols=%d headroom=%d cap=%d "
-            "(static=%d correction=%d disk_new=%d)"
+            "(static=%d boot_calibration=%d retained=%d disk_new=%d)"
             % (
                 symbols["symbols"],
                 symbol_headroom,
                 max_sym,
                 symbols["static_symbols"],
-                symbols["symbol_correction"],
+                symbols["boot_symbol_calibration"],
+                symbols["retained_symbols"],
                 symbols["disk_new_symbols"],
             )
         )
     if namepool_headroom < args.min_namepool_headroom:
         raise SystemExit(
             "workbench-disk-lib-budget: FAIL runtime_namepool=%d headroom=%d cap=%d "
-            "(static=%d correction=%d disk_new=%d)"
+            "(static=%d boot_calibration=%d retained=%d disk_new=%d)"
             % (
                 symbols["namepool_bytes"],
                 namepool_headroom,
                 namepool,
                 symbols["static_namepool_bytes"],
-                symbols["namepool_correction"],
+                symbols["boot_namepool_calibration"],
+                symbols["retained_namepool_bytes"],
                 symbols["disk_new_symbols"],
             )
         )
@@ -465,8 +512,10 @@ def main(argv=None):
                 {"path": path, "sha256": sha256_file(path)}
                 for path in args.disk_lib_manifest
             ],
-            "symbol_correction": args.symbol_correction,
-            "namepool_correction": args.namepool_correction,
+            "boot_symbol_calibration": args.boot_symbol_calibration,
+            "boot_namepool_calibration": args.boot_namepool_calibration,
+            "retained_symbols": args.retained_symbols,
+            "retained_namepool_bytes": args.retained_namepool_bytes,
         },
         "limits": {
             "vm_dir_max": cap,
@@ -511,7 +560,8 @@ def main(argv=None):
         "namepool": {
             "used": symbols["namepool_bytes"],
             "static_used": symbols["static_namepool_bytes"],
-            "correction": symbols["namepool_correction"],
+            "boot_calibration": symbols["boot_namepool_calibration"],
+            "retained": symbols["retained_namepool_bytes"],
             "headroom": namepool_headroom,
         },
     }
@@ -532,7 +582,9 @@ def main(argv=None):
         "disk_file_bytes=%d disk_file_max=%d disk_file_headroom=%d "
         "runtime_symbols=%d max_sym=%d symbol_headroom=%d "
         "runtime_namepool=%d namepool=%d namepool_headroom=%d "
-        "disk_new_symbols=%d symbol_correction=%d namepool_correction=%d"
+        "disk_new_symbols=%d boot_symbol_calibration=%d "
+        "boot_namepool_calibration=%d retained_symbols=%d "
+        "retained_namepool_bytes=%d"
         % (
             resident,
             start,
@@ -563,8 +615,10 @@ def main(argv=None):
             namepool,
             namepool_headroom,
             symbols["disk_new_symbols"],
-            symbols["symbol_correction"],
-            symbols["namepool_correction"],
+            symbols["boot_symbol_calibration"],
+            symbols["boot_namepool_calibration"],
+            symbols["retained_symbols"],
+            symbols["retained_namepool_bytes"],
         )
     )
     return 0

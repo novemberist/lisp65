@@ -1,0 +1,75 @@
+{
+  "format": "lisp65-v11-wave2-policy-name-revocation-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-18",
+  "status": "owner-authorized-prepared-for-wave2-repin",
+  "timing": "Apply after the remaining Wave-2 product blocks and bundle with the single Wave-2 repin; do not create an intermediate product identity.",
+  "baseline_measurement": "docs/planning/measurements/v1.1-prewave-measurements.json",
+  "classification": {
+    "private_state": {
+      "name": "*ide-buffers*",
+      "replacement": "reuse the value cell of the existing public function symbol ide-buffers under Lisp-2",
+      "user_visible_function": "ide-buffers remains unchanged"
+    },
+    "command_tokens": [
+      {"name": "compile-load", "id": 1008},
+      {"name": "delete-backward", "id": 1101},
+      {"name": "delete-forward", "id": 1102},
+      {"name": "find-file", "id": 1002},
+      {"name": "goto-line", "id": 1012},
+      {"name": "line-end", "id": 1103},
+      {"name": "line-start", "id": 1104},
+      {"name": "lisp-mode", "id": 1105},
+      {"name": "move-left", "id": 1106},
+      {"name": "move-right", "id": 1107},
+      {"name": "move-up", "id": 1108},
+      {"name": "newline", "id": 1109},
+      {"name": "self-insert", "id": 1110},
+      {"name": "switch-buffer", "id": 1006},
+      {"name": "write-file", "id": 1004}
+    ],
+    "retained_kind_symbol": {
+      "name": "bytecode",
+      "reason": "It is the pinned function-kind result used by the 1.1-G kind contract and remains an interned semantic value, not an IDE command token."
+    }
+  },
+  "m_x_rule": "Displayed command names remain Strings. The existing launcher maps Strings directly to numeric command IDs and never interns a command name.",
+  "expected_recovery": {
+    "symbols": 16,
+    "namepool_bytes": 182,
+    "bytecode_retained_namepool_bytes": 9
+  },
+  "echo_cases": [
+    "compile-load",
+    "delete-backward",
+    "delete-forward",
+    "find-file",
+    "goto-line",
+    "line-end",
+    "line-start",
+    "lisp-mode",
+    "move-left",
+    "move-right",
+    "move-up",
+    "newline",
+    "self-insert",
+    "switch-buffer",
+    "write-file",
+    "private-buffer-state-survives-ide-reentry",
+    "function-kind-still-returns-bytecode",
+    "unknown-m-x-command-remains-rejected"
+  ],
+  "required_regeneration": [
+    "the four-engine Workbench artifact differential receipt",
+    "the IDE behavior evidence bound to the regenerated IDE/IDEX containers",
+    "the export-only-interning/capacity receipt"
+  ],
+  "gates": [
+    "all 18 echo cases pass",
+    "none of the 16 revoked names remains in the standard-composition intern set",
+    "bytecode remains present exactly as a kind symbol",
+    "M-x display strings and behavior are unchanged",
+    "all capacity dimensions are reported in the Wave-2 repin"
+  ],
+  "claim_limit": "This contract prepares an already authorized Wave-2-repin change. It neither changes product bytes now nor pre-authorizes the measured implementation deltas."
+}

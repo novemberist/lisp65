@@ -11,6 +11,7 @@ instructions for release 1.0.1.
 - [Dialect V2 Language Reference](language-reference.md) — released syntax and surface
 - [Release Notes 1.0.1](releases/1.0.1.md) — package correction and inherited proof
 - [Release Notes 1.0.0](releases/1.0.0.md) — original shipped features and limits
+- [1.1 Wave 2 Candidate Notes](releases/1.1-wave-2-candidate.md) — unreleased surface, limits, and open hardware claim
 - [Architecture Overview](architecture-overview.md) — the product in one page
 
 ## Contributors

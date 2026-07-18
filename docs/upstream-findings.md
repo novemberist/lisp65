@@ -5,7 +5,7 @@ while developing lisp65. Each entry records its confidence, local evidence, and
 the core of a future upstream issue. Reverify every finding against the current
 upstream release before filing it.
 
-Updated: 2026-07-15.
+Updated: 2026-07-18.
 
 ## llvm-mos
 
@@ -55,6 +55,20 @@ restore Z to zero or execution fails. Request an explicit MOS-target ABI note.
 Without a `"memory"` clobber, LTO moved DMA-list stores after the MMIO trigger
 store. Request a documented MOS MMIO/DMA pattern using a register-free trigger
 and a memory clobber. Reference: `src/mem.c` (`ext_dma`).
+
+### L7 — 28-bit DMA addresses versus 16-bit `uintptr_t` (docs; verify first)
+
+The llvm-mos C pointer model for this target is 16-bit, while MEGA65
+DMA/Attic endpoints are 28-bit physical addresses. Converting `$00050000`
+through `uintptr_t` therefore changes the value to zero; the pinned compiler
+correctly warned about that conversion. lisp65 now requires physical endpoints
+to remain `uint32_t` values or explicit DMA-list bytes and forbids routing them
+through pointer types.
+
+Before proposing upstream text, verify the current llvm-mos documentation. If
+the distinction is already explicit, close L7 as a local-rule reminder. If it
+is absent, propose a documentation example rather than reporting a compiler
+bug. Evidence: the failed bounded `restart-repl` Attic-recovery probe.
 
 ## mega65-core
 

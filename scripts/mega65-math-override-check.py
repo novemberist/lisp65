@@ -9,6 +9,7 @@ baseline, strong unsigned overrides, and overrides plus signed libcrt wrappers.
 from __future__ import annotations
 
 import argparse
+import os
 import pathlib
 import random
 import re
@@ -18,11 +19,14 @@ import tempfile
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-DEFAULT_CC = ROOT / "tools/llvm-mos/bin/mos-mega65-clang"
-DEFAULT_NM = ROOT / "tools/llvm-mos/bin/llvm-nm"
-DEFAULT_OBJDUMP = ROOT / "tools/llvm-mos/bin/llvm-objdump"
-DEFAULT_SIZE = ROOT / "tools/llvm-mos/bin/llvm-size"
-DEFAULT_AR = ROOT / "tools/llvm-mos/bin/llvm-ar"
+LLVM_MOS_ROOT = pathlib.Path(
+    os.environ.get("LLVM_MOS_ROOT", ROOT / "tools/llvm-mos")
+).resolve()
+DEFAULT_CC = LLVM_MOS_ROOT / "bin/mos-mega65-clang"
+DEFAULT_NM = LLVM_MOS_ROOT / "bin/llvm-nm"
+DEFAULT_OBJDUMP = LLVM_MOS_ROOT / "bin/llvm-objdump"
+DEFAULT_SIZE = LLVM_MOS_ROOT / "bin/llvm-size"
+DEFAULT_AR = LLVM_MOS_ROOT / "bin/llvm-ar"
 FIXTURE = ROOT / "scripts/mega65-math-abi-main.c"
 HOST_FIXTURE = ROOT / "scripts/mega65-math-host-oracle-main.c"
 ABI_FIXTURE = ROOT / "scripts/mega65-math-caller-abi.c"
@@ -32,7 +36,7 @@ SIGNED = ("__divhi3", "__modhi3")
 ALL_RUNTIME = UNSIGNED + SIGNED
 IMPLEMENTATION = {symbol: "lisp65_hw_" + symbol[2:] for symbol in ALL_RUNTIME}
 MOD_ADJUST = "lisp65_mod_adjust_tagged"
-LIBCRT = ROOT / "tools/llvm-mos/mos-platform/common/lib/libcrt.a"
+LIBCRT = LLVM_MOS_ROOT / "mos-platform/common/lib/libcrt.a"
 
 
 def run(argv: list[str]) -> str:

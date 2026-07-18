@@ -22,10 +22,15 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools" / "host-lisp"))
+
+import r5_persistence_fixtures as R5_FIXTURES  # noqa: E402
+
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 RECEIPT_FORMAT = "lisp65-dialect-v2-workbench-native-receipt-v1"
 NEGATIVE_FORMAT = "lisp65-dialect-v2-workbench-verifier-negative-proof-v1"
+PERSISTENCE_FIXTURES = R5_FIXTURES.load_fixtures()
 
 EXPECTED = {
     "workbench-persistence": {
@@ -69,7 +74,19 @@ EVIDENCE = {
         "before-d81": None, "after-d81": None,
         "marker": "save new pass 5/5", "run": "907",
     },
-    "overlay-stack-guard": {"ship-receipt": None, "arith": "42", "reader-recovery": "42"},
+    "overlay-stack-guard": {
+        "ship-receipt": None,
+        "arith": "42",
+        "c1-repl-direct": "(42 ",
+        "c1-repl-warm": "(42 ",
+        "c1-repl-definition-call": "(t ",
+        "c1-repl-latency": "c1-repl-latency: LIMITATION-STABLE",
+        "c1-seam-lcc-run": "overlay-c1-seam-lcc-run-ok",
+        "c1-seam-eval": "overlay-c1-seam-eval-ok",
+        "c1-seam-eval-buffer": "overlay-c1-seam-eval-buffer-ok",
+        "c1-seam-compile-string": "overlay-c1-seam-compile-string-ok",
+        "reader-recovery": "42",
+    },
     "stdlib-runtime": {"result": "42"},
     "ux-complete": {
         "persistence": "((\"(defun ap6-persisted () 612)\") 612 (\"(defun ap6-b () 613)\") 613)",
@@ -227,34 +244,49 @@ def verify_d81(case_id: str, files: dict[str, Path]) -> None:
         return
     before, after = str(files["before-d81"]), str(files["after-d81"])
     py = sys.executable
+    fixed = PERSISTENCE_FIXTURES["fixed_write"]
+    save = PERSISTENCE_FIXTURES["save_new"]
+    scan = PERSISTENCE_FIXTURES["save_new_scan"]
     if case_id == "bam-alloc":
-        command = [py, "tools/host-lisp/d81_bam_alloc_diff.py", before, after, "--track", "45", "--sector", "8"]
+        command = [
+            py, "tools/host-lisp/d81_bam_alloc_diff.py", before, after,
+            "--track", str(fixed["track"]), "--sector", str(fixed["first_sector"]),
+        ]
     elif case_id == "chain-write":
         command = [
             py, "tools/host-lisp/d81_chain_write_diff.py", before, after,
-            "--source", "tests/disk/m3-chain-source.lisp", "--track", "45",
-            "--first-sector", "8", "--second-sector", "9",
+            "--source", "tests/disk/m3-chain-source.lisp", "--track", str(fixed["track"]),
+            "--first-sector", str(fixed["first_sector"]),
+            "--second-sector", str(fixed["second_sector"]),
         ]
     elif case_id == "dir-write":
         command = [
             py, "tools/host-lisp/d81_dir_write_diff.py", before, after,
             "--source", "tests/disk/m4-dir-source.lisp", "--name", "m4src",
-            "--track", "45", "--first-sector", "8", "--second-sector", "9",
-            "--dir-track", "40", "--dir-sector", "4", "--dir-entry", "2",
+            "--track", str(fixed["track"]), "--first-sector", str(fixed["first_sector"]),
+            "--second-sector", str(fixed["second_sector"]),
+            "--dir-track", str(fixed["directory_track"]),
+            "--dir-sector", str(fixed["directory_sector"]),
+            "--dir-entry", str(fixed["directory_entry"]),
         ]
     elif case_id in ("save-new", "save-new-scan"):
-        first, second, name = (("27", "28", "m5src") if case_id == "save-new" else ("28", "29", "m6src"))
+        row, name = ((save, "m5src") if case_id == "save-new" else (scan, "m6src"))
         command = [
             py, "tools/host-lisp/d81_dir_write_diff.py", before, after,
             "--source", "tests/disk/m5-new-source.lisp", "--name", name,
-            "--track", "45", "--first-sector", first, "--second-sector", second,
-            "--dir-track", "40", "--dir-sector", "4", "--dir-entry", "3",
+            "--track", str(row["track"]), "--first-sector", str(row["first_sector"]),
+            "--second-sector", str(row["second_sector"]),
+            "--dir-track", str(row["directory_track"]),
+            "--dir-sector", str(row["directory_sector"]),
+            "--dir-entry", str(row["directory_entry"]),
         ]
     else:
         command = [
             py, "tools/host-lisp/d81_save_new_diff.py", before, after,
             "--source", "tests/disk/m7-var-source.lisp", "--name", "m7src",
-            "--dir-track", "40", "--dir-sector", "4", "--dir-entry", "3",
+            "--dir-track", str(save["directory_track"]),
+            "--dir-sector", str(save["directory_sector"]),
+            "--dir-entry", str(save["directory_entry"]),
         ]
     run_oracle(command, f"{case_id} independent D81 oracle")
 

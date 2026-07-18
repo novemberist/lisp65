@@ -1,0 +1,80 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-repl-banner-product-capability-correction",
+  "status": "owner-authorized-for-product-promotion",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "ab20d49581b482e7da1457869e61544c13061c4a",
+  "diagnosis": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-product-capability-diagnosis.json",
+    "sha256": "14e2bddd31fdb3ed54346692b0ec934301d4bffec557d7c6b7b63bd325b1b288"
+  },
+  "visual_contract": {
+    "decision": "accept the charset-independent yellow block lambda",
+    "hardware_screenshot_sha256": "7bc0ff2468c8dcbd089f000422dc62f4f607f2e7394ae04790f06ef4d3725e6c",
+    "invalid_assumption_replaced": "screen codes 77 and 78 are diagonal graphics in the canonical mixed-case charset"
+  },
+  "capacity": {
+    "bank": {
+      "before_post_boot_reserve_bytes": 1873,
+      "after_post_boot_reserve_bytes": 1873,
+      "target_bytes": 1536,
+      "after_margin_bytes": 337,
+      "authorized_delta_bytes": 0
+    },
+    "ext": {
+      "before_standard_composition_headroom_bytes": 25186,
+      "after_standard_composition_headroom_bytes": 25161,
+      "floor_bytes": 16384,
+      "after_margin_bytes": 8777,
+      "authorized_delta_bytes": -25
+    },
+    "symbols": {
+      "before_headroom": 389,
+      "after_headroom": 388,
+      "required_headroom": 32,
+      "authorized_delta": -1
+    },
+    "namepool": {
+      "before_headroom_bytes": 5643,
+      "after_headroom_bytes": 5625,
+      "required_headroom_bytes": 384,
+      "authorized_delta_bytes": -18
+    },
+    "directory": {
+      "before_raw_resident_entries": 210,
+      "after_raw_resident_entries": 211,
+      "before_aligned_entries": 216,
+      "after_aligned_entries": 216,
+      "before_post_align_headroom": 168,
+      "after_post_align_headroom": 168,
+      "authorized_post_align_delta": 0
+    },
+    "overlay": {
+      "before_headroom_bytes": 80,
+      "after_headroom_bytes": 80,
+      "authorized_delta_bytes": 0
+    },
+    "boot_overlay": {
+      "before_bytes": 1669,
+      "after_bytes": 1669,
+      "authorized_size_delta_bytes": 0
+    },
+    "attribution": "A profile-faithful per-cell separator/subtitle fallback and one private separator entry replace the unavailable resident bulk primitive. Charset-independent reverse-space lambda cells remove the invalid 77/78 graphics assumption without resident Bank or overlay cost."
+  },
+  "profile_delivery_gate": {
+    "status": "required",
+    "name": "screen-write-string",
+    "rule": "dialect-public and registry-bound, but absent from the canonical Workbench product define and resident manifest; screen-bulk-p fallback must be present",
+    "contract": "config/v11-surface-delivery-parity.json"
+  },
+  "owner_decision": "Authorize the corrected block-lambda visual contract and incremental debits of 25 B EXT, one symbol and 18 B namepool. Bank, aligned Directory, overlay and boot-overlay size remain unchanged.",
+  "promotion_conditions": {
+    "profile_faithful_native_vm_gate": "required",
+    "profile_delivery_parity_gate": "required",
+    "hardware_screenshot": "accepted",
+    "canonical_product_link": "required from committed sources",
+    "wave_seal": "still blocked pending regular R4/R5/R6 repin and single-device G6"
+  },
+  "claim_limit": "This authorization permits promotion of the measured banner capability correction. It does not seal Wave 1 or claim R4/R5/R6/G6 evidence."
+}

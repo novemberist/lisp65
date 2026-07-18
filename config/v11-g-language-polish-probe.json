@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-v11-g-language-polish-probe-contract-v1",
+  "status": "probe-only",
+  "baseline": "sealed-wave-1-product-graph",
+  "claim_limit": "capacity-and-architecture-only-no-product-delivery-claim",
+  "variants": [
+    "baseline",
+    "bitops",
+    "gc",
+    "room",
+    "read-string",
+    "restart",
+    "tick"
+  ],
+  "rules": {
+    "canonical_product_sources_edited": false,
+    "new_prim_id_allocated": false,
+    "full_real_link_required_for_capacity_claim": true,
+    "red_link_is_a_result": true,
+    "host_model_must_not_be_relaxed_for_probe_private_services": true,
+    "promotion_requires_normal_registry_and_four_engine_gates": true,
+    "entrypoint_policy": "invoke-probe-tools-directly-never-add-convenience-targets-to-product-hashed-mk/workbench.mk"
+  },
+  "representation_contracts": {
+    "fixnum_min": -16384,
+    "fixnum_max": 16383,
+    "peekw_required_range": "0..65535",
+    "peekw_pokew_outcome": "design-stop-until-word-representation-is-decided"
+  },
+  "required_decisions_after_probe": [
+    "bitops opcode or runtime-slice architecture",
+    "peekw/pokew representation or tombstone",
+    "error payload contract",
+    "room result and counter overflow contract",
+    "tick-hook scheduling and reentrancy contract"
+  ]
+}

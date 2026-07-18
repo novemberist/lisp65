@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-c1-compiler-tier-capacity",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-16",
+  "source_commit": "9029f67679d68a92bb3a28c880c56133b250a330",
+  "probe_receipt_before_authorization": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-compiler-tier-block-receipt.json",
+    "sha256": "062bb8b2c056f06c5e7aba9eed18cdc4ac4626e9ed082bfed1b478b889c5964d"
+  },
+  "capacity": {
+    "bank": {
+      "baseline_post_boot_reserve_bytes": 1799,
+      "candidate_post_boot_reserve_bytes": 1798,
+      "target_bytes": 1536,
+      "candidate_margin_bytes": 262,
+      "authorized_delta_bytes": -1
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 16384,
+      "candidate_standard_composition_headroom_bytes": 25628,
+      "floor_bytes": 16384,
+      "authorized_credit_bytes": 9244,
+      "margin_bytes": 9244,
+      "freeze_before": "absolute-zero-margin-freeze",
+      "freeze_after": "lifted-normal-per-block-authorization-discipline"
+    },
+    "overlay_vma": {
+      "candidate_base": "0xc352",
+      "ceiling": "0xc356",
+      "remaining_bytes": 4,
+      "wave_3_event_driver_probe_delta_bytes": 68,
+      "future_rule": "every-overlay-touching-block-must-report-and-finance-its-own-delta"
+    }
+  },
+  "promotion_gate": {
+    "gross_compiler_tier_exclusion_bytes": 9573,
+    "resident_replacement_bytes": 329,
+    "net_persistent_ext_credit_bytes": 9244,
+    "temporary_load_headroom_bytes": 3118,
+    "temporary_execution_headroom_bytes": 16208,
+    "compiler_private_references_after_retirement": 0,
+    "compile_equivalence": "seven-form-cases-five-executed-results-two-exact-FASL-images",
+    "lifecycle": "10-of-10-gc-oom-malformed-reset-partial-user-symbol-abort-cases",
+    "performance": "batched-staging-window-to-buffer-DMA-seam",
+    "status": "passed"
+  },
+  "carried_obligations": [
+    "Buffer printing is a mandatory probe-first fail-closed fix before the wave-1 seal; T_BUF must never enter the list printer.",
+    "Overlay capacity is a mandatory receipt dimension, and wave 3 requires a measured source for the event driver's 68-byte probe delta before authorization.",
+    "The regular wave-level product/evidence repin and hardware acceptance remain mandatory; this authorization makes no hardware claim."
+  ],
+  "claim_limit": "This authorization promotes the measured C1 capacity result and lifts the temporary EXT freeze. It does not promote a wave product set, claim hardware evidence, authorize the Buffer printer fix, filter, banner, or waive their per-block capacity gates."
+}

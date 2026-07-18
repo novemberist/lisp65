@@ -40,7 +40,7 @@ PINNED_SCREEN = {
     "seam": False,
 }
 PINNED_ISLAND = {"start": 0x1800, "end_exclusive": 0x2000}
-PINNED_IMMUTABLE_BYTES = 1108
+PINNED_IMMUTABLE_BYTES = 1668
 PINNED_ANNEX = {
     "section": ".lisp65_resident_island_annex",
     "start_symbol": "__lisp65_resident_island_annex_start",
@@ -53,7 +53,7 @@ PINNED_ANNEX_SYMBOLS = (
     ("gc_rootstack", 2, 256),
     ("lisp65_rootstack_canary_after", 258, 2),
 )
-PINNED_MIN_RESERVE = 672
+PINNED_MIN_RESERVE = 120
 SCREEN_SEAM_NOTE = (
     "SEAM mode is outside this contract and requires explicit screen relocation "
     "before the resident island may be used."
@@ -149,9 +149,11 @@ def _validate_policy(policy: dict[str, Any]) -> None:
     if not isinstance(policy.get("profile"), str) or not policy["profile"]:
         raise ValueError("policy profile must be a non-empty string")
     classes = policy.get("allowed_coordinator_classes")
-    if classes != ["l65m-coordinator", "batch-coordinator"]:
+    if classes != [
+        "l65m-coordinator", "batch-coordinator", "buffer-transport", "source-stream"
+    ]:
         raise ValueError(
-            "allowed_coordinator_classes must pin only L65M and batch coordinators"
+            "allowed_coordinator_classes must pin all four island allocation classes"
         )
 
     screen = policy.get("screen_contract")
@@ -213,11 +215,21 @@ def _validate_policy(policy: dict[str, Any]) -> None:
         names.add(name)
         if _parse_int(item["expected_allocations"]) != 1:
             raise ValueError("allowed symbol %s must expect exactly one allocation" % name)
-        if item["kind"] != "cold-coordinator":
-            raise ValueError("allowed symbol %s is not a cold coordinator" % name)
+        if item["kind"] not in {
+            "cold-coordinator", "persistent-buffer-transport", "persistent-source-reader"
+        }:
+            raise ValueError("allowed symbol %s has an unknown island allocation kind" % name)
+        if (item["kind"] == "persistent-source-reader") != (
+            item["coordinator_class"] == "source-stream"
+        ):
+            raise ValueError("source-stream kind/class pairing drift for %s" % name)
+        if (item["kind"] == "persistent-buffer-transport") != (
+            item["coordinator_class"] == "buffer-transport"
+        ):
+            raise ValueError("buffer-transport kind/class pairing drift for %s" % name)
         if item["coordinator_class"] not in classes:
             raise ValueError(
-                "allowed symbol %s is outside the L65M/batch coordinator classes" % name
+                "allowed symbol %s is outside the pinned island allocation classes" % name
             )
 
 
@@ -553,12 +565,12 @@ def _build_report(
                 )
             )
 
-    if require_annex and len(allowed) != 8:
+    if require_annex and len(allowed) != 11:
         violations.append(
             _violation(
                 "immutable-coordinator-count-drift",
-                "frozen immutable island must contain exactly eight coordinators",
-                expected=8,
+                "frozen immutable island must contain exactly eleven declared allocations",
+                expected=11,
                 actual=len(allowed),
             )
         )
@@ -868,7 +880,9 @@ def _selftest_policy() -> dict[str, Any]:
     return {
         "schema": POLICY_SCHEMA,
         "profile": "selftest",
-        "allowed_coordinator_classes": ["l65m-coordinator", "batch-coordinator"],
+        "allowed_coordinator_classes": [
+            "l65m-coordinator", "batch-coordinator", "buffer-transport", "source-stream"
+        ],
         "screen_contract": dict(PINNED_SCREEN),
         "island": {
             "section": ".lisp65_resident_island",
@@ -920,6 +934,8 @@ def _selftest() -> int:
     assert base["allowed_coordinator_classes"] == [
         "l65m-coordinator",
         "batch-coordinator",
+        "buffer-transport",
+        "source-stream",
     ]
     assert base["screen_contract"]["non_seam_max_address"] == 0x179F
     assert base["annex_contract"]["present"] is False
@@ -1003,7 +1019,7 @@ def _selftest() -> int:
     try:
         _build_report(sections, symbols, forbidden_class, {})
     except ValueError as error:
-        assert "outside the L65M/batch coordinator classes" in str(error)
+        assert "outside the pinned island allocation classes" in str(error)
     else:
         raise AssertionError("commit coordinator class was accepted")
 

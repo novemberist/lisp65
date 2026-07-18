@@ -3,8 +3,9 @@
  * AUTOBOOT.C65 runs before the Workbench and owns no byte in its final Bank-0
  * image.  It reads a fixed binary descriptor from the mounted L65SYS,65 D81,
  * proves that descriptor against the build id compiled into this artifact,
- * verifies every product-medium member, validates or fully restages Bank 5 and
- * the Attic catalog, re-verifies both destinations, stages the exact product
+ * verifies every product-medium member, validates or fully restages Bank 5,
+ * the runtime-overlay catalog and the 1.1 library shelf, re-verifies all three
+ * destinations, stages the exact product
  * PRG in Bank 4, and only then hands off through the $1800 trampoline.
  *
  * F011 timing remains hardware-only evidence.  This source is nevertheless
@@ -21,14 +22,17 @@
 #endif
 
 #define R3_DESCRIPTOR_NAME "boot.id"
-#define R3_DESCRIPTOR_BYTES 240u
+#define R3_DESCRIPTOR_BYTES 272u
 #define R3_DESCRIPTOR_HEADER_BYTES 16u
 #define R3_DESCRIPTOR_RECORD_BYTES 32u
-#define R3_DESCRIPTOR_RECORDS 7u
+#define R3_DESCRIPTOR_RECORDS 8u
 #define R3_RESTAGE_LIMIT 2u
+#define R3_LOGICAL_SECTOR_PAYLOAD 254ul
+#define R3_MAX_MEDIA_BYTES 819200ul
 #define R3_PRODUCT_STAGE 0x00040000ul
 #define R3_BANK5_ADDR 0x00050000ul
 #define R3_ATTIC_ADDR 0x08000000ul
+#define R3_ATTIC_SHELF_ADDR 0x08100000ul
 
 #define R3_ROLE_BANK5 1u
 #define R3_ROLE_ATTIC 2u
@@ -37,6 +41,7 @@
 #define R3_ROLE_IDE 5u
 #define R3_ROLE_IDEX 6u
 #define R3_ROLE_M65D 7u
+#define R3_ROLE_SHELF 8u
 
 #define R3_FLAG_STAGE 0x01u
 #define R3_FLAG_PRG 0x02u
@@ -62,7 +67,7 @@ static uint8_t verify_buffer[256];
 static uint8_t r3_g3_memory_valid;
 static uint8_t r3_g3_disk_valid;
 static uint8_t r3_g3_stage_mask;
-static uint8_t r3_g3_stage_order[2];
+static uint8_t r3_g3_stage_order[3];
 static uint8_t r3_g3_stage_count;
 static uint8_t r3_g3_media_checks;
 static uint8_t r3_g3_product_selected;
@@ -240,9 +245,12 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
                          uint32_t expected_length, uint32_t expected_crc) {
     uint8_t track;
     uint8_t sector;
-    uint8_t fuel = 255;
+    uint16_t fuel;
     uint32_t length = 0;
     uint32_t crc = 0xfffffffful;
+    if (!expected_length || expected_length > R3_MAX_MEDIA_BYTES) return 0;
+    fuel = (uint16_t)((expected_length + R3_LOGICAL_SECTOR_PAYLOAD - 1ul) /
+                      R3_LOGICAL_SECTOR_PAYLOAD);
     if (!find_file(name, &track, &sector)) return 0;
     while (track && fuel--) {
         uint16_t off;
@@ -255,6 +263,10 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
         p = (volatile uint8_t *)0xde00 + off;
         next_track = p[0];
         next_sector = p[1];
+        if (!next_track && !next_sector) {
+            lisp65_f011_unmap_buffer();
+            return 0;
+        }
         count = next_track ? 254u : (uint16_t)(next_sector - 1u);
         if (length + count > expected_length) {
             lisp65_f011_unmap_buffer();
@@ -268,12 +280,16 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
         if (stage && count) edma_copy((uint32_t)(uintptr_t)sector_payload,
                                       destination + length, count);
         length += count;
-        if (!next_track) break;
-        if (next_track < 1 || next_track > 80 || next_sector > 39) return 0;
+        if (!next_track) {
+            track = 0;
+            break;
+        }
+        if (next_track < 1 || next_track > 80 || next_sector > 39 ||
+            (next_track == track && next_sector == sector)) return 0;
         track = next_track;
         sector = next_sector;
     }
-    if (track && !fuel) return 0;
+    if (track) return 0;
     return length == expected_length && (crc ^ 0xfffffffful) == expected_crc;
 }
 
@@ -331,6 +347,12 @@ static uint8_t load_descriptor(void) {
         p = (volatile uint8_t *)0xde00 + off;
         next_track = p[0];
         next_sector = p[1];
+        if ((!next_track && !next_sector) ||
+            (next_track && (next_track > 80 || next_sector > 39 ||
+                            (next_track == track && next_sector == sector)))) {
+            lisp65_f011_unmap_buffer();
+            return 0;
+        }
         count = next_track ? 254u : (uint16_t)(next_sector - 1u);
         if ((uint16_t)(used + count) > R3_DESCRIPTOR_BYTES) {
             lisp65_f011_unmap_buffer();
@@ -338,11 +360,14 @@ static uint8_t load_descriptor(void) {
         }
         for (index = 0; index < count; index++) descriptor[used++] = p[2u + index];
         lisp65_f011_unmap_buffer();
-        if (!next_track) break;
+        if (!next_track) {
+            track = 0;
+            break;
+        }
         track = next_track;
         sector = next_sector;
     }
-    return used == R3_DESCRIPTOR_BYTES;
+    return !track && used == R3_DESCRIPTOR_BYTES;
 }
 
 static uint8_t validate_descriptor(void) {
@@ -365,20 +390,21 @@ static uint8_t validate_descriptor(void) {
         const uint8_t *record = record_at(index);
         uint8_t role = record[0];
         uint8_t name_length = record[2];
-        if (role < R3_ROLE_BANK5 || role > R3_ROLE_M65D ||
+        if (role < R3_ROLE_BANK5 || role > R3_ROLE_SHELF ||
             (seen & (uint8_t)(1u << (role - 1u))) ||
             name_length < 1 || name_length > 16 || record[3] != 0 ||
             !rd32(record + 8)) return 0;
         seen |= (uint8_t)(1u << (role - 1u));
     }
-    return seen == 0x7f;
+    return seen == 0xff;
 }
 
 static uint8_t memory_record_valid(const uint8_t *record, uint32_t profile_build_id) {
 #ifdef R3_G3_TRACE
     uint8_t role = record[0];
     (void)profile_build_id;
-    if (role != R3_ROLE_BANK5 && role != R3_ROLE_ATTIC) return 0;
+    if (role != R3_ROLE_BANK5 && role != R3_ROLE_ATTIC &&
+        role != R3_ROLE_SHELF) return 0;
     if (!(record[1] & R3_FLAG_STAGE)) return 0;
     return r3_g3_memory_valid;
 #else
@@ -398,12 +424,14 @@ static uint8_t disk_record(const uint8_t *record, uint8_t stage) {
     uint8_t role = record[0];
     if (!r3_g3_disk_valid) return 0;
     if (!stage) return 1;
-    if (role == R3_ROLE_BANK5 || role == R3_ROLE_ATTIC) {
-        uint8_t bit = role == R3_ROLE_BANK5 ? 1u : 2u;
-        if (!(r3_g3_stage_mask & bit) && r3_g3_stage_count < 2u)
+    if (role == R3_ROLE_BANK5 || role == R3_ROLE_ATTIC ||
+        role == R3_ROLE_SHELF) {
+        uint8_t bit = role == R3_ROLE_BANK5 ? 1u :
+                      (role == R3_ROLE_ATTIC ? 2u : 4u);
+        if (!(r3_g3_stage_mask & bit) && r3_g3_stage_count < 3u)
             r3_g3_stage_order[r3_g3_stage_count++] = role;
         r3_g3_stage_mask |= bit;
-        if (r3_g3_stage_mask == 3u) r3_g3_memory_valid = 1;
+        if (r3_g3_stage_mask == 7u) r3_g3_memory_valid = 1;
         return 1;
     }
     if (role == R3_ROLE_PRODUCT) {
@@ -421,17 +449,22 @@ static uint8_t disk_record(const uint8_t *record, uint8_t stage) {
 static uint8_t staged_state_valid(uint32_t profile_build_id) {
     const uint8_t *bank5 = find_role(R3_ROLE_BANK5);
     const uint8_t *attic = find_role(R3_ROLE_ATTIC);
-    return bank5 && attic && memory_record_valid(bank5, profile_build_id) &&
-           memory_record_valid(attic, profile_build_id);
+    const uint8_t *shelf = find_role(R3_ROLE_SHELF);
+    return bank5 && attic && shelf &&
+           memory_record_valid(bank5, profile_build_id) &&
+           memory_record_valid(attic, profile_build_id) &&
+           memory_record_valid(shelf, profile_build_id);
 }
 
 static uint8_t restage_and_reverify(uint32_t profile_build_id) {
     uint8_t attempt;
     const uint8_t *bank5 = find_role(R3_ROLE_BANK5);
     const uint8_t *attic = find_role(R3_ROLE_ATTIC);
-    if (!bank5 || !attic) return 0;
+    const uint8_t *shelf = find_role(R3_ROLE_SHELF);
+    if (!bank5 || !attic || !shelf) return 0;
     for (attempt = 0; attempt < R3_RESTAGE_LIMIT; attempt++) {
-        if (product_media_identity() && disk_record(bank5, 1) && disk_record(attic, 1) &&
+        if (product_media_identity() && disk_record(bank5, 1) &&
+            disk_record(attic, 1) && disk_record(shelf, 1) &&
             staged_state_valid(profile_build_id)) return 1;
     }
     return 0;
@@ -490,7 +523,8 @@ int main(void) {
     for (index = 0; index < R3_DESCRIPTOR_RECORDS; index++) {
         const uint8_t *record = record_at(index);
         if (record[0] != R3_ROLE_BANK5 && record[0] != R3_ROLE_ATTIC &&
-            record[0] != R3_ROLE_PRODUCT && !disk_record(record, 0)) show_disk_error();
+            record[0] != R3_ROLE_SHELF && record[0] != R3_ROLE_PRODUCT &&
+            !disk_record(record, 0)) show_disk_error();
     }
     product = find_role(R3_ROLE_PRODUCT);
     if (!product || rd32(product + 4) != R3_PRODUCT_STAGE ||

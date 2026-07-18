@@ -10,6 +10,10 @@
 ;; The new chain is selected from exactly one BAM sector.  The visible commit
 ;; point is the directory-sector write; the old chain is released afterwards.
 
+;; Container-private state reuses value cells of public function symbols.
+;; Lisp-2 keeps those cells independent from the function bindings, avoiding
+;; private state names and additional directory entries.
+
 (defun %m65d-set (code latch)
   ;; Status 11 is retired and never emitted.  In the dense live status range,
   ;; 9 + 12 = 21 is therefore the unique overwrite pair that must be blocked:
@@ -17,22 +21,18 @@
   (if (= (+ code (m65d-status)) 21)
       12
       (progn
-        (set-symbol-value (quote %m65d-status) code)
-        (if latch (set-symbol-value (quote %m65d-latch) t) nil)
+        (set-symbol-value (quote m65d-status) code)
+        (if latch (set-symbol-value (quote m65d-remount) t) nil)
         code)))
 
 ;; In predicate failure branches, (not (%m65d-set ...)) both records the
 ;; non-NIL status code and returns NIL; this is the compact form of SET/DROP/NIL.
 
 (defun %m65d-latched-p ()
-  (if (boundp (quote %m65d-latch))
-      (eq (symbol-value (quote %m65d-latch)) t)
-      t))
+  (eq (if (boundp (quote m65d-remount)) (symbol-value (quote m65d-remount)) t) t))
 
 (defun m65d-status ()
-  (if (boundp (quote %m65d-status))
-      (symbol-value (quote %m65d-status))
-      0))
+  (if (boundp (quote m65d-status)) (symbol-value (quote m65d-status)) 0))
 
 ;; R3 single-drive media identity.  The 1581 header lives at T40/S0;
 ;; name bytes are +4..+19 and the two-byte disk id is +22/+23.  Passing base
@@ -95,9 +95,9 @@
   (if track
       (let ((status (%disk-write-sector track sector 1)))
         (if (= status 0) t (not (%m65d-set status t))))
-      (let ((txn (symbol-value (quote %m65d-txn-generation))))
+      (let ((txn (symbol-value (quote m65d-save))))
         (if (if (consp txn)
-                (eq (car txn) (symbol-value (quote %m65d-latch)))
+                (eq (car txn) (symbol-value (quote m65d-remount)))
                 nil)
             (let ((kind (%m65d-media-kind)))
               (if (= kind 0)
@@ -352,10 +352,14 @@
 (defun %m65d-clear ()
   (dotimes (i 256 t) (%disk-poke i 0)))
 
-(defun %m65d-copy (src pos count)
-  (dotimes (i count t) (%disk-poke (+ i 2) (string-ref src (+ pos i)))))
+(defun %m65d-copy (src pos count buffer)
+  (dotimes (i count t)
+    (%disk-poke (+ i 2)
+                (if buffer
+                    (%fasl-stage-get (+ pos i))
+                    (string-ref src (+ pos i))))))
 
-(defun %m65d-write-chain (src len chain pos)
+(defun %m65d-write-chain (src len chain pos buffer)
   (if chain
       (let ((pair (car chain))
             (rest (cdr chain)))
@@ -368,9 +372,9 @@
                       (%disk-poke 0 (car (car rest)))
                       (%disk-poke 1 (cdr (car rest))))
                     (progn (%disk-poke 0 0) (%disk-poke 1 (+ count 1))))
-                (%m65d-copy src pos count)
+                (%m65d-copy src pos count buffer)
                 (if (%m65d-before-write (car pair) (cdr pair))
-                    (%m65d-write-chain src len rest (+ pos count))
+                    (%m65d-write-chain src len rest (+ pos count) buffer)
                     nil))
               nil)))
       t))
@@ -501,10 +505,10 @@
             (not (%m65d-set 6 nil))))
       t))
 
-(defun %m65d-write-plan (record name src len blocks old)
+(defun %m65d-write-plan (record name src len blocks old buffer)
   (let ((chain (%m65d-find-new-chain blocks)))
     (if chain
-        (if (%m65d-write-chain src len chain 0)
+        (if (%m65d-write-chain src len chain 0 buffer)
             (if (%m65d-claim-new chain)
                 (if (%m65d-commit-dir record name (car chain) blocks)
                     (if (if (= (car record) 1)
@@ -517,31 +521,32 @@
             (m65d-status))
         (if (= (m65d-status) 6) 6 (%m65d-set 4 nil)))))
 
-(defun %m65d-run-record (record name src len new-only)
+(defun %m65d-run-record (record name src len new-only buffer)
   (if (if new-only (= (car record) 1) nil)
       (%m65d-set 2 nil)
       (let ((blocks (%m65d-blocks-for len 0))
             (old (%m65d-old-plan record)))
         (if (if (= (car record) 1) (not old) nil)
             (m65d-status)
-            (%m65d-write-plan record name src len blocks old)))))
+            (%m65d-write-plan record name src len blocks old buffer)))))
 
-(defun %m65d-run-source (name src new-only)
-  (let ((len (string-length src)))
+(defun %m65d-run-source (name src new-only buffer)
+  (let ((len (if buffer (%buffer-alloc 3 src) (string-length src))))
     (if (< len 1)
         (%m65d-set 3 nil)
         (if (> len 8192)
             (%m65d-set 3 nil)
             (let ((record (%m65d-find-dir name)))
               (if record
-                  (%m65d-run-record record name src len new-only)
+                  (%m65d-run-record record name src len new-only buffer)
                   (if (= (m65d-status) 6) 6 (%m65d-set 5 nil))))))))
 
 (defun %m65d-run-authorized (name src new-only)
   (if (%m65d-name-ok-p name)
-      (if (stringp src)
-          (%m65d-run-source name src new-only)
-          (%m65d-set 3 nil))
+      (let ((buffer (not (stringp src))))
+        (if (if buffer (%buffer-read 0 src) t)
+            (%m65d-run-source name src new-only buffer)
+            (%m65d-set 3 nil)))
       (%m65d-set 1 nil)))
 
 (defun %m65d-run-unlatched (name src new-only)
@@ -552,8 +557,8 @@
           (progn
             (%disk-write-sector)
             (set-symbol-value
-             (quote %m65d-txn-generation)
-             (cons (symbol-value (quote %m65d-latch))
+             (quote m65d-save)
+             (cons (symbol-value (quote m65d-remount))
                    (cons (%disk-byte 22)
                          (cons (%disk-byte 23)
                                (%m65d-media-detail 15 nil)))))
@@ -582,14 +587,12 @@
   (%m65d-run name src nil))
 
 (defun m65d-save-new (name src)
-  (%m65d-run name src t))
+  (if (stringp src) (%m65d-run name src t) (%m65d-set 3 nil)))
 
 (defun %m65d-remount-finish ()
   (if (%m65d-dir-scan (list 0) 40 0 40 nil)
       (progn
-        (set-symbol-value
-         (quote %m65d-latch)
-         (cons nil nil))
+        (set-symbol-value (quote m65d-remount) (cons nil nil))
         (%m65d-set 0 nil))
       (%m65d-set 6 nil)))
 

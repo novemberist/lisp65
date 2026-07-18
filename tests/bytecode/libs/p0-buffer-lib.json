@@ -1,0 +1,63 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "buffer",
+  "d81_name": "BUFFER",
+  "provides": [
+    "bufferp",
+    "make-buffer",
+    "buffer-length",
+    "buffer-ref",
+    "buffer-set!",
+    "buffer->string",
+    "string->buffer"
+  ],
+  "requires": ["core"],
+  "description": "Public first-class byte-buffer wrappers over the private overlay carriers.",
+  "sources": ["lib/buffer.lisp"],
+  "functions": [
+    "bufferp",
+    "make-buffer",
+    "buffer-length",
+    "buffer-ref",
+    "buffer-set!",
+    "buffer->string",
+    "string->buffer"
+  ],
+  "require_all_defuns": true,
+  "resident_suite": "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json",
+  "strict_arity": true,
+  "abi_profile": "dialect-v2",
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "buffer-predicate-normalizes",
+      "expr": "(bufferp (make-buffer 3))",
+      "expect": "t"
+    },
+    {
+      "name": "buffer-predicate-rejects-string",
+      "expr": "(bufferp \"abc\")",
+      "expect": "nil"
+    },
+    {
+      "name": "buffer-is-zero-filled-and-zero-based",
+      "expr": "(let ((test-buffer (make-buffer 3))) (cons (buffer-length test-buffer) (cons (buffer-ref test-buffer 0) (cons (buffer-ref test-buffer 2) nil))))",
+      "expect": "(3 0 0)"
+    },
+    {
+      "name": "buffer-set-returns-byte",
+      "expr": "(let ((test-buffer (make-buffer 2))) (buffer-set! test-buffer 1 255))",
+      "expect": "255"
+    },
+    {
+      "name": "buffer-mutation-freezes-byte-exactly",
+      "expr": "(let ((test-buffer (string->buffer \"abc\"))) (buffer-set! test-buffer 1 90) (buffer->string test-buffer))",
+      "expect": "\"aZc\""
+    },
+    {
+      "name": "freeze-transfers-ownership",
+      "expr": "(let ((test-buffer (make-buffer 1))) (buffer->string test-buffer) (bufferp test-buffer))",
+      "expect": "nil"
+    }
+  ]
+}

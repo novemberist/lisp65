@@ -10,6 +10,10 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+fixture_get() {
+  python3 tools/host-lisp/r5_persistence_fixtures.py get "$1"
+}
+
 dry_run=0
 build=1
 ip="${MEGA65_IP:-}"
@@ -20,6 +24,7 @@ prefix="${PREFIX:-hw-workbench-dir-write}"
 wait_sec="${WAIT_SEC:-3}"
 boot_wait_sec="${BOOT_WAIT_SEC:-3}"
 form_wait_sec="${FORM_WAIT_SEC:-3}"
+expect_poll_sec="${EXPECT_POLL_SEC:-30}"
 timeout_sec="${TIMEOUT_SEC:-20}"
 deploy_timeout="${DEPLOY_TIMEOUT_SEC:-180}"
 remote_d81="${WORKBENCH_M4_REMOTE_D81:-L65M4.D81}"
@@ -29,12 +34,12 @@ after_d81="${WORKBENCH_M4_AFTER_D81:-build/hw/workbench-m4-after.d81}"
 prg="${M65HWDIRWRITEPRG:-build/lisp65-mega65-hw-dir-write-smoke.prg}"
 source_lisp="${WORKBENCH_M4_SOURCE:-tests/disk/m4-dir-source.lisp}"
 target_name="${WORKBENCH_M4_NAME:-m4src}"
-target_track=45
-first_sector=8
-second_sector=9
-dir_track=40
-dir_sector=4
-dir_entry=2
+target_track="$(fixture_get fixed_write.track)"
+first_sector="$(fixture_get fixed_write.first_sector)"
+second_sector="$(fixture_get fixed_write.second_sector)"
+dir_track="$(fixture_get fixed_write.directory_track)"
+dir_sector="$(fixture_get fixed_write.directory_sector)"
+dir_entry="$(fixture_get fixed_write.directory_entry)"
 expect="dir write pass 11/11"
 restore=1
 restore_armed=0
@@ -53,6 +58,7 @@ usage: $0 [options]
   --wait <seconds>      wait before screenshot (default: $wait_sec)
   --boot-wait <seconds> wait after Workbench oracle deploy (default: $boot_wait_sec)
   --form-wait <seconds> wait after each REPL form (default: $form_wait_sec)
+  --expect-poll <sec>   poll exact oracle result (default: $expect_poll_sec)
   --timeout <seconds>   timeout for m65 commands (default: $timeout_sec)
   --deploy-timeout <s>  timeout for Workbench deploy wrapper (default: $deploy_timeout)
   --remote-d81 <name>   throwaway D81 name on MEGA65 SD (default: $remote_d81)
@@ -60,6 +66,9 @@ usage: $0 [options]
   --after-d81 <file>    local downloaded image after HW run (default: $after_d81)
   --source <file>       expected Lisp payload (default: $source_lisp)
   --name <file-name>    D81 directory filename (default: $target_name)
+  --track <n>           fixture data track (default: $target_track)
+  --first-sector <n>    fixture first sector (default: $first_sector)
+  --second-sector <n>   fixture second sector (default: $second_sector)
   --prg <file>          directory-write PRG (default: $prg)
   --no-restore          leave machine after the M4 oracle/readback path
   --restore-workbench   redeploy Workbench after live test (default)
@@ -80,6 +89,7 @@ while [ "$#" -gt 0 ]; do
     --wait) shift; [ "$#" -gt 0 ] || usage; wait_sec="$1" ;;
     --boot-wait) shift; [ "$#" -gt 0 ] || usage; boot_wait_sec="$1" ;;
     --form-wait) shift; [ "$#" -gt 0 ] || usage; form_wait_sec="$1" ;;
+    --expect-poll) shift; [ "$#" -gt 0 ] || usage; expect_poll_sec="$1" ;;
     --timeout) shift; [ "$#" -gt 0 ] || usage; timeout_sec="$1" ;;
     --deploy-timeout) shift; [ "$#" -gt 0 ] || usage; deploy_timeout="$1" ;;
     --remote-d81) shift; [ "$#" -gt 0 ] || usage; remote_d81="$1" ;;
@@ -87,6 +97,9 @@ while [ "$#" -gt 0 ]; do
     --after-d81) shift; [ "$#" -gt 0 ] || usage; after_d81="$1" ;;
     --source) shift; [ "$#" -gt 0 ] || usage; source_lisp="$1" ;;
     --name) shift; [ "$#" -gt 0 ] || usage; target_name="$1" ;;
+    --track) shift; [ "$#" -gt 0 ] || usage; target_track="$1" ;;
+    --first-sector) shift; [ "$#" -gt 0 ] || usage; first_sector="$1" ;;
+    --second-sector) shift; [ "$#" -gt 0 ] || usage; second_sector="$1" ;;
     --prg) shift; [ "$#" -gt 0 ] || usage; prg="$1" ;;
     --no-restore) restore=0 ;;
     --restore-workbench) restore=1 ;;
@@ -100,8 +113,13 @@ done
 case "$wait_sec" in ''|*[!0-9]*) echo "Fehler: --wait muss numerisch sein" >&2; exit 2 ;; esac
 case "$boot_wait_sec" in ''|*[!0-9]*) echo "Fehler: --boot-wait muss numerisch sein" >&2; exit 2 ;; esac
 case "$form_wait_sec" in ''|*[!0-9]*) echo "Fehler: --form-wait muss numerisch sein" >&2; exit 2 ;; esac
+case "$expect_poll_sec" in ''|*[!0-9]*) echo "Fehler: --expect-poll muss numerisch sein" >&2; exit 2 ;; esac
+[ "$expect_poll_sec" -gt 0 ] || { echo "Fehler: --expect-poll muss groesser als 0 sein" >&2; exit 2; }
 case "$timeout_sec" in ''|*[!0-9]*) echo "Fehler: --timeout muss numerisch sein" >&2; exit 2 ;; esac
 case "$deploy_timeout" in ''|*[!0-9]*) echo "Fehler: --deploy-timeout muss numerisch sein" >&2; exit 2 ;; esac
+case "$target_track" in ''|*[!0-9]*) echo "Fehler: --track muss numerisch sein" >&2; exit 2 ;; esac
+case "$first_sector" in ''|*[!0-9]*) echo "Fehler: --first-sector muss numerisch sein" >&2; exit 2 ;; esac
+case "$second_sector" in ''|*[!0-9]*) echo "Fehler: --second-sector muss numerisch sein" >&2; exit 2 ;; esac
 
 mkdir -p "$out_dir" "$(dirname "$before_d81")" "$(dirname "$after_d81")"
 
@@ -269,7 +287,7 @@ run_oracle_phase() {
   set -- --form "$form" --prefix "$prefix-$phase" --out-dir "$out_dir" \
     --tools "$tools_dir" --device "$device" --wait "$wait_sec" \
     --form-wait "$form_wait_sec" --timeout "$timeout_sec" --expect "$marker" \
-    --verified-input
+    --expect-poll "$expect_poll_sec" --verified-input
   [ "$dry_run" = "1" ] && set -- "$@" --dry-run
   echo "==> JTAG-REPL-Oracle: $phase"
   scripts/hw-jtag-repl.sh "$@"

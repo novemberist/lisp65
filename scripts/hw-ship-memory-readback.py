@@ -22,11 +22,14 @@ R5_GLOBAL_G5_FORMAT = "lisp65-r5-global-g5-hw-package-v1"
 PRG_ARTIFACT = "workbench-prg"
 BANK5_ARTIFACT = "workbench-stdlib-blob"
 ATTIC_ARTIFACT = "workbench-runtime-overlays"
+SHELF_ARTIFACT = "attic-library-shelf"
 D81_ARTIFACT = "workbench-d81"
 BANK5_ROLE = "workbench-stdlib-boot"
 ATTIC_ROLE = "runtime-overlays"
+SHELF_ROLE = "attic-library-shelf"
 BANK5_ADDRESS = 0x00050000
 ATTIC_ADDRESS = 0x08000000
+SHELF_ADDRESS = 0x08100000
 ATTIC_KIND = "attic-ram"
 ATTIC_PERSISTENCE = "reset-stable-power-volatile"
 ATTIC_RECOVERY = "redeploy-required"
@@ -73,13 +76,14 @@ class Contract:
     prg: Span
     bank5: Span
     attic: Span
+    shelf: Span | None
     island: Span
 
     def spans_for(self, phase: str) -> tuple[Span, ...]:
         if phase == "staged":
-            return (self.prg, self.bank5, self.attic)
+            return (self.prg, self.bank5, self.attic) + ((self.shelf,) if self.shelf else ())
         if phase == "post-reset":
-            return (self.attic, self.island)
+            return (self.attic,) + ((self.shelf,) if self.shelf else ()) + (self.island,)
         raise ReadbackError(f"unsupported phase: {phase}")
 
 
@@ -350,6 +354,7 @@ def resolve_contract(
     island_elf_path: Path,
     nm: Path,
     objcopy: Path,
+    shelf_path: Path | None = None,
 ) -> Contract:
     manifest, raw_manifest = _read_manifest(manifest_path)
     package_dir = manifest_path.parent
@@ -381,6 +386,15 @@ def resolve_contract(
     prg = _bound_artifact(package_dir, records[PRG_ARTIFACT], prg_path, "PRG")
     bank5 = _bound_artifact(package_dir, records[BANK5_ARTIFACT], bank5_path, "Bank-5")
     attic = _bound_artifact(package_dir, records[ATTIC_ARTIFACT], attic_path, "Attic")
+    shelf: bytes | None = None
+    if SHELF_ARTIFACT in records:
+        if shelf_path is None:
+            raise ReadbackError("manifest-bound Attic shelf requires --shelf")
+        shelf = _bound_artifact(
+            package_dir, records[SHELF_ARTIFACT], shelf_path, "Attic shelf"
+        )
+    elif shelf_path is not None:
+        raise ReadbackError("--shelf supplied but the manifest has no Attic shelf artifact")
     _bound_artifact(package_dir, records[D81_ARTIFACT], d81_path, "D81")
 
     if len(prg) <= 2:
@@ -420,6 +434,34 @@ def resolve_contract(
     if ATTIC_ADDRESS + len(attic) > 0x10000000:
         raise ReadbackError("Attic preload exceeds the 28-bit address space")
 
+    shelf_span: Span | None = None
+    if shelf is not None:
+        shelf_preload = _preload_record(manifest, SHELF_ARTIFACT, SHELF_ROLE)
+        _check_preload_artifact(
+            shelf_preload, records[SHELF_ARTIFACT], "length", "Attic shelf"
+        )
+        if shelf_preload.get("kind") != ATTIC_KIND:
+            raise ReadbackError(f"Attic shelf preload kind must be {ATTIC_KIND}")
+        if shelf_preload.get("address") != SHELF_ADDRESS:
+            raise ReadbackError(
+                f"Attic shelf preload address must be 0x{SHELF_ADDRESS:08x}"
+            )
+        if shelf_preload.get("address_bits") != 28:
+            raise ReadbackError("Attic shelf preload address_bits must be 28")
+        if shelf_preload.get("persistence") != ATTIC_PERSISTENCE:
+            raise ReadbackError(
+                f"Attic shelf persistence must be {ATTIC_PERSISTENCE}"
+            )
+        if shelf_preload.get("recovery") != ATTIC_RECOVERY:
+            raise ReadbackError(f"Attic shelf recovery must be {ATTIC_RECOVERY}")
+        if shelf_preload.get("crc16") != _crc16_ccitt_false(shelf):
+            raise ReadbackError("Attic shelf preload CRC-16 differs from the artifact")
+        if shelf_preload.get("crc16_algorithm") != CRC16_ALGORITHM:
+            raise ReadbackError(f"Attic shelf CRC algorithm must be {CRC16_ALGORITHM}")
+        if SHELF_ADDRESS + len(shelf) > 0x10000000:
+            raise ReadbackError("Attic shelf exceeds the 28-bit address space")
+        shelf_span = Span("attic-library-shelf", SHELF_ARTIFACT, SHELF_ADDRESS, shelf)
+
     runtime = manifest.get("runtime_overlays")
     if not isinstance(runtime, dict) or runtime.get("schema") != ATTIC_BINDING_SCHEMA:
         raise ReadbackError(f"runtime_overlays.schema must be {ATTIC_BINDING_SCHEMA}")
@@ -453,6 +495,7 @@ def resolve_contract(
         prg=Span("prg-payload", PRG_ARTIFACT, prg_address, prg_payload),
         bank5=Span("bank5-preload", BANK5_ARTIFACT, BANK5_ADDRESS, bank5),
         attic=Span("attic-catalog", ATTIC_ARTIFACT, ATTIC_ADDRESS, attic),
+        shelf=shelf_span,
         island=island,
     )
 
@@ -614,7 +657,7 @@ def _verify_receipt(path: Path, contract: Contract, dry_run: bool) -> None:
 def run(args: argparse.Namespace) -> int:
     contract = resolve_contract(
         args.manifest, args.prg, args.bank5, args.attic, args.d81,
-        args.elf, args.nm, args.objcopy,
+        args.elf, args.nm, args.objcopy, args.shelf,
     )
     spans = contract.spans_for(args.phase)
     m65 = args.tools / "m65"
@@ -804,7 +847,9 @@ def selftest() -> int:
         root = Path(raw_tmp)
         manifest_path, files, manifest = _write_fixture(root)
 
-        def resolve(candidate: Path = manifest_path) -> Contract:
+        def resolve(
+            candidate: Path = manifest_path, shelf: Path | None = None
+        ) -> Contract:
             return resolve_contract(
                 candidate,
                 files[PRG_ARTIFACT],
@@ -814,6 +859,7 @@ def selftest() -> int:
                 files["island-elf"],
                 files["nm"],
                 files["objcopy"],
+                shelf,
             )
 
         contract = resolve()
@@ -848,6 +894,51 @@ def selftest() -> int:
         del missing["bank5-preload"]
         if not compare_readbacks(contract.spans_for("staged"), missing):
             failures.append("missing-readback")
+
+        shelf_path = root / "lisp65-mvp-workbench.shelf.bin"
+        shelf_data = b"attic-library-shelf-fixture"
+        shelf_path.write_bytes(shelf_data)
+        shelf_manifest = json.loads(json.dumps(manifest))
+        shelf_manifest["artifacts"].append({
+            "id": SHELF_ARTIFACT,
+            "path": shelf_path.name,
+            "size": len(shelf_data),
+            "sha256": _sha256(shelf_data),
+        })
+        shelf_manifest["preloads"].append({
+            "role": SHELF_ROLE,
+            "artifact": SHELF_ARTIFACT,
+            "file": shelf_path.name,
+            "kind": ATTIC_KIND,
+            "address": SHELF_ADDRESS,
+            "address_bits": 28,
+            "length": len(shelf_data),
+            "crc16": _crc16_ccitt_false(shelf_data),
+            "crc16_algorithm": CRC16_ALGORITHM,
+            "sha256": _sha256(shelf_data),
+            "persistence": ATTIC_PERSISTENCE,
+            "recovery": ATTIC_RECOVERY,
+        })
+        shelf_manifest_path = root / "manifest-with-shelf.json"
+        shelf_manifest_path.write_text(
+            json.dumps(shelf_manifest, sort_keys=True) + "\n", encoding="ascii"
+        )
+        cases += 1
+        shelf_contract = resolve(shelf_manifest_path, shelf_path)
+        if (
+            shelf_contract.shelf is None
+            or shelf_contract.shelf.address != SHELF_ADDRESS
+            or shelf_contract.shelf.data != shelf_data
+            or shelf_contract.shelf not in shelf_contract.spans_for("staged")
+            or shelf_contract.shelf not in shelf_contract.spans_for("post-reset")
+        ):
+            failures.append("shelf-valid")
+        cases += 1
+        try:
+            resolve(shelf_manifest_path)
+            failures.append("shelf-missing-argument")
+        except ReadbackError:
+            pass
 
         def reject(name: str, mutate: Any) -> None:
             nonlocal cases
@@ -927,6 +1018,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--prg", type=Path)
     parser.add_argument("--bank5", type=Path)
     parser.add_argument("--attic", type=Path)
+    parser.add_argument("--shelf", type=Path)
     parser.add_argument("--d81", type=Path)
     parser.add_argument("--elf", type=Path)
     parser.add_argument("--nm", type=Path, default=Path("tools/llvm-mos/bin/llvm-nm"))

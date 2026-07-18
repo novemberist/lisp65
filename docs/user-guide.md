@@ -113,6 +113,54 @@ The persistent compiler writes only to preallocated FASL slots. The blank work
 D81 supplied with 1.0.1 has none; `compile-load` combines compilation and loading
 only on externally provisioned media.
 
+### Wave 2 candidate fresh-session workflow
+
+This subsection describes the unreleased 1.1 Wave 2 candidate, not release
+1.0.1. Save edited source before restarting:
+
+```lisp
+(save-buffer-to "demo")
+```
+
+For a fresh session, restart Lisp65 from the product disk using the documented
+BASIC boot path. The MEGA65 Reset button itself exits to BASIC; it does not
+restart the Workbench. A power cycle additionally clears the reset-persistent,
+power-volatile Attic state. The escalation ladder is therefore: RUN/STOP aborts
+the current evaluation and keeps the session; a product-disk restart creates a
+fresh Lisp65 session; a power cycle creates a fully cold start. `restart-repl`
+is not delivered by 1.1 and returns only with the C2 architecture.
+
+### Wave 2 candidate persistent compilation
+
+The unreleased Wave 2 candidate removes the preallocated `fasl*` requirement.
+`compile-string` and the editor compilation commands write an arbitrary target
+name through the complete M65D copy-on-write transaction: allocation and
+verified staging happen first, the directory entry is published last, and the
+transaction remains bound to the same mounted medium throughout.
+
+Load M65D and establish the current work-medium mount before compiling:
+
+```lisp
+(load-lib "m65d")
+(m65d-remount)
+(compile-string "(defun answer () 42)" "answer")
+(load-lib "answer")
+(answer)                              ; => 42
+```
+
+The historic slot requirement and the warning that `compile-string` bypasses
+M65D apply only to release 1.0.1 and earlier. They are retired in the
+hardware-sealed Wave 2 candidate, which is not yet a public release.
+
+### Wave 2 candidate error text
+
+The candidate uses the existing L65E-v1 runtime overlay for readable error
+messages. It binds 60 stable error codes and supplies text for the 43 codes
+reachable in the Workbench profile. Unknown, omitted, or temporarily
+unavailable texts retain the allocation-free `Ehh` fallback, where `hh` is the
+stable two-digit hexadecimal error code. This is an error-text facility, not a
+general condition system or user-handler API.
+
 ## Editor keys
 
 The editor intends to provide the compact Emacs-style key set below. `C-x` means

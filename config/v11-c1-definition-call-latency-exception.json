@@ -1,0 +1,62 @@
+{
+  "format": "lisp65-v11-c1-definition-call-latency-exception-v1",
+  "version": 1,
+  "id": "v11-c1-definition-first-call",
+  "status": "owner-approved-dated-exception",
+  "approved_on": "2026-07-16",
+  "performance_bar_result": "not-passed",
+  "observed": {
+    "first_call_after_definition_frames": 95,
+    "first_call_after_definition_milliseconds": 1900,
+    "hardware_baseline_frames": [95, 96, 96],
+    "session_curve_frames": [95, 97, 95, 97, 96, 95, 96, 96, 98, 95, 98, 96],
+    "session_curve_minimum_frames": 95,
+    "session_curve_maximum_frames": 98,
+    "session_curve_mean_frames": 96.1666666667,
+    "session_curve_classification": "jitter-without-demonstrated-growth-or-plateau",
+    "longer_observation_frames": 110,
+    "longer_observation_disposition": "visible-unexplained-not-used-to-attribute-a-cause",
+    "frame_quantum_milliseconds": 20,
+    "following_warm_call_frames": 10,
+    "following_warm_call_milliseconds": 200
+  },
+  "stability_gate": {
+    "maximum_first_call_after_definition_frames": 98,
+    "quantization_tolerance_frames": 1,
+    "quantization_tolerance_policy": "The historical one-frame 95-to-96 correction remains a closed measurement decision; it is not iterated.",
+    "session_band_correction": "Owner-approved on 2026-07-17 from a complete twelve-cycle curve, not from an isolated overrun. Values above 98 frames stop again; the band is not widened iteratively.",
+    "meaning": "The gate proves that the measured 95-to-98-frame distribution has not regressed. Success is LIMITATION-STABLE, never a performance PASS.",
+    "required_value_tokens": [
+      "performance-bar=not-passed",
+      "exception=owner-dated-2026-07-16",
+      "session-band=owner-corrected-2026-07-17:95..98frames",
+      "longer-observation=visible-unexplained",
+      "cure=C2/1.2"
+    ]
+  },
+  "user_documentation": {
+    "required_before_wave_seal": true,
+    "exact_limit": "On the reference MEGA65, the first expression compiled after a persistent definition typically takes 1.90 to 1.96 seconds; occasionally longer times have been observed. Immediately following warm expressions take about 0.20 seconds.",
+    "usage_hint": "Enter related definitions as a block before testing them so one compiler reload is amortized across the block."
+  },
+  "cure": {
+    "id": "C2-direct-Attic-execution",
+    "release": "1.2",
+    "commitment": "required-not-candidate",
+    "relationship_to_ship_builder": "C2 and the on-device ship builder are the two committed 1.2 lead themes; their ordering and scope split remain a later owner decision."
+  },
+  "renewal": {
+    "automatic": false,
+    "trigger": "If C2 leaves the 1.2 scope, this exception expires and requires a new explicit owner decision."
+  },
+  "decision_basis": {
+    "independent_installation": "rejected: fixed-overlay overlap",
+    "resident_compiler": "rejected: misses the EXT floor by 643 bytes",
+    "identity_bound_restore": "rejected: l65m-commit and C1-lifetime slice overruns plus runtime-overlay-bank deficit",
+    "rollback_cost": "would unwind approximately 9.2 KiB of structural EXT relief plus filter and the banner",
+    "session_curve_receipt": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-session-curve-receipt.json",
+    "bounded_optimization_receipt": "tests/bytecode/dialect-v2/evidence/r5/c1-definition-call-crc-nibble-negative-probe-receipt.json",
+    "bounded_optimization_result": "hardware-red-at-102-frames-and-fully-rolled-back"
+  },
+  "claim_limit": "This is a dated product exception, not a changed performance target and not a PASS. It permits C1 promotion only while the exact limitation, batching guidance, C2/1.2 cure and non-automatic renewal rule remain bound by the product documentation and gate receipts."
+}

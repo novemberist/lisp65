@@ -1,0 +1,77 @@
+{
+  "format": "lisp65-v11-g-private-service-pack-plan-v1",
+  "version": 1,
+  "status": "rejected-after-the-one-authorized-attempt-fallback-triggered",
+  "recorded_on": "2026-07-17",
+  "architecture": {
+    "resident_facade": "one service-id based synchronous private runtime facade",
+    "state_carrier": {
+      "slot": 32,
+      "co_packed_with": "lcc-install-02",
+      "accepted_file_bytes": 1037,
+      "accepted_allocated_bytes": 1280,
+      "maximum_candidate_file_bytes": 1280
+    },
+    "error_carrier": {
+      "slot": 31,
+      "co_packed_with": "lcc-install-01",
+      "accepted_file_bytes": 1355,
+      "accepted_allocated_bytes": 1536,
+      "maximum_candidate_file_bytes": 1536
+    },
+    "room_delivery": "resident standard bytecode; no new shelf record or device name branch",
+    "future_extension_rule": "new private services reuse the facade and receive an explicit existing or authorized carrier assignment"
+  },
+  "hard_link_gates": {
+    "resident_bss_end_exclusive_max": 50006,
+    "runtime_overlay_bank_bytes_max": 65472,
+    "runtime_overlay_bank_headroom_min": 64,
+    "shelf_bytes_exact": 65368,
+    "shelf_catalog_headroom_exact": 167,
+    "fixed_overlay_delta_bytes": 0,
+    "resident_island_delta_bytes": 0,
+    "installer_slice_headroom_min_bytes": 22
+  },
+  "accepted_baseline": {
+    "commit": "0da2d57",
+    "map": {
+      "path": "build/probes/v11-g/accepted-baseline/resident-island-seed-linked.prg.map",
+      "sha256": "9b11353d35cb43745611fe17cc6c2bf545fdb4d112e7e7a00a7ac1b8abeabb0e"
+    },
+    "runtime_overlay_manifest": {
+      "path": "build/probes/v11-g/accepted-baseline/runtime-overlays-manifest.json",
+      "sha256": "f8f27a57f7ba4bab82915fd1382d4eef025bd601ae53cc72118f1257a8a9a980"
+    }
+  },
+  "failure_rule": "If either resident fit or unchanged packed runtime-bank allocation fails in the one real product link, remove gc/room/error from 1.1 and defer the trio to C2.2 without another tuning round.",
+  "attempt_outcome": {
+    "result": "failed-real-product-link",
+    "resident_bss": {
+      "start": 47986,
+      "bytes": 2248,
+      "end_exclusive": 50234,
+      "fixed_boundary": 50006,
+      "overlap_bytes": 228
+    },
+    "carrier_sections": {
+      "lcc_install_01_bytes": 2007,
+      "lcc_install_01_hard_cap_bytes": 1792,
+      "lcc_install_01_over_cap_bytes": 215,
+      "lcc_install_02_bytes": 1560,
+      "lcc_install_02_planned_allocation_bytes": 1280,
+      "lcc_install_02_over_plan_bytes": 280
+    },
+    "map_symbols_bytes": {
+      "generic_facade": 161,
+      "dynamic_error_renderer": 387,
+      "error_carrier_entry": 576,
+      "state_carrier_entry": 482,
+      "vm_callprim": 4434
+    },
+    "evidence": {
+      "failed_map_sha256": "87cc6c0274f434a7cadb485ff90496239fccc430d0a6702f36cd0c5d7bd3d781",
+      "link_log_sha256": "00ff12b26b04f004e6d1eac4616bd72e616181cffbeb323407c3973fca297635"
+    },
+    "fallback": "gc, room, and error removed from the 1.1 product surface and ABI; semantic contract retained for C2.2; no second architecture attempt"
+  }
+}

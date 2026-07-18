@@ -10,6 +10,10 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+fixture_get() {
+  python3 tools/host-lisp/r5_persistence_fixtures.py get "$1"
+}
+
 dry_run=0
 build=1
 ip="${MEGA65_IP:-}"
@@ -27,8 +31,8 @@ prg="${M65HWBAMALLOCPRG:-build/lisp65-mega65-hw-bam-alloc-smoke.prg}"
 restore=1
 restore_armed=0
 restored=0
-target_track=45
-target_sector=8
+target_track="$(fixture_get fixed_write.track)"
+target_sector="$(fixture_get fixed_write.first_sector)"
 expect="bam alloc pass 4/4"
 
 usage() {
@@ -46,6 +50,8 @@ usage: $0 [options]
   --remote-d81 <name>   throwaway D81 name on MEGA65 SD (default: $remote_d81)
   --before-d81 <file>   local throwaway image before HW run (default: $before_d81)
   --after-d81 <file>    local downloaded image after HW run (default: $after_d81)
+  --track <n>           fixture data track (default: $target_track)
+  --sector <n>          fixture data sector (default: $target_sector)
   --prg <file>          BAM alloc PRG (default: $prg)
   --no-restore          leave machine after the M2 mini-PRG/readback path
   --restore-workbench   redeploy Workbench after live test (default)
@@ -68,6 +74,8 @@ while [ "$#" -gt 0 ]; do
     --remote-d81) shift; [ "$#" -gt 0 ] || usage; remote_d81="$1" ;;
     --before-d81) shift; [ "$#" -gt 0 ] || usage; before_d81="$1" ;;
     --after-d81) shift; [ "$#" -gt 0 ] || usage; after_d81="$1" ;;
+    --track) shift; [ "$#" -gt 0 ] || usage; target_track="$1" ;;
+    --sector) shift; [ "$#" -gt 0 ] || usage; target_sector="$1" ;;
     --prg) shift; [ "$#" -gt 0 ] || usage; prg="$1" ;;
     --no-restore) restore=0 ;;
     --restore-workbench) restore=1 ;;
@@ -80,6 +88,8 @@ done
 
 case "$wait_sec" in ''|*[!0-9]*) echo "Fehler: --wait muss numerisch sein" >&2; exit 2 ;; esac
 case "$timeout_sec" in ''|*[!0-9]*) echo "Fehler: --timeout muss numerisch sein" >&2; exit 2 ;; esac
+case "$target_track" in ''|*[!0-9]*) echo "Fehler: --track muss numerisch sein" >&2; exit 2 ;; esac
+case "$target_sector" in ''|*[!0-9]*) echo "Fehler: --sector muss numerisch sein" >&2; exit 2 ;; esac
 
 mkdir -p "$out_dir" "$(dirname "$before_d81")" "$(dirname "$after_d81")"
 

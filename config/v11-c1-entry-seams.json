@@ -1,0 +1,48 @@
+{
+  "format": "lisp65-v11-c1-entry-seam-contract-v1",
+  "version": 1,
+  "id": "v11-c1-public-entry-seams",
+  "decision": "config/v11-c1-architecture-decision.json",
+  "cases": [
+    {
+      "id": "lcc-run",
+      "entry": "lcc-run",
+      "expect": "\"overlay-c1-seam-lcc-run-ok\"",
+      "forms": [
+        "(lcc-run (quote (defun c1-seam-lr (x) (+ x 1))))",
+        "(if (= (c1-seam-lr 41) 42) \"overlay-c1-seam-lcc-run-ok\" \"overlay-c1-seam-lcc-run-fail\")"
+      ]
+    },
+    {
+      "id": "eval",
+      "entry": "eval",
+      "expect": "\"overlay-c1-seam-eval-ok\"",
+      "forms": [
+        "(eval (quote (defun c1-seam-ev (x) (+ x 2))))",
+        "(if (= (c1-seam-ev 40) 42) \"overlay-c1-seam-eval-ok\" \"overlay-c1-seam-eval-fail\")"
+      ]
+    },
+    {
+      "id": "eval-buffer",
+      "entry": "eval-buffer",
+      "expect": "\"overlay-c1-seam-eval-buffer-ok\"",
+      "forms": [
+        "(set-symbol-value (quote ide-buffers) (list (cons \"c1seam\" (ide-make-buffer \"c1seam\" (list \"(defun c1-seam-eb () 42)\")))))",
+        "(eval-buffer \"c1seam\")",
+        "(if (= (c1-seam-eb) 42) \"overlay-c1-seam-eval-buffer-ok\" \"overlay-c1-seam-eval-buffer-fail\")"
+      ]
+    },
+    {
+      "id": "compile-string",
+      "entry": "compile-string",
+      "expect": "\"overlay-c1-seam-compile-string-ok\"",
+      "forms": [
+        "(load-lib \"m65d\")",
+        "(m65d-remount)",
+        "(compile-string \"(defun c1-seam-cs () 42)\" \"c1seam\")",
+        "(load-lib \"c1seam\")",
+        "(if (= (c1-seam-cs) 42) \"overlay-c1-seam-compile-string-ok\" \"overlay-c1-seam-compile-string-fail\")"
+      ]
+    }
+  ]
+}

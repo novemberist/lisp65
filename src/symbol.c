@@ -117,18 +117,16 @@ static void sympool_write(uint16_t off, const char *src, uint16_t len) {
 }
 #endif
 
-/* SYM_NAME_MAX = interner Deckel aus new_symbol (33) + NUL. Der Reader-Vertrag
- * bleibt separat bei 31 Zeichen. Ein Name-Vergleich/-Lesen ist
- * EIN Bulk-Transfer in einen Bank-0-Scratch (im EXT-Modus: eine Bulk-DMA statt 1 DMA/Byte —
- * Boot macht O(nsym^2) Vergleiche, byteweise waere das katastrophal). */
-#define SYM_NAME_MAX 34
-char sym_name_scratch[SYM_NAME_MAX];
+/* The reader contract remains separately capped at 31 characters.  Name
+ * comparison and lookup use one bulk transfer into a Bank-0 scratch buffer;
+ * EXT mode therefore performs one DMA instead of one DMA per byte. */
+char sym_name_scratch[LISP65_SYMBOL_NAME_BUFFER];
 
 /* Namen aus dem Pool mit einem C-String vergleichen (0 = gleich): 1 Bulk-Read + lokaler strcmp. */
 static int sympool_streq(uint16_t off, const char *name) {
-    char buf[SYM_NAME_MAX]; uint16_t i;
-    sympool_read(off, buf, SYM_NAME_MAX);
-    for (i = 0; i < SYM_NAME_MAX; i++) {
+    char buf[LISP65_SYMBOL_NAME_BUFFER]; uint16_t i;
+    sympool_read(off, buf, LISP65_SYMBOL_NAME_BUFFER);
+    for (i = 0; i < LISP65_SYMBOL_NAME_BUFFER; i++) {
         if (buf[i] != name[i]) return 0;
         if (buf[i] == 0) return 1;
     }
@@ -142,8 +140,9 @@ static obj new_symbol(const char *name) {
      * fuehren. Vorher wrappte `npool + len + 1` bei len~0xFFFF auf npool -> Check bestand
      * -> strcpy walzte den Speicher (HW-Diagnose 2026-07-01). Reader-Tokens sind <=31. */
     uint16_t len = 0, off;
-    while (name[len] && len <= 33) len++;
-    if (len > 33 || nsym >= MAX_SYM || (uint16_t)(len + 1) > (uint16_t)(NAMEPOOL - npool)) {
+    while (name[len] && len <= LISP65_SYMBOL_NAME_MAX) len++;
+    if (len > LISP65_SYMBOL_NAME_MAX || nsym >= MAX_SYM
+        || (uint16_t)(len + 1) > (uint16_t)(NAMEPOOL - npool)) {
         lisp_abort_static(LISP65_ERR_TOO_MANY_SYMBOLS, "too many symbols");
         return NIL;                      /* falls kein Toplevel aktiv (Host/Smoke) */
     }
@@ -160,7 +159,7 @@ static obj new_symbol(const char *name) {
 
 uint8_t sym_lookup(const char *name, obj *out) {
     uint16_t i, len = 0;
-    while (name[len] && len <= 33) len++;
+    while (name[len] && len <= LISP65_SYMBOL_NAME_MAX) len++;
     for (i = 0; i < nsym; i++) {
         if (nlen4_get(i) != NLEN4_CAP(len)) continue;  /* 4-Bit-Laengen-Vorfilter: kein DMA (Bank 0) */
         if (sympool_streq(NOFF(i), name)) {
@@ -202,8 +201,8 @@ obj gensym(void) {
  * reentrant (static buf) — die Nutzer rufen sequenziell + kopieren sofort. */
 const char *symname(obj o) {
     uint16_t off = IS_SYMI(o) ? NOFF(SYMI_IDX(o)) : (uint16_t)cell_b(o);
-    sympool_read(off, sym_name_scratch, SYM_NAME_MAX);
-    sym_name_scratch[SYM_NAME_MAX - 1] = 0;
+    sympool_read(off, sym_name_scratch, LISP65_SYMBOL_NAME_BUFFER);
+    sym_name_scratch[LISP65_SYMBOL_NAME_BUFFER - 1u] = 0;
     return sym_name_scratch;
 }
 

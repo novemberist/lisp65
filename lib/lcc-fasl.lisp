@@ -199,6 +199,25 @@
   (let ((fs (%fasl-fs 8192)))
     (%fasl-forms fs forms)
     (%fasl-finish fs)))
+
+; 1.1-C1 shelf export.  Emission keeps the established byte-at-a-time staging
+; path; only the completed output crosses the resident boundary, once, as a
+; detached Buffer through the batched operation 2 carrier.
+(defun %c1-compile-source (source)
+  (progn
+    (%cs-read-open source)
+    (let ((fs (%fasl-fs 0)))
+      (%fasl-stream-forms fs)
+      (let ((length (%fasl-finish fs)))
+        (%buffer-alloc 2 length)))))
+
+; One export is sufficient for both resident call sites and reduces the
+; checkpoint to one function-cell binding. Mode 0 compiles an eval form; mode
+; 1 prepares a persistent source result plus its already-validated slot.
+(defun %c1-compile (mode first second)
+  (if (= mode 0)
+      (%c1-compile-form first)
+      (%c1-compile-source first)))
 ; Gerät: Quelle von Disk lesen (Form für Form, OHNE Auswertung), Fasl in Slot dst schreiben.
 (defun %fasl-stream-forms (fs)
   (let ((f (%fasl-read-form)))
@@ -224,8 +243,11 @@
                 hit
                 (let ((next-track (%disk-byte 0))
                       (next-sector (%disk-byte 1)))
-                  (if (> next-track 0)
-                      (%compile-slot-find codes next-track next-sector (1- fuel))
+                  (if (%disk-directory-link-valid-p
+                       track sector next-track next-sector)
+                      (if (> next-track 0)
+                          (%compile-slot-find codes next-track next-sector (1- fuel))
+                          nil)
                       nil))))
           nil)
       nil))
@@ -235,10 +257,16 @@
       (if (%disk-read-sector track sector)
           (let ((next-track (%disk-byte 0))
                 (next-sector (%disk-byte 1)))
-            (let ((cap2 (+ cap (if (> next-track 0) 254 (- next-sector 1)))))
-              (if (> next-track 0)
-                  (%compile-slot-capacity next-track next-sector (1- fuel) cap2)
-                  cap2)))
+            (if (if (= next-track 0)
+                    (> next-sector 0)
+                    (if (and (<= next-track 80) (< next-sector 40))
+                        (not (and (= next-track track) (= next-sector sector)))
+                        nil))
+                (let ((cap2 (+ cap (if (> next-track 0) 254 (- next-sector 1)))))
+                  (if (> next-track 0)
+                      (%compile-slot-capacity next-track next-sector (1- fuel) cap2)
+                      cap2))
+                0))
           0)
       0))
 

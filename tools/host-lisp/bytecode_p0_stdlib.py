@@ -38,6 +38,7 @@ ARTIFACT_FORMATS = {
     "disk-lib": ARTIFACT_FORMAT_DISK_LIB,
 }
 DEFAULT_MAX_CODE_OBJECT_BYTES = 255
+SYMBOL_NAME_MAX_BYTES = 33
 ENTRY_FLAG_MACRO = 1
 OMISSION_RECORD_KEYS = {"name", "reason"}
 
@@ -252,11 +253,35 @@ def _align2(data):
     return data
 
 
+def _symbol_name_bytes(name, role):
+    if not isinstance(name, str) or not name or "\x00" in name:
+        raise StdlibCheckError("%s must be a non-empty NUL-free string" % role)
+    raw = name.encode("utf-8")
+    if len(raw) > SYMBOL_NAME_MAX_BYTES:
+        raise StdlibCheckError(
+            "%s exceeds the %d-byte symbol-name contract: %r"
+            % (role, SYMBOL_NAME_MAX_BYTES, name)
+        )
+    return raw
+
+
+def _validate_ext_symbol_names(literal_pool, manifest_entries):
+    """Reject L65M names that the canonical product interner cannot own."""
+
+    for entry in manifest_entries:
+        if not entry.get("anonymous", False):
+            _symbol_name_bytes(entry.get("name"), "named L65M entry")
+    for node in literal_pool.nodes:
+        if int(node.get("kind", 0)) == K_SYMBOL:
+            _symbol_name_bytes(node.get("name"), "L65M symbol literal")
+
+
 def _build_ext_metadata(bundle, literal_pool, manifest_entries, literal_patches,
                         format_version=1):
     """Pack boot metadata into a pointer-free little-endian EXT blob trailer."""
 
     pool = literal_pool
+    _validate_ext_symbol_names(pool, manifest_entries)
     strings = {}
     string_bytes = bytearray()
 
@@ -591,11 +616,48 @@ def _directory_only_selftest():
             raise StdlibCheckError(
                 "Directory-only contract mutation was accepted: %s" % mutation
             )
-    print("bytecode-p0-directory-only selftest: PASS cases=6")
+
+    class NamePool:
+        def __init__(self, nodes):
+            self.nodes = nodes
+
+    boundary = "s" * SYMBOL_NAME_MAX_BYTES
+    _validate_ext_symbol_names(
+        NamePool([
+            {"kind": K_SYMBOL, "name": boundary},
+            {"kind": K_STRING, "name": "x" * (SYMBOL_NAME_MAX_BYTES + 40)},
+        ]),
+        [
+            {"name": boundary, "anonymous": False},
+            {"name": "host-only-" + ("x" * 40), "anonymous": True},
+        ],
+    )
+    for label, pool, named_entries in (
+        (
+            "entry",
+            NamePool([]),
+            [{"name": boundary + "x", "anonymous": False}],
+        ),
+        (
+            "symbol",
+            NamePool([{"kind": K_SYMBOL, "name": boundary + "x"}]),
+            [],
+        ),
+    ):
+        try:
+            _validate_ext_symbol_names(pool, named_entries)
+        except StdlibCheckError:
+            pass
+        else:
+            raise StdlibCheckError(
+                "%s longer than the symbol-name contract was accepted" % label
+            )
+    print("bytecode-p0-directory-only selftest: PASS cases=9 symbol-name-max=33")
     return 0
 
 
-def _entry_definition_source(name, sources, resident_overrides):
+def _entry_definition_source(name, sources, resident_overrides,
+                             definition_source_overrides=None):
     pattern = re.compile(r"\(def(?:un|macro)\s+" + re.escape(name) + r"(?=[\s()])")
     matches = []
     for source in sources:
@@ -608,6 +670,9 @@ def _entry_definition_source(name, sources, resident_overrides):
             matches.append(source)
     if len(matches) == 1:
         return matches[0]
+    selected = dict(definition_source_overrides or {}).get(name)
+    if selected in matches:
+        return selected
     if name in set(resident_overrides) and matches:
         return matches[-1]
     raise StdlibCheckError("%s: Directory-only source mapping is ambiguous: %r" % (name, matches))
@@ -1797,7 +1862,25 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
         )
-        result = vm.run(directory[entry_obj], [])
+        expected_vm_error = case.get("expect_vm_error")
+        try:
+            result = vm.run(directory[entry_obj], [])
+        except B.VMError as exc:
+            total_steps += vm.steps
+            if exc.status != expected_vm_error:
+                raise
+            observations.append({
+                "name": case["name"], "error": exc.status,
+            })
+            if verbose:
+                print("PASS %-28s steps=%d error=%s" %
+                      (case["name"], vm.steps, exc.status))
+            continue
+        if expected_vm_error:
+            raise AssertionError(
+                "%s (%s): expected VM error %r"
+                % (case["name"], path, expected_vm_error)
+            )
         total_steps += vm.steps
         got = case_heap.obj_to_text(result)
         if got != case["expect"]:
@@ -2050,6 +2133,13 @@ def _emit_header(
         "#define LISP65_BYTECODE_STDLIB_LITERAL_INDEX_COUNT %du" % len(pool.index),
         "#define LISP65_BYTECODE_STDLIB_LITERAL_NODE_COUNT %du" % len(pool.nodes),
         "#define LISP65_BYTECODE_STDLIB_LITERAL_PATCH_COUNT %du" % len(literal_patches),
+    ]
+    if "%repl-banner" in names:
+        lines.append(
+            "#define LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY %du"
+            % names.index("%repl-banner")
+        )
+    lines.extend([
         "",
         "#if defined(LISP65_STDLIB_BOOT_OVERLAY)",
         "#define LISP65_STDLIB_BOOTDATA __attribute__((section(\".lisp65_boot\"), used))",
@@ -2118,7 +2208,7 @@ def _emit_header(
         "",
         "#endif /* %s */" % guard,
         "",
-    ]
+    ])
 
     with open(path, "w", encoding="ascii") as f:
         f.write("\n".join(lines))
@@ -2524,7 +2614,22 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
         )
-        result = vm.run(case_directory[entry_obj], [])
+        expected_vm_error = case.get("expect_vm_error")
+        try:
+            result = vm.run(case_directory[entry_obj], [])
+        except B.VMError as exc:
+            total_steps += vm.steps
+            if exc.status != expected_vm_error:
+                raise
+            if verbose:
+                print("EMBED PASS %-22s steps=%d error=%s" %
+                      (case["name"], vm.steps, exc.status))
+            continue
+        if expected_vm_error:
+            raise AssertionError(
+                "%s (%s embed): expected VM error %r"
+                % (case["name"], path, expected_vm_error)
+            )
         total_steps += vm.steps
         got = case_heap.obj_to_text(result)
         if got != case["expect"]:
@@ -2818,6 +2923,7 @@ def emit_artifacts(path, suite, prefix, base_addr=PB.DEFAULT_BASE_ADDR, artifact
              "source_path": _entry_definition_source(
                  entry["name"], suite.get("sources", []),
                  suite.get("resident_overrides", []),
+                 suite.get("definition_source_overrides", {}),
              ),
              "blob_offset": entry["blob_offset"], "length": entry["length"],
              "code_sha256": _sha256(

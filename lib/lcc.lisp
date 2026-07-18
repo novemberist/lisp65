@@ -710,6 +710,16 @@
 ; (BCODE-Wert; eval->vm-Brücke führt aus).
 (defun %lcc-wrap (form) (cons 'lambda (cons nil (cons form nil))))
 
+; 1.1-C1 shelf export.  The returned CodeObject list is ordinary detached heap
+; data: the resident coordinator retires this compiler tier before handing the
+; value to the already-proven lcc-install transaction.
+(defun %c1-compile-form (form)
+  (cond ((if (%lcc-consp form) (eq (car form) 'defmacro) nil)
+         (lcc-compile-obj (cons 'lambda (cdr (cdr form)))))
+        ((if (%lcc-consp form) (eq (car form) 'defun) nil)
+         (lcc-compile-obj form))
+        (t (lcc-compile-obj (%lcc-wrap form)))))
+
 (defun lcc-run (form)
   (cond ((if (%lcc-consp form) (eq (car form) 'defmacro) nil)
          (%set-macro (car (cdr form))

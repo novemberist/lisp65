@@ -1,0 +1,34 @@
+{
+  "format": "lisp65-capacity-debit-authorization-v1",
+  "id": "v11-restart-repl-self-restart",
+  "status": "closed-without-debit-after-failed-pre-smoke",
+  "authorized_on": "2026-07-18",
+  "timing": "pre-promotion-after-real-link-probe",
+  "scope": "restart-repl-product-self-restart-correction",
+  "probe_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-restart-repl-self-restart-probe-receipt.json",
+  "authorized_debits": {},
+  "historical_conditional_authorization": {
+    "bank_post_boot_reserve_bytes": 3
+  },
+  "capacity": {
+    "baseline_bank_post_boot_reserve_bytes": 1861,
+    "failed_direct_candidate_bank_post_boot_reserve_bytes": 1858,
+    "rolled_back_bank_post_boot_reserve_bytes": 1861,
+    "release_floor_bytes": 1536,
+    "rolled_back_headroom_above_floor_bytes": 325,
+    "all_other_pinned_deltas": 0
+  },
+  "required_acceptance": {
+    "source_and_link_gate": "ldx #$ff; txs; jmp _start, with no restart-branch jump through $fffc",
+    "hardware_smoke_before_chain": "receipt-less double restart-repl on the probe candidate",
+    "authoritative_hardware": "fresh full G5/G6 product-identity cycle; two consecutive public restart-repl calls in the permanent G6 case",
+    "media": "mounted medium remains unchanged"
+  },
+  "outcome": {
+    "direct_candidate": "failed the receipt-less hardware pre-smoke: the product did not return to a fresh banner and prompt",
+    "recovery_candidate": "closed before a valid product run: Bank 7 is outside the MEGA65's populated 384-KiB Fast-RAM range and read back as all zeroes",
+    "capacity_effect": "none; neither candidate was promoted and all product-source changes were rolled back",
+    "authorization_effect": "the three-byte authorization was conditional on a working direct candidate and therefore records no debit"
+  },
+  "decision": "The owner-authorized direct candidate was admissible only after the new receipt-less pre-smoke. That smoke failed, so the debit is not booked. A later self-restart design requires a fresh probe, capacity attribution, and owner authorization."
+}

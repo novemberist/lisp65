@@ -1,0 +1,81 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-c1-wave1-integration-capacity-correction",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "350166c77208b5b6f598eedef20a799784bce703",
+  "probe_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-wave1-integration-capacity-drift-receipt.json",
+    "sha256": "788b643b0787c2a3fcce63f251900b3d3094dfecc0d325c7aa38cc62f346b47a"
+  },
+  "capacity": {
+    "bank": {
+      "baseline_post_boot_reserve_bytes": 1873,
+      "candidate_post_boot_reserve_bytes": 1802,
+      "release_target_bytes": 1536,
+      "candidate_margin_over_target_bytes": 266,
+      "authorized_delta_bytes": -71,
+      "prior_authorizations": "-49 B correctness and -22 B lease/trusted-stage"
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 25161,
+      "candidate_standard_composition_headroom_bytes": 25073,
+      "floor_bytes": 16384,
+      "candidate_margin_bytes": 8689,
+      "authorized_delta_bytes": -88,
+      "attribution": "81 B eval-runtime plus 7 B stdlib-load-lib; mandatory C1 lease, retirement and resident Buffer-predicate correctness"
+    },
+    "symbols": {
+      "baseline_runtime_headroom": 297,
+      "candidate_runtime_headroom": 298,
+      "authorized_delta": 1
+    },
+    "namepool": {
+      "baseline_runtime_headroom_bytes": 4594,
+      "candidate_runtime_headroom_bytes": 4602,
+      "authorized_delta_bytes": 8
+    },
+    "directory": {
+      "baseline_post_align_headroom": 168,
+      "candidate_post_align_headroom": 168,
+      "authorized_delta": 0
+    },
+    "boot_overlay": {
+      "baseline_bytes": 1669,
+      "candidate_bytes": 1669,
+      "authorized_size_delta_bytes": 0
+    },
+    "overlay_vma": {
+      "baseline_headroom_bytes": 80,
+      "candidate_headroom_bytes": 0,
+      "authorized_delta_bytes": -80,
+      "prior_authorizations": "-50 B correctness and -30 B lease/trusted-stage",
+      "rule_after_authorization": "frozen-at-zero; no further debit without simultaneous structural relief"
+    },
+    "runtime_overlay_bank": {
+      "baseline_bytes": 63906,
+      "candidate_bytes": 65472,
+      "hard_limit_bytes": 65536,
+      "candidate_margin_bytes": 64,
+      "rule_after_authorization": "effectively frozen"
+    }
+  },
+  "performance_claim": {
+    "definition_call_frames": 95,
+    "definition_call_milliseconds": 1900,
+    "warm_call_frames": 10,
+    "warm_call_milliseconds": 200,
+    "result": "performance-bar-not-passed",
+    "exception": "owner-dated-2026-07-16",
+    "cure": "C2/1.2"
+  },
+  "promotion_conditions": [
+    "The integration gate consumes this authorization and emits a new addendum receipt; the original C1 block receipt is immutable historical evidence.",
+    "The latency value string remains LIMITATION-STABLE with performance-bar=not-passed, the dated exception and cure C2/1.2.",
+    "The regular R4/R5/R6 repin and full fresh G5/G6 evidence chain remain mandatory.",
+    "Wave-seal user documentation states 1.90 s first call after a definition, 0.20 s warm, and the batching hint; C2 remains a committed 1.2 cure."
+  ],
+  "owner_decision": "Authorize the exact 88-byte EXT debit. The 81+7 attribution closes, the symbol/namepool credits are bound, and the remaining 8689-byte margin carries the release-critical correctness bytes.",
+  "claim_limit": "This authorization permits the measured integration capacity deltas. It does not relabel the latency limitation as a performance pass, promote a product set, preserve the stopped G5 run, or claim R4/R5/R6/G6 acceptance."
+}

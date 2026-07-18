@@ -1,0 +1,41 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-c1-bootstrap-final-link-installer-slice-repin",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "c81125c5ec2892af5fc6f0cba8ec8a5f9542d947",
+  "probe_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-bootstrap-final-link-determinism-diagnosis.json",
+    "sha256": "fb7942af208f6052d16afc0d9b77b987a2720d7803ecad397e445fcdf8035687"
+  },
+  "capacity": {
+    "runtime_overlay_bank": {
+      "bytes": 65472,
+      "hard_limit_bytes": 65536,
+      "remaining_bytes": 64
+    },
+    "resident_island_installer_slice": {
+      "hard_limit_bytes": 1792,
+      "baseline_bytes": 1759,
+      "candidate_bytes": 1765,
+      "baseline_headroom_bytes": 33,
+      "candidate_headroom_bytes": 27,
+      "authorized_headroom_delta_bytes": -6,
+      "attribution": "Profile-build-ID movement changed whole-program register allocation; no product behavior or source-level feature was added."
+    },
+    "other_dimensions": {
+      "bank_post_boot_reserve_bytes": 1802,
+      "ext_standard_composition_headroom_bytes": 25073,
+      "boot_overlay_bytes": 1669,
+      "overlay_vma_headroom_bytes": 0,
+      "symbols_headroom": 298,
+      "namepool_headroom_bytes": 4602,
+      "directory_post_align_headroom": 168,
+      "delta": "all unchanged"
+    }
+  },
+  "future_policy": "Exact-byte pinning remains active. A lower-bound tolerance such as >=16 B may be proposed only by a separate owner-reviewed authorization if profile-ID repins become recurring noise; this authorization creates no tolerance zone.",
+  "owner_decision": "Authorize the exact six-byte resident-island-installer slice-headroom debit and repin the margin from 33 B to 27 B. Do not chase unused bytes or remove the build contract from product identity.",
+  "claim_limit": "This authorization permits only the measured installer-slice repin. It does not prove the varied double-build, promote a product set, or claim R3/R4/R5/R6/G5/G6 acceptance."
+}

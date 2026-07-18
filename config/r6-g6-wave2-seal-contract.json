@@ -1,0 +1,46 @@
+{
+  "format": "lisp65-r6-g6-seal-contract-v1",
+  "version": 1,
+  "id": "r6-g6-hardware-acceptance",
+  "status": "authorized",
+  "kind": "hardware-acceptance",
+  "input": {
+    "run_id": "run-20260718-wave2-02",
+    "product_artifact_set_sha256": "5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6",
+    "ship_manifest_sha256": "58c9fac1ed769280450d47059703e4c464e53e1f6cd34bd5a606295957592761",
+    "preflight_sha256": "51ffa366c99b117b64275edb6e397978b5e07132970a77212dd1de0de918010f",
+    "top_receipt_sha256": "152ce4a4eaf2f88d22f1c0ef4352673e4734673be4999daaed88eac844033081"
+  },
+  "receipt": {
+    "format": "lisp65-r6-g6-hardware-receipt-v2",
+    "applicable_cases": 5,
+    "profile_not_applicable_cases": 1,
+    "coverage": "exactly-once-per-applicable-case",
+    "physical_power_or_reset_cycles": 2
+  },
+  "archive": {
+    "format": "lisp65-r6-g6-hardware-archive-v1",
+    "self_contained": true,
+    "immutability": "append-only-never-amend",
+    "offline_verification": "archive-alone-no-repository-no-network",
+    "double_pack": "byte-identical-varied-environment"
+  },
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed-for-product-artifact-set",
+    "G6": "G6: 5/5 anwendbare Hardwarefälle bestanden; execution=single-device; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration",
+    "function_metadata": "101-exact/34-unresolved-no-complete-help-claim",
+    "release": "not-promoted-until-R7"
+  },
+  "capacity_delta": {
+    "baseline_identity_sha256": "e14de21a23823d70d90df0988a5424b436af89f1ebae21772950dcec7857549f",
+    "candidate_identity_sha256": "5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6",
+    "dimensions": {
+      "bank": {"baseline": 354, "candidate": 371, "delta": 17, "authorization": null},
+      "ext": {"baseline": 24796, "candidate": 25498, "delta": 702, "authorization": null},
+      "symbols": {"baseline": 295, "candidate": 320, "delta": 25, "authorization": null},
+      "namepool": {"baseline": 4529, "candidate": 4897, "delta": 368, "authorization": null},
+      "directory": {"baseline": 168, "candidate": 176, "delta": 8, "authorization": null}
+    }
+  }
+}

@@ -154,134 +154,164 @@
  },
  "cases": [
   {
+   "name": "ide-disk-link-valid-tail",
+   "expr": "(%ide-disk-link-valid-p 1 0 0 1)",
+   "expect": "t"
+  },
+  {
+   "name": "ide-disk-link-rejects-zero-tail",
+   "expr": "(%ide-disk-link-valid-p 1 0 0 0)",
+   "expect": "nil"
+  },
+  {
+   "name": "ide-disk-link-rejects-self-reference",
+   "expr": "(%ide-disk-link-valid-p 1 0 1 0)",
+   "expect": "nil"
+  },
+  {
+   "name": "ide-disk-link-rejects-out-of-range",
+   "expr": "(%ide-disk-link-valid-p 1 0 81 0)",
+   "expect": "nil"
+  },
+  {
    "name": "ide-event-command-self-insert",
    "expr": "(ide-event-command '(key 97 nil))",
-   "expect": "self-insert"
+   "expect": "1110"
   },
   {
    "name": "ide-event-command-cx-save",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 19 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 19 nil)))",
    "expect": "1001"
   },
   {
    "name": "ide-event-command-cx-write",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 23 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 23 nil)))",
    "expect": "1004"
   },
   {
    "name": "ide-event-command-cx-find",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 6 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 6 nil)))",
    "expect": "1002"
   },
   {
    "name": "ide-event-command-cx-switch-buffer",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 2 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 2 nil)))",
    "expect": "1006"
   },
   {
    "name": "ide-event-command-delete-forward",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 4 nil)))",
-   "expect": "delete-forward"
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 4 nil)))",
+   "expect": "1102"
+  },
+  {
+   "name": "ide-event-command-delete-backward",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 20 nil)))",
+   "expect": "1101"
   },
   {
    "name": "ide-event-command-cx-directory-prefix-wins",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 4 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 4 nil)))",
    "expect": "1007"
   },
   {
    "name": "ide-event-command-cx-next-buffer",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 14 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 14 nil)))",
    "expect": "1009"
   },
   {
    "name": "ide-event-command-cx-previous-buffer",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 16 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 16 nil)))",
    "expect": "1010"
   },
   {
    "name": "ide-event-command-ctrl-f-move-right",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 6 nil)))",
-   "expect": "move-right"
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 6 nil)))",
+   "expect": "1107"
   },
   {
    "name": "ide-event-command-ctrl-b-move-left",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 2 nil)))",
-   "expect": "move-left"
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 2 nil)))",
+   "expect": "1106"
   },
   {
    "name": "ide-event-command-ctrl-n-move-down",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 14 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 14 nil)))",
    "expect": "1003"
   },
   {
    "name": "ide-event-command-ctrl-p-move-up",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 16 nil)))",
-   "expect": "move-up"
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 16 nil)))",
+   "expect": "1108"
   },
   {
    "name": "ide-event-command-ctrl-j-newline",
    "expr": "(ide-event-command (list (quote key) 10 nil))",
-   "expect": "newline"
+   "expect": "1109"
   },
   {
    "name": "ide-event-command-ctrl-a-line-start",
    "expr": "(ide-event-command (list (quote key) 1 nil))",
-   "expect": "line-start"
+   "expect": "1104"
   },
   {
    "name": "ide-event-command-ctrl-e-line-end",
    "expr": "(ide-event-command (list (quote key) 5 nil))",
-   "expect": "line-end"
+   "expect": "1103"
   },
   {
    "name": "ide-event-command-ctrl-s-search",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 19 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 19 nil)))",
    "expect": "1011"
   },
   {
    "name": "ide-event-command-ctrl-l-goto-line",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-event-command (list (quote key) 12 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 12 nil)))",
    "expect": "1012"
   },
   {
    "name": "ide-event-command-cx-directory",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 4 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 4 nil)))",
    "expect": "1007"
   },
   {
    "name": "ide-event-command-cx-compile-load",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 11 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 11 nil)))",
    "expect": "1008"
   },
   {
    "name": "ide-event-command-cx-x-execute-command",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) 24) (ide-event-command (list (quote key) 120 nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 120 nil)))",
    "expect": "1013"
   },
   {
+   "name": "ide-buffer-default-mode-id",
+   "expr": "(car (cdr (cdr (cdr (cdr (cdr (cdr (ide-make-buffer \"scratch\" (list \"\")))))))))",
+   "expect": "1105"
+  },
+  {
    "name": "ide-step-cx-x-starts-mx",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 120 nil)))) (%ide-mini-status-line)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 120 nil)))) (%ide-mini-status-line)))",
    "expect": "\"M-x [find-file]\""
   },
   {
    "name": "ide-step-cx-cs-saves-current-buffer",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-state-message (ide-step (ide-step (ide-make-state (ide-insert-char (ide-make-buffer \"work\" (list \"\")) 97)) (list (quote key) 24 nil)) (list (quote key) 19 nil))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-state-message (ide-step (ide-step (ide-make-state (ide-insert-char (ide-make-buffer \"work\" (list \"\")) 97)) (list (quote key) 24 nil)) (list (quote key) 19 nil))))",
    "expect": "\"saved\"",
    "max_steps": 1000000
   },
   {
    "name": "ide-step-cx-cf-starts-minibuffer",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (ide-state-message (ide-step (ide-step (ide-make-state (ide-make-buffer \"scratch\" (list \"\"))) (list (quote key) 24 nil)) (list (quote key) 6 nil))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-state-message (ide-step (ide-step (ide-make-state (ide-make-buffer \"scratch\" (list \"\"))) (list (quote key) 24 nil)) (list (quote key) 6 nil))))",
    "expect": "1005"
   },
   {
    "name": "ide-step-cx-cf-shows-default",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"testlib\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil)))) (%ide-mini-status-line)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"testlib\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil)))) (%ide-mini-status-line)))",
    "expect": "\"Find file: [testlib]\""
   },
   {
    "name": "ide-step-minibuffer-types-character",
-   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 100 nil)))) (car (cdr (cdr (symbol-value (quote %ide-mini))))))",
+   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 100 nil)))) (car (cdr (cdr (if (boundp (quote ide-step)) (symbol-value (quote ide-step)) nil)))))",
    "expect": "\"d\""
   },
   {
@@ -322,7 +352,7 @@
   },
   {
    "name": "ide-step-minibuffer-del-backspaces-input",
-   "expr": "(%ide-mini-input-value 127 (quote find-file) \"de\" \"\" nil)",
+   "expr": "(%ide-mini-input-value 127 1002 \"de\" \"\" nil)",
    "expect": "\"d\""
   },
   {
@@ -342,12 +372,12 @@
   },
   {
    "name": "ide-step-minibuffer-cg-cancels",
-   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 7 nil)))) (list (ide-state-message s3) (symbol-value (quote %ide-mini))))",
+   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 7 nil)))) (list (ide-state-message s3) (if (boundp (quote ide-step)) (symbol-value (quote ide-step)) nil)))",
    "expect": "(\"cancelled\" nil)"
   },
   {
    "name": "ide-step-minibuffer-esc-cancels",
-   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 27 nil)))) (list (ide-state-message s3) (symbol-value (quote %ide-mini))))",
+   "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 27 nil)))) (list (ide-state-message s3) (if (boundp (quote ide-step)) (symbol-value (quote ide-step)) nil)))",
    "expect": "(\"cancelled\" nil)"
   },
   {
@@ -357,7 +387,7 @@
   },
   {
    "name": "ide-step-cx-cf-return-reports-missing-file",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"missing\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-state-message s3) (ide-error))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"missing\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 6 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-state-message s3) (ide-error))))",
    "expect": "(\"source missing\" \"source missing\")"
   },
   {
@@ -372,7 +402,7 @@
   },
   {
    "name": "ide-step-cx-cw-writes-typed-file",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"testlib\" \"src\") (let* ((s0 (ide-make-state (%ide-resume-buffer \"src\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 23 nil))) (s3 (ide-step s2 (list (quote key) 119 nil))) (s4 (ide-step s3 (list (quote key) 111 nil))) (s5 (ide-step s4 (list (quote key) 114 nil))) (s6 (ide-step s5 (list (quote key) 107 nil))) (s7 (ide-step s6 (list (quote key) 13 nil)))) (list (ide-state-message s7) (ide-buffer-file-name (ide-state-buffer s7)))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"testlib\" \"src\") (let* ((s0 (ide-make-state (%ide-resume-buffer \"src\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 23 nil))) (s3 (ide-step s2 (list (quote key) 119 nil))) (s4 (ide-step s3 (list (quote key) 111 nil))) (s5 (ide-step s4 (list (quote key) 114 nil))) (s6 (ide-step s5 (list (quote key) 107 nil))) (s7 (ide-step s6 (list (quote key) 13 nil)))) (list (ide-state-message s7) (ide-buffer-file-name (ide-state-buffer s7)))))",
    "expect": "(\"saved\" \"work\")",
    "max_steps": 1000000
   },
@@ -388,32 +418,32 @@
   },
   {
    "name": "ide-step-cx-b-shows-next-buffer-default",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"b\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 2 nil)))) (%ide-mini-status-line)))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"b\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 2 nil)))) (%ide-mini-status-line)))",
    "expect": "\"Buffer: [a]\""
   },
   {
    "name": "ide-step-cx-b-return-switches-default",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"b\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 2 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-buffer-name (ide-state-buffer s3)) (ide-state-message s3))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"b\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 2 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-buffer-name (ide-state-buffer s3)) (ide-state-message s3))))",
    "expect": "(\"a\" \"switched\")"
   },
   {
    "name": "ide-step-cx-b-tab-cycles-buffers",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"b\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 2 nil))) (s3 (ide-step s2 (list (quote key) 9 nil)))) (%ide-mini-status-line)))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"b\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 2 nil))) (s3 (ide-step s2 (list (quote key) 9 nil)))) (%ide-mini-status-line)))",
    "expect": "\"Buffer: b\""
   },
   {
    "name": "ide-step-cx-cn-cycles-through-stable-buffer-list",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (%ide-store-buffer (ide-make-buffer \"c\" (list \"cc\"))) (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"c\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 14 nil))) (s3 (ide-step s2 (list (quote key) 24 nil))) (s4 (ide-step s3 (list (quote key) 14 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-buffer-name (ide-state-buffer s4)))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (%ide-store-buffer (ide-make-buffer \"c\" (list \"cc\"))) (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"c\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 14 nil))) (s3 (ide-step s2 (list (quote key) 24 nil))) (s4 (ide-step s3 (list (quote key) 14 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-buffer-name (ide-state-buffer s4)))))",
    "expect": "(\"b\" \"a\")"
   },
   {
    "name": "ide-step-cx-cn-wraps-to-first-buffer",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (%ide-store-buffer (ide-make-buffer \"c\" (list \"cc\"))) (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"a\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 14 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-state-message s2))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (%ide-store-buffer (ide-make-buffer \"c\" (list \"cc\"))) (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"a\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 14 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-state-message s2))))",
    "expect": "(\"c\" \"switched\")"
   },
   {
    "name": "ide-step-cx-cp-wraps-to-previous-buffer",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (%ide-store-buffer (ide-make-buffer \"c\" (list \"cc\"))) (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"c\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 16 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-state-message s2))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"a\" (list \"aa\"))) (%ide-store-buffer (ide-make-buffer \"b\" (list \"bb\"))) (%ide-store-buffer (ide-make-buffer \"c\" (list \"cc\"))) (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (%ide-resume-buffer \"c\"))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 16 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-state-message s2))))",
    "expect": "(\"a\" \"switched\")"
   },
   {
@@ -433,32 +463,32 @@
   },
   {
    "name": "ide-step-cx-d-opens-directory-buffer",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 4 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-buffer-lines (ide-state-buffer s2)) (ide-state-message s2))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 4 nil)))) (list (ide-buffer-name (ide-state-buffer s2)) (ide-buffer-lines (ide-state-buffer s2)) (ide-state-message s2))))",
    "expect": "(\"*directory*\" (\"TESTLIB\" \"WORK\" \"DEMO\") \"sources\")"
   },
   {
    "name": "ide-step-directory-return-opens-current-entry",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (set-symbol-value (quote *ide-buffers*) nil) (let* ((s0 (ide-make-state (ide-set-point (ide-make-buffer \"*directory*\" (list \"TESTLIB\" \"WORK\" \"DEMO\")) 0 0))) (s1 (ide-step s0 (list (quote key) 13 nil)))) (list (ide-buffer-name (ide-state-buffer s1)) (ide-buffer-lines (ide-state-buffer s1)) (ide-state-message s1))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (set-symbol-value (quote ide-buffers) nil) (let* ((s0 (ide-make-state (ide-set-point (ide-make-buffer \"*directory*\" (list \"TESTLIB\" \"WORK\" \"DEMO\")) 0 0))) (s1 (ide-step s0 (list (quote key) 13 nil)))) (list (ide-buffer-name (ide-state-buffer s1)) (ide-buffer-lines (ide-state-buffer s1)) (ide-state-message s1))))",
    "expect": "(\"TESTLIB\" (\"alpha\" \"beta\") \"loaded\")"
   },
   {
    "name": "ide-step-directory-return-rejects-fasl-slot",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (set-symbol-value (quote *ide-buffers*) nil) (let* ((s0 (ide-make-state (ide-set-point (ide-make-buffer \"*directory*\" (list \"FASL2\")) 0 0))) (s1 (ide-step s0 (list (quote key) 13 nil)))) (list (ide-buffer-name (ide-state-buffer s1)) (ide-state-message s1) (ide-error))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (set-symbol-value (quote ide-buffers) nil) (let* ((s0 (ide-make-state (ide-set-point (ide-make-buffer \"*directory*\" (list \"FASL2\")) 0 0))) (s1 (ide-step s0 (list (quote key) 13 nil)))) (list (ide-buffer-name (ide-state-buffer s1)) (ide-state-message s1) (ide-error))))",
    "expect": "(\"*directory*\" \"not source\" \"not source\")"
   },
   {
    "name": "ide-step-cx-ck-shows-compile-default",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"demo\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 11 nil)))) (%ide-mini-status-line)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"demo\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 11 nil)))) (%ide-mini-status-line)))",
    "expect": "\"Compile+load: [fasl0]\""
   },
   {
    "name": "ide-step-cx-ck-tab-filters-target-slots",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"demo\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 11 nil))) (s3 (ide-step s2 (list (quote key) 9 nil)))) (%ide-mini-status-line)))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"demo\" (list \"\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 11 nil))) (s3 (ide-step s2 (list (quote key) 9 nil)))) (%ide-mini-status-line)))",
    "expect": "\"Compile+load: FASL2\""
   },
   {
    "name": "ide-step-cx-ck-return-reports-missing-slot",
-   "expr": "(progn (set-symbol-value (quote %ide-prefix) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"demo\" (list \"(defun ide-key-demo () 42)\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 11 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-state-message s3) (ide-error))))",
+   "expr": "(progn (set-symbol-value (quote ide-event-command) nil) (let* ((s0 (ide-make-state (ide-make-buffer \"demo\" (list \"(defun ide-key-demo () 42)\")))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 11 nil))) (s3 (ide-step s2 (list (quote key) 13 nil)))) (list (ide-state-message s3) (ide-error))))",
    "expect": "(\"slot missing\" \"slot missing\")"
   },
   {
@@ -558,27 +588,27 @@
   },
   {
    "name": "ide-store-buffer-global-lines",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"z\"))) (ide-buffer-lines (cdr (car (symbol-value (quote *ide-buffers*))))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"z\"))) (ide-buffer-lines (cdr (car (symbol-value (quote ide-buffers))))))",
    "expect": "(\"z\")"
   },
   {
    "name": "ide-buffers-alist-lines",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"z\"))) (ide-buffer-lines (cdr (car (%ide-buffers-alist)))))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"z\"))) (ide-buffer-lines (cdr (car (%ide-buffers-alist)))))",
    "expect": "(\"z\")"
   },
   {
    "name": "ide-store-buffer-resumes-lines",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"z\"))) (ide-buffer-lines (%ide-resume-buffer nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"z\"))) (ide-buffer-lines (%ide-resume-buffer nil)))",
    "expect": "(\"z\")"
   },
   {
    "name": "ide-persist-state-resumes-buffer-lines",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-persist-state (ide-make-state (ide-insert-char (ide-make-buffer \"scratch\" '(\"\")) 97))) (ide-buffer-lines (%ide-resume-buffer nil)))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-persist-state (ide-make-state (ide-insert-char (ide-make-buffer \"scratch\" '(\"\")) 97))) (ide-buffer-lines (%ide-resume-buffer nil)))",
    "expect": "(\"a\")"
   },
   {
    "name": "ide-persist-state-replaces-front-buffer",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"\"))) (%ide-persist-state (ide-make-state (ide-insert-char (ide-make-buffer \"scratch\" '(\"\")) 97))) (length (ide-buffers)))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" '(\"\"))) (%ide-persist-state (ide-make-state (ide-insert-char (ide-make-buffer \"scratch\" '(\"\")) 97))) (length (ide-buffers)))",
    "expect": "1"
   },
   {
@@ -679,17 +709,17 @@
   },
   {
    "name": "ide-disk-eval-buffer-missing-error",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (eval-buffer \"missing\") (ide-error))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (eval-buffer \"missing\") (ide-error))",
    "expect": "\"buffer missing\""
   },
   {
    "name": "ide-disk-load-file-to-buffer-host-dir",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"testlib\" \"src\") (ide-buffer-name (%ide-resume-buffer \"src\")))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"testlib\" \"src\") (ide-buffer-name (%ide-resume-buffer \"src\")))",
    "expect": "\"src\""
   },
   {
    "name": "ide-disk-load-file-to-buffer-host-content",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"testlib\" \"src\") (ide-buffer-lines (%ide-resume-buffer \"src\")))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"testlib\" \"src\") (ide-buffer-lines (%ide-resume-buffer \"src\")))",
    "expect": "(\"alpha\" \"beta\")"
   },
   {
@@ -719,29 +749,29 @@
   },
   {
    "name": "ide-disk-save-buffer-to-roundtrip",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"testlib\" \"src\") (save-buffer-to \"work\" \"src\") (load-file-to-buffer \"work\" \"copy\") (ide-buffer-lines (%ide-resume-buffer \"copy\")))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"testlib\" \"src\") (save-buffer-to \"work\" \"src\") (load-file-to-buffer \"work\" \"copy\") (ide-buffer-lines (%ide-resume-buffer \"copy\")))",
    "expect": "(\"alpha\" \"beta\")",
    "max_steps": 1000000
   },
   {
    "name": "ide-disk-workbench-load-edit-save-flow",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"demo\" \"demo\") (%ide-store-buffer (ide-insert-char (%ide-resume-buffer \"demo\") 32)) (save-buffer-to \"work\" \"demo\") (load-file-to-buffer \"work\" \"copy\") (ide-buffer-lines (%ide-resume-buffer \"copy\")))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"demo\" \"demo\") (%ide-store-buffer (ide-insert-char (%ide-resume-buffer \"demo\") 32)) (save-buffer-to \"work\" \"demo\") (load-file-to-buffer \"work\" \"copy\") (ide-buffer-lines (%ide-resume-buffer \"copy\")))",
    "expect": "(\" (defun demo-numbers-run () 42)\")",
    "max_steps": 1000000
   },
   {
    "name": "ide-disk-save-buffer-to-rejects-fasl-slot",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" (list \"x\"))) (save-buffer-to \"fasl2\" \"scratch\"))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" (list \"x\"))) (save-buffer-to \"fasl2\" \"scratch\"))",
    "expect": "nil"
   },
   {
    "name": "ide-disk-save-buffer-to-rejects-fasl-error",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" (list \"x\"))) (save-buffer-to \"fasl2\" \"scratch\") (ide-error))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (%ide-store-buffer (ide-make-buffer \"scratch\" (list \"x\"))) (save-buffer-to \"fasl2\" \"scratch\") (ide-error))",
    "expect": "\"not source\""
   },
   {
    "name": "ide-disk-compile-buffer-to-lib-missing-slot-error",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"testlib\" \"src\") (compile-buffer-to-lib \"fasl0\" \"src\") (ide-error))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"testlib\" \"src\") (compile-buffer-to-lib \"fasl0\" \"src\") (ide-error))",
    "expect": "\"slot missing\""
   },
   {
@@ -766,7 +796,7 @@
   },
   {
    "name": "ide-disk-save-buffer-to-new-slot",
-   "expr": "(progn (set-symbol-value (quote *ide-buffers*) nil) (load-file-to-buffer \"testlib\" \"src\") (save-buffer-to \"noslot\" \"src\"))",
+   "expr": "(progn (set-symbol-value (quote ide-buffers) nil) (load-file-to-buffer \"testlib\" \"src\") (save-buffer-to \"noslot\" \"src\"))",
    "expect": "t",
    "max_steps": 1000000
   },

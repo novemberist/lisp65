@@ -187,14 +187,18 @@ def toolchain_binding() -> dict[str, Any]:
 
 def build_one(parent: Path, commit: str, axis: dict[str, str]) -> dict[str, Any]:
     checkout = parent / axis["id"]
+    clone_env = os.environ.copy()
+    clone_env["GIT_LFS_SKIP_SMUDGE"] = "1"
     run(
         ["git", "clone", "--no-local", "--no-checkout", str(ROOT), str(checkout)],
         cwd=parent,
+        env=clone_env,
         label=f"clone {axis['id']}",
     )
     run(
         ["git", "checkout", "--detach", commit],
         cwd=checkout,
+        env=clone_env,
         label=f"checkout {axis['id']}",
     )
     toolchain = checkout / "tools/llvm-mos"

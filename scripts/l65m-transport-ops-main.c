@@ -8,6 +8,10 @@
 #include "l65m_overlay_abi.h"
 #include "vm_runtime_overlay.h"
 #include "l65m-bulkread-cases.h"
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+#include "obj.h"
+#include "dialect-v2/libs/lcc-contract.h"
+#endif
 
 #define TEST_VMA                 0x9000u
 #define TEST_LIMIT               LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICE
@@ -473,6 +477,187 @@ static int load_image(const char *path, file_source *source) {
     return 1;
 }
 
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+static file_source *c1_fastpath_source;
+
+static uint8_t read_c1_fastpath(void *opaque, uint16_t off, uint8_t *dst,
+                                uint16_t length) {
+    (void)opaque;
+    return read_file(c1_fastpath_source, off, dst, length);
+}
+
+static void c1_fastpath_limits(l65m_limits *limits) {
+    memset(limits, 0, sizeof *limits);
+    limits->dir_capacity = 608u;
+    limits->symbol_capacity = 752u;
+    limits->namepool_capacity = 10208u;
+    limits->heap_free = 1024u;
+    limits->arena_capacity = 9280u;
+    limits->roots_capacity = 128u;
+    limits->string_arena = 1u;
+    limits->symbol_exists = no_symbol_exists;
+}
+
+static l65m_status c1_fastpath_phase(l65m_overlay_work *work,
+                                     unsigned phase) {
+    l65m_status status;
+    do {
+        status = (l65m_status)phase_functions[phase](work);
+    } while (status == L65M_OK && work->expected_phase == phase);
+    return status;
+}
+
+static int c1_fastpath_capacity_case(file_source *bytes,
+                                     l65m_limits *limits,
+                                     l65m_status expected) {
+    l65m_source source = {
+        read_c1_fastpath,
+        (void *)(uintptr_t)((uint16_t)MK_SYMI(1u) | 1u),
+        LISP65_C1_COMPILER_CONTAINER_BYTES
+    };
+    l65m_plan plan;
+    l65m_overlay_work work;
+    l65m_status status;
+    c1_fastpath_source = bytes;
+    l65m_overlay_work_init(&work, &source, 0x4200u, limits, &plan);
+    status = c1_fastpath_phase(&work, 0u);
+    if (status != expected || source.ctx !=
+            (void *)(uintptr_t)(uint16_t)MK_SYMI(1u))
+        return 0;
+    return expected != L65M_OK || (work.flags & 128u) != 0;
+}
+
+static int c1_fastpath_selftest(const char *image_path) {
+    file_source bytes = { 0 };
+    l65m_source source;
+    l65m_limits limits;
+    l65m_plan plan;
+    l65m_overlay_work work;
+    l65m_status status = L65M_OK;
+    unsigned phase;
+    unsigned failures = 0;
+    uint32_t reads_before;
+    static const struct {
+        const char *name;
+        l65m_status expected;
+        unsigned field;
+    } capacity_cases[] = {
+        { "directory", L65M_ERR_DIRECTORY, 0u },
+        { "symbols", L65M_ERR_SYMBOLS, 1u },
+        { "namepool", L65M_ERR_NAMEPOOL, 2u },
+        { "heap", L65M_ERR_HEAP, 3u },
+        { "roots", L65M_ERR_ROOTS, 4u },
+        { "arena", L65M_ERR_ARENA, 5u }
+    };
+
+    if (!load_image(image_path, &bytes)) return 1;
+    if (bytes.length != LISP65_C1_COMPILER_CONTAINER_BYTES) {
+        fprintf(stderr, "c1-fastpath-selftest: generated length mismatch\n");
+        free((void *)bytes.data);
+        return 1;
+    }
+    c1_fastpath_source = &bytes;
+    source.read = read_c1_fastpath;
+    source.ctx = (void *)(uintptr_t)((uint16_t)MK_SYMI(1u) | 1u);
+    source.length = bytes.length;
+    c1_fastpath_limits(&limits);
+    limits.dir_count = 3u;
+    limits.symbol_count = 17u;
+    limits.namepool_used = 99u;
+    limits.heap_free = 900u;
+    limits.arena_used = 23u;
+    limits.roots_used = 7u;
+    l65m_overlay_work_init(&work, &source, 0x4200u, &limits, &plan);
+    reads_before = bytes.reads;
+    for (phase = 0; phase <= 3u && status == L65M_OK; phase++)
+        status = c1_fastpath_phase(&work, phase);
+    if (status != L65M_OK || !work.finished ||
+        work.expected_phase != L65M_OVERLAY_PHASE_COUNT ||
+        !(work.flags & 128u) || bytes.reads != reads_before ||
+        source.ctx != (void *)(uintptr_t)(uint16_t)MK_SYMI(1u))
+        failures++;
+#define C1_EXPECT(field, value) do { if (plan.field != (value)) failures++; } while (0)
+    C1_EXPECT(source_length, LISP65_C1_COMPILER_CONTAINER_BYTES);
+    C1_EXPECT(source_crc16, LISP65_C1_COMPILER_CONTAINER_CRC16);
+    C1_EXPECT(source_blob_off, 4u);
+    C1_EXPECT(source_metadata_off, 4u + LISP65_C1_COMPILER_BLOB_BYTES);
+    C1_EXPECT(blob_len, LISP65_C1_COMPILER_BLOB_BYTES);
+    C1_EXPECT(metadata_len, LISP65_C1_PLAN_METADATA_BYTES);
+    C1_EXPECT(entry_count, LISP65_C1_COMPILER_ENTRY_COUNT);
+    C1_EXPECT(index_count, LISP65_C1_PLAN_INDEX_COUNT);
+    C1_EXPECT(node_count, LISP65_C1_PLAN_NODE_COUNT);
+    C1_EXPECT(patch_count, LISP65_C1_PLAN_PATCH_COUNT);
+    C1_EXPECT(entries_off, LISP65_C1_PLAN_ENTRIES_OFF);
+    C1_EXPECT(index_off, LISP65_C1_PLAN_INDEX_OFF);
+    C1_EXPECT(nodes_off, LISP65_C1_PLAN_NODES_OFF);
+    C1_EXPECT(patches_off, LISP65_C1_PLAN_PATCHES_OFF);
+    C1_EXPECT(strings_off, LISP65_C1_PLAN_STRINGS_OFF);
+    C1_EXPECT(strings_bytes, LISP65_C1_PLAN_STRINGS_BYTES);
+    C1_EXPECT(new_symbols, LISP65_C1_PLAN_SYMBOL_CEILING);
+    C1_EXPECT(new_name_bytes, LISP65_C1_PLAN_NAME_BYTES_CEILING);
+    C1_EXPECT(heap_cells, LISP65_C1_PLAN_HEAP_CELLS);
+    C1_EXPECT(arena_bytes, LISP65_C1_PLAN_ARENA_BYTES);
+    C1_EXPECT(root_slots, LISP65_C1_PLAN_ROOT_SLOTS);
+    C1_EXPECT(max_graph_depth, 0x80u | LISP65_C1_PLAN_MAX_GRAPH_DEPTH);
+    C1_EXPECT(format_version, LISP65_C1_COMPILER_FORMAT_VERSION);
+    C1_EXPECT(code_base, 0x4200u);
+    C1_EXPECT(dir_before, limits.dir_count);
+    C1_EXPECT(dir_after, 8u + LISP65_C1_COMPILER_ENTRY_COUNT);
+    C1_EXPECT(symbols_before, limits.symbol_count);
+    C1_EXPECT(namepool_before, limits.namepool_used);
+    C1_EXPECT(heap_free_before, limits.heap_free);
+    C1_EXPECT(arena_used_before, limits.arena_used);
+    C1_EXPECT(roots_before, limits.roots_used);
+#undef C1_EXPECT
+
+    /* An untagged source and a tagged wrong-length source must not inherit
+     * the trusted plan. */
+    source.ctx = (void *)(uintptr_t)(uint16_t)MK_SYMI(1u);
+    source.length = bytes.length;
+    bytes.reads = 0;
+    l65m_overlay_work_init(&work, &source, 0x4200u, &limits, &plan);
+    status = c1_fastpath_phase(&work, 0u);
+    if (status != L65M_OK || (work.flags & 128u) || !bytes.reads ||
+        work.expected_phase != 1u) failures++;
+
+    source.ctx = (void *)(uintptr_t)((uint16_t)MK_SYMI(1u) | 1u);
+    source.length = (uint16_t)(bytes.length - 1u);
+    bytes.reads = 0;
+    l65m_overlay_work_init(&work, &source, 0x4200u, &limits, &plan);
+    status = c1_fastpath_phase(&work, 0u);
+    if (status != L65M_ERR_CONTAINER || (work.flags & 128u) || !bytes.reads)
+        failures++;
+
+    for (phase = 0; phase < sizeof capacity_cases / sizeof capacity_cases[0];
+         phase++) {
+        c1_fastpath_limits(&limits);
+        switch (capacity_cases[phase].field) {
+        case 0: limits.dir_capacity = LISP65_C1_COMPILER_ENTRY_COUNT - 1u; break;
+        case 1: limits.symbol_capacity = LISP65_C1_PLAN_SYMBOL_CEILING - 1u; break;
+        case 2: limits.namepool_capacity = LISP65_C1_PLAN_NAME_BYTES_CEILING - 1u; break;
+        case 3: limits.heap_free = LISP65_C1_PLAN_HEAP_CELLS - 1u; break;
+        case 4: limits.roots_capacity = LISP65_C1_PLAN_ROOT_SLOTS - 1u; break;
+        default: limits.arena_capacity = LISP65_C1_PLAN_ARENA_BYTES - 1u; break;
+        }
+        if (!c1_fastpath_capacity_case(&bytes, &limits,
+                                       capacity_cases[phase].expected)) {
+            fprintf(stderr, "c1-fastpath-selftest: capacity case failed: %s\n",
+                    capacity_cases[phase].name);
+            failures++;
+        }
+    }
+    free((void *)bytes.data);
+    if (failures) {
+        fprintf(stderr, "c1-fastpath-selftest: FAIL failures=%u\n", failures);
+        return 1;
+    }
+    printf("c1-fastpath-selftest: PASS exact-plan=28 no-source-reads=yes "
+           "fallbacks=2 capacity-rejections=6 commit-crc-bound=%04x\n",
+           (unsigned)LISP65_C1_COMPILER_CONTAINER_CRC16);
+    return 0;
+}
+#endif
+
 static unsigned check_phase(unsigned phase, const phase_ops *ops, FILE *errors) {
     unsigned violations = 0;
 #define REQUIRE(condition, message) do { \
@@ -795,6 +980,20 @@ static int run_report(const char *image_path, const char *integration_path,
             image_path, bytes.length);
     fprintf(out, "entry_count=%u\nindex_count=%u\nnode_count=%u\npatch_count=%u\n",
             plan.entry_count, plan.index_count, plan.node_count, plan.patch_count);
+    fprintf(out, "source_length=%u\nsource_crc16=%04x\nsource_blob_off=%u\n"
+                 "source_metadata_off=%u\nblob_len=%u\nmetadata_len=%u\n",
+            plan.source_length, plan.source_crc16, plan.source_blob_off,
+            plan.source_metadata_off, plan.blob_len, plan.metadata_len);
+    fprintf(out, "entries_off=%u\nindex_off=%u\nnodes_off=%u\npatches_off=%u\n"
+                 "strings_off=%u\nstrings_bytes=%u\n",
+            plan.entries_off, plan.index_off, plan.nodes_off, plan.patches_off,
+            plan.strings_off, plan.strings_bytes);
+    fprintf(out, "new_symbols=%u\nnew_name_bytes=%u\nheap_cells=%u\n"
+                 "arena_bytes=%u\nroot_slots=%u\nmax_graph_depth=%u\n"
+                 "format_version=%u\n",
+            plan.new_symbols, plan.new_name_bytes, plan.heap_cells,
+            plan.arena_bytes, plan.root_slots, plan.max_graph_depth,
+            plan.format_version);
     fprintf(out, "runtime_catalog_slots=%u\nsemantics=repeat-batch-ingress-and-egress-crc\n",
             test_slot_count);
     fprintf(out, "integration_source=%s\nintegration_batch_calls=%u\n",
@@ -881,15 +1080,26 @@ static int run_report(const char *image_path, const char *integration_path,
 
 static void usage(const char *program) {
     fprintf(stderr, "usage: %s --selftest | --image PATH --integration C "
-                    "--scratch-source C [--out PATH] [--check]\n",
+                    "--scratch-source C [--out PATH] [--check]"
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+                    " | --fastpath-selftest --image PATH"
+#endif
+                    "\n",
             program);
 }
 
 int main(int argc, char **argv) {
     const char *image = 0, *integration = 0, *scratch_source = 0, *out = 0;
     int check = 0, run_selftest = 0, i;
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+    int run_fastpath_selftest = 0;
+#endif
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--selftest")) run_selftest = 1;
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+        else if (!strcmp(argv[i], "--fastpath-selftest"))
+            run_fastpath_selftest = 1;
+#endif
         else if (!strcmp(argv[i], "--check")) check = 1;
         else if (!strcmp(argv[i], "--image") && i + 1 < argc) image = argv[++i];
         else if (!strcmp(argv[i], "--integration") && i + 1 < argc)
@@ -902,6 +1112,11 @@ int main(int argc, char **argv) {
     if (run_selftest)
         return image || integration || scratch_source || out || check
                    ? (usage(argv[0]), 2) : selftest();
+#ifdef LISP65_C1_TRUST_FASTPATH_PROBE
+    if (run_fastpath_selftest)
+        return !image || integration || scratch_source || out || check
+                   ? (usage(argv[0]), 2) : c1_fastpath_selftest(image);
+#endif
     if (!image) { usage(argv[0]); return 2; }
     return run_report(image, integration, scratch_source, out, check);
 }

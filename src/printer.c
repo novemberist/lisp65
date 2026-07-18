@@ -125,7 +125,8 @@ void print_obj(obj o) {
         emit('"');
         return;
     }
-    default:        print_list(o); return;        /* T_CONS */
+    case T_CONS:    print_list(o); return;
+    default:        emit('?'); return;               /* opaque/unknown Heap object */
     }
 }
 

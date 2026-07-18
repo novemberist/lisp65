@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-buffer-printer-completion-capacity",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-16",
+  "source_commit": "ea649338ba6dbe12d99d8bbee4c601fb5c6f217e",
+  "probe_receipt_before_authorization": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-buffer-printer-fix-probe-receipt.json",
+    "sha256": "f11af3955cf2080b68cbf74b2f09c009642006efbfc2502f9abe4fe3ee49e4a0"
+  },
+  "capacity": {
+    "bank": {
+      "baseline_post_boot_reserve_bytes": 1798,
+      "candidate_post_boot_reserve_bytes": 1795,
+      "target_bytes": 1536,
+      "candidate_margin_bytes": 259,
+      "authorized_delta_bytes": -3
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 25628,
+      "candidate_standard_composition_headroom_bytes": 25628,
+      "floor_bytes": 16384,
+      "delta_bytes": 0,
+      "margin_bytes": 9244
+    },
+    "overlay_vma": {
+      "baseline_base": "0xc352",
+      "candidate_base": "0xc354",
+      "ceiling": "0xc356",
+      "authorized_delta_bytes": 2,
+      "remaining_bytes": 2,
+      "rule": "filter and banner must each prove overlay delta zero; wave 3 cannot start 1.1-L without a measured source for its 68-byte probe delta"
+    }
+  },
+  "documentation_duty": "The wave-seal language reference states that buffers print as ?, payload is read through buffer-ref, and length through buffer-length.",
+  "promotion_gate": {
+    "representation": "?",
+    "t_buf_reaches_list_printer": false,
+    "canonical_product_link": "passed-with-pinned-overlay-ceiling",
+    "host_oracle": "exact-output-pass",
+    "asan_ubsan": "pass"
+  },
+  "claim_limit": "This authorization promotes the measured Buffer-printer capacity result. It does not promote a wave product set, claim hardware evidence, authorize filter or banner capacity, or waive their overlay-neutrality gates."
+}

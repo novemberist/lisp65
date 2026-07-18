@@ -2,11 +2,15 @@
 #include "io.h"
 #ifdef MEGA65_F011_LOAD
 #include "obj.h"     /* ext_disk_put/get/stage (EXT-Disk-Scratch) */
+#include "mem.h"     /* shared Bank-4 disk-scratch layout contract */
 #include "eval.h"    /* load_source_stream */
 #include "reader.h"  /* reader_from_fetch (FASL compile-file source stream) */
+#include "vm_runtime_overlay.h" /* persistent source fetch across C1 overlay swaps */
 #ifdef LISP65_DISK_LIBS
 #include "vm_embed.h" /* vm_load_lib_ext + lisp65_stdlib_* (Stufe 2: Bytecode-Libs von Disk) */
-#include "mem.h"      /* ext_disk_read: bulk source for the transactional validator */
+#ifdef LISP65_ATTIC_LIBRARY_SHELF
+#include "attic_library_shelf.h"
+#endif
 #endif
 #endif
 
@@ -86,8 +90,23 @@ static unsigned int f011_read_at(unsigned char T, unsigned char S) {
  * EXT-RAM (ext_disk_put/get, Bank oberhalb des Zell-Heaps). Die Datei wird ueber load_source_stream
  * in den Reader gestreamt -> beliebige Dateigroesse. Alles KALT (Ladezeit) -> DMA/Byte ok. */
 #define DISK_EXT_DIR   0u        /* Dir-Sektor: EXT-Offset 0..255 */
-#define DISK_EXT_FILE  256u      /* Datei ab EXT-Offset 256 */
+#define DISK_EXT_FILE  LISP65_EXT_DISK_FILE_OFFSET /* Datei nach dem 256-B-Directory-Sektor */
 #define DISK_FILE_MAX  DISK_EXT_FILE_MAX
+#define DISK_CHAIN_FUEL ((unsigned int)(DISK_FILE_MAX / 254u + 2u))
+
+/* Decode one 1581 file-chain link without ever treating a corrupt 0/0 tail
+ * as 255 payload bytes.  Product file APIs are capped by DISK_FILE_MAX, so
+ * their walker fuel is derived from that public byte ceiling rather than an
+ * 8-bit magic number. */
+static unsigned int disk_chain_count(unsigned char t, unsigned char s,
+                                     unsigned char nt, unsigned char ns) {
+    if (!nt) {
+        if (!ns) return 255u;
+        return (unsigned int)(ns - 1u);
+    }
+    if (nt > 80u || ns > 39u || (nt == t && ns == s)) return 255u;
+    return 254u;
+}
 
 /* %disk-read-sector: liest CBM-Logiksektor (T,S), legt die 256 B in den EXT-Dir-Scratch. */
 unsigned char io_disk_read_sector(unsigned char track, unsigned char sector) {
@@ -252,14 +271,18 @@ unsigned char io_disk_stage_put(unsigned int i, unsigned char v) {
 
 /* Nutz-Kapazitaet einer bestehenden Sektorkette: 254 B je Vollsektor + (Endmarke-1) im Endsektor. */
 static unsigned int disk_chain_capacity(unsigned char t, unsigned char s) {
-    unsigned int cap = 0; unsigned char nt, ns, fuel = 255;
+    unsigned int cap = 0, count, fuel = DISK_CHAIN_FUEL;
+    unsigned char nt, ns;
     while (t && fuel--) {
         if (!io_disk_read_sector(t, s)) return 0;
         nt = io_disk_byte(0); ns = io_disk_byte(1);
-        cap += nt ? 254u : (unsigned int)(ns - 1);
+        count = disk_chain_count(t, s, nt, ns);
+        if (count > 254u) return 0;
+        if (count > DISK_FILE_MAX - cap) return 0;
+        cap += count;
         t = nt; s = ns;
     }
-    return cap;
+    return t ? 0 : cap;
 }
 
 /* SAVE (MVP Overwrite-in-place, docs/two-product-workflow.md Prio 1): schreibt len Bytes aus dem
@@ -269,21 +292,23 @@ static unsigned int disk_chain_capacity(unsigned char t, unsigned char s) {
  * ueberliest. Jeder Sektor geht durch den HW-kalibrierten io_disk_write_sector (RMW + Verify).
  * 0 = nicht gefunden / passt nicht in den Slot / Verify-Fehlschlag. */
 static unsigned char io_disk_save_impl(const char *name, unsigned int base, unsigned int len) {
-    unsigned char t, s, nt, ns, fuel = 255;
+    unsigned char t, s, nt, ns;
+    unsigned int fuel = DISK_CHAIN_FUEL;
     unsigned int n = 0, i, use;
     if (!disk_dir_find(name, &t, &s)) return 0;
     if (len > disk_chain_capacity(t, s)) return 0;
     while (t && fuel--) {
         if (!io_disk_read_sector(t, s)) return 0;       /* Links + Altinhalt in den Scratch (RMW) */
         nt = io_disk_byte(0); ns = io_disk_byte(1);
-        use = nt ? 254u : (unsigned int)(ns - 1);
+        use = disk_chain_count(t, s, nt, ns);
+        if (use > 254u) return 0;
         for (i = 0; i < use; i++, n++)
             io_disk_scratch_poke((unsigned char)(2u + i),
                                  n < len ? ext_disk_get((unsigned int)(DISK_EXT_FILE + base + n)) : 32u);
         if (!io_disk_write_sector(t, s)) return 0;
         t = nt; s = ns;
     }
-    return 1;
+    return t == 0;
 }
 unsigned char io_disk_save_named(const char *name, unsigned int len) {
     return io_disk_save_impl(name, 0, len);
@@ -306,6 +331,29 @@ static char disk_file_fetch(void) {
     return (char)ext_disk_get((unsigned int)(DISK_EXT_FILE + disk_file_pos++));
 }
 
+/* Source loads and L65M staging must not share a lifetime.  In the dialect-v2
+ * product every top-level source form is evaluated through lcc-run; C1 may
+ * therefore replace DISK_EXT_FILE with the compiler container between two
+ * reader fetches.  Keep the source stream in the disjoint 256-byte directory
+ * scratch instead.  The two-byte reader lookahead and the current sector stay
+ * valid while C1 owns the file window; the next sector is fetched only when
+ * the reader asks for it. */
+static unsigned char disk_source_pos, disk_source_len;
+static LISP65_RESIDENT_ISLAND_FN char disk_source_fetch(void) {
+    unsigned char nt, ns;
+    if (disk_file_pos >= disk_file_len) return '\0';
+    if (disk_source_pos >= disk_source_len) {
+        nt = io_disk_byte(0); ns = io_disk_byte(1);
+        if (!nt || !io_disk_read_sector(nt, ns)) return '\0';
+        nt = io_disk_byte(0); ns = io_disk_byte(1);
+        if (!nt && !ns) return '\0';
+        disk_source_pos = 0;
+        disk_source_len = nt ? 254u : (unsigned char)(ns - 1u);
+    }
+    ++disk_file_pos;
+    return (char)io_disk_byte((unsigned char)(2u + disk_source_pos++));
+}
+
 /* Folgt der 1581-Sektorkette ab (T,S) und akkumuliert die Datenbytes DIREKT aus $DE00 in den
  * EXT-Datei-Puffer (kein Bank-0-Puffer). Rueckgabe = Anzahl akkumulierter Bytes (0 = leer). */
 static unsigned int disk_chain_to_scratch(unsigned char track, unsigned char sector) {
@@ -315,13 +363,17 @@ static unsigned int disk_chain_to_scratch(unsigned char track, unsigned char sec
         off = f011_read_at(t, s);
         nt = ((volatile unsigned char *)0xDE00)[off];
         ns = ((volatile unsigned char *)0xDE00)[off + 1];
-        cnt = nt ? 254 : (unsigned int)(ns - 1);
-        remaining = (unsigned int)(DISK_FILE_MAX - n);
-        if (!remaining) {
+        if ((!nt && !ns) ||
+            (nt && (nt > 80u || ns > 39u || (nt == t && ns == s)))) {
             lisp65_f011_unmap_buffer();
-            break;
+            return 0;
         }
-        if (cnt > remaining) cnt = remaining;
+        cnt = nt ? 254u : (unsigned int)(ns - 1u);
+        remaining = (unsigned int)(DISK_FILE_MAX - n);
+        if (cnt > remaining) {
+            lisp65_f011_unmap_buffer();
+            return 0;
+        }
         for (i = 0; i < cnt; i++)
             ext_disk_put((unsigned int)(DISK_EXT_FILE + n++), ((volatile unsigned char *)0xDE00)[off + 2 + i]);
         lisp65_f011_unmap_buffer();
@@ -333,10 +385,15 @@ static unsigned int disk_chain_to_scratch(unsigned char track, unsigned char sec
 /* %disk-load-file: Datei ab (T,S) in den EXT-Puffer folgen, dann via load_source_stream in den
  * Reader streamen (Quelltext-LOAD). 1=ok, 0=leer. */
 unsigned char io_disk_load_chain(unsigned char track, unsigned char sector) {
+    unsigned char nt, ns;
     unsigned int n = disk_chain_to_scratch(track, sector);
     if (!n) return 0;
     disk_file_len = n; disk_file_pos = 0;
-    load_source_stream(disk_file_fetch);
+    if (!io_disk_read_sector(track, sector)) return 0;
+    nt = io_disk_byte(0); ns = io_disk_byte(1);
+    disk_source_pos = 0;
+    disk_source_len = nt ? 254u : (unsigned char)(ns - 1u);
+    load_source_stream(disk_source_fetch);
     return 1;
 }
 
@@ -409,6 +466,7 @@ static unsigned char disk_dir_find(const char *name, unsigned char *st, unsigned
         }
         nt = io_disk_byte(0); ns = io_disk_byte(1);
         if (nt == 0) return 0;
+        if (nt != 40u || ns >= 40u || (nt == track && ns == sector)) return 0;
         track = nt; sector = ns;
     }
     return 0;
@@ -427,8 +485,12 @@ unsigned char io_disk_load_named(const char *name) {
 /* Lib-Registrierung ab BEREITS GESTAGETER Datei (n Bytes im EXT-Fenster): Prefix parsen,
  * Preflight, Bank-5-Stage, Trailer registrieren. Geteilt von io_disk_load_lib und der
  * Test-Naht %lib-staged (xemu kann kein F011 — der Monitor stagt die Lib direkt in Bank 4). */
-static l65m_plan disk_lib_plan;
-static l65m_source disk_lib_source;
+/* C1 reuses this already-resident preflight record as its transaction
+ * checkpoint.  source.ctx is normally unused by both readers; while the
+ * temporary compiler is active it carries the pre-existing export symbol.
+ * Reset clears both objects, so no stale compiler lifetime can cross reset. */
+l65m_plan lisp65_disk_lib_plan;
+l65m_source lisp65_disk_lib_source;
 static l65m_status disk_lib_last_status = L65M_OK;
 static uint8_t disk_lib_read(void *ctx, uint16_t off, uint8_t *dst, uint16_t len) {
     (void)ctx;
@@ -438,21 +500,182 @@ static uint8_t disk_lib_read(void *ctx, uint16_t off, uint8_t *dst, uint16_t len
 l65m_status io_disk_lib_status(void) { return disk_lib_last_status; }
 unsigned char io_disk_lib_staged(unsigned int n) {
     if (n > DISK_FILE_MAX) { disk_lib_last_status = L65M_ERR_CONTAINER; return 0; }
-    disk_lib_source.read = disk_lib_read; disk_lib_source.ctx = 0;
-    disk_lib_source.length = (uint16_t)n;
-    disk_lib_last_status = vm_preflight_lib_ext(&disk_lib_source, &disk_lib_plan);
+    lisp65_disk_lib_source.read = disk_lib_read;
+    lisp65_disk_lib_source.length = (uint16_t)n;
+    disk_lib_last_status = vm_preflight_lib_ext(
+        &lisp65_disk_lib_source, &lisp65_disk_lib_plan);
     if (disk_lib_last_status != L65M_OK) return 0;
-    ext_disk_stage((uint16_t)(DISK_EXT_FILE + disk_lib_plan.source_blob_off),
-                   lisp65_stdlib_bank, disk_lib_plan.code_base, disk_lib_plan.blob_len);
+    lisp65_disk_lib_source.length = lisp65_disk_lib_plan.source_length;
+    ext_disk_stage((uint16_t)(DISK_EXT_FILE + lisp65_disk_lib_plan.source_blob_off),
+                   lisp65_stdlib_bank, lisp65_disk_lib_plan.code_base,
+                   lisp65_disk_lib_plan.blob_len);
     /* vm_load_lib_ext reserves the verified staged blob before any publish step.
      * On a later fail-stop error the region remains owned, so partial entries
      * can never point into storage reused by a subsequent load. */
-    disk_lib_last_status = vm_load_lib_ext(&disk_lib_source, &disk_lib_plan);
+    disk_lib_last_status = vm_load_lib_ext(
+        &lisp65_disk_lib_source, &lisp65_disk_lib_plan);
     return disk_lib_last_status == L65M_OK;
 }
 unsigned char io_disk_load_lib(unsigned char track, unsigned char sector) {
-    return io_disk_lib_staged(disk_chain_to_scratch(track, sector));
+    unsigned char loaded;
+    /* Private synchronous grant: this reader ignores ctx, while phase 0 may
+     * frame one exact container inside the reusable disk allocation chain. */
+    lisp65_disk_lib_source.ctx = (void *)1;
+    loaded = io_disk_lib_staged(disk_chain_to_scratch(track, sector));
+    lisp65_disk_lib_source.ctx = 0;
+    return loaded;
 }
+
+#ifdef LISP65_ATTIC_LIBRARY_SHELF_RESIDENT_PROBE
+/* Rejected 1.1-A price probe. The production implementation lives in the
+ * profile-bound runtime-overlay slice; keeping this code behind an explicit
+ * probe macro makes the measured 1,866-byte resident alternative reproducible. */
+static uint16_t attic_lib_off;
+static uint8_t attic_crc_buf[16];
+
+#ifdef __MEGA65__
+/* Enhanced DMA is required here: the shelf lives above the 24-bit Bank-5
+ * address space. One shared descriptor handles both Attic reads and the final
+ * Attic-to-Bank-5 blob stage. */
+__attribute__((used)) static uint8_t attic_edma_job[20] = {
+    0x0b, 0x80, 0x81, 0x81, 0x00, 0x85, 0x01, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+static void attic_copy(uint32_t source, uint32_t target, uint16_t length) {
+    attic_edma_job[2] = (uint8_t)(source >> 20);
+    attic_edma_job[4] = (uint8_t)(target >> 20);
+    attic_edma_job[9] = (uint8_t)length;
+    attic_edma_job[10] = (uint8_t)(length >> 8);
+    attic_edma_job[11] = (uint8_t)source;
+    attic_edma_job[12] = (uint8_t)(source >> 8);
+    attic_edma_job[13] = (uint8_t)((source >> 16) & 0x0fu);
+    attic_edma_job[14] = (uint8_t)target;
+    attic_edma_job[15] = (uint8_t)(target >> 8);
+    attic_edma_job[16] = (uint8_t)((target >> 16) & 0x0fu);
+    __asm__ volatile(
+        "lda #1\n\tsta $d703\n\tlda #0\n\tsta $d702\n\tsta $d704\n\t"
+        "lda #mos16hi(attic_edma_job)\n\tsta $d701\n\t"
+        "lda #mos16lo(attic_edma_job)\n\tsta $d705\n\t"
+        ::: "a", "memory");
+}
+#else
+/* Host-only seam for the focused shelf loader test. Product builds use EDMA. */
+static const uint8_t *attic_host_bytes;
+static uint16_t attic_host_length;
+void io_attic_shelf_host_bind(const uint8_t *bytes, uint16_t length) {
+    attic_host_bytes = bytes; attic_host_length = length;
+}
+static void attic_copy(uint32_t source, uint32_t target, uint16_t length) {
+    uint16_t off = (uint16_t)(source - L65S_ATTIC_BASE), i;
+    uint8_t *dst = (uint8_t *)(uintptr_t)target;
+    if (!attic_host_bytes || (uint32_t)off + length > attic_host_length) return;
+    for (i = 0; i < length; i++) dst[i] = attic_host_bytes[(uint16_t)(off + i)];
+}
+#endif
+
+static void attic_read_at(uint16_t off, uint8_t *dst, uint16_t length) {
+    attic_copy(L65S_ATTIC_BASE + off, (uint32_t)(uintptr_t)dst, length);
+}
+
+static uint8_t attic_lib_read(void *ctx, uint16_t off, uint8_t *dst, uint16_t len) {
+    (void)ctx;
+    attic_read_at((uint16_t)(attic_lib_off + off), dst, len);
+    return 1;
+}
+
+static uint8_t attic_u8(uint16_t off) {
+    attic_read_at(off, attic_crc_buf, 1);
+    return attic_crc_buf[0];
+}
+
+static uint16_t attic_u16(uint16_t off) {
+    attic_read_at(off, attic_crc_buf, 2);
+    return (uint16_t)attic_crc_buf[0] | ((uint16_t)attic_crc_buf[1] << 8);
+}
+
+static uint32_t attic_u32(uint16_t off) {
+    attic_read_at(off, attic_crc_buf, 4);
+    return (uint32_t)attic_crc_buf[0] | ((uint32_t)attic_crc_buf[1] << 8)
+        | ((uint32_t)attic_crc_buf[2] << 16) | ((uint32_t)attic_crc_buf[3] << 24);
+}
+
+static uint32_t attic_crc32_step(uint32_t crc, uint8_t value) {
+    uint8_t bit;
+    crc ^= value;
+    for (bit = 0; bit < 8; bit++)
+        crc = (crc >> 1) ^ (0xedb88320ul & (uint32_t)-(int32_t)(crc & 1u));
+    return crc;
+}
+
+static uint32_t attic_crc32(uint16_t off, uint16_t length) {
+    uint32_t crc = 0xfffffffful;
+    uint16_t chunk, index;
+    while (length) {
+        chunk = length > sizeof attic_crc_buf ? sizeof attic_crc_buf : length;
+        attic_read_at(off, attic_crc_buf, chunk);
+        for (index = 0; index < chunk; index++)
+            crc = attic_crc32_step(crc, attic_crc_buf[index]);
+        off = (uint16_t)(off + chunk); length = (uint16_t)(length - chunk);
+    }
+    return crc ^ 0xfffffffful;
+}
+
+static uint8_t attic_name_equal(uint16_t record, const char *name) {
+    uint8_t index, expected, actual;
+    for (index = 0; index < 8; index++) {
+        expected = (uint8_t)name[index]; actual = attic_u8((uint16_t)(record + index));
+        if (actual != expected) return 0;
+        if (!actual) return 1;
+    }
+    return 0;
+}
+
+unsigned char io_attic_load_lib(const char *name) {
+    uint8_t index;
+    uint16_t record, total, off, length;
+    uint32_t expected_crc;
+    if (!name || !name[0] || name[7]) return 0;
+    if (attic_u8(0) != L65S_MAGIC_0 || attic_u8(1) != L65S_MAGIC_1
+        || attic_u8(2) != L65S_MAGIC_2 || attic_u8(3) != L65S_MAGIC_3
+        || attic_u8(4) != L65S_VERSION || attic_u8(5) != L65S_HEADER_BYTES
+        || attic_u8(6) != L65S_RECORD_BYTES || attic_u8(7) != L65S_RECORDS
+        || attic_u16(8) != L65S_HEADER_BYTES || attic_u16(10) != L65S_PAYLOAD_OFF) {
+        disk_lib_last_status = L65M_ERR_SOURCE; return 0;
+    }
+    total = (uint16_t)attic_u32(12);
+    if (total < L65S_PAYLOAD_OFF
+        || attic_crc32(L65S_HEADER_BYTES,
+                       (uint16_t)(L65S_RECORD_BYTES * L65S_RECORDS)) != attic_u32(20)) {
+        disk_lib_last_status = L65M_ERR_SOURCE; return 0;
+    }
+    record = L65S_HEADER_BYTES;
+    for (index = 0; index < L65S_RECORDS; index++, record += L65S_RECORD_BYTES)
+        if (attic_name_equal(record, name)) break;
+    if (index == L65S_RECORDS) { disk_lib_last_status = L65M_ERR_SOURCE; return 0; }
+    off = attic_u16((uint16_t)(record + 8));
+    length = attic_u16((uint16_t)(record + 10));
+    expected_crc = attic_u32((uint16_t)(record + 12));
+    if (off < L65S_PAYLOAD_OFF || length < 4u || (uint32_t)off + length > total
+        || attic_crc32(off, length) != expected_crc) {
+        disk_lib_last_status = L65M_ERR_SOURCE; return 0;
+    }
+    attic_lib_off = off;
+    lisp65_disk_lib_source.read = attic_lib_read;
+    lisp65_disk_lib_source.length = length;
+    disk_lib_last_status = vm_preflight_lib_ext(
+        &lisp65_disk_lib_source, &lisp65_disk_lib_plan);
+    if (disk_lib_last_status != L65M_OK) return 0;
+    attic_copy(L65S_ATTIC_BASE + off + lisp65_disk_lib_plan.source_blob_off,
+               ((uint32_t)lisp65_stdlib_bank << 16)
+                   + lisp65_disk_lib_plan.code_base,
+               lisp65_disk_lib_plan.blob_len);
+    disk_lib_last_status = vm_load_lib_ext(
+        &lisp65_disk_lib_source, &lisp65_disk_lib_plan);
+    return disk_lib_last_status == L65M_OK;
+}
+#endif
 #endif
 /* F011-Build: `(load)` ist jetzt Bytecode-Lisp (nutzt %disk-read-sector/-byte/-load-file); der
  * alte C-1581-Dir-Walk ist RAUS (Regel-B-Redesign, spart ~816 B .text). io_load_file bleibt nur

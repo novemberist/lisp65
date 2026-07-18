@@ -66,7 +66,9 @@
              (if hit
                  hit
                  ((lambda (nt ns)
-                    (if (> nt 0) (%ide-disk-find codes nt ns (1- fuel)) nil))
+                    (if (%disk-directory-link-valid-p track sector nt ns)
+                        (if (> nt 0) (%ide-disk-find codes nt ns (1- fuel)) nil)
+                        nil))
                   (%disk-byte 0) (%disk-byte 1))))
            (%ide-disk-scan-entries codes 0))
           nil)
@@ -90,18 +92,27 @@
           (1+ count)))
        (%disk-byte i))))
 
+(defun %ide-disk-link-valid-p (track sector next-track next-sector)
+  (if (= next-track 0)
+      (> next-sector 0)
+      (if (and (<= next-track 80) (< next-sector 40))
+          (not (and (= next-track track) (= next-sector sector)))
+          nil)))
+
 (defun %ide-disk-effective-count (track sector fuel count last)
   (if (> fuel 0)
       (if (%disk-read-sector track sector)
           ((lambda (nt ns)
-             ((lambda (pair)
-                (if (> nt 0)
-                    (%ide-disk-effective-count nt ns (1- fuel) (car pair) (cdr pair))
-                    (cdr pair)))
-              (%ide-disk-effective-sector 2 (if (> nt 0) 255 ns) count last)))
+             (if (%ide-disk-link-valid-p track sector nt ns)
+                 ((lambda (pair)
+                    (if (> nt 0)
+                        (%ide-disk-effective-count nt ns (1- fuel) (car pair) (cdr pair))
+                        (cdr pair)))
+                  (%ide-disk-effective-sector 2 (if (> nt 0) 255 ns) count last))
+                 -1))
            (%disk-byte 0) (%disk-byte 1))
-          last)
-      last))
+          -1)
+      -1))
 
 ;; Sektoren direkt in Zeilen umsetzen. Der alte Pfad hielt erst die komplette
 ;; Datei als Byte-Cons-Liste und danach zusaetzlich die Zeilen im Heap. Diese
@@ -128,18 +139,20 @@
       (if (> fuel 0)
           (if (%disk-read-sector track sector)
               ((lambda (nt ns)
-                 ((lambda (state)
-                    ((lambda (remaining2 cur2 acc2)
-                       (if (and (> remaining2 0) (> nt 0))
-                           (%ide-disk-read-chain
-                            nt ns (1- fuel) remaining2 cur2 acc2)
-                           (reverse (cons (list->string (nreverse cur2)) acc2))))
-                     (car state) (car (cdr state)) (cdr (cdr state))))
-                  (%ide-disk-sector-into
-                   2 (if (> nt 0) 255 ns) remaining cur acc)))
+                 (if (%ide-disk-link-valid-p track sector nt ns)
+                     ((lambda (state)
+                        ((lambda (remaining2 cur2 acc2)
+                           (if (and (> remaining2 0) (> nt 0))
+                               (%ide-disk-read-chain
+                                nt ns (1- fuel) remaining2 cur2 acc2)
+                               (reverse (cons (list->string (nreverse cur2)) acc2))))
+                         (car state) (car (cdr state)) (cdr (cdr state))))
+                      (%ide-disk-sector-into
+                       2 (if (> nt 0) 255 ns) remaining cur acc))
+                     nil))
                (%disk-byte 0) (%disk-byte 1))
-              (reverse (cons (list->string (nreverse cur)) acc)))
-          (reverse (cons (list->string (nreverse cur)) acc)))))
+              nil)
+          nil)))
 
 ;; Save-Padding abstreifen: Spaces/Zeilenenden am DATEIENDE = KOPF der reversed Liste.
 (defun %ide-disk-trim-rev (rcodes)
@@ -157,7 +170,9 @@
   ((lambda (start)
      (if start
          ((lambda (keep)
-            (%ide-disk-read-chain (car start) (cdr start) 255 keep nil nil))
+            (if (< keep 0)
+                nil
+                (%ide-disk-read-chain (car start) (cdr start) 255 keep nil nil)))
           (%ide-disk-effective-count (car start) (cdr start) 255 0 0))
          nil))
    (%ide-disk-find (string->list name) 40 3 64)))
@@ -185,9 +200,9 @@
           (load-lib "m65d"))
       ((lambda (status)
          (if (= status 0)
-             (progn (set-symbol-value (quote %ide-error) nil) t)
+             (progn (set-symbol-value (quote ide-error) nil) t)
              (progn
-               (set-symbol-value (quote %ide-error) (%ide-m65d-message status))
+               (set-symbol-value (quote ide-error) (%ide-m65d-message status))
                (if (= status 9) t nil))))
        ;; R3 one-drive flow: only pre-transaction status 8 authorizes one
        ;; remount and retry.  Mid-transaction status 12 is terminal: no code
@@ -202,7 +217,7 @@
               status))
         (m65d-save file source)))
       (progn
-        (set-symbol-value (quote %ide-error) "persistence unavailable")
+        (set-symbol-value (quote ide-error) "persistence unavailable")
         nil)))
 
 ;; ---- Directory: Disk -> Dateinamenliste ----
@@ -238,9 +253,11 @@
       (if (%disk-read-sector track sector)
           ((lambda (acc2)
              ((lambda (nt ns)
-                (if (> nt 0)
-                    (%ide-dir-scan-directory nt ns (1- fuel) acc2)
-                    (%ide-rev-onto acc2 nil)))
+                (if (%disk-directory-link-valid-p track sector nt ns)
+                    (if (> nt 0)
+                        (%ide-dir-scan-directory nt ns (1- fuel) acc2)
+                        (%ide-rev-onto acc2 nil))
+                    nil))
               (%disk-byte 0) (%disk-byte 1)))
            (%ide-dir-scan-entries (%ide-dir-first-entry track sector) acc))
           (%ide-rev-onto acc nil))
@@ -251,7 +268,7 @@
 
 ;; ---- Public API: Disk <-> Buffer ----
 (defun ide-error ()
-  (symbol-value (quote %ide-error)))
+  (if (boundp (quote ide-error)) (symbol-value (quote ide-error)) nil))
 
 (defun %ide-compile-error-message ()
   ((lambda (err) (if err err "compile failed"))
@@ -279,18 +296,18 @@
       ((lambda (lines)
          (if lines
              (progn
-               (set-symbol-value (quote %ide-error) nil)
+               (set-symbol-value (quote ide-error) nil)
                (%ide-store-buffer
                 (%ide-disk-clean-buffer
                  (ide-make-buffer (if buffer-name (car buffer-name) file) lines)
                  file))
                't)
              (progn
-               (set-symbol-value (quote %ide-error) "source missing")
+               (set-symbol-value (quote ide-error) "source missing")
                nil)))
        (%ide-disk-read-lines file))
       (progn
-        (set-symbol-value (quote %ide-error) "not source")
+        (set-symbol-value (quote ide-error) "not source")
         nil)))
 
 (defun save-buffer-to (file &rest buffer-name)
@@ -305,10 +322,10 @@
                     nil))
               (%ide-buffer-source buf))
              (progn
-               (set-symbol-value (quote %ide-error) "not source")
+               (set-symbol-value (quote ide-error) "not source")
                nil))
          (progn
-           (set-symbol-value (quote %ide-error) "buffer missing")
+           (set-symbol-value (quote ide-error) "buffer missing")
            nil)))
    (%ide-selected-buffer buffer-name)))
 
@@ -319,11 +336,11 @@
          (if (%ide-fasl-slot-p dst)
              (if (%ide-disk-find (string->list dst) 40 3 64)
                  (if (compile-string (%ide-buffer-source buf) dst)
-                     (progn (set-symbol-value (quote %ide-error) nil) 't)
-                     (progn (set-symbol-value (quote %ide-error) (%ide-compile-error-message)) nil))
-                 (progn (set-symbol-value (quote %ide-error) "slot missing") nil))
-             (progn (set-symbol-value (quote %ide-error) "not fasl") nil))
-         (progn (set-symbol-value (quote %ide-error) "buffer missing") nil)))
+                     (progn (set-symbol-value (quote ide-error) nil) 't)
+                     (progn (set-symbol-value (quote ide-error) (%ide-compile-error-message)) nil))
+                 (progn (set-symbol-value (quote ide-error) "slot missing") nil))
+             (progn (set-symbol-value (quote ide-error) "not fasl") nil))
+         (progn (set-symbol-value (quote ide-error) "buffer missing") nil)))
    (%ide-selected-buffer buffer-name)))
 
 (defun compile-file-to-lib (src dst)
@@ -333,32 +350,30 @@
              (if (%ide-fasl-slot-p dst)
                  (if (%ide-disk-find (string->list dst) 40 3 64)
                      (if (compile-string source dst)
-                         (progn (set-symbol-value (quote %ide-error) nil) 't)
-                         (progn (set-symbol-value (quote %ide-error) (%ide-compile-error-message)) nil))
-                     (progn (set-symbol-value (quote %ide-error) "slot missing") nil))
-                 (progn (set-symbol-value (quote %ide-error) "not fasl") nil))
-             (progn (set-symbol-value (quote %ide-error) "source missing") nil)))
+                         (progn (set-symbol-value (quote ide-error) nil) 't)
+                         (progn (set-symbol-value (quote ide-error) (%ide-compile-error-message)) nil))
+                     (progn (set-symbol-value (quote ide-error) "slot missing") nil))
+                 (progn (set-symbol-value (quote ide-error) "not fasl") nil))
+             (progn (set-symbol-value (quote ide-error) "source missing") nil)))
        (%ide-disk-read-string src))
-      (progn (set-symbol-value (quote %ide-error) "not source") nil)))
+      (progn (set-symbol-value (quote ide-error) "not source") nil)))
 
 ;; ---- Public API: Buffer -> transiente laufende Session ----
 (defun eval-buffer (buffer-name)
-  (if (eq buffer-name (quote %loop))
+  (if (eq buffer-name 0)
       ((lambda (form)
          (if (eq form (quote %fasl-eof))
              't
-             (progn
-               (lcc-run form)
-               (eval-buffer (quote %loop)))))
+             (progn (lcc-run form) (eval-buffer 0))))
        (%fasl-read-form))
       ((lambda (buf)
          (if buf
              (progn
-               (set-symbol-value (quote %ide-error) nil)
+               (set-symbol-value (quote ide-error) nil)
                (%cs-read-open (%ide-buffer-source buf))
-               (eval-buffer (quote %loop)))
+               (eval-buffer 0))
              (progn
-               (set-symbol-value (quote %ide-error) "buffer missing")
+               (set-symbol-value (quote ide-error) "buffer missing")
                nil)))
        (%ide-buffers-find buffer-name (%ide-buffers-alist)))))
 
@@ -469,7 +484,7 @@
       (%ide-state-with-message state "no search")))
 
 (defun %ide-mini-motion-submit (state action file)
-  (if (eq action 'goto-line)
+  (if (eq action 1012)
       (if (> (string-length file) 0)
           ((lambda (n max)
              ((lambda (line)
@@ -492,7 +507,7 @@
 (defun %ide-find-key (state)
   (%ide-mini-start
    state
-   'find-file
+   1002
    "Find file: "
    ""
    (%ide-disk-current-file (ide-state-buffer state))
@@ -501,18 +516,18 @@
 (defun %ide-write-key (state)
   (%ide-mini-start
    state
-   'write-file
+   1004
    "Write file: "
    ""
    (%ide-disk-current-file (ide-state-buffer state))
    (remove-if-not (function %ide-source-file-p) (cdr (dir)))))
 
 (defun %ide-mini-file-submit (state action file)
-  (cond ((eq action 'find-file)
+  (cond ((eq action 1002)
          (%ide-find-file-named state file))
-        ((eq action 'write-file)
+        ((eq action 1004)
          (%ide-write-file-named state file))
-        ((eq action 'switch-buffer)
+        ((eq action 1006)
          (if file
              (progn
                (%ide-store-buffer (ide-state-buffer state))
@@ -520,7 +535,7 @@
                 (%ide-state-with-buffer state (%ide-resume-buffer file))
                 "switched"))
              (%ide-state-with-message state "no buffer")))
-        ((eq action 'compile-load)
+        ((eq action 1008)
          (if file
              (progn
                (%ide-store-buffer (ide-state-buffer state))
@@ -528,7 +543,7 @@
                    (if (load-lib file)
                        (%ide-state-with-message state "compiled")
                        (progn
-                         (set-symbol-value (quote %ide-error) "load failed")
+                         (set-symbol-value (quote ide-error) "load failed")
                          (%ide-state-with-message state "load failed")))
                    (%ide-state-with-message state (ide-error))))
              (%ide-state-with-message state "no file")))
@@ -546,7 +561,7 @@
                     'mini state
                     (if (> (string-length input) 0) action 'search-next)
                     file))
-                  ((eq action 'goto-line)
+                  ((eq action 1012)
                    (%ide-mini-motion-submit state action file))
                   (t (%ide-state-with-message state "unknown command")))))
       (%ide-mini-file-submit state action file)))

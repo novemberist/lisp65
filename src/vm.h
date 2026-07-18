@@ -112,6 +112,9 @@ obj vm_family_internal_primitive(uint8_t pid, obj *args, uint8_t nargs);
 void vm_dir_reset(void);
 uint16_t vm_dir_count(void);
 uint16_t vm_dir_capacity(void);
+#ifdef LISP65_C1_COMPILER_TIER
+uint8_t vm_dir_truncate(uint16_t count);
+#endif
 int  vm_dir_add(obj name_sym, uint8_t bank, uint16_t off, uint16_t len);  /* Index oder -1 */
 /* dir_n auf die naechste 8er-Block-Grenze padden (Disk-Bytecode-Libs; s. vm.c/docs). */
 void vm_dir_align8(void);

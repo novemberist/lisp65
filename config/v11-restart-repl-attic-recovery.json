@@ -1,0 +1,43 @@
+{
+  "format": "lisp65-v11-restart-repl-attic-recovery-v1",
+  "version": 1,
+  "status": "failed-hard-gates-rolled-back-not-promoted",
+  "attic_tenant": {
+    "address": 136314880,
+    "window_bytes": 65536,
+    "header_bytes": 64,
+    "persistence": "reset-stable-power-volatile",
+    "generation": "resolved-profile-build-id",
+    "source": "product-medium-bank5.bin-via-cold-stager",
+    "reconstructible": true,
+    "sole_copy": false
+  },
+  "integrity": {
+    "artifact_identity": "full-sha256-compared-before-every-restore-against-the-cold-stager-bank0-handoff",
+    "device_payload_integrity": "crc32-recomputed-before-and-after-enhanced-dma-restore",
+    "header_integrity": "crc32-with-zeroed-header-crc-field",
+    "failure": "fail-closed-restart-unavailable-reboot-from-disk"
+  },
+  "acceptance": {
+    "real_links": 1,
+    "hardware_smoke": "receipt-less-two-consecutive-restart-repl-calls",
+    "hard_gate_policy": "stop-and-return-to-owner-on-any-red-gate"
+  },
+  "outcome": {
+    "real_links_consumed": 1,
+    "stager_probe": "passed-at-6842-of-16384-bytes-with-35-of-64-byte-chain-trampoline",
+    "host_integrity_gates": "passed-full-sha-header-crc32-payload-crc32-and-reject-before-write-mutations",
+    "product_link": "failed-at-first-seed-link-before-a-candidate-prg-existed",
+    "resident_growth_lower_bound_bytes": 1291,
+    "baseline_bss": "0xba4b..0xc311",
+    "candidate_bss": "0xbf56..0xc81c",
+    "candidate_noinit": "0xc81c..0xc83c",
+    "fixed_runtime_overlay_vma": "0xc356",
+    "address_model_failure": "llvm-mos uintptr_t is 16-bit; converting physical Bank-5 address 0x00050000 to uintptr_t truncated it to 0x0000",
+    "hardware_smoke": "not-run",
+    "capacity_debit": "none",
+    "rollback": "all probe product, stager, ABI, error-table, and runtime-overlay source changes removed"
+  },
+  "c2_note": "Bank 5 is session-mutated before C2, so restart requires a pristine whole-image restore. The bounded pre-C2 resident implementation exceeded Bank 0 before it could link; C2's immutable-code/mutable-session split must reduce the restore surface rather than preserve this mechanism.",
+  "claim_limit": "Diagnosis only: no product candidate linked, no hardware smoke ran, no capacity debit is authorized, and no restart-repl device semantics are claimed."
+}

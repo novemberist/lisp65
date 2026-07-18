@@ -30,10 +30,10 @@
       "fidelity": "emulator-valid",
       "required_gate": "G3",
       "phase": "stager",
-      "setup": "Attic catalog present with a bad catalog or record CRC",
+      "setup": "Attic catalog or the SHA-bound library shelf is present with a bad catalog or record CRC",
       "action": "run the stager decision and validation path",
-      "expected": "catalog is never chained; complete product-media restage is followed by re-verification, with at most two attempts and then the pinned media-error halt",
-      "oracle": "stager phase receipt plus post-stage SHA readback",
+      "expected": "catalog and shelf are never trusted independently; complete product-media restage is followed by re-verification of Bank 5, runtime overlays and the library shelf, with at most two attempts and then the pinned media-error halt",
+      "oracle": "stager phase receipt plus post-stage Bank-5, overlay and shelf SHA readback",
       "core_binding": "emulator-stack"
     },
     {
@@ -41,10 +41,10 @@
       "fidelity": "emulator-valid",
       "required_gate": "G3",
       "phase": "stager",
-      "setup": "Bank 5 and Attic catalog absent as after a power loss",
+      "setup": "Bank 5, Attic catalog and library shelf absent as after a power loss",
       "action": "run the stager decision and staging path against deterministic media input",
-      "expected": "Bank 5 and Attic are fully restaged and re-verified before the product chain step",
-      "oracle": "stager phase receipt plus post-stage SHA readback",
+      "expected": "Bank 5, runtime overlays and the library shelf are fully restaged and re-verified before the product chain step",
+      "oracle": "stager phase receipt plus post-stage Bank-5, overlay and shelf SHA readback",
       "core_binding": "emulator-stack"
     },
     {
@@ -52,9 +52,9 @@
       "fidelity": "emulator-valid",
       "required_gate": "G3",
       "phase": "stager",
-      "setup": "valid build-id- and profile-bound Bank-5 preload and Attic catalog already staged",
+      "setup": "valid build-id- and profile-bound Bank-5 preload, Attic catalog and library shelf already staged",
       "action": "validate descriptor build identity and both regions, then continue through the chain-control path",
-      "expected": "restage is skipped and only the exact descriptor-bound Workbench PRG is selected",
+      "expected": "restage is skipped only after all three staged regions verify, and only the exact descriptor-bound Workbench PRG is selected",
       "oracle": "stager phase receipt and product-entry marker",
       "core_binding": "emulator-stack"
     },
@@ -96,10 +96,10 @@
       "fidelity": "hardware-only",
       "required_gate": "G6",
       "phase": "cold-start",
-      "setup": "machine unpowered, product D81 mounted on drive 8, Bank 5 and Attic power-volatile",
+      "setup": "machine unpowered, product D81 mounted on drive 8, Bank 5, runtime overlays and the library shelf power-volatile",
       "action": "apply power with no host, JTAG, Etherload or typed BOOT command",
-      "expected": "AUTOBOOT enters the stager, restages Bank 5 and Attic, chains the bound product and reaches the REPL",
-      "oracle": "hardware cold-start receipt with physical cycle id and staged-region SHA readback",
+      "expected": "AUTOBOOT enters the stager, restages Bank 5, runtime overlays and the library shelf, chains the bound product and reaches the REPL",
+      "oracle": "hardware cold-start receipt with physical cycle id and Bank-5, overlay and shelf SHA readback",
       "core_binding": "hardware-receipt"
     },
     {
@@ -151,10 +151,10 @@
       "fidelity": "hardware-only",
       "required_gate": "G6",
       "phase": "reset-recovery",
-      "setup": "valid profile-bound Bank-5 preload and Attic catalog followed by a physical reset that preserves both",
-      "action": "restart through the product boot chain",
-      "expected": "catalog validation succeeds, restaging is skipped and the same product reaches the REPL",
-      "oracle": "hardware reset receipt with before and after region SHAs",
+      "setup": "a cold boot stages the exact profile-bound Bank-5 preload, runtime overlays and library shelf, reaches the REPL without loading IDE, IDEX or M65D, then a physical warm reset preserves all three staged regions",
+      "action": "restart from the product disk through the valid-catalog fast path, reach the REPL, replace the product medium with an arbitrary valid non-product 1581 medium, load IDE, IDEX and M65D from the Attic shelf, and call one bound function from each library",
+      "expected": "the physical platform reset preserves all verified staged regions, the explicit disk restart returns to a usable Lisp65 banner and REPL without restaging valid shelf bytes, all three libraries load from the SHA-bound Attic shelf without reading their D81 entries, the standard composition remains callable, and invalid or absent shelf data falls back fail-closed to the proven D81 path",
+      "oracle": "physical-reset receipt with before and after shelf SHA readback, stager trace proving no restage, exact library-container SHA bindings, post-swap load transcript and one callable observation per library",
       "core_binding": "hardware-receipt"
     },
     {

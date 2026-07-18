@@ -1,5 +1,6 @@
 /* On-demand LCC installer slices. The resident facade runs transient code later. */
 #include "lcc_install_overlay.h"
+#include "c1_phase_probe.h"
 
 #ifdef LISP65_LCC_INSTALL
 
@@ -160,6 +161,9 @@ LCC_SLICE(00) uint8_t lcc_install_phase_00(void *context) {
     lcc_install_status status = (lcc_install_status)lcc_enter(
         work, LCC_INSTALL_PHASE_SHAPE);
     if (status != LCC_INSTALL_OK) return (uint8_t)status;
+    if (!work->fn_count)
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_INSTALL,
+                                 LISP65_C1_PROBE_EDGE_BEGIN);
 
     if (!lcc_cons_p(work->current_fn))
         return lcc_leave(work, work->fn_count ? LCC_INSTALL_ERR_SHAPE
@@ -323,6 +327,8 @@ LCC_SLICE(02) uint8_t lcc_install_phase_02(void *context) {
 
     if (work->transient) {
         work->result = NIL;
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_INSTALL,
+                                 LISP65_C1_PROBE_EDGE_END);
         return lcc_leave(work, LCC_INSTALL_OK, LCC_INSTALL_PHASE_COUNT, 1);
     }
 
@@ -338,6 +344,8 @@ LCC_SLICE(02) uint8_t lcc_install_phase_02(void *context) {
                          ? work->defname : MK_BCODE(directory_index);
         if (work->defname != NIL)
             set_sym_function(work->defname, MK_BCODE(directory_index));
+        lisp65_c1_phase_mark_for(LISP65_C1_PROBE_INSTALL,
+                                 LISP65_C1_PROBE_EDGE_END);
         return lcc_leave(work, LCC_INSTALL_OK, LCC_INSTALL_PHASE_COUNT, 1);
     }
 

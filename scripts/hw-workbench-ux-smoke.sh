@@ -26,6 +26,7 @@ remote_d81="${MVP_VM_SHIP_REMOTE_D81:-L65WB.D81}"
 ship_prg="${MVP_VM_SHIP_PRG:-build/ship/lisp65-mvp-workbench.prg}"
 ship_blob="${MVP_VM_SHIP_BLOB:-build/ship/lisp65-mvp-workbench.blob.bin}"
 ship_overlays="${MVP_VM_SHIP_OVERLAYS:-build/ship/lisp65-mvp-workbench.overlays.bin}"
+ship_shelf="${MVP_VM_SHIP_SHELF:-}"
 jtag_repl_runner="${JTAG_REPL_RUNNER:-scripts/hw-jtag-repl.sh}"
 bootstrap_retry_wait_sec="${JTAG_BOOTSTRAP_RETRY_WAIT_SEC:-2}"
 jtag_input_retry_wait_sec="${JTAG_INPUT_RETRY_WAIT_SEC:-0.2}"
@@ -270,9 +271,9 @@ run_phase() {
 # because they belong to the REPL session/test closure rather than the product.
 install_r5_harness_helpers() {
   run_phase r5-harness-helpers '"r5-harness-ok"' \
-    '(defun r5-hw-store-buffer (buf) (progn (set-symbol-value (quote *ide-buffers*) (cons (cons (ide-buffer-name buf) buf) (symbol-value (quote *ide-buffers*)))) (quote t)))' \
+    '(defun r5-hw-store-buffer (buf) (progn (set-symbol-value (quote ide-buffers) (cons (cons (ide-buffer-name buf) buf) (symbol-value (quote ide-buffers)))) (quote t)))' \
     '(defun r5-hw-find-buffer (name alist) (if alist (if (string= name (car (car alist))) (cdr (car alist)) (r5-hw-find-buffer name (cdr alist))) nil))' \
-    '(defun r5-hw-resume-buffer (name) ((lambda (found) (if found found (ide-make-buffer name (list "")))) (r5-hw-find-buffer name (symbol-value (quote *ide-buffers*)))))' \
+    '(defun r5-hw-resume-buffer (name) ((lambda (found) (if found found (ide-make-buffer name (list "")))) (r5-hw-find-buffer name (symbol-value (quote ide-buffers)))))' \
     '(defun r5-hw-set-rows (state rows) (progn (rplaca (cdr (cdr (cdr (cdr (cdr (cdr state)))))) rows) state))' \
     '"r5-harness-ok"'
 }
@@ -294,7 +295,7 @@ run_phase core-kind "bytecode" \
   "(function-kind (quote compile-buffer-to-lib))"
 
 run_phase persistence-create "(t nil bytecode)" \
-  "(set-symbol-value (quote *ide-buffers*) nil)" \
+  "(set-symbol-value (quote ide-buffers) nil)" \
   "(r5-hw-store-buffer (ide-make-buffer \"ap6src\" (list \"(defun ap6-persisted () 611)\")))" \
   "(list (save-buffer-to \"ap6src\" \"ap6src\") (ide-error) (function-kind (quote m65d-save)))"
 
@@ -339,6 +340,7 @@ if [ "$deploy" = "1" ]; then
   set -- --tools "$tools_dir" --mount "$remote_d81" \
     --preload-bin 0x08000000 "$ship_overlays" \
     --preload-bin 0x050000 "$ship_blob" --run
+  [ -z "$ship_shelf" ] || set -- "$@" --preload-bin 0x08100000 "$ship_shelf"
   [ -n "$ip" ] && set -- "$@" --ip "$ip"
   [ "$dry_run" = "1" ] && set -- "$@" --dry-run
   set -- "$@" "$ship_prg"
@@ -415,27 +417,27 @@ run_phase reject-fasl-save "\"not source\"" \
   "(setq x (ide-step x (list (quote key) 50 nil)))" \
   "(car (cdr (setq x (ide-step x (list (quote key) 13 nil)))))"
 
-run_phase find-tab "(find-file \"Find file: \" \"DEMO\")" \
+run_phase find-tab "(1002 \"Find file: \" \"DEMO\")" \
   "(setq x (ide-make-state (ide-make-buffer \"scratch\" (list \"\"))))" \
   "(setq x (ide-step x (list (quote key) 24 nil)))" \
   "(setq x (ide-step x (list (quote key) 6 nil)))" \
   "(setq x (ide-step x (list (quote key) 9 nil)))" \
-  "(setq x (symbol-value (quote %ide-mini)))" \
+  "(setq x (symbol-value (quote ide-step)))" \
   "(list (car x) (car (cdr x)) (car (cdr (cdr x))))"
 
-run_phase buffer-tab "(switch-buffer \"Buffer: \" \"b\" \"a\")" \
-  "(set-symbol-value (quote *ide-buffers*) nil)" \
+run_phase buffer-tab "(1006 \"Buffer: \" \"b\" \"a\")" \
+  "(set-symbol-value (quote ide-buffers) nil)" \
   "(r5-hw-store-buffer (ide-make-buffer \"a\" (list \"aa\")))" \
   "(r5-hw-store-buffer (ide-make-buffer \"b\" (list \"bb\")))" \
   "(setq x (ide-make-state (r5-hw-resume-buffer \"b\")))" \
   "(setq x (ide-step x (list (quote key) 24 nil)))" \
   "(setq x (ide-step x (list (quote key) 2 nil)))" \
   "(setq x (ide-step x (list (quote key) 9 nil)))" \
-  "(setq x (symbol-value (quote %ide-mini)))" \
+  "(setq x (symbol-value (quote ide-step)))" \
   "(list (car x) (car (cdr x)) (car (cdr (cdr x))) (car (cdr (cdr (cdr x)))))"
 
 run_phase buffer-cycle "\"a\"" \
-  "(set-symbol-value (quote *ide-buffers*) nil)" \
+  "(set-symbol-value (quote ide-buffers) nil)" \
   "(r5-hw-store-buffer (ide-make-buffer \"a\" (list \"aa\")))" \
   "(r5-hw-store-buffer (ide-make-buffer \"b\" (list \"bb\")))" \
   "(r5-hw-store-buffer (ide-make-buffer \"c\" (list \"cc\")))" \
@@ -515,24 +517,24 @@ run_phase navigation-aliases "(\"a\" \"b\" \"cd\")" \
   "(progn (setq x (ide-step x (list (quote key) 10 nil))) nil)" \
   "(ide-buffer-lines (car x))"
 
-run_phase mini-history "(find-file \"Find file: \" \"demo\")" \
-  "(set-symbol-value (quote %ide-mini-history) (list (quote find-file) \"demo\"))" \
+run_phase mini-history "(1002 \"Find file: \" \"demo\")" \
+  "(set-symbol-value (quote %ide-mini-history) (list 1002 \"demo\"))" \
   "(setq x (ide-make-state (ide-make-buffer \"scratch\" (list \"\"))))" \
   "(setq x (ide-step x (list (quote key) 24 nil)))" \
   "(setq x (ide-step x (list (quote key) 6 nil)))" \
   "(setq x (ide-step x (list (quote key) 16 nil)))" \
-  "(setq x (symbol-value (quote %ide-mini)))" \
+  "(setq x (symbol-value (quote ide-step)))" \
   "(list (car x) (car (cdr x)) (car (cdr (cdr x))))"
 
 run_phase mini-edit "\"d\"" \
-  "(set-symbol-value (quote %ide-prefix) nil)" \
+  "(set-symbol-value (quote ide-event-command) nil)" \
   "(setq x (ide-make-state (ide-make-buffer \"scratch\" (list \"\"))))" \
   "(setq x (ide-step x (list (quote key) 24 nil)))" \
   "(setq x (ide-step x (list (quote key) 6 nil)))" \
   "(setq x (ide-step x (list (quote key) 100 nil)))" \
   "(setq x (ide-step x (list (quote key) 101 nil)))" \
   "(setq x (ide-step x (list (quote key) 127 nil)))" \
-  "(car (cdr (cdr (symbol-value (quote %ide-mini)))))"
+  "(car (cdr (cdr (symbol-value (quote ide-step)))))"
 
 run_phase search-goto "\"moved\"" \
   "(progn (setq x (ide-make-state (ide-make-buffer \"scratch\" (list \"abc\" \"needle\" \"tail\")))) nil)" \
@@ -582,7 +584,7 @@ if [ "$deploy" = "1" ]; then
 fi
 
 run_phase mx-eval-buffer "(\"evaluated\" 42)" \
-  "(set-symbol-value (quote *ide-buffers*) nil)" \
+  "(set-symbol-value (quote ide-buffers) nil)" \
   "(setq x (ide-make-state (ide-make-buffer \"e\" (list \"(defun eh () 42)\" \"(eh)\"))))" \
   "(setq x (ide-step x (list (quote key) 24 nil)))" \
   "(setq x (ide-step x (list (quote key) 120 nil)))" \

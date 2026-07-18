@@ -1,0 +1,147 @@
+{
+  "format": "lisp65-v11-architecture-decision-v1",
+  "version": 1,
+  "id": "v11-c-required-ext-relief",
+  "status": "owner-approved",
+  "decided_on": "2026-07-15",
+  "selected": "C1-compiler-tier-deresidentization",
+  "reviewed_memo": {
+    "path": "docs/planning/v1.1-c-ext-relief-design-memo.md",
+    "recording_commit": "4effaf9ee0dfa0229863c66f7d6eeed580dab3aa",
+    "sha256_at_recording_commit": "dbf0ba37029c79c4e7e5bb088e5f67501ea96946c9ddc676c335c03b3f6d05a4"
+  },
+  "rejected_for_1.1": {
+    "id": "C2-direct-Attic-execution",
+    "disposition": "committed-1.2-cure-for-the-dated-C1-latency-exception",
+    "reason": "C2 remains too broad for the 1.1 relief target, but is now a required 1.2 item because every admissible fast definition-cycle alternative was independently measured and rejected."
+  },
+  "dependency": {
+    "required_first": "1.1-E-detached-buffer-seam",
+    "condition": "EXT-neutral",
+    "alternative": "a separately proved non-EXT temporary execution window"
+  },
+  "promotion_gate": {
+    "exact_compiler_tier_exclusion_bytes": 9573,
+    "minimum_post_block_ext_margin_bytes": 64,
+    "hard_minimum_before_unfreezing_bytes": 16,
+    "named_link_deviations_required": true,
+    "compiler_private_references_after_retirement": 0,
+    "compile_result_equivalence_required": true,
+    "compile_performance": {
+      "required": true,
+      "accepted_evidence": [
+        "measured-before-and-after-compile-time-with-regression-escalated",
+        "batched-staging-window-to-buffer-write-seam-with-measured-throughput"
+      ],
+      "forbidden_assumption": "byte-at-a-time-buffer-set-is-fast-enough"
+    },
+    "overlay_headroom_required": true,
+    "peak_ext_failure_policy": "design-stop-never-lower-the-floor",
+    "fail_closed_rollback_classes": [
+      "gc",
+      "oom",
+      "malformed-shelf-data",
+      "reset"
+    ]
+  },
+  "reopening": {
+    "status": "owner-approved",
+    "resolution_status": "dated-latency-exception-owner-approved",
+    "promotion_status": "promotion-authorized-after-poke-harness-fix-pending-regular-repin",
+    "decided_on": "2026-07-16",
+    "reason": "Wave-1 G5 exposed nested-entry correctness and end-to-end latency regressions before any case receipt was created.",
+    "hardware_entry_seams": [
+      "lcc-run",
+      "eval",
+      "eval-buffer",
+      "compile-string"
+    ],
+    "entry_seam_contract": "config/v11-c1-entry-seams.json",
+    "rollback_rule": "allow retirement under an active transient stack only when the complete persistent region is below it; reject overlap without mutation",
+    "performance_gate": {
+      "load_lib_max_ratio_to_v1_0_1": 1.15,
+      "single_form_repl_latency": "no-perceptible-regression",
+      "optimization_after_phase_measurement": true,
+      "measurement_method": "in-product-frame-counter-separated-from-transport-and-harness-time",
+      "load_lib_seconds": 6.0,
+      "load_lib_limit_seconds": 6.9,
+      "warm_nested_entry_milliseconds": 260,
+      "direct_resident_equivalent_milliseconds": 200,
+      "definitions_free_warm_path_status": "owner-accepted-2026-07-16-scoped-to-definitions-free-sequences",
+      "definition_call_cycle_required": true,
+      "definition_call_observed_frames": 95,
+      "definition_call_observed_milliseconds": 1900,
+      "definition_call_max_frames": 98,
+      "definition_call_hardware_baseline_frames": [95, 96, 96],
+      "definition_call_session_curve_frames": [95, 97, 95, 97, 96, 95, 96, 96, 98, 95, 98, 96],
+      "definition_call_session_curve_classification": "jitter-without-demonstrated-growth-or-plateau",
+      "definition_call_quantization_tolerance_frames": 1,
+      "definition_call_quantization_policy": "historical-95-to-96-correction-closed-not-iterated",
+      "definition_call_session_band_policy": "owner-corrected-2026-07-17-from-twelve-cycle-curve; values-above-98-stop; no-iterative-widening",
+      "definition_call_longer_observation_frames": 110,
+      "definition_call_longer_observation_disposition": "visible-unexplained",
+      "definition_call_disposition": "documented-limitation-not-performance-pass",
+      "owner_result": "documented-limitation-session-band-owner-approved-2026-07-17-cure-C2-1.2"
+    },
+    "capacity_resolution": {
+      "bank_delta_bytes": -22,
+      "bank_margin_over_target_bytes": 266,
+      "overlay_headroom_before_bytes": 30,
+      "overlay_headroom_after_bytes": 0,
+      "runtime_overlay_bank_delta_bytes": 1280,
+      "runtime_overlay_bank_margin_bytes": 64,
+      "authorization_status": "reissued-under-dated-latency-exception",
+      "overlay_rule": "measured-zero-headroom-not-promotable-while-authorization-is-suspended",
+      "runtime_overlay_bank_rule": "measured-64-byte-margin-not-promotable-while-authorization-is-suspended",
+      "wave_3_consequence": "1.1-L-blocked-until-measured-structural-overlay-relief"
+    },
+    "identity_restore_probe": {
+      "status": "capacity-red-rolled-back",
+      "attempt_policy": "one-bounded-attempt-consumed-no-further-tuning-authorized",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-identity-restore-capacity-probe-receipt.json",
+      "receipt_sha256": "eaa7f48cb9678a5abff29660df3c4c2270d92d289ea3227bea1a1f7e2d22d527",
+      "capacity": {
+        "l65m_commit_00_baseline_bytes": 1403,
+        "l65m_commit_00_candidate_bytes": 1895,
+        "l65m_commit_00_limit_bytes": 1792,
+        "l65m_commit_01_baseline_bytes": 564,
+        "l65m_commit_01_candidate_bytes": 1098,
+        "l65m_commit_01_packed_growth_bytes": 512,
+        "c1_lifetime_baseline_bytes": 1728,
+        "c1_lifetime_candidate_bytes": 1908,
+        "c1_lifetime_limit_bytes": 1792,
+        "runtime_overlay_bank_baseline_bytes": 65472,
+        "runtime_overlay_bank_limit_bytes": 65536,
+        "runtime_overlay_bank_baseline_margin_bytes": 64
+      },
+      "unrun_because_capacity_failed_first": [
+        "reset-safety",
+        "repeated-definition-cycle-zero-leak",
+        "after-definition-frame-measurement"
+      ],
+      "rollback": "all restore code removed and a clean baseline product relink restored the exact pre-probe section and footprint sizes",
+      "next_owner_decision": [
+        "dated-1.90-second-1.1-exception-with-C2-as-the-named-1.2-cure",
+        "C1-rollback-and-immediate-C2-replanning"
+      ],
+      "owner_resolution": "dated-1.90-to-1.96-second-session-band-exception-selected"
+    },
+    "latency_exception": {
+      "contract": "config/v11-c1-definition-call-latency-exception.json",
+      "contract_sha256": "77a8128ed5310b5ca6da0741b762a4f8d45afd443e8176121867bb00e66480a6",
+      "performance_bar_result": "not-passed",
+      "gate_result": "limitation-stable",
+      "cure": "C2-direct-Attic-execution-in-1.2",
+      "automatic_renewal": false
+    },
+    "poke_differential_blocker": {
+      "status": "closed-harness-drift-product-regression-refuted",
+      "diagnosis": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-poke-differential-diagnosis.json",
+      "diagnosis_sha256": "ab44e599025916bcfa8ba1f9b724379b9899d033440f6d92643b853644cf4961",
+      "structural_fix": "SHA-bound observation baseline replaces execution of mutable historical source suites",
+      "differential_cases": 357,
+      "observation_differences": 0
+    }
+  },
+  "wave_rule": "Wave 1 cannot seal without a successful C1 gate receipt whose definition-call value is explicitly LIMITATION-STABLE, performance-bar=not-passed and cure=C2/1.2."
+}

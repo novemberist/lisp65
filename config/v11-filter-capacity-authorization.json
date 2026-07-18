@@ -1,0 +1,73 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-filter-resident-delivery-capacity",
+  "status": "owner-authorized",
+  "authorized_on": "2026-07-16",
+  "source_commit": "257042b700dd5722195b001b573764f397b39df7",
+  "delivery_receipt_before_authorization": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-filter-delivery-block-receipt.json",
+    "sha256": "d98957a461e58639eb1908c3740c1d06b3951cd417ac72911dbe0bf70bfa77aa"
+  },
+  "capacity": {
+    "bank": {
+      "baseline_post_boot_reserve_bytes": 1795,
+      "candidate_post_boot_reserve_bytes": 1795,
+      "target_bytes": 1536,
+      "candidate_margin_bytes": 259,
+      "authorized_delta_bytes": 0
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 25628,
+      "candidate_standard_composition_headroom_bytes": 25537,
+      "floor_bytes": 16384,
+      "authorized_delta_bytes": -91,
+      "candidate_margin_bytes": 9153
+    },
+    "symbols": {
+      "baseline_headroom": 394,
+      "candidate_headroom": 391,
+      "required_headroom": 32,
+      "authorized_delta": -3
+    },
+    "namepool": {
+      "baseline_headroom_bytes": 5708,
+      "candidate_headroom_bytes": 5668,
+      "required_headroom_bytes": 384,
+      "authorized_delta_bytes": -40
+    },
+    "directory": {
+      "baseline_resident_entries": 205,
+      "candidate_resident_entries": 208,
+      "raw_delta": 3,
+      "baseline_post_align_headroom": 176,
+      "candidate_post_align_headroom": 176,
+      "post_align_delta": 0,
+      "reason": "The three resident entries consume existing eight-entry alignment slack."
+    },
+    "overlay_vma": {
+      "baseline_base": "0xc354",
+      "candidate_base": "0xc354",
+      "ceiling": "0xc356",
+      "authorized_delta_bytes": 0,
+      "remaining_bytes": 2
+    },
+    "boot_overlay": {
+      "baseline_bytes": 1669,
+      "candidate_bytes": 1669,
+      "authorized_delta_bytes": 0,
+      "baseline_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0",
+      "candidate_sha256": "2ca0a046ed4c59cb36a52294a89110bcc522ed622c3b4dbd1128436ae268a1d0"
+    }
+  },
+  "promotion_gate": {
+    "resident_delivery": "pass",
+    "direct_funcall_apply": "pass",
+    "four_engine_lists_parity": "pass",
+    "surface_delivery_parity": "pass: eval,filter",
+    "canonical_product_link": "pass",
+    "overlay_neutral": true,
+    "boot_overlay_byte_identical": true
+  },
+  "claim_limit": "This authorization accepts the measured filter capacity debits and permits inclusion in the next wave product candidate. It does not promote a wave product set, authorize banner capacity, or claim hardware evidence."
+}

@@ -29,9 +29,20 @@ unsigned char io_disk_load_named(const char *name);
 #include "l65m_validate.h"
 /* Stufe 2: eine Bytecode-Lib ab (track,sektor) laden — nach Bank 5 stagen + vm_load_lib_ext. 1=ok. */
 unsigned char io_disk_load_lib(unsigned char track, unsigned char sector);
+#ifdef LISP65_ATTIC_LIBRARY_SHELF
+#include "obj.h"
+/* Load a verified L65M container from the reset-persistent 1.1 Attic shelf. */
+unsigned char io_attic_load_lib(obj name);
+#endif
 /* Lib-Registrierung ab bereits gestageter Datei (Test-Naht: xemu ohne F011). */
 unsigned char io_disk_lib_staged(unsigned int n);
 l65m_status io_disk_lib_status(void);       /* letzter stabile L65M-Status */
+#ifdef LISP65_C1_COMPILER_TIER
+/* Private C1 lifetime binding. No new resident record: the temporary compiler
+ * consumes the exact preflight plan of the most recent shelf load. */
+extern l65m_plan lisp65_disk_lib_plan;
+extern l65m_source lisp65_disk_lib_source;
+#endif
 #endif
 
 #ifdef MEGA65_F011_WRITE

@@ -4,10 +4,16 @@
 #include "mem.h"
 #include "symbol.h"
 #include "v2_native_function_dispatch.h"
+#if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
+#include "buffer_overlay.h"
+#ifdef LISP65_RUNTIME_OVERLAY
+#include "vm_runtime_overlay.h"
+#endif
+#endif
 #if defined(MEGA65_F011_LOAD) || defined(LISP65_V2_WORKBENCH_SERVICES) || defined(LISP65_V2_TREE_PRIMITIVE_VIEW)
 #include "eval.h"        /* load_source for %disk-load-file */
 #endif
-#ifdef MEGA65_F011_LOAD
+#if defined(MEGA65_F011_LOAD) || defined(LISP65_C1_COMPILER_TIER)
 #include "io.h"
 #endif
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
@@ -109,6 +115,16 @@ static uint16_t dir_off_get(uint16_t di) {
 void vm_dir_reset(void) { dir_n = 0; }
 uint16_t vm_dir_count(void) { return dir_n; }   /* Diagnose: registrierte Objekte (Objekt-Effizienz) */
 uint16_t vm_dir_capacity(void) { return VM_DIR_MAX; }
+#ifdef LISP65_C1_COMPILER_TIER
+#if defined(__mos__) && defined(LISP65_RUNTIME_OVERLAY)
+__attribute__((section(".lisp65_rt_c1_compiler"), noinline))
+#endif
+uint8_t vm_dir_truncate(uint16_t count) {
+    if (count > dir_n) return 0;
+    dir_n = count;
+    return 1;
+}
+#endif
 int  vm_dir_add(obj sym, uint8_t bank, uint16_t off, uint16_t len) {
     if (dir_n >= VM_DIR_MAX || len > 255) return -1;     /* len>255 / Bank-Wechsel: laut scheitern */
     if (dir_n == 0) dir_bank0 = bank;
@@ -755,6 +771,41 @@ static __attribute__((noinline)) uint8_t vm_byte_args(obj *a, uint8_t n, uint8_t
 }
 #endif
 
+#if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
+#ifdef LISP65_C1_COMPILER_TIER
+#include "c1_compiler_overlay.h"
+#endif
+#ifdef LISP65_RUNTIME_OVERLAY
+static LISP65_RESIDENT_ISLAND_FN obj vm_buffer_call(
+#else
+static __attribute__((noinline)) obj vm_buffer_call(
+#endif
+        uint8_t pid, obj *a, uint8_t n) {
+    lisp65_buffer_overlay_context *context =
+        (lisp65_buffer_overlay_context *)(void *)vm_codebuf;
+    uint8_t slot = (uint8_t)(LISP65_BUFFER_OVERLAY_READ_SLOT +
+                             pid - LISP65_BUFFER_PRIM_FIRST);
+    context->args = a;
+    context->argc = n;
+#ifdef LISP65_RUNTIME_OVERLAY
+    /* The transport writes ENTRY_NOT_RUN before any fallible step. A failed
+     * load therefore leaves vm_status nonzero and all VM callers fail closed;
+     * the returned object is ignored whenever vm_status is nonzero. */
+    (void)vm_runtime_overlay_exec(slot, context, &vm_status);
+#else
+    if (slot == LISP65_C1_COMPILER_OVERLAY_SLOT)
+        vm_status = lisp65_c1_compiler_overlay_entry(context);
+    else if (slot == LISP65_BUFFER_OVERLAY_ALLOC_SLOT)
+        vm_status = lisp65_buffer_overlay_alloc_entry(context);
+    else if (slot == LISP65_BUFFER_OVERLAY_WRITE_SLOT)
+        vm_status = lisp65_buffer_overlay_write_entry(context);
+    else vm_status = lisp65_buffer_overlay_read_entry(context);
+#endif
+    return context->result;
+}
+
+#endif
+
 static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n) {
 #ifndef LISP65_STRING_ARENA
     obj cs;
@@ -822,29 +873,21 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
 #if defined(LISP65_DIALECT_V2) && defined(LISP65_V2_NATIVE_CAPABILITIES)
     case 23: {                                                                         /* nreverse */
-        obj p, prev = NIL;
         if (n != 1) { vm_status = VM_ARITY; return NIL; }
-        p = a[0];
-        while (IS_PTR(p) && cell_type(p) == T_CONS) {
-            obj next = cell_b(p);
-            cell_set_b(p, prev);
-            prev = p;
-            p = next;
-        }
-        return prev;
+        return list_nreverse(a[0]);
     }
     case 24:                                                                           /* rplaca */
         if (n != 2) { vm_status = VM_ARITY; return NIL; }
         if (!IS_PTR(a[0]) || cell_type(a[0]) != T_CONS) {
             vm_status = VM_TYPEERROR; return NIL;
         }
-        cell_set_a(a[0], a[1]); return a[0];
+        return list_rplaca(a[0], a[1]);
     case 25:                                                                           /* rplacd */
         if (n != 2) { vm_status = VM_ARITY; return NIL; }
         if (!IS_PTR(a[0]) || cell_type(a[0]) != T_CONS) {
             vm_status = VM_TYPEERROR; return NIL;
         }
-        cell_set_b(a[0], a[1]); return a[0];
+        return list_rplacd(a[0], a[1]);
 #ifdef LISP65_V2_NATIVE_STRING_CODECS
     case 28: {                                                                         /* %string-codes */
         uint16_t l, i; obj lst = NIL;
@@ -998,6 +1041,11 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         return io_disk_load_chain((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
 #ifdef LISP65_DISK_LIBS
     case 18:  /* %disk-load-lib — Bytecode-Lib nach Bank 5 stagen + registrieren (Stufe 2) */
+#ifdef LISP65_ATTIC_LIBRARY_SHELF
+        if (n == 1) {
+            return io_attic_load_lib(a[0]) ? vm_t : NIL;
+        }
+#endif
         if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
         return io_disk_load_lib((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
 #endif
@@ -1111,6 +1159,16 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
         return a[2];
     }
+#endif
+#if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
+    /* Numeric labels are intentionally visible to the registry parity gate. */
+    case 63: /* %buffer-read */
+    case 64: /* %buffer-write */
+    case 65: /* %buffer-alloc */
+#ifdef LISP65_C1_COMPILER_TIER
+    case 66: /* %c1-control */
+#endif
+        return vm_buffer_call(pid, a, n);
 #endif
     default: vm_status = VM_BADOPCODE; return NIL;
     }

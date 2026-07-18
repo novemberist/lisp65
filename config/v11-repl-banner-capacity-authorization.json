@@ -1,0 +1,82 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-repl-banner-capacity",
+  "status": "owner-authorized-for-product-promotion",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "2b4fc40a4fab0f1a4991ad6732e0cad18a4cc3b9",
+  "probe_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-probe-receipt.json",
+    "sha256": "bd18fb37a1cee0df493521682d7336df89eef485fa328abb28744f01569119c8"
+  },
+  "capacity": {
+    "bank": {
+      "baseline_post_boot_reserve_bytes": 1795,
+      "candidate_post_boot_reserve_bytes": 1876,
+      "target_bytes": 1536,
+      "candidate_margin_bytes": 340,
+      "authorized_delta_bytes": 81,
+      "attribution": "The byte-sized REPL cursor/status correction and removal of two unused buffer bytes pay for the generated ordinal seam and reclaim a net 81 bytes. REPL_BUF_MAX is compile-time gated to 2..255."
+    },
+    "ext": {
+      "baseline_standard_composition_headroom_bytes": 25537,
+      "candidate_standard_composition_headroom_bytes": 25186,
+      "floor_bytes": 16384,
+      "candidate_margin_bytes": 8802,
+      "authorized_delta_bytes": -351
+    },
+    "symbols": {
+      "baseline_headroom": 391,
+      "candidate_headroom": 389,
+      "required_headroom": 32,
+      "authorized_delta": -2,
+      "attribution": "Only %banner-run and %repl-banner remain resident internal symbols. %banner-runs and %banner-subtitle are privately inlined; no banner name is public or exported."
+    },
+    "namepool": {
+      "baseline_headroom_bytes": 5668,
+      "candidate_headroom_bytes": 5643,
+      "required_headroom_bytes": 384,
+      "authorized_delta_bytes": -25
+    },
+    "directory": {
+      "baseline_resident_entries": 208,
+      "candidate_resident_entries": 210,
+      "raw_entry_delta": 2,
+      "baseline_post_align_headroom": 176,
+      "candidate_post_align_headroom": 168,
+      "authorized_post_align_delta": -8,
+      "attribution": "The debit is eight aligned slots, not eight new functions: two internal entries move boot use from 208 to 210, and the mandatory align-to-eight step rounds 210 to 216. %banner-run is 248 bytes, already at the 255-byte object ceiling once call-site overhead is considered; inlining it into the 103-byte %repl-banner would violate the object-size gate."
+    },
+    "overlay_vma": {
+      "baseline_base": "0xc354",
+      "candidate_base": "0xc304",
+      "ceiling": "0xc356",
+      "baseline_headroom_bytes": 2,
+      "candidate_headroom_bytes": 82,
+      "authorized_headroom_delta_bytes": 80,
+      "planning_effect": "The measured 68-byte 1.1-L eventqueue path is now fundable with 14 bytes of projected overlay headroom remaining, subject to its own real link."
+    },
+    "boot_overlay": {
+      "baseline_bytes": 1669,
+      "candidate_bytes": 1669,
+      "authorized_size_delta_bytes": 0,
+      "byte_identical": false,
+      "accepted_reason": "The overlay source and size are unchanged; absolute relocations move because the attributed REPL correction moves the VMA from c354 to c304. The wave repin covers the resulting product SHA."
+    }
+  },
+  "accepted_contract_corrections": [
+    "A minimal native seam launches the Lisp banner through a generated directory ordinal after scr_init and before the first prompt.",
+    "The explicit coordinate table is normative where the prose art disagrees.",
+    "The permanent visual oracle pins 235 visible writes rather than the approximate 180.",
+    "The subtitle uses WORKBENCH - DIALECT V2 until a PETSCII middle-dot mapping is measured and pinned.",
+    "Boot-overlay size remains neutral; VMA-driven byte nonidentity is accepted and must be repinned with the wave."
+  ],
+  "promotion_conditions": {
+    "permanent_visual_oracle": "required and fail-closed",
+    "real_product_link_matches_authorized_capacity": true,
+    "hardware_screenshot": "required before wave seal",
+    "detector_calibration": "must be confirmed against the real 235-write hardware rendering before wave seal",
+    "wave_product_and_evidence_repin": "required"
+  },
+  "claim_limit": "This authorization permits product-source promotion at the measured capacity. It does not accept hardware appearance, seal wave 1, or waive the regular R4/R5/R6/G6 repin."
+}

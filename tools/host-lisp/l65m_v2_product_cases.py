@@ -315,6 +315,32 @@ def collect() -> tuple[dict, list[dict]]:
             "anonymous": int(directory_only["anonymous_entries"]),
             "entry_refs": int(directory_only["entry_ref_nodes"]),
         })
+    # The temporary compiler is a product L65M-v2 input as well.  Keeping its
+    # exact bytes in this native validator fixture is the host-side half of the
+    # C1 validate-at-stage experiment: a fast device plan is never generated
+    # for a container that has not first passed the same native validator as
+    # the permanent product libraries.
+    lcc_image_path = LIBDIR / "lcc.ext.bin"
+    lcc_manifest_path = LIBDIR / "lcc.manifest.json"
+    lcc_image, lcc_manifest = lcc_image_path.read_bytes(), load(lcc_manifest_path)
+    lcc_directory_only = lcc_manifest.get("directory_only", {})
+    if (
+        lcc_manifest.get("artifact_role") != "disk-lib"
+        or lcc_manifest.get("exports") != ["%c1-compile"]
+        or lcc_manifest.get("external_image", {}).get("metadata_format", {}).get("version") != 2
+        or lcc_manifest.get("external_image", {}).get("sha256") != sha(lcc_image)
+        or lcc_directory_only.get("container_sha256") != sha(lcc_image)
+    ):
+        raise ProductCaseError("lcc: temporary compiler container/manifest binding drift")
+    libraries.append({
+        "name": "lcc",
+        "data": lcc_image,
+        "sha256": sha(lcc_image),
+        "entries": len(lcc_manifest["entries"]),
+        "patches": len(lcc_manifest["literal_patches"]),
+        "anonymous": int(lcc_directory_only["anonymous_entries"]),
+        "entry_refs": int(lcc_directory_only["entry_ref_nodes"]),
+    })
     if set(observed_sites) != set(expected):
         raise ProductCaseError(f"designator site coverage drift: {sorted(observed_sites)}")
     entry_names = {

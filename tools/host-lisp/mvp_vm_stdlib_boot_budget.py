@@ -16,7 +16,7 @@ from collections.abc import Iterable
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "build" / "bytecode" / "stdlib-p0.manifest.json"
 DEFAULT_EVAL_C = ROOT / "src" / "eval.c"
-MAX_INTERN_NAME_LEN = 32
+MAX_INTERN_NAME_LEN = 33
 
 
 def parse_int(text: object) -> int:
@@ -142,8 +142,31 @@ def native_symbols(
     defines: Iterable[str] = (),
 ) -> tuple[set[str], set[str], set[str]]:
     text = _active_c_text(eval_c.read_text(encoding="utf-8"), defines)
+    # The Workbench moves eval_init's strings into reclaimed boot storage and
+    # addresses them through BOOTNAME(id).  Counting only literal defprim() and
+    # intern() calls silently drops that product profile's native symbol set.
+    # Resolve the declarations from the same preprocessor-filtered source so a
+    # disabled surface remains absent from the capacity model.
+    boot_names = dict(re.findall(
+        r'WORKBENCH_BOOTNAME\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*,\s*"([^"]+)"\s*\)',
+        text,
+    ))
     prim_names = set(re.findall(r'defprim\("([^"]+)"', text))
     intern_names = set(re.findall(r'\bintern\("([^"]+)"', text))
+    prim_ids = set(re.findall(
+        r'defprim\(BOOTNAME\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', text
+    ))
+    intern_ids = set(re.findall(
+        r'\bintern\(BOOTNAME\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', text
+    ))
+    unresolved = (prim_ids | intern_ids) - set(boot_names)
+    if unresolved:
+        raise ValueError(
+            "BOOTNAME uses lack active declarations: %s"
+            % ", ".join(sorted(unresolved))
+        )
+    prim_names.update(boot_names[name] for name in prim_ids)
+    intern_names.update(boot_names[name] for name in intern_ids)
     names = prim_names | intern_names
     names.add("t")
     return names, prim_names, intern_names

@@ -1,8 +1,8 @@
 /* lisp65 -- M2 throwaway-D81 BAM allocation smoke.
  *
  * Writes exactly one 1581 BAM allocation bit in the mounted D81:
- * T45/S8, represented in BAM sector T40/S2 by free-count byte 40 and
- * bitmap byte 42. The shell harness verifies the downloaded D81 byte-for-byte.
+ * The target is supplied by the shared R5 persistence-fixture contract. The
+ * shell harness verifies the downloaded D81 byte-for-byte.
  */
 #include <stdint.h>
 #include "screen.h"
@@ -12,6 +12,20 @@
 #define COLOR_RED    2u
 #define COLOR_GREEN  5u
 #define COLOR_YELLOW 7u
+
+#ifndef R5_FIXED_TRACK
+#error R5_FIXED_TRACK must come from the R5 persistence-fixture contract
+#endif
+#ifndef R5_FIXED_FIRST
+#error R5_FIXED_FIRST must come from the R5 persistence-fixture contract
+#endif
+
+#define DATA_TRACK ((uint8_t)R5_FIXED_TRACK)
+#define DATA_SECTOR ((uint8_t)R5_FIXED_FIRST)
+#define BAM_ENTRY ((uint8_t)(16u + 6u * (DATA_TRACK - 41u)))
+#define BAM_COUNT BAM_ENTRY
+#define BAM_BITMAP ((uint8_t)(BAM_ENTRY + 1u + DATA_SECTOR / 8u))
+#define BAM_MASK ((uint8_t)(1u << (DATA_SECTOR & 7u)))
 
 enum {
     CASE_READ_BAM = 0,
@@ -111,22 +125,24 @@ static uint8_t write_sector(uint8_t track, uint8_t sector) {
 }
 
 static void run_m2(void) {
-    uint8_t ok, before_count, after_count;
+    uint8_t ok, before_count, after_count, before_bitmap, after_bitmap;
     m65_io_enable();
     read_sector(40, 2);
     record(CASE_READ_BAM, scratch[0] == 0 && scratch[1] == 255, scratch[0], 0);
-    before_count = scratch[40];
+    before_count = scratch[BAM_COUNT];
+    before_bitmap = scratch[BAM_BITMAP];
     after_count = (uint8_t)(before_count - 1u);
-    ok = before_count > 0 && scratch[42] == 255;
+    after_bitmap = (uint8_t)(before_bitmap & (uint8_t)~BAM_MASK);
+    ok = before_count > 0 && (before_bitmap & BAM_MASK) != 0;
     record(CASE_BEFORE_COUNT, ok, before_count, before_count);
     if (!ok) return;
-    scratch[40] = after_count;
-    scratch[42] = 254;
+    scratch[BAM_COUNT] = after_count;
+    scratch[BAM_BITMAP] = after_bitmap;
     ok = write_sector(40, 2);
     record(CASE_WRITE_VERIFY, ok, ok, 1);
     read_sector(40, 2);
-    ok = scratch[40] == after_count && scratch[42] == 254;
-    record(CASE_AFTER_COUNT, ok, scratch[40], after_count);
+    ok = scratch[BAM_COUNT] == after_count && scratch[BAM_BITMAP] == after_bitmap;
+    record(CASE_AFTER_COUNT, ok, scratch[BAM_COUNT], after_count);
 }
 
 static void show_result(void) {
@@ -138,7 +154,11 @@ static void show_result(void) {
     scr_putc('/');
     put_u8(hw_bam_alloc_total);
     scr_putc('\n');
-    puts_scr("target T45/S8 via BAM T40/S2 bytes 40/42\n");
+    puts_scr("target T");
+    put_u8(DATA_TRACK);
+    puts_scr("/S");
+    put_u8(DATA_SECTOR);
+    puts_scr(" via BAM T40/S2\n");
     puts_scr("count ");
     put_u8(hw_bam_alloc_got[CASE_BEFORE_COUNT]);
     puts_scr(" -> ");

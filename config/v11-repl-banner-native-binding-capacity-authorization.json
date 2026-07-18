@@ -1,0 +1,50 @@
+{
+  "format": "lisp65-v11-capacity-authorization-v1",
+  "version": 1,
+  "id": "v11-repl-banner-native-binding-correction",
+  "status": "owner-authorized-for-product-promotion",
+  "authorized_on": "2026-07-16",
+  "authorization_source_commit": "7d9696e",
+  "diagnosis": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-repl-banner-native-binding-diagnosis.json",
+    "sha256": "4cf88484730d732f5f514ba5bf7deaa412d053dfe57ee399c41cc54f98579680"
+  },
+  "capacity": {
+    "bank": {
+      "previously_authorized_candidate_reserve_bytes": 1876,
+      "corrected_candidate_reserve_bytes": 1873,
+      "target_bytes": 1536,
+      "corrected_margin_bytes": 337,
+      "authorized_correction_bytes": -3,
+      "delta_from_pre_banner_baseline_bytes": 78
+    },
+    "overlay_vma": {
+      "previously_authorized_base": "0xc304",
+      "corrected_base": "0xc306",
+      "ceiling": "0xc356",
+      "previously_authorized_headroom_bytes": 82,
+      "corrected_headroom_bytes": 80,
+      "authorized_headroom_correction_bytes": -2,
+      "delta_from_pre_banner_baseline_bytes": 78,
+      "eventqueue_projection_bytes": 68,
+      "projected_post_eventqueue_headroom_bytes": 12
+    },
+    "unchanged_dimensions": {
+      "ext_headroom_bytes": 25186,
+      "symbol_headroom": 389,
+      "namepool_headroom_bytes": 5643,
+      "directory_post_align_headroom": 168,
+      "boot_overlay_bytes": 1669
+    },
+    "attribution": "The generated-ordinal vm_run_dir launch replaces the smaller legacy emit_str fallback. The mandatory native binding adds three resident bytes and moves the overlay VMA by two bytes without changing the Lisp blob or any composition dimension."
+  },
+  "owner_decision": "Authorize the three-byte Bank correction and two-byte overlay-headroom correction; no reclaim sweep for five effective bytes.",
+  "promotion_conditions": {
+    "generated_header_binding": "required",
+    "missing_ordinal_build_failure": "required",
+    "binary_disassembly_binding": "vm_run_dir(198) immediately after scr_init",
+    "hardware_screenshot": "must be repeated against the corrected committed candidate",
+    "wave_seal": "still blocked pending visual acceptance and regular repin/G6"
+  },
+  "claim_limit": "This authorization permits promotion of the measured native binding correction. It does not accept hardware appearance or seal Wave 1."
+}

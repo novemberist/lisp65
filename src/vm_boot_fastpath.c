@@ -71,7 +71,7 @@
 #define BF_HELP(name) \
     static __attribute__((section(".lisp65_rt_boot_" name), noinline))
 
-#define BF_NAME_MAX 34u
+#define BF_NAME_MAX LISP65_SYMBOL_NAME_BUFFER
 #define BF_CRC_POLY 0x1021u
 #define BF_CRC_INIT 0xffffu
 

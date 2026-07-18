@@ -4,9 +4,28 @@
 
 #include "obj.h"
 
+/* One layout contract owns the Bank-4 disk scratch used by F011, the L65M
+ * validator, first-class Buffer staging and the Attic shelf DMA.  Profile
+ * builds may move DISK_EXT_BASE, but no consumer may mirror its physical
+ * address as a literal. */
+#ifndef EXT_BANK
+#define EXT_BANK 0x04u
+#endif
+#ifndef DISK_EXT_BASE
+#define DISK_EXT_BASE 0x6c00u
+#endif
+#define LISP65_EXT_DISK_FILE_OFFSET 256u
+#define LISP65_EXT_DISK_FILE_PHYSICAL \
+    (((uint32_t)EXT_BANK << 16) + DISK_EXT_BASE + LISP65_EXT_DISK_FILE_OFFSET)
+
 void mem_init(void);                /* Heap als Freelist initialisieren (vor allem!) */
 obj  alloc(uint8_t type);           /* rohe Zelle; loest bei Bedarf GC aus           */
 obj  cons(obj car, obj cdr);        /* (cons car cdr) — schuetzt car/cdr selbst      */
+/* One mutation core is shared by Treewalk and CALLPRIM.  Callers retain
+ * their route-specific arity and diagnostic contracts. */
+obj  list_nreverse(obj list);
+obj  list_rplaca(obj cell, obj value);
+obj  list_rplacd(obj cell, obj value);
 uint16_t mem_free_cells(void);      /* read-only: aktuelle Freelist-Laenge          */
 #ifdef LISP65_EXT_HEAP
 void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len); /* Scratch -> Bank 0, bulk */
@@ -69,6 +88,23 @@ uint16_t str_arena_capacity(void);                             /* Build-Cap, rea
 obj      str_open(void);
 uint8_t  str_putc(obj s, uint8_t c);                           /* 0 = Arena voll (mem_oom gesetzt) */
 obj      str_close(obj s);
+
+#ifdef LISP65_FIRST_CLASS_BUFFER
+/* First-class byte buffers share the compacted byte arena with strings. The
+ * object cell is stable; GC may relocate its contiguous byte span and update
+ * the private offset. A buffer becomes immutable atomically by changing its
+ * type to T_STR only after all writes have completed. */
+obj      buf_make(uint16_t len);
+obj      buf_from_string(obj string);
+#if defined(LISP65_C1_COMPILER_TIER) && defined(LISP65_EXT_HEAP)
+obj      buf_from_stage(uint16_t len);
+uint16_t buf_to_stage(obj buffer);
+#endif
+uint16_t buf_len(obj buffer);
+uint8_t  buf_byte(obj buffer, uint16_t index);
+void     buf_set(obj buffer, uint16_t index, uint8_t value);
+obj      buf_freeze(obj buffer);
+#endif
 
 #endif
 

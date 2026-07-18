@@ -1,0 +1,17 @@
+{
+  "format": "lisp65-v11-hardware-case-fixture-v1",
+  "version": 1,
+  "block_id": "1.1-A-attic-library-shelf",
+  "case": {
+    "id": "warm-reset-attic-shelf-load",
+    "fidelity": "hardware-only",
+    "required_gate": "G6",
+    "phase": "reset-recovery",
+    "setup": "A cold boot stages the exact profile-bound Bank-5 preload, runtime overlays and library shelf, reaches the REPL without loading IDE, IDEX or M65D, then a physical warm reset preserves all three staged regions.",
+    "action": "Boot through the valid-catalog fast path, reach the REPL, replace the product medium with an arbitrary valid non-product 1581 medium, then load IDE, IDEX and M65D and call one bound function from each library.",
+    "expected": "The stager skips restaging, all three libraries load from the SHA-bound Attic shelf without reading their D81 entries, the standard composition remains callable, and invalid or absent shelf data falls back fail-closed to the proven D81 path.",
+    "oracle": "Physical-reset receipt with before/after shelf SHA readback, stager trace proving no restage, exact library-container SHA bindings, post-swap load transcript and one callable observation per library.",
+    "core_binding": "hardware-receipt"
+  },
+  "integration": "Replace and strengthen warm-reset-valid-catalog-fastpath in the live G6 matrix when the 1.1 wave-1 product set is promoted; do not rewrite the sealed 1.0.1 matrix."
+}

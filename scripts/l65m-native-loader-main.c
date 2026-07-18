@@ -34,6 +34,8 @@ static unsigned ext_write_calls;
 static obj sentinel;
 static int failed;
 static int expect(const char *case_name, const char *what, int condition);
+static int expect_status(const char *case_name, l65m_status actual,
+                         l65m_status expected);
 
 static void check_repeat_guard(void) {
     l65m_overlay_work work;
@@ -178,6 +180,38 @@ static uint8_t read_bytes(void *opaque, uint16_t off, uint8_t *dst, uint16_t len
     if (off > source->length || len > (uint16_t)(source->length - off)) return 0;
     if (len) memcpy(dst, source->data + off, len);
     return 1;
+}
+
+static bytes_source *disk_carrier_bytes;
+/* Product-equivalent reader: the real disk callback ignores its private ctx. */
+uint8_t lisp65_disk_carrier_read(void *opaque, uint16_t off,
+                                 uint8_t *dst, uint16_t len) {
+    (void)opaque;
+    return read_bytes(disk_carrier_bytes, off, dst, len);
+}
+
+static void check_disk_carrier_framing(const l65m_contract_case *test) {
+    uint8_t padded[test->len + 16u];
+    bytes_source bytes;
+    l65m_source source;
+    l65m_plan plan;
+    l65m_status status;
+    memcpy(padded, test->data, test->len);
+    memset(padded + test->len, 0x20, 16u);
+    bytes.data = padded; bytes.length = (uint16_t)sizeof padded;
+    bytes.read_calls = 0; bytes.fail_call = 0;
+    source.read = read_bytes; source.ctx = &bytes; source.length = bytes.length;
+    status = vm_preflight_lib_ext(&source, &plan);
+    expect("disk-carrier-framing", "arbitrary padded source was accepted",
+           status == L65M_ERR_CONTAINER);
+    bytes.read_calls = 0;
+    disk_carrier_bytes = &bytes;
+    source.read = lisp65_disk_carrier_read;
+    source.ctx = (void *)1;
+    status = vm_preflight_lib_ext(&source, &plan);
+    expect_status("disk-carrier-framing", status, L65M_OK);
+    expect("disk-carrier-framing", "plan retained allocation-chain length",
+           status == L65M_OK && plan.source_length == test->len);
 }
 
 void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst) {
@@ -1125,6 +1159,7 @@ int main(void) {
         run_depth_commit_case(depth_case);
     if (expect("golden", "no valid generated case", commit_case != 0))
         run_commit_case(commit_case);
+    if (commit_case != 0) check_disk_carrier_framing(commit_case);
     if (commit_case != 0) check_commit_oom_recovery(commit_case);
 
     if (failed) {

@@ -7,13 +7,16 @@ is not complete merely because it compiles or passes a host test: product bytes,
 memory floors, artifact identity, and evidence bindings are part of the change.
 
 Release 1.0.0 is immutable. New work starts from the post-release branch and
-must not amend the `v1.0.0` tag or its R4/R5/G6 archives.
+must not amend its product or R4/R5/G6 archive bytes. The private proof mirror
+had one owner-approved transport-only rewrite on 2026-07-18; the public release
+tag did not move, and recording-time private commit IDs remain resolvable
+through the checked transport map.
 
 ## Toolchain
 
 The normal source gates require:
 
-- Git and Git LFS
+- Git
 - GNU Make
 - Python 3
 - a C99 host compiler
@@ -56,7 +59,28 @@ Workbench build.
 ## Private proof gates
 
 The complete private mirror additionally provides the sealed evidence consumed
-by these cumulative gates:
+by these cumulative gates. Archives are ignored local caches materialized from
+their SHA-bound private release assets; they are never committed or stored in
+Git LFS:
+
+```sh
+python3 tools/host-lisp/evidence_archive_assets.py remote-check
+python3 tools/host-lisp/evidence_archive_assets.py materialize --all
+```
+
+A normal full clone contains the object graph required to resolve historical
+recording-time commit IDs. Bootstrap those local aliases with:
+
+```sh
+make history-transport-bootstrap
+```
+
+A `--single-branch` clone is intentionally insufficient. Fetch all private
+branch/tag objects first if the bootstrap reports a missing transport target;
+the diagnostic prints the exact `git fetch` command and fails closed rather
+than installing a partial alias set.
+
+The cumulative gates are:
 
 ```sh
 make check-source
@@ -64,7 +88,7 @@ make check-host
 make check-product
 ```
 
-They are not public-source CI targets: removing the sealed archives while
+They are not public-source CI targets: omitting materialization while
 pretending those gates still ran would weaken their claim. `make check` remains
 the cumulative private MVP/product gate used by older workflows. Hardware
 targets are never implied by a host-only command.
@@ -101,6 +125,11 @@ notice.
    archives are never amended.
 8. **Preserve claim limits.** Emulator, host, and hardware results must say
    exactly which domain they prove.
+9. **Keep physical addresses out of pointer types.** The llvm-mos C address
+   model uses 16-bit pointers and `uintptr_t`; MEGA65 DMA/Attic addresses are
+   28-bit physical values. Carry them as `uint32_t` or as explicit DMA-list
+   bytes. Cast through a pointer type only for a proven Bank-0 C object, never
+   for a physical DMA endpoint.
 
 ## Documentation rules
 
@@ -156,8 +185,11 @@ python3 tools/host-lisp/public_export.py check
 - Run the relevant focused tests and the complete automated gates.
 - Confirm that generated files and receipts are bound to the intended commit.
 - Explain unexpected capacity gains as carefully as losses.
-- For a remote push, verify branch and annotated-tag refs with `git ls-remote`
-  and confirm that `git lfs push --dry-run` reports nothing pending.
+- For a normal private-mirror push, use
+  `scripts/push-github-verified.sh`; it verifies archive assets, history size,
+  the promotion register, branch equality via `git ls-remote`, and an empty
+  Git LFS dry-run. New promotion receipts additionally record `remote_head`
+  and fail if their source commit has not already reached that branch.
 
 ## GitHub repository metadata
 

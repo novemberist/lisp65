@@ -26,6 +26,22 @@ WORKBENCH_STDLIB_HEADER := $(WORKBENCH_STDLIB_PREFIX).h
 WORKBENCH_STDLIB_C := $(WORKBENCH_STDLIB_PREFIX).c
 WORKBENCH_STDLIB_BASE_EXT_BLOB := $(WORKBENCH_STDLIB_PREFIX).ext.bin
 WORKBENCH_STDLIB_BASE_MANIFEST := $(WORKBENCH_STDLIB_PREFIX).manifest.json
+WORKBENCH_ATTIC_SHELF_TOOL := tools/host-lisp/v11_attic_library_shelf.py
+WORKBENCH_ATTIC_SHELF_CONTRACT := config/v11-attic-library-shelf.json
+WORKBENCH_ATTIC_SHELF_DIR := build/bytecode/dialect-v2/shelf
+WORKBENCH_ATTIC_SHELF_IMAGE := $(WORKBENCH_ATTIC_SHELF_DIR)/library-shelf.bin
+WORKBENCH_ATTIC_SHELF_MANIFEST := $(WORKBENCH_ATTIC_SHELF_DIR)/library-shelf-manifest.json
+WORKBENCH_ATTIC_SHELF_HOST := build/attic-library-shelf-smoke-host
+WORKBENCH_C1_COMPILER_TOOL := tools/host-lisp/v11_c1_compiler_tier.py
+WORKBENCH_C1_COMPILER_SUITE := build/bytecode/dialect-v2/suites/p0-c1-compiler-tier.json
+WORKBENCH_C1_COMPILER_GENERATION := build/bytecode/dialect-v2/c1-compiler-tier-generation.json
+WORKBENCH_C1_COMPILER_PREFIX := build/bytecode/dialect-v2/libs/lcc
+WORKBENCH_C1_COMPILER_CONTRACT_TOOL := tools/host-lisp/v11_c1_compiler_contract.py
+WORKBENCH_C1_COMPILER_CONTRACT_HEADER := build/bytecode/dialect-v2/libs/lcc-contract.h
+WORKBENCH_C1_COMPILER_CONTRACT_RECEIPT := build/bytecode/dialect-v2/libs/lcc-contract.json
+WORKBENCH_C1_COMPILER_VALIDATOR_REPORT := build/bytecode/dialect-v2/libs/lcc-native-validator.txt
+WORKBENCH_C1_GATE_TOOL := tools/host-lisp/v11_c1_gate.py
+WORKBENCH_C1_GATE_RECEIPT := tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-c1-wave1-integration-block-receipt.json
 # Compatibility names remain the raw stdlib inputs inside the build graph.
 # Ship recipes override them with the profile-bound combined product artifacts.
 WORKBENCH_STDLIB_EXT_BLOB := $(WORKBENCH_STDLIB_BASE_EXT_BLOB)
@@ -85,9 +101,10 @@ WORKBENCH_RUNTIME_OVERLAY_BANK := 3
 WORKBENCH_RUNTIME_OVERLAY_ADDRESS := 0x08000000
 WORKBENCH_RUNTIME_OVERLAY_MAX_SLICE_BYTES := 1792
 WORKBENCH_RUNTIME_OVERLAY_MAX_SLICES := 64
+WORKBENCH_RUNTIME_OVERLAY_VMA := 0xc356
 WORKBENCH_RUNTIME_OVERLAY_MAX_VMA := 0xc356
 WORKBENCH_RUNTIME_OVERLAY_ENTRY_ABI := 1
-WORKBENCH_RUNTIME_OVERLAY_SLICE_COUNT := 38
+WORKBENCH_RUNTIME_OVERLAY_SLICE_COUNT := 44
 WORKBENCH_RUNTIME_OVERLAY_VMA_SYMBOL := __lisp65_workbench_runtime_overlay_vma
 WORKBENCH_ERROR_TEXT_PROFILE := workbench
 WORKBENCH_ERROR_TEXT_SPEC := config/error-texts.json
@@ -135,7 +152,13 @@ WORKBENCH_RUNTIME_OVERLAY_SLICE_ARGS := \
 	--slice '34:boot-fastpath-patches:.lisp65_rt_boot_01:__lisp65_rt_boot_01_start:__lisp65_rt_boot_01_end:__lisp65_rt_boot_01_entry:boot:1:0:vm_boot_fastpath_phase_patches' \
 	--slice '35:boot-fastpath-entries-freeze:.lisp65_rt_boot_02:__lisp65_rt_boot_02_start:__lisp65_rt_boot_02_end:__lisp65_rt_boot_02_entry:boot:1:0:vm_boot_fastpath_phase_entries' \
 	--slice '36:error-text-renderer:.lisp65_rt_l65e:__lisp65_rt_l65e_start:__lisp65_rt_l65e_end:__lisp65_rt_l65e_entry:runtime+reusable:1:0:lisp65_error_overlay_entry' \
-	--slice '37:resident-island-installer:.lisp65_rt_island_00:__lisp65_rt_island_00_start:__lisp65_rt_island_00_end:__lisp65_rt_island_00_entry:boot:1:0:vm_resident_island_install'
+	--slice '37:resident-island-installer:.lisp65_rt_island_00:__lisp65_rt_island_00_start:__lisp65_rt_island_00_end:__lisp65_rt_island_00_entry:boot:1:0:vm_resident_island_install' \
+	--slice '38:attic-library-shelf:.lisp65_rt_l65s:__lisp65_rt_l65s_start:__lisp65_rt_l65s_end:__lisp65_rt_l65s_entry:runtime+reusable:1:0:l65s_stage_entry' \
+	--slice '39:attic-library-name:.lisp65_rt_l65s_name:__lisp65_rt_l65s_name_start:__lisp65_rt_l65s_name_end:__lisp65_rt_l65s_name_entry:runtime+reusable:1:0:l65s_name_entry' \
+	--slice '40:first-class-buffer-read:.lisp65_rt_buffer_read:__lisp65_rt_buffer_read_start:__lisp65_rt_buffer_read_end:__lisp65_rt_buffer_read_entry:runtime+reusable:1:0:lisp65_buffer_overlay_read_entry' \
+	--slice '41:first-class-buffer-write:.lisp65_rt_buffer_write:__lisp65_rt_buffer_write_start:__lisp65_rt_buffer_write_end:__lisp65_rt_buffer_write_entry:runtime+reusable:1:0:lisp65_buffer_overlay_write_entry' \
+	--slice '42:first-class-buffer-alloc:.lisp65_rt_buffer_alloc:__lisp65_rt_buffer_alloc_start:__lisp65_rt_buffer_alloc_end:__lisp65_rt_buffer_alloc_entry:runtime+reusable:1:0:lisp65_buffer_overlay_alloc_entry' \
+	--slice '43:c1-compiler-lifetime:.lisp65_rt_c1_compiler:__lisp65_rt_c1_compiler_start:__lisp65_rt_c1_compiler_end:__lisp65_rt_c1_compiler_entry:runtime+reusable:1:0:lisp65_c1_compiler_overlay_entry'
 WORKBENCH_OVERLAY_MIN_BOOT_STACK_GAP := 512
 WORKBENCH_OVERLAY_BOOT_STACK_GAP_TARGET := 1024
 WORKBENCH_OVERLAY_MIN_POST_BOOT_RESERVE := 1024
@@ -155,6 +178,11 @@ WORKBENCH_OVERLAY_PROBE_MIN_HW_REMAINING := 32
 WORKBENCH_OVERLAY_PROBE_DEFINES := -DLISP65_BOOT_STACK_PROBE -DLISP65_BOOT_OVERLAY_WIPE
 
 WORKBENCH_OVERLAY_GUARD_DIR := build/products/workbench/overlay-stack-guard
+WORKBENCH_C1_PHASE_PROBE_DIR := build/products/workbench/c1-phase-probe
+# The historical macro name is retained to guarantee byte identity with the
+# owner-accepted probe-11 artifacts. It is now part of the canonical C1
+# product profile; phase/lease diagnostics override it explicitly as needed.
+WORKBENCH_C1_PHASE_PROBE_DEFINES ?= -DLISP65_C1_TRUST_FASTPATH_PROBE
 WORKBENCH_OVERLAY_GUARD_RESIDENT_PRG := $(WORKBENCH_OVERLAY_GUARD_DIR)/lisp65-workbench-resident.prg
 WORKBENCH_OVERLAY_GUARD_ELF := $(WORKBENCH_OVERLAY_GUARD_DIR)/lisp65-workbench-overlay-linked.prg.elf
 WORKBENCH_OVERLAY_GUARD_PRELOAD := $(WORKBENCH_OVERLAY_GUARD_DIR)/stdlib-with-overlay.ext.bin
@@ -217,11 +245,14 @@ WORKBENCH_DEFINES := \
 	-DLISP65_TREEWALK_STRIP \
 	-DMEGA65_F011_LOAD \
 	-DLISP65_DISK_LIBS \
+	-DLISP65_ATTIC_LIBRARY_SHELF \
+	-DLISP65_C1_COMPILER_TIER \
 	-DMEGA65_F011_WRITE \
 	-DIO_BUF_MAX=1 \
 	-DEXT_CELLS=1024 \
 	-DLISP65_NURSERY_HYSTERESIS=192 \
 	-DLISP65_STRING_ARENA \
+	-DLISP65_FIRST_CLASS_BUFFER \
 	-DSTR_ARENA_SIZE=0x2480 \
 	-DDISK_EXT_BASE=0x6900 \
 	-DDISK_EXT_FILE_MAX=0x9600 \
@@ -233,7 +264,8 @@ WORKBENCH_DEFINES := \
 	-DVM_DIR_MAX=608 \
 	-DREPL_BUF_MAX=192 \
 	-DHIST_MAX=64 \
-	-DLISP65_REPL_HISTORY_IN_BUF
+	-DLISP65_REPL_HISTORY_IN_BUF \
+	-DLISP65_REPL_BANNER_REQUIRED
 
 # Derive the staging ceiling from the canonical profile define.  Descriptor
 # plus payload must remain below the Bank-5 namepool, not merely below $10000.
@@ -246,12 +278,14 @@ WORKBENCH_BANK0_RESERVE_TARGET := 1024
 WORKBENCH_MAX_PRG_FILE_END := 0xc0c0
 WORKBENCH_MIN_SYMBOL_HEADROOM := 32
 WORKBENCH_BOOT_SYMBOL_CORRECTION := 8
-# The hardware-minus-manifest calibration was +5/+51 while peek/poke were
-# already installed by eval_init but absent from the manifest census.  Their
-# LCC Prim rows now make both names statically visible, so subtract that exact
-# 2-symbol/10-byte overlap rather than counting the same runtime names twice.
-WORKBENCH_COMPOSITION_SYMBOL_CORRECTION := 3
-WORKBENCH_COMPOSITION_NAMEPOOL_CORRECTION := 41
+# The composition gate separates the measured boot-only calibration from
+# symbols retained after the temporary C1 compiler tier is retired.  The
+# values are bound by the Wave-1 C1 first-form diagnosis/probe receipt; neither
+# category may be folded into an unexplained aggregate correction again.
+WORKBENCH_COMPOSITION_BOOT_SYMBOL_CALIBRATION := 9
+WORKBENCH_COMPOSITION_BOOT_NAMEPOOL_CALIBRATION := 303
+WORKBENCH_COMPOSITION_RETAINED_SYMBOLS := 54
+WORKBENCH_COMPOSITION_RETAINED_NAMEPOOL_BYTES := 432
 
 WORKBENCH_MIN_LOAD_HEADROOM := 32
 WORKBENCH_MIN_POST_ALIGN_HEADROOM := 32

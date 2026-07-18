@@ -96,7 +96,11 @@
     {"name": "%fasl-error-window-overflow", "value": 54, "restricted_views": ["apply", "function-kind"], "reason": "internal-error-service"},
     {"name": "%lcc-error-do-body-too-big", "value": 55, "restricted_views": ["apply", "function-kind"], "reason": "internal-error-service"},
     {"name": "%lcc-error-invalid-parameter-list", "value": 56, "restricted_views": ["apply", "function-kind"], "reason": "internal-error-service"},
-    {"name": "%list-malformed-error", "value": 58, "restricted_views": ["apply", "function-kind"], "reason": "internal-error-service"}
+    {"name": "%list-malformed-error", "value": 58, "restricted_views": ["apply", "function-kind"], "reason": "internal-error-service"},
+    {"name": "%buffer-read", "value": 63, "restricted_views": ["apply", "function-kind", "compile-repl"], "reason": "prebuilt-shelf-only-first-class-buffer-carrier"},
+    {"name": "%buffer-write", "value": 64, "restricted_views": ["apply", "function-kind", "compile-repl"], "reason": "prebuilt-shelf-only-first-class-buffer-carrier"},
+    {"name": "%buffer-alloc", "value": 65, "restricted_views": ["apply", "function-kind", "compile-repl"], "reason": "prebuilt-shelf-only-first-class-buffer-carrier"},
+    {"name": "%c1-control", "value": 66, "restricted_views": ["apply", "function-kind", "compile-repl"], "reason": "prebuilt-shelf-only-temporary-compiler-lifetime-carrier"}
   ],
   "safety_cases": [
     {"name": "peek-arity-low", "target": "peek", "args": ["208"], "expect_error": "!error"},

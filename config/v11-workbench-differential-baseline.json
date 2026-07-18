@@ -1,0 +1,210 @@
+{
+  "format": "lisp65-v11-workbench-differential-baseline-v1",
+  "version": 1,
+  "observation_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-filter-workbench-differential-receipt.json",
+  "observation_receipt_sha256": "af378453d2f727d792699d12167480b30a81b2958a0f547391f202b36aa96068",
+  "expected_artifacts": 4,
+  "expected_cases": 356,
+  "intentional_additions": {
+    "resident": [
+      {
+        "name": "workbench-directory-link-valid-tail",
+        "result": "t",
+        "reason": "The chain-walker closure adds the valid terminal-sector witness."
+      },
+      {
+        "name": "workbench-directory-link-valid-next",
+        "result": "t",
+        "reason": "The chain-walker closure adds the valid next-sector witness."
+      },
+      {
+        "name": "workbench-directory-link-rejects-wrong-track",
+        "result": "nil",
+        "reason": "The chain-walker closure rejects a directory link outside track 40."
+      },
+      {
+        "name": "workbench-directory-link-rejects-self-reference",
+        "result": "nil",
+        "reason": "The chain-walker closure rejects a self-referential directory link."
+      },
+      {
+        "name": "workbench-repl-banner-return",
+        "result": "nil",
+        "reason": "The Wave-1 banner is new dialect-v2 product functionality and intentionally uses the ABI-v2 poke primitive. It is checked against the frozen post-filter observation baseline, not executed inside a mutable historical source profile."
+      },
+      {
+        "name": "v11-g-read-from-string-direct",
+        "result": "42",
+        "reason": "The owner-authorized Wave-2 Green Surface adds the direct read-from-string route."
+      },
+      {
+        "name": "v11-g-read-from-string-funcall",
+        "result": "42",
+        "reason": "The owner-authorized Wave-2 Green Surface adds the funcall read-from-string route."
+      },
+      {
+        "name": "v11-g-read-from-string-apply",
+        "result": "42",
+        "reason": "The owner-authorized Wave-2 Green Surface adds the apply read-from-string route."
+      },
+      {
+        "name": "v11-g-read-from-string-first-object",
+        "result": "42",
+        "reason": "The owner-authorized Wave-2 Green Surface pins first-object reader semantics."
+      },
+      {
+        "name": "v11-g-read-from-string-type-error",
+        "result": "error:TypeError",
+        "reason": "The owner-authorized Wave-2 Green Surface pins the type-error route."
+      },
+      {
+        "name": "v11-g-read-from-string-arity-zero",
+        "result": "error:ArityError",
+        "reason": "The owner-authorized Wave-2 Green Surface pins strict zero-argument rejection."
+      },
+      {
+        "name": "v11-g-read-from-string-arity-extra",
+        "result": "error:ArityError",
+        "reason": "The owner-authorized Wave-2 Green Surface pins strict extra-argument rejection."
+      },
+      {
+        "name": "workbench-compile-string-bad-destination",
+        "result": "nil",
+        "reason": "The transactional FASL composition cut replaces the obsolete fixed-slot failure with a bad-destination witness."
+      },
+      {
+        "name": "workbench-compile-string-bad-destination-error",
+        "result": "\"bad destination\"",
+        "reason": "The transactional FASL composition cut pins its bad-destination diagnostic."
+      }
+    ],
+    "ide": [
+      {
+        "name": "ide-disk-link-valid-tail",
+        "result": "t",
+        "reason": "The completed chain-walker inventory adds the IDE terminal-link witness."
+      },
+      {
+        "name": "ide-disk-link-rejects-zero-tail",
+        "result": "nil",
+        "reason": "The completed chain-walker inventory pins the corrupt zero-tail clamp."
+      },
+      {
+        "name": "ide-disk-link-rejects-self-reference",
+        "result": "nil",
+        "reason": "The completed chain-walker inventory rejects an IDE self-link."
+      },
+      {
+        "name": "ide-disk-link-rejects-out-of-range",
+        "result": "nil",
+        "reason": "The completed chain-walker inventory rejects an out-of-range IDE link."
+      },
+      {
+        "name": "ide-event-command-delete-backward",
+        "result": "1101",
+        "reason": "The 16-name harvest adds a permanent echo witness for the numeric delete-backward token."
+      },
+      {
+        "name": "ide-buffer-default-mode-id",
+        "result": "1105",
+        "reason": "The 16-name harvest adds a permanent echo witness for the numeric lisp-mode token."
+      }
+    ],
+    "idex": [
+      {
+        "name": "ide-extra-unknown-mx-command-rejected",
+        "result": "nil",
+        "reason": "The 16-name harvest adds the required negative M-x echo witness."
+      }
+    ],
+    "m65d": [
+      {
+        "name": "m65d-buffer-payload-composition-external",
+        "result": "0",
+        "reason": "The transactional FASL composition cut adds the Buffer-payload external D81 witness."
+      },
+      {
+        "name": "m65d-buffer-payload-composition-bad-type",
+        "result": "3",
+        "reason": "The transactional FASL composition cut pins invalid Buffer-payload rejection."
+      }
+    ]
+  },
+  "intentional_removals": {
+    "resident": [
+      {
+        "name": "workbench-compile-slot-capacity-host",
+        "result": "254",
+        "reason": "Wave-2 M removes the fixed-slot writer and its slot-capacity surface."
+      },
+      {
+        "name": "workbench-compile-string-missing-slot",
+        "result": "nil",
+        "reason": "Wave-2 M removes the preallocated-slot seam in favor of arbitrary M65D COW destinations."
+      },
+      {
+        "name": "workbench-compile-string-missing-slot-error",
+        "result": "\"slot missing\"",
+        "reason": "Wave-2 M retires the obsolete missing-slot diagnostic with the fixed-slot seam."
+      }
+    ],
+    "ide": [],
+    "idex": [],
+    "m65d": []
+  },
+  "intentional_changes": {
+    "resident": [],
+    "ide": [
+      {
+        "name": "ide-event-command-self-insert",
+        "before": "self-insert",
+        "after": "1110",
+        "reason": "The 16-name harvest replaces the internal self-insert symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-delete-forward",
+        "before": "delete-forward",
+        "after": "1102",
+        "reason": "The 16-name harvest replaces the internal delete-forward symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-ctrl-f-move-right",
+        "before": "move-right",
+        "after": "1107",
+        "reason": "The 16-name harvest replaces the internal move-right symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-ctrl-b-move-left",
+        "before": "move-left",
+        "after": "1106",
+        "reason": "The 16-name harvest replaces the internal move-left symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-ctrl-p-move-up",
+        "before": "move-up",
+        "after": "1108",
+        "reason": "The 16-name harvest replaces the internal move-up symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-ctrl-j-newline",
+        "before": "newline",
+        "after": "1109",
+        "reason": "The 16-name harvest replaces the internal newline symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-ctrl-a-line-start",
+        "before": "line-start",
+        "after": "1104",
+        "reason": "The 16-name harvest replaces the internal line-start symbol token with its pinned numeric command ID."
+      },
+      {
+        "name": "ide-event-command-ctrl-e-line-end",
+        "before": "line-end",
+        "after": "1103",
+        "reason": "The 16-name harvest replaces the internal line-end symbol token with its pinned numeric command ID."
+      }
+    ],
+    "idex": [],
+    "m65d": []
+  }
+}
