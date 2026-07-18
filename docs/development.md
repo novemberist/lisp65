@@ -185,11 +185,16 @@ python3 tools/host-lisp/public_export.py check
 - Run the relevant focused tests and the complete automated gates.
 - Confirm that generated files and receipts are bound to the intended commit.
 - Explain unexpected capacity gains as carefully as losses.
-- For a normal private-mirror push, use
-  `scripts/push-github-verified.sh`; it verifies archive assets, history size,
-  the promotion register, branch equality via `git ls-remote`, and an empty
-  Git LFS dry-run. New promotion receipts additionally record `remote_head`
-  and fail if their source commit has not already reached that branch.
+- In the full private proof mirror, use its
+  `scripts/push-github-verified.sh` for a normal mirror push. It verifies
+  archive assets, the 50 MB index/history ceiling, the promotion register,
+  exact branch and tag equality via `git ls-remote`, and an empty Git LFS
+  dry-run. `make proof-hooks-install` enables the private mirror's tracked
+  pre-commit and pre-push gates. New promotion-v3 and G6-v2 seal manifests
+  record `remote_source_binding.remote_head` and require their source commit to
+  have reached that branch. These proof-transport scripts, hooks, receipts, and
+  private asset inventory are deliberately absent from the curated public
+  snapshot; they are not needed to build or use the product.
 
 ## GitHub repository metadata
 

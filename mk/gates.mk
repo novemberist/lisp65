@@ -1,6 +1,6 @@
 # Stable gate entry points and provider-neutral CI wrappers.
 
-.PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
+.PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check proof-hooks-install evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-index-size-gate evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest remote-source-binding-receipt-check promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
 .NOTPARALLEL: check-source check-host check-product check-hardware-dry-run check-hardware check mvp-ship
 
 DOCTOR_GATE ?= G2
@@ -32,13 +32,20 @@ document-index-selftest:
 document-index-check: document-index-selftest
 	python3 tools/host-lisp/document_index.py
 
+proof-hooks-install:
+	git config core.hooksPath .githooks
+	test "$$(git config --get core.hooksPath)" = .githooks
+
 evidence-archive-assets-selftest:
 	python3 tools/host-lisp/evidence_archive_assets.py selftest
+
+evidence-archive-index-size-gate: evidence-archive-assets-selftest
+	python3 tools/host-lisp/evidence_archive_assets.py index-size-gate
 
 evidence-archive-history-size-gate: evidence-archive-assets-selftest
 	python3 tools/host-lisp/evidence_archive_assets.py history-size-gate
 
-evidence-archive-assets-check: evidence-archive-assets-selftest evidence-archive-history-size-gate
+evidence-archive-assets-check: evidence-archive-assets-selftest evidence-archive-index-size-gate evidence-archive-history-size-gate
 	python3 tools/host-lisp/evidence_archive_assets.py local-check
 
 evidence-archive-assets-remote-check: evidence-archive-assets-selftest
@@ -52,8 +59,13 @@ history-transport-rewrite-check: evidence-archive-assets-selftest history-transp
 
 remote-source-binding-selftest:
 	python3 tools/host-lisp/remote_source_binding.py selftest
+	python3 tools/host-lisp/promotion_archive_offline.py --remote-binding-selftest
+	python3 tools/host-lisp/r6_g6_seal_offline.py --remote-binding-selftest
 
-promotion-register-check: evidence-archive-assets-check history-transport-rewrite-check remote-source-binding-selftest
+remote-source-binding-receipt-check: remote-source-binding-selftest
+	python3 tools/host-lisp/remote_source_binding.py receipt-check
+
+promotion-register-check: evidence-archive-assets-check history-transport-rewrite-check remote-source-binding-receipt-check
 	python3 tools/host-lisp/promotion_archive.py register-check
 
 workbench-product-reproducibility-selftest:
