@@ -484,7 +484,8 @@ run_phase document-nav "((2 . 1) (0 . 1) (0 . 0) (2 . 3))" \
 
 run_phase region-edit "((\"ad\") \"bc\")" \
   "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (setq x (ide-make-state (ide-set-point (ide-make-buffer \"scratch\" (list \"abcd\")) 0 1))) nil)" \
-  "(progn (setq x (ide-step x (list (quote key) 0 nil))) nil)" \
+  "(progn (setq x (ide-step x (list (quote key) 24 nil))) nil)" \
+  "(progn (setq x (ide-step x (list (quote key) 32 nil))) nil)" \
   "(progn (setq x (ide-step x (list (quote key) 5 nil))) nil)" \
   "(progn (setq x (ide-step x (list (quote key) 2 nil))) nil)" \
   "(progn (setq x (ide-step x (list (quote key) 24 nil))) nil)" \
@@ -493,7 +494,8 @@ run_phase region-edit "((\"ad\") \"bc\")" \
 
 run_phase region-multiline "((\"ah\") (0 . 1) (\"bcd\" \"ef\" \"g\"))" \
   "(progn (set-symbol-value (quote *ide-kill-ring*) \"\") (setq x (ide-make-state (ide-set-point (ide-make-buffer \"scratch\" (list \"abcd\" \"ef\" \"gh\")) 0 1))) nil)" \
-  "(progn (setq x (ide-step x (list (quote key) 0 nil))) nil)" \
+  "(progn (setq x (ide-step x (list (quote key) 24 nil))) nil)" \
+  "(progn (setq x (ide-step x (list (quote key) 32 nil))) nil)" \
   "(progn (setq x (cons (ide-set-point (car x) 2 1) (cdr x))) nil)" \
   "(progn (setq x (ide-step x (list (quote key) 24 nil))) nil)" \
   "(progn (setq x (ide-step x (list (quote key) 18 nil))) nil)" \

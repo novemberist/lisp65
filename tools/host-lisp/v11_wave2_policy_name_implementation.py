@@ -29,10 +29,12 @@ LIST_AUTHORIZATION = ROOT / (
     "config/v11-wave2-list-primitive-unification-capacity-authorization.json"
 )
 IDE_SOURCES = tuple(ROOT / f"lib/{name}" for name in (
-    "ide-status.lisp", "ide-syntax.lisp", "ide-buffer.lisp", "ide-ui.lisp",
+    "ide-status.lisp", "ide-syntax.lisp", "ide-buffer.lisp",
+    "ide-keymap-generated.lisp", "ide-ui.lisp",
     "ide-disk.lisp",
 ))
 IDE_UI = ROOT / "lib/ide-ui.lisp"
+IDE_KEYMAP = ROOT / "lib/ide-keymap-generated.lisp"
 IDE_DISK = ROOT / "lib/ide-disk.lisp"
 HW_UX_HARNESS = ROOT / "scripts/hw-workbench-ux-smoke.sh"
 MANIFESTS = tuple(ROOT / f"build/bytecode/dialect-v2/libs/{name}.manifest.json"
@@ -154,11 +156,14 @@ def collect() -> dict[str, Any]:
         require(stale not in hw_ux_harness,
                 f"hardware UX harness retained revoked command data: {stale}")
 
-    ui = source_text[IDE_UI]
-    launcher = defun_body(ui, "%ide-command-named", "%ide-execute-command-key")
-    command_names = defun_body(ui, "ide-command-names", "%ide-command-named")
-    require("intern" not in launcher.lower() and "string-ref" in launcher,
-            "M-x launcher is not direct String-to-ID")
+    keymap = source_text[IDE_KEYMAP]
+    launcher_start = keymap.find("(defun %ide-command-named ")
+    require(launcher_start >= 0, "generated M-x launcher missing")
+    launcher = keymap[launcher_start:]
+    command_names = defun_body(keymap, "ide-command-names", "%ide-command-named")
+    require("intern" not in launcher.lower() and "string-ref" not in launcher
+            and "string=" in launcher,
+            "M-x launcher is not exact String-to-ID")
     display_to_id = {
         "find-file": 1002,
         "save-buffer": 1001,

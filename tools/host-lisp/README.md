@@ -35,7 +35,8 @@ tool development and self-tests.
 | `workbench_ship.py` | builds and verifies the historical workbench ship format |
 | `overlay_package.py` | builds and verifies profile-bound overlay packages |
 | `r6_g6_seal.py` / `r6_g6_seal_offline.py` | seals final G6 hardware acceptance |
-| `r7_release.py` / `r7_release_offline.py` | materializes and verifies the 1.0 release from its seal |
+| `r7_release.py` / `r7_release_offline.py` | reproduces the historical 1.0.1-light package from its seal |
+| `r7_release_v11.py` / `r7_release_v11_offline.py` | materializes and verifies the 1.1.0 release from the registered Wave 3 G6 seal |
 | `bank0_lifetime_report.py` | classifies physical Bank-0 allocations and ICF aliases |
 | `bank0_reclaim_report.py` | ranks measured reclaim candidates |
 | `ide_bytecode_cost_report.py` | static editor bytecode and render-contract cost report |

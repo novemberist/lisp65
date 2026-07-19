@@ -40,6 +40,7 @@ alloc_name="${WORKBENCH_M5_ALLOC_NAME:-m5alloc}"
 target_track="${WORKBENCH_M5_TRACK:-$(fixture_get save_new.track)}"
 first_sector="${WORKBENCH_M5_FIRST_SECTOR:-$(fixture_get save_new.first_sector)}"
 second_sector="${WORKBENCH_M5_SECOND_SECTOR:-$(fixture_get save_new.second_sector)}"
+allocator_start_sector="${WORKBENCH_M5_ALLOCATOR_START_SECTOR:-20}"
 dir_track="${WORKBENCH_M5_DIR_TRACK:-$(fixture_get save_new.directory_track)}"
 dir_sector="${WORKBENCH_M5_DIR_SECTOR:-$(fixture_get save_new.directory_sector)}"
 dir_entry="${WORKBENCH_M5_DIR_ENTRY:-$(fixture_get save_new.directory_entry)}"
@@ -82,6 +83,8 @@ usage: $0 [options]
   --track <n>           expected data track (default: $target_track)
   --first-sector <n>    expected first data sector (default: $first_sector)
   --second-sector <n>   expected second data sector (default: $second_sector)
+  --allocator-start-sector <n>
+                        require the fixed allocator to choose the first two free sectors from S<n>
   --dir-track <n>       expected directory track (default: $dir_track)
   --dir-sector <n>      expected directory sector (default: $dir_sector)
   --dir-entry <n>       expected directory entry index (default: $dir_entry)
@@ -126,6 +129,7 @@ while [ "$#" -gt 0 ]; do
     --track) shift; [ "$#" -gt 0 ] || usage; target_track="$1" ;;
     --first-sector) shift; [ "$#" -gt 0 ] || usage; first_sector="$1" ;;
     --second-sector) shift; [ "$#" -gt 0 ] || usage; second_sector="$1" ;;
+    --allocator-start-sector) shift; [ "$#" -gt 0 ] || usage; allocator_start_sector="$1" ;;
     --dir-track) shift; [ "$#" -gt 0 ] || usage; dir_track="$1" ;;
     --dir-sector) shift; [ "$#" -gt 0 ] || usage; dir_sector="$1" ;;
     --dir-entry) shift; [ "$#" -gt 0 ] || usage; dir_entry="$1" ;;
@@ -157,6 +161,7 @@ case "$diff_mode" in fixed|generic) ;; *) echo "Fehler: Diff-Modus muss fixed od
 case "$target_track" in ''|*[!0-9]*) echo "Fehler: --track muss numerisch sein" >&2; exit 2 ;; esac
 case "$first_sector" in ''|*[!0-9]*) echo "Fehler: --first-sector muss numerisch sein" >&2; exit 2 ;; esac
 case "$second_sector" in ''|*[!0-9]*) echo "Fehler: --second-sector muss numerisch sein" >&2; exit 2 ;; esac
+case "$allocator_start_sector" in ''|*[!0-9]*) echo "Fehler: --allocator-start-sector muss numerisch sein" >&2; exit 2 ;; esac
 case "$dir_track" in ''|*[!0-9]*) echo "Fehler: --dir-track muss numerisch sein" >&2; exit 2 ;; esac
 case "$dir_sector" in ''|*[!0-9]*) echo "Fehler: --dir-sector muss numerisch sein" >&2; exit 2 ;; esac
 case "$dir_entry" in ''|*[!0-9]*) echo "Fehler: --dir-entry muss numerisch sein" >&2; exit 2 ;; esac
@@ -209,7 +214,7 @@ if [ "$dry_run" = "1" ]; then
   if [ "$diff_mode" = "generic" ]; then
     echo "DRY-RUN: python3 tools/host-lisp/d81_save_new_diff.py --selftest $before_d81 --source $source_lisp --name $target_name --dir-track $dir_track --dir-sector $dir_sector --dir-entry $dir_entry"
   else
-    echo "DRY-RUN: python3 tools/host-lisp/d81_dir_write_diff.py --selftest $before_d81 --source $source_lisp --name $target_name --track $target_track --first-sector $first_sector --second-sector $second_sector --dir-track $dir_track --dir-sector $dir_sector --dir-entry $dir_entry"
+    echo "DRY-RUN: python3 tools/host-lisp/d81_dir_write_diff.py --selftest $before_d81 --source $source_lisp --name $target_name --track $target_track --first-sector $first_sector --second-sector $second_sector --allocator-start-sector $allocator_start_sector --dir-track $dir_track --dir-sector $dir_sector --dir-entry $dir_entry"
   fi
 else
   [ -f "$ship_d81" ] || { echo "Fehler: Workbench-D81 fehlt: $ship_d81" >&2; exit 3; }
@@ -235,7 +240,8 @@ else
     python3 tools/host-lisp/d81_dir_write_diff.py --selftest "$before_d81" \
       --source "$source_lisp" --name "$target_name" \
       --track "$target_track" --first-sector "$first_sector" \
-      --second-sector "$second_sector" --dir-track "$dir_track" \
+      --second-sector "$second_sector" --allocator-start-sector "$allocator_start_sector" \
+      --dir-track "$dir_track" \
       --dir-sector "$dir_sector" --dir-entry "$dir_entry"
   fi
 fi
@@ -320,7 +326,7 @@ verify_after_image() {
     if [ "$diff_mode" = "generic" ]; then
       echo "DRY-RUN: python3 tools/host-lisp/d81_save_new_diff.py $before_d81 $after_d81 --source $source_lisp --name $target_name --dir-track $dir_track --dir-sector $dir_sector --dir-entry $dir_entry"
     else
-      echo "DRY-RUN: python3 tools/host-lisp/d81_dir_write_diff.py $before_d81 $after_d81 --source $source_lisp --name $target_name --track $target_track --first-sector $first_sector --second-sector $second_sector --dir-track $dir_track --dir-sector $dir_sector --dir-entry $dir_entry"
+      echo "DRY-RUN: python3 tools/host-lisp/d81_dir_write_diff.py $before_d81 $after_d81 --source $source_lisp --name $target_name --track $target_track --first-sector $first_sector --second-sector $second_sector --allocator-start-sector $allocator_start_sector --dir-track $dir_track --dir-sector $dir_sector --dir-entry $dir_entry"
     fi
   else
     if [ "$diff_mode" = "generic" ]; then
@@ -331,7 +337,8 @@ verify_after_image() {
       python3 tools/host-lisp/d81_dir_write_diff.py "$before_d81" "$after_d81" \
         --source "$source_lisp" --name "$target_name" \
         --track "$target_track" --first-sector "$first_sector" \
-        --second-sector "$second_sector" --dir-track "$dir_track" \
+        --second-sector "$second_sector" --allocator-start-sector "$allocator_start_sector" \
+        --dir-track "$dir_track" \
         --dir-sector "$dir_sector" --dir-entry "$dir_entry"
     fi
   fi

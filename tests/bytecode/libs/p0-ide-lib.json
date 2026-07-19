@@ -13,10 +13,17 @@
   "core"
  ],
  "description": "IDE bytecode disk library for the Workbench MVP. The artifact contains status, syntax, buffer, UI and disk/compile buffer helpers; stdlib deps resolve against the resident Workbench suite.",
+ "cases_from_suites": [
+  "p0-ide-keymap-cases.generated.json"
+ ],
+ "remove_cases_prefixes": [
+  "ide-event-command-"
+ ],
  "sources": [
   "lib/ide-status.lisp",
   "lib/ide-syntax.lisp",
   "lib/ide-buffer.lisp",
+  "lib/ide-keymap-generated.lisp",
   "lib/ide-ui.lisp",
   "lib/ide-disk.lisp"
  ],
@@ -24,6 +31,7 @@
   "lib/ide-status.lisp",
   "lib/ide-syntax.lisp",
   "lib/ide-buffer.lisp",
+  "lib/ide-keymap-generated.lisp",
   "lib/ide-ui.lisp",
   "lib/ide-disk.lisp"
  ],
@@ -95,7 +103,6 @@
   "%ide-disk-read-string",
   "%ide-buffers-names",
   "%ide-lines-insert",
-  "%ide-quit-key-p",
   "%ide-budget-string",
   "%ide-join",
   "%ide-render-code-line-at",
@@ -804,6 +811,16 @@
    "name": "ide-disk-persistence-status-messages",
    "expr": "(list (%ide-m65d-message 1) (%ide-m65d-message 2) (%ide-m65d-message 3) (%ide-m65d-message 4) (%ide-m65d-message 5) (%ide-m65d-message 6) (%ide-m65d-message 7) (%ide-m65d-message 8) (%ide-m65d-message 9) (%ide-m65d-message 10) (%ide-m65d-message 11) (%ide-m65d-message 12))",
    "expect": "(\"bad name\" \"duplicate name\" \"too large\" \"no space\" \"directory full\" \"disk invalid\" \"write/verify failed\" \"remount required\" \"saved; old space leaked\" \"product media is read-only\" \"persistence failed\" \"medium changed during write; check both disks\")"
+  },
+  {
+   "name": "l-lite-goto-line-accepts-three-digits",
+   "expr": "(%ide-decimal-value-from \"123\" 0 0)",
+   "expect": "123"
+  },
+  {
+   "name": "l-lite-goto-line-rejects-nondigit",
+   "expr": "(%ide-decimal-value-from \"12x\" 0 0)",
+   "expect": "nil"
   }
  ],
  "tailcall_self": [

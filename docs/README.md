@@ -3,15 +3,19 @@
 This index is the curated entry point for the live lisp65 documentation.
 Documents not linked from the first three sections are implementation records,
 machine-bound contracts, proposals, or historical material; they are not user
-instructions for release 1.0.1.
+instructions for release 1.1.0.
 
 ## Users
 
 - [User Guide](user-guide.md) — verify, boot, edit, save, and recover
 - [Dialect V2 Language Reference](language-reference.md) — released syntax and surface
-- [Release Notes 1.0.1](releases/1.0.1.md) — package correction and inherited proof
+- [Release Notes 1.1.0](releases/1.1.0.md) — current feature release and evidence boundary
+- [Generated IDE Keymap](generated/ide-keymap.md) — authoritative 1.1 editor bindings
+- [Release Notes 1.0.1](releases/1.0.1.md) — historical package correction
 - [Release Notes 1.0.0](releases/1.0.0.md) — original shipped features and limits
-- [1.1 Wave 2 Candidate Notes](releases/1.1-wave-2-candidate.md) — unreleased surface, limits, and open hardware claim
+- [1.1 Wave 1 Candidate Notes](releases/1.1-wave-1-candidate.md) — historical wave record
+- [1.1 Wave 2 Candidate Notes](releases/1.1-wave-2-candidate.md) — historical wave record
+- [1.1 Wave 3 Candidate Notes](releases/1.1-wave-3-candidate.md) — historical wave record
 - [Architecture Overview](architecture-overview.md) — the product in one page
 
 ## Contributors

@@ -180,21 +180,35 @@ def source_commit(policy: dict) -> str:
     return result
 
 
-def worktree_is_clean() -> bool:
-    return not subprocess.run(
-        ["git", "status", "--porcelain"],
+def worktree_is_clean(policy: dict) -> bool:
+    """Return whether the exported closure, rather than private state, is clean."""
+    paths = selected_paths(policy)
+    for args in (("diff", "--quiet", "--"), ("diff", "--cached", "--quiet", "--")):
+        result = subprocess.run(["git", *args, *paths], cwd=ROOT, check=False)
+        if result.returncode not in {0, 1}:
+            raise PolicyError(f"cannot inspect exported worktree closure: git {' '.join(args)}")
+        if result.returncode == 1:
+            return False
+    untracked = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z"],
         cwd=ROOT,
         check=True,
         stdout=subprocess.PIPE,
-    ).stdout
+    ).stdout.split(b"\0")
+    return not any(
+        matches(name, policy["include"]) and not matches(name, policy["exclude"])
+        for raw in untracked
+        if raw
+        for name in [raw.decode("utf-8", "surrogateescape")]
+    )
 
 
 def materialize(policy: dict, destination: Path, allow_dirty: bool) -> None:
     errors = check(policy)
     if errors:
         raise PolicyError("\n".join(errors))
-    if not allow_dirty and not worktree_is_clean():
-        raise PolicyError("refusing to export a dirty source tree")
+    if not allow_dirty and not worktree_is_clean(policy):
+        raise PolicyError("refusing to export a dirty public closure")
     if destination.exists() and any(destination.iterdir()):
         raise PolicyError(f"destination is not empty: {destination}")
 
@@ -223,7 +237,7 @@ def materialize(policy: dict, destination: Path, allow_dirty: bool) -> None:
     manifest = {
         "format": "lisp65-public-source-manifest-v1",
         "source_commit": source_commit(policy),
-        "source_tree_clean": worktree_is_clean(),
+        "source_tree_clean": worktree_is_clean(policy),
         "file_count": len(manifest_files),
         "tree_sha256": tree_digest.hexdigest(),
         "files": manifest_files,
@@ -270,8 +284,8 @@ def verify_snapshot(root: Path) -> list[str]:
 
 def compare_snapshot(policy: dict, root: Path) -> list[str]:
     """Compare a public checkout with a freshly materialized private export."""
-    if not worktree_is_clean():
-        return ["refusing to compare from a dirty private source tree"]
+    if not worktree_is_clean(policy):
+        return ["refusing to compare from a dirty public closure"]
 
     errors: list[str] = []
     with tempfile.TemporaryDirectory(prefix="lisp65-public-compare-") as temp:

@@ -241,21 +241,21 @@ R5_GLOBAL_G5_HW_PACKAGE := $(R5_GLOBAL_G5_DIR)/hw-package
 R5_GLOBAL_G5_NEGATIVE_PROOF := $(R5_GLOBAL_G5_DIR)/workbench-verifier-negative-proof.json
 R5_GLOBAL_G5_PREFLIGHT_BUILD := $(R5_GLOBAL_G5_DIR)/static-preflight-receipt.json
 R5_GLOBAL_G5_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/r5/global-g5-static-preflight-receipt.json
-R5_GLOBAL_G5_RUN_ID := r5-run-20260718-wave2-02
+R5_GLOBAL_G5_RUN_ID := r5-run-20260719-wave3-01
 R5_GLOBAL_G5_EVIDENCE := $(R5_GLOBAL_G5_DIR)/evidence/$(R5_GLOBAL_G5_RUN_ID)
 R5_GLOBAL_G5_BOOT_WAIT_SEC := 8
-R5_GLOBAL_G5_PRODUCT_SET := 5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6
+R5_GLOBAL_G5_PRODUCT_SET := 048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024
 R5_GLOBAL_G5_CLOSURE_SET = $(shell python3 -c 'import json; print(json.load(open("$(R5_GLOBAL_G5_CLOSURE)"))["closure_set_sha256"])' 2>/dev/null)
 R5_GLOBAL_G5_PRODUCT_PREFIX := $(R5_GLOBAL_G5_PRODUCT)/build/products/workbench/overlay-stack-guard
 R6_SHIP_DIR := build/r6/ship
 R6_SHIP_SECOND_DIR := build/r6/ship-second
 R6_SHIP_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
 R6_SHIP_PACKED_ON ?= $(shell git show -s --format=%cs $(R6_SHIP_SOURCE_COMMIT) 2>/dev/null)
-R6_SHIP_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-ship-wave2-packer-receipt.json
+R6_SHIP_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-ship-wave3-packer-receipt.json
 R6_G6_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
-R6_G6_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave2-static-preflight-receipt.json
-R6_G6_PROFILE_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave2-profile-applicability-receipt.json
-R6_G6_RUN_DIR := build/r6/g6/run-20260718-wave2-02
+R6_G6_PREFLIGHT_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-static-preflight-receipt.json
+R6_G6_PROFILE_RECEIPT := tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-profile-applicability-receipt.json
+R6_G6_RUN_DIR := build/r6/g6/run-20260719-wave3-01
 R6_G6_TOP_RECEIPT := $(R6_G6_RUN_DIR)/g6-hardware-receipt.json
 R6_G6_SEAL_SOURCE_COMMIT ?= $(shell git rev-parse HEAD)
 R6_G6_SEALED_ON ?= $(shell git show -s --format=%cs $(R6_G6_SEAL_SOURCE_COMMIT) 2>/dev/null)
@@ -266,6 +266,8 @@ R7_MANIFEST_PREVIEW ?= build/r7/public-manifest-prerequisites.json
 R7_MANIFEST_RECEIPT ?= build/r7/public-manifest-prerequisites-receipt.json
 R7_RELEASE_BUNDLE := releases/lisp65-1.0.1.tar.gz
 R7_RELEASE_RECEIPT := releases/lisp65-1.0.1-receipt.json
+R7_V11_RELEASE_BUNDLE := releases/lisp65-1.1.0.tar.gz
+R7_V11_RELEASE_RECEIPT := releases/lisp65-1.1.0-receipt.json
 R5_GLOBAL_G5_WORKBENCH_ENV = \
 	BOOT_WAIT_SEC='$(R5_GLOBAL_G5_BOOT_WAIT_SEC)' \
 	MVP_VM_SHIP_PRG='$(R5_GLOBAL_G5_HW_PACKAGE)/lisp65-mvp-workbench.prg' \
@@ -612,7 +614,7 @@ M65VMSTDLIB_EINSUITE_EXTRA_CFLAGS ?= -DMAX_SYM=481 -DNAMEPOOL=8192 -DVM_DIR_MAX=
 M65VMSTDLIB_EINSUITE_STRIP_EXTRA_CFLAGS ?= $(M65VMSTDLIB_EINSUITE_EXTRA_CFLAGS) -DLISP65_TREEWALK_STRIP -DLISP65_EVAL_PRIMS
 M65VMSTDLIB_EINSUITE_FULL_EXTRA_CFLAGS ?= $(filter-out -DLISP65_SCREEN_BULK_P_IN_STDLIB -DMAX_SYM=481 -DVM_DIR_MAX=416 -DSYMPOOL_EXT_OFF=0xa000,$(M65VMSTDLIB_EINSUITE_STRIP_EXTRA_CFLAGS)) -DMEGA65_F011_LOAD -DLISP65_DISK_LIBS -DMEGA65_F011_WRITE -DIO_BUF_MAX=1 -DLISP65_SCREEN_WRITE_STRING -DMAX_SYM=544 -DVM_DIR_MAX=480 -DSYMPOOL_EXT_OFF=0xc000
 M65VMSTDLIB_EINSUITE_FASL_EXTRA_CFLAGS ?= $(filter-out -DSYMPOOL_EXT_OFF=0xa000 -DMAX_SYM=481 -DVM_DIR_MAX=416 -DREPL_BUF_MAX=72,$(M65VMSTDLIB_EINSUITE_STRIP_EXTRA_CFLAGS)) -DSYMPOOL_EXT_OFF=0xb000 -DMEGA65_F011_LOAD -DLISP65_DISK_LIBS -DMEGA65_F011_WRITE -DIO_BUF_MAX=1 -DMAX_SYM=532 -DVM_DIR_MAX=408 -DREPL_BUF_MAX=64 -DLISP65_FASL
-M65VMSTDLIB_EINSUITE_CORE_EXTRA_CFLAGS ?= $(filter-out -DSYMPOOL_EXT_OFF=0xa000 -DMAX_SYM=481 -DVM_DIR_MAX=416 -DREPL_BUF_MAX=72 -DLISP65_EVAL_PRIMS -DEXT_CELLS=384,$(M65VMSTDLIB_EINSUITE_STRIP_EXTRA_CFLAGS)) -DSYMPOOL_EXT_OFF=0xb000 -DMEGA65_F011_LOAD -DLISP65_DISK_LIBS -DMEGA65_F011_WRITE -DIO_BUF_MAX=1 -DMAX_SYM=576 -DVM_DIR_MAX=480 -DREPL_BUF_MAX=64 -DLISP65_FASL -DEXT_CELLS=1024 -DLISP65_REPL_IDE_TOGGLE -DLISP65_NURSERY_HYSTERESIS=192
+M65VMSTDLIB_EINSUITE_CORE_EXTRA_CFLAGS ?= $(filter-out -DSYMPOOL_EXT_OFF=0xa000 -DMAX_SYM=481 -DVM_DIR_MAX=416 -DREPL_BUF_MAX=72 -DLISP65_EVAL_PRIMS -DEXT_CELLS=384,$(M65VMSTDLIB_EINSUITE_STRIP_EXTRA_CFLAGS)) -DSYMPOOL_EXT_OFF=0xb000 -DMEGA65_F011_LOAD -DLISP65_DISK_LIBS -DMEGA65_F011_WRITE -DIO_BUF_MAX=1 -DMAX_SYM=576 -DVM_DIR_MAX=480 -DREPL_BUF_MAX=64 -DLISP65_FASL -DEXT_CELLS=1024 -DLISP65_NURSERY_HYSTERESIS=192
 M65VMSTDLIB_EINSUITE_CORE_EDMA_SCROLL_EXTRA_CFLAGS ?= $(M65VMSTDLIB_EINSUITE_CORE_EXTRA_CFLAGS) -DLISP65_SCREEN_EDMA_SCROLL
 M65VMSTDLIB_EINSUITE_CORE_STRING_ARENA_EXTRA_CFLAGS ?= $(M65VMSTDLIB_EINSUITE_CORE_EXTRA_CFLAGS) -DLISP65_STRING_ARENA
 M65VMSTDLIB_EINSUITE_BOOT_SYMBOL_CORRECTION ?= 8
@@ -1660,9 +1662,9 @@ hw-color-ram-smoke-readback-dry-run: $(M65HWCOLORRAMPRG)
 	python3 scripts/hw-opportunity-readback.py color --elf $(M65HWCOLORRAMPRG).elf --dry-run
 
 hw-edma-screen-smoke-prg: $(M65HWEDMASCREENPRG)
-$(M65HWEDMASCREENPRG): scripts/hw-edma-screen-smoke-main.c scripts/hw-mega65-hwops.h src/screen.c src/screen.h | build
-	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -Isrc -Iscripts \
-		scripts/hw-edma-screen-smoke-main.c src/screen.c -o $@
+$(M65HWEDMASCREENPRG): scripts/hw-edma-screen-smoke-main.c scripts/hw-mega65-hwops.h src/screen.c src/screen.h src/screen_scroll_overlay.c src/screen_scroll_overlay.h | build
+	$(CC_M65) $(CFLAGS) -DLISP65_SCREEN_DRIVER -DLISP65_SCREEN_EDMA_SCROLL -Isrc -Iscripts \
+		scripts/hw-edma-screen-smoke-main.c src/screen.c src/screen_scroll_overlay.c -o $@
 	@sz=$$(stat -c%s "$@"); end=$$((0x2001 + $$sz - 2)); \
 		printf 'built %s (%s bytes, prg_file_end $$%04x)' "$@" "$$sz" "$$end"; \
 		if [ "$$end" -ge $$((0xC000)) ]; then \
@@ -2538,6 +2540,26 @@ r7-release-verify: r7-release-selftest
 r7-release-receipt-check: r7-release-selftest
 	python3 tools/host-lisp/r7_release.py receipt-check --require-tag '$(R7_RELEASE_RECEIPT)'
 
+.PHONY: r7-v11-release-selftest r7-v11-release-build r7-v11-release-verify \
+	r7-v11-release-negative-test r7-v11-release-receipt-check
+
+r7-v11-release-selftest:
+	python3 tools/host-lisp/r7_release_v11.py selftest
+
+r7-v11-release-build: r7-v11-release-selftest
+	rm -f '$(R7_V11_RELEASE_BUNDLE)' '$(R7_V11_RELEASE_RECEIPT)'
+	python3 tools/host-lisp/r7_release_v11.py build \
+		--output '$(R7_V11_RELEASE_BUNDLE)' --receipt '$(R7_V11_RELEASE_RECEIPT)'
+
+r7-v11-release-verify: r7-v11-release-selftest
+	python3 tools/host-lisp/r7_release_v11.py verify '$(R7_V11_RELEASE_BUNDLE)'
+
+r7-v11-release-negative-test: r7-v11-release-selftest
+	python3 tools/host-lisp/r7_release_v11.py negative-test '$(R7_V11_RELEASE_BUNDLE)'
+
+r7-v11-release-receipt-check: r7-v11-release-selftest
+	python3 tools/host-lisp/r7_release_v11.py receipt-check --require-tag '$(R7_V11_RELEASE_RECEIPT)'
+
 r5-global-g5-materialize: r5-global-g5-selftest
 	rm -rf '$(R5_GLOBAL_G5_PRODUCT)'
 	python3 tools/host-lisp/r5_global_g5.py materialize --out '$(R5_GLOBAL_G5_PRODUCT)'
@@ -2617,7 +2639,7 @@ r5-global-g5-preflight-check: r5-global-g5-selftest
 r5-global-g5-preflight-ready: r5-global-g5-preflight-check
 
 define R5_GLOBAL_G5_CASE_GUARD
-	@test '$(R5_GLOBAL_G5_PRODUCT_SET)' = '5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6'
+	@test '$(R5_GLOBAL_G5_PRODUCT_SET)' = '048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024'
 	@test -n '$(R5_GLOBAL_G5_CLOSURE_SET)'
 	@test -n '$(R5_GLOBAL_G5_CYCLE_ID)' || \
 		{ printf '%s\n' 'Set R5_GLOBAL_G5_CYCLE_ID to the Workbench run id or fresh Runtime power-cycle id.' >&2; exit 2; }

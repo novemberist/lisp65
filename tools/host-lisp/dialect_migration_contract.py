@@ -28,6 +28,7 @@ import runtime_export_hw_oracle as RUNTIME_HW  # noqa: E402
 import v2_capability_carrier_contract as CAPABILITY_CARRIER  # noqa: E402
 import dialect_v2_r2_decisions as R2_DECISIONS  # noqa: E402
 import block_bank_delta_policy as BANK_DELTA  # noqa: E402
+import history_transport_rewrite as TRANSPORT  # noqa: E402
 
 
 DEFAULT_CONTRACT = ROOT / "config" / "dialect-migration-contract.json"
@@ -340,6 +341,7 @@ def _commit(value: Any, label: str) -> str:
     commit = _string(value, label)
     if commit is None or not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise MigrationError(f"{label} must be a full lowercase commit id")
+    commit = TRANSPORT.resolve_commit(commit)
     result = subprocess.run(
         ["git", "cat-file", "-e", commit + "^{commit}"],
         cwd=ROOT,

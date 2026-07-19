@@ -1,0 +1,40 @@
+{
+  "generated_from": "config/v11-l-lite-keymap.json",
+  "cases": [
+    {
+      "name": "l-lite-mx-exact-find-file",
+      "expr": "(%ide-command-named \"find-file\")",
+      "expect": "1002"
+    },
+    {
+      "name": "l-lite-mx-exact-save-buffer",
+      "expr": "(%ide-command-named \"save-buffer\")",
+      "expect": "1001"
+    },
+    {
+      "name": "l-lite-mx-exact-compile-load",
+      "expr": "(%ide-command-named \"compile-load\")",
+      "expect": "1008"
+    },
+    {
+      "name": "l-lite-mx-exact-goto-line",
+      "expr": "(%ide-command-named \"goto-line\")",
+      "expect": "1012"
+    },
+    {
+      "name": "l-lite-mx-exact-eval-buffer",
+      "expr": "(%ide-command-named \"eval-buffer\")",
+      "expect": "1014"
+    },
+    {
+      "name": "l-lite-mx-rejects-two-character-prefix",
+      "expr": "(%ide-command-named \"fi\")",
+      "expect": "nil"
+    },
+    {
+      "name": "l-lite-mx-rejects-trailing-junk",
+      "expr": "(%ide-command-named \"save-buffer-junk\")",
+      "expect": "nil"
+    }
+  ]
+}

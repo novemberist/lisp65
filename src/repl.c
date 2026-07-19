@@ -100,12 +100,6 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
         do { c = cbm_k_getin(); } while (c == 0);
         if (c == '\r' || c == '\n') { kb_cursor_off(); *np = n; return 1; }
         if (c == 0x93 || c == 0x13) { kb_clear(); *np = n; return 2; }  /* CLR/HOME */
-#ifdef LISP65_REPL_IDE_TOGGLE
-        /* RUN/STOP ($03 in der GETIN-Queue — dieselbe Quelle, aus der P_READKEY den
-         * Editor-Exit sieht) toggelt in den Editor: (edit)/(ide) statt Tipp-Eingabe.
-         * VOR dem Steuerzeichen-Filter unten, der $03 sonst still schluckt. */
-        if (c == 0x03) { kb_cursor_off(); *np = n; return 3; }
-#endif
         if (c == 0x14) {                                  /* DEL/Backspace */
             kb_cursor_off();
             if (n > floor) { n--; kb_del(); }
@@ -222,22 +216,11 @@ void repl(void) {
         if (st == 1) emit('\n');
         if (st == 0) return;                              /* EOF */
         if (st == 2) continue;                            /* CLR -> Neustart */
-#ifdef LISP65_REPL_IDE_TOGGLE
-        if (st == 3) {                                    /* RUN/STOP: Editor-Toggle */
-            /* (edit) = residenter Auto-Load-Launcher (lib/ide-launch.lisp); Fallback (ide)
-             * fuer Profile mit residenter IDE. Zeile ersetzen und normal auswerten lassen —
-             * so laufen lcc-first, OOM-Meldung und Fehlerpfade identisch zur Tipp-Eingabe. */
-            const char *t = (sym_function(intern("edit")) != NIL) ? "(edit)" : "(ide)";
-            for (n = 0; t[n]; n++) buf[n] = t[n];
-            emit('\n');
-        }
-#endif
-
 #ifdef DEVICE_KB
         /* History fuellen: VOR der Auswertung (auch fehlerhafte Zeilen sind so per CRSR-hoch
          * korrigierbar). Leere/ueberlange Zeilen ueberschreiben den Eintrag nicht. */
 #if HIST_MAX > 0 && !defined(LISP65_REPL_HISTORY_IN_BUF)
-        if (st != 3 && n > 0 && n <= HIST_MAX) { int k; for (k = 0; k < n; k++) hist[k] = buf[k]; hist_len = (unsigned char)n; }
+        if (n > 0 && n <= HIST_MAX) { int k; for (k = 0; k < n; k++) hist[k] = buf[k]; hist_len = (unsigned char)n; }
 #endif
         /* Wrap-Kompensation: lange Eingabezeilen (Prompt+Echo) brechen um, ohne dass emit()
          * es sieht. Konservativ mit 40 Spalten rechnen (im 80er-Modus zaehlt das doppelt ->
@@ -303,10 +286,5 @@ void repl(void) {
 #endif
             }
         }
-#if defined(LISP65_REPL_IDE_TOGGLE) && defined(DEVICE_KB)
-        /* Nach dem Editor-Rundtrip evtl. nachgelaufene RUN/STOP-Wiederholungen verwerfen,
-         * sonst toggelt die naechste read_line sofort wieder hinein (Ping-Pong). */
-        if (st == 3) { while (cbm_k_getin() != 0) ; }
-#endif
     }
 }

@@ -248,9 +248,14 @@
    "expect": "((\"ab \") (0 . 3) \"cd\")"
   },
   {
-   "name": "step-ctrl-space-sets-mark",
-   "input": "(let* ((s0 (ide-make-state (ide-set-point (ide-make-buffer \"scratch\" '(\"ab\")) 0 1))) (s1 (ide-step s0 (list (quote key) 0 nil)))) (list (ide-buffer-mark (ide-state-buffer s1)) (ide-state-message s1)))",
+   "name": "step-cx-space-sets-mark",
+   "input": "(let* ((s0 (ide-make-state (ide-set-point (ide-make-buffer \"scratch\" '(\"ab\")) 0 1))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 32 nil)))) (list (ide-buffer-mark (ide-state-buffer s2)) (ide-state-message s2)))",
    "expect": "((0 . 1) \"mark\")"
+  },
+  {
+   "name": "step-cx-cc-persists-active-buffer",
+   "input": "(progn (set-symbol-value (quote ide-buffers) nil) (let* ((s0 (ide-make-state (ide-insert-char (ide-make-buffer \"scratch\" (list \"\")) 97))) (s1 (ide-step s0 (list (quote key) 24 nil))) (s2 (ide-step s1 (list (quote key) 3 nil)))) (%ide-persist-state (%ide-state-with-message s2 nil)) (ide-buffer-lines (%ide-resume-buffer \"scratch\"))))",
+   "expect": "(\"a\")"
   },
   {
    "name": "step-cx-cx-exchanges-point-and-mark",

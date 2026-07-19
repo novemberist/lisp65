@@ -18,9 +18,9 @@
 ;; symbolische CALL-Aufloesung sieht dann ohne Runtime-/ABI-Sonderfall die
 ;; aktuelle Funktionszelle. Der Core bleibt bei fehlendem IDEX benutzbar.
 (defun %ide-x (kind state a b)
-  (cond ((and (eq kind 'apply) (eq a 'kill-line))
+  (cond ((and (eq kind 'apply) (eq a 1118))
          (%ide-state-with-buffer state (ide-kill-line (ide-state-buffer state))))
-        ((and (eq kind 'apply) (eq a 'yank))
+        ((and (eq kind 'apply) (eq a 1119))
          (%ide-state-with-buffer state (ide-yank (ide-state-buffer state))))
         (t (%ide-state-with-message state "load idex"))))
 
@@ -223,63 +223,9 @@
 (defun ide-event-code (event)
   (car (cdr event)))
 
-(defun ide-printable-code-p (code)
-  (and (>= code 32) (<= code 126)))
-
-(defun %ide-prefix-command (code)
-  (cond ((= code 19) (progn (set-symbol-value (quote ide-event-command) nil) 1001))
-        ((= code 6) (progn (set-symbol-value (quote ide-event-command) nil) 1002))
-        ((= code 23) (progn (set-symbol-value (quote ide-event-command) nil) 1004))
-        ((= code 2) (progn (set-symbol-value (quote ide-event-command) nil) 1006))
-        ((= code 4) (progn (set-symbol-value (quote ide-event-command) nil) 1007))
-        ((= code 11) (progn (set-symbol-value (quote ide-event-command) nil) 1008))
-        ((= code 14) (progn (set-symbol-value (quote ide-event-command) nil) 1009))
-        ((= code 16) (progn (set-symbol-value (quote ide-event-command) nil) 1010))
-        ((= code 1) (progn (set-symbol-value (quote ide-event-command) nil) 'buffer-start))
-        ((= code 5) (progn (set-symbol-value (quote ide-event-command) nil) 'buffer-end))
-        ((= code 18) (progn (set-symbol-value (quote ide-event-command) nil) 'kill-region))
-        ((= code 24) (progn (set-symbol-value (quote ide-event-command) nil) 'exchange-point-and-mark))
-        ((= code 25) (progn (set-symbol-value (quote ide-event-command) nil) 'copy-region-as-kill))
-        (t nil)))
-
-(defun %ide-control-command (code)
-  (cond ((= code 4) 1102)
-        ((= code 6) 1107)
-        ((= code 2) 1106)
-        ((= code 19) 1011)
-        ((= code 12) 1012)
-        ((= code 14) 1003)
-        ((= code 16) 1108)
-        ((= code 10) 1109)
-        ((= code 1) 1104)
-        ((= code 5) 1103)
-        ((= code 15) 'move-word-right)
-        ((= code 21) 'move-word-left)
-        ((= code 23) 'kill-word)
-        ((= code 18) 'backward-kill-word)
-        ((= code 0) 'set-mark)
-        ((= code 22) 'page-down)
-        ((= code 26) 'page-up)
-        ((= code 11) 'kill-line)
-        ((= code 25) 'yank)
-        (t nil)))
-
-(defun ide-event-command (event)
-  ((lambda (code)
-     (cond ((eq (symbol-value (quote ide-event-command)) 24)
-            (if (or (= code 120) (= code 13))
-                (progn (set-symbol-value (quote ide-event-command) nil) 1013)
-                (%ide-prefix-command code)))
-           ((= code 13) 1109)
-           ((= code 20) 1101)
-           ((= code 157) 1106)
-           ((= code 29) 1107)
-           ((= code 145) 1108)
-           ((= code 17) 1003)
-           ((ide-printable-code-p code) 1110)
-           ((= code 24) (progn (set-symbol-value (quote ide-event-command) 24) nil))
-           (t (%ide-control-command code))))
-   (ide-event-code event)))
+;; Event-to-command mapping is generated from config/v11-l-lite-keymap.json in
+;; lib/ide-keymap-generated.lisp. The same source also generates the tests and
+;; user-facing table, so a documented binding cannot drift from this dispatcher.
 
 ;; Auto-Umbruch beim Tippen (2026-07-03): Strings sind Zeichenlisten -> jeder
 ;; self-insert baut die Zeile neu (O(Spalte)). Am Zeilenende waechst das ohne
@@ -364,21 +310,8 @@
        (search needle (car lines)))
       nil))
 
-(defun ide-command-names ()
-  (list "find-file" "save-buffer" "compile-load" "goto-line" "eval-buffer"))
-
-(defun %ide-command-named (name)
-  (if (> (string-length name) 1)
-      ((lambda (a b)
-         (cond ((and (= a 102) (= b 105)) 1002)
-               ((and (= a 115) (= b 97)) 1001)
-               ((and (= a 99) (= b 111)) 1008)
-               ((and (= a 103) (= b 111)) 1012)
-               ((and (= a 101) (= b 118)) 1014)
-               (t nil)))
-       (string-ref name 0)
-       (string-ref name 1))
-      nil))
+;; Exact M-x spelling and lookup are generated with the keymap. Prefix-only
+;; matches are deliberately rejected.
 
 (defun %ide-execute-command-key (state)
   (%ide-mini-start
@@ -396,31 +329,6 @@
          (%ide-state-with-message state "unknown command")))
    (%ide-command-named name)))
 
-(defun %ide-direct-p (command)
-  (cond ((eq command 1110) 't)
-        ((eq command 1003) 't)
-        ((eq command 1101) 't)
-        ((eq command 1102) 't)
-        ((eq command 1106) 't)
-        ((eq command 1107) 't)
-        ((eq command 1108) 't)
-        ((eq command 1109) 't)
-        ((eq command 'move-word-right) 't)
-        ((eq command 'move-word-left) 't)
-        ((eq command 'kill-word) 't)
-        ((eq command 'backward-kill-word) 't)
-        ((eq command 'kill-line) 't)
-        ((eq command 'yank) 't)
-        ((eq command 'set-mark) 't)
-        ((eq command 'exchange-point-and-mark) 't)
-        ((eq command 'kill-region) 't)
-        ((eq command 'copy-region-as-kill) 't)
-        ((eq command 'page-down) 't)
-        ((eq command 'page-up) 't)
-        ((eq command 'buffer-start) 't)
-        ((eq command 'buffer-end) 't)
-        (t nil)))
-
 (defun %ide-page-rows (state)
   ((lambda (rows)
      (if rows
@@ -429,60 +337,50 @@
    (ide-state-render-rows state)))
 
 (defun %ide-word-edit-command-p (command)
-  (or (eq command 'move-word-right)
-      (or (eq command 'move-word-left)
-          (or (eq command 'kill-word)
-              (or (eq command 'backward-kill-word)
-                  (or (eq command 'kill-line)
-                      (eq command 'yank)))))))
+  (and (>= command 1111)
+       (or (<= command 1114) (and (>= command 1118) (<= command 1119)))))
 
 (defun %ide-region-command-p (command)
-  (or (eq command 'set-mark)
-      (or (eq command 'exchange-point-and-mark)
-          (or (eq command 'kill-region)
-              (eq command 'copy-region-as-kill)))))
+  (or (eq command 1115) (and (>= command 1122) (<= command 1124))))
 
 (defun %ide-page-command-p (command)
-  (or (eq command 'page-down)
-      (or (eq command 'page-up)
-          (or (eq command 'buffer-start)
-              (eq command 'buffer-end)))))
+  (and (>= command 1116) (<= command 1121)))
 
 (defun %ide-apply-word-edit-command (state command)
-  (cond ((eq command 'move-word-right)
+  (cond ((eq command 1111)
          (%ide-state-with-buffer state
                                  (ide-move-word-right (ide-state-buffer state))))
-        ((eq command 'move-word-left)
+        ((eq command 1112)
          (%ide-state-with-buffer state
                                  (ide-move-word-left (ide-state-buffer state))))
-        ((eq command 'kill-word)
+        ((eq command 1113)
          (%ide-state-with-buffer state
                                  (ide-kill-word (ide-state-buffer state))))
-        ((eq command 'backward-kill-word)
+        ((eq command 1114)
          (%ide-state-with-buffer state
                                  (ide-backward-kill-word (ide-state-buffer state))))
-        ((eq command 'kill-line)
+        ((eq command 1118)
          (%ide-state-with-buffer state
                                  (ide-kill-line (ide-state-buffer state))))
-        ((eq command 'yank)
+        ((eq command 1119)
          (%ide-state-with-buffer state
                                  (ide-yank (ide-state-buffer state))))
         (t state)))
 
 (defun %ide-apply-region-command (state command)
   (cond
-        ((eq command 'set-mark)
+        ((eq command 1115)
          (%ide-state-with-message
           (%ide-state-with-buffer state
                                   (ide-set-mark (ide-state-buffer state)))
           "mark"))
-        ((eq command 'exchange-point-and-mark)
+        ((eq command 1123)
          (%ide-state-with-buffer state
                                  (ide-exchange-point-and-mark (ide-state-buffer state))))
-        ((eq command 'kill-region)
+        ((eq command 1122)
          (%ide-state-with-buffer state
                                  (ide-kill-region (ide-state-buffer state))))
-        ((eq command 'copy-region-as-kill)
+        ((eq command 1124)
          (%ide-state-with-message
           (%ide-state-with-buffer state
                                   (ide-copy-region-as-kill (ide-state-buffer state)))
@@ -491,18 +389,18 @@
 
 (defun %ide-apply-page-command (state command)
   (cond
-        ((eq command 'page-down)
+        ((eq command 1116)
          (%ide-state-with-buffer
           state
           (ide-page-down (ide-state-buffer state) (%ide-page-rows state))))
-        ((eq command 'page-up)
+        ((eq command 1117)
          (%ide-state-with-buffer
           state
           (ide-page-up (ide-state-buffer state) (%ide-page-rows state))))
-        ((eq command 'buffer-start)
+        ((eq command 1120)
          (%ide-state-with-buffer state
                                  (ide-buffer-start (ide-state-buffer state))))
-        ((eq command 'buffer-end)
+        ((eq command 1121)
          (%ide-state-with-buffer state
                                  (ide-buffer-end (ide-state-buffer state))))
         (t state)))
@@ -649,36 +547,37 @@
      (remove-if-not (function %ide-source-file-p) (cdr (dir)))))
    "sources"))
 
-(defun %ide-cmd-action (state command event)
-  (if (eq command 1001)
-      (%ide-save-key state)
-      (if (eq command 1002)
-          (%ide-find-key state)
-          (if (eq command 1004)
-              (%ide-write-key state)
-              (if (eq command 1006)
-                  (%ide-switch-key state)
-                  (if (eq command 1007)
-                      (%ide-directory-key state)
-                      (if (eq command 1008)
-                          (%ide-compile-key state)
-                          (if (eq command 1009)
-                              (%ide-cycle-buffer state 't)
-                              (if (eq command 1010)
-                                  (%ide-cycle-buffer state nil)
-                                  (if (> command 1010)
-                                      (%ide-motion-key state command)
-                                      (ide-apply-command state command event)))))))))))
+(defun %ide-dispatch-route-low (state command event route)
+  (cond ((eq route 1) (ide-apply-command state command event))
+        ((eq route 2) (%ide-line-edge-command state nil))
+        ((eq route 3) (%ide-line-edge-command state 't))
+        (t state)))
+
+(defun %ide-dispatch-route-mid (state route)
+  (cond ((eq route 4) (%ide-save-key state))
+        ((eq route 5) (%ide-find-key state))
+        ((eq route 6) (%ide-write-key state))
+        ((eq route 7) (%ide-switch-key state))
+        ((eq route 8) (%ide-directory-key state))
+        (t state)))
+
+(defun %ide-dispatch-route-high (state command route)
+  (cond ((eq route 9) (%ide-compile-key state))
+        ((eq route 10) (%ide-cycle-buffer state 't))
+        ((eq route 11) (%ide-cycle-buffer state nil))
+        ((eq route 12) (%ide-motion-key state command))
+        ((eq route 13) (%ide-state-with-message state 1015))
+        (t state)))
 
 (defun %ide-dispatch-command (state command event)
   (if command
-      (if (%ide-direct-p command)
-          (ide-apply-command state command event)
-          (if (eq command 1104)
-              (%ide-line-edge-command state nil)
-              (if (eq command 1103)
-                  (%ide-line-edge-command state 't)
-                  (%ide-cmd-action state command event))))
+      ((lambda (route)
+         (if (<= route 3)
+             (%ide-dispatch-route-low state command event route)
+             (if (<= route 8)
+                 (%ide-dispatch-route-mid state route)
+                 (%ide-dispatch-route-high state command route))))
+       (%ide-command-route command))
       state))
 
 (defun ide-step (state event)
@@ -952,28 +851,26 @@
 ;; Tasten in der Queue warten (poll-key), nur ide-step (~600 Steps) statt
 ;; step+render (~2400 Steps); gerendert wird EINMAL, wenn die Queue leer ist.
 (defun %ide-drain-pending (state)
-  ((lambda (k)
-     (if k
-         (%ide-drain-pending (ide-step state k))
-         state))
-   (poll-key)))
+  (if (eq (ide-state-message state) 1015)
+      state
+      ((lambda (k)
+         (if k
+             (%ide-drain-pending (ide-step state k))
+             state))
+       (poll-key))))
 
-;; Quit: Run/Stop (PETSCII 3) beendet immer die Command-Loop; ESC (27) nur
-;; ausserhalb des Minibuffers. Im Minibuffer ist ESC ein Abbruch wie C-g.
-;; (Ohne Exit war ide-run endlos -> nur per Reset verlassbar.)
-(defun %ide-quit-key-p (event)
-  ((lambda (code) (if (= code 3) 't (= code 27)))
-   (ide-event-code event)))
-
-;; Interaktive Command-Loop: read-key -> Quit? -> sonst step -> drain (Koaleszenz) -> render, wiederholen.
+;; C-x C-c is the only editor exit. RUN/STOP remains exclusively the global
+;; evaluation abort, and ESC remains a minibuffer cancel key. The exit marker
+;; stops queue draining before a later key can consume it; persistence happens
+;; before returning to the REPL.
 (defun ide-run (state)
   ((lambda (saved-state)
      ((lambda (key)
-        (if (if (eq (ide-state-message saved-state) 1005)
-                (= (ide-event-code key) 3)
-                (%ide-quit-key-p key))
-            saved-state
-            (ide-run (ide-render (%ide-drain-pending (ide-step saved-state key))))))
+        ((lambda (next)
+           (if (eq (ide-state-message next) 1015)
+               (%ide-persist-state (%ide-state-with-message next nil))
+               (ide-run (ide-render next))))
+         (%ide-drain-pending (ide-step saved-state key))))
       (read-key)))
    (%ide-persist-state state)))
 
@@ -985,8 +882,8 @@
 ;; API: (ide) = zuletzt aktiver Buffer (bzw. frischer "scratch"); (ide "name") = zu Buffer
 ;; "name" wechseln, bei Bedarf anlegen; (ide-buffers) = Namen, jüngster zuerst.
 ;; Global-Zugriff NATIV via CALLPRIM 19/20 (symbol-value/set-symbol-value) — der alte
-;; eval-Umweg (v2a-Ära) brach im Dev-Core (kein eval-Prim, Budget) und verlor beim
-;; RUN/STOP-Exit den Buffer (B4-Handtest-Fund). Null Bank-0: beides ABI-CALLPRIMs.
+;; eval-Umweg (v2a-Ära) brach im Dev-Core (kein eval-Prim, Budget). C-x C-c
+;; persists through this same path, preserving the historical B4 guarantee.
 (defun %ide-buffers-alist ()
   (symbol-value (quote ide-buffers)))
 

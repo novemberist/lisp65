@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-r7-release-v11-contract-v1",
+  "version": 1,
+  "id": "lisp65-public-release-v1.1.0",
+  "status": "owner-authorized",
+  "release": {
+    "product": "lisp65",
+    "version": "1.1.0",
+    "tag": "v1.1.0",
+    "tag_type": "annotated",
+    "bundle": "releases/lisp65-1.1.0.tar.gz",
+    "visibility": "public",
+    "dialect": "v2"
+  },
+  "product": {
+    "artifact_set_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "artifact_count": 14,
+    "product_build_id": "f144fd48",
+    "product_sha_changes_during_R7": 0
+  },
+  "input": {
+    "promotion_id": "r6-g6-hardware-acceptance-a0c3880",
+    "archive": "tests/bytecode/dialect-v2/evidence/promotions/r6-g6-hardware-acceptance-a0c3880.tar.gz",
+    "archive_sha256": "c6a00b232a0dcd5bc3bbf1b6ab6869ef8d97ef6720d32415d881a9bb08d206ae",
+    "ship_manifest_member": "payload/build/r6/ship/manifest.json",
+    "ship_manifest_sha256": "706dc97d3811dfa0d362522358a00b7c1dd30264f7409acccec3fce07d46150e",
+    "g6_receipt_member": "payload/build/r6/g6/run-20260719-wave3-01/g6-hardware-receipt.json",
+    "g6_receipt_sha256": "6ecf662e5828560521701446ba907e249990aa27ebd20e9e93046ea5d6460a10",
+    "ship_packer_receipt": "tests/bytecode/dialect-v2/evidence/post-release/r6-ship-wave3-packer-receipt.json",
+    "ship_packer_receipt_sha256": "37eafd5d600d28aa2be97cc167c4ce45bc5df98eb5fbf2dac29653d0c8fb91b9",
+    "static_preflight_receipt": "tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-static-preflight-receipt.json",
+    "static_preflight_receipt_sha256": "a6340e08d5ee2345cda948afbb17680f3d3fe61f0405b3a2375e50117cbf4330",
+    "profile_applicability_receipt": "tests/bytecode/dialect-v2/evidence/post-release/r6-g6-wave3-profile-applicability-receipt.json",
+    "profile_applicability_receipt_sha256": "befee46dfabe13cb6769f7966527f1e1bce7acdb9ce983a01972acbe279b8c46"
+  },
+  "documentation": [
+    "LICENSE",
+    "LICENSE-SCOPE.md",
+    "README.md",
+    "RUNTIME-REDISTRIBUTION.md",
+    "THIRD-PARTY-NOTICES.md",
+    "docs/generated/ide-keymap.md",
+    "docs/language-reference.md",
+    "docs/releases/1.1.0.md",
+    "docs/user-guide.md"
+  ],
+  "capacity": {
+    "bank": 371,
+    "directory": 168,
+    "ext": 26232,
+    "namepool": 5079,
+    "symbols": 334
+  },
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed(14/14-hardware)-for-product-artifact-set",
+    "G6": "passed(5/5-applicable); execution=single-device; product-medium-physical-write-protect=n/a-no-physical-medium-in-SD-D81-configuration",
+    "function_metadata": "101-exact/34-unresolved-no-complete-help-claim",
+    "definition_call_latency": "performance-bar=not-passed; documented-limitation=1.90..1.96s-occasional-longer; warm=0.20s; cure=C2/1.2",
+    "release": "verified-v1.1.0-package"
+  },
+  "policy": {
+    "operation": "transform-and-package-only",
+    "product_byte_source": "registered-r6-g6-seal-only",
+    "live_tree_product_authority": false,
+    "product_byte_identity": "required-against-sealed-r6-ship-for-all-14-artifacts",
+    "documentation_identity": "release-bundle-private-repo-public-repo-byte-parity",
+    "self_contained": true,
+    "offline_verification": "bundle-alone-no-repository-no-network",
+    "double_pack_axes": ["PYTHONHASHSEED", "TZ"],
+    "negative_tests": ["product-byte", "manifest", "source-seal", "g6-receipt", "readme", "keymap"],
+    "tag_after_bundle_verification": true
+  }
+}

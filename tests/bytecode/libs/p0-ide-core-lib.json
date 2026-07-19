@@ -16,7 +16,6 @@
     "%ide-disk-read-string",
     "%ide-buffers-names",
     "%ide-lines-insert",
-    "%ide-quit-key-p",
     "%ide-budget-string",
     "%ide-join",
     "%ide-render-code-line-at",
@@ -293,7 +292,7 @@
   "cases": [
     {
       "name": "ide-core-kill-line-and-yank",
-      "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"abc\")))) (s1 (ide-apply-command s0 (quote kill-line) nil)) (s2 (ide-apply-command s1 (quote yank) nil))) (list (ide-buffer-lines (ide-state-buffer s2)) (ide-buffer-point (ide-state-buffer s2))))",
+      "expr": "(let* ((s0 (ide-make-state (ide-make-buffer \"scratch\" (list \"abc\")))) (s1 (ide-apply-command s0 1118 nil)) (s2 (ide-apply-command s1 1119 nil))) (list (ide-buffer-lines (ide-state-buffer s2)) (ide-buffer-point (ide-state-buffer s2))))",
       "expect": "((\"abc\") (0 . 3))"
     }
   ]

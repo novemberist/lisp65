@@ -11,10 +11,11 @@ static void expect(const char *what, int cond) {
 }
 static void puts_scr(const char *s) { while (*s) scr_putc(*s++); }
 int main(void) {
-    const uint8_t *b;
+    const uint8_t *b, *color;
     int i;
     scr_init();
     b = scr_host_buf();
+    color = scr_host_color_buf();
     expect("init: 80x25 erkannt", scr_cols() == 80 && scr_rows() == 25);
     expect("init: leer", b[0] == 0x20 && b[80*25-1] == 0x20);
     puts_scr("hello WORLD 42!\n");
@@ -33,8 +34,10 @@ int main(void) {
     puts_scr("ab");
     scr_backspace();
     expect("backspace loescht", b[24*80 + 1] == 0x20 && b[24*80] == 0x01);
+    scr_put_at(3, 3, 'a', 7);
     scr_clear();
     expect("clear: leer + home", b[0] == 0x20 && scr_row() == 0);
+    expect("clear: color remains unchanged", color[3*80 + 3] == 7);
     scr_cursor(1);
     expect("cursor: RVS-Bit", (b[0] & 0x80) != 0);
     scr_putc('q');
@@ -44,6 +47,13 @@ int main(void) {
     expect("put_at RVS-Bit", b[2] == (0x01 | 0x80));
     scr_put_at(200, 0, 'a', 1);
     expect("put_at clips x", 1);   /* must not crash or write */
+    /* One exact scroll with per-row color sentinels. The new bottom row must
+     * receive the default attribute instead of inheriting the banner color. */
+    scr_clear();
+    for (i = 0; i < 25; i++) scr_put_at(0, (uint8_t)i, 'a', (int16_t)((i % 15) + 1));
+    for (i = 0; i < 25; i++) scr_putc('\n');
+    expect("scroll: color row 1 becomes row 0", color[0] == 2);
+    expect("scroll: new row gets default color", color[24*80] == 1);
     printf(fails ? "FAILS: %d\n" : "ALL PASS\n", fails);
     return fails ? 1 : 0;
 }

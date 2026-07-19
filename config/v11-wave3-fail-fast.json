@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-v11-wave3-fail-fast-v1",
+  "status": "wave3-repin-authorized-hardware-not-run",
+  "color_scroll_product_status": "final-fallback-to-c2-after-authorized-retry-hard-gate",
+  "rule": "fail-fast-seal-slow",
+  "authority": {
+    "dry_variants": "non-authoritative and receipt-less",
+    "hardware_presmoke": "non-authoritative and receipt-less",
+    "g6": "authoritative only after the regular static preflight"
+  },
+  "new_cases_first": [
+    "binding-cx-exit",
+    "binding-cx-set-mark",
+    "goto-line-three-digits",
+    "mx-exact-match",
+    "run-stop-abort",
+    "sticky-prefix-clears"
+  ],
+  "deferred_external_cases": [
+    "color-scroll-after-banner"
+  ],
+  "dry_variants": [
+    {
+      "id": "keymap-and-editor-behavior",
+      "command": "make v11-l-lite-keymap-dry-check",
+      "claim": "host/emulator prefilter only"
+    },
+    {
+      "id": "run-stop-abort-seam",
+      "command": "make error-overlay-smoke v11-wave3-fail-fast-check",
+      "claim": "static and host prefilter only"
+    },
+    {
+      "id": "color-scroll",
+      "command": "make screen-smoke hw-edma-screen-smoke-prg",
+      "claim": "host model plus hardware-program build only"
+    }
+  ],
+  "presmoke": {
+    "script": "scripts/hw-v11-wave3-presmoke.sh",
+    "receipt_output": "forbidden",
+    "stop_on_first_failure": true,
+    "required_before_chain": true
+  }
+}

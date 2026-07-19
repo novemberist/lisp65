@@ -1,168 +1,134 @@
 # lisp65
 
-lisp65 is a native, interactive Lisp workbench for the [MEGA65](https://mega65.org/).
-It combines a Common Lisp–inspired language, an on-device bytecode compiler, an
-Emacs-style full-screen editor, and transactional 1581 disk persistence.
+lisp65 is a native, interactive Lisp workbench for the
+[MEGA65](https://mega65.org/). It combines a Common Lisp-inspired language,
+an on-device bytecode compiler, an Emacs-style full-screen editor, and
+transactional 1581 disk persistence.
 
-The current release is **lisp65 1.0.1**, which uses **Dialect V2**. Release
-1.0.1 is a packaging and documentation correction; its 13 product artifacts
-are byte-identical to the hardware-accepted 1.0.0 product set.
+The current release is **lisp65 1.1.0**, using **Dialect V2**.
 
 ## Highlights
 
 - Native REPL and self-hosted `lcc` compiler on the MEGA65
 - Lisp-2 semantics, macros, closures, higher-order functions, and strict arity
-- Full-screen editor with Emacs-style navigation and file workflows
-- On-demand IDE, IDEX, and M65D libraries
-- Copy-on-write disk persistence with read-back verification
+- Full-screen editor with 41 generated-and-tested key bindings
+- On-demand IDE, IDEX, M65D, and first-class Buffer libraries
+- Attic-backed library shelf: staged libraries remain available after the disk swap
+- Copy-on-write saves and persistent compilation with read-back verification
 - Start from an SD-backed D81 image without a connected development PC
 - Reproducible, self-verifying release bundle with hardware-bound receipts
 
 ## Get the release
 
-Download `lisp65-1.0.1.tar.gz` from the
-[v1.0.1 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.0.1).
-Release bundles are published as assets and are not stored in the public Git
-history.
+Download `lisp65-1.1.0.tar.gz` from the
+[v1.1.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.1.0).
+Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.0.1.tar.gz
-cd lisp65-1.0.1
+tar -xzf lisp65-1.1.0.tar.gz
+cd lisp65-1.1.0
 python3 verify.py
 ```
 
-The verifier checks the complete package, its product artifacts, and the
-embedded G6 hardware-acceptance seal before you use either disk image.
+Do not use a bundle that fails verification. The verifier checks every package
+file, all 14 sealed product artifacts, and the embedded Wave 3 hardware-
+acceptance seal without consulting the repository or the network.
 
-The 1.0.1 archive corrects the first-session instructions while preserving all
-13 product artifacts byte-for-byte. The original 1.0.0 archive and tag remain
-immutable historical evidence. See the [1.0.1 release notes](docs/releases/1.0.1.md)
-for the exact package-only delta.
+See the [1.1.0 release notes](docs/releases/1.1.0.md) for the complete change
+summary and evidence boundary.
 
 ## First start from BASIC
 
-1. Make `media/lisp65-product.d81` available on the MEGA65 SD card.
+1. Copy `media/lisp65-product.d81` to the MEGA65 SD card.
 2. Power on the MEGA65 and wait for the BASIC 65 prompt.
 3. Mount the product D81 in drive 8 using the Freezer, then return to BASIC
-   without rebooting. You can instead use BASIC's `MOUNT` command if the image
-   is accessible by name on the SD card.
-4. Start the lisp65 boot stager from BASIC:
+   without rebooting. You may instead use BASIC's `MOUNT` command when the
+   image is accessible by name.
+4. Start the boot stager:
 
    ```basic
    DLOAD "AUTOBOOT.C65",U8
    RUN
    ```
 
-5. Wait for the stager to finish and for the REPL to appear.
-6. Load the libraries you want while the product disk is still mounted.
-7. Swap once to `media/lisp65-work.d81` or any other valid, non-product 1581
-   disk before saving user files.
+5. Wait for the banner and REPL.
+6. Load the composition while `L65SYS` is still mounted:
+
+   ```lisp
+   (load-lib "ide")
+   (load-lib "idex")  ; optional editor extensions
+   (load-lib "m65d")  ; persistence and compiler output
+   ```
+
+7. Swap once to `media/lisp65-work.d81` or any valid non-product 1581 disk.
+8. Enter the editor with `(edit)`.
 
 The MEGA65 does not retain a D81 selected in the Freezer across a reboot. An
-automatic cold start therefore requires separately configuring a default disk
-image in the MEGA65 Config menu; it is not assumed by this procedure.
+automatic cold start therefore requires a default disk image configured in the
+MEGA65 Config menu; this procedure does not assume one.
 
-Try this at the REPL:
+M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
+identity. There is no on-device disk formatter in 1.1.0.
 
-```lisp
-(+ 20 22)
-(load-lib "ide")
-(load-lib "idex")  ; optional editor extensions
-(load-lib "m65d")  ; load before the one-drive disk swap
-(edit)
-```
-
-M65D accepts any valid 1581 work disk and rejects the product disk by identity.
-There is no on-device disk formatter in 1.0.1.
-
-See the [User Guide](docs/user-guide.md) for the editor keys, disk workflow,
-error recovery, and current limitations.
-
-## IDE input erratum for 1.0.0
-
-A post-release end-to-end audit found that the editor backends are more complete
-than the physical keyboard path that exposes them. Release 1.0.0 reads a
-KERNAL/PETSCII code but does not retain the MEGA65 Control, MEGA, or Alt state.
-The hardware UX receipts injected normalized key events after that boundary, so
-they do not prove every documented physical chord.
-
-- Load `ide`, `idex`, and `m65d` from `L65SYS` before the one-drive swap. The
-  1.0.0 bundled `README-FIRST.txt` listed only `ide`; 1.0.1 corrects that
-  package instruction.
-- The command launcher implemented by 1.0.0 is `C-x x` or `C-x Return`, not
-  physical `M-x`, and it requires IDEX.
-- `C-Space` cannot reach the 1.0.0 dispatcher and must be treated as broken.
-  Mark- and region-based keyboard workflows are therefore not usable as
-  documented.
-- Other Control and `C-x` bindings have working dispatcher/backend tests, but
-  their physical keyboard path was not accepted end to end. Treat them as
-  experimental; for a reliable save, leave the editor and call
-  `save-buffer-to` explicitly after loading M65D.
-- `compile-load` and `compile-buffer-to-lib` require an existing, preallocated
-  FASL target. The supplied blank work D81 contains no `fasl0`--`fasl2` slots,
-  so persistent on-device compilation is not available out of the box in the
-  supplied bundle.
-
-Release 1.0.1 ships these documentation corrections and the corrected load
-order without changing product bytes. It deliberately does not provision FASL
-slots: the legacy compiler writer does not share M65D's product-media guard or
-transaction binding. Persistent compilation remains unavailable on the blank
-work image until the transactional 1.1 redesign. The modifier-aware MEGA65
-keyboard driver and fully bound keymap also belong to 1.1.
+See the [User Guide](docs/user-guide.md) for the complete workflow and the
+[generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
+bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.0.1 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.1.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
-yet be treated as a general-purpose production environment for irreplaceable
-data, unattended operation, or large applications.
+be treated as a general-purpose production environment for irreplaceable data,
+unattended operation, or large applications.
 
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
-| Finite session metadata | The released baseline leaves 120 symbol entries, 2,160 name-pool bytes, and 32 L65M directory entries. Libraries and definitions are append-only in 1.0.1; there is no `unload`, so a long or heavily composed session can exhaust a pool and require a restart. | The 1.1 candidate adds measured capacity relief but still has no dependency-safe `unload`. A fresh 1.1 session requires restarting Lisp65 from the product disk; platform Reset exits to BASIC. The one-command `restart-repl` workflow is deferred to the C2 immutable-code/mutable-session architecture. |
-| Libraries come from the product medium | With one drive, IDE, IDEX, and M65D must be loaded before swapping from the product D81 to a work disk. | The 1.1 Attic library shelf is intended to remove the post-boot library-disk dependency. |
-| IDE keyboard path is incomplete | Arrow navigation is usable, but the 1.0.1 input path loses modifier identity. `C-Space` is broken, physical `M-x` is not implemented, and the other documented chords lack an end-to-end physical-key receipt. | 1.0.1 corrects packaging and documentation only. 1.1 replaces the input path and binds every documented key. |
-| Blank work media has no compiler targets | Persistent compilation requires an existing preallocated FASL slot, but the supplied blank work D81 has no `fasl0`--`fasl2`; `compile-load` therefore reports `slot missing` without externally provisioned media. | 1.1 replaces the slot writer with the M65D copy-on-write transaction and removes preallocated slots. |
-| No standalone application builder | The on-device compiler creates and loads L65M modules for the current Workbench. It cannot yet produce a self-contained runtime or bootable application disk. | An on-device ship builder is the lead goal for 1.2. |
-| Editor safety and discoverability are limited | Buffers have fixed capacities. There is no undo/redo, interactive symbol completion, integrated help, or full Lisp-aware structural editing. | 1.1 plans measured undo, incremental search, S-expression navigation, completion, and help; full Paredit is not promised. |
-| File sizes are bounded | M65D and editor saves accept payloads from 1 through 8,192 bytes, so 8 KiB is the maximum supported editable load/save round trip. Evaluator `load` has a separate 38,400-byte staging ceiling; editor memory may become the practical limit before that. | 1.1 buffer work targets safer construction and better capacity use, but no larger file-size limit is currently promised. |
-| Xemu-only use has limited fidelity | Xemu is useful for evaluator, compiler, editor, and boot-choreography checks, but it is not a complete substitute for a MEGA65. Known local gaps include F011 sector writes, SD buffer mapping, and the missing Freezer; reset, timing, and media-swap behavior remain hardware-only claims. | Emulator-valid tests remain a prefilter. Broader emulator-only support depends partly on upstream Xemu behavior and has no promised release date. |
-| Storage workflow remains narrow | Release 1.0.1 supports one drive, has no on-device formatter, and retains a documented Freezer media-swap race in which at most one already-started sector can cross the media boundary before writes stop. | Keep backups now. Multi-drive support and stronger core-assisted mount locking remain later work, without a promised release date. |
+| Finite session metadata | The sealed profile leaves 334 symbol entries, 5,079 name-pool bytes, and 168 directory entries. Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | C2 separates immutable code from mutable session state; `unload` remains a later dependency-aware feature. |
+| Definition-to-call latency | The first call after a persistent definition takes about 1.90–1.96 seconds on the reference machine; isolated longer observations exist. Warm expressions take about 0.20 seconds. | Enter related definitions as one block to amortize the reload. C2 direct-Attic execution is the committed 1.2 cure. |
+| Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
+| No standalone application builder | The compiler creates L65M modules for the current Workbench; it does not produce a self-contained runtime or bootable application disk. | A ship-builder remains a 1.2 product goal. |
+| Editor safety and discoverability | Buffers have fixed capacities. There is no undo/redo, interactive completion, integrated help, or full structural editing. | These remain measured post-1.1 work; no release date is promised. |
+| File sizes are bounded | M65D and editor saves support 1–8,192 bytes. Evaluator `load` has a separate 38,400-byte staging ceiling; memory may become the practical limit earlier. | Larger files require a future storage/runtime design. |
+| Xemu-only use has limited fidelity | Xemu is useful for logic and boot choreography, but F011 writes, SD buffer mapping, Freezer behavior, reset semantics, and timing remain hardware claims. | Emulator-valid tests remain a prefilter, never a hardware substitute. |
+| Storage workflow remains narrow | One drive is supported, there is no on-device formatter, and a documented Freezer race can let at most one already-started sector cross a media boundary before status 12 stops further writes. | Keep backups. Multi-drive and core-assisted mount locking remain later work. |
+| Banner colors persist after scrolling | The screen driver scrolls character cells but not color RAM, so text crossing the former banner rows can inherit its colors. Data and program state are unaffected. | The color-RAM rider requires the C2 runtime-layout evolution. |
+| Function metadata is incomplete | Exact arity is proven for 101 entries; 34 native or macro entries remain explicitly unresolved, so no complete integrated-help claim is made. | C2.2 supplies the metadata/carrier evolution. |
 
-These roadmap items describe current intent, not release dates or compatibility
-promises. Each change remains conditional on measured capacity, reproducible
-builds, and hardware acceptance.
+Buffers print as the opaque marker `?`; inspect them with `buffer-ref` and
+`buffer-length`. The physical product-medium write-protect case is not
+applicable to the tested stock-core SD-D81 profile because it exposes no
+physical or virtual write-protect medium.
+
+These roadmap statements describe intent, not delivery promises. Every change
+remains conditional on measured capacity, reproducible builds, and hardware
+acceptance.
 
 ## Verification status
 
-Release 1.0.1 reuses product artifact set `c41b9643…` and G6 seal
-`b339a274…`:
+Release 1.1.0 binds product artifact set
+`048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024`:
 
 - G3: passed as an emulator prefilter
 - G5: 14/14 hardware cases passed
-- G6: 5/5 profile-applicable hardware cases passed
-- Physical product-medium write protection: not applicable to the tested
+- G6: 5/5 profile-applicable hardware cases passed on one physical MEGA65
+- Physical product-medium write protection: not applicable in the tested
   stock-core SD-D81 profile
 
-The exact claims, full hashes, toolchain provenance, and negative verification
-tests are recorded in the [1.0.1 release receipt](releases/lisp65-1.0.1-receipt.json).
-The public [1.0.1 artifact manifest](releases/lisp65-1.0.1-manifest.json) lists the
-SHA-256 digest and byte count of every sealed product artifact.
+The G6 acceptance archive is self-contained, verified offline, reproducibly
+packed, and rejects deliberate mutations. Exact hashes and toolchain provenance
+are recorded in the [1.1.0 release receipt](releases/lisp65-1.1.0-receipt.json)
+and [manifest](releases/lisp65-1.1.0-manifest.json).
 
 The public repository is a curated source snapshot with independent Git
-history. Its tags therefore have different Git object identities from the
-private proof tags. The 1.0.1 release receipt preserves authoritative proof
-source commit `5479471…` (the 1.0.0 receipt retains `5897294…`), while
-`PUBLIC-SOURCE-MANIFEST.json` binds every file in the public snapshot to the
-private cleanup commit from which it was exported.
+history. Its Git commit and tag object IDs therefore differ from the private
+proof repository; the release receipt binds the public package back to the
+authoritative product and evidence SHAs.
 
 ## Building from source
 
 The source tree is primarily for lisp65 development. It requires GNU Make,
-Python 3, a C99 host compiler, `c1541`, LLVM-MOS, and the MEGA65 tools for
-hardware deployment. The public repository does not redistribute either
-third-party tool bundle; install them separately at the paths described in the
-[Development Guide](docs/development.md).
+Python 3, a C99 host compiler, `c1541`, LLVM-MOS, and the MEGA65 tools. The
+public repository does not redistribute third-party tool bundles.
 
 ```sh
 make doctor DOCTOR_GATE=G2
@@ -171,36 +137,30 @@ make source-syntax-check
 make workbench-product
 ```
 
-Start with the [Development Guide](docs/development.md) before changing product
-code or memory budgets. The aggregate `check-source`, `check-host`, and
-`check-product` targets consume sealed evidence and are therefore available
-only in the private proof repository.
+Start with the [Development Guide](docs/development.md). Aggregate proof gates
+that consume sealed evidence are available only in the private proof repository.
 
 ## Documentation
 
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
+- [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 1.1.0](docs/releases/1.1.0.md)
 - [Development Guide](docs/development.md)
 - [Architecture Overview](docs/architecture-overview.md)
 - [Documentation Index](docs/README.md)
-- [Release Notes for 1.0.1](docs/releases/1.0.1.md)
-- [Release Notes for 1.0.0](docs/releases/1.0.0.md)
 
-## Scope
+## Scope and licensing
 
-lisp65 is intentionally a practical Common Lisp–inspired subset, not a complete
+lisp65 is intentionally a practical Common Lisp-inspired subset, not a complete
 ANSI Common Lisp implementation. It is native to the MEGA65 and does not target
-C64 compatibility. Performance-sensitive work is expected to use coarse native
-primitives and MEGA65 hardware services rather than tight bytecode loops.
-
-## Licensing and public distribution
+C64 compatibility.
 
 lisp65's original source and documentation are licensed under the
 [Mozilla Public License 2.0](LICENSE). See [license scope](LICENSE-SCOPE.md),
 [runtime redistribution](RUNTIME-REDISTRIBUTION.md), and
 [third-party notices](THIRD-PARTY-NOTICES.md) for the exact boundaries.
 
-The complete proof and development mirror remains private. A separate public
-repository is generated from an explicit allowlist; bundled toolchains,
-third-party reference PDFs, sealed evidence, and release tarballs in Git/LFS
-are excluded.
+The complete proof/development mirror remains private. The public repository is
+generated from an explicit allowlist; bundled toolchains, reference PDFs,
+sealed evidence, and release tarballs in Git/LFS are excluded.

@@ -15,7 +15,7 @@
 #include <stdint.h>
 
 void scr_init(void);          /* Geometrie lesen, loeschen, Cursor home */
-void scr_clear(void);         /* Schirm leeren + Cursor home (ersetzt CHROUT 0x93) */
+void scr_clear(void);         /* Screen-Codes leeren + Cursor home; Farbe bleibt */
 void scr_putc(char c);        /* ASCII-Zeichen am Cursor ausgeben; '\n'/'\r' = Zeilenwechsel */
 void scr_backspace(void);     /* Zeichen links vom Cursor loeschen (DEL) */
 void scr_cursor(uint8_t on);  /* Block-Cursor am aktuellen Ort zeigen/verstecken */
@@ -29,6 +29,7 @@ uint8_t scr_row(void);        /* aktuelle Cursorzeile (fuer REPL-Heuristiken) */
 
 #ifndef __mos__
 const uint8_t *scr_host_buf(void);   /* Host-Test: rohes Screen-Abbild (cols*rows) */
+const uint8_t *scr_host_color_buf(void); /* Host-Test: logisches 28-Bit-Farb-Abbild */
 #endif
 
 #endif /* LISP65_SCREEN_H */

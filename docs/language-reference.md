@@ -1,10 +1,7 @@
 # Dialect V2 Language Reference
 
-This living reference describes the current lisp65 **1.1 Wave 2 candidate**.
-The released lisp65 1.0.1 also ships Dialect V2, but it does not contain the
-Wave 1 additions called out below. Waves 1 and 2 are hardware-sealed; the
-candidate is still not a released version because Wave 3 and the final release
-promotion remain open.
+This living reference describes **lisp65 1.1.0**. The product version is 1.1.0;
+the language remains Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
 intentionally not ANSI Common Lisp.
@@ -49,7 +46,7 @@ the public `remainder` name are not part of Dialect V2.
 
 ## Functions
 
-The current Wave 1 candidate surface includes:
+The released surface includes:
 
 - arithmetic and comparison: `+`, `-`, `*`, `/`, `mod`, `1+`, `1-`, `=`,
   `/=`, `<`, `>`, `<=`, `>=`, `zerop`, `plusp`, `minusp`;
@@ -68,10 +65,9 @@ The current Wave 1 candidate surface includes:
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
 
-`filter` is a Wave 1 candidate addition. `read-from-string` is a Wave 2
-candidate addition; neither is present in release 1.0.1. `read-from-string`
-reads the first object from a String; malformed input uses the ordinary reader
-error path. `restart-repl` is deliberately not part of the 1.1 surface. It is
+`filter` and `read-from-string` were added in 1.1. `read-from-string` reads the
+first object from a String; malformed input uses the ordinary reader error
+path. `restart-repl` is deliberately not part of the 1.1 surface. It is
 reserved for the C2 immutable-code/mutable-session architecture after three
 bounded pre-C2 designs failed their hardware or capacity gates.
 
@@ -85,22 +81,21 @@ The complete native visibility and restriction inventory is generated from
 loadable surface.
 
 Bitwise functions `logand`, `logior`, `logxor`, and `ash` are not available in
-the 1.1 candidate. Their compact implementation requires the catalog-format
+1.1. Their compact implementation requires the catalog-format
 evolution planned with C2.2. Consequently `peekw` and `pokew` are also absent:
 1.1 exposes byte-sized `peek` and `poke`, but cannot compose a full unsigned
 16-bit result within its signed 15-bit fixnum representation.
 
-First-class byte buffers are a Wave 1 candidate addition. They print as the
-opaque marker `?`. Read their contents with `buffer-ref` and their length with
-`buffer-length`; the marker is not a readable representation. Release 1.0.1
-does not provide this Buffer type.
+First-class byte buffers were added in 1.1. They print as the opaque marker
+`?`. Read their contents with `buffer-ref` and their length with
+`buffer-length`; the marker is not a readable representation.
 
-## Wave 1 interactive latency limitation
+## Interactive latency limitation
 
 On the reference MEGA65, the first expression compiled after a persistent
 definition typically takes **1.90 to 1.96 seconds**; occasionally longer times
 have been observed. Immediately following warm expressions take about
-**0.20 seconds**. This is a dated, owner-approved candidate
+**0.20 seconds**. This is a dated, owner-approved release
 limitation, not a passed performance target. Entering related definitions as
 one block amortizes the compiler-tier reload. The committed cure is the C2
 direct-Attic-execution architecture for 1.2; the exception does not renew

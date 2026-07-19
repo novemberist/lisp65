@@ -1,0 +1,62 @@
+{
+  "format": "lisp65-r6-g6-seal-contract-v1",
+  "version": 1,
+  "id": "r6-g6-hardware-acceptance",
+  "status": "authorized",
+  "kind": "hardware-acceptance",
+  "input": {
+    "run_id": "run-20260719-wave3-01",
+    "product_artifact_set_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "ship_manifest_sha256": "706dc97d3811dfa0d362522358a00b7c1dd30264f7409acccec3fce07d46150e",
+    "preflight_sha256": "a6340e08d5ee2345cda948afbb17680f3d3fe61f0405b3a2375e50117cbf4330",
+    "top_receipt_sha256": "6ecf662e5828560521701446ba907e249990aa27ebd20e9e93046ea5d6460a10"
+  },
+  "receipt": {
+    "format": "lisp65-r6-g6-hardware-receipt-v2",
+    "applicable_cases": 5,
+    "profile_not_applicable_cases": 1,
+    "coverage": "exactly-once-per-applicable-case",
+    "physical_power_or_reset_cycles": 2
+  },
+  "archive": {
+    "format": "lisp65-r6-g6-hardware-archive-v1",
+    "self_contained": true,
+    "immutability": "append-only-never-amend",
+    "offline_verification": "archive-alone-no-repository-no-network",
+    "double_pack": "byte-identical-varied-environment"
+  },
+  "claims": {
+    "G3": "passed-emulator-prefilter-only",
+    "G5": "passed-for-product-artifact-set",
+    "G6": "G6: 5/5 anwendbare Hardwarefälle bestanden; execution=single-device; product-medium-physical-write-protect n/a: kein physisches Medium in der SD-D81-Konfiguration",
+    "function_metadata": "101-exact/34-unresolved-no-complete-help-claim",
+    "release": "not-promoted-until-R7"
+  },
+  "capacity_delta": {
+    "baseline_identity_sha256": "5c7c17f8b441f8acd4f5d57ac9dd17db852f1884f7450611985e13489cc0ffb6",
+    "candidate_identity_sha256": "048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024",
+    "dimensions": {
+      "bank": {"baseline": 1907, "candidate": 1907, "delta": 0, "authorization": null},
+      "ext": {
+        "baseline": 16967,
+        "candidate": 16731,
+        "delta": -236,
+        "authorization": {
+          "path": "config/v11-wave3-r3-aggregate-capacity-authorization.json",
+          "sha256": "b75946615c4ef20f9b1dd4422bba72c751bd877e7c93201dff5ea34f1a00d7c4"
+        }
+      },
+      "symbols": {"baseline": 320, "candidate": 334, "delta": 14, "authorization": null},
+      "namepool": {"baseline": 4897, "candidate": 5079, "delta": 182, "authorization": null},
+      "directory": {
+        "baseline": 176,
+        "candidate": 168,
+        "delta": -8,
+        "authorization": {
+          "path": "config/v11-wave3-r3-aggregate-capacity-authorization.json",
+          "sha256": "b75946615c4ef20f9b1dd4422bba72c751bd877e7c93201dff5ea34f1a00d7c4"
+        }
+      }
+    }
+  }
+}

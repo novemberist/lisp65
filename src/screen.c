@@ -8,10 +8,21 @@
  *
  * ASCII -> Screen-Code (Mixed-Case-Charset, wie chr$(14)):
  *   'a'..'z' -> 0x01..0x1A  |  'A'..'Z' -> 0x41..0x5A  |  0x20..0x3F identisch
- * Scroll: Zeilen 1..rows-1 um eine Zeile hochkopieren, letzte Zeile leeren. Default:
- * CPU-Kopie; der EDMA-Scroll bleibt ein opt-in Messpfad
- * (-DLISP65_SCREEN_EDMA_SCROLL), bis Footprint und IDE-Hotpath-Gates gruen sind. */
+ * Scroll: Zeilen 1..rows-1 um eine Zeile hochkopieren, letzte Zeile leeren. Der
+ * Enhanced-DMA-Pfad fuer getrennte Screen- und Farb-RAM-Jobs ist als isolierter
+ * L-lite-Probe-Pfad verfuegbar. Nach den begrenzten Welle-3-Linkversuchen bleibt
+ * das kanonische Workbench-Profil beim kleinen CPU-Fallback; die
+ * Produktintegration ist als C2-Fracht dokumentiert. */
 #include "screen.h"
+
+/* Future product profiles that require the color-safe rider must opt into the
+ * implementation explicitly.  Keeping the requirement separate lets the
+ * current C2-deferred profile remain buildable while preserving the earned
+ * fail-closed binding gate. */
+#if defined(LISP65_SCREEN_EDMA_SCROLL_REQUIRED) && \
+    !defined(LISP65_SCREEN_EDMA_SCROLL)
+#error "Workbench color-safe scroll is required but LISP65_SCREEN_EDMA_SCROLL is absent"
+#endif
 
 #ifndef __mos__
 #include <string.h>
@@ -19,11 +30,9 @@
 #define SIM_COLS 80
 #define SIM_ROWS 25
 static uint8_t sim[SIM_COLS * SIM_ROWS];
+static uint8_t sim_color[SIM_COLS * SIM_ROWS];
 static uint8_t *scr_base = sim;
 #else
-#ifdef LISP65_SCREEN_EDMA_SCROLL
-#include <mega65.h>
-#endif
 static uint8_t *scr_base;
 #define VIC31   (*(volatile uint8_t *)0xD031)
 #define SCRNPTRL (*(volatile uint8_t *)0xD060)
@@ -65,82 +74,42 @@ static void fill_row(uint8_t r) {
 }
 
 #if defined(__mos__) && defined(LISP65_SCREEN_EDMA_SCROLL)
-#define M65_COLOR_RAM_28 0x0ff80000ul
-
-struct screen_edma_job {
-    uint8_t options[7];
-    uint8_t end_option;
-    uint8_t dmalist[12];
-};
-
-__attribute__((used)) static struct screen_edma_job screen_edma;
-
-static void screen_edma_common(uint8_t cmd, uint32_t src, uint32_t dst,
-                               uint16_t count, uint8_t fill_value) {
-    screen_edma.options[0] = ENABLE_F018B_OPT;
-    screen_edma.options[1] = SRC_ADDR_BITS_OPT;
-    screen_edma.options[2] = (uint8_t)(src >> 20);
-    screen_edma.options[3] = DST_ADDR_BITS_OPT;
-    screen_edma.options[4] = (uint8_t)(dst >> 20);
-    screen_edma.options[5] = DST_SKIP_RATE_OPT;
-    screen_edma.options[6] = 1;
-    screen_edma.end_option = 0;
-
-    screen_edma.dmalist[0] = cmd;
-    screen_edma.dmalist[1] = (uint8_t)count;
-    screen_edma.dmalist[2] = (uint8_t)(count >> 8);
-    if (cmd == DMA_FILL_CMD) {
-        screen_edma.dmalist[3] = fill_value;
-        screen_edma.dmalist[4] = 0;
-        screen_edma.dmalist[5] = 0;
-    } else {
-        screen_edma.dmalist[3] = (uint8_t)src;
-        screen_edma.dmalist[4] = (uint8_t)(src >> 8);
-        screen_edma.dmalist[5] = (uint8_t)((src >> 16) & 0x0f);
-    }
-    screen_edma.dmalist[6] = (uint8_t)dst;
-    screen_edma.dmalist[7] = (uint8_t)(dst >> 8);
-    screen_edma.dmalist[8] = (uint8_t)((dst >> 16) & 0x0f);
-    screen_edma.dmalist[9] = 0;
-    screen_edma.dmalist[10] = 0;
-    screen_edma.dmalist[11] = 0;
-
-    __asm__ volatile(
-        "lda #1\n\t"
-        "sta $d703\n\t"
-        "lda #0\n\t"
-        "sta $d702\n\t"
-        "sta $d704\n\t"
-        "lda #mos16hi(screen_edma)\n\t"
-        "sta $d701\n\t"
-        "lda #mos16lo(screen_edma)\n\t"
-        "sta $d705\n\t"
-        ::: "a", "memory");
-}
-
-static void screen_edma_copy(uint32_t src, uint32_t dst, uint16_t count) {
-    screen_edma_common(DMA_COPY_CMD, src, dst, count, 0);
-}
-
-static void screen_edma_fill(uint32_t dst, uint8_t value, uint16_t count) {
-    screen_edma_common(DMA_FILL_CMD, 0, dst, count, value);
-}
+#include "screen_scroll_overlay.h"
+#if defined(LISP65_RUNTIME_OVERLAY)
+#include "vm_runtime_overlay.h"
+#endif
 #endif
 
 static void scroll_up(void) {
     /* Eigenes Scrollen — genau das, was der KERNAL nicht crashfrei kann. */
     uint16_t n = (uint16_t)(rows_ - 1) * cols_;
 #if defined(__mos__) && defined(LISP65_SCREEN_EDMA_SCROLL)
-    uint32_t base = (uint32_t)(uintptr_t)scr_base;
-    screen_edma_copy(base + cols_, base, n);
-    screen_edma_fill(base + n, 0x20, cols_);
-    screen_edma_copy(M65_COLOR_RAM_28 + cols_, M65_COLOR_RAM_28, n);
-    screen_edma_fill(M65_COLOR_RAM_28 + n, 1, cols_);
+    lisp65_screen_scroll_context context;
+    uint8_t result = 1;
+    context.screen_base = (uint16_t)(uintptr_t)scr_base;
+    context.copy_bytes = n;
+    context.columns = cols_;
+#if defined(LISP65_RUNTIME_OVERLAY)
+    if (vm_runtime_overlay_exec(LISP65_SCREEN_SCROLL_OVERLAY_SLOT,
+                                &context, &result) != VM_RUNTIME_OVERLAY_OK ||
+        result != 0) {
+        /* Fail closed: lose the visible page instead of separating screen and
+         * color state after a transport failure. */
+        scr_clear();
+    }
+#else
+    result = lisp65_screen_scroll_overlay_entry(&context);
+    if (result != 0) scr_clear();
+#endif
 #else
     uint16_t i;
     uint8_t *dst = scr_base, *src = scr_base + cols_;
     for (i = 0; i < n; i++) dst[i] = src[i];
     fill_row((uint8_t)(rows_ - 1));
+#ifndef __mos__
+    for (i = 0; i < n; i++) sim_color[i] = sim_color[i + cols_];
+    for (i = n; i < (uint16_t)(n + cols_); i++) sim_color[i] = 1;
+#endif
 #endif
 }
 
@@ -159,6 +128,7 @@ void scr_init(void) {
     for (i = 0; i < n; i++) ((volatile uint8_t *)0xD800)[i] = 1;
 #else
     cols_ = SIM_COLS; rows_ = SIM_ROWS;
+    memset(sim_color, 1, sizeof(sim_color));
 #endif
     cursor_on = 0;
     scr_clear();
@@ -204,7 +174,7 @@ void scr_put_at(uint8_t x, uint8_t y, char c, int16_t attr) {
 #ifdef __mos__
     if (attr >= 0 && off < CRAM_WINDOW) ((volatile uint8_t *)0xD800)[off] = (uint8_t)(attr & 0x0F);
 #else
-    (void)attr;
+    if (attr >= 0) sim_color[off] = (uint8_t)(attr & 0x0F);
 #endif
 }
 
@@ -233,6 +203,11 @@ void scr_write_span(uint8_t x, uint8_t y, const char *chars, uint8_t nchars,
         uint8_t lim = (i < room) ? i : (uint8_t)room;       /* Rest liegt in I/O -> nicht anfassen */
         for (k = 0; k < lim; k++) cp[k] = col;
     }
+#else
+    if (attr >= 0) {
+        uint8_t col = (uint8_t)(attr & 0x0F), k;
+        for (k = 0; k < i; k++) sim_color[off + k] = col;
+    }
 #endif
 }
 
@@ -249,4 +224,5 @@ uint8_t scr_row(void)  { return crow; }
 
 #ifndef __mos__
 const uint8_t *scr_host_buf(void) { return sim; }
+const uint8_t *scr_host_color_buf(void) { return sim_color; }
 #endif

@@ -90,21 +90,16 @@ static void run_scroll_checks(void) {
     volatile uint8_t *screen = (volatile uint8_t *)(uintptr_t)base;
 
     record(HW_SCREEN_GEOMETRY,
-           scr_cols() == HW_SCREEN_COLS && scr_rows() >= HW_SCREEN_ROWS,
+           scr_cols() == HW_SCREEN_COLS && scr_rows() == HW_SCREEN_ROWS,
            (uint16_t)(((uint16_t)scr_rows() << 8) | scr_cols()),
            (uint16_t)((HW_SCREEN_ROWS << 8) | HW_SCREEN_COLS));
 
     seed_screen(base);
-
-    hw_edma_copy((uint32_t)base + HW_SCREEN_COLS,
-                 (uint32_t)base,
-                 HW_SCREEN_SCROLL_BYTES);
-    hw_edma_fill((uint32_t)base + HW_SCREEN_SCROLL_BYTES, 0x20, HW_SCREEN_COLS);
-
-    hw_edma_copy(HW_M65_COLOR_RAM + HW_SCREEN_COLS,
-                 HW_M65_COLOR_RAM,
-                 HW_SCREEN_SCROLL_BYTES);
-    hw_edma_fill(HW_M65_COLOR_RAM + HW_SCREEN_SCROLL_BYTES, 1, HW_SCREEN_COLS);
+    /* Drive the product scroll path, not a duplicate DMA recipe in the smoke. */
+    {
+        uint8_t row;
+        for (row = 0; row < HW_SCREEN_ROWS; row++) scr_putc('\n');
+    }
 
     record(HW_SCREEN_COPY_TOP,
            screen[0] == row_code(1),

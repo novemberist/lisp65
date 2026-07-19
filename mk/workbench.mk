@@ -1,6 +1,38 @@
 # Canonical Workbench product, packaging, and release rules.
 
-.PHONY: v11-c1-repl-latency-check v11-source-stream-lifetime-selftest v11-source-stream-lifetime-check v11-wave2-error-text-library-check v11-wave2-list-unification-selftest v11-wave2-list-unification-check v11-wave2-policy-name-implementation-collect v11-wave2-policy-name-implementation-check v11-wave2-common-repin-collect v11-wave2-common-repin-check v11-function-metadata-selftest v11-function-metadata-check
+.PHONY: v11-c1-repl-latency-check v11-source-stream-lifetime-selftest v11-source-stream-lifetime-check v11-wave2-error-text-library-check v11-wave2-list-unification-selftest v11-wave2-list-unification-check v11-wave2-policy-name-implementation-collect v11-wave2-policy-name-implementation-check v11-wave2-common-repin-collect v11-wave2-common-repin-check v11-function-metadata-selftest v11-function-metadata-check v11-l-lite-keymap-check v11-l-lite-keymap-dry-check v11-color-scroll-binding-check v11-wave3-fail-fast-check v11-wave3-dry-smoke v11-l-lite-probe-check v11-wave3-l-lite-repin-collect v11-wave3-l-lite-repin-check
+
+v11-l-lite-keymap-check:
+	python3 tools/host-lisp/v11_l_lite_keymap.py selftest
+	python3 tools/host-lisp/v11_l_lite_keymap.py check
+
+v11-color-scroll-binding-check:
+	python3 tools/host-lisp/v11_color_scroll_binding.py selftest
+	python3 tools/host-lisp/v11_color_scroll_binding.py check
+
+v11-wave3-fail-fast-check: v11-l-lite-keymap-check v11-color-scroll-binding-check
+	python3 tools/host-lisp/v11_wave3_fail_fast.py selftest
+	python3 tools/host-lisp/v11_wave3_fail_fast.py check
+
+v11-l-lite-keymap-dry-check: v11-l-lite-keymap-check
+	python3 tools/host-lisp/ide_ui_eval_oracle.py
+	$(MAKE) v2-workbench-codemod
+	python3 tools/host-lisp/bytecode_p0_stdlib.py --check \
+		build/bytecode/dialect-v2/suites/p0-ide-core-lib.json \
+		build/bytecode/dialect-v2/suites/p0-ide-extra-lib.json
+
+v11-wave3-dry-smoke: v11-l-lite-keymap-dry-check v11-wave3-fail-fast-check error-overlay-smoke screen-smoke hw-edma-screen-smoke-prg
+
+v11-l-lite-probe-check:
+	python3 tools/host-lisp/v11_l_lite_probe.py selftest
+	python3 tools/host-lisp/v11_l_lite_probe.py check
+
+v11-wave3-l-lite-repin-collect: workbench-overlay-stack-guard v2-workbench-library-composition-check
+	python3 tools/host-lisp/v11_wave3_l_lite_repin.py collect
+
+v11-wave3-l-lite-repin-check: workbench-overlay-stack-guard v2-workbench-library-composition-check
+	python3 tools/host-lisp/v11_wave3_l_lite_repin.py check
+
 
 v11-wave2-error-text-library-check:
 	python3 tools/host-lisp/v11_wave2_error_text_library.py check

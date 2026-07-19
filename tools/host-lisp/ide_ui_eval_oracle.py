@@ -22,9 +22,11 @@ DEFAULT_STRINGS_LIB = ROOT / "lib" / "stdlib-strings.lisp"
 DEFAULT_IDE_BUFFER_LIB = ROOT / "lib" / "ide-buffer.lisp"
 DEFAULT_IDE_STATUS_LIB = ROOT / "lib" / "ide-status.lisp"
 DEFAULT_IDE_SYNTAX_LIB = ROOT / "lib" / "ide-syntax.lisp"
+DEFAULT_IDE_KEYMAP_LIB = ROOT / "lib" / "ide-keymap-generated.lisp"
 DEFAULT_IDE_UI_LIB = ROOT / "lib" / "ide-ui.lisp"
 DEFAULT_IDE_EXTRA_LIB = ROOT / "lib" / "ide-extra.lisp"
 DEFAULT_CASES = ROOT / "lib" / "tests" / "ide-ui-eval-cases.json"
+DEFAULT_KEYMAP_CASES = ROOT / "lib" / "tests" / "ide-keymap-eval-cases.generated.json"
 
 
 def main(argv: list[str]) -> int:
@@ -43,6 +45,7 @@ def main(argv: list[str]) -> int:
         load_prelude(buffer_lib, reset=False)
         load_prelude(status_lib, reset=False)
         load_prelude(DEFAULT_IDE_SYNTAX_LIB, reset=False)   # Syntax-Feature (ide-ui ruft %ide-hl-walk/split-indented)
+        load_prelude(DEFAULT_IDE_KEYMAP_LIB, reset=False)
         load_prelude(ui_lib, reset=False)
         load_prelude(DEFAULT_IDE_EXTRA_LIB, reset=False)
     except (EvalError, ReaderError) as exc:
@@ -53,7 +56,15 @@ def main(argv: list[str]) -> int:
     env = Env()
     passed = 0
     failed = 0
-    for case in data["cases"]:
+    generated = json.loads(DEFAULT_KEYMAP_CASES.read_text(encoding="utf-8"))
+    # Direct binding rows moved to the generated suite. Keep the older file as
+    # the behavioral step/render corpus until its next mechanical compaction.
+    behavioral = [
+        case for case in data["cases"]
+        if not case["name"].startswith("event-command-")
+        and not case["name"].startswith("ide-command-named-")
+    ]
+    for case in behavioral + generated["cases"]:
         try:
             ok, message = check_case(case, env)
         except Exception as exc:

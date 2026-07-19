@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the M4 D81 directory-entry write mutation."""
+"""Verify an exact two-sector D81 directory-entry write mutation."""
 
 from __future__ import annotations
 
@@ -37,6 +37,23 @@ def bit_count_bam(data: bytes, track: int) -> int:
     index = (track - 1) if track <= 40 else (track - 41)
     entry = sector_offset(DIRECTORY_TRACK, bam_sector) + BAM_ENTRY_BASE + BAM_ENTRY_SIZE * index
     return sum(b.bit_count() for b in data[entry + 1 : entry + BAM_ENTRY_SIZE])
+
+
+def sector_free(data: bytes, track: int, sector: int) -> bool:
+    _, bitmap_off, mask = bam_offsets(track, sector)
+    return (data[bitmap_off] & mask) != 0
+
+
+def first_free_sectors(data: bytes, track: int, start: int, count: int) -> list[int]:
+    if not (0 <= start < SECTORS_PER_TRACK):
+        raise ValueError("allocator start sector out of range: %d" % start)
+    found = [sector for sector in range(start, SECTORS_PER_TRACK) if sector_free(data, track, sector)]
+    if len(found) < count:
+        raise ValueError(
+            "T%d has only %d free sectors at or after S%d, need %d"
+            % (track, len(found), start, count)
+        )
+    return found[:count]
 
 
 def fold_name(name: str) -> bytes:
@@ -85,6 +102,7 @@ def expected_after(
     dir_track: int,
     dir_sector: int,
     dir_entry_index: int,
+    allocator_start_sector: int | None = None,
 ) -> bytearray:
     expected_size = TRACKS * SECTORS_PER_TRACK * SECTOR_SIZE
     if len(before) != expected_size:
@@ -97,21 +115,29 @@ def expected_after(
     count_off, bitmap_off_a, mask_a = bam_offsets(track, first)
     count_off_b, bitmap_off_b, mask_b = bam_offsets(track, second)
     if count_off_b != count_off:
-        raise ValueError("M4 sectors must live on the same BAM track entry")
-    if bitmap_off_a != bitmap_off_b:
-        raise ValueError("M4 sectors must live in the same BAM bitmap byte")
+        raise ValueError("sectors must live on the same BAM track entry")
+    if first == second:
+        raise ValueError("first and second sector must differ")
+    if allocator_start_sector is not None:
+        selected = first_free_sectors(before, track, allocator_start_sector, 2)
+        if selected != [first, second]:
+            raise ValueError(
+                "allocator plan drift: first free sectors from T%d/S%d are S%d,S%d, expected S%d,S%d"
+                % (track, allocator_start_sector, selected[0], selected[1], first, second)
+            )
 
     before_count = before[count_off]
-    before_bitmap = before[bitmap_off_a]
+    before_bitmap_a = before[bitmap_off_a]
+    before_bitmap_b = before[bitmap_off_b]
     errors: list[str] = []
     if before_count != bit_count_bam(before, track):
         errors.append(
             "before T%d free-count %d != bitmap bits %d"
             % (track, before_count, bit_count_bam(before, track))
         )
-    if (before_bitmap & mask_a) == 0:
+    if (before_bitmap_a & mask_a) == 0:
         errors.append("before T%d/S%d is already allocated" % (track, first))
-    if (before_bitmap & mask_b) == 0:
+    if (before_bitmap_b & mask_b) == 0:
         errors.append("before T%d/S%d is already allocated" % (track, second))
     if before_count < 2:
         errors.append("before T%d free-count %d cannot allocate two sectors" % (track, before_count))
@@ -124,7 +150,8 @@ def expected_after(
 
     after = bytearray(before)
     after[count_off] = before_count - 2
-    after[bitmap_off_a] = before_bitmap & (0xFF ^ mask_a ^ mask_b)
+    after[bitmap_off_a] = before_bitmap_a & (0xFF ^ mask_a)
+    after[bitmap_off_b] = after[bitmap_off_b] & (0xFF ^ mask_b)
 
     first_off = sector_offset(track, first)
     second_off = sector_offset(track, second)
@@ -154,6 +181,7 @@ def verify(
     dir_track: int,
     dir_sector: int,
     dir_entry_index: int,
+    allocator_start_sector: int | None = None,
 ) -> list[str]:
     errors: list[str] = []
     expected_size = TRACKS * SECTORS_PER_TRACK * SECTOR_SIZE
@@ -165,7 +193,16 @@ def verify(
         return errors
     try:
         expected = expected_after(
-            before, payload, name, track, first, second, dir_track, dir_sector, dir_entry_index
+            before,
+            payload,
+            name,
+            track,
+            first,
+            second,
+            dir_track,
+            dir_sector,
+            dir_entry_index,
+            allocator_start_sector,
         )
     except ValueError as exc:
         errors.append(str(exc))
@@ -207,6 +244,11 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--dir-track", type=int, default=40)
     ap.add_argument("--dir-sector", type=int, default=4)
     ap.add_argument("--dir-entry", type=int, default=1)
+    ap.add_argument(
+        "--allocator-start-sector",
+        type=int,
+        help="require first/second to be the allocator's first two free sectors from this sector",
+    )
     ap.add_argument("--selftest", type=Path, help="verify the expected mutation in memory")
     args = ap.parse_args(argv)
 
@@ -225,6 +267,7 @@ def main(argv: list[str]) -> int:
                     args.dir_track,
                     args.dir_sector,
                     args.dir_entry,
+                    args.allocator_start_sector,
                 )
             )
         else:
@@ -243,6 +286,7 @@ def main(argv: list[str]) -> int:
             args.dir_track,
             args.dir_sector,
             args.dir_entry,
+            args.allocator_start_sector,
         )
     except (OSError, ValueError) as exc:
         print("d81-dir-write-diff: FAIL:", exc, file=sys.stderr)
@@ -253,11 +297,16 @@ def main(argv: list[str]) -> int:
             print("d81-dir-write-diff: FAIL:", error, file=sys.stderr)
         return 1
 
-    count_off, bitmap_off, _ = bam_offsets(args.track, args.first_sector)
+    count_off, bitmap_off_a, _ = bam_offsets(args.track, args.first_sector)
+    _, bitmap_off_b, _ = bam_offsets(args.track, args.second_sector)
     dir_base = sector_offset(args.dir_track, args.dir_sector) + args.dir_entry * DIR_ENTRY_SIZE
+    bitmap_offsets = sorted({bitmap_off_a, bitmap_off_b})
+    bitmap_summary = ",".join(
+        "0x%05x:0x%02x->0x%02x" % (off, before[off], after[off]) for off in bitmap_offsets
+    )
     print(
         "d81-dir-write-diff: PASS name=%s T%d/S%d->S%d dir@0x%05x len=%d "
-        "count@0x%05x %d->%d bitmap@0x%05x 0x%02x->0x%02x"
+        "count@0x%05x %d->%d bitmap=%s"
         % (
             args.name,
             args.track,
@@ -268,9 +317,7 @@ def main(argv: list[str]) -> int:
             count_off,
             before[count_off],
             after[count_off],
-            bitmap_off,
-            before[bitmap_off],
-            after[bitmap_off],
+            bitmap_summary,
         )
     )
     return 0

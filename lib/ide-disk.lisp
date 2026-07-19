@@ -483,24 +483,34 @@
         (ide-buffer-point (ide-state-buffer state))))
       (%ide-state-with-message state "no search")))
 
+(defun %ide-decimal-value-from (text index value)
+  (if (< index (string-length text))
+      ((lambda (code)
+         (if (and (>= code 48) (<= code 57))
+             (%ide-decimal-value-from text (+ index 1)
+                                      (+ (* value 10) (- code 48)))
+             nil))
+       (string-ref text index))
+      value))
+
 (defun %ide-mini-motion-submit (state action file)
   (if (eq action 1012)
       (if (> (string-length file) 0)
-          ((lambda (n max)
-             ((lambda (line)
-                (%ide-state-with-message
-                 (%ide-state-with-buffer
-                  state
-                  (ide-set-point (ide-state-buffer state) line 0))
-                 "moved"))
-              (if (< n 1)
-                  0
-                  (if (< n max) (- n 1) (- max 1)))))
-           (if (> (string-length file) 1)
-               (+ (* 10 (- (string-ref file 0) 48))
-                  (- (string-ref file 1) 48))
-               (- (string-ref file 0) 48))
-           (ide-line-count (ide-state-buffer state)))
+          ((lambda (n)
+             (if n
+                 ((lambda (max)
+                    ((lambda (line)
+                       (%ide-state-with-message
+                        (%ide-state-with-buffer
+                         state
+                         (ide-set-point (ide-state-buffer state) line 0))
+                        "moved"))
+                     (if (< n 1)
+                         0
+                         (if (< n max) (- n 1) (- max 1)))))
+                  (ide-line-count (ide-state-buffer state)))
+                 (%ide-state-with-message state "invalid line")))
+           (%ide-decimal-value-from file 0 0))
           (%ide-state-with-message state "no line"))
       (%ide-state-with-message state "unknown command")))
 
