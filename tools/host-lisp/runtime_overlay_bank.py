@@ -19,9 +19,15 @@ from typing import Any, Sequence
 
 
 FORMAT = "lisp65-runtime-overlay-bank-v1"
+FORMAT_V2 = "lisp65-runtime-overlay-bank-v2"
+FORMAT_V3 = "lisp65-runtime-overlay-bank-v3"
+FORMAT_V4 = "lisp65-runtime-overlay-bank-v4"
 BINDING_SCHEMA = "lisp65-runtime-overlay-package-v2"
 MAGIC = b"L65R"
 VERSION = 1
+VERSION_V2 = 2
+VERSION_V3 = 3
+VERSION_V4 = 4
 HEADER_SIZE = 32
 ENTRY_SIZE = 32
 MAX_SLICES = 64
@@ -39,6 +45,20 @@ STORAGE_BASE = 0x08000000
 STORAGE_LIMIT = STORAGE_BASE + BANK_SIZE
 STORAGE_ADDRESS_BITS = 28
 STORAGE_PERSISTENCE = "reset-stable-power-volatile"
+REGION_MAIN = 0
+REGION_C2D_OVERFLOW = 1
+KNOWN_REGIONS = (REGION_MAIN, REGION_C2D_OVERFLOW)
+REGION1_KIND = "chip-ram-bank5-session-overflow"
+REGION1_SOURCE_KIND = "attic-ram-stage-source"
+# Region 1 is staged only after the product shelf has finished using Bank-5
+# scratch.  Its durable source therefore cannot alias the shelf tenant at
+# 0x08100000 or the Boot-family tenant at 0x08200000.
+REGION1_SOURCE_BASE = 0x08300000
+REGION1_BANK = 5
+REGION1_ADDRESS = 0xBD00
+REGION1_RUNTIME_SOURCE_BASE = (REGION1_BANK << 16) + REGION1_ADDRESS
+REGION1_CAPACITY = 0x07F0
+REGION1_LIMIT = REGION1_ADDRESS + REGION1_CAPACITY
 PAYLOAD_ALIGNMENT = 0x100
 CRC16_INIT = 0xFFFF
 CRC16_POLY = 0x1021
@@ -54,7 +74,9 @@ PREPARE_VERIFIER_BINDINGS = (
 FLAG_BOOT = 0x0001
 FLAG_RUNTIME = 0x0002
 FLAG_REUSABLE = 0x0004
-KNOWN_FLAGS = FLAG_BOOT | FLAG_RUNTIME | FLAG_REUSABLE
+FLAG_DATA_ONLY = 0x0008
+KNOWN_FLAGS = FLAG_BOOT | FLAG_RUNTIME | FLAG_REUSABLE | FLAG_DATA_ONLY
+DATA_ENTRY_SENTINEL = 0xFFFF
 
 HEADER = struct.Struct("<4sBBBBHBBIHHIHHI")
 ENTRY = struct.Struct("<HHHHHHHHIHHII")
@@ -68,11 +90,17 @@ TOP_FIELDS = {
     "schema", "profile", "profile_build_id", "abi", "elf", "storage",
     "catalog", "config_header", "policy", "slices",
 }
+TOP_FIELDS_V4 = TOP_FIELDS | {"overflow_storage"}
 ABI_FIELDS = {"contract", "sha256"}
 FILE_FIELDS = {"file", "sha256"}
 STORAGE_FIELDS = {
     "format", "file", "kind", "address", "address_bits", "limit", "size",
     "build_id", "crc16", "crc16_algorithm", "sha256", "persistence",
+}
+OVERFLOW_STORAGE_FIELDS = {
+    "format", "file", "kind", "source_kind", "source_address", "bank",
+    "address", "limit", "capacity", "used", "crc16", "crc16_algorithm",
+    "sha256", "lifetime",
 }
 CATALOG_FIELDS = {
     "magic", "version", "header_size", "entry_size", "slice_count", "flags",
@@ -87,8 +115,9 @@ SLICE_FIELDS = {
     "id", "name", "section", "start_symbol", "end_symbol", "entry_symbol",
     "flags", "roles", "file_offset", "file_size", "memory_size", "vma", "end",
     "entry", "entry_offset", "abi_version", "slice_build_id", "capability_mask",
-    "crc16", "sha256",
+    "crc16", "record_crc16", "sha256",
 }
+SLICE_FIELDS_V4 = SLICE_FIELDS | {"region_id", "source_address"}
 
 
 class OverlayBankError(RuntimeError):
@@ -111,6 +140,9 @@ class SliceSpec:
     abi_version: int
     capability_mask: int
     entry_target: str = ""
+    data_only: bool = False
+    destination: int = 0
+    region_id: int = REGION_MAIN
 
 
 @dataclass(frozen=True)
@@ -134,8 +166,10 @@ class ParsedSlice:
     abi_version: int
     slice_build_id: int
     crc16: int
-    bss_bytes: int
+    record_crc16: int
     capability_mask: int
+    region_id: int = REGION_MAIN
+    source_address: int = 0
 
 
 @dataclass(frozen=True)
@@ -146,6 +180,8 @@ class ParsedBank:
     directory_crc16: int
     header_crc16: int
     slices: tuple[ParsedSlice, ...]
+    overflow_used: int = 0
+    overflow_crc16: int = 0
 
 
 @dataclass(frozen=True)
@@ -153,6 +189,7 @@ class Materialized:
     image: bytes
     manifest: dict[str, Any]
     header: bytes
+    overflow_image: bytes = b""
 
 
 def _fail(code: str, detail: str) -> None:
@@ -177,6 +214,10 @@ def _parse_int(value: str, label: str, minimum: int, maximum: int) -> int:
 
 def _address(value: str) -> int:
     return _parse_int(value, "runtime overlay VMA", 0, MAX_VMA)
+
+
+def _source_address(value: str) -> int:
+    return _parse_int(value, "runtime overlay source address", 0, 0x0FFFFFFF)
 
 
 def _positive_u16(value: str) -> int:
@@ -317,6 +358,8 @@ def _roles(flags: int) -> list[str]:
         result.append("runtime")
     if flags & FLAG_REUSABLE:
         result.append("reusable")
+    if flags & FLAG_DATA_ONLY:
+        result.append("data-only")
     return result
 
 
@@ -327,10 +370,18 @@ def _check_flags(flags: int, label: str) -> None:
         _fail("invalid-flags", f"{label} must select exactly one of boot or runtime")
     if flags & FLAG_REUSABLE and not flags & FLAG_RUNTIME:
         _fail("invalid-flags", f"{label} reusable requires runtime")
+    if flags & FLAG_DATA_ONLY and flags != FLAG_BOOT | FLAG_DATA_ONLY:
+        _fail("invalid-flags", f"{label} data-only requires boot and forbids runtime/reusable")
 
 
 def _parse_flags(value: str) -> int:
-    names = {"boot": FLAG_BOOT, "runtime": FLAG_RUNTIME, "reusable": FLAG_REUSABLE}
+    names = {
+        "boot": FLAG_BOOT,
+        "runtime": FLAG_RUNTIME,
+        "reusable": FLAG_REUSABLE,
+        "data": FLAG_DATA_ONLY,
+        "data-only": FLAG_DATA_ONLY,
+    }
     try:
         if value.startswith(("0x", "0X")) or value.isdigit():
             flags = int(value, 0)
@@ -352,19 +403,28 @@ def _parse_flags(value: str) -> int:
 
 
 def _payload_limit(flags: int, runtime_limit: int) -> int:
+    if flags & FLAG_DATA_ONLY:
+        return runtime_limit
     return MAX_BOOT_SLICE_BYTES if flags & FLAG_BOOT else runtime_limit
 
 
 def _slice_spec(value: str) -> SliceSpec:
     fields = value.split(":")
-    if len(fields) != 10:
+    if len(fields) not in (10, 11):
         raise argparse.ArgumentTypeError(
-            "slice must be ID:NAME:SECTION:START:END:ENTRY:FLAGS:ABI_VERSION:CAPS:ENTRY_TARGET"
+            "slice must be ID:NAME:SECTION:START:END:ENTRY:FLAGS:"
+            "ABI_VERSION:CAPS:ENTRY_TARGET[:REGION]"
         )
+    core = fields[:10]
     (
         id_text, name, section, start, end, entry, flags_text, abi_text,
         caps_text, entry_target,
-    ) = fields
+    ) = core
+    region_id = (
+        _parse_int(fields[10], "slice region", REGION_MAIN,
+                   REGION_C2D_OVERFLOW)
+        if len(fields) == 11 else REGION_MAIN
+    )
     slice_id = _parse_int(id_text, "slice ID", 0, MAX_SLICES - 1)
     if not ID_RE.fullmatch(name):
         raise argparse.ArgumentTypeError(f"slice name must match {ID_RE.pattern!r}: {name!r}")
@@ -377,11 +437,52 @@ def _slice_spec(value: str) -> SliceSpec:
         if not SYMBOL_RE.fullmatch(symbol):
             raise argparse.ArgumentTypeError(f"invalid {label} symbol: {symbol!r}")
     flags = _parse_flags(flags_text)
+    if flags & FLAG_DATA_ONLY:
+        raise argparse.ArgumentTypeError("data-only records require --data-slice")
     abi_version = _parse_int(abi_text, "ABI version", ENTRY_ABI, ENTRY_ABI)
     capabilities = _parse_int(caps_text, "capability mask", 0, 0xFFFFFFFF)
     return SliceSpec(
         slice_id, name, section, start, end, entry, flags, abi_version,
-        capabilities, entry_target
+        capabilities, entry_target, False, 0, region_id
+    )
+
+
+def _data_slice_spec(value: str) -> SliceSpec:
+    fields = value.split(":")
+    if len(fields) not in (8, 9):
+        raise argparse.ArgumentTypeError(
+            "data slice must be ID:NAME:SECTION:START:END:FLAGS:"
+            "DESTINATION:CAPS[:REGION]"
+        )
+    (
+        id_text, name, section, start, end, flags_text, destination_text,
+        caps_text,
+    ) = fields[:8]
+    region_id = (
+        _parse_int(fields[8], "data-slice region", REGION_MAIN,
+                   REGION_C2D_OVERFLOW)
+        if len(fields) == 9 else REGION_MAIN
+    )
+    slice_id = _parse_int(id_text, "data-slice ID", 0, MAX_SLICES - 1)
+    if not ID_RE.fullmatch(name):
+        raise argparse.ArgumentTypeError(
+            f"data-slice name must match {ID_RE.pattern!r}: {name!r}")
+    if not SECTION_RE.fullmatch(section):
+        raise argparse.ArgumentTypeError(f"invalid data-slice section: {section!r}")
+    for label, symbol in (("start", start), ("end", end)):
+        if not SYMBOL_RE.fullmatch(symbol):
+            raise argparse.ArgumentTypeError(f"invalid data-slice {label} symbol: {symbol!r}")
+    flags = _parse_flags(flags_text)
+    if flags != FLAG_BOOT | FLAG_DATA_ONLY:
+        raise argparse.ArgumentTypeError(
+            "data-slice flags must be exactly boot+data")
+    destination = _parse_int(destination_text, "data-slice destination", 0, 0xFFFF)
+    capabilities = _parse_int(caps_text, "data-slice capability mask", 0, 0xFFFFFFFF)
+    if capabilities:
+        raise argparse.ArgumentTypeError("data-only records require capability mask zero")
+    return SliceSpec(
+        slice_id, name, section, start, end, "", flags, 0, capabilities,
+        "", True, destination, region_id,
     )
 
 
@@ -396,7 +497,7 @@ def _check_specs(specs: Sequence[SliceSpec]) -> list[SliceSpec]:
         ("section", [item.section for item in specs]),
         ("start symbol", [item.start_symbol for item in specs]),
         ("end symbol", [item.end_symbol for item in specs]),
-        ("entry symbol", [item.entry_symbol for item in specs]),
+        ("entry symbol", [item.entry_symbol for item in specs if not item.data_only]),
     ):
         if len(set(values)) != len(values):
             _fail("duplicate-slice-spec", f"duplicate slice {label}")
@@ -412,10 +513,11 @@ def _check_specs(specs: Sequence[SliceSpec]) -> list[SliceSpec]:
 
 
 def lint_layout(args: argparse.Namespace) -> None:
-    specs = _check_specs(args.slice)
-    if any(not spec.entry_target for spec in specs) or len(
-        {spec.entry_target for spec in specs}
-    ) != len(specs):
+    specs = _check_specs([*args.slice, *getattr(args, "data_slice", [])])
+    executable = [spec for spec in specs if not spec.data_only]
+    if any(not spec.entry_target for spec in executable) or len(
+        {spec.entry_target for spec in executable}
+    ) != len(executable):
         _fail("layout-entry-target", "entry targets must be non-empty and unique")
     for label, configured, canonical in (
         ("bank", args.expect_bank, BANK),
@@ -456,12 +558,13 @@ def lint_layout(args: argparse.Namespace) -> None:
         )
     for spec in specs:
         size_limit = _payload_limit(spec.flags, MAX_SLICE_BYTES)
-        required = (
+        required = [
             f"{spec.start_symbol} = ADDR({spec.section})",
             f"{spec.end_symbol} = ADDR({spec.section}) + SIZEOF({spec.section})",
-            f"{spec.entry_symbol} = {spec.entry_target};",
             f"ASSERT(SIZEOF({spec.section}) > 0 && SIZEOF({spec.section}) <= {size_limit}",
-        )
+        ]
+        if not spec.data_only:
+            required.append(f"{spec.entry_symbol} = {spec.entry_target};")
         for fragment in required:
             if fragment not in linker:
                 _fail(
@@ -534,8 +637,9 @@ def extract_slices(
     required = {
         symbol
         for item in ordered
-        for symbol in (item.start_symbol, item.end_symbol, item.entry_symbol)
+        for symbol in (item.start_symbol, item.end_symbol)
     }
+    required.update(item.entry_symbol for item in ordered if not item.data_only)
     symbols = _nm_symbols(nm, elf, required)
     extracted: list[ExtractedSlice] = []
     with tempfile.TemporaryDirectory(prefix="lisp65-runtime-overlay-extract-") as name:
@@ -543,15 +647,17 @@ def extract_slices(
         for index, spec in enumerate(ordered):
             start = symbols[spec.start_symbol]
             end = symbols[spec.end_symbol]
-            entry = symbols[spec.entry_symbol]
-            if start != expected_vma:
+            entry = (DATA_ENTRY_SENTINEL if spec.data_only
+                     else symbols[spec.entry_symbol])
+            required_vma = spec.destination if spec.data_only else expected_vma
+            if start != required_vma:
                 _fail(
                     "vma-mismatch",
-                    f"slice {spec.name} VMA is 0x{start:04x}, expected 0x{expected_vma:04x}",
+                    f"slice {spec.name} VMA is 0x{start:04x}, expected 0x{required_vma:04x}",
                 )
             if not 0 <= start < end <= BANK_SIZE:
                 _fail("invalid-vma", f"slice {spec.name} has invalid span 0x{start:x}..0x{end:x}")
-            if not start <= entry < end:
+            if not spec.data_only and not start <= entry < end:
                 _fail("entry-range", f"slice {spec.name} entry lies outside its VMA span")
             size = end - start
             size_limit = _payload_limit(spec.flags, max_slice_bytes)
@@ -578,14 +684,19 @@ def _profile_build_id(contract_sha256: str) -> int:
     return int(contract_sha256[:8], 16)
 
 
-def build_image(
+def build_region_images(
     slices: Sequence[ExtractedSlice],
     *,
     profile_build_id: int,
     expected_vma: int,
     max_slice_bytes: int,
     max_vma: int = MAX_VMA,
-) -> tuple[bytes, ParsedBank]:
+    format_version: int = VERSION,
+    main_source_base: int = STORAGE_BASE,
+    overflow_source_base: int = REGION1_RUNTIME_SOURCE_BASE,
+) -> tuple[bytes, bytes, ParsedBank]:
+    if format_version not in (VERSION, VERSION_V2, VERSION_V3, VERSION_V4):
+        _fail("bad-version", f"unsupported catalog version {format_version}")
     if not 0 <= profile_build_id <= 0xFFFFFFFF:
         _fail("build-id", "profile build ID does not fit uint32")
     if type(max_vma) is not int or not 0 <= max_vma <= 0xFFFF:
@@ -594,40 +705,99 @@ def build_image(
         _fail("invalid-vma", f"expected VMA must be in 0..0x{max_vma:04x}")
     if not 1 <= max_slice_bytes <= 0xFFFF:
         _fail("slice-limit", "max slice bytes must fit a positive uint16")
+    for label, source_base in (
+        ("main", main_source_base), ("overflow", overflow_source_base)
+    ):
+        if (type(source_base) is not int
+                or not 0 <= source_base <= 0x0FFFFFFF
+                or source_base & (PAYLOAD_ALIGNMENT - 1)):
+            _fail(
+                "source-address",
+                f"{label} source base must be a 28-bit 256-byte-aligned address",
+            )
     ordered = sorted(slices, key=lambda item: item.spec.id)
     _check_specs([item.spec for item in ordered])
-    if any(item.vma != expected_vma for item in ordered):
-        _fail("vma-mismatch", "all slices must use the profile VMA")
+    if any(item.vma != (item.spec.destination if item.spec.data_only else expected_vma)
+           for item in ordered):
+        _fail("vma-mismatch", "slice VMA differs from its executable or data destination")
 
     payload_offset = _align(HEADER_SIZE + len(ordered) * ENTRY_SIZE)
     if payload_offset > 0xFFFF:
         _fail("catalog-size", "catalog payload offset does not fit uint16")
-    cursor = payload_offset
+    cursors = {
+        REGION_MAIN: payload_offset,
+        REGION_C2D_OVERFLOW: 0,
+    }
     records: list[bytes] = []
-    payloads: list[tuple[int, bytes]] = []
+    payloads: list[tuple[int, int, bytes]] = []
     parsed: list[ParsedSlice] = []
     for item in ordered:
         spec = item.spec
+        region_id = spec.region_id
         _check_flags(spec.flags, f"slice {spec.name} flags")
+        if region_id not in KNOWN_REGIONS:
+            _fail("bad-region", f"slice {spec.name} has unknown region {region_id}")
+        if format_version != VERSION_V4 and region_id != REGION_MAIN:
+            _fail("bad-version", "region-qualified records require L65R-v4")
+        if format_version == VERSION_V4 and spec.capability_mask:
+            _fail(
+                "capability-region-conflict",
+                f"slice {spec.name} v4 region byte replaces the v3 capability field",
+            )
+        if spec.data_only and format_version < VERSION_V2:
+            _fail("bad-version", "data-only records require L65R-v2 or later")
+        if bool(spec.flags & FLAG_DATA_ONLY) != spec.data_only:
+            _fail("invalid-flags", f"slice {spec.name} data kind differs from its flags")
         if item.end - item.vma != len(item.data):
             _fail("section-size", f"slice {spec.name} memory and file sizes differ")
         if not item.data or len(item.data) > _payload_limit(spec.flags, max_slice_bytes):
             _fail("slice-too-large", f"slice {spec.name} size is outside the profile limit")
         if item.vma + len(item.data) > BANK_SIZE:
             _fail("invalid-vma", f"slice {spec.name} exceeds Bank 0")
-        if not item.vma <= item.entry < item.end:
+        if not spec.data_only and not item.vma <= item.entry < item.end:
             _fail("entry-range", f"slice {spec.name} entry lies outside the payload")
-        cursor = _align(cursor)
+        cursor = _align(cursors[region_id])
         if cursor > 0xFFFF:
-            _fail("bank-overflow", f"slice {spec.name} file offset does not fit uint16")
-        if cursor + len(item.data) > BANK_SIZE:
-            _fail("bank-overflow", f"slice {spec.name} exceeds the L65R-v1 64-KB window")
+            _fail(
+                "bank-overflow",
+                f"slice {spec.name} file offset does not fit uint16",
+            )
+        region_limit = (
+            BANK_SIZE if region_id == REGION_MAIN else REGION1_CAPACITY)
+        if cursor + len(item.data) > region_limit:
+            _fail(
+                "bank-overflow",
+                f"slice {spec.name} exceeds L65R region {region_id} "
+                f"capacity {region_limit}",
+            )
         crc = crc16_ccitt_false(item.data)
-        entry_offset = item.entry - item.vma
-        record = ENTRY.pack(
+        entry_offset = (DATA_ENTRY_SENTINEL if spec.data_only
+                        else item.entry - item.vma)
+        source_base = (
+            main_source_base if region_id == REGION_MAIN
+            else overflow_source_base)
+        source_address = source_base + cursor
+        if source_address > 0x0FFFFFFF:
+            _fail(
+                "source-address",
+                f"slice {spec.name} source address exceeds the 28-bit DMA domain",
+            )
+        # L65R-v4 turns the old relative file-offset word into the low 16
+        # address bits.  Byte 24 remains region_id; bytes 25/26 carry the
+        # DMA-native address bits 16..19 and 20..27.  Byte 27 stays reserved.
+        record_offset = (
+            source_address & 0xFFFF
+            if format_version == VERSION_V4 else cursor)
+        region_word = (
+            region_id
+            | (((source_address >> 16) & 0x0F) << 8)
+            | (((source_address >> 20) & 0xFF) << 16)
+            if format_version == VERSION_V4
+            else spec.capability_mask)
+        record = bytearray(ENTRY.pack(
             spec.id,
             spec.flags,
-            cursor,
+            record_offset,
             len(item.data),
             item.vma,
             len(item.data),
@@ -636,11 +806,17 @@ def build_image(
             profile_build_id,
             crc,
             0,
-            spec.capability_mask,
+            region_word,
             0,
-        )
-        records.append(record)
-        payloads.append((cursor, item.data))
+        ))
+        record_crc = 0
+        if format_version in (VERSION_V3, VERSION_V4):
+            record_crc = crc16_ccitt_false(record)
+            if not record_crc:
+                _fail("record-crc-zero", f"slice {spec.name} emitted a forbidden zero record CRC")
+            struct.pack_into("<H", record, 22, record_crc)
+        records.append(bytes(record))
+        payloads.append((region_id, cursor, item.data))
         parsed.append(
             ParsedSlice(
                 spec.id,
@@ -653,17 +829,27 @@ def build_image(
                 spec.abi_version,
                 profile_build_id,
                 crc,
-                0,
-                spec.capability_mask,
+                record_crc,
+                0 if format_version == VERSION_V4 else spec.capability_mask,
+                region_id,
+                source_address if format_version == VERSION_V4 else 0,
             )
         )
-        cursor += len(item.data)
-    image_size = cursor
+        cursors[region_id] = cursor + len(item.data)
+    image_size = cursors[REGION_MAIN]
+    overflow_used = cursors[REGION_C2D_OVERFLOW]
+    overflow = bytearray(overflow_used)
+    for region_id, offset, data in payloads:
+        if region_id == REGION_C2D_OVERFLOW:
+            overflow[offset : offset + len(data)] = data
+    overflow_result = bytes(overflow)
+    overflow_crc = (
+        crc16_ccitt_false(overflow_result) if overflow_result else 0)
     directory = b"".join(records)
     directory_crc = crc16_ccitt_false(directory)
     header_without_crc = HEADER.pack(
         MAGIC,
-        VERSION,
+        format_version,
         HEADER_SIZE,
         ENTRY_SIZE,
         len(ordered),
@@ -676,7 +862,10 @@ def build_image(
         image_size,
         directory_crc,
         0,
-        0,
+        (
+            overflow_used | (overflow_crc << 16)
+            if format_version == VERSION_V4 else 0
+        ),
     )
     header_crc = crc16_ccitt_false(header_without_crc)
     header = bytearray(header_without_crc)
@@ -684,8 +873,9 @@ def build_image(
     image = bytearray(image_size)
     image[:HEADER_SIZE] = header
     image[HEADER_SIZE : HEADER_SIZE + len(directory)] = directory
-    for offset, data in payloads:
-        image[offset : offset + len(data)] = data
+    for region_id, offset, data in payloads:
+        if region_id == REGION_MAIN:
+            image[offset : offset + len(data)] = data
     result = bytes(image)
     parsed_bank = ParsedBank(
         profile_build_id,
@@ -694,30 +884,87 @@ def build_image(
         directory_crc,
         header_crc,
         tuple(parsed),
+        overflow_used,
+        overflow_crc,
     )
-    validate_image(
+    validate_region_images(
         result,
+        overflow_result,
         expected_build_id=profile_build_id,
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
         max_vma=max_vma,
+        format_version=format_version,
+        main_source_base=main_source_base,
+        overflow_source_base=overflow_source_base,
     )
-    return result, parsed_bank
+    return result, overflow_result, parsed_bank
 
 
-def validate_image(
+def build_image(
+    slices: Sequence[ExtractedSlice],
+    *,
+    profile_build_id: int,
+    expected_vma: int,
+    max_slice_bytes: int,
+    max_vma: int = MAX_VMA,
+    format_version: int = VERSION,
+) -> tuple[bytes, ParsedBank]:
+    """Compatibility surface for the historical one-region formats."""
+    image, overflow, parsed = build_region_images(
+        slices,
+        profile_build_id=profile_build_id,
+        expected_vma=expected_vma,
+        max_slice_bytes=max_slice_bytes,
+        max_vma=max_vma,
+        format_version=format_version,
+    )
+    if overflow:
+        _fail(
+            "overflow-output-required",
+            "L65R-v4 region-1 payloads require the multi-image materializer",
+        )
+    return image, parsed
+
+
+def validate_region_images(
     image: bytes,
+    overflow_image: bytes,
     *,
     expected_build_id: int,
     expected_vma: int,
     max_slice_bytes: int,
     max_vma: int = MAX_VMA,
+    format_version: int = VERSION,
+    main_source_base: int = STORAGE_BASE,
+    overflow_source_base: int = REGION1_RUNTIME_SOURCE_BASE,
 ) -> ParsedBank:
+    if format_version not in (VERSION, VERSION_V2, VERSION_V3, VERSION_V4):
+        _fail("bad-version", f"unsupported catalog version {format_version}")
     if type(max_vma) is not int or not 0 <= max_vma <= 0xFFFF:
         _fail("invalid-vma", "maximum VMA does not fit uint16")
     if type(expected_vma) is not int or not 0 <= expected_vma <= max_vma:
         _fail("invalid-vma", f"expected VMA must be in 0..0x{max_vma:04x}")
+    for label, source_base in (
+        ("main", main_source_base), ("overflow", overflow_source_base)
+    ):
+        if (type(source_base) is not int
+                or not 0 <= source_base <= 0x0FFFFFFF
+                or source_base & (PAYLOAD_ALIGNMENT - 1)):
+            _fail(
+                "source-address",
+                f"{label} source base must be a 28-bit 256-byte-aligned address",
+            )
     data = bytes(image)
+    overflow_data = bytes(overflow_image)
+    if format_version != VERSION_V4 and overflow_data:
+        _fail("bad-version", "pre-v4 catalog cannot bind an overflow image")
+    if len(overflow_data) > REGION1_CAPACITY:
+        _fail(
+            "region-bounds",
+            f"overflow image has {len(overflow_data)} bytes, "
+            f"capacity is {REGION1_CAPACITY}",
+        )
     if len(data) < HEADER_SIZE:
         _fail("truncated-header", f"image has {len(data)} bytes, need {HEADER_SIZE}")
     fields = HEADER.unpack_from(data)
@@ -740,8 +987,8 @@ def validate_image(
     ) = fields
     if magic != MAGIC:
         _fail("bad-magic", f"catalog magic is {magic!r}")
-    if version != VERSION:
-        _fail("bad-version", f"catalog version is {version}")
+    if version != format_version:
+        _fail("bad-version", f"catalog version is {version}, expected {format_version}")
     if header_size != HEADER_SIZE:
         _fail("bad-header-size", f"header size is {header_size}")
     if entry_size != ENTRY_SIZE:
@@ -752,8 +999,24 @@ def validate_image(
         _fail("header-flags", f"header flags are 0x{flags:04x}")
     if bank != BANK:
         _fail("wrong-bank", f"catalog bank is {bank}, expected {BANK}")
-    if reserved_byte or reserved_word:
-        _fail("header-reserved", "header reserved fields must be zero")
+    overflow_used = reserved_word & 0xFFFF
+    overflow_crc = reserved_word >> 16
+    if reserved_byte:
+        _fail("header-reserved", "header reserved byte must be zero")
+    if format_version == VERSION_V4:
+        if (
+            overflow_used != len(overflow_data)
+            or overflow_used > REGION1_CAPACITY
+            or bool(overflow_used) != bool(overflow_crc)
+            or (overflow_used
+                and crc16_ccitt_false(overflow_data) != overflow_crc)
+        ):
+            _fail(
+                "overflow-binding",
+                "v4 header overflow size/CRC binding is invalid",
+            )
+    elif reserved_word:
+        _fail("header-reserved", "pre-v4 header reserved word must be zero")
     if build_id != expected_build_id:
         _fail("build-id", f"profile build ID is 0x{build_id:08x}")
     if directory_offset != HEADER_SIZE:
@@ -777,13 +1040,16 @@ def validate_image(
         _fail("nonzero-padding", "catalog-to-payload padding is not zero")
 
     slices: list[ParsedSlice] = []
-    cursor = payload_offset
+    cursors = {
+        REGION_MAIN: payload_offset,
+        REGION_C2D_OVERFLOW: 0,
+    }
     for index in range(count):
         values = ENTRY.unpack_from(directory, index * ENTRY_SIZE)
         (
             slice_id,
             slice_flags,
-            file_offset,
+            encoded_offset,
             file_size,
             vma,
             memory_size,
@@ -791,8 +1057,8 @@ def validate_image(
             abi_version,
             slice_build_id,
             payload_crc,
-            bss_bytes,
-            capability_mask,
+            record_crc,
+            region_word,
             entry_reserved,
         ) = values
         if slice_id != index:
@@ -803,33 +1069,92 @@ def validate_image(
                 f"slice[{index}] ID is {slice_id}, expected dense slot ID {index}",
             )
         _check_flags(slice_flags, f"slice[{index}].flags")
+        data_only = bool(slice_flags & FLAG_DATA_ONLY)
+        if data_only and format_version < VERSION_V2:
+            _fail("bad-version", f"slice[{index}] data-only kind requires L65R-v2 or later")
+        if format_version in (VERSION_V3, VERSION_V4):
+            raw_record = bytearray(directory[
+                index * ENTRY_SIZE:(index + 1) * ENTRY_SIZE])
+            if not record_crc:
+                _fail("record-crc-zero", f"slice[{index}] record CRC is zero")
+            raw_record[22:24] = b"\x00\x00"
+            if crc16_ccitt_false(raw_record) != record_crc:
+                _fail("record-crc", f"slice[{index}] record CRC mismatch")
+        elif record_crc:
+            _fail("memory-size", f"slice[{index}] pre-v3 reserved word must be zero")
+        if format_version == VERSION_V4:
+            region_id = region_word & 0xFF
+            source_bank = (region_word >> 8) & 0xFF
+            source_megabyte = (region_word >> 16) & 0xFF
+            source_reserved = (region_word >> 24) & 0xFF
+            if (region_id not in KNOWN_REGIONS
+                    or source_bank & 0xF0
+                    or source_reserved):
+                _fail(
+                    "bad-region",
+                    f"slice[{index}] region encoding is 0x{region_word:08x}",
+                )
+            source_address = (
+                encoded_offset
+                | (source_bank << 16)
+                | (source_megabyte << 20))
+            capability_mask = 0
+        else:
+            region_id = REGION_MAIN
+            capability_mask = region_word
+            source_address = 0
+        cursor = cursors[region_id]
         canonical_offset = _align(cursor)
-        if file_offset != canonical_offset:
-            _fail(
-                "file-offset",
-                f"slice[{index}] file offset is {file_offset}, expected {canonical_offset}",
-            )
+        if format_version == VERSION_V4:
+            source_base = (
+                main_source_base if region_id == REGION_MAIN
+                else overflow_source_base)
+            expected_source = source_base + canonical_offset
+            if source_address != expected_source:
+                _fail(
+                    "source-address",
+                    f"slice[{index}] source is 0x{source_address:07x}, "
+                    f"expected 0x{expected_source:07x}",
+                )
+            file_offset = canonical_offset
+        else:
+            file_offset = encoded_offset
+            if file_offset != canonical_offset:
+                _fail(
+                    "file-offset",
+                    f"slice[{index}] file offset is {file_offset}, "
+                    f"expected {canonical_offset}",
+                )
         if file_offset & (PAYLOAD_ALIGNMENT - 1):
             _fail("payload-alignment", f"slice[{index}] payload is not 256-byte aligned")
-        if any(data[cursor:file_offset]):
+        region_data = data if region_id == REGION_MAIN else overflow_data
+        if any(region_data[cursor:file_offset]):
             _fail("nonzero-padding", f"padding before slice[{index}] is not zero")
         if not 1 <= file_size <= _payload_limit(slice_flags, max_slice_bytes):
             _fail("slice-size", f"slice[{index}] file size is {file_size}")
-        if file_offset > len(data) or file_size > len(data) - file_offset:
+        if (file_offset > len(region_data)
+                or file_size > len(region_data) - file_offset):
             _fail("slice-bounds", f"slice[{index}] payload exceeds the image")
-        if memory_size != file_size or bss_bytes != 0:
-            _fail("memory-size", f"slice[{index}] v1 requires memory_size=file_size and no BSS")
-        if vma != expected_vma or vma + memory_size > BANK_SIZE:
+        if memory_size != file_size:
+            _fail("memory-size", f"slice[{index}] requires memory_size=file_size")
+        required_vma = (0x1800 if data_only else expected_vma)
+        if vma != required_vma or vma + memory_size > BANK_SIZE:
             _fail("vma-mismatch", f"slice[{index}] VMA is 0x{vma:04x}")
-        if entry_offset >= file_size:
-            _fail("entry-range", f"slice[{index}] entry offset is outside its payload")
-        if abi_version != ENTRY_ABI:
-            _fail("abi-version", f"slice[{index}] ABI version must be {ENTRY_ABI}")
+        if data_only:
+            if entry_offset != DATA_ENTRY_SENTINEL:
+                _fail("entry-range", f"slice[{index}] data entry sentinel is invalid")
+            if abi_version != 0 or capability_mask:
+                _fail("abi-version", f"slice[{index}] data record requires ABI/capabilities zero")
+        else:
+            if entry_offset >= file_size:
+                _fail("entry-range", f"slice[{index}] entry offset is outside its payload")
+            if abi_version != ENTRY_ABI:
+                _fail("abi-version", f"slice[{index}] ABI version must be {ENTRY_ABI}")
         if slice_build_id != expected_build_id:
             _fail("slice-build-id", f"slice[{index}] build ID does not match the profile")
         if entry_reserved:
             _fail("entry-reserved", f"slice[{index}] reserved field must be zero")
-        payload = data[file_offset : file_offset + file_size]
+        payload = region_data[file_offset : file_offset + file_size]
         if crc16_ccitt_false(payload) != payload_crc:
             _fail("payload-crc", f"slice[{index}] payload CRC mismatch")
         slices.append(
@@ -844,13 +1169,25 @@ def validate_image(
                 abi_version,
                 slice_build_id,
                 payload_crc,
-                bss_bytes,
+                record_crc,
                 capability_mask,
+                region_id,
+                source_address,
             )
         )
-        cursor = file_offset + file_size
-    if cursor != len(data):
-        _fail("trailing-bytes", f"last slice ends at {cursor}, image ends at {len(data)}")
+        cursors[region_id] = file_offset + file_size
+    if cursors[REGION_MAIN] != len(data):
+        _fail(
+            "trailing-bytes",
+            f"last main-region slice ends at {cursors[REGION_MAIN]}, "
+            f"image ends at {len(data)}",
+        )
+    if cursors[REGION_C2D_OVERFLOW] != len(overflow_data):
+        _fail(
+            "trailing-bytes",
+            f"last overflow slice ends at {cursors[REGION_C2D_OVERFLOW]}, "
+            f"image ends at {len(overflow_data)}",
+        )
     return ParsedBank(
         build_id,
         payload_offset,
@@ -858,6 +1195,29 @@ def validate_image(
         directory_crc,
         header_crc,
         tuple(slices),
+        len(overflow_data),
+        overflow_crc,
+    )
+
+
+def validate_image(
+    image: bytes,
+    *,
+    expected_build_id: int,
+    expected_vma: int,
+    max_slice_bytes: int,
+    max_vma: int = MAX_VMA,
+    format_version: int = VERSION,
+) -> ParsedBank:
+    """Compatibility validator for catalogs without a separate region image."""
+    return validate_region_images(
+        image,
+        b"",
+        expected_build_id=expected_build_id,
+        expected_vma=expected_vma,
+        max_slice_bytes=max_slice_bytes,
+        max_vma=max_vma,
+        format_version=format_version,
     )
 
 
@@ -888,6 +1248,7 @@ def render_header(
     *,
     profile_build_id: int,
     verifier_slices: Sequence[ParsedSlice] | None = None,
+    format_version: int = VERSION,
 ) -> bytes:
     catalog, record = _verifier_bindings(verifier_slices)
     lines = [
@@ -895,6 +1256,7 @@ def render_header(
         "#ifndef LISP65_RUNTIME_OVERLAY_BANK_CONFIG_H",
         "#define LISP65_RUNTIME_OVERLAY_BANK_CONFIG_H",
         "",
+        f"#define LISP65_RUNTIME_OVERLAY_CATALOG_VERSION {format_version}u",
         f"#define LISP65_RUNTIME_OVERLAY_FORMAT_BANK_TAG 0x{BANK:02x}u",
         f"#define LISP65_RUNTIME_OVERLAY_STORAGE_BASE 0x{STORAGE_BASE:08x}UL",
         f"#define LISP65_RUNTIME_OVERLAY_STORAGE_MEGABYTE 0x{STORAGE_BASE >> 20:02x}u",
@@ -904,6 +1266,21 @@ def render_header(
         f"#define LISP65_RUNTIME_OVERLAY_MAX_SLICE_BYTES {MAX_SLICE_BYTES}u",
         f"#define LISP65_RUNTIME_OVERLAY_BOOT_MAX_SLICE_BYTES {MAX_BOOT_SLICE_BYTES}u",
         f"#define LISP65_RUNTIME_OVERLAY_ENTRY_ABI {ENTRY_ABI}u",
+    ]
+    if format_version == VERSION_V4:
+        lines.extend([
+            f"#define LISP65_RUNTIME_OVERLAY_REGION_MAIN {REGION_MAIN}u",
+            f"#define LISP65_RUNTIME_OVERLAY_REGION_C2D_OVERFLOW "
+            f"{REGION_C2D_OVERFLOW}u",
+            f"#define LISP65_RUNTIME_OVERLAY_REGION1_BANK {REGION1_BANK}u",
+            f"#define LISP65_RUNTIME_OVERLAY_REGION1_SOURCE_BASE "
+            f"0x{REGION1_SOURCE_BASE:08x}UL",
+            f"#define LISP65_RUNTIME_OVERLAY_REGION1_ADDRESS "
+            f"0x{REGION1_ADDRESS:04x}u",
+            f"#define LISP65_RUNTIME_OVERLAY_REGION1_CAPACITY "
+            f"{REGION1_CAPACITY}u",
+        ])
+    lines.extend([
         "",
         f"#define LISP65_RUNTIME_OVERLAY_CATALOG_VERIFIER_FILE_OFF 0x{catalog[0]:04x}u",
         f"#define LISP65_RUNTIME_OVERLAY_CATALOG_VERIFIER_FILE_SIZE 0x{catalog[1]:04x}u",
@@ -913,7 +1290,7 @@ def render_header(
         f"#define LISP65_RUNTIME_OVERLAY_RECORD_VERIFIER_FILE_SIZE 0x{record[1]:04x}u",
         f"#define LISP65_RUNTIME_OVERLAY_RECORD_VERIFIER_ENTRY_OFFSET 0x{record[2]:04x}u",
         f"#define LISP65_RUNTIME_OVERLAY_RECORD_VERIFIER_CRC16 0x{record[3]:04x}u",
-    ]
+    ])
     lines.extend(["", "#endif /* LISP65_RUNTIME_OVERLAY_BANK_CONFIG_H */", ""])
     return "\n".join(lines).encode("ascii")
 
@@ -925,13 +1302,16 @@ def _manifest(
     abi_sha256: str,
     elf: Path,
     image_path: Path,
+    overflow_image_path: Path | None,
     header_path: Path,
     image: bytes,
+    overflow_image: bytes,
     header: bytes,
     parsed: ParsedBank,
     slices: Sequence[ExtractedSlice],
     expected_vma: int,
     max_slice_bytes: int,
+    format_version: int = VERSION,
 ) -> dict[str, Any]:
     by_id = {item.spec.id: item for item in slices}
     records: list[dict[str, Any]] = []
@@ -953,23 +1333,34 @@ def _manifest(
                 "memory_size": entry.memory_size,
                 "vma": entry.vma,
                 "end": entry.vma + entry.memory_size,
-                "entry": entry.vma + entry.entry_offset,
+                "entry": (None if spec.data_only
+                          else entry.vma + entry.entry_offset),
                 "entry_offset": entry.entry_offset,
                 "abi_version": entry.abi_version,
                 "slice_build_id": entry.slice_build_id,
                 "capability_mask": entry.capability_mask,
                 "crc16": entry.crc16,
+                "record_crc16": entry.record_crc16,
                 "sha256": _sha256_bytes(source.data),
+                **(
+                    {
+                        "region_id": entry.region_id,
+                        "source_address": entry.source_address,
+                    }
+                    if format_version == VERSION_V4 else {}
+                ),
             }
         )
-    return {
+    result = {
         "schema": BINDING_SCHEMA,
         "profile": profile,
         "profile_build_id": parsed.profile_build_id,
         "abi": {"contract": abi_contract.name, "sha256": abi_sha256},
         "elf": {"file": elf.name, "sha256": _sha256(elf)},
         "storage": {
-            "format": FORMAT,
+            "format": (FORMAT_V4 if format_version == VERSION_V4 else
+                       FORMAT_V3 if format_version == VERSION_V3 else
+                       FORMAT_V2 if format_version == VERSION_V2 else FORMAT),
             "file": image_path.name,
             "kind": STORAGE_KIND,
             "address": STORAGE_BASE,
@@ -984,7 +1375,7 @@ def _manifest(
         },
         "catalog": {
             "magic": MAGIC.decode("ascii"),
-            "version": VERSION,
+            "version": format_version,
             "header_size": HEADER_SIZE,
             "entry_size": ENTRY_SIZE,
             "slice_count": len(records),
@@ -1007,6 +1398,26 @@ def _manifest(
         },
         "slices": records,
     }
+    if format_version == VERSION_V4:
+        if overflow_image_path is None:
+            _fail("overflow-output-required", "L65R-v4 requires an overflow image path")
+        result["overflow_storage"] = {
+            "format": FORMAT_V4,
+            "file": overflow_image_path.name,
+            "kind": REGION1_KIND,
+            "source_kind": REGION1_SOURCE_KIND,
+            "source_address": REGION1_SOURCE_BASE,
+            "bank": REGION1_BANK,
+            "address": REGION1_ADDRESS,
+            "limit": REGION1_LIMIT,
+            "capacity": REGION1_CAPACITY,
+            "used": len(overflow_image),
+            "crc16": crc16_ccitt_false(overflow_image),
+            "crc16_algorithm": "crc-16-ccitt-false",
+            "sha256": _sha256_bytes(overflow_image),
+            "lifetime": "post-phase-3-session",
+        }
+    return result
 
 
 def _shape(value: Any, fields: set[str], label: str) -> None:
@@ -1022,17 +1433,27 @@ def _shape(value: Any, fields: set[str], label: str) -> None:
 
 
 def validate_manifest(value: dict[str, Any]) -> None:
-    _shape(value, TOP_FIELDS, "manifest")
+    catalog_version = value.get("catalog", {}).get("version")
+    _shape(
+        value,
+        TOP_FIELDS_V4 if catalog_version == VERSION_V4 else TOP_FIELDS,
+        "manifest",
+    )
     _shape(value["abi"], ABI_FIELDS, "manifest.abi")
     _shape(value["elf"], FILE_FIELDS, "manifest.elf")
     _shape(value["storage"], STORAGE_FIELDS, "manifest.storage")
     _shape(value["catalog"], CATALOG_FIELDS, "manifest.catalog")
     _shape(value["config_header"], FILE_FIELDS, "manifest.config_header")
     _shape(value["policy"], POLICY_FIELDS, "manifest.policy")
-    if value["schema"] != BINDING_SCHEMA or value["storage"]["format"] != FORMAT:
+    expected_format = (FORMAT_V4 if catalog_version == VERSION_V4 else
+                       FORMAT_V3 if catalog_version == VERSION_V3 else
+                       FORMAT_V2 if catalog_version == VERSION_V2 else FORMAT)
+    if (catalog_version not in (VERSION, VERSION_V2, VERSION_V3, VERSION_V4)
+            or value["schema"] != BINDING_SCHEMA
+            or value["storage"]["format"] != expected_format):
         _fail(
             "manifest-format",
-            f"manifest schema must be {BINDING_SCHEMA} with binary format {FORMAT}",
+            f"manifest schema must be {BINDING_SCHEMA} with the version-bound binary format",
         )
     if not isinstance(value["profile"], str) or not value["profile"]:
         _fail("manifest-profile", "manifest profile must be a non-empty string")
@@ -1062,10 +1483,43 @@ def validate_manifest(value: dict[str, Any]) -> None:
             _fail("manifest-storage", f"manifest storage {field} must be {expected!r}")
     if type(storage.get("crc16")) is not int or not 0 <= storage["crc16"] <= 0xFFFF:
         _fail("manifest-storage", "manifest storage CRC16 must be a uint16")
+    if catalog_version == VERSION_V4:
+        overflow = value["overflow_storage"]
+        _shape(overflow, OVERFLOW_STORAGE_FIELDS, "manifest.overflow_storage")
+        expected_overflow = {
+            "format": FORMAT_V4,
+            "kind": REGION1_KIND,
+            "source_kind": REGION1_SOURCE_KIND,
+            "source_address": REGION1_SOURCE_BASE,
+            "bank": REGION1_BANK,
+            "address": REGION1_ADDRESS,
+            "limit": REGION1_LIMIT,
+            "capacity": REGION1_CAPACITY,
+            "crc16_algorithm": "crc-16-ccitt-false",
+            "lifetime": "post-phase-3-session",
+        }
+        for field, expected in expected_overflow.items():
+            if overflow.get(field) != expected:
+                _fail(
+                    "manifest-overflow-storage",
+                    f"overflow storage {field} must be {expected!r}",
+                )
+        if (
+            type(overflow.get("used")) is not int
+            or not 0 <= overflow["used"] <= REGION1_CAPACITY
+            or type(overflow.get("crc16")) is not int
+            or not 0 <= overflow["crc16"] <= 0xFFFF
+            or not isinstance(overflow.get("sha256"), str)
+            or not SHA256_RE.fullmatch(overflow["sha256"])
+        ):
+            _fail(
+                "manifest-overflow-storage",
+                "overflow used/CRC/SHA fields are invalid",
+            )
     catalog = value["catalog"]
     expected_catalog = {
         "magic": MAGIC.decode("ascii"),
-        "version": VERSION,
+        "version": catalog_version,
         "header_size": HEADER_SIZE,
         "entry_size": ENTRY_SIZE,
         "flags": 0,
@@ -1098,7 +1552,11 @@ def validate_manifest(value: dict[str, Any]) -> None:
         _fail("manifest-slices", "manifest slices must be a non-empty bounded array")
     ids: list[int] = []
     for index, record in enumerate(slices):
-        _shape(record, SLICE_FIELDS, f"manifest.slices[{index}]")
+        _shape(
+            record,
+            SLICE_FIELDS_V4 if catalog_version == VERSION_V4 else SLICE_FIELDS,
+            f"manifest.slices[{index}]",
+        )
         ids.append(record.get("id"))
         if not isinstance(record.get("sha256"), str) or not SHA256_RE.fullmatch(record["sha256"]):
             _fail("manifest-sha", f"slice[{index}] SHA-256 is invalid")
@@ -1108,8 +1566,35 @@ def validate_manifest(value: dict[str, Any]) -> None:
         _check_flags(slice_flags, f"manifest slice[{index}].flags")
         if record.get("roles") != _roles(slice_flags):
             _fail("manifest-flags", f"slice[{index}] roles do not match flags")
-        if record.get("abi_version") != ENTRY_ABI:
+        data_only = bool(slice_flags & FLAG_DATA_ONLY)
+        if data_only:
+            if catalog_version < VERSION_V2:
+                _fail("manifest-abi", f"slice[{index}] data record requires L65R-v2 or later")
+            if (record.get("abi_version") != 0
+                    or record.get("entry_offset") != DATA_ENTRY_SENTINEL
+                    or record.get("entry") is not None
+                    or record.get("vma") != 0x1800
+                    or record.get("capability_mask") != 0):
+                _fail("manifest-abi", f"slice[{index}] data-record contract mismatch")
+        elif record.get("abi_version") != ENTRY_ABI:
             _fail("manifest-abi", f"slice[{index}] ABI version must be {ENTRY_ABI}")
+        record_crc = record.get("record_crc16")
+        if type(record_crc) is not int or not 0 <= record_crc <= 0xFFFF:
+            _fail("manifest-record-crc", f"slice[{index}] record CRC must be a uint16")
+        if (catalog_version in (VERSION_V3, VERSION_V4)) != bool(record_crc):
+            _fail("manifest-record-crc", f"slice[{index}] record CRC/version mismatch")
+        if catalog_version == VERSION_V4:
+            region_id = record.get("region_id")
+            source_address = record.get("source_address")
+            if (region_id not in KNOWN_REGIONS
+                    or record.get("capability_mask") != 0
+                    or type(source_address) is not int
+                    or not 0 <= source_address <= 0x0FFFFFFF
+                    or source_address & (PAYLOAD_ALIGNMENT - 1)):
+                _fail(
+                    "manifest-region",
+                    f"slice[{index}] has invalid v4 region/source identity",
+                )
         if record.get("slice_build_id") != expected_build_id:
             _fail("manifest-build-id", f"slice[{index}] build ID differs from the profile")
     if any(type(item) is not int for item in ids) or ids != list(range(len(ids))):
@@ -1129,7 +1614,11 @@ def materialize(
     expected_vma: int,
     max_slice_bytes: int,
     image_path: Path,
+    overflow_image_path: Path | None,
     header_path: Path,
+    format_version: int = VERSION,
+    main_source_base: int = STORAGE_BASE,
+    overflow_source_base: int = REGION1_RUNTIME_SOURCE_BASE,
 ) -> Materialized:
     if not profile or "\x00" in profile:
         _fail("profile", "profile must be a non-empty NUL-free string")
@@ -1151,15 +1640,19 @@ def materialize(
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
     )
-    image, parsed = build_image(
+    image, overflow_image, parsed = build_region_images(
         slices,
         profile_build_id=build_id,
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
+        format_version=format_version,
+        main_source_base=main_source_base,
+        overflow_source_base=overflow_source_base,
     )
     header = render_header(
         profile_build_id=build_id,
         verifier_slices=parsed.slices,
+        format_version=format_version,
     )
     manifest = _manifest(
         profile=profile,
@@ -1167,42 +1660,67 @@ def materialize(
         abi_sha256=abi_sha,
         elf=elf,
         image_path=image_path,
+        overflow_image_path=overflow_image_path,
         header_path=header_path,
         image=image,
+        overflow_image=overflow_image,
         header=header,
         parsed=parsed,
         slices=slices,
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
+        format_version=format_version,
     )
     validate_manifest(manifest)
-    return Materialized(image, manifest, header)
+    return Materialized(image, manifest, header, overflow_image)
 
 
 def _verify_outputs(
     expected: Materialized,
     *,
     image_path: Path,
+    overflow_image_path: Path | None,
     manifest_path: Path,
     header_path: Path,
     expected_vma: int,
     max_slice_bytes: int,
+    format_version: int,
+    main_source_base: int,
+    overflow_source_base: int,
 ) -> None:
-    for path, label in (
+    inputs = [
         (image_path, "overlay bank image"),
         (manifest_path, "overlay bank manifest"),
         (header_path, "overlay bank C header"),
-    ):
+    ]
+    if format_version == VERSION_V4:
+        if overflow_image_path is None:
+            _fail("overflow-output-required", "L65R-v4 requires --overflow-image")
+        inputs.append((overflow_image_path, "overlay overflow image"))
+    for path, label in inputs:
         _regular_file(path, label)
     actual_image = image_path.read_bytes()
-    validate_image(
+    actual_overflow = (
+        overflow_image_path.read_bytes()
+        if overflow_image_path is not None else b""
+    )
+    validate_region_images(
         actual_image,
+        actual_overflow,
         expected_build_id=expected.manifest["profile_build_id"],
         expected_vma=expected_vma,
         max_slice_bytes=max_slice_bytes,
+        format_version=format_version,
+        main_source_base=main_source_base,
+        overflow_source_base=overflow_source_base,
     )
     if actual_image != expected.image:
         _fail("image-mismatch", "overlay bank image is not the canonical extraction of the ELF")
+    if actual_overflow != expected.overflow_image:
+        _fail(
+            "image-mismatch",
+            "overflow image is not the canonical extraction of the ELF",
+        )
     actual_manifest = _read_json(manifest_path, "overlay bank manifest")
     validate_manifest(actual_manifest)
     if actual_manifest != expected.manifest:
@@ -1222,16 +1740,24 @@ def pack(args: argparse.Namespace) -> None:
         objcopy=args.objcopy,
         profile=args.profile,
         abi_contract=args.abi_contract,
-        specs=args.slice,
+        specs=[*args.slice, *args.data_slice],
         expected_vma=args.vma,
         max_slice_bytes=args.max_slice_bytes,
         image_path=args.image,
+        overflow_image_path=args.overflow_image,
         header_path=args.header,
+        format_version=args.format_version,
+        main_source_base=args.main_source_base,
+        overflow_source_base=args.overflow_source_base,
     )
     outputs = [
         (args.image, expected.image),
         (args.manifest, _json_bytes(expected.manifest)),
     ]
+    if args.format_version == VERSION_V4:
+        if args.overflow_image is None:
+            _fail("overflow-output-required", "L65R-v4 requires --overflow-image")
+        outputs.append((args.overflow_image, expected.overflow_image))
     if args.header_mode == "write":
         outputs.append((args.header, expected.header))
     else:
@@ -1249,10 +1775,14 @@ def pack(args: argparse.Namespace) -> None:
     _verify_outputs(
         expected,
         image_path=args.image,
+        overflow_image_path=args.overflow_image,
         manifest_path=args.manifest,
         header_path=args.header,
         expected_vma=args.vma,
         max_slice_bytes=args.max_slice_bytes,
+        format_version=args.format_version,
+        main_source_base=args.main_source_base,
+        overflow_source_base=args.overflow_source_base,
     )
 
 
@@ -1263,19 +1793,27 @@ def verify(args: argparse.Namespace) -> None:
         objcopy=args.objcopy,
         profile=args.profile,
         abi_contract=args.abi_contract,
-        specs=args.slice,
+        specs=[*args.slice, *args.data_slice],
         expected_vma=args.vma,
         max_slice_bytes=args.max_slice_bytes,
         image_path=args.image,
+        overflow_image_path=args.overflow_image,
         header_path=args.header,
+        format_version=args.format_version,
+        main_source_base=args.main_source_base,
+        overflow_source_base=args.overflow_source_base,
     )
     _verify_outputs(
         expected,
         image_path=args.image,
+        overflow_image_path=args.overflow_image,
         manifest_path=args.manifest,
         header_path=args.header,
         expected_vma=args.vma,
         max_slice_bytes=args.max_slice_bytes,
+        format_version=args.format_version,
+        main_source_base=args.main_source_base,
+        overflow_source_base=args.overflow_source_base,
     )
 
 
@@ -1708,8 +2246,10 @@ def selftest() -> None:
             abi_sha256=_sha256(abi),
             elf=elf,
             image_path=image_path,
+            overflow_image_path=None,
             header_path=header_path,
             image=image,
+            overflow_image=b"",
             header=header,
             parsed=parsed,
             slices=slices,
@@ -1799,6 +2339,30 @@ def _common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--nm", type=Path, required=True, help="llvm-nm executable")
     parser.add_argument("--objcopy", type=Path, required=True, help="llvm-objcopy executable")
     parser.add_argument("--profile", required=True, help="exact product profile ID")
+    parser.add_argument(
+        "--format-version", type=int,
+        choices=(VERSION, VERSION_V2, VERSION_V3, VERSION_V4),
+        default=VERSION,
+        help="strict L65R catalog version emitted and accepted",
+    )
+    parser.add_argument(
+        "--main-source-base",
+        type=_source_address,
+        default=STORAGE_BASE,
+        help=(
+            "L65R-v4 absolute runtime source base for region 0 "
+            "(record-bound; default: Attic catalog base)"
+        ),
+    )
+    parser.add_argument(
+        "--overflow-source-base",
+        type=_source_address,
+        default=REGION1_RUNTIME_SOURCE_BASE,
+        help=(
+            "L65R-v4 absolute runtime source base for region 1 "
+            "(default: Bank 5 overflow base)"
+        ),
+    )
     parser.add_argument("--abi-contract", type=Path, required=True)
     parser.add_argument("--vma", type=_address, required=True, help="common Bank-0 slice VMA")
     parser.add_argument(
@@ -1811,14 +2375,31 @@ def _common(parser: argparse.ArgumentParser) -> None:
         "--slice",
         action="append",
         type=_slice_spec,
-        required=True,
+        default=[],
         metavar="SPEC",
         help=(
             "repeatable ID:NAME:SECTION:START:END:ENTRY:FLAGS:ABI_VERSION:CAPS:ENTRY_TARGET; "
-            "FLAGS is boot, runtime, runtime+reusable, or an integer"
+            "FLAGS is boot, runtime, runtime+reusable, or an integer; "
+            "L65R-v4 may append :REGION"
+        ),
+    )
+    parser.add_argument(
+        "--data-slice",
+        action="append",
+        type=_data_slice_spec,
+        default=[],
+        metavar="SPEC",
+        help=(
+            "L65R-v2 only: ID:NAME:SECTION:START:END:FLAGS:DESTINATION:CAPS; "
+            "FLAGS must be boot+data"
         ),
     )
     parser.add_argument("--image", type=Path, required=True)
+    parser.add_argument(
+        "--overflow-image",
+        type=Path,
+        help="L65R-v4 region-1 payload image (required for v4)",
+    )
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--header", type=Path, required=True)
     parser.add_argument(
@@ -1840,6 +2421,11 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     prepare_parser.add_argument("--abi-contract", type=Path, required=True)
     prepare_parser.add_argument("--header", type=Path, required=True)
     prepare_parser.add_argument("--profile", help="optional profile label for diagnostics")
+    prepare_parser.add_argument(
+        "--format-version", type=int,
+        choices=(VERSION, VERSION_V2, VERSION_V3, VERSION_V4),
+        default=VERSION,
+    )
     lint_parser = commands.add_parser(
         "lint-layout",
         help="check that configured slices exactly match linker members and bindings",
@@ -1877,6 +2463,13 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         required=True,
         metavar="SPEC",
     )
+    lint_parser.add_argument(
+        "--data-slice",
+        action="append",
+        type=_data_slice_spec,
+        default=[],
+        metavar="SPEC",
+    )
     commands.add_parser("selftest", help="run deterministic format and mutation tests")
     return parser.parse_args(argv)
 
@@ -1886,7 +2479,8 @@ def prepare(args: argparse.Namespace) -> int:
     if args.profile is not None and (not args.profile or "\x00" in args.profile):
         _fail("profile", "profile must be a non-empty NUL-free string")
     build_id = _profile_build_id(_sha256(args.abi_contract))
-    header = render_header(profile_build_id=build_id)
+    header = render_header(
+        profile_build_id=build_id, format_version=args.format_version)
     _atomic_write_many(((args.header, header),))
     _regular_file(args.header, "runtime overlay config header")
     if args.header.read_bytes() != header:

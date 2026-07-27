@@ -208,6 +208,46 @@
       "expect": "1013"
     },
     {
+      "name": "l-full-binding-control-space",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 255 (list (quote control)))))",
+      "expect": "1115"
+    },
+    {
+      "name": "l-full-binding-control-space-missing-modifier",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 255 nil)))",
+      "expect": "NIL"
+    },
+    {
+      "name": "l-full-binding-control-space-wrong-modifier",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 255 (list (quote meta)))))",
+      "expect": "NIL"
+    },
+    {
+      "name": "l-full-binding-meta-x",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 120 (list (quote meta)))))",
+      "expect": "1013"
+    },
+    {
+      "name": "l-full-binding-meta-x-missing-modifier",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 120 nil)))",
+      "expect": "1110"
+    },
+    {
+      "name": "l-full-binding-meta-x-wrong-modifier",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 120 (list (quote control)))))",
+      "expect": "1110"
+    },
+    {
+      "name": "l-full-meta-x-raw-petscii-is-not-product-domain",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 88 (list (quote meta)))))",
+      "expect": "1110"
+    },
+    {
+      "name": "l-full-foreign-meta-code-falls-back",
+      "input": "(progn (set-symbol-value (quote ide-event-command) nil) (ide-event-command (list (quote key) 121 (list (quote meta)))))",
+      "expect": "1110"
+    },
+    {
       "name": "l-lite-prefix-unknown-clears-carrier",
       "input": "(progn (set-symbol-value (quote ide-event-command) 24) (ide-event-command (list (quote key) 8 nil)) (symbol-value (quote ide-event-command)))",
       "expect": "NIL"

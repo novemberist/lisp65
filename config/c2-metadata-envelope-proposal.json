@@ -1,0 +1,92 @@
+{
+  "format": "lisp65-c2-metadata-envelope-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "owner-approved-c2.1-bytes-authorized",
+  "owner_approval": "Option A, local-24-byte-header, approved without amendment on 2026-07-19.",
+  "claim_limit": "Format addendum only. It emits no C2 image, changes no product byte, authorizes no capacity and makes no execution claim.",
+  "gap": "The approved C2I-v1 contract defines entry and literal records but not the self-describing metadata header, section counts, entry flag bits or string-record boundaries required by a device decoder.",
+  "options": [
+    {
+      "id": "local-24-byte-header",
+      "assessment": "recommended",
+      "reason": "Keeps each C2I region self-describing without changing the approved 32-byte L65S-v4 shelf record."
+    },
+    {
+      "id": "expand-l65s-record",
+      "assessment": "not-recommended",
+      "reason": "Couples container-internal counts to the shelf and pays a second catalog-layout change."
+    },
+    {
+      "id": "proof-only-compile-time-counts",
+      "assessment": "rejected",
+      "reason": "Would let the proof target pass without proving a self-describing product decoder."
+    }
+  ],
+  "recommended_contract": {
+    "metadata_header": {
+      "magic": "C2I\\0",
+      "bytes": 24,
+      "fields": [
+        {"name": "magic_4", "bytes": 4},
+        {"name": "version_u8", "bytes": 1},
+        {"name": "header_bytes_u8", "bytes": 1},
+        {"name": "entry_bytes_u8", "bytes": 1},
+        {"name": "literal_bytes_u8", "bytes": 1},
+        {"name": "flags_u16_zero", "bytes": 2},
+        {"name": "entry_count_u16", "bytes": 2},
+        {"name": "literal_count_u16", "bytes": 2},
+        {"name": "entries_offset_u16", "bytes": 2},
+        {"name": "literals_offset_u16", "bytes": 2},
+        {"name": "strings_offset_u16", "bytes": 2},
+        {"name": "strings_bytes_u16", "bytes": 2},
+        {"name": "reserved_u16_zero", "bytes": 2}
+      ]
+    },
+    "sections": {
+      "entries_offset": "24",
+      "literals_offset": "24 + entry_count * 16",
+      "strings_offset": "literals_offset + literal_count * 8",
+      "metadata_bytes": "align2(strings_offset + strings_bytes)",
+      "rule": "Sections are contiguous, offsets and arithmetic are checked before access, and the optional final alignment byte is zero. The L65S-v4 record metadata length must equal metadata_bytes."
+    },
+    "string_pool": {
+      "record": "length_u16 followed by exactly length raw bytes; records are packed without terminators or per-record padding",
+      "offset_base": "Every entry or literal string offset is relative to the first byte of the local string pool and points to a record's length_u16.",
+      "binary_string_rule": "Immutable strings may contain any byte including NUL; descriptor argument0 equals the record length.",
+      "symbol_name_rule": "Export-name records contain 1..255 canonical 7-bit ASCII bytes with no NUL or reader whitespace; the device performs no case folding."
+    },
+    "entry_flags": {
+      "0x01": "macro export",
+      "0x02": "late-bound export",
+      "allowed_mask": 3,
+      "rules": "Anonymous entries have export_name_offset=0xffff and cannot carry either export flag. A late-bound entry is named and no literal may target it by ordinal. Entry arity and literal count must equal the immutable code-object header."
+    },
+    "literal_kinds": [
+      {"id": 0, "name": "nil", "argument0": "zero", "argument1": "zero"},
+      {"id": 1, "name": "true", "argument0": "zero", "argument1": "zero"},
+      {"id": 2, "name": "fixnum-i16", "argument0": "two's-complement i16 restricted to -16384..16383", "argument1": "zero"},
+      {"id": 3, "name": "immutable-string-offset-u24", "argument0": "string byte length", "argument1": "local string-record offset"},
+      {"id": 4, "name": "container-entry-ordinal-u16", "argument0": "entry ordinal", "argument1": "zero"},
+      {"id": 5, "name": "export-name-offset-u24", "argument0": "name byte length", "argument1": "local string-record offset"},
+      {"id": 6, "name": "native-primitive-id-u16", "argument0": "active primitive ID", "argument1": "zero"}
+    ],
+    "literal_flags": "zero in C2I-v1; every unused argument and the descriptor reserved byte are zero",
+    "code_normalization": "Each entry covers one complete current-ABI code object. The literal-shaped bytes after the seven-byte code header are zero, header NLITS equals entry literal_count, header NARGS equals entry arity, and 7 + 2*NLITS + payload_length equals entry code_length. PUSHLIT reads the session resolution table."
+  },
+  "required_negative_fixtures": [
+    "bad C2I magic or version",
+    "header, entry or literal size mismatch",
+    "nonzero header flags or reserved field",
+    "section arithmetic overflow, gap, overlap or nonzero alignment byte",
+    "metadata length differs from the L65S record",
+    "entry code or literal range outside its region",
+    "entry flags outside 0x03 or export flags on an anonymous entry",
+    "late-bound entry targeted by ordinal",
+    "string offset not at a record boundary or record crossing the pool",
+    "symbol name empty, longer than 255 or outside canonical ASCII",
+    "unknown literal kind, nonzero literal flags/reserved or nonzero unused argument",
+    "string descriptor length differs from its string record"
+  ],
+  "owner_decision": "local-24-byte-header approved; C2.1 must emit and decode this exact envelope"
+}

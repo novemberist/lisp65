@@ -1,0 +1,118 @@
+{
+  "format": "lisp65-c2-lite-acceptance-chain-v1",
+  "version": 1,
+  "id": "c2-lite-R4-R5-R6-G5-G6",
+  "status": "owner-authorized",
+  "input": {
+    "R4": "sealed-promotion-v3-complete-19-role-media-product",
+    "R5": "materialize-only-from-sealed-R4",
+    "G5": "fresh-hardware-results-only",
+    "R6": "package-only-from-sealed-R5",
+    "G6": "fresh-hardware-results-on-exact-R6-media-only"
+  },
+  "artifact_roles": [
+    "linked-product-elf",
+    "c2-resident-prg",
+    "c2-bank2-static-code-plane",
+    "c2d-v6-code-plane",
+    "c2-two-record-boot-stage",
+    "c2-session-family-region-0",
+    "c2-product-shelf",
+    "c2-boot-family",
+    "c2-session-family-region-1",
+    "c2-kernal-window",
+    "resolved-profile",
+    "library-ide",
+    "library-idex",
+    "library-m65d",
+    "cold-stager",
+    "boot-descriptor",
+    "product-d81",
+    "work-d81",
+    "product-mount-descriptor"
+  ],
+  "G5": {
+    "coverage": "exactly-once-in-order-until-first-red",
+    "device_policy": "one-physical-device-one-value-string-per-case",
+    "cases": [
+      {
+        "id": "media/cold-boot-stage-banner",
+        "claim": "required",
+        "limit": "banner-and-usable-REPL"
+      },
+      {
+        "id": "runtime/published-nullary-cold",
+        "claim": "required",
+        "limit": "frames<=16"
+      },
+      {
+        "id": "runtime/published-nullary-warm",
+        "claim": "required",
+        "limit": "frames<=10"
+      },
+      {
+        "id": "runtime/published-argument-informative",
+        "claim": "informative",
+        "limit": null
+      },
+      {
+        "id": "runtime/gc-envelope-informative",
+        "claim": "informative",
+        "limit": null
+      },
+      {
+        "id": "runtime/runstop-zero-growth",
+        "claim": "required",
+        "limit": "stopped-and-byteidentical-zero-growth"
+      },
+      {
+        "id": "runtime/idle-freezer-identity",
+        "claim": "required",
+        "limit": "F3-return-and-bank2-bank3-window-identity"
+      },
+      {
+        "id": "runtime/nested-eval-generation",
+        "claim": "required",
+        "limit": "t-and-zero-growth-and-generation-change"
+      },
+      {
+        "id": "media/destructive-restage-recovery",
+        "claim": "required",
+        "limit": "cold-boot-detects-and-repairs-destroyed-chip-stage"
+      }
+    ]
+  },
+  "R6": {
+    "operation": "transform-and-package-only",
+    "build_tools": "forbidden",
+    "artifact_mapping": "all-19-R5-roles-exactly-once",
+    "media": [
+      "product-d81",
+      "work-d81",
+      "product-mount-descriptor"
+    ],
+    "product_bytes": "byteidentical-to-R5",
+    "release_effect": "none-until-G6"
+  },
+  "G6": {
+    "coverage": "exactly-once-in-order-until-first-red",
+    "cases": [
+      "offline-package-verification",
+      "cold-boot-from-exact-R6-product-media",
+      "always-restage-and-target-readback",
+      "work-media-write-read-power-cycle",
+      "product-media-remains-byteidentical"
+    ],
+    "seal": "G6-v2-with-remote_head"
+  },
+  "claims": {
+    "Fresh-Clone": "required-before-R4",
+    "no_inherited_green": true,
+    "emulator": "prefilter-only",
+    "hardware": "arbiter",
+    "informative_lines_are_visible_not-claimed": [
+      "published-argument-frames",
+      "GC-envelope-frames-and-blockreads"
+    ]
+  }
+}

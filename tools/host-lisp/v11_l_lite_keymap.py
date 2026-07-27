@@ -53,7 +53,7 @@ def load_contract(path: Path = CONTRACT) -> dict[str, Any]:
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise KeymapError(f"cannot read keymap contract: {exc}") from exc
     require(isinstance(value, dict), "keymap contract must be an object")
-    require(value.get("format") == "lisp65-v11-l-lite-keymap-v1", "keymap format drift")
+    require(value.get("format") == "lisp65-v11-keymap-v2", "keymap format drift")
     return value
 
 
@@ -61,12 +61,15 @@ def validate(value: dict[str, Any]) -> None:
     model = value.get("event_model")
     commands = value.get("commands")
     bindings = value.get("bindings")
+    modifier_bindings = value.get("modifier_bindings")
     mx = value.get("m_x_commands")
     global_bindings = value.get("global_hardware_bindings")
     behavior_cases = value.get("behavior_hardware_cases")
     require(isinstance(model, dict), "event_model missing")
     require(isinstance(commands, list) and commands, "commands missing")
     require(isinstance(bindings, list) and bindings, "bindings missing")
+    require(isinstance(modifier_bindings, list) and modifier_bindings,
+            "modifier bindings missing")
     require(isinstance(mx, list) and mx, "m_x_commands missing")
     require(isinstance(global_bindings, list) and global_bindings,
             "global hardware bindings missing")
@@ -131,6 +134,54 @@ def validate(value: dict[str, Any]) -> None:
     require((0,) not in actual, "unreachable C-Space binding returned")
     require((3,) not in actual, "RUN/STOP must not be an editor binding")
 
+    masks = model.get("modifier_masks")
+    require(masks == {"control": 4, "meta": 16}, "modifier mask drift")
+    modifier_ids: set[str] = set()
+    modifier_keys: set[tuple[int, tuple[str, ...]]] = set()
+    for row in modifier_bindings:
+        require(isinstance(row, dict), "modifier binding row must be an object")
+        binding_id = row.get("id")
+        display = row.get("display")
+        raw = row.get("raw_petscii")
+        normalized = row.get("normalized_code")
+        required_modifiers = row.get("required_modifiers")
+        command = row.get("command")
+        require(isinstance(binding_id, str) and binding_id
+                and binding_id not in modifier_ids,
+                f"duplicate/invalid modifier binding id: {binding_id!r}")
+        require(isinstance(display, str) and display,
+                f"modifier binding display missing: {binding_id}")
+        require(isinstance(raw, int) and 0 <= raw <= 255,
+                f"raw PETSCII invalid: {binding_id}")
+        require(isinstance(normalized, int) and 0 <= normalized <= 255,
+                f"normalized code invalid: {binding_id}")
+        require(isinstance(required_modifiers, list)
+                and len(required_modifiers) == 1
+                and required_modifiers[0] in masks,
+                f"required modifier invalid: {binding_id}")
+        key = (normalized, tuple(required_modifiers))
+        require(key not in modifier_keys,
+                f"duplicate modifier binding: {binding_id}")
+        require(command in command_ids,
+                f"unknown modifier command {command}: {binding_id}")
+        require(row.get("new_surface") is True,
+                f"modifier binding must be a new surface: {binding_id}")
+        modifier_ids.add(binding_id)
+        modifier_keys.add(key)
+    require(modifier_ids == {"control-space", "meta-x"},
+            "L-full modifier binding set drift")
+    by_modifier_id = {row["id"]: row for row in modifier_bindings}
+    require(by_modifier_id["control-space"]["raw_petscii"] == 255
+            and by_modifier_id["control-space"]["normalized_code"] == 255
+            and by_modifier_id["control-space"]["required_modifiers"] == ["control"]
+            and by_modifier_id["control-space"]["command"] == 1115,
+            "C-Space product binding drift")
+    require(by_modifier_id["meta-x"]["raw_petscii"] == 88
+            and by_modifier_id["meta-x"]["normalized_code"] == 120
+            and by_modifier_id["meta-x"]["required_modifiers"] == ["meta"]
+            and by_modifier_id["meta-x"]["command"] == 1013,
+            "M-x raw-to-normalized product binding drift")
+
     mx_names: set[str] = set()
     for row in mx:
         require(isinstance(row, dict), "M-x row must be an object")
@@ -174,6 +225,7 @@ def flat_table(rows: list[dict[str, Any]]) -> str:
 def render_lisp(value: dict[str, Any]) -> str:
     model = value["event_model"]
     bindings = value["bindings"]
+    modifier_bindings = value["modifier_bindings"]
     base = [row for row in bindings if len(row["codes"]) == 1]
     prefix = [row for row in bindings if len(row["codes"]) == 2]
     mx = value["m_x_commands"]
@@ -210,28 +262,49 @@ def render_lisp(value: dict[str, Any]) -> str:
         "(defun %ide-direct-p (command)",
         "  (eq (%ide-command-route command) 1))",
         "",
+        "(defun ide-event-modifiers (event)",
+        "  (car (cdr (cdr event))))",
+        "",
+        "(defun %ide-modifier-command (code modifiers)",
+        "  (cond",
+    ]
+    for row in modifier_bindings:
+        modifier = row["required_modifiers"][0]
+        lines.append(
+            f"        ((and (= code {row['normalized_code']}) "
+            f"(member (quote {modifier}) modifiers)) {row['command']})")
+    lines.extend([
+        "        (t nil)))",
+        "",
         "(defun ide-event-command (event)",
-        "  ((lambda (code)",
-        f"     (if (eq (symbol-value (quote ide-event-command)) {model['prefix_code']})",
-        "         (%ide-prefix-command code)",
-        f"         (if (= code {model['prefix_code']})",
-        f"             (progn (set-symbol-value (quote ide-event-command) {model['prefix_code']}) nil)",
-        "             ((lambda (command)",
-        "                (if command",
-        "                    command",
-        f"                    (if (and (>= code {model['printable_min']})",
-        f"                             (<= code {model['printable_max']}))",
-        f"                        {model['printable_command']}",
-        "                        nil)))",
-        "              (%ide-base-command code)))))",
-        "   (ide-event-code event)))",
+        "  ((lambda (code modifiers)",
+        "     ((lambda (modified)",
+        "        (if modified",
+        "            (progn",
+        "              (set-symbol-value (quote ide-event-command) nil)",
+        "              modified)",
+        f"            (if (eq (symbol-value (quote ide-event-command)) {model['prefix_code']})",
+        "                (%ide-prefix-command code)",
+        f"                (if (= code {model['prefix_code']})",
+        f"                    (progn (set-symbol-value (quote ide-event-command) {model['prefix_code']}) nil)",
+        "                    ((lambda (command)",
+        "                       (if command",
+        "                           command",
+        f"                           (if (and (>= code {model['printable_min']})",
+        f"                                    (<= code {model['printable_max']}))",
+        f"                               {model['printable_command']}",
+        "                               nil)))",
+        "                     (%ide-base-command code))))))",
+        "      (%ide-modifier-command code modifiers)))",
+        "   (ide-event-code event)",
+        "   (ide-event-modifiers event)))",
         "",
         "(defun ide-command-names ()",
         f"  (list {mx_names}))",
         "",
         "(defun %ide-command-named (name)",
         "  (cond",
-    ]
+    ])
     for row in mx:
         lines.append(f"        ((string= name {json.dumps(row['name'])}) {row['command']})")
     lines.extend(("        (t nil)))", ""))
@@ -249,6 +322,15 @@ def sequence_expr(codes: list[int]) -> str:
     )
 
 
+def modifier_event_expr(code: int, modifiers: list[str]) -> str:
+    rendered = " ".join(f"(quote {modifier})" for modifier in modifiers)
+    modifier_list = f"(list {rendered})" if rendered else "nil"
+    return (
+        "(progn (set-symbol-value (quote ide-event-command) nil) "
+        f"(ide-event-command (list (quote key) {code} {modifier_list})))"
+    )
+
+
 def binding_cases(value: dict[str, Any], *, p0: bool) -> list[dict[str, Any]]:
     cases: list[dict[str, Any]] = []
     input_key = "expr" if p0 else "input"
@@ -258,6 +340,42 @@ def binding_cases(value: dict[str, Any], *, p0: bool) -> list[dict[str, Any]]:
             input_key: sequence_expr(row["codes"]),
             "expect": str(row["command"]),
         })
+    for row in value["modifier_bindings"]:
+        modifier = row["required_modifiers"][0]
+        cases.extend((
+            {
+                "name": f"l-full-binding-{row['id']}",
+                input_key: modifier_event_expr(
+                    row["normalized_code"], [modifier]),
+                "expect": str(row["command"]),
+            },
+            {
+                "name": f"l-full-binding-{row['id']}-missing-modifier",
+                input_key: modifier_event_expr(row["normalized_code"], []),
+                "expect": ("1110" if row["normalized_code"] == 120
+                           else ("nil" if p0 else "NIL")),
+            },
+            {
+                "name": f"l-full-binding-{row['id']}-wrong-modifier",
+                input_key: modifier_event_expr(
+                    row["normalized_code"],
+                    ["meta" if modifier == "control" else "control"]),
+                "expect": ("1110" if row["normalized_code"] == 120
+                           else ("nil" if p0 else "NIL")),
+            },
+        ))
+    cases.extend((
+        {
+            "name": "l-full-meta-x-raw-petscii-is-not-product-domain",
+            input_key: modifier_event_expr(88, ["meta"]),
+            "expect": "1110",
+        },
+        {
+            "name": "l-full-foreign-meta-code-falls-back",
+            input_key: modifier_event_expr(121, ["meta"]),
+            "expect": "1110",
+        },
+    ))
     cases.extend((
         {
             "name": "l-lite-prefix-unknown-clears-carrier",
@@ -311,6 +429,19 @@ def render_p0_cases(value: dict[str, Any], extra: bool) -> str:
 
 def render_hardware_cases(value: dict[str, Any]) -> str:
     cases: list[dict[str, Any]] = []
+    for row in value["modifier_bindings"]:
+        cases.append({
+            "id": f"binding-{row['id']}",
+            "surface": "ide-keymap",
+            "display": row["display"],
+            "raw_petscii": row["raw_petscii"],
+            "normalized_code": row["normalized_code"],
+            "required_modifiers": row["required_modifiers"],
+            "command": row["command"],
+            "fidelity": "hardware-exact",
+            "new_surface": True,
+            "receipt_policy": "hardware-exactly-once",
+        })
     for row in value["bindings"]:
         cases.append({
             "id": f"binding-{row['id']}",
@@ -353,10 +484,11 @@ def render_docs(value: dict[str, Any]) -> str:
         "<!-- Generated by tools/host-lisp/v11_l_lite_keymap.py. Do not edit. -->",
         "# Workbench key bindings",
         "",
-        "The 1.1 L-lite profile uses the MEGA65 GETIN-compatible key codes. It does not",
-        "claim physical Meta/Alt modifier identity; the command launcher is `C-x x` or",
-        "`C-x Return`. `C-x Space` sets the mark because code zero means an empty queue",
-        "and therefore cannot represent C-Space on this input path.",
+        "The published 1.1 L-lite fallback uses MEGA65 GETIN-compatible key codes.",
+        "Its command launcher is `C-x x` or `C-x Return`; `C-x Space` sets the mark.",
+        "The C2 typed-event product also generates physical C-Space and M-x consumers",
+        "from the same table, but those physical claims remain unpublished until their",
+        "real-key hardware row passes.",
         "",
         "| Key | Action |",
         "| --- | --- |",
@@ -430,14 +562,36 @@ def selftest(value: dict[str, Any]) -> None:
         pass
     else:
         raise KeymapError("RUN/STOP editor mutation was accepted")
+    duplicate_modifier = copy.deepcopy(value)
+    duplicate_modifier["modifier_bindings"][1]["normalized_code"] = 255
+    duplicate_modifier["modifier_bindings"][1]["required_modifiers"] = ["control"]
+    try:
+        validate(duplicate_modifier)
+    except KeymapError:
+        pass
+    else:
+        raise KeymapError("duplicate modifier binding mutation was accepted")
+    raw_domain = copy.deepcopy(value)
+    raw_domain["modifier_bindings"][1]["normalized_code"] = 88
+    try:
+        validate(raw_domain)
+    except KeymapError:
+        pass
+    else:
+        raise KeymapError("raw M-x PETSCII product-domain mutation was accepted")
     partial = render_lisp(value)
     require('(string= name "find-file")' in partial and 'string-ref name' not in partial,
             "exact M-x matcher was not generated")
+    require("(defun %ide-modifier-command" in partial
+            and "(member (quote control) modifiers)" in partial
+            and "(member (quote meta) modifiers)" in partial,
+            "modifier-aware product consumer was not generated")
     with tempfile.TemporaryDirectory(prefix="v11-l-lite-keymap-") as raw:
         tmp = Path(raw) / "contract.json"
         tmp.write_text(json.dumps(value), encoding="utf-8")
         validate(load_contract(tmp))
-    print("v11-l-lite-keymap: SELFTEST PASS mutations=2 exact-mx=true")
+    print("v11-l-lite-keymap: SELFTEST PASS mutations=4 exact-mx=true "
+          "typed-modifiers=true")
 
 
 def main(argv: list[str]) -> int:

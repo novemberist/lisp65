@@ -212,6 +212,6 @@
     X("%buffer-read", 63) \
     X("%buffer-write", 64) \
     X("%buffer-alloc", 65) \
-    X("%c1-control", 66)
+    X("%c2-control", 66)
 
 #endif

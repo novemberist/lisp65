@@ -1,0 +1,42 @@
+{
+  "format": "lisp65-c2-overlay-transaction-auth-island-followup-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-one-capacity-probe",
+  "prerequisites": {
+    "host_semantics_receipt_sha256": "6d482366482b20542e4044f884677ca30cf09fcddb1b88a8064b6bdfa770cc9d",
+    "capacity_first_red_receipt_sha256": "e7fb37a6b5e73bd19b31965ff87bad44f51f081d582d05f608b4272a72916f9a"
+  },
+  "scope": {
+    "resident_island_seed_links_authorized": 1,
+    "product_closure_links_authorized": 0,
+    "hardware_runs_authorized": 0,
+    "performance_claim": "none"
+  },
+  "placement": {
+    "transaction_control": "noinline resident-island functions",
+    "product_entrypoints": "noinline single-copy Bank-0 functions",
+    "state": "reuse the lifetime-exclusive runtime-batch tuple; no new ordinary Bank-0 BSS",
+    "resident_island_link30_headroom_bytes": 497
+  },
+  "hard_capacity_gates": {
+    "resident_island_growth_max_bytes": 497,
+    "ordinary_bank0_bss_delta_bytes": 0,
+    "ordinary_bank0_bss_headroom_bytes": 19,
+    "e000_delta_bytes": 0,
+    "e000_policy": "closed to new tenants",
+    "runtime_slice_cap_bytes": 1792
+  },
+  "lifetime_invariant": {
+    "rule": "runtime batch execution and append-transaction authentication never overlap",
+    "construction": "transaction begin rejects a live batch; batch entry rejects an active transaction; both paths release the shared discriminator",
+    "failure": "any attempted overlap is rejected before the shared tuple changes"
+  },
+  "semantic_invariants": [
+    "family evidence is authenticated once per append transaction",
+    "record bounds, payload CRC and wipe remain per slice",
+    "payload mutation between transactions in one generation remains fail-closed",
+    "generation change forces fresh family authentication fail-closed"
+  ],
+  "first_red_rule": "Any failed host, mutation, island, BSS, E000, slice, placement or structure gate stops before a product link. Link 30 remains unchanged."
+}

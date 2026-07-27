@@ -52,7 +52,11 @@ static void boot_stdlib_from_disk(void) {
 #include "prelude_gen.h"   /* von Lane T generiert: const char prelude_src[] (NUL-term.) */
 #endif
 #ifdef LISP65_EMBED_STDLIB
+#ifndef LISP65_C2_PRODUCT_CUT
 #include "vm_embed.h"      /* eingebettete Bytecode-Stdlib (setzt LISP65_VM voraus) */
+#else
+#include "c2_product_runtime.h"
+#endif
 #ifdef LISP65_STAGED_BOOT_OVERLAY
 #include "interrupt.h"
 #include "vm_boot_fastpath.h"
@@ -64,6 +68,9 @@ static void boot_stdlib_from_disk(void) {
 #endif
 #ifdef LISP65_SCREEN_DRIVER
 #include "screen.h"
+#endif
+#ifdef LISP65_C2_KERNAL_UNMAP
+#include "c2_kernal_runtime.h"
 #endif
 
 int main(void) {
@@ -77,6 +84,13 @@ int main(void) {
     *(volatile unsigned char *)0xD02F = 0x47;   /* VIC-IV freischalten ("G") */
     *(volatile unsigned char *)0xD02F = 0x53;   /* ... ("S") */
     *(volatile unsigned char *)0xD054 |= 0x40;  /* VFAST: 40 MHz */
+#ifdef LISP65_C2_KERNAL_UNMAP
+    /* D3: pin the independent physical RUN/STOP source before the owned
+     * raster IRQ can start.  The IRQ reads segment 7 bit 7 directly; queued
+     * PETSCII $03 is therefore ordinary queue data and never a second abort. */
+    *(volatile unsigned char *)0xD614 =
+        LISP65_RUN_STOP_MATRIX_SEGMENT;
+#endif
 #endif
 #ifdef LISP65_STAGED_BOOT_OVERLAY
     BT(1);                         /* gesamter Init laeuft im verifizierten Overlay-Entry */
@@ -95,6 +109,20 @@ int main(void) {
 #endif
 #ifdef LISP65_EMBED_STDLIB
 #ifdef LISP65_STAGED_BOOT_OVERLAY
+#if defined(LISP65_C2_PRODUCT_CUT) && defined(LISP65_C2_KERNAL_UNMAP)
+    /* C2's fixed state lives at $c080 and its streaming/decoder machinery in
+     * the $e000 window.  Even vm_install_staged_boot_overlay() reaches the C2
+     * shelf reader through shelf_crc32, so ownership must precede the entire
+     * staged-overlay operation as well as C2 prepare/boot.  Link-21 hardware
+     * diagnosis found the old inverse order looping in c2_dma_copy with an
+     * unmapped $c0b2 descriptor; Link 22's strengthened gate found this still
+     * earlier consumer before any replacement candidate reached hardware. */
+    if (!c2_kernal_take_ownership()) {
+        lisp_abort_static(LISP65_ERR_STDLIB_PROFILED_PRELOAD,
+                          "c2: KERNAL ownership unavailable; reboot from disk");
+        return 1;
+    }
+#endif
     boot_overlay_result = vm_install_staged_boot_overlay();
     if (boot_overlay_result != VM_BOOT_OVERLAY_OK) {
         if (!lisp_error_msg)
@@ -109,6 +137,7 @@ int main(void) {
         return 1;
     }
 #endif
+#ifndef LISP65_C2_PRODUCT_CUT
     boot_overlay_result = vm_load_profiled_boot_stdlib();
     if (boot_overlay_result != VM_BOOT_FASTPATH_OK) {
         if (boot_overlay_result == VM_BOOT_FASTPATH_ERR_CATALOG) {
@@ -124,10 +153,22 @@ int main(void) {
                               "stdlib: invalid profiled preload");
         return 1;
     }
+#endif
+#ifdef LISP65_C2_PRODUCT_CUT
+    if (!c2_product_prepare_boot()) {
+        lisp_abort_static(LISP65_ERR_STDLIB_PROFILED_PRELOAD,
+                          "c2: runtime family unavailable");
+        return 1;
+    }
+#endif
     boot_overlay_result = (uint8_t)vm_runtime_overlay_install_island();
     if (boot_overlay_result != VM_RUNTIME_OVERLAY_OK) {
-        lisp_abort_static(LISP65_ERR_RUNTIME_ISLAND,
-                          "runtime island invalid; redeploy");
+        if (boot_overlay_result == VM_RUNTIME_OVERLAY_ERR_COMPLETION_TIMEOUT)
+            lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                              "runtime transport timeout; reboot");
+        else
+            lisp_abort_static(LISP65_ERR_RUNTIME_ISLAND,
+                              "runtime island invalid; redeploy");
 #ifdef LISP65_SCREEN_DRIVER
         scr_init();
         (void)lisp65_error_render_pending();
@@ -135,6 +176,25 @@ int main(void) {
 #endif
         return 1;
     }
+#ifdef LISP65_C2_PRODUCT_CUT
+    if (!c2_product_boot()) {
+#ifdef LISP65_C2_LITE_BANK3_STAGING
+        if (vm_runtime_overlay_last_status()
+            == VM_RUNTIME_OVERLAY_ERR_FAMILY_STAGE)
+            lisp_abort_static(LISP65_ERR_RUNTIME_FAMILY_STAGE,
+                              "runtime family staging failed; redeploy");
+        else
+#endif
+            lisp_abort_static(LISP65_ERR_STDLIB_PROFILED_PRELOAD,
+                              "c2: invalid product image");
+#ifdef LISP65_SCREEN_DRIVER
+        scr_init();
+        (void)lisp65_error_render_pending();
+        emit('\n');
+#endif
+        return 1;
+    }
+#endif
     BT(4);
 #else
     vm_load_embedded_stdlib(); BT(4);  /* eingebettete Bytecode-Stdlib ins erw. RAM stagen + registrieren */

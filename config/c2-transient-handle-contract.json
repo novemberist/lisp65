@@ -1,0 +1,89 @@
+{
+  "format": "lisp65-c2-transient-handle-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-bounded-contract-and-design-probe",
+  "scope": {
+    "product_links_authorized": 0,
+    "product_source_changes_authorized": 0,
+    "hardware_execution": "not authorized by this probe",
+    "performance_claim": "none"
+  },
+  "bound_inputs": {
+    "product_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "nested_append_contract": "config/c2-nested-append-unwind-contract.json",
+    "nested_append_contract_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-unwind-contract-probe-receipt.json",
+    "capacity_first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-nested-append-capacity-placement-first-red-receipt.json"
+  },
+  "format_decision": {
+    "c2d_version": 5,
+    "compatibility_rule": "C2D-v4 has not shipped. The v4-to-v5 correction before the first C2 release has no compatibility debt; the same change after a seal would require migration.",
+    "header_bytes": 48,
+    "record_width_changes": 0,
+    "header_offset_8": "transient_handle_watermark_u16",
+    "inactive_value": 4096,
+    "legal_active_range": "2048..4095",
+    "depth_source": "derived from the contiguous active source-kind-2 image records descending from slot 63; maximum four; no separately maintained depth field",
+    "publication_rule": "Transient bytes and all reverse edges are staged and validated first. The handle watermark is published last inside the existing non-GC-interruptible publication seam.",
+    "removal_rule": "The handle watermark is raised first, making removed handles unreachable, before the corresponding records and Attic bytes are wiped.",
+    "restage_rule": "Write inactive watermark 4096 before changing the generation. Old physical bytes may remain but no old transient handle is callable."
+  },
+  "handle_domains": {
+    "bcode_index_width_bits": 12,
+    "persistent_logical": "0..persistent_entry_count-1",
+    "persistent_capacity": 2048,
+    "invalid_hole": "persistent_entry_count..transient_handle_watermark-1",
+    "transient_logical": "transient_handle_watermark..4095",
+    "physical_transient_translation": "logical_index - 2048",
+    "physical_transient": "transient_handle_watermark-2048..2047",
+    "single_source_rule": "The C2D header watermark is the only runtime transient-handle visibility state. Physical high-tail fronts and logical handles are arithmetic projections of it, not separately maintained counters.",
+    "collision_rule": "persistent_entry_count + active_transient_entry_count <= 2048; equality is legal and the next record is rejected before journal or target mutation"
+  },
+  "hot_lookup_rule": {
+    "input_boundary": "Only BCODE_IDX values reach normalization, so the caller already proves 0..4095.",
+    "persistent": "Reject index >= persistent_entry_count; physical ordinal equals logical index.",
+    "transient": "Reject index < transient_handle_watermark; physical ordinal is index-2048.",
+    "shared_path": "After normalization both domains use the existing c2_entry_records record/materialization path.",
+    "stage_boundary": "Directory/image reverse edges, source kind, generation, interval ownership and record topology are validated before publish. The hot path must not duplicate immutable topology validation.",
+    "one_lookup_rule": "No transient-tail locator, scan or second directory path may survive. There is one normalizer and one common entry-record path."
+  },
+  "required_positive_cases": [
+    "persistent handles preserve their current indices and physical ordinals",
+    "nested transient records allocate logical handles from 4095 downward and physical records from 2047 downward with constant translation",
+    "popping an inner record leaves outer handles valid",
+    "persistent publication below active transients does not alter transient handles",
+    "the exact persistent/transient meet is legal",
+    "publication makes a complete staged range visible only at the watermark write"
+  ],
+  "required_negative_cases": [
+    "a stale inner handle after normal pop is rejected",
+    "every transient handle after abort cleanup is rejected",
+    "every old transient handle after generation restage is rejected",
+    "a handle in the low/high hole is rejected",
+    "a malformed watermark below 2048 or above 4096 is rejected",
+    "a non-contiguous, overlapping or fifth transient image record is rejected before publication",
+    "one entry beyond the exact low/high meet is rejected before journal or target mutation",
+    "a transient handle presented before the publish-last watermark store is rejected",
+    "a removed handle is rejected after watermark raise even before record wipe"
+  ],
+  "capacity_gate": {
+    "baseline_lookup": "Link-32 c2_entry_records calibrated against a target-shaped no-LTO object",
+    "e000_policy": "delta must be <= 0 bytes; the window remains closed to new tenants",
+    "island_budget": "normalizer plus the already projected 13-byte abort facade must fit the 109-byte Link-32 Island headroom",
+    "bank0_text_headroom_bytes": 10,
+    "ordinary_bank0_bss_headroom_bytes": 19,
+    "runtime_slice_minimum_headroom_bytes": 11,
+    "product_work_on_any_red": "prohibited"
+  },
+  "gc_measurement_requirement": {
+    "current_projection_blocks_per_collection": 18,
+    "high_edge_projection_blocks_per_collection": 96,
+    "status": "not performance-accepted",
+    "next_hardware_presmoke": "must report GC time/frames as a separate line; the 78 additional 32-byte reads may not be accepted by argument"
+  },
+  "fallback_order": [
+    "If this contract/capacity probe is red, measure in-place reclaim of 126 bytes in the existing closure.",
+    "Only after both fail may an owner reopen the E000 closure with an explicitly lower floor; that is not reviewer-authorizable contingency use."
+  ],
+  "claim_limit": "Contract, host state model and target-object capacity projection only. No product implementation, product link, hardware result, GC-latency acceptance or promotion is authorized."
+}

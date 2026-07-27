@@ -11,6 +11,9 @@ and verification gates. Detailed pre-1.0 design documents are preserved under
 | Bytecode IDs and compatibility | `config/bytecode-abi-ledger.json`, `src/vm.h`, `tools/host-lisp/bytecode_p0.py` | `make bytecode-p0-drift-check` |
 | Code-object arity | `config/code-object-arity-contract.json` | `tools/host-lisp/code_object_arity_contract.py` |
 | L65M library format | emitters, validators, and L65M fixtures under `config/` and `tests/bytecode/` | package and loader contract gates |
+| C2D-v6 execution records and root surrogates | C2-lite emitter/decoder contracts and `config/c2-transient-handle-contract.json` | single-emitter, domain-collision, lookup and append gates |
+| L65R-v4 runtime regions | region-qualified records and two-region store contracts | record/region, packing, closure and stage-before-publish gates |
+| Post-READY Attic exclusion | C2-lite execution and suffix-read contracts | control/data closure plus calculated-source range gates |
 | Product artifact identity | R4 seal and `config/promotion-register.json` | `make promotion-register-check` |
 | G5/G6 hardware evidence | R5/R6 manifests and sealed case receipts | offline archive verifiers |
 | Capacity floors | product footprint receipts and capacity ledgers | footprint and capacity-delta gates |
@@ -26,8 +29,8 @@ and verification gates. Detailed pre-1.0 design documents are preserved under
   use ordinals and remain anonymous.
 - Product evidence binds artifact SHAs. A product-byte change requires fresh
   applicable hardware evidence.
-- Every promoted change reports Bank 0, EXT, symbols, name-pool bytes, and
-  directory-slot deltas.
+- Every promoted change reports each affected Bank-0 wall, runtime-store
+  region, C2D budget, symbol, name-pool, and directory-slot delta.
 
 When prose and a generated value disagree, stop and repair the prose or gate;
 do not reinterpret a sealed receipt.

@@ -1,0 +1,117 @@
+{
+  "format": "lisp65-c2-historical-gate-inheritance-v1",
+  "recorded_on": "2026-07-21",
+  "scope": "Host-side gates attached to the retired Workbench boot-overlay product carrier; hardware-only acceptance remains in the hardware protocol.",
+  "entries": [
+    {
+      "id": "overlay-control-geometry-and-bootstrap",
+      "legacy_carrier": "workbench-overlay-control-audit",
+      "disposition": "superseded",
+      "reason": "The L65M boot overlay, its eval_init/defprim entry chain and its single resident inbound edge do not exist in C2.",
+      "current_truth": [
+        "one-truth-closure",
+        "boot-lifetime-gate",
+        "preinstallation-Island-gate",
+        "runtime-family-identity-gate"
+      ]
+    },
+    {
+      "id": "overlay-control-resident-placement",
+      "legacy_carrier": "workbench-overlay-control-audit",
+      "disposition": "superseded",
+      "reason": "C2 replaces the old resident-symbol allowlist with section-qualified lifetime, ownership, facade and capacity gates.",
+      "current_truth": [
+        "pre-ownership-gate",
+        "boot-lifetime-gate",
+        "fixed-facade-gate",
+        "resident-wall-capacity-gates"
+      ]
+    },
+    {
+      "id": "runtime-crc-codegen",
+      "legacy_carrier": "workbench-overlay-control-audit",
+      "disposition": "migrated",
+      "reason": "This still-live emitted-code property was orphaned when the Workbench carrier retired; Link 33 hardware exposed the loss.",
+      "current_truth": [
+        "tools/host-lisp/c2_crc_codegen_gate.py",
+        "c2-crc-codegen-gate.json"
+      ],
+      "product_link_token": "CRC_CODEGEN.audit_elf"
+    },
+    {
+      "id": "f011-mount-window",
+      "legacy_carrier": "workbench-f011-mount-window-audit",
+      "disposition": "migrated",
+      "reason": "The guarded F011 write path remains product code and its final linked instruction window must be remeasured for every C2 identity.",
+      "current_truth": [
+        "tools/host-lisp/f011_mount_window.py",
+        "c2-f011-mount-window-gate.json"
+      ],
+      "product_link_token": "F011_WINDOW.audit"
+    },
+    {
+      "id": "boot-overlay-package",
+      "legacy_carrier": "workbench-overlay-package-verify",
+      "disposition": "superseded",
+      "reason": "The L65M stage descriptor and combined preload are retired; C2 boot records are self-describing L65R-v2 records with publish-last identity.",
+      "current_truth": [
+        "runtime-family-identity-gate",
+        "L65R-v2-packer-mutation-matrix",
+        "total-publish-last-gate"
+      ]
+    },
+    {
+      "id": "runtime-overlay-package",
+      "legacy_carrier": "workbench-runtime-overlay-package-verify",
+      "disposition": "superseded",
+      "reason": "C2 packs boot and session families independently and binds every record and payload after the sole product link.",
+      "current_truth": [
+        "runtime-family-identity-gate",
+        "runtime-slice-cap-gate",
+        "overlay-closure-gate"
+      ]
+    },
+    {
+      "id": "overlay-stage-layout-and-footprint",
+      "legacy_carrier": "workbench-overlay-stage verify/audit",
+      "disposition": "superseded",
+      "reason": "The old Bank-0 boot-overlay gap model is retired; C2 measures all five resident walls and both lifetime-exclusive runtime banks from WPLTO output.",
+      "current_truth": [
+        "whole-program-capacity-gate",
+        "runtime-slice-cap-gate",
+        "boot-and-session-bank-headroom"
+      ]
+    },
+    {
+      "id": "overlay-build-reproducibility",
+      "legacy_carrier": "workbench-overlay-reproducibility-check",
+      "disposition": "retired-with-reason",
+      "reason": "WPLTO is not claimed to be a pure function across invocations. The current contract pins the one built identity, its evidence and the 34-byte publish-last domain instead of claiming rebuild identity.",
+      "current_truth": [
+        "post-link-SHA-binding",
+        "read-only-evidence-artifacts",
+        "total-publish-last-domain-gate"
+      ]
+    },
+    {
+      "id": "legacy-bootstrap-host-smoke",
+      "legacy_carrier": "workbench-overlay-bootstrap-smoke",
+      "disposition": "retired-with-reason",
+      "reason": "The smoke executes the removed vm_boot_overlay implementation. C2 boot execution is covered by its own target decoder tests and hardware presmoke rather than a false compatibility host path.",
+      "current_truth": [
+        "C2-target-decoder-host-matrix",
+        "hardware-presmoke-boot-to-REPL"
+      ]
+    },
+    {
+      "id": "legacy-hardware-stack-readback",
+      "legacy_carrier": "workbench-overlay-stack-probe/readback",
+      "disposition": "retained-hardware-only",
+      "reason": "Hardware stack and boot behavior cannot become a structural link claim; its successor remains an explicit hardware protocol line after each new product identity.",
+      "current_truth": [
+        "hardware-presmoke",
+        "full-hardware-acceptance"
+      ]
+    }
+  ]
+}

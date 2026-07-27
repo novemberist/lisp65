@@ -1,0 +1,36 @@
+{
+  "format": "lisp65-c2-hot-refill-link29-seams-amendment-v1",
+  "version": 1,
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-amended-resident-island-seed-probe",
+  "scope": {
+    "product_links_authorized": 0,
+    "amended_resident_island_seed_links_authorized": 1,
+    "hardware_execution": "not-authorized-by-this-contract",
+    "performance_claim": "none"
+  },
+  "preserved_link29_seams": {
+    "child_resolver": "c2_stream_product_child_value remains byte-for-byte Link-29 source and remains in the owned $E000 window",
+    "entry_records": "c2_entry_records retains the Link-29 algorithm and owned-window placement; external linkage is the sole source-level visibility change",
+    "entry_length": "c2_product_entry_length remains byte-for-byte Link-29 source and placement",
+    "hard_window_gate": "$E000 occupied bytes and every named $E000 section must equal Link 29; delta must be exactly 0 bytes"
+  },
+  "only_new_resident": {
+    "symbol": "c2_stream_product_materialize_entry",
+    "placement": "Resident Island",
+    "consumers": [
+      "c2_product_entry_read",
+      "c2_stream_phase_13"
+    ],
+    "single_truth_rule": "Both consumers call the one materializer; no second refill materializer or descriptor interpreter may survive."
+  },
+  "required_fresh_evidence": [
+    "588/588 published entries and 1931/1931 literal values match the pinned Link-29 capture",
+    "nested caller rematerialization restores the original values",
+    "all four content mutations are rejected before publication",
+    "both hot-path transport failures close fail-closed",
+    "the Link-29 child resolver, entry-record seam and entry-length seam remain source-identical under the declared linkage exception",
+    "all capacity and placement currencies are reported and $E000 delta is exactly 0 bytes"
+  ],
+  "first_red_rule": "Any failed semantic, source, capacity, placement or structure gate stops before a product link. Link 29 remains untouched."
+}

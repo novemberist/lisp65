@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-v12-known-issues-register-v1",
+  "version": 1,
+  "release": "1.2.0",
+  "recorded_on": "2026-07-27",
+  "active": [
+    {
+      "id": "c2.2-freezer-during-active-definition",
+      "status": "documented-C2.3-deferred",
+      "user_rule": "Enter the Freezer only at a visible REPL prompt or while the evaluator is otherwise idle. If entered during a persistent definition or append, return with F3 and cold-restart before relying on the interrupted definition.",
+      "authority": {
+        "path": "docs/planning/c2.2-cross-invariant-matrix.md",
+        "sha256": "ecff5ab35452c1ad6c5bfd7e53b7a2684662ecc034125b66fbfdd01ca804b424"
+      },
+      "claim_limit": "Idle Freezer identity is product-bound hardware evidence. The active-definition crossing is not PROVEN."
+    }
+  ],
+  "informative": [
+    {
+      "id": "published-call-with-argument",
+      "value": "68 frames",
+      "limit": null
+    },
+    {
+      "id": "gc-envelope",
+      "value": "89 frames; one collection; 96 contract block reads",
+      "limit": null
+    },
+    {
+      "id": "cold-boot-observation",
+      "value": "27.653-second upper bound to a captured screen; prompt may have appeared earlier",
+      "limit": null
+    }
+  ],
+  "retired": [
+    {
+      "id": "v11-c1-definition-first-call",
+      "status": "retired-by-promoted-v1.2-product",
+      "historical_authority": {
+        "path": "config/v11-c1-definition-call-latency-exception.json",
+        "sha256": "77a8128ed5310b5ca6da0741b762a4f8d45afd443e8176121867bb00e66480a6"
+      },
+      "historical_values": {
+        "first_call_frames": "95..98",
+        "warm_call_frames": 10,
+        "performance_bar": "not-passed"
+      },
+      "retirement_values": {
+        "acceptance_first_call_frames": 1,
+        "acceptance_warm_call_frames": 0,
+        "final_G5_first_call_frames": 0,
+        "final_G5_warm_call_frames": 0,
+        "claimed_first_call_ceiling_frames": 16,
+        "claimed_warm_call_ceiling_frames": 10
+      },
+      "evidence": {
+        "link66_hardware_receipt": {
+          "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-bundled-hardware-measurements-receipt.json",
+          "sha256": "93396a7f6fe423837c9ae7e38380b6045853acdca9808e3950a8c617f9ac0d8e"
+        },
+        "G5_receipt_sha256": "d317833ccd68d129493e824c1a89995b819ddc6464ce4f50534f1fb46cd8dbc0",
+        "G6_receipt_sha256": "b4e494b025fd7dd3404cc14a363980f54ae0e051f0e12285f092facc67c94685",
+        "promotion_id": "c2-lite-r6-g6-hardware-acceptance-19aa835",
+        "product_artifact_set_sha256": "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d",
+        "package_set_sha256": "82ddc3d7fd8bc048b2803081866aa5320a08bd226d18b063c403a33fc9e7e038"
+      },
+      "claim_limit": "Retires only the published nullary definition-to-first-call exception. It creates no n-ary, GC or boot-latency claim."
+    }
+  ]
+}

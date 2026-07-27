@@ -1,0 +1,178 @@
+{
+  "format": "lisp65-c2-lite-media-product-v1",
+  "version": 1,
+  "id": "c2-lite-canonical-two-media-product",
+  "status": "owner-authorized-for-fresh-clone-R4-R5-R6-G5-G6",
+  "product": {
+    "source_baseline": "Link-66-single-submit-completion",
+    "resident_load_address": "0x2001",
+    "resident_entry_address": "0x2023",
+    "product_disk": {
+      "name": "L65SYS",
+      "id": "65",
+      "mode": "0444"
+    },
+    "work_disk": {
+      "name": "L65WORK",
+      "id": "65",
+      "mode": "0644",
+      "initial_entries": []
+    }
+  },
+  "descriptor": {
+    "magic": "L65B",
+    "version": 2,
+    "header_bytes": 16,
+    "record_bytes": 32,
+    "record_count": 13,
+    "bytes": 432,
+    "restage_limit": 2,
+    "identity": "CRC32-over-final-record-array",
+    "policy": "one-emitter-strict-v2-no-v1-dual-decoder"
+  },
+  "media_entries": [
+    {
+      "role_id": 1,
+      "artifact_role": "c2-bank2-static-code-plane",
+      "name": "code.bin",
+      "destination": "0x00020000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 2,
+      "artifact_role": "c2d-v6-code-plane",
+      "name": "c2d.bin",
+      "destination": "0x00050000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 3,
+      "artifact_role": "c2-two-record-boot-stage",
+      "name": "bootstage.bin",
+      "destination": "0x00058500",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 4,
+      "artifact_role": "c2-session-family-region-0",
+      "name": "session.bin",
+      "destination": "0x08000000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 5,
+      "artifact_role": "c2-product-shelf",
+      "name": "shelf.bin",
+      "destination": "0x08100000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 6,
+      "artifact_role": "c2-boot-family",
+      "name": "boot.bin",
+      "destination": "0x08200000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 7,
+      "artifact_role": "c2-session-family-region-1",
+      "name": "region1.bin",
+      "destination": "0x08300000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 8,
+      "artifact_role": "c2-kernal-window",
+      "name": "window.bin",
+      "destination": "0x087fe000",
+      "policy": "stage-and-independent-target-readback"
+    },
+    {
+      "role_id": 9,
+      "artifact_role": "c2-resident-prg",
+      "name": "lisp65.prg",
+      "destination": "0x00040000",
+      "policy": "verify-stage-then-chain"
+    },
+    {
+      "role_id": 10,
+      "artifact_role": "resolved-profile",
+      "name": "profile",
+      "destination": null,
+      "policy": "media-CRC-only"
+    },
+    {
+      "role_id": 11,
+      "artifact_role": "library-ide",
+      "name": "ide",
+      "destination": null,
+      "policy": "media-CRC-only"
+    },
+    {
+      "role_id": 12,
+      "artifact_role": "library-idex",
+      "name": "idex",
+      "destination": null,
+      "policy": "media-CRC-only"
+    },
+    {
+      "role_id": 13,
+      "artifact_role": "library-m65d",
+      "name": "m65d",
+      "destination": null,
+      "policy": "media-CRC-only"
+    }
+  ],
+  "staging": {
+    "execution": "always-restage-before-product-chain",
+    "fastpath": "none",
+    "reason": "C2-lite media acceptance must not inherit the historical Attic-validity assumption",
+    "write_completion": "each media block is written once, poisoned readback is submitted once, and local observation waits for byte identity",
+    "timeout": {
+      "raster_low_wraps": 192,
+      "interpretation": "fail-closed bound, not a performance claim"
+    },
+    "publish_order": [
+      "validate-medium-and-final-descriptor",
+      "stage-and-prove-all-eight-C2-inputs",
+      "validate-profile-and-library-members",
+      "stage-and-prove-resident-PRG",
+      "chain-to-bound-resident-entry"
+    ]
+  },
+  "artifact_roles": [
+    "linked-product-elf",
+    "c2-resident-prg",
+    "c2-bank2-static-code-plane",
+    "c2d-v6-code-plane",
+    "c2-two-record-boot-stage",
+    "c2-session-family-region-0",
+    "c2-product-shelf",
+    "c2-boot-family",
+    "c2-session-family-region-1",
+    "c2-kernal-window",
+    "resolved-profile",
+    "library-ide",
+    "library-idex",
+    "library-m65d",
+    "cold-stager",
+    "boot-descriptor",
+    "product-d81",
+    "work-d81",
+    "product-mount-descriptor"
+  ],
+  "artifact_count": 19,
+  "media_entry_count": 15,
+  "negative_requirements": [
+    "missing-or-extra-role",
+    "wrong-role-id",
+    "wrong-destination",
+    "descriptor-v1-presented-to-v2-stager",
+    "record-array-CRC-mismatch",
+    "source-file-CRC-mismatch",
+    "target-readback-mismatch-or-timeout",
+    "chain-before-all-stage-records-proven",
+    "product-PRG-load-or-entry-drift"
+  ],
+  "claim_limit": "Defines the C2-lite product and media truth consumed by fresh-clone, R4, R5, R6 and G6. It is not itself a build, promotion, hardware or release claim."
+}

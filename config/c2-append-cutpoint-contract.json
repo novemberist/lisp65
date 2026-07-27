@@ -1,0 +1,169 @@
+{
+  "schema": "lisp65.c2.append-cutpoint-contract.v8",
+  "decision": {
+    "class": "C",
+    "approved_on": "2026-07-22",
+    "approved_scope": [
+      "explicit_forward_and_rollback_phase_plans",
+      "phase_plans_as_named_data_with_one_serial_interpreter",
+      "phase_range_inventory_and_cutpoint_fixtures",
+      "retirement_of_the_fixture_completed_internal_badopcode_detail_scaffold",
+      "publish_exports_and_journal_clear_one_record_marker_qualified_co_residence",
+      "one_product_shaped_wplto_probe",
+      "one_successor_product_link_after_green_probe",
+      "one_hardware_presmoke_after_green_link"
+      ,"append_temperature_attribution_and_terminal_status_publication"
+      ,"canonical_pointer_selected_terminated_phase_plans"
+      ,"persistent_post_decode_plan_scan_resolve_header_publish"
+      ,"mandatory_station_omission_mutations_for_every_plan_kind"
+      ,"journal_prepare_one_record_cutpoint_co_residence"
+      ,"four_point_cpu_chip_completion_in_existing_header_phase"
+      ,"emission_bound_C2J_bookend_seal_in_lifetime_free_record_bytes"
+    ]
+  },
+  "baseline": {
+    "link": 48,
+    "product_sha256": "1b7f7309a415d113a0d8718805e8c860ff3583b82ee2037dfae9dac5f7f5eae6",
+    "hardware_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link48-zero-literal-append-hardware-first-red.json",
+    "persistent_header_hardware_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link49-facade16-missing-persistent-header-hardware-first-red.json"
+  },
+  "phase_plans": {
+    "forward_stage": {
+      "slots": [30, 39, 33, 34, 35, 36],
+      "names": [
+        "journal_write",
+        "c2j_active_completion",
+        "stage_copy",
+        "stage_plane",
+        "image",
+        "entries"
+      ],
+      "forbidden_intervening_recovery_slots": [31, 32]
+    },
+    "rollback": {
+      "slots": [39, 41, 42, 43, 44, 45, 40, 39],
+      "names": [
+        "pre_rollback_data_barrier",
+        "rollback_unpublish",
+        "rollback_wipe_plane",
+        "rollback_wipe_chip",
+        "rollback_wipe_attic",
+        "rollback_finalize",
+        "journal_clear",
+        "c2j_clear_completion"
+      ],
+      "ordering": "The first header-slot call is the gathered data barrier before restoration or wipe. The second proves C2J CLEAR after every restoration write."
+    },
+    "persistent_publish": {
+      "slots": [37, 38, 39, 40],
+      "names": [
+        "publish_plan_scan",
+        "publish_plan_resolve",
+        "header_commit",
+        "publish_exports"
+      ],
+      "ordering": "The persistent append completes decode, then scans, resolves, commits its header, and only then publishes exports. Current slot 39 is mandatory, not an optional range member."
+    },
+    "representation": {
+      "kind": "three named zero-terminated uint8 arrays consumed by one named and sized non-LTO assembler leaf in the resident Island",
+      "forward_bytes": 7,
+      "persistent_publish_bytes": 5,
+      "rollback_bytes": 6,
+      "selection": "the C caller passes the canonical linked array pointer in __rc2/__rc3 and context in __rc4/__rc5; no transport id or selector table rebuilds plan identity",
+      "rule": "c2_append_plan_walk invokes the one generic Session seam once per nonzero data byte. The walker owns no status, rollback, or publication policy."
+    },
+    "range_rule": "A numeric range is permitted only for an ascending, semantically contiguous phase sequence; descending and semantic-gap requests fail closed.",
+    "overlay_rule": "The resident serial driver is the sole caller; no overlay calls another overlay."
+  },
+  "publish_clear_co_residence": {
+    "physical_slice": "publish_clear",
+    "logical_entries": ["publish_exports", "journal_clear"],
+    "slot": 40,
+    "request_storage": "record byte 23, after the roots/fronts marker lifetime has ended",
+    "requests": {"publish_exports": "0x70", "journal_clear": "0x6a"},
+    "ordering": "the resident serial driver writes one request marker and calls the sole physical record; the dispatcher clears the marker before either body mutates state",
+    "failure": "missing, foreign, skipped or replayed markers fail before either logical body changes state",
+    "overlay_rule": "the named and sized assembler selector and both C bodies share one section; the selector tail-jumps to exactly one body and none calls another overlay",
+    "selector": {
+      "implementation": "non-LTO assembler leaf c2_append_journal_prepare_phase",
+      "abi": "c2_append_state pointer in __rc2/__rc3; uint8 result in A",
+      "target_offsets": {"main_ordinal": 2, "journal_result": 213},
+      "maximum_bytes": 82,
+      "replaces_measured_C_dispatcher_bytes": 105
+    },
+    "new_resident_cells": 0,
+    "new_bss_bytes": 0,
+    "new_gc_roots": 0,
+    "catalog_records_before": 50,
+    "catalog_records_after": 49
+  },
+  "journal_prepare_co_residence": {
+    "physical_slice": "journal_prepare",
+    "logical_entries": ["rollback_prepare", "journal_write"],
+    "slot": 30,
+    "request_storage": "existing record byte 31 C2J result: NONE, PREPARED, ACTIVE",
+    "ordering": "normal append with a main-ordinal sink writes directly; rollback without a sink advances NONE to PREPARED to ACTIVE through two serial calls",
+    "failure": "missing preparation, foreign result, skipped call, or replay after ACTIVE fails before either logical body mutates state",
+    "selector_totality": "For each main-ordinal class all 256 marker bytes have a defined result: only NONE for a normal append and NONE/PREPARED for rollback are accepted; the other 509 combinations return C2_STREAM_ERR_STATE.",
+    "tail_abi": "Both selector tail edges restore the llvm-mos C-entry invariant Z=0 after reading record[31]; a tail edge with any other last Z definition is a build error.",
+    "overlay_rule": "the dispatcher and both bodies share one section and none calls another overlay",
+    "new_resident_cells": 0,
+    "new_bss_bytes": 0,
+    "new_gc_roots": 0,
+    "combined_measured_pre_fusion_bytes": 1779,
+    "slice_cap_bytes": 1792,
+    "packed_bytes_before": 2048,
+    "packed_bytes_after": 1792,
+    "catalog_records_before": 49,
+    "catalog_records_after": 48
+  },
+  "C2J_bookend_seal": {
+    "storage": "record bytes 25..26",
+    "width_bytes": 2,
+    "algorithm": "CRC16/CCITT-FALSE via the existing rtov_crc_mem assembler leaf",
+    "coverage": "all 64 final C2J bytes including the record-owned CRC32 in bytes 60..63",
+    "producer_order": "finish fields -> finish format CRC32 -> bind seal -> submit ACTIVE",
+    "recovery_order": "validate format CRC32, identity and ranges -> bind seal from the validated snapshot -> reconstruct -> rollback",
+    "consumer": "the common header-phase completion body compares one independently read target CRC with the bound seal",
+    "lifetime_proof": "source-record interpretation has ended before journal_write owns the bytes; no phase marker, fused selector, code-base tuple or journal-result byte aliases 25..26; CLEAR proof releases them",
+    "forbidden": "field-by-field reconstruction in the completion poll",
+    "new_resident_bytes": 0,
+    "new_BSS_bytes": 0,
+    "new_roots": 0
+  },
+  "badopcode_detail_retirement": {
+    "reason": "the internal BADOPCODE detail was diagnostic scaffolding for the now corrected and permanently cutpoint-covered phase plans",
+    "removed": ["first_failure_slot", "first_failure_status", "resident raw capture", "terminal BCODE materialization"],
+    "preserved": ["VM_BADOPCODE fail-closed status", "cold tagged install-phase provenance outside the append work structs", "DIRMISS symbolic name detail", "DIRMISS BCODE ordinal detail"],
+    "rule": "Fixtures prevent raw plan-latch regressions. The later install-phase discriminator reserves only the scratch tail and does not restore slot capture, result detail, renderer dispatch or BCODE materialization."
+  },
+  "required_fixtures": [
+    "forward_plan_exactly_30_39_33_34_35_36",
+    "rollback_plan_exactly_39_41_42_40_39",
+    "persistent_publish_plan_exactly_37_38_39_40",
+    "all_three_plan_arrays_exist_as_linked_data_with_exact_slot_bytes_and_one_zero_terminator",
+    "plan_byte_mutations_are_rejected",
+    "omitting_any_mandatory_station_from_each_plan_kind_is_rejected",
+    "omitting_header_slot_40_reproduces_and_rejects_the_Link_49_staged_1_committed_0_signature",
+    "canonical_plan_pointers_are_consumed_only_by_c2_append_plan_walk",
+    "plan_walker_is_a_named_sized_resident_Island_STT_FUNC_and_calls_only_the_generic_session_seam",
+    "plan_walker_C_ABI_is_plan_pointer_in_rc2_rc3_context_in_rc4_rc5_result_in_A",
+    "descending_range_fails_closed",
+    "all_remaining_ranges_are_ascending_and_semantically_contiguous",
+    "publish_clear_missing_foreign_skip_and_replay_markers_are_rejected",
+    "publish_clear_normal_and_rollback_only_entry_sequences_are_distinct",
+    "journal_prepare_normal_direct_write_and_rollback_prepare_write_sequences_are_distinct",
+    "journal_prepare_skip_foreign_and_replay_states_are_rejected",
+    "journal_prepare_selector_is_a_named_sized_STT_FUNC_with_real_context_ABI_and_two_tail_edges",
+    "BADOPCODE_detail_scaffold_cannot_reappear",
+    "DIRMISS_symbol_and_ordinal_detail_remain_present",
+    "rollback_after_each_forward_cutpoint_leaves_no_active_C2J_and_no_suffix_growth",
+    "hardware_first_red_suffix_plus_active_C2J_is_rejected",
+    "C2J_emission_seal_rejects_target_seal_order_and_recovery_reseal_mutations",
+    "exact_119_byte_zero_literal_image_runs_through_real_phase_plan_fixture"
+  ],
+  "counters": {
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  }
+}

@@ -33,7 +33,10 @@ typedef struct {
     uint32_t context_tag;
     uint16_t context_contract;
     uint8_t code;
-    obj symbol;
+    /* Closed detail union is code-qualified: NIL; SYMI for symbol errors;
+     * BCODE for VM_DIRMISS; exact Fixnum 5 for C2 nesting refusal.  The field
+     * keeps the original two-byte ABI position. */
+    obj detail;
 } lisp65_error_overlay_context;
 
 #define LISP65_ERROR_OVERLAY_CONTEXT_SIZE \
@@ -49,6 +52,6 @@ uint8_t lisp65_error_overlay_entry(void *context);
 /* Returns one only after the complete text was rendered. Sparse codes without
  * profile text return zero; the caller owns the resident Ehh fallback for that
  * case and for transport, latch, context, and table failures. */
-uint8_t lisp65_error_render_code(lisp65_error_code code, obj symbol);
+uint8_t lisp65_error_render_code(lisp65_error_code code, obj detail);
 
 #endif /* LISP65_ERROR_OVERLAY_H */

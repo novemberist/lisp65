@@ -8,10 +8,16 @@ persistent media, and verification artifacts as explicit product interfaces.
 
 1. **Resident core** — REPL, reader/evaluator services, bytecode VM, `lcc`
    integration, loader, error recovery, and the minimal hardware bridges.
-2. **Bank-5 preload** — the bound standard-library prefix needed at boot.
-3. **Attic catalog** — reset-persistent, power-volatile overlay metadata.
-4. **L65M libraries** — on-demand IDE, IDEX, M65D, and user-compiled code.
-5. **Boot stager** — a separate artifact that validates and stages the product
+2. **Bank-2 code plane** — verified static bytecode and session-appended code.
+3. **Bank-3 runtime plane** — verified boot and session runtime families.
+4. **Bank-5 C2D/session store** — immutable directory prefix, mutable
+   generation-bound entries, and a bounded second region for cold rollback
+   phases.
+5. **Attic shelf** — a cold, power-volatile staging source. The post-READY
+   execution path does not read code, records, literals, or native slices from
+   Attic memory.
+6. **L65M libraries** — on-demand IDE, IDEX, M65D, and user-compiled code.
+7. **Boot stager** — a separate artifact that validates and stages the product
    before chaining into the workbench PRG.
 
 Keeping the stager separate preserves the resident Bank-0 budget and lets the
@@ -34,7 +40,7 @@ paying the disk-write implementation cost until needed.
 
 ## Media model
 
-Release 1.0.0 uses two D81 images with one drive:
+Release 1.2.0 uses two D81 images with one drive:
 
 - `L65SYS` is the immutable product image used for boot and library loading.
 - A valid non-product 1581 image holds user files.
@@ -49,13 +55,17 @@ filesystem structure and BAM accounting rather than trusting M65D's own readback
 The principal constrained resources are:
 
 - resident Bank-0 bytes;
-- EXT bytes used by the product image;
+- the product-owned `$e000..$ffff` window and its pinned floor;
+- fixed resident blocks and the runtime Island;
+- the primary and overflow runtime-slice stores;
+- Bank-5 C2D append scratch;
 - interned symbol slots;
 - name-pool bytes;
 - L65M directory slots.
 
-Each promoted block reports all five deltas. Release 1.0.0 deliberately stops at
-the pinned floors rather than reclaiming capacity without a concrete need.
+Each promoted block reports every affected currency. Release 1.2.0 stops at
+its pinned floors rather than treating unused address space as an implicit
+budget.
 
 ## Evidence model
 

@@ -1,0 +1,138 @@
+{
+  "format": "lisp65-c2-session-extension-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "host-probe-complete-owner-review-required",
+  "owner_decision": "Option A approved as one bounded contract/emitter probe on 2026-07-19. No product bytes are authorized before the probe is green and reviewed.",
+  "claim_limit": "Host contract and emitter/append probe only. It changes no product source or artifact, authorizes no product capacity and makes no device, latency, compatibility or product-link claim.",
+  "single_format_rule": {
+    "immutable_image_language": "C2I-v2 for static shelf images, interactive definitions and persistent compiled libraries",
+    "outer_envelope": "one-record L65S-v4-direct with split code and C2I-v2 metadata regions",
+    "device_decoder_count": 1,
+    "product_emitter_count": 1,
+    "legacy_l65m_product_policy": "The C2 product rejects L65M on device. Source remains portable; v1.1 compiled artifacts require recompilation or an offline migration tool. No L65M emitter or decoder may remain in the C2 product closure."
+  },
+  "extension_envelope": {
+    "magic": "L65S",
+    "version": 4,
+    "header_bytes": 32,
+    "record_bytes": 32,
+    "record_count": 1,
+    "flags": 1,
+    "maximum_total_bytes": 8192,
+    "build_identity": "header build_id_u32 must equal the running product build identity",
+    "identity": "catalog CRC32 plus code CRC32, metadata CRC32 and combined image CRC32; host artifact SHA256 binds all bytes",
+    "layout": "header, one record, normalized code, C2I-v2 metadata; all checked arithmetic closes exactly and optional C2I alignment is zero",
+    "strictness": "Reject L65S-v3, widening-only v4, count other than one, unknown flags, wrong build identity, CRC mismatch, overlap, truncation or trailing bytes"
+  },
+  "session_attic_arena": {
+    "region_id": 2,
+    "base": "0x08400000",
+    "bytes": 1048576,
+    "allocation": "append-only, align2, exact envelope length",
+    "immutability": "bytes are never modified after verified staging within a session generation",
+    "reset_rule": "Attic bytes may survive reset, but the new C2D generation starts without extension records; stale bytes have no callable handle",
+    "identity_rule": "C2D image generation, product build identity and combined image CRC bind every callable source"
+  },
+  "c2d_v3": {
+    "header": {
+      "bytes": 48,
+      "fields": [
+        "magic_4", "version_u8=3", "header_bytes_u8=48",
+        "image_record_bytes_u8=32", "entry_record_bytes_u8=10",
+        "flags_u16_zero", "session_generation_u16_nonzero",
+        "image_count_u16", "image_capacity_u16",
+        "entry_count_u16", "entry_capacity_u16",
+        "resolution_count_u16", "resolution_capacity_u16",
+        "root_count_u16", "root_capacity_u16",
+        "images_offset_u16", "entries_offset_u16",
+        "resolutions_offset_u16", "roots_offset_u16",
+        "total_bytes_u16", "immutable_image_count_u16",
+        "product_shelf_catalog_crc32", "product_build_id_u32"
+      ]
+    },
+    "image_record": {
+      "bytes": 32,
+      "fields": [
+        "source_kind_u8", "flags_u8_zero", "source_slot_u8",
+        "reserved_u8_zero", "session_generation_u16",
+        "directory_base_u16", "entry_count_u16",
+        "resolution_base_u16", "resolution_count_u16",
+        "root_base_u16", "root_count_u16",
+        "code_offset_u24", "code_length_u16",
+        "metadata_offset_u24", "metadata_length_u16",
+        "combined_image_crc32"
+      ],
+      "source_kinds": {
+        "0": "product L65S shelf; offsets relative to 0x08100000; source_slot is the immutable shelf record",
+        "1": "session extension; offsets relative to 0x08400000; source_slot is the append ordinal"
+      }
+    },
+    "entry_record": {
+      "bytes": 10,
+      "fields": [
+        "image_slot_u8", "flags_u8_zero", "entry_ordinal_u16",
+        "code_length_u16", "literal_resolution_base_u16",
+        "session_generation_u16"
+      ]
+    },
+    "capacities": {
+      "images": 64,
+      "entries": 2048,
+      "resolutions": 4096,
+      "roots": 1536,
+      "initial_counts": {
+        "images": 6,
+        "entries": 583,
+        "resolutions": 2249,
+        "roots": 284
+      },
+      "available_after_static_composition": {
+        "images": 58,
+        "entries": 1465,
+        "resolutions": 1847,
+        "roots": 1252
+      },
+      "section_offsets": {
+        "images": 48,
+        "entries": 2096,
+        "resolutions": 22576,
+        "roots": 30768
+      },
+      "total_bytes": 33840,
+      "bank5_session_region_bytes": 50816,
+      "bank5_headroom_bytes": 16976
+    },
+    "generation_rule": "Header, every active image and every active entry carry the same nonzero session generation. A mismatch is rejected before address calculation. Generation wrap requires cold boot.",
+    "root_rule": "Membership is derived only from each identity-bound C2I-v2 descriptor stream. Heap values live only in root_values. During append a u16 pending-root high-water extends the collector scan through newly published canonical slots; rollback zeros those slots and clears the high-water. Normal collections scan root_count only.",
+    "unused_rule": "Every inactive image, entry, resolution and root byte is zero. Append writes only the next inactive contiguous ranges. Rollback restores the previous header and zeros every touched inactive byte.",
+    "attic_watermark_rule": "The committed Attic watermark is not stored independently. It is derived as the maximum metadata_offset + metadata_length across active source-kind-1 image records (zero with none). Publishing C2D header counts therefore publishes reachability and allocation state from one source."
+  },
+  "append_protocol": [
+    "verify the complete one-record L65S-v4-direct envelope, current product build identity and all CRCs",
+    "strictly decode C2I-v2 and derive entry, resolution and root counts from metadata",
+    "check C2D image, entry, resolution and root capacities plus Attic arena capacity with u32 arithmetic",
+    "stage the complete envelope into unpublished align2 Attic space and read back/verify it",
+    "reserve the next inactive C2D ranges and zero them",
+    "resolve descriptors; publish each heap value to its sole canonical root slot before later allocation while pending-root high-water protects it",
+    "journal every export function cell and validate late-bound rules",
+    "write the inactive image, entry and resolution records",
+    "publish the new C2D header counts as the directory commit marker; the committed Attic watermark is derived from the now-active session image records",
+    "publish export cells last; on any failure restore cells in reverse order, restore the old header/watermark and zero all appended C2D ranges"
+  ],
+  "required_probe_fixtures": [
+    "same emitter implementation produces a static product image and real compiler-derived session image",
+    "candidate output contains no L65M magic or legacy patch table",
+    "legacy L65M rejected by the C2 extension decoder and C2 extension rejected by the historical L65M decoder",
+    "stale session-image generation after restage",
+    "wrong product build identity",
+    "catalog, code, metadata and combined-image CRC mismatch",
+    "image, entry, resolution, root and Attic capacity exhaustion",
+    "failure at every append publication phase leaves prior C2D bytes and exports identical",
+    "GC after every appended heap allocation preserves canonical roots without writeback",
+    "reset between Attic staging and C2D header publication leaves no reachable extension",
+    "unknown source kind, flag or record width",
+    "zero-length entry, overlapping region and trailing extension bytes"
+  ],
+  "product_gate_after_probe": "Before the real product substitution link can pass, its source/object closure must contain the C2 emitter/decoder only and must contain no L65M validator, commit, emitter, magic or runtime slice."
+}

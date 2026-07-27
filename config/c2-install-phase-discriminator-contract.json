@@ -1,0 +1,79 @@
+{
+  "schema": "lisp65.c2.install-first-fault-stamp.v3",
+  "decision": {
+    "class": "C",
+    "approved_on": "2026-07-23",
+    "scope": "first-error-wins slot provenance for the intermittent cold-first-call BADOPCODE",
+    "predecessor": "lisp65.c2.install-phase-self-stamp.v2",
+    "trigger": "Link-52 hardware captured [slot 44, inner 0]; slot 44 was abort cleanup provenance and had overwritten the primary failing phase",
+    "product_links_authorized_after_green_wplto": 1
+  },
+  "storage": {
+    "object": "lisp65_c2_phase_scratch",
+    "scratch_bytes": 304,
+    "offset": 302,
+    "bytes": 2,
+    "layout": ["first_error_session_slot", "trace_flags"],
+    "trace_flags": {
+      "inner_vm_entered_bit": 1,
+      "primary_locked_bit": 128,
+      "reserved_mask": 126
+    },
+    "new_bss_bytes": 0,
+    "new_gc_roots": 0,
+    "new_latches": 0,
+    "lifetime": "tail excluded from emitter and append work structs; the first emitter entry resets flags; cold phases stamp the primary byte until rollback, abort or inner-VM entry locks it"
+  },
+  "writers": {
+    "decoder_slots": "session decoder phases 04 through 12 stamp their actual configured slot while unlocked",
+    "emitter_slots": "all eight emitter overlay entries stamp their actual configured slot while unlocked",
+    "append_slots": "forward-only append entries stamp directly; dual-use append and cleanup entries stamp only while unlocked",
+    "local_cleanup_lock": "rollback_unpublish locks before attempting its own stamp and is the first member of the canonical local rollback plan",
+    "nonlocal_cleanup_lock": "abort_control locks before attempting its own stamp and precedes every non-local cleanup phase",
+    "inner_transition": "c2_product_install performs the sole resident provenance store immediately before vm_run_dir; that store sets both INNER_ENTERED and PRIMARY_LOCKED",
+    "reset": "the first emitter overlay entry clears both flags before stamping itself; pre-overlay transaction/reset failures remain identified by their existing status and are outside the tuple claim"
+  },
+  "interpretation": {
+    "first_error_session_slot": "the last non-cleanup cold overlay entered before the first rollback/abort boundary, or the last append slot before inner-VM entry",
+    "inner_vm_entered": "trace_flags bit 0 is one iff this install crossed into vm_run_dir",
+    "primary_locked": "trace_flags bit 7 is one after the first cleanup boundary or inner-VM entry; later cleanup stamps are no-ops",
+    "precedence": "the first phase witness wins; cleanup may enrich C2J and the flag byte but may never replace the primary slot",
+    "success": "a completed transient install may retain both bits set; the tuple is provenance, not a success marker",
+    "refill_boundary_claimed": false
+  },
+  "visibility": {
+    "consumer": "read-only JTAG capture after normal fail-closed unwind",
+    "product_consumer": "none",
+    "renderer_change": false,
+    "badopcode_detail_change": false
+  },
+  "capacity": {
+    "bank0_text_delta_limit_bytes": 11,
+    "bank0_text_noise_reserve_bytes": 32,
+    "e000_floor_bytes": 54,
+    "session_family_limit_bytes": 65536,
+    "all_other_walls": "nonnegative",
+    "whole_program_lto_is_authoritative": true
+  },
+  "required_mutations": [
+    "tail_offset_drift",
+    "emitter_overlaps_tail",
+    "append_overlaps_tail",
+    "missing_first_overlay_reset",
+    "missing_inner_transition",
+    "inner_transition_after_vm_call",
+    "inner_transition_does_not_lock",
+    "missing_decoder_stamp",
+    "missing_emitter_stamp",
+    "missing_append_stamp",
+    "wrong_slot_identity",
+    "hot_refill_stamps_trace",
+    "cleanup_stamp_ignores_lock",
+    "cleanup_locks_after_own_stamp",
+    "inner_status_overwritten"
+  ],
+  "counters": {
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "lisp65.c2.badopcode-hold-shelf-recipe.v1",
+  "recorded_on": "2026-07-22",
+  "status": "prepared-not-instantiated-nonpromotable-diagnostic-recipe",
+  "resident_product_bytes": 0,
+  "authority": {
+    "proven_template_link": 50,
+    "product_sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "elf_sha256": "0ac6121a0e1b484efafd81334fbe5c14909b8b741e20ee1f41caa615524f7f47",
+    "original_driver_sha256": "d6007d2ad82d6fb71c0a1f0be54c47e8ccde8b67829d0255336500124363d62f"
+  },
+  "patch": {
+    "function": "vm_check_status",
+    "qualification": "unique STX __rc21 immediately after the first vm_status >= 2 branch, derived from the final ELF/PRG",
+    "template_function_interval": "0x3766..0x37b1",
+    "template_instruction_address": "0x3774",
+    "template_file_offset": "0x1775",
+    "before_hex": "8617",
+    "after_hex": "80fe",
+    "semantics": "replace STX __rc21 with BRA -2 and hold before status clear and renderer",
+    "changed_bytes": 2,
+    "file_size_delta_bytes": 0
+  },
+  "capture_window": {
+    "three_time_separated_bank0_captures": true,
+    "vm_status": "symbol:vm_status",
+    "vm_codebuf": "symbol:vm_codebuf,56 bytes",
+    "vm_window_state": "symbols:vm_buf_bank through vmr_streaming",
+    "vm_buf_off": "symbol:vm_buf_off,2 bytes",
+    "live_bank2": "0x00020000..0x0002ffff",
+    "live_c2d_bank5": "0x00050000..0x0005ffff",
+    "rule": "read-only captures with elapsed milliseconds; no input after hold"
+  },
+  "instantiation_rule": {
+    "trigger": "a future ordinary product run reproduces VM_BADOPCODE",
+    "rebase": "derive exact function interval, instruction address and PRG offset anew from that SHA-bound final ELF/PRG",
+    "identity": "new SHA-bound NONPROMOTABLE diagnostic derivative",
+    "forbidden": ["reuse template offset without qualification", "compiler run", "linker run", "product promotion"]
+  },
+  "required_mutations": [
+    "wrong_opcode",
+    "wrong_relative_target",
+    "only_opcode_changed",
+    "only_operand_changed",
+    "extra_neighbour_byte"
+  ]
+}

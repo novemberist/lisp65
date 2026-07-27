@@ -207,7 +207,7 @@ WORKBENCH_FOOTPRINT_REPORT := $(WORKBENCH_OVERLAY_GUARD_FOOTPRINT_REPORT)
 
 WORKBENCH_CFLAGS := -Oz -Wall
 WORKBENCH_HEAP_CELLS := 48
-WORKBENCH_TARGET_SRCS := src/mega65_math.s src/l65m_batch_repeat.s src/f011_guarded_write.s
+WORKBENCH_TARGET_SRCS := src/mega65_math.s src/l65m_batch_repeat.s src/f011_guarded_write.s src/l65e_bcode_ordinal.s
 WORKBENCH_MATH_LINK_ALIASES := \
 	-Wl,--defsym=__udivhi3=lisp65_hw_udivhi3 \
 	-Wl,--defsym=__umodhi3=lisp65_hw_umodhi3 \

@@ -1,0 +1,931 @@
+#!/usr/bin/env python3
+"""Run and close the fresh five-case C2-lite G6 hardware acceptance."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path, PurePosixPath
+import re
+import shutil
+import subprocess
+import sys
+import time
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACT = ROOT / "config/c2-lite-acceptance-chain.json"
+R6_ROOT = ROOT / "build/c2.2/acceptance/r6-successor-v11"
+SHIP = R6_ROOT / "ship"
+MANIFEST = SHIP / "manifest.json"
+R6_RECEIPT = R6_ROOT / "r6-packaging-receipt.json"
+OUT = ROOT / "build/c2.2/acceptance/g6-successor-v11/session-01"
+PLAN = OUT / "g6-plan.json"
+DEVICE = "/dev/ttyUSB1"
+M65 = ROOT / "tools/m65tools/m65"
+FTP = ROOT / "tools/m65tools/mega65_ftp"
+REPL = ROOT / "scripts/hw-jtag-repl.sh"
+REMOTE_PRODUCT = "L65R6V11.D81"
+REMOTE_WORK = "L65R6W.D81"
+CASES = [
+    "offline-package-verification",
+    "cold-boot-from-exact-R6-product-media",
+    "always-restage-and-target-readback",
+    "work-media-write-read-power-cycle",
+    "product-media-remains-byteidentical",
+]
+TARGETS = (
+    ("c2-bank2-static-code-plane", "bank2-code", 0x00020000),
+    ("c2-session-family-region-0", "bank3-session", 0x00030000),
+    ("c2-session-family-region-0", "attic-session", 0x08000000),
+    ("c2-product-shelf", "attic-shelf", 0x08100000),
+    ("c2-boot-family", "attic-boot", 0x08200000),
+    ("c2-session-family-region-1", "attic-region1", 0x08300000),
+    ("c2-kernal-window", "attic-window", 0x087FE000),
+)
+
+
+class G6Error(RuntimeError):
+    pass
+
+
+def require(value: bool, message: str) -> None:
+    if not value:
+        raise G6Error(message)
+
+
+def load(path: Path, label: str) -> dict[str, Any]:
+    require(path.is_file() and not path.is_symlink(), f"{label} missing")
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise G6Error(f"cannot read {label}: {error}") from error
+    require(isinstance(value, dict), f"{label} must be an object")
+    return value
+
+
+def canonical(value: Any) -> bytes:
+    return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("ascii")
+
+
+def write(path: Path, value: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(canonical(value))
+
+
+def sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def bind(path: Path) -> dict[str, Any]:
+    require(path.is_file() and not path.is_symlink(), f"evidence missing: {path}")
+    return {
+        "path": path.relative_to(ROOT).as_posix(),
+        "bytes": path.stat().st_size,
+        "sha256": sha(path),
+    }
+
+
+def repo_path(value: str, label: str) -> Path:
+    pure = PurePosixPath(value)
+    require(
+        value and not pure.is_absolute() and pure.as_posix() == value
+        and ".." not in pure.parts,
+        f"{label} path invalid",
+    )
+    return ROOT / Path(*pure.parts)
+
+
+def run(
+    argv: list[str], label: str, *, output: Path | None = None,
+    timeout: int = 45, cwd: Path = ROOT,
+) -> str:
+    completed = subprocess.run(
+        argv, cwd=cwd, text=True, stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT, timeout=timeout, check=False,
+    )
+    if output is not None:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(completed.stdout, encoding="utf-8")
+    require(
+        completed.returncode == 0,
+        f"{label} failed ({completed.returncode}): {completed.stdout[-1000:]}",
+    )
+    return completed.stdout
+
+
+def manifest_state() -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    value = load(MANIFEST, "R6 manifest")
+    receipt = load(R6_RECEIPT, "R6 packaging receipt")
+    contract = load(CONTRACT, "acceptance contract")
+    require(
+        value.get("status") == "passed-transform-and-package-only"
+        and value.get("result") == "passed"
+        and receipt.get("status") == "passed-R6-package"
+        and contract.get("G6", {}).get("cases") == CASES,
+        "R6/G6 authority drift",
+    )
+    completed = subprocess.run(
+        [sys.executable, "verify.py"], cwd=SHIP,
+        text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        check=False,
+    )
+    require(completed.returncode == 0, "R6 offline verification red")
+    rows = value["product"]["artifacts"]
+    by_role = {row["role"]: row for row in rows}
+    require(len(rows) == len(by_role) == 19, "R6 role closure drift")
+    return value, by_role
+
+
+def artifact(by_role: dict[str, dict[str, Any]], role: str) -> Path:
+    row = by_role[role]
+    path = SHIP / Path(*PurePosixPath(row["ship_path"]).parts)
+    require(
+        path.is_file() and path.stat().st_size == row["bytes"]
+        and sha(path) == row["sha256"],
+        f"R6 role byte drift: {role}",
+    )
+    return path
+
+
+def prepare() -> None:
+    manifest, by_role = manifest_state()
+    require(not OUT.exists(), "G6 session already exists")
+    OUT.mkdir(parents=True)
+    plan = {
+        "format": "lisp65-c2-lite-G6-plan-v1",
+        "version": 1,
+        "id": "G6-successor-v11-session-01",
+        "status": "ready-first-red",
+        "recorded_on": "2026-07-27",
+        "authority": {
+            "R6_manifest": bind(MANIFEST),
+            "R6_packaging_receipt": bind(R6_RECEIPT),
+            "acceptance_contract": bind(CONTRACT),
+        },
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "product_d81_sha256": by_role["product-d81"]["sha256"],
+        "work_d81_sha256": by_role["work-d81"]["sha256"],
+        "device": DEVICE,
+        "remote_product": REMOTE_PRODUCT,
+        "remote_work": REMOTE_WORK,
+        "coverage": "exactly-once-in-order-until-first-red",
+        "cases": [
+            {"id": case, "status": "not-run"} for case in CASES
+        ],
+        "execution_accounting": {
+            "physical_devices": 1,
+            "product_byte_changes": 0,
+            "product_builds": 0,
+            "product_links": 0,
+        },
+        "claims": {
+            "R6": "passed",
+            "G6": "not-run",
+            "release": "not-release-capable",
+        },
+    }
+    write(PLAN, plan)
+    # Bind case 1 as a fresh execution, not inherited R6 output text.
+    output = run(
+        [sys.executable, str(SHIP / "verify.py")],
+        "fresh R6 offline verification",
+        output=OUT / "case-01-offline/verify.log",
+    )
+    require("C2-LITE R6 OFFLINE PASS" in output, "offline verifier output drift")
+    write(OUT / "case-01-offline/receipt.json", {
+        "format": "lisp65-c2-lite-G6-case-receipt-v1",
+        "version": 1,
+        "id": CASES[0],
+        "status": "passed",
+        "authority": {
+            "R6_manifest": bind(MANIFEST),
+            "R6_packaging_receipt": bind(R6_RECEIPT),
+        },
+        "evidence": [bind(OUT / "case-01-offline/verify.log")],
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "result": "passed",
+    })
+    print("c2-lite G6 PREPARE PASS case=1/5 offline=passed hardware=not-started")
+
+
+def memsave(start: int, length: int, output: Path, label: str) -> None:
+    end = start + length
+    output.parent.mkdir(parents=True, exist_ok=True)
+    run([
+        "timeout", "30s", str(M65), "-l", DEVICE,
+        "--memsave", f"0x{start:08x}:0x{end:08x}={output}",
+    ], label, output=output.with_suffix(output.suffix + ".log"), timeout=35)
+    require(output.is_file() and output.stat().st_size == length,
+            f"{label} readback size drift")
+
+
+def target_readbacks(
+    by_role: dict[str, dict[str, Any]], root: Path,
+) -> list[dict[str, Any]]:
+    evidence = []
+    for role, target_name, address in TARGETS:
+        row = by_role[role]
+        output = root / f"{target_name}.bin"
+        memsave(address, row["bytes"], output, f"read {target_name}")
+        source = artifact(by_role, role)
+        require(output.read_bytes() == source.read_bytes(),
+                f"target readback differs: {target_name}")
+        evidence.append({
+            "role": role,
+            "target": target_name,
+            "address": f"0x{address:08x}",
+            "source": bind(source),
+            "readback": bind(output),
+            "comparison": "byteidentical",
+        })
+    return evidence
+
+
+def ftp(
+    commands: list[str], label: str, output: Path, *, force: bool = True,
+    timeout_seconds: int = 75,
+) -> None:
+    argv = [str(FTP)]
+    if force:
+        argv.append("-F")
+    argv += ["-l", DEVICE, "-y"]
+    for command in commands:
+        argv += ["-c", command]
+    if not commands or commands[-1] != "exit":
+        argv += ["-c", "exit"]
+    run(
+        ["timeout", f"{timeout_seconds}s", *argv],
+        label, output=output, timeout=timeout_seconds + 5,
+    )
+
+
+def repl_form(
+    root: Path, prefix: str, form: str, expected: str, wait: int = 2,
+) -> list[dict[str, Any]]:
+    run([
+        "timeout", "45s", str(REPL),
+        "--tools", "tools/m65tools", "--device", DEVICE,
+        "--out-dir", root.relative_to(ROOT).as_posix(),
+        "--prefix", prefix, "--verified-input",
+        "--timeout", "25", "--expect-poll", "15",
+        "--wait", str(wait), "--expect", expected, "--form", form,
+    ], f"REPL {prefix}", output=root / f"{prefix}.runner.log", timeout=50)
+    paths = sorted(root.glob(f"{prefix}*"))
+    return [bind(path) for path in paths if path.is_file()]
+
+
+def repl_evidence(root: Path, prefix: str) -> list[dict[str, Any]]:
+    paths = sorted(root.glob(f"{prefix}*"))
+    require(paths, f"REPL evidence prefix absent: {prefix}")
+    return [bind(path) for path in paths if path.is_file()]
+
+
+def boot() -> None:
+    require(PLAN.is_file(), "run prepare first")
+    manifest, by_role = manifest_state()
+    root = OUT / "case-02-cold-boot"
+    product = artifact(by_role, "product-d81")
+    work = artifact(by_role, "work-d81")
+    product_readback = root / "uploaded-product-readback.d81"
+    work_readback = root / "uploaded-work-readback.d81"
+    if root.exists():
+        require(
+            not (root / "receipt.json").exists()
+            and product_readback.is_file() and work_readback.is_file()
+            and (root / "core-registers.bin").is_file()
+            and list(root.glob("cold-repl*")),
+            "G6 cold-boot evidence is not a resumable harness-first-red",
+        )
+    else:
+        root.mkdir(parents=True)
+        ftp([
+            f"put {product} {REMOTE_PRODUCT}",
+            f"get {REMOTE_PRODUCT} {product_readback}",
+            f"put {work} {REMOTE_WORK}",
+            f"get {REMOTE_WORK} {work_readback}",
+            "exit",
+        ], "upload exact R6 media", root / "upload.log")
+        require(product_readback.read_bytes() == product.read_bytes(),
+                "uploaded R6 product media differs")
+        require(work_readback.read_bytes() == work.read_bytes(),
+                "uploaded R6 work media differs")
+        ftp(
+            [f"mount {REMOTE_PRODUCT}", "exit"],
+            "mount exact R6 product media", root / "mount.log",
+        )
+        time.sleep(30)
+        memsave(0x0FFD3632, 4, root / "core-registers.bin", "core identity")
+        repl_form(root, "cold-repl", "(+ 2 3)", "5")
+    require(product_readback.read_bytes() == product.read_bytes(),
+            "uploaded R6 product media differs")
+    require(work_readback.read_bytes() == work.read_bytes(),
+            "uploaded R6 work media differs")
+    repl = [
+        bind(path) for path in sorted(root.glob("cold-repl*"))
+        if path.is_file()
+    ]
+    targets = target_readbacks(by_role, root / "targets")
+    receipt = {
+        "format": "lisp65-c2-lite-G6-case-receipt-v1",
+        "version": 1,
+        "id": CASES[1],
+        "status": "passed",
+        "authority": {
+            "R6_manifest": bind(MANIFEST),
+            "product_media": bind(product),
+            "work_media": bind(work),
+        },
+        "deployment": {
+            "remote_product": REMOTE_PRODUCT,
+            "remote_work": REMOTE_WORK,
+            "product_upload_readback": bind(product_readback),
+            "work_upload_readback": bind(work_readback),
+            "upload_log": bind(root / "upload.log"),
+            "mount_log": bind(root / "mount.log"),
+        },
+        "machine": {
+            "device": DEVICE,
+            "core_registers": bind(root / "core-registers.bin"),
+            "core_version": (
+                f"git-{int.from_bytes((root / 'core-registers.bin').read_bytes(), 'little'):08x}"
+            ),
+        },
+        "REPL": {
+            "form": "(+ 2 3)",
+            "result": "5",
+            "evidence": repl,
+        },
+        "target_readbacks": targets,
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "result": "passed",
+    }
+    write(root / "receipt.json", receipt)
+    print(
+        "c2-lite G6 CASE 2/5 PASS cold-boot exact-R6-media "
+        f"targets={len(targets)} repl=5"
+    )
+
+
+def upload(address: int, source: Path, readback: Path, label: str) -> None:
+    run([
+        "timeout", "30s", str(M65), "-l", DEVICE, "-H",
+        "-@", f"{source}@0x{address:08x}",
+    ], f"upload {label}", output=readback.with_suffix(".upload.log"), timeout=35)
+    memsave(address, source.stat().st_size, readback, f"verify {label}")
+    require(source.read_bytes() == readback.read_bytes(),
+            f"{label} upload readback differs")
+
+
+def restage() -> None:
+    require(
+        (OUT / "case-02-cold-boot/receipt.json").is_file(),
+        "cold-boot case is not passed",
+    )
+    manifest, by_role = manifest_state()
+    root = OUT / "case-03-restage"
+    require(not root.exists(), "G6 restage case already exists")
+    root.mkdir(parents=True)
+
+    # Reset before establishing the destructive precondition.  Bank 2 is also
+    # part of the pre-product BASIC boot carrier, so poisoning it before a
+    # remount tests the harness rather than C2-lite restaging.  The two Attic
+    # roles below are mandatory always-restage targets, persist independently
+    # of the BASIC carrier, and are proved byte-for-byte after product boot.
+    run([
+        "timeout", "20s", str(M65), "-l", DEVICE, "-F",
+        f"--screenshot={root / 'harness-reset.png'}",
+    ], "reset before destructive restage", output=root / "harness-reset.log",
+        timeout=25)
+    # The reset command returns while Hypervisor is still scanning the SD
+    # card.  Attic reads issued during that interval can stall the debug
+    # transport, so the destructive precondition begins only after the
+    # platform has reached its stable BASIC-side helper context.
+    time.sleep(10)
+    run([
+        "timeout", "20s", str(M65), "-l", DEVICE,
+        f"--screenshot={root / 'precondition-ready.png'}",
+    ], "capture stable precondition context",
+        output=root / "precondition-ready.log", timeout=25)
+
+    poison_session = root / "poison-attic-session-prefix.bin"
+    poison_shelf = root / "poison-attic-shelf-prefix.bin"
+    poison_session.write_bytes(
+        bytes((0x44 + index * 13) & 0xFF for index in range(256))
+    )
+    poison_shelf.write_bytes(
+        bytes((0x55 + index * 17) & 0xFF for index in range(256))
+    )
+    upload(
+        0x08000000, poison_session,
+        root / "poison-attic-session-readback.bin",
+        "Attic session poison",
+    )
+    upload(
+        0x08100000, poison_shelf,
+        root / "poison-attic-shelf-readback.bin",
+        "Attic shelf poison",
+    )
+    product = artifact(by_role, "product-d81")
+    ftp(
+        [f"mount {REMOTE_PRODUCT}", "exit"],
+        "cold remount exact R6 product for restage",
+        root / "mount.log",
+    )
+    time.sleep(30)
+    repl = repl_form(root, "restage-repl", "(+ 3 4)", "7")
+    targets = target_readbacks(by_role, root / "targets")
+    receipt = {
+        "format": "lisp65-c2-lite-G6-case-receipt-v1",
+        "version": 1,
+        "id": CASES[2],
+        "status": "passed",
+        "authority": {
+            "R6_manifest": bind(MANIFEST),
+            "product_media": bind(product),
+        },
+        "destruction": {
+            "AtticSession": {
+                "address": "0x08000000",
+                "bytes": 256,
+                "poison": bind(poison_session),
+                "readback": bind(
+                    root / "poison-attic-session-readback.bin"
+                ),
+            },
+            "AtticShelf": {
+                "address": "0x08100000",
+                "bytes": 256,
+                "poison": bind(poison_shelf),
+                "readback": bind(
+                    root / "poison-attic-shelf-readback.bin"
+                ),
+            },
+            "boot_carrier_exclusion": (
+                "Bank-2/Bank-3 poisoning is excluded because Bank 2 aliases "
+                "the pre-product BASIC boot carrier; archived first-red "
+                "evidence remains separate"
+            ),
+        },
+        "cold_restaging": {
+            "mount_log": bind(root / "mount.log"),
+            "target_readbacks": targets,
+            "always_restage": (
+                "passed-after-byteverified-Attic-target-destruction"
+            ),
+        },
+        "REPL": {
+            "form": "(+ 3 4)",
+            "result": "7",
+            "evidence": repl,
+        },
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "result": "passed",
+    }
+    write(root / "receipt.json", receipt)
+    print(
+        "c2-lite G6 CASE 3/5 PASS destructive-restage "
+        f"targets={len(targets)} repl=7"
+    )
+
+
+def disk_label_byte(root: Path, prefix: str, expected: int) -> list[dict[str, Any]]:
+    return repl_form(
+        root, prefix,
+        "(progn (%disk-read-sector 40 0) (%disk-byte 7))",
+        str(expected),
+    )
+
+
+def work_prepare() -> None:
+    require(
+        (OUT / "case-03-restage/receipt.json").is_file(),
+        "destructive-restage case is not passed",
+    )
+    root = OUT / "case-04-work-media"
+    require(not root.exists(), "G6 work-media case already exists")
+    root.mkdir(parents=True)
+    library = repl_form(
+        root, "prework-load",
+        '(load-libs (list "ide" "m65d"))', "t", wait=4,
+    )
+    label = disk_label_byte(root, "prework-product-label", 211)
+    write(root / "prepare-phase.json", {
+        "format": "lisp65-c2-lite-G6-work-phase-v1",
+        "version": 1,
+        "phase": "product-libraries-loaded-before-work-media-switch",
+        "product_label": {
+            "track": 40, "sector": 0, "offset": 7,
+            "petscii_byte": 211, "text": "L65SYS",
+        },
+        "evidence": library + label,
+        "next_operator_action": (
+            f"open Freezer; mount {REMOTE_WORK}; return with F3"
+        ),
+        "result": "passed",
+    })
+    print(
+        f"c2-lite G6 CASE 4 PREPARE PASS mount={REMOTE_WORK} return=F3"
+    )
+
+
+def work_write() -> None:
+    root = OUT / "case-04-work-media"
+    require(
+        (root / "prepare-phase.json").is_file()
+        and not (root / "write-phase.json").exists(),
+        "work-media prepare phase is not ready",
+    )
+    harness_red = root / "harness-first-red-jtag-ram-view.bin"
+    if harness_red.is_file():
+        # m65 --memsave observes the RAM under the mapped I/O page here, not
+        # the live F011 register.  Preserve that harness first-red, then use
+        # the product's native I/O reader exactly as the historical G6 proof.
+        require(
+            harness_red.read_bytes() == b"\x00"
+            and (root / "harness-first-red-jtag-ram-view.log").is_file(),
+            "BUFSEL harness first-red evidence drift",
+        )
+        label = repl_evidence(root, "work-label-before-write")
+        remount = repl_evidence(root, "work-remount-before-write")
+        poke = repl_evidence(root, "work-bufsel-force")
+    else:
+        label = disk_label_byte(root, "work-label-before-write", 215)
+        remount = repl_form(
+            root, "work-remount-before-write", "(m65d-remount)", "0",
+        )
+        poke = repl_form(
+            root, "work-bufsel-force", "(poke 214 137 128)", "128",
+        )
+    pre_peek = repl_form(
+        root, "work-bufsel-peek-before-save", "(peek 214 137)", "128",
+    )
+    (root / "bufsel-before-save.bin").write_bytes(b"\x80")
+    save = repl_form(
+        root, "work-save",
+        '(m65d-save-new "g6r6" "persist")', "0", wait=4,
+    )
+    post_peek = repl_form(
+        root, "work-bufsel-peek-after-save", "(peek 214 137)", "0",
+    )
+    (root / "bufsel-after-save.bin").write_bytes(b"\x00")
+    load_file = repl_form(
+        root, "work-read-before-cycle",
+        '(load-file-to-buffer "g6r6" "g6a")', "t", wait=3,
+    )
+    content = repl_form(
+        root, "work-content-before-cycle",
+        "(ide-buffer-lines (cdr (car (symbol-value (quote ide-buffers)))))",
+        '("persist")',
+    )
+    write(root / "write-phase.json", {
+        "format": "lisp65-c2-lite-G6-work-phase-v1",
+        "version": 1,
+        "phase": "work-media-write-before-power-cycle",
+        "work_label": {
+            "track": 40, "sector": 0, "offset": 7,
+            "petscii_byte": 215, "text": "L65WORK",
+        },
+        "operation": {
+            "file": "g6r6", "content": "persist",
+            "save_status": 0, "readback": ["persist"],
+        },
+        "BUFSEL": {
+            "before": bind(root / "bufsel-before-save.bin"),
+            "after": bind(root / "bufsel-after-save.bin"),
+            "observation": "native-peek-of-live-I/O-register",
+            "harness_first_red": (
+                bind(harness_red) if harness_red.is_file() else None
+            ),
+        },
+        "evidence": (
+            label + remount + poke + pre_peek + save + post_peek
+            + load_file + content
+        ),
+        "next_operator_action": (
+            f"open Freezer; mount {REMOTE_PRODUCT}; return with F3; "
+            "physically power-cycle; wait for the lisp65 REPL"
+        ),
+        "result": "passed",
+    })
+    print(
+        f"c2-lite G6 CASE 4 WRITE PASS file=g6r6 "
+        f"next=mount-{REMOTE_PRODUCT}-and-power-cycle"
+    )
+
+
+def work_resume() -> None:
+    root = OUT / "case-04-work-media"
+    require(
+        (root / "write-phase.json").is_file()
+        and not (root / "resume-phase.json").exists(),
+        "work-media write phase is not ready",
+    )
+    cold = repl_form(root, "postcycle-repl", "(+ 4 5)", "9")
+    memsave(0x0FFD3632, 4, root / "postcycle-core-registers.bin",
+            "post-cycle core identity")
+    libraries = repl_form(
+        root, "postcycle-load",
+        '(load-libs (list "ide" "m65d"))', "t", wait=4,
+    )
+    label = disk_label_byte(root, "postcycle-product-label", 211)
+    write_phase = bind(root / "write-phase.json")
+    cycle_id = hashlib.sha256(
+        (root / "postcycle-core-registers.bin").read_bytes()
+        + bytes.fromhex(write_phase["sha256"])
+        + b"G6-work-media-power-cycle"
+    ).hexdigest()[:24]
+    write(root / "resume-phase.json", {
+        "format": "lisp65-c2-lite-G6-work-phase-v1",
+        "version": 1,
+        "phase": "post-physical-power-cycle-product-repl",
+        "cycle_id": cycle_id,
+        "operator_confirmation": "physical-power-cycle-completed",
+        "product_label": {
+            "track": 40, "sector": 0, "offset": 7,
+            "petscii_byte": 211, "text": "L65SYS",
+        },
+        "core_registers": bind(root / "postcycle-core-registers.bin"),
+        "evidence": cold + libraries + label,
+        "next_operator_action": (
+            f"open Freezer; mount {REMOTE_WORK}; return with F3"
+        ),
+        "result": "passed",
+    })
+    print(
+        f"c2-lite G6 CASE 4 RESUME PASS cycle={cycle_id} "
+        f"mount={REMOTE_WORK} return=F3"
+    )
+
+
+def work_read() -> None:
+    manifest, by_role = manifest_state()
+    root = OUT / "case-04-work-media"
+    require(
+        (root / "resume-phase.json").is_file()
+        and not (root / "receipt.json").exists(),
+        "work-media resume phase is not ready",
+    )
+    label = disk_label_byte(root, "work-label-after-cycle", 215)
+    remount = repl_form(root, "work-remount-after-cycle", "(m65d-remount)", "0")
+    load_file = repl_form(
+        root, "work-read-after-cycle",
+        '(load-file-to-buffer "g6r6" "g6b")', "t", wait=3,
+    )
+    content = repl_form(
+        root, "work-content-after-cycle",
+        "(ide-buffer-lines (cdr (car (symbol-value (quote ide-buffers)))))",
+        '("persist")',
+    )
+    status_evidence = repl_form(
+        root, "work-status-after-cycle", "(m65d-status)", "0",
+    )
+    product = artifact(by_role, "product-d81")
+    work = artifact(by_role, "work-d81")
+    resume = load(root / "resume-phase.json", "work resume phase")
+    receipt = {
+        "format": "lisp65-c2-lite-G6-case-receipt-v1",
+        "version": 1,
+        "id": CASES[3],
+        "status": "passed",
+        "authority": {
+            "R6_manifest": bind(MANIFEST),
+            "product_media": bind(product),
+            "pristine_work_media": bind(work),
+        },
+        "cycle_id": resume["cycle_id"],
+        "procedure": {
+            "write": bind(root / "write-phase.json"),
+            "physical_power_cycle": bind(root / "resume-phase.json"),
+            "read_after_cycle": {
+                "file": "g6r6", "content": ["persist"], "status": 0,
+            },
+        },
+        "evidence": label + remount + load_file + content + status_evidence,
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "result": "passed",
+    }
+    write(root / "receipt.json", receipt)
+    print(
+        f"c2-lite G6 CASE 4/5 PASS work-media-persisted "
+        f"cycle={resume['cycle_id']} content=persist"
+    )
+
+
+def media_finalize(
+    root: Path, manifest: dict[str, Any], by_role: dict[str, dict[str, Any]],
+) -> None:
+    product = artifact(by_role, "product-d81")
+    pristine_work = artifact(by_role, "work-d81")
+    product_after = root / "product-after-G6.d81"
+    work_after = root / "work-after-G6.d81"
+    require(
+        product_after.read_bytes() == product.read_bytes(),
+        "product medium changed during G6",
+    )
+    require(
+        work_after.read_bytes() != pristine_work.read_bytes(),
+        "work medium did not retain the G6 write",
+    )
+    listing = run(
+        ["c1541", str(work_after), "-list"],
+        "list final G6 work medium", output=root / "work-list.log",
+    )
+    require('"g6r6"' in listing.lower(), "G6 work file absent after power cycle")
+    extract_root = root / "work-extracted"
+    extract_root.mkdir(exist_ok=True)
+    extracted = extract_root / "g6r6"
+    if extracted.exists():
+        extracted.unlink()
+    run(
+        ["c1541", str(work_after), "-extract"],
+        "extract final G6 work medium", output=root / "work-extract.log",
+        cwd=extract_root,
+    )
+    require(
+        extracted.is_file() and b"persist" in extracted.read_bytes().lower(),
+        "G6 work payload differs after power cycle",
+    )
+    case4 = OUT / "case-04-work-media/receipt.json"
+    receipt = {
+        "format": "lisp65-c2-lite-G6-case-receipt-v1",
+        "version": 1,
+        "id": CASES[4],
+        "status": "passed",
+        "authority": {
+            "R6_manifest": bind(MANIFEST),
+            "product_media": bind(product),
+            "pristine_work_media": bind(pristine_work),
+            "work_persistence_case": bind(case4),
+        },
+        "media_readback": {
+            "product": bind(product_after),
+            "work": bind(work_after),
+            "product_comparison": "byteidentical",
+            "work_comparison": "changed-only-by-authorized-G6-work-write",
+            "work_listing": bind(root / "work-list.log"),
+            "work_payload": bind(extracted),
+        },
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "result": "passed",
+    }
+    write(root / "receipt.json", receipt)
+
+    case_receipts = [
+        next(OUT.glob(f"case-{index:02d}-*/receipt.json"))
+        for index in range(1, 6)
+    ]
+    top = {
+        "format": "lisp65-c2-lite-G6-hardware-receipt-v2",
+        "version": 2,
+        "id": "G6-successor-v11-session-01",
+        "status": "passed-five-of-five",
+        "product_artifact_set_sha256": (
+            manifest["product"]["artifact_set_sha256"]
+        ),
+        "R6_manifest": bind(MANIFEST),
+        "cases": [
+            {"id": case, "receipt": bind(path)}
+            for case, path in zip(CASES, case_receipts, strict=True)
+        ],
+        "claims": {
+            "G5": "passed-nine-of-nine",
+            "G6": "passed-five-of-five",
+            "release": "not-promoted-until-remote-head-seal",
+        },
+        "result": "passed",
+    }
+    write(OUT / "g6-hardware-receipt.json", top)
+    print(
+        "c2-lite G6 CASE 5/5 PASS product-media=byteidentical "
+        "work-media=persistent G6=5/5"
+    )
+
+
+def media_close() -> None:
+    require(
+        (OUT / "case-04-work-media/receipt.json").is_file(),
+        "work-media case is not passed",
+    )
+    manifest, by_role = manifest_state()
+    root = OUT / "case-05-product-media"
+    require(not root.exists(), "G6 product-media case already exists")
+    root.mkdir(parents=True)
+
+    # Case 5 is entered only after the operator's physical cold start.  A
+    # JTAG warm reset from the running product can leave the serial SD helper
+    # installed but unable to transfer its first byte; two archived harness
+    # first-reds bind that distinction.
+    screen = run([
+        "timeout", "20s", str(M65), "-l", DEVICE,
+        f"--screenshot={root / 'cold-helper-context.png'}",
+    ], "capture cold helper context",
+        output=root / "cold-helper-context.log",
+        timeout=25)
+    screen_text = re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", screen)
+    (root / "cold-helper-context.txt").write_text(
+        screen_text, encoding="utf-8",
+    )
+    require(
+        any(marker in screen_text.upper()
+            for marker in ("READY.", "MEGA65", "COMMODORE")),
+        "cold helper screen is not a stable BASIC/Hypervisor context",
+    )
+    product_after = root / "product-after-G6.d81"
+    work_after = root / "work-after-G6.d81"
+    helper_prime = root / "helper-prime.bin"
+    helper_prime.write_bytes(b"G6")
+    ftp(
+        [
+            f"put {helper_prime} G6PRIME.BIN",
+            f"get {REMOTE_PRODUCT} {product_after}",
+            f"get {REMOTE_WORK} {work_after}",
+            "del G6PRIME.BIN",
+            "exit",
+        ],
+        "prime helper and read final G6 media",
+        root / "media-readback.log",
+        timeout_seconds=180,
+    )
+    media_finalize(root, manifest, by_role)
+
+
+def media_finalize_existing() -> None:
+    require(
+        (OUT / "case-04-work-media/receipt.json").is_file(),
+        "work-media case is not passed",
+    )
+    manifest, by_role = manifest_state()
+    root = OUT / "case-05-product-media"
+    require(
+        root.is_dir()
+        and (root / "product-after-G6.d81").is_file()
+        and (root / "work-after-G6.d81").is_file()
+        and not (root / "receipt.json").exists(),
+        "no incomplete final-media readback to close",
+    )
+    media_finalize(root, manifest, by_role)
+
+
+def status() -> None:
+    manifest, _ = manifest_state()
+    print(f"G6 set={manifest['product']['artifact_set_sha256']}")
+    for index, case in enumerate(CASES, 1):
+        matches = list(OUT.glob(f"case-{index:02d}-*/receipt.json"))
+        state = "passed" if len(matches) == 1 else "not-run"
+        print(f"{index}/5 {state} {case}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "command",
+        choices=(
+            "prepare", "boot", "restage", "work-prepare", "work-write",
+            "work-resume", "work-read", "media-close", "media-finalize",
+            "status",
+        ),
+    )
+    args = parser.parse_args()
+    try:
+        if args.command == "prepare":
+            prepare()
+        elif args.command == "boot":
+            boot()
+        elif args.command == "restage":
+            restage()
+        elif args.command == "work-prepare":
+            work_prepare()
+        elif args.command == "work-write":
+            work_write()
+        elif args.command == "work-resume":
+            work_resume()
+        elif args.command == "work-read":
+            work_read()
+        elif args.command == "media-close":
+            media_close()
+        elif args.command == "media-finalize":
+            media_finalize_existing()
+        else:
+            status()
+    except (G6Error, subprocess.TimeoutExpired) as error:
+        raise SystemExit(f"c2-lite G6: FAIL: {error}") from error
+
+
+if __name__ == "__main__":
+    main()

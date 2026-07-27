@@ -25,21 +25,37 @@
 (defun %ide-direct-p (command)
   (eq (%ide-command-route command) 1))
 
+(defun ide-event-modifiers (event)
+  (car (cdr (cdr event))))
+
+(defun %ide-modifier-command (code modifiers)
+  (cond
+        ((and (= code 255) (member (quote control) modifiers)) 1115)
+        ((and (= code 120) (member (quote meta) modifiers)) 1013)
+        (t nil)))
+
 (defun ide-event-command (event)
-  ((lambda (code)
-     (if (eq (symbol-value (quote ide-event-command)) 24)
-         (%ide-prefix-command code)
-         (if (= code 24)
-             (progn (set-symbol-value (quote ide-event-command) 24) nil)
-             ((lambda (command)
-                (if command
-                    command
-                    (if (and (>= code 32)
-                             (<= code 126))
-                        1110
-                        nil)))
-              (%ide-base-command code)))))
-   (ide-event-code event)))
+  ((lambda (code modifiers)
+     ((lambda (modified)
+        (if modified
+            (progn
+              (set-symbol-value (quote ide-event-command) nil)
+              modified)
+            (if (eq (symbol-value (quote ide-event-command)) 24)
+                (%ide-prefix-command code)
+                (if (= code 24)
+                    (progn (set-symbol-value (quote ide-event-command) 24) nil)
+                    ((lambda (command)
+                       (if command
+                           command
+                           (if (and (>= code 32)
+                                    (<= code 126))
+                               1110
+                               nil)))
+                     (%ide-base-command code))))))
+      (%ide-modifier-command code modifiers)))
+   (ide-event-code event)
+   (ide-event-modifiers event)))
 
 (defun ide-command-names ()
   (list "find-file" "save-buffer" "compile-load" "goto-line" "eval-buffer"))

@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-c2-hot-refill-single-source-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-resident-island-capacity-probe",
+  "scope": {
+    "product_links_authorized": 0,
+    "resident_island_seed_links_authorized": 1,
+    "hardware_execution": "not-authorized-by-this-contract",
+    "performance_claim": "none"
+  },
+  "stage_trust_boundary": {
+    "rule": "Descriptor kinds, direct resolutions, canonical root ordinals and root values are fully validated before publication; the published generation is immutable until invalidation or a new atomic append.",
+    "hot_path_rule": "The hot path consumes only the identity-bound, generation-bound published plane and therefore does not repeat content validation.",
+    "reachability_rule": "c2_entry_records rejects an unpublished, unfinished, wrong-phase, wrong-context or stale-generation view before the materializer can observe it.",
+    "transport_rule": "A descriptor, resolution or root read failure remains fail-closed at the hot reader even though content validation belongs to staging."
+  },
+  "single_materializer": {
+    "record_seam": "c2_entry_records",
+    "materializer": "c2_stream_product_materialize_entry",
+    "consumers": [
+      "c2_product_entry_read",
+      "c2_stream_phase_13"
+    ],
+    "forbidden": [
+      "a second VM-refill record walker",
+      "a second phase-13 descriptor interpreter",
+      "content-validation logic duplicated in the hot materializer"
+    ]
+  },
+  "required_evidence": [
+    "588/588 published entries and 1931/1931 literal values match the pinned Link-29 capture",
+    "nested caller rematerialization restores the original values",
+    "content mutations are rejected before publication by the stage decoder",
+    "descriptor and resolution transport failures close in the hot reader",
+    "both product consumers call the one materializer in the linked seed",
+    "all capacity and placement currencies are reported before any product link"
+  ],
+  "first_red_rule": "Any failed semantic, source, capacity, placement or structure gate stops before a product link. Link 29 remains the candidate pin."
+}

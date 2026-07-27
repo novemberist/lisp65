@@ -75,6 +75,7 @@ VM_EXT_CODE_RECLAIM_SMOKE_HOST := build/vm-ext-code-reclaim-smoke-host
 WORKBENCH_OVERLAY_BOOTSTRAP_SMOKE_HOST := build/workbench-overlay-bootstrap-smoke-host
 WORKBENCH_OVERLAY_STACK_PROBE_SMOKE_HOST := build/workbench-overlay-stack-probe-smoke-host
 WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST := build/runtime-overlay-smoke-host
+WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST := build/runtime-overlay-transaction-host
 V11_BUFFER_MEMORY_HOST := build/v11-buffer-smoke-host
 V11_BUFFER_CARRIER_HOST := build/v11-buffer-carrier-host
 F011_TRANSACTION_CONTEXT_HOST := build/f011-transaction-context-host
@@ -153,6 +154,22 @@ $(WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST): scripts/runtime-overlay-smoke-main.c sr
 
 runtime-overlay-transport-smoke: $(WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST)
 	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(WORKBENCH_RUNTIME_OVERLAY_SMOKE_HOST)
+
+.PHONY: runtime-overlay-transaction-auth-smoke c2-overlay-transaction-auth-check
+$(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST): scripts/runtime-overlay-transaction-main.c src/vm_runtime_overlay.c src/vm_runtime_overlay.h src/vm.h | build
+	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -fsanitize=address,undefined \
+		-DLISP65_VM -DLISP65_RUNTIME_OVERLAY_HOST_TEST \
+		-DLISP65_RUNTIME_OVERLAY_LIFETIME_FAMILIES \
+		-DLISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH \
+		-DLISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND -Isrc \
+		scripts/runtime-overlay-transaction-main.c src/vm_runtime_overlay.c -o '$@'
+
+runtime-overlay-transaction-auth-smoke: $(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST)
+	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 $(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_HOST)
+
+c2-overlay-transaction-auth-check: runtime-overlay-transaction-auth-smoke
+	python3 tools/host-lisp/c2_overlay_transaction_auth_island.py selftest
+	python3 tools/host-lisp/c2_overlay_transaction_auth_island.py check
 
 $(V11_BUFFER_MEMORY_HOST): scripts/v11-buffer-smoke-main.c src/mem.c src/mem.h src/obj.h src/printer.c src/printer.h src/symbol.c src/interrupt.c | build
 	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -O1 -g \
@@ -810,12 +827,25 @@ workbench-c1-fastpath-probe: v11-c1-lease-check v11-c1-trust-fastpath-check
 hw-workbench-c1-phase-probe-dry-run: workbench-c1-phase-probe-check
 	python3 scripts/hw-c1-phase-probe.py --probe 1 --dry-run
 
-# Canonical product. The recursive generic builder is isolated behind one
-# target so G2, candidate packaging and hardware gates share the same files.
-workbench-product: asm-c-constant-contract-check f011-transaction-context-check mega65-math-override-check v11-source-stream-lifetime-check
+# Canonical C2-lite product.  The historical 1.1 tier-composition prerequisites
+# are intentionally absent: the six-image compiler/FASL plane has one emitter,
+# one WPLTO closure and one media packer.  Existing manifests are checked
+# read-only; a missing manifest is built exactly once.
+workbench-product:
+	@if test -f build/c2.2/canonical-product/canonical-product-manifest.json; then \
+		python3 tools/host-lisp/c2_lite_canonical_product.py check; \
+	else \
+		python3 tools/host-lisp/c2_lite_canonical_product.py build; \
+	fi
+	@if test -f build/c2.2/canonical-media/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_lite_media_product.py check; \
+	else \
+		python3 tools/host-lisp/c2_lite_media_product.py build; \
+	fi
+	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 
 workbench-product-footprint-report: workbench-product
-	@test -f '$(WORKBENCH_FOOTPRINT_REPORT)'
+	@test -f build/c2.2/canonical-product/final/substitution-balance.json
 
 # Called by the ship builder after its outer Make target has already built the
 # product. Deliberately check-only to avoid a second FORCE-driven overlay link.

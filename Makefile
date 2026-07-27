@@ -161,10 +161,10 @@ WORKBENCH_M7_NAME ?= m7src
 WORKBENCH_M7_ALLOC_NAME ?= m7alloc
 WORKBENCH_M7_SELFTEST_D81 ?= build/hw/workbench-m7-selftest-before.d81
 M5_NEW_SOURCE := tests/disk/m5-new-source.lisp
-M5_ALLOC_SOURCE := lib/m65-disk-alloc.lisp
+M5_ALLOC_SOURCE := tests/fixtures/legacy/m65d/alloc-two-sector.lisp
 M5_PAYLOAD_FORM := tests/disk/m5-new-payload-form.lisp
 M5_PAYLOAD_GEN := build/hw/m5-new-payload-form.h
-M7_ALLOC_SOURCE := lib/m65-disk-alloc-var.lisp
+M7_ALLOC_SOURCE := tests/fixtures/legacy/m65d/alloc-variable-chain.lisp
 M7_VAR_SOURCE := tests/disk/m7-var-source.lisp
 M7_PAYLOAD_FORM := tests/disk/m7-var-payload-form.lisp
 M7_PAYLOAD_GEN := build/hw/m7-var-payload-form.h
@@ -664,7 +664,21 @@ include mk/runtime-core-v2-proof.mk
 .PHONY: mvp-ship-artifacts mvp-ship-wip workbench-ship-artifacts-check workbench-ship-verifier-selftest workbench-reproducibility-check verify-ship print-workbench-resolved-profile bytecode-p0-workbench-stdlib-artifacts
 .PHONY: bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check ide-capacity-selftest ide-capacity-check m65d-blank-d81-oracle-selftest bytecode-p0-m65d-lib-check bytecode-p0-m65d-lib-artifacts bytecode-p0-buffer-lib-check bytecode-p0-buffer-lib-artifacts
 .PHONY: v11-repl-banner-vm-check
+.PHONY: c2-elf-truth-migration-selftest c2-elf-truth-migration-check \
+	post-v1.2-housekeeping-selftest post-v1.2-housekeeping-check
 all: $(M65PRG)
+
+c2-elf-truth-migration-selftest:
+	python3 tools/host-lisp/c2_elf_truth_migration_gate.py --selftest
+
+c2-elf-truth-migration-check:
+	python3 tools/host-lisp/c2_elf_truth_migration_gate.py
+
+post-v1.2-housekeeping-selftest:
+	python3 tools/host-lisp/post_12_housekeeping.py --selftest
+
+post-v1.2-housekeeping-check:
+	python3 tools/host-lisp/post_12_housekeeping.py
 
 $(M65PRG): $(SRCS) | build
 	$(CC_M65) $(CFLAGS) $(SRCS) -o $@
@@ -2399,7 +2413,7 @@ v2-capability-carrier-g5-workbench-save-new-var: v2-capability-carrier-internal-
 		--out-dir '$(V2_CAPABILITY_CARRIER_G5_EVIDENCE)/workbench-save-new-var' --prefix v2-g5-save-new-var \
 		--before-d81 '$(V2_CAPABILITY_CARRIER_G5_EVIDENCE)/workbench-save-new-var/before.d81' \
 		--after-d81 '$(V2_CAPABILITY_CARRIER_G5_EVIDENCE)/workbench-save-new-var/after.d81' \
-		--source tests/disk/m7-var-source.lisp --alloc-source lib/m65-disk-alloc-var.lisp \
+		--source tests/disk/m7-var-source.lisp --alloc-source tests/fixtures/legacy/m65d/alloc-variable-chain.lisp \
 		--alloc-name m7alloc --name m7src --load-ok m7-load-ok --load-fail m7-load-fail \
 		--run-form '(m7-var-run)' --run-expect 907
 
@@ -2841,7 +2855,7 @@ r5-global-g5-workbench-save-new-var: r5-global-g5-preflight-ready
 		--remote-d81 L65R57.D81 --out-dir '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new-var' \
 		--prefix r5-g5-save-new-var --before-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new-var/before.d81' \
 		--after-d81 '$(R5_GLOBAL_G5_EVIDENCE)/workbench-save-new-var/after.d81' \
-		--source tests/disk/m7-var-source.lisp --alloc-source lib/m65-disk-alloc-var.lisp \
+		--source tests/disk/m7-var-source.lisp --alloc-source tests/fixtures/legacy/m65d/alloc-variable-chain.lisp \
 		--alloc-name m7alloc --name m7src --load-ok m7-load-ok --load-fail m7-load-fail \
 		--run-form '(m7-var-run)' --run-expect 907 || \
 		{ status=$$?; printf '%s\n' 'R5_PRODUCT_RESULT=FAIL case=workbench-persistence/save-new-var'; exit $$status; }
@@ -2982,7 +2996,7 @@ eval-surface-contract-check: $(EQUIVALENCE_HOST)
 	python3 tools/host-lisp/eval_surface_contract.py --engine native-c-compiler-vm --binary $(EQUIVALENCE_HOST) tests/bytecode/runtime/p0-eval-surface.json
 	python3 tools/host-lisp/eval_surface_contract.py --engine lisp-lcc --binary $(EQUIVALENCE_HOST) tests/bytecode/runtime/p0-eval-surface.json
 
-equivalence-check:
+equivalence-check: $(READER_CONFORMANCE_HOST)
 	sh scripts/equivalence-check.sh
 
 stdlib-embed-whatif-check:
@@ -3172,6 +3186,7 @@ $(V11_REPL_BANNER_VM_HOST): scripts/v11-repl-banner-vm-main.c \
 		src/screen.c -o $@
 
 v11-repl-banner-vm-check: $(V11_REPL_BANNER_VM_HOST)
+	python3 tools/host-lisp/vm_stream_branch_safety.py src/vm.c
 	ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
 		$(V11_REPL_BANNER_VM_HOST)
 

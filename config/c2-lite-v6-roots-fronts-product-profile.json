@@ -1,0 +1,58 @@
+{
+  "format": "lisp65-c2-lite-v6-roots-fronts-product-profile-v1",
+  "authority": {
+    "green_wplto_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-c2-lite-v6-bank2-target-stage-phase02b-artifact-replay-receipt.json",
+      "sha256": "8ef2e990d8cfe56d4772f09a5e4137f9825c6f4c1a97ab0008dbf33b362ae1a0"
+    },
+    "green_wplto_profile": {
+      "path": "build/c2-lite/v6-bank2-target-stage-phase02b-wplto/full-product-wplto/resolved-profile.txt",
+      "sha256": "a70b02189ca0bc6e014fbacfe23be5bc76e46e5a05db06505730f8ac0d10e9e2"
+    },
+    "link40_predecessor_profile": {
+      "path": "build/c2.2/substitution/product-link-40-c2-lite-v6-real-abi-e000/resolved-profile.txt",
+      "sha256": "6efb97f303cefa85269ee3349e9d55410fe7e5e025d0d871d43cfff871bead0a"
+    }
+  },
+  "feature_defines": [
+    "LISP65_C2_DIRECT_HOT_REFILL",
+    "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH",
+    "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND",
+    "LISP65_C2_TRANSACTION_AUTH",
+    "LISP65_C2_TRANSACTION_AUTH_NOINLINE",
+    "LISP65_C2_NESTED_APPEND_V5",
+    "LISP65_C2_RESIDENCY_TRIAGE",
+    "LISP65_C2_E000_REOPEN",
+    "LISP65_C2_BSS_TRIAGE",
+    "LISP65_RUNTIME_OVERLAY_FORMAT_V3",
+    "LISP65_C2_PHASE11_SPLIT",
+    "LISP65_C2_LITE_COLD_EVICTION",
+    "LISP65_C2_LITE_V6_SEMANTIC_SPLITS",
+    "LISP65_C2_LITE_V6_CORESIDENT_DIET",
+    "LISP65_C2_LITE_BANK3_STAGING",
+    "LISP65_C2_LITE_BANK2_STAGING",
+    "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT",
+    "LISP65_C2_LITE_VM_ARITY_E000",
+    "LISP65_C2_LITE_CHIP_RAM"
+  ],
+  "authorized_delta_from_link40": [
+    "LISP65_C2_LITE_BANK2_STAGING",
+    "LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT"
+  ],
+  "driver_owned_features": [
+    "LISP65_C2_LITE_BANK2_STAGING"
+  ],
+  "legacy_wrapper_gap_closed": [
+    "LISP65_C2_LITE_VM_ARITY_E000"
+  ],
+  "shape": {
+    "boot_family_slice_count": 12,
+    "session_family_slice_count": 50,
+    "unique_slice_count": 58,
+    "session_family_bytes": 65438,
+    "session_family_headroom_bytes": 98,
+    "roots_fronts_slice_bytes": 1473
+  },
+  "entry_rule": "The product-link driver reads this complete feature list and never reconstructs it from predecessor wrappers. Before any compiler or linker process, its exact ordered list and this object's SHA are checked against the immutable green WPLTO authority. Bank-2 staging is driver-owned only for slice installation; its feature define still comes exclusively from this object.",
+  "historical_gap": "The Link-33 object bound the base profile only. Later C2-lite wrapper features were appended outside that object; the Link-41 driver inherited the pre-E000 wrapper and therefore omitted one already-authorized feature without tripping the base-object hash."
+}

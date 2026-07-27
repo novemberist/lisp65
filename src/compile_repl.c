@@ -162,7 +162,7 @@ static obj crtf_run(uint16_t fslot) {
         at = region_put(asmbuf, len, 1);
         if (at == 0xFFFF) { vm_status = VM_HEAPOOM; return NIL; }    /* Bank-5-Code-Region voll */
         di = vm_dir_add(u.fn[i].name, CREPL_BANK, at, len);
-        if (di < 0) { vm_status = VM_DIRMISS; return NIL; }
+        if (di < 0) return vm_dirmiss_detail(u.fn[i].name);
         set_sym_function(u.fn[i].name, MK_BCODE(di));
     }
     if (is_defun) {                                                  /* fn[0] IST die Funktion -> unter defname */
@@ -171,7 +171,7 @@ static obj crtf_run(uint16_t fslot) {
         at = region_put(asmbuf, len, 1);
         if (at == 0xFFFF) { vm_status = VM_HEAPOOM; return NIL; }
         di = vm_dir_add(defname, CREPL_BANK, at, len);
-        if (di < 0) { vm_status = VM_DIRMISS; return NIL; }
+        if (di < 0) return vm_dirmiss_detail(defname);
         set_sym_function(defname, MK_BCODE(di));
         return defname;                                             /* defun: kein Main-Lauf */
     }

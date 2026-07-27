@@ -7,6 +7,10 @@
  */
 #include "mem.h"
 #include "symbol.h"
+#ifdef LISP65_C2_PRODUCT_CUT
+#include "c2_product_runtime.h"
+#endif
+#include "c2_kernal_layout.h"
 
 #ifdef LISP65_STAGED_BOOT_OVERLAY
 #define WORKBENCH_BOOTFN __attribute__((section(".lisp65_boot"), noinline, used))
@@ -29,7 +33,7 @@
 #endif
 
 
-Cell heap[HEAP_CELLS];
+Cell LISP65_C2_FIXED_BANK0_HOT_BSS("heap") heap[HEAP_CELLS];
 
 #ifdef LISP65_EXT_HEAP
 /* Erweiterter Heap-Ueberlauf: flach in EXT_BANK, 8-Byte-Zellen (type@0, a@2, b@4),
@@ -182,6 +186,12 @@ uint16_t gc_rootsp = 0;
 
 void mem_init(void) {
     uint16_t i;
+#ifdef LISP65_C2_BSS_TRIAGE
+    /* The explicitly placed hot heap is deliberately outside ordinary .bss.
+     * It therefore does not ride CRT zero_bss and must be initialized before
+     * the first EXT-first allocation can observe it. */
+    __builtin_memset(heap, 0, sizeof(heap));
+#endif
     freelist = NIL;
 #if defined(__mos__) && defined(LISP65_STAGED_BOOT_OVERLAY) && \
     defined(LISP65_RUNTIME_OVERLAY)
@@ -369,6 +379,11 @@ void gc_collect(void) {
      * (Markstack-gc_mark fror dort deterministisch ein; docs/mvp-hw-findings.md).
      * Kosten O(HEAP_CELLS * Kettentiefe): bei <=512 Zellen ~ms-Bereich, irrelevant. */
     for (i = 0; i < gc_rootsp; i++) gc_mark1(gc_rootstack[i]);
+#ifdef LISP65_C2_PRODUCT_CUT
+    /* C2D root values are the sole canonical home of heap-valued immutable
+     * literals.  gc_mark is non-moving and therefore performs no writeback. */
+    c2_product_gc_mark_roots();
+#endif
     LA(18);   /* R: roots markiert */
 
     n = sym_count();
@@ -440,7 +455,7 @@ void gc_collect(void) {
  * mem.c — der kippte LTO-Inlining-Schwellen um -374 B). Der REPL prueft das Flag nach der
  * Auswertung und meldet "*** out of memory" — stilles NIL zerlegte sonst Bindungen zu
  * Geister-nil-Ergebnissen (HW 2026-07-02). */
-uint8_t mem_oom = 0;
+uint8_t LISP65_C2_FIXED_ZP("mem_oom") mem_oom;
 /* Diagnose-Naht (Host-Harnesse zaehlen die Freeliste; LTO strippt sie in Geraete-Builds). */
 obj mem_freelist_head(void) { return freelist; }
 uint16_t mem_free_cells(void) {
@@ -649,7 +664,8 @@ static void str_swap_buffers(void) {
 
 static uint16_t str_top = 0;       /* naechster freier Offset (Bump-Pointer) */
 static uint16_t str_frozen = 0;    /* permanentes Praefix (Boot-Strings) */
-static obj      str_building = NIL; /* aktuell offener Streaming-String (bleibt beim Compact am Ende) */
+static obj LISP65_C2_FIXED_ZP("str_building") str_building;
+/* aktuell offener Streaming-String (bleibt beim Compact am Ende) */
 
 uint16_t str_len(obj s)              { return (uint16_t)FIXVAL(cell_a(s)); }
 uint8_t  str_byte(obj s, uint16_t i) { return str_read_byte((uint16_t)FIXVAL(cell_b(s)) + i); }

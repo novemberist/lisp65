@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2-top-level-published-nullary-call-contract-v1",
+  "recorded_on": "2026-07-23",
+  "status": "owner-authorized targeted latency fix; product-shaped probe required before link",
+  "problem": {
+    "cold_frames": 60,
+    "warm_frames": 61,
+    "cold_limit_frames": 16,
+    "warm_limit_frames": 10,
+    "completed_latency_attempts": 1,
+    "remaining_latency_attempts": 1,
+    "attribution": "43/44 frames lie in the serial transient compile/append/install/rollback path; no individual station exceeds six frames"
+  },
+  "fast_path": {
+    "form_shape": "a proper one-element list",
+    "operator_requirement": "function-kind(operator) == bytecode",
+    "argument_count": 0,
+    "action": "funcall the canonical function-cell binding",
+    "transaction_effect": "none",
+    "generation_binding": "function-kind and funcall consume the current published function cell"
+  },
+  "mandatory_fallbacks": [
+    "defun",
+    "defmacro",
+    "macro calls",
+    "primitive calls",
+    "undefined operators",
+    "special forms",
+    "every form with one or more arguments",
+    "every atom"
+  ],
+  "safety": {
+    "compiler_path": "the historical %c2-compile-form -> lcc-install path remains byte-for-byte source-identical inside the fallback branch",
+    "error_path": "funcall retains the existing VM status and inner-status-wins handling",
+    "new_resident_state_bytes": 0,
+    "new_transaction_state_bytes": 0,
+    "new_roots": 0,
+    "performance_claim": "none before the second and final hardware latency measurement"
+  },
+  "required_fixtures": [
+    "published nullary bytecode call reaches funcall without %c2-compile-form or lcc-install",
+    "one-argument bytecode call reaches %c2-compile-form",
+    "nullary primitive reaches %c2-compile-form",
+    "nullary macro reaches %c2-compile-form",
+    "nullary undefined operator reaches %c2-compile-form",
+    "direct result is byteidentical to invoking the published bytecode target"
+  ],
+  "prohibitions": [
+    "no argument-bearing direct path",
+    "no primitive or macro direct path",
+    "no cached private function identity",
+    "no weakening of per-slice CRC, wipe, journal, rollback or publish-last contracts",
+    "no hardware measurement before a separately reviewed successor product link"
+  ]
+}

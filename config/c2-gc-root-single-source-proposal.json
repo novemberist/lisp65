@@ -1,0 +1,77 @@
+{
+  "format": "lisp65-c2-gc-root-single-source-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "option-b2-owner-approved-product-work-authorized",
+  "owner_decision": "Option B2 and the CRC-domain correction approved without amendment on 2026-07-19.",
+  "finding": "The earlier compact-vector proposal duplicated each heap obj in the logical resolution table and root vector. An immutable ordinal list removes duplication but costs 18 list reads plus 284 scattered value reads. C2D also has no content CRC; immutable membership belongs to the CRC-bound C2I descriptor stream.",
+  "claim_limit": "Host-only contract correction and model. It changes no product byte, authorizes no capacity, makes no device or latency claim and does not run the product substitution link.",
+  "selected_candidate": {
+    "id": "c2d-v2-descriptor-tagged-single-source-roots",
+    "c2d_header_bytes": 32,
+    "c2d_image_record_bytes": 20,
+    "c2d_entry_record_bytes": 10,
+    "c2d_resolution_record_bytes": 2,
+    "resolution_semantics": {
+      "kinds_3_7": "canonical root_index_u16; never an obj",
+      "all_other_legal_kinds": "resolved obj_u16"
+    },
+    "immutable_membership_source": "The identity-bound C2I-v2 descriptor kind stream; kind 3 and kind 7 only",
+    "immutable_identity_chain": "C2I metadata CRC -> image CRC -> L65S catalog CRC; C2D final header binds the verified catalog CRC",
+    "canonical_root_index": "zero-based rank among all preceding kind-3 and kind-7 descriptors",
+    "root_value_storage": "one contiguous mutable C2D root_values array; the only stored obj representation for heap-valued resolutions",
+    "hot_window_materialization": "descriptor range + resolution range + at most one contiguous root-value span per entry; fill Bank-0 literal cache before execution",
+    "gc_rule": "non-moving mark-sweep reads and marks every canonical root value and never writes one back"
+  },
+  "measured": {
+    "images": 6,
+    "entries": 583,
+    "resolutions": 2249,
+    "root_values": 284,
+    "root_bytes": 568,
+    "c2d_v1_bytes": 10480,
+    "c2d_v2_bytes": 11048,
+    "bank5_session_region_bytes": 50816,
+    "bank5_headroom_bytes": 39768,
+    "gc_scan_reads_at_32_bytes": 18,
+    "maximum_entry_literals": 23,
+    "maximum_entry_root_values": 9,
+    "entries_with_root_values": 47
+  },
+  "rejected_interpretations": [
+    {
+      "id": "duplicate-resolution-and-root-values",
+      "reason": "second mutable value representation can desynchronize"
+    },
+    {
+      "id": "immutable-root-ordinal-list-plus-scattered-values",
+      "reason": "single-source but 18 ordinal-list reads plus 284 scattered value reads per collection"
+    },
+    {
+      "id": "new-obj-tag-for-root-index",
+      "reason": "the current 16-bit obj space has no collision-free marker; an ABI change is unnecessary"
+    }
+  ],
+  "required_invariants": [
+    "root membership is derived exclusively from immutable C2I descriptor kinds",
+    "every heap-kind resolution word equals its canonical root rank",
+    "heap obj values exist only in the canonical root_values section",
+    "the root-value span is active and zeroed before the first allocation",
+    "each new heap value is published to its canonical root slot before any later allocation",
+    "the collector is non-moving and never writes root values back",
+    "a copying or compacting GC requires a new C2D root protocol",
+    "C2D-v1 remains historical proof evidence; only C2D-v2 may enter the product"
+  ],
+  "required_negative_fixtures": [
+    "strict v1/v2 decoder mismatch in both directions",
+    "root count differs from immutable descriptor census",
+    "root section arithmetic overlap, truncation or trailing data",
+    "heap-kind resolution lacks its canonical root index",
+    "reordered, duplicated or out-of-range root index",
+    "direct-kind resolution interpreted as root index",
+    "zero or non-pointer root value in a published plane",
+    "catalog identity mismatch",
+    "final root cursor mismatch"
+  ],
+  "next_authorized_action": "Change the product decoder to C2D-v2 single-source roots and run the real substitution link."
+}

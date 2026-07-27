@@ -3,6 +3,7 @@
 #define LISP65_MEM_H
 
 #include "obj.h"
+#include "c2_kernal_layout.h"
 
 /* One layout contract owns the Bank-4 disk scratch used by F011, the L65M
  * validator, first-class Buffer staging and the Attic shelf DMA.  Profile
@@ -46,7 +47,7 @@ extern uint16_t gc_runs;    /* Statistik: Anzahl gc_collect-Laeufe */
 #ifdef LISP65_GC_SCAN_PROBE
 extern uint32_t gc_symbol_scan_visits;
 #endif
-extern uint8_t mem_oom;          /* 1 = alloc lief in OOM (REPL meldet + loescht) */
+extern uint8_t LISP65_C2_ZP mem_oom; /* 1 = alloc lief in OOM (REPL meldet + loescht) */
 #define GC_PUSH(x)  (gc_rootstack[gc_rootsp++] = (obj)(x))
 #define GC_SET(i,x) (gc_rootstack[(i)] = (obj)(x))   /* gepushten Slot aktualisieren */
 #define GC_TOP      (gc_rootsp - 1)
@@ -96,7 +97,7 @@ obj      str_close(obj s);
  * type to T_STR only after all writes have completed. */
 obj      buf_make(uint16_t len);
 obj      buf_from_string(obj string);
-#if defined(LISP65_C1_COMPILER_TIER) && defined(LISP65_EXT_HEAP)
+#if (defined(LISP65_C1_COMPILER_TIER) || defined(LISP65_C2_PRODUCT_CUT)) && defined(LISP65_EXT_HEAP)
 obj      buf_from_stage(uint16_t len);
 uint16_t buf_to_stage(obj buffer);
 #endif

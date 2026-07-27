@@ -1,0 +1,50 @@
+{
+  "format": "lisp65-c2-two-region-session-store-contract-probe-v1",
+  "recorded_on": "2026-07-24",
+  "status": "class-c-contract-probe-only",
+  "scope": {
+    "baseline": "Link 59 plus the CPU-to-Chip C2J-seal WPLTO First Red",
+    "purpose": "test one named capped second Session payload region in Bank 5 before any format or product implementation",
+    "forbidden": [
+      "product source changes",
+      "L65R emitter or decoder changes",
+      "slice splitting",
+      "WPLTO",
+      "product link",
+      "hardware"
+    ]
+  },
+  "geometry": {
+    "bank": 5,
+    "overflow_base": "0xbd00",
+    "overflow_end": "0xc4f0",
+    "overflow_bytes": 2032,
+    "alignment_bytes": 256,
+    "c2d_growth_floor_bytes": 14544,
+    "self_defense": "overflow of this region or encroachment below the growth floor triggers scope triage; a third Session region is forbidden"
+  },
+  "format_question": {
+    "current": "strict L65R-v3",
+    "required_property": "every catalog record names its payload region and its u16 offset is relative to that region",
+    "width_rule": "header and record remain 32 bytes",
+    "asymmetry": "one strict decoder; no dual decoder"
+  },
+  "packing_question": {
+    "main_region_max": 65536,
+    "overflow_region_max": 2032,
+    "slice_max": 1792,
+    "packing_quantum": 256,
+    "normal_path_stays_main": true,
+    "preferred_overflow_temperature": "abort-only rollback phases"
+  },
+  "gates": [
+    "region identity is record-CRC-bound",
+    "unknown or third region fails closed",
+    "per-region offsets are aligned and range-checked",
+    "both regions share one dense slot/catalog truth",
+    "packing accounts for both regions and rejects missing or surplus payloads",
+    "every region-1 load uses the canonical Bank-5 Chip-DMA seam",
+    "no overlay calls another overlay",
+    "Bank-5 overflow does not overlap C2D, emitter roots, C2J or the external symbol arena"
+  ]
+}

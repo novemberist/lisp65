@@ -1,0 +1,200 @@
+{
+  "format": "lisp65-c2-two-region-session-store-contract-v1",
+  "recorded_on": "2026-07-24",
+  "status": "owner-authorized-strict-L65R-v4-product-contract",
+  "format_contract": {
+    "magic": "L65R",
+    "version": 4,
+    "header_bytes": 32,
+    "record_bytes": 32,
+    "region_id_offset": 24,
+    "source_address_low_offset": 4,
+    "source_address_bank_offset": 25,
+    "source_address_megabyte_offset": 26,
+    "source_address_encoding": "absolute-28-bit-DMA-address: low16@4, bits16..19@25, bits20..27@26",
+    "valid_regions": {
+      "0": "main Session image in Chip-RAM Bank 3",
+      "1": "bounded Session overflow in C2D-owned Chip-RAM Bank 5"
+    },
+    "reserved_zero_bytes": [
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "record_crc_covers_region_and_source": true,
+    "header_overflow_binding": {
+      "size_u16_offset": 28,
+      "crc16_offset": 30,
+      "zero_pair_means_no_overflow": true
+    },
+    "one_emitter": true,
+    "dual_decoder": false,
+    "strict_asymmetry": {
+      "v4_rejects_v3": true,
+      "v3_rejects_v4": true,
+      "unknown_region_is_format_error": true
+    }
+  },
+  "regions": {
+    "main": {
+      "id": 0,
+      "bank": 3,
+      "capacity_bytes": 65536,
+      "required_headroom_bytes": 98,
+      "contents": "catalog, directory and normal Session path"
+    },
+    "rollback_overflow": {
+      "id": 1,
+      "bank": 5,
+      "start": 48384,
+      "end_exclusive": 50416,
+      "capacity_bytes": 2032,
+      "expected_packed_span_bytes": 1956,
+      "expected_headroom_bytes": 76,
+      "contents": "rollback wipe-plane, wipe-chip and wipe-attic bodies only; rollback-unpublish remains in the main Session region",
+      "third_region": "forbidden",
+      "overflow_policy": "automatic-scope-triage"
+    }
+  },
+  "c2d_growth_floor": {
+    "start": 33840,
+    "end_exclusive": 48384,
+    "bytes": 14544,
+    "export_row_bytes": 8,
+    "remaining_dynamic_export_rows": 1818,
+    "current_root_count": 283,
+    "root_ceiling": 1536,
+    "deliberate_worst_case_rows_below_root_ceiling": 25
+  },
+  "loading": {
+    "catalog_and_records": "region-0-only",
+    "payload_source": "absolute source_addr consumed directly by the region-blind hot loader",
+    "source_resolution": "emitter/stage resolves region_id to source_addr exactly once",
+    "stage_bounds": "the canonical emitter rejects every region-qualified source outside its packed region; the emitted record CRC binds region_id and source_addr",
+    "stage_target_identity": "the final family-manifest size/CRC tuple is published into rtov_family_stage_bindings; the cold family stage proves the complete target image, including region 1 for Session, before RTOV_FAMILY_VERIFIED",
+    "runtime_record_validation": "record CRC convergence authenticates the emitted tuple at use; duplicate region/source bounds reconstruction in the per-record verifier is forbidden",
+    "installer_frame_order": "the authenticated v4 slot/count tuple is transformed to its final absolute source bank/megabyte representation before the verifier computes or publishes the installer-frame seal",
+    "installer_frame_identity": "the original Boot installer slot identity is consumed from the CRC-bound record; the transformed frame contains only the final representation consumed by the installer",
+    "hot_region_dispatch": "forbidden",
+    "region1_stage": "product-owned-post-shelf-before-Session-publish",
+    "region1_attic_stage_source": 137363456,
+    "region1_attic_stage_source_hex": "0x08300000",
+    "region1_lifetime_order": "the product shelf may use Bank 5 at 0xbd00 during boot; only after phase 03 has consumed the shelf may the cold Session stager copy Region 1 from its disjoint durable Attic source into that destination",
+    "region1_target_crc": "required",
+    "external_preload_as_authority": "forbidden",
+    "no_overlay_calls_overlay": true
+  },
+  "residency_cuts": {
+    "batch_repeat": {
+      "decision": "E000-S1",
+      "owner_selected_on": "2026-07-24",
+      "retired_symbols": [
+        "rtov_run_batch",
+        "vm_runtime_overlay_exec_batch_island"
+      ],
+      "replacement": "each requested repetition traverses vm_runtime_overlay_exec and therefore the complete authenticated single-record copy, target-CRC, execute and wipe path",
+      "semantic_effect": "none",
+      "deliberate_cost": "cold L65M, commit and LCC batch operations repeat record authentication and transport and are therefore slower",
+      "forbidden": "same-payload Island loop, hidden batch fast path or fallback that bypasses single-record verification",
+      "tuple_lifetime_guards": {
+        "rtov_batch_entry_and_rtov_batch_crc": "serial split-installer handoff or transaction-auth catalog tuple only",
+        "rtov_batch_slot_id": "transaction-auth catalog tuple, fixed retry probe result or non-transaction-auth C1 abort result only",
+        "narrow_prelink_tuple_bytes": 0,
+        "current_product_tuple_bytes": 5,
+        "expected_current_product_delta_bytes": 0
+      }
+    },
+    "record_source_verification": {
+      "decision": "amortized-at-stage-boundary",
+      "measured_verifier_relief_target_bytes": 35,
+      "emitter_authority": "runtime_overlay_bank.py validates exact absolute source addresses against the packed region geometry",
+      "binding": "L65R-v4 record CRC covers region_id and every absolute source-address byte",
+      "stage_authority": "the final manifest size/CRC is consumed by the cold target stage and must match the complete staged image before family publication",
+      "hot_path": "consumes only the authenticated absolute source tuple"
+    },
+    "rollback_wipes": {
+      "representation": "three slot bytes in lisp65_c2_append_rollback_plan",
+      "resident_direct_calls": 0,
+      "executor": "the existing non-LTO plan walker"
+    },
+    "session_emitter_state": {
+      "bytes": 10,
+      "home": "c2e_work_state in the existing 304-byte phase scratch",
+      "installer_trace_offset": 302,
+      "work_state_bytes": 302,
+      "lifetime_unions": [
+        "function_count/final_length",
+        "literal_index/code_start"
+      ],
+      "E000_bytes": 0,
+      "E000_anchor": "0xfd22",
+      "profile_rodata_address": "0xfd2c",
+      "placement_authority": "config/c2-kernal-unmap-contract.json#link60_heap_and_e000_repin_2026_07_24",
+      "new_roots": 0
+    }
+  },
+  "gates": {
+    "packing": "each record is bounded within its named region",
+    "closure": "every loaded Session record has exactly one authenticated region",
+    "staging": "region 1 is copied from the disjoint 0x08300000 durable source only after shelf consumption, then target-verified before Session family publication",
+    "c2d_floor": "no C2D growth or journal write reaches 0xbd00",
+    "mutations": [
+      "v3-as-v4",
+      "v4-as-v3",
+      "region-0-as-region-1",
+      "region-1-as-region-0",
+      "unknown-region",
+      "wrong-source-low16",
+      "wrong-source-bank",
+      "wrong-source-megabyte",
+      "nonzero-source-reserved-byte",
+      "region-1-underflow",
+      "region-1-overflow",
+      "record-crc-not-rebound"
+    ],
+    "E000_S1": [
+      "both retired batch symbols absent from the final ELF",
+      "every repeated iteration calls the complete single-record loader",
+      "invalid policy or absent predicate retains the single-record behavior",
+      "batch exhaustion remains fail-closed"
+    ],
+    "stage_source_authority": [
+      "emitter source-address/region validation",
+      "record CRC binds region and source",
+      "final manifest size/CRC binds the staged family",
+      "target CRC and region-1 CRC precede RTOV_FAMILY_VERIFIED",
+      "runtime verifier contains no duplicate region dispatch or source-bounds reconstruction"
+    ],
+    "post_shelf_region1": [
+      "durable Region-1 source is 0x08300000 and disjoint from Session main, product shelf and Boot family",
+      "phase 03 precedes the cold Region-1 copy",
+      "Region-1 target CRC precedes RTOV_FAMILY_VERIFIED",
+      "the Link-61 hardware state with an L65S shelf prefix at Bank 5 is a permanent publication-negative fixture"
+    ],
+    "v4_installer_frame_seal": [
+      "record verifier authenticates the final record bytes",
+      "slot/count transform to absolute source bank/megabyte",
+      "seal covers the transformed frame through offsetof(rtov_verify_context, seal)",
+      "RTOV_INSTALL_CONTEXT publishes only after seal",
+      "installer recomputes the same sealed domain before installation"
+    ]
+  },
+  "capacity_policy": {
+    "slice_cap_bytes": 1792,
+    "pack_quantum_bytes": 256,
+    "bank0_text_noise_headroom_bytes": 32,
+    "E000_floor_bytes": 54,
+    "window_change": "forbidden-unless-separately-reviewed"
+  },
+  "link60_publish_last_authority": {
+    "owner_authorized_on": "2026-07-24",
+    "section": ".lisp65_runtime_overlay_verifier_bindings",
+    "address": "0xb972",
+    "bytes": 40,
+    "predecessor_address": "0xb94e",
+    "rule": "Current gates consume the final linked ELF address; historical pins remain historical.",
+    "artifact_completion": "The frozen sole-WPLTO ELF may be completed without compiler or linker activity, confined to the already declared 40-byte verifier table and two KERNAL-window CRC operands."
+  }
+}

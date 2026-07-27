@@ -43,6 +43,146 @@
       "path": "src/f011_guarded_write.s"
     }
   ],
+  "classified_non_mirror_sources": [
+    {
+      "path": "scripts/c2-crc-convergence-minimal-resident-probe.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_crc_convergence_minimal_resident_wplto.py",
+      "reason": "Capacity-only lower-bound carrier with no intentional C constant mirror."
+    },
+    {
+      "path": "scripts/c2-crc-convergence-shared-driver-probe.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_crc_convergence_shared_driver_island_split_wplto.py",
+      "reason": "Capacity-only shared-driver carrier with its own structural probe."
+    },
+    {
+      "path": "scripts/c2-direct-hw-smoke-irq.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_direct_hw_smoke.py",
+      "reason": "Receipt-less hardware prefilter IRQ shim, not a product C constant mirror."
+    },
+    {
+      "path": "scripts/c2-kernal-unmap-proof-control.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_kernal_unmap_probe.py",
+      "reason": "KERNAL-unmap proof carrier controlled by the dedicated probe."
+    },
+    {
+      "path": "scripts/c2-kernal-unmap-proof-window.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_kernal_unmap_probe.py",
+      "reason": "KERNAL-window proof carrier controlled by the dedicated probe."
+    },
+    {
+      "path": "scripts/c2-link34-crc-leaf-hw-probe.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_link34_crc_leaf_hw_probe.py",
+      "reason": "Hardware parity carrier for the CRC leaf, excluded from product links."
+    },
+    {
+      "path": "scripts/c2-lite-chipram-proof-control.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_lite_chipram_probe.py",
+      "reason": "Chip-RAM hardware prefilter control carrier with a dedicated gate."
+    },
+    {
+      "path": "scripts/c2-lite-chipram-proof-window.s",
+      "class": "probe-only",
+      "authority": "tools/host-lisp/c2_lite_chipram_probe.py",
+      "reason": "Chip-RAM hardware prefilter window carrier with a dedicated gate."
+    },
+    {
+      "path": "scripts/c2-lite-cold-stager-chain.s",
+      "class": "stager-component",
+      "authority": "tools/host-lisp/c2_lite_media_product.py",
+      "reason": "C2-lite media stager component governed by the media-product packer."
+    },
+    {
+      "path": "scripts/r3-rom-write-enable.s",
+      "class": "stager-component",
+      "authority": "tools/host-lisp/c2_lite_media_product.py",
+      "reason": "Cold-stager ROM-write helper governed by the media-product packer."
+    },
+    {
+      "path": "src/c2_append_plan_walk.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_append_phase_plan_gate.py",
+      "reason": "Append plan walker is dataflow- and ABI-gated from the linked ELF."
+    },
+    {
+      "path": "src/c2_boot_chain_commit.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "reason": "Boot-chain commit leaf is covered by the ELF-derived C/ASM ABI gate."
+    },
+    {
+      "path": "src/c2_completion_mode_length.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_cpu_chip_write_completion_gate.py",
+      "reason": "Completion-mode length leaf has a dedicated linked dataflow gate."
+    },
+    {
+      "path": "src/c2_journal_prepare_select.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_journal_prepare_coresident_gate.py",
+      "reason": "Journal selector is ABI- and marker-totality-gated from the linked ELF."
+    },
+    {
+      "path": "src/c2_kernal_facade.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_kernal_unmap_contract_gate.py",
+      "reason": "Pinned post-unmap facade governed by the KERNAL ownership gate."
+    },
+    {
+      "path": "src/c2_kernal_facade_reopen.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_kernal_unmap_contract_gate.py",
+      "reason": "Pinned facade continuation governed by the KERNAL ownership gate."
+    },
+    {
+      "path": "src/c2_kernal_map.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_kernal_unmap_contract_gate.py",
+      "reason": "MAP transition source governed by the KERNAL ownership gate."
+    },
+    {
+      "path": "src/c2_kernal_window.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_kernal_unmap_contract_gate.py",
+      "reason": "Product-owned KERNAL window governed by the ownership and pin gates."
+    },
+    {
+      "path": "src/c2_lite_bank3_stage_entry.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "reason": "Bank-3 staging entry is covered by the ELF-derived C/ASM ABI gate."
+    },
+    {
+      "path": "src/l65e_bcode_ordinal.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "reason": "BCODE ordinal renderer is covered by the ELF-derived C/ASM ABI gate."
+    },
+    {
+      "path": "src/rtov_crc_mem.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "reason": "CRC leaf is covered by ABI, opcode, parity, and mutation gates."
+    },
+    {
+      "path": "src/rtov_dma_completion.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "reason": "DMA-completion leaf is covered by the ELF-derived C/ASM ABI gate."
+    },
+    {
+      "path": "src/runtime_overlay_verifier_bindings.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
+      "reason": "Verifier binding leaf is covered by linked callsite and ABI gates."
+    }
+  ],
   "generated_include": "build/generated/asm-c-contract.inc",
   "generator": "scripts/asm-c-contract-values-main.c",
   "scan_roots": ["src", "scripts"]

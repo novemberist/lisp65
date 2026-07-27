@@ -31,7 +31,9 @@
 #endif
 
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
+#ifndef LISP65_C2_KERNAL_UNMAP
 #include <cbm.h>
+#endif
 #define DEVICE_KB 1
 #ifdef LISP65_SCREEN_DRIVER
 #include "screen.h"
@@ -68,7 +70,8 @@ static char hist[HIST_MAX];
  * eigenen Treiber (ASCII direkt, kein Quote-Modus, kein PETSCII-Umweg); sonst KERNAL. */
 #ifdef LISP65_SCREEN_DRIVER
 static void kb_cursor_on(void)  { scr_cursor(1); }
-static void kb_cursor_off(void) { scr_cursor(0); }
+static void LISP65_C2_FIXED_BANK0_CODE("kb_cursor_off")
+kb_cursor_off(void) { scr_cursor(0); }
 static void kb_clear(void)      { scr_clear(); }
 static void kb_del(void)        { scr_backspace(); }
 static void echo_char(char ch)  { scr_putc(ch); }
@@ -76,7 +79,8 @@ static void echo_char(char ch)  { scr_putc(ch); }
 static void kb_cursor_on(void)  {   /* Block-Cursor zeichensatz-unabhaengig: RVS-Space */
     cbm_k_chrout(0x12); cbm_k_chrout(' '); cbm_k_chrout(0x92); cbm_k_chrout(0x9D);
 }
-static void kb_cursor_off(void) { cbm_k_chrout(' '); cbm_k_chrout(0x9D); }
+static void LISP65_C2_FIXED_BANK0_CODE("kb_cursor_off")
+kb_cursor_off(void) { cbm_k_chrout(' '); cbm_k_chrout(0x9D); }
 static void kb_clear(void)      { cbm_k_chrout(0x93); }
 static void kb_del(void)        { cbm_k_chrout(0x14); }
 /* Ein Zeichen aus buf/hist zurueck auf den Schirm echoen (Reader-Kleinbuchstaben -> PETSCII;
@@ -97,7 +101,15 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
     for (;;) {
 #ifdef DEVICE_KB
         kb_cursor_on();
+#ifdef LISP65_C2_KERNAL_UNMAP
+        {
+            lisp65_key_event event;
+            (void)lisp_input_event(1u, 1u, &event);
+            c = event.code;
+        }
+#else
         do { c = cbm_k_getin(); } while (c == 0);
+#endif
         if (c == '\r' || c == '\n') { kb_cursor_off(); *np = n; return 1; }
         if (c == 0x93 || c == 0x13) { kb_clear(); *np = n; return 2; }  /* CLR/HOME */
         if (c == 0x14) {                                  /* DEL/Backspace */
@@ -202,8 +214,21 @@ void repl(void) {
     }
 #else
 #ifdef LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY
-    if (!aborted)
+    if (!aborted) {
         (void)vm_run_dir(LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY, NULL, 0);
+        /* A prompt is a publication claim: the product banner entry really
+         * executed.  Preserve the inner VM status and fail closed instead of
+         * turning a missing/invalid Bank-2 plane into a plausible REPL. */
+        if (vm_status != VM_OK && vm_status != VM_HALT) {
+            /* The numeric error seam is the one resident error truth.  Do not
+             * pull vm_status_message() and its private string table into Bank
+             * 0 merely to report a boot-time VM failure. */
+            emit_str("*** ");
+            (void)lisp65_error_render_code(vm_status_error_code(vm_status), NIL);
+            emit('\n');
+            return;
+        }
+    }
 #else
     if (!aborted) emit_str("lisp65\n");
 #endif

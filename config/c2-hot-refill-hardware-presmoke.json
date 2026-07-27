@@ -1,0 +1,49 @@
+{
+  "format": "lisp65-c2-hot-refill-hardware-presmoke-contract-v1",
+  "clock": {
+    "interval_register": "$d7fa",
+    "interval_frame_milliseconds": 20,
+    "boot_counter_low": "$ff83",
+    "boot_counter_high": "$ff84"
+  },
+  "forms": {
+    "boot_counter": "(list(peek 255 132)(peek 255 131)(peek 255 132))",
+    "definition_setup": "(defun %c2h()(quote t))",
+    "definition_first_call": "(let((a(peek 215 250)))(let((r(eval(quote(%c2h)))))(list r a(peek 215 250))))",
+    "warm_second_call": "(let((a(peek 215 250)))(let((r(eval(quote(%c2h)))))(list r a(peek 215 250))))",
+    "post_freezer_resume": "(+ 1 2)"
+  },
+  "freezer_roundtrip": {
+    "classification": "hardware-only permanent presmoke row",
+    "procedure": "Bind the complete post-link $e000 window to the current candidate identity, enter and leave the Freezer once, then compare all 8192 bytes and execute post_freezer_resume.",
+    "pass": "$e000 is byte-identical to the current post-link pin and the resumed form returns 3",
+    "identity_rule": "The row expires on every product-identity change and must never inherit green from an older candidate.",
+    "first_red": "Any byte drift, failed Freezer return, mapping drift or wrong resumed result stops the presmoke."
+  },
+  "diagnostic_limits": {
+    "boot_to_repl_max_frames": 1500,
+    "boot_to_repl_basis": "Link-29 receipt-less hardware observation: approximately 30 seconds",
+    "definition_first_call_max_frames": 16,
+    "definition_first_call_target": "C2.3 owner-pin candidate: 15 frames, with one-frame edge quantization shown separately",
+    "warm_second_call_max_frames": 10
+  },
+  "policy": {
+    "automatic_order": [
+      "boot_counter",
+      "definition_setup",
+      "definition_first_call",
+      "warm_second_call"
+    ],
+    "order": [
+      "boot_counter",
+      "definition_setup",
+      "definition_first_call",
+      "warm_second_call",
+      "gc_blockread_and_frame_line",
+      "freezer_roundtrip",
+      "post_freezer_resume"
+    ],
+    "first_red": "Stop on a malformed result, unstable boot-counter read, wrong Lisp result or diagnostic-limit overrun.",
+    "claim_limit": "Receipt-less fail-fast hardware pre-smoke only. Limits classify this candidate; they are not promotion, acceptance or a release claim."
+  }
+}

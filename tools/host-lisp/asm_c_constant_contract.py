@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import json
 from pathlib import Path
 import re
@@ -19,6 +20,12 @@ INCLUDE_TOKEN = '.include\t"build/generated/asm-c-contract.inc"'
 EQU = re.compile(r"^\.equ\s+([A-Z0-9_]+),\s*([0-9]+)\s*$", re.MULTILINE)
 NUMERIC_IMMEDIATE = re.compile(r"^\s*([a-z][a-z0-9]*)\s+(#(?:\$[0-9a-f]+|[0-9]+))(?:\s*;.*)?$", re.I)
 NUMERIC_JUMP = re.compile(r"^\s*(?:jmp|jsr)\s+(?:\$[0-9a-f]+|[0-9]+)(?:\s*;.*)?$", re.I)
+CLASSIFIED_NON_MIRROR_KINDS = (
+    "probe-only",
+    "elf-gated-product-leaf",
+    "product-map-or-facade",
+    "stager-component",
+)
 
 
 class ContractError(RuntimeError):
@@ -53,11 +60,26 @@ def validate_inventory(value: dict[str, Any]) -> list[dict[str, Any]]:
     paths = [row.get("path") for row in rows if isinstance(row, dict)]
     if len(paths) != len(rows) or len(set(paths)) != len(paths):
         raise ContractError("assembler source inventory contains invalid/duplicate paths")
+    classified = value.get("classified_non_mirror_sources")
+    if not isinstance(classified, list):
+        raise ContractError("classified non-mirror assembler inventory must be a list")
+    classified_paths = [
+        row.get("path") for row in classified if isinstance(row, dict)
+    ]
+    if (
+        len(classified_paths) != len(classified)
+        or len(set(classified_paths)) != len(classified_paths)
+        or set(paths) & set(classified_paths)
+    ):
+        raise ContractError(
+            "classified non-mirror assembler inventory contains invalid/duplicate paths"
+        )
     found = discovered_sources(value)
-    if set(paths) != found:
+    inventoried = set(paths) | set(classified_paths)
+    if inventoried != found:
         raise ContractError(
             "assembler source inventory drift: "
-            f"missing={sorted(found - set(paths))} stale={sorted(set(paths) - found)}"
+            f"missing={sorted(found - inventoried)} stale={sorted(inventoried - found)}"
         )
     for row in rows:
         path = ROOT / row["path"]
@@ -73,10 +95,29 @@ def validate_inventory(value: dict[str, Any]) -> list[dict[str, Any]]:
                 raise ContractError("F011 guard source lost its dedicated gate")
         elif kind != "generated-c-contract":
             raise ContractError(f"unknown assembler contract kind: {kind}")
+    for row in classified:
+        path = ROOT / row["path"]
+        authority = ROOT / str(row.get("authority", ""))
+        if not path.is_file() or not authority.is_file():
+            raise ContractError(
+                f"missing classified assembler source/authority: {row['path']}"
+            )
+        if row.get("class") not in CLASSIFIED_NON_MIRROR_KINDS:
+            raise ContractError(
+                f"unknown classified assembler kind: {row.get('class')!r}"
+            )
+        reason = row.get("reason")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ContractError(
+                f"classified assembler source lacks a reason: {row['path']}"
+            )
     return rows
 
 
-def compile_output(value: dict[str, Any], cc: str) -> bytes:
+def compile_output(
+    value: dict[str, Any], cc: str,
+    extra_cpp_flags: tuple[str, ...] = (),
+) -> bytes:
     generator = ROOT / str(value.get("generator", ""))
     if not generator.is_file():
         raise ContractError("missing C contract generator")
@@ -84,7 +125,7 @@ def compile_output(value: dict[str, Any], cc: str) -> bytes:
         binary = Path(raw) / "emit"
         built = subprocess.run(
             [cc, "-std=c99", "-Wall", "-Wextra", "-Werror", "-Isrc", "-Iscripts",
-             str(generator), "-o", str(binary)],
+             *extra_cpp_flags, str(generator), "-o", str(binary)],
             cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
         )
         if built.returncode:
@@ -192,8 +233,28 @@ def selftest() -> None:
             raise ContractError("mutated generated include survived")
     value = load_contract()
     rows = validate_inventory(value)
-    if len(rows) != 4 or discovered_sources(value) != {row["path"] for row in rows}:
+    classified = value["classified_non_mirror_sources"]
+    inventory = {row["path"] for row in rows + classified}
+    if len(rows) != 4 or discovered_sources(value) != inventory:
         raise ContractError("inventory closure selftest drift")
+
+    missing = deepcopy(value)
+    missing["classified_non_mirror_sources"].pop()
+    try:
+        validate_inventory(missing)
+    except ContractError:
+        pass
+    else:
+        raise ContractError("unclassified assembler mutation survived")
+
+    invalid = deepcopy(value)
+    invalid["classified_non_mirror_sources"][0]["class"] = "unreviewed"
+    try:
+        validate_inventory(invalid)
+    except ContractError:
+        pass
+    else:
+        raise ContractError("unknown assembler classification mutation survived")
 
 
 def main() -> int:
@@ -210,7 +271,12 @@ def main() -> int:
             generate(value, args.cc, out)
         elif args.command == "check":
             symbols = check(value, args.cc, out)
-            print(f"asm/C constant contract: PASS ({len(symbols)} generated mirrors, {len(value['assembler_sources'])} sources)")
+            print(
+                "asm/C constant contract: PASS "
+                f"({len(symbols)} generated mirrors, "
+                f"{len(value['assembler_sources'])} mirror sources, "
+                f"{len(value['classified_non_mirror_sources'])} classified non-mirrors)"
+            )
         elif args.command == "selftest":
             selftest()
             print("asm/C constant contract selftest: PASS")

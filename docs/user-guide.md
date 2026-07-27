@@ -1,9 +1,9 @@
-# lisp65 1.1 User Guide
+# lisp65 1.2 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.1.0` release bundle
+- The extracted `lisp65-1.2.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -91,7 +91,8 @@ Example:
 
 ## Editor keys
 
-The authoritative 1.1 keymap is generated from the same source as its tests:
+The authoritative 1.2 L-full keymap is generated from the same source as its
+tests:
 [Workbench key bindings](generated/ide-keymap.md). It contains 41 bindings.
 
 Important conventions:
@@ -110,7 +111,7 @@ without its corresponding test declaration.
 
 ## Fresh sessions and recovery ladder
 
-Save important edits first. The 1.1 escalation ladder is:
+Save important edits first. The 1.2 escalation ladder is:
 
 1. RUN/STOP aborts the current evaluation and preserves the session.
 2. Restart lisp65 from the product disk for a fresh Workbench session. The
@@ -173,12 +174,17 @@ further writes. The release does not claim atomicity inside that window.
 
 - Use backups. This release is intended for exploration and small projects,
   not irreplaceable data or unattended production use.
-- The sealed profile leaves 334 free symbol entries, 5,079 name-pool bytes, and
-  168 directory entries. There is no dependency-safe `unload`.
-- The first call after a persistent definition takes about 1.90–1.96 seconds on
-  the reference MEGA65; isolated longer observations exist. Warm expressions
-  take about 0.20 seconds. Enter related definitions as one block to amortize
-  the reload. C2 direct-Attic execution is the committed 1.2 cure.
+- Open the Freezer only while the REPL prompt is visible or the evaluator is
+  otherwise idle. Freezer entry during a persistent definition/append
+  transaction is not supported in C2.2; that crossing remains a named C2.3
+  obligation. If it happens, return with F3 and cold-restart lisp65 before
+  relying on the interrupted definition.
+- Session metadata is finite and there is no dependency-safe `unload`.
+- The dated 1.1 definition-to-first-call exception is retired. The 1.2
+  acceptance measured a newly published nullary call at 1 frame cold and
+  0 frames warm, with claimed ceilings of 16 and 10 frames respectively.
+  Calls with arguments are not covered by that claim; the final informative
+  one-argument measurement was 68 frames.
 - M65D/editor saves support 1–8,192 bytes. Evaluator `load` has a separate
   38,400-byte staging ceiling; memory may constrain practical input earlier.
 - The compiler builds Workbench L65M modules, not standalone runtimes or

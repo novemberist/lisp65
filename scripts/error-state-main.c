@@ -80,10 +80,17 @@ int main(void) {
     lisp_abort_code(LISP65_ERR_RUNTIME_CATALOG);
     reset_output();
     failed += expect(lisp65_error_render_pending() == 1,
-                     "resident catalog renderer succeeds");
+                     "early catalog renderer succeeds");
+#ifdef LISP65_C2_NUMERIC_EARLY_ERRORS
+    failed += expect(strcmp(output, "E2e") == 0,
+                     "early catalog numeric output");
+    failed += expect(hook_calls == 2,
+                     "early catalog tries overlay before numeric fallback");
+#else
     failed += expect(strcmp(output, "E2e catalog missing; redeploy") == 0,
                      "resident catalog renderer output");
     failed += expect(hook_calls == 1, "resident catalog renderer bypasses overlay hook");
+#endif
 #endif
 
     lisp_abort_symbol(LISP65_ERR_UNDEFINED_FUNCTION, MK_SYMI(17));
@@ -123,7 +130,11 @@ int main(void) {
     failed += expect(lisp_error_msg == NULL, "clear message");
     failed += expect(lisp65_error_pending_code() == LISP65_ERR_NONE, "clear code");
     failed += expect(lisp65_error_pending_symbol() == NIL, "clear symbol");
+#ifdef LISP65_C2_NUMERIC_EARLY_ERRORS
+    failed += expect(hook_calls == 3, "hook called for every numeric error");
+#else
     failed += expect(hook_calls == 2, "hook called only for numeric errors");
+#endif
 
     if (failed) return 1;
     puts("error-state: PASS dynamic+numeric+symbol+fallback+cleanup");

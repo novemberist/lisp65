@@ -50,7 +50,7 @@
 
 /* VM-Fehlerstatus in einen Lisp-Abbruch uebersetzen (REPL faengt via Toplevel; ohne aktives
  * Toplevel ist lisp_abort ein No-op und der Aufrufer sieht den Fehlerwert). */
-static __attribute__((noinline)) void vm_check_status(void) {   /* mehrfach gerufen: Inline-Kopien kosten .text */
+static __attribute__((noinline)) void vm_check_status(obj detail) {   /* mehrfach gerufen: Inline-Kopien kosten .text */
     switch (vm_status) {
     case VM_OK:
     case VM_HALT:      return;
@@ -65,8 +65,15 @@ static __attribute__((noinline)) void vm_check_status(void) {   /* mehrfach geru
 #endif
         vm_status = VM_OK;
 #ifdef LISP65_NUMERIC_ERRORS
-        lisp_abort_code(code);
+        if (code == LISP65_ERR_VM_UNDEFINED_FUNCTION && IS_SYMI(detail))
+            lisp_abort_symbol(LISP65_ERR_UNDEFINED_FUNCTION, detail);
+        else if (code == LISP65_ERR_VM_UNDEFINED_FUNCTION
+                 && IS_BCODE(detail))
+            lisp_abort_detail(code, detail);
+        else
+            lisp_abort_code(code);
 #else
+        (void)detail;
         lisp_abort(m);
 #endif
         break;
@@ -80,7 +87,7 @@ static __attribute__((noinline)) void vm_check_status(void) {   /* mehrfach geru
  * the same boundary previously owned by apply(). */
 static obj eval_vm_native_apply_checked(obj fn, obj arglist) {
     obj result = vm_native_apply(fn, arglist);
-    vm_check_status();
+    vm_check_status(result);
     return result;
 }
 #endif
@@ -118,7 +125,7 @@ static obj k_bytecode, k_primitive, k_closure, k_macro, k_other;
 static obj k_lcc_invalid_parameter_list;
 #endif
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
-static obj k_key, k_shift;
+static obj k_key, k_shift, k_control, k_meta;
 #endif
 
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
@@ -127,10 +134,13 @@ static obj k_key, k_shift;
  * DEL $14, CRSR $11/$91/$1D/$9D, CLR $93, Ctrl+Buchstabe $01-$1A, ...) bleiben ROH —
  * Keymaps matchen die Codes direkt. Ctrl+M ist auf GETIN-Ebene von RETURN nicht
  * unterscheidbar (beide $0D) — Editor behandelt $0D als RETURN. */
-static obj key_event(int c) {
+static obj key_event(int c, uint8_t event_modifiers) {
     obj mods = NIL, e;
-    if (c >= 0xC1 && c <= 0xDA) { c -= 0x80; mods = cons(k_shift, NIL); }
+    if (c >= 0xC1 && c <= 0xDA) { c -= 0x80; event_modifiers |= LISP65_KEYMOD_SHIFT; }
     else if (c >= 'A' && c <= 'Z') c += 0x20;
+    if (event_modifiers & LISP65_KEYMOD_SHIFT) mods = cons(k_shift, mods);
+    if (event_modifiers & LISP65_KEYMOD_CONTROL) mods = cons(k_control, mods);
+    if (event_modifiers & LISP65_KEYMOD_META) mods = cons(k_meta, mods);
     GC_PUSH(mods);
     e = cons(gc_rootstack[GC_TOP], NIL);            /* (mods) */
     GC_SET(GC_TOP, e);
@@ -173,7 +183,10 @@ static obj sf_cond, sf_and, sf_or;   /* Aequivalenz-Naht: Compiler-gelowerte For
 #define LISP65_EVAL_DIV_PRIM 1       /* CONTROL_SF schliesst "/" ein; "/" ist auch solo pinbar (~60 B) */
 #endif
 #endif
-static obj lisp_t;   /* gecachtes t (heisses Praedikat-Ergebnis; sonst intern("t")-Lookup je Aufruf) */
+/* Canonical t interned by eval_init. C2 consumes the same identity for a
+ * transient definition; a second intern("t") would create a private identity
+ * truth and an unnecessary facade edge. */
+obj lisp_t;
 
 enum { P_ADD, P_SUB, P_MUL, P_MOD, P_CONS, P_CAR, P_CDR, P_CONSP, P_EQ, P_EQL,
        P_LT, P_GT, P_NUMEQ, P_LE, P_GE,
@@ -234,7 +247,9 @@ int8_t eval_v2_native_function_view(obj sym, uint8_t *kind, uint8_t *value) {
 
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
 #define LISP_REAL_MEM 1   /* echter Speicherzugriff nur auf dem Geraet */
+#ifndef LISP65_C2_KERNAL_UNMAP
 #include <cbm.h>          /* GETIN fuer read-key/poll-key */
+#endif
 #endif
 #if defined(LISP65_SCREEN_DRIVER) || defined(LISP65_EVAL_SCREEN_PRIMS)
 #include "screen.h"
@@ -313,7 +328,23 @@ static char cs_fetch(void) {
 }
 #endif
 
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_C2_PRODUCT_CUT)
+#include "c2_product_runtime.h"
+
+static obj lcc_install_obj(obj fnlist, obj defname) {
+    uint16_t root_base = gc_rootsp;
+    obj result;
+    if (!GC_CAN_RESERVE(2)) {
+        lisp_abort_static(LISP65_ERR_LCC_INSTALL, "C2 install: roots");
+        return NIL;
+    }
+    GC_PUSH(fnlist); GC_PUSH(defname);
+    result = c2_product_install(fnlist, defname);
+    gc_rootsp = root_base;
+    vm_check_status(result);
+    return result;
+}
+#elif defined(LISP65_LCC_INSTALL)
 #ifndef LISP65_VM
 #error "LISP65_LCC_INSTALL requires LISP65_VM"
 #endif
@@ -349,7 +380,7 @@ static obj lcc_install_obj(obj fnlist, obj defname) {
     result = vm_run(installed.bank, installed.off, installed.length, NULL, 0);
     lcc_install_transient_pop(&installed);
     gc_rootsp = root_base;
-    vm_check_status();
+    vm_check_status(result);
     return result;
 }
 #endif
@@ -494,13 +525,25 @@ static obj apply_prim(int16_t id, obj args) {
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
         {
             int c;
+#ifdef LISP65_C2_KERNAL_UNMAP
+            lisp65_key_event event;
+            if (!lisp_input_event((uint8_t)mode, 0u, &event)) return NIL;
+            c = event.code;
+#else
             if (mode) {
                 do { lisp_poll(); c = cbm_k_getin(); } while (c == 0);
             } else {
                 c = cbm_k_getin();
                 if (c == 0) return NIL;
             }
-            return key_event(c);
+#endif
+            return key_event(c,
+#ifdef LISP65_C2_KERNAL_UNMAP
+                             event.modifiers
+#else
+                             0u
+#endif
+            );
         }
 #else
         return NIL;
@@ -614,7 +657,7 @@ static obj apply_prim(int16_t id, obj args) {
 #endif
         return car(cdr(cdr(args)));
     }
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
     case P_LCCINST: {   /* (lcc-install fnlist name|nil) -> name | BCODE-Wert des Main */
         return lcc_install_obj(car(args), cadr(args));
     }
@@ -713,7 +756,7 @@ static obj apply_prim(int16_t id, obj args) {
         fn = sym_function(op);
         if (!(IS_PTR(fn) && cell_type(fn) == T_MACRO)) return form;
         pb = cell_a(fn);
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
         if (IS_BCODE(pb)) return apply(pb, cell_b(form));   /* M2: BCODE-Expander, rohe Args */
 #endif
 #ifdef LISP65_TREEWALK_STRIP
@@ -986,6 +1029,7 @@ static obj apply_prim(int16_t id, obj args) {
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
     case P_READKEY: case P_POLLKEY: {               /* (read-key)|(poll-key) -> (key code mods)|nil */
         int c;
+        uint8_t modifiers = 0u;
         /* lisp_poll IM Warte-Loop: RUN/STOP wird fast immer beim Warten gedrueckt — dort
          * laufen keine VM-Schritte, der VM-Poll feuert nie (HW-Befund 2026-07-02). */
         /* lisp_poll IM Warte-Loop (RUN/STOP; Achtung: lisp_polls STKEY-Adresse stimmt fuer
@@ -994,13 +1038,31 @@ static obj apply_prim(int16_t id, obj args) {
 #ifdef LISP65_READKEY_DIAG
             *(volatile unsigned char *)0xD020 = 6;   /* BLAU: warte */
 #endif
+#ifdef LISP65_C2_KERNAL_UNMAP
+            {
+                lisp65_key_event event;
+                (void)lisp_input_event(1u, 0u, &event);
+                c = event.code;
+                modifiers = event.modifiers;
+            }
+#else
             do { lisp_poll(); c = cbm_k_getin(); } while (c == 0);
+#endif
 #ifdef LISP65_READKEY_DIAG
             *(volatile unsigned char *)0xD020 = 2;   /* ROT: verarbeite */
 #endif
         }
-        else { c = cbm_k_getin(); if (c == 0) return NIL; }
-        return key_event(c); }
+        else {
+#ifdef LISP65_C2_KERNAL_UNMAP
+            lisp65_key_event event;
+            if (!lisp_input_event(0u, 0u, &event)) return NIL;
+            c = event.code;
+            modifiers = event.modifiers;
+#else
+            c = cbm_k_getin(); if (c == 0) return NIL;
+#endif
+        }
+        return key_event(c, modifiers); }
 #endif
 #endif
 #ifndef LISP65_TREEWALK_STDLIB_BRIDGES
@@ -1122,7 +1184,7 @@ uint8_t eval_v2_workbench_service(uint8_t id, const obj *args, obj *result) {
             (uint16_t)(256u + (uint16_t)FIXVAL(args[0]))));
         return 1;
 #endif
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
     case 35: { /* %set-macro */
         obj macro = alloc(T_MACRO);
         if (macro == NIL) { *result = NIL; return 1; }
@@ -1149,7 +1211,7 @@ uint8_t eval_v2_workbench_service(uint8_t id, const obj *args, obj *result) {
     }
     case 37: /* gensym */
         *result = gensym(); return 1;
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
     case 38: /* lcc-install */
         *result = lcc_install_obj(args[0], args[1]); return 1;
 #endif
@@ -1164,7 +1226,7 @@ uint8_t eval_v2_workbench_service(uint8_t id, const obj *args, obj *result) {
             *result = form; return 1;
         }
         expansion = cell_a(function);
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
         if (IS_BCODE(expansion)) {
 #ifdef LISP65_V2_CARRIER_CUT
             *result = eval_vm_native_apply_checked(expansion, cell_b(form));
@@ -1374,7 +1436,7 @@ static obj apply(obj fn, obj args) {
         if (p != NIL) { lisp_abort_static(LISP65_ERR_TOO_MANY_ARGS, "too many args"); gc_rootsp = base; return NIL; }
         r = vm_run_dir((int)BCODE_IDX(fn), arr, n);
         gc_rootsp = base;
-        vm_check_status();   /* VM-Fehler (Typ/Overflow/Dir-Miss) -> lisp_abort statt stillem NIL */
+        vm_check_status(r);   /* VM-Fehler (Typ/Overflow/Dir-Miss) -> lisp_abort statt stillem NIL */
         return r;
     }
 #endif
@@ -1386,7 +1448,7 @@ static obj apply(obj fn, obj args) {
         if (IS_BCODE(cell_a(fn))) {
             r = vm_apply_bcode_closure(fn, args);
             gc_rootsp = base;
-            vm_check_status();
+            vm_check_status(r);
             return r;
         }
 #endif
@@ -1553,7 +1615,7 @@ static obj eval_env(obj e, obj env) {
                     argv[0] = car(evaluated);
                     vm_status = VM_OK;
                     result = vm_family_internal_primitive(pid, argv, 1);
-                    vm_check_status();
+                    vm_check_status(result);
                     gc_rootsp = base;
                     return result;
                 }
@@ -1691,7 +1753,7 @@ static obj eval_env(obj e, obj env) {
                     }
                     if (IS_PTR(fn) && cell_type(fn) == T_MACRO) {     /* TCO: Expansion in Tail-Pos. */
                         obj pb = cell_a(fn);
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
                         if (IS_BCODE(pb)) { e = apply(pb, args); continue; }   /* M2: BCODE-Expander */
 #endif
                         {
@@ -1914,7 +1976,7 @@ WORKBENCH_BOOTNAME(eval_string, "eval-string");
 #ifdef LISP65_MACROEXPAND_PRIM
 WORKBENCH_BOOTNAME(macroexpand_1, "macroexpand-1");
 #endif
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
 WORKBENCH_BOOTNAME(lcc_install, "lcc-install");
 WORKBENCH_BOOTNAME(set_macro, "%set-macro");
 #endif
@@ -1968,6 +2030,8 @@ WORKBENCH_BOOTNAME(other, "other");
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
 WORKBENCH_BOOTNAME(key, "key");
 WORKBENCH_BOOTNAME(shift, "shift");
+WORKBENCH_BOOTNAME(control, "control");
+WORKBENCH_BOOTNAME(meta, "meta");
 #endif
 WORKBENCH_BOOTNAME(nreverse, "nreverse");
 WORKBENCH_BOOTNAME(rplaca, "rplaca");
@@ -2070,7 +2134,7 @@ WORKBENCH_BOOTFN void eval_init(void) {
 #ifdef LISP65_MACROEXPAND_PRIM
     defprim(BOOTNAME(macroexpand_1), P_MEXP1);
 #endif
-#ifdef LISP65_LCC_INSTALL
+#if defined(LISP65_LCC_INSTALL) || defined(LISP65_C2_PRODUCT_CUT)
     defprim(BOOTNAME(lcc_install), P_LCCINST);
     defprim(BOOTNAME(set_macro), P_SETMACRO);   /* Konvergenz-M2: BCODE-Makro-Install (lcc-run defmacro) */
 #endif
@@ -2131,6 +2195,7 @@ WORKBENCH_BOOTFN void eval_init(void) {
     k_closure = intern(BOOTNAME(closure)); k_macro = intern(BOOTNAME(macro)); k_other = intern(BOOTNAME(other));
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
     k_key = intern(BOOTNAME(key)); k_shift = intern(BOOTNAME(shift));
+    k_control = intern(BOOTNAME(control)); k_meta = intern(BOOTNAME(meta));
 #endif
     defprim(BOOTNAME(nreverse), P_NREVERSE);
     defprim(BOOTNAME(rplaca), P_RPLACA); defprim(BOOTNAME(rplacd), P_RPLACD);
@@ -2173,6 +2238,12 @@ WORKBENCH_BOOTFN void eval_init(void) {
 #endif
 #endif
 #endif
+#ifdef LISP65_C2_PRODUCT_CUT
+    /* vm_init ran first and published the canonical object through the
+     * product alias vm_t == lisp_t.  Consume it; never derive "t" twice. */
+    t = lisp_t;
+#else
     t = intern(BOOTNAME(t));   lisp_t = t;
+#endif
     set_sym_value(t, t);
 }

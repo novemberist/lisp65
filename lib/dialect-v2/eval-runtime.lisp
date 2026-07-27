@@ -1,28 +1,27 @@
-; Dialect-v2 runtime eval is ordinary resident bytecode. lcc-run is the single
-; semantic engine after the native Treewalk carrier is removed.
+; C2 runtime eval is ordinary immutable bytecode.  The compiler image is part
+; of the generation-bound C2 shelf, so no lease/load/retirement coordinator or
+; legacy L65M carrier remains in the product closure.
 (defun eval (form)
   (lcc-run form))
 
-; 1.1-C1 resident control surface. The one compiler export exists as a literal
-; before the transaction starts. Private %c1-control operations 0/1/2 own
-; checkpoint, validation and retirement; operation 2 returns its second value
-; only after the old function cell and code/directory watermarks are restored.
-(defun %c1-compile-detached (mode first second)
-  (if (%c1-control 0 (quote %c1-compile))
-      (if (%disk-load-lib "lcc")
-          (if (%c1-control 1 nil)
-              (%c1-control 2 (%c1-compile mode first second))
-              (progn (%c1-control 2 nil) nil))
-          (progn (%c1-control 2 nil) nil))
-      nil))
-
 (defun lcc-run (form)
-  (let ((compiled (%c1-compile-detached 0 form nil)))
-    (cond ((if (consp form) (eq (car form) 'defmacro) nil)
-           (%set-macro (car (cdr form)) (lcc-install compiled nil)))
-          ((if (consp form) (eq (car form) 'defun) nil)
-           (lcc-install compiled (car (cdr form))))
-          (t (lcc-install compiled 't)))))
+  ; A published nullary bytecode call is already a complete execution object.
+  ; Recompiling it as a transient wrapper would reopen the full append,
+  ; publication and rollback transaction without adding semantics.  Keep the
+  ; fast path deliberately narrow: macros, primitives, argument evaluation,
+  ; special forms and unbound names all retain the proven compiler path.
+  (if (if (consp form)
+          (if (null (cdr form))
+              (eq (function-kind (car form)) 'bytecode)
+              nil)
+          nil)
+      (funcall (car form))
+      (let ((compiled (%c2-compile-form form)))
+        (cond ((if (consp form) (eq (car form) 'defmacro) nil)
+               (%set-macro (car (cdr form)) (lcc-install compiled nil)))
+              ((if (consp form) (eq (car form) 'defun) nil)
+               (lcc-install compiled (car (cdr form))))
+              (t (lcc-install compiled 't))))))
 
 (defun %number->string-result (negative codes)
   (%string-from-codes (if negative (cons 45 codes) codes)))
@@ -59,11 +58,34 @@
 (defun compile-error ()
   (symbol-value (quote %compile-error)))
 
-; Compile into the detached staging Buffer, then hand that Buffer to the one
-; public persistence transaction. The buffer predicate stays resident through
-; %buffer-read; no optional comfort library is required.
-(defun %c1-compile-save (source dst)
-  (let ((output (%c1-compile-detached 1 source nil)))
+; One emitter for born code. Each source definition is compiled by the same
+; immutable compiler and appended to the one C2I-v2 image under construction.
+(defun %c2-source-form (form)
+  (cond ((if (consp form) (eq (car form) 'defmacro) nil)
+         (%c2-control 1
+           (cons (%c2-compile-form form)
+             (cons (car (cdr form)) (cons 1 nil)))))
+        ((if (consp form) (eq (car form) 'defun) nil)
+         (%c2-control 1
+           (cons (%c2-compile-form form)
+             (cons (car (cdr form)) (cons 0 nil)))))
+        (t (%fasl-error-not-a-defun))))
+
+(defun %c2-source-forms ()
+  (let ((form (%fasl-read-form)))
+    (if (eq form '%fasl-eof)
+        (%c2-control 2 nil)
+        (if (%c2-source-form form) (%c2-source-forms) nil))))
+
+(defun %c2-compile-source (source)
+  (progn
+    (%cs-read-open source)
+    (if (%c2-control 0 nil) (%c2-source-forms) nil)))
+
+; Compile into the detached C2I-v2 Buffer, then hand that Buffer to the one
+; public M65D COW transaction.
+(defun %c2-compile-save (source dst)
+  (let ((output (%c2-compile-source source)))
     (if (%buffer-read 0 output)
         (let ((saved (m65d-save dst output)))
           (if (= saved 0)
@@ -78,6 +100,6 @@
     (set-symbol-value (quote %compile-error) nil)
     (if (stringp source)
         (if (stringp dst)
-            (%c1-compile-save source dst)
+            (%c2-compile-save source dst)
             (progn (set-symbol-value (quote %compile-error) "bad destination") nil))
         (progn (set-symbol-value (quote %compile-error) "bad source") nil))))

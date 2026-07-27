@@ -1,0 +1,51 @@
+name: Bug report
+description: Report a reproducible lisp65 product or tooling defect
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not attach ROMs, proprietary manuals, credentials, or private diagnostic archives.
+  - type: input
+    id: release
+    attributes:
+      label: lisp65 release or source commit
+      placeholder: v1.2.0 or a Git commit
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Physical MEGA65
+        - Xemu
+        - Host-only tool
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the exact Lisp form, boot steps, or command.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed result
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Include core version, media workflow, and whether the Freezer or RUN/STOP was involved.

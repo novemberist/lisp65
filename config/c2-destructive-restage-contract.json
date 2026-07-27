@@ -1,0 +1,120 @@
+{
+  "format": "lisp65-c2-destructive-restage-contract-v1",
+  "status": "class-c-reviewed-direction-contract-first-hardware-not-run",
+  "row": "C4",
+  "product_identity": {
+    "link": 57,
+    "sha256": "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8"
+  },
+  "reset_model": {
+    "platform_reset": {
+      "bank2": "destroyed-by-ROM-restage",
+      "bank3": "destroyed-by-ROM-restage",
+      "bank5": "survives-and-is-untrusted",
+      "attic": "survives-and-is-untrusted",
+      "bank0_runtime_state": "reinitialized-by-CRT-and-c2_product_prepare_boot"
+    },
+    "power_cycle": "out-of-scope-no-survival-claim"
+  },
+  "domains": {
+    "c2d_bank": 5,
+    "c2d_physical_base": 327680,
+    "canonical_prefix_bytes": 33840,
+    "region_bytes": 50816,
+    "unwind_offset": 50752,
+    "unwind_bytes": 64,
+    "authenticated_bootstrap_scratch": {
+      "physical_base": 361728,
+      "offset": 34048,
+      "bytes": 3285,
+      "end_offset_exclusive": 37333,
+      "meaning": "after the complete cold reset write, the SHA-bound Boot overlay temporarily occupies this inactive-suffix interval before READY"
+    },
+    "session_attic_physical_base": 138412032,
+    "session_attic_bytes": 1048576,
+    "bank2_physical_base": 131072,
+    "bank3_physical_base": 196608
+  },
+  "destructive_predecessor": {
+    "c2d_header": {
+      "generation_offset": 10,
+      "generation_before": 1,
+      "generation_after": 2,
+      "meaning": "a replacement generation header became visible while the immutable image and entry rows still carry generation 1"
+    },
+    "unwind_journal": {
+      "state": "valid-active-prior-generation-C2J",
+      "meaning": "a reset occurred after the journal was committed and before cleanup; the next cold generation must not replay it"
+    },
+    "inactive_suffix": "nonzero stale rows and values may remain physically present",
+    "session_attic": "a named stale sentinel remains physically present and must remain unreachable",
+    "runtime_tuple": {
+      "c2_ready": 1,
+      "native_family": 2,
+      "native_generation": 1,
+      "island_state": 2
+    }
+  },
+  "cold_repair": {
+    "bank5_reset_image": {
+      "span": "[0,50816)",
+      "canonical_prefix": "[0,33840)",
+      "zero_suffix": "[33840,50816)",
+      "write_order": [
+        "write and read back the complete 50816-byte reset image",
+        "then write and read back the authenticated Boot-overlay scratch at [34048,37333)",
+        "then execute"
+      ],
+      "bootstrap_scratch_exception": "the later Boot-overlay write may replace zeroes only at [34048,37333); it is disjoint from the canonical prefix and C2J",
+      "journal_postcondition": "all 64 bytes at [50752,50816) are zero before READY and before the first append"
+    },
+    "session_attic": "need not be wiped; no active C2D record may reference a surviving session byte",
+    "bank2": "complete target stage and CRC verification before READY",
+    "bank3": "complete Session-family target stage and CRC verification before family publication",
+    "runtime_tuple": "READY zero and family/generation non-callable before construction; exact Session family/generation published last"
+  },
+  "negative_branch": {
+    "input": "torn C2D header plus committed predecessor journal",
+    "required": [
+      "READY remains zero",
+      "no Session family is published",
+      "the product retains LISP65_ERR_STDLIB_PROFILED_PRELOAD (0x25), rendered as E25 because the rejection precedes Bank-3 L65E availability",
+      "no stale handle or export is callable"
+    ],
+    "forbidden": [
+      "guessing cleanup from the stale journal",
+      "continuing with a mixed-generation directory",
+      "publishing either Chip plane"
+    ]
+  },
+  "repair_branch": {
+    "required": [
+      "the full Bank-5 reset image is read back byte-identically before the later authenticated Boot-overlay preload",
+      "after that preload, the canonical prefix, Boot-overlay scratch and C2J are each read back against their separate authorities",
+      "Bank 2 equals the canonical static code plane after boot",
+      "Bank 3 equals the canonical Session family after boot",
+      "C2J is zero before the first append",
+      "READY is one only with Session family and generation one",
+      "the stale Session-Attic sentinel remains physically present but unreachable",
+      "a fresh persistent definition commits, calls, and leaves C2J zero"
+    ]
+  },
+  "hardware_sequence": [
+    "hold the exact Link-57 PRG and preload the SHA-bound immutable inputs",
+    "install and read back the destructive 50816-byte Bank-5 predecessor plus stale tuple and Attic sentinel",
+    "run once and capture the fail-closed state",
+    "reset and hold the same Link-57 PRG",
+    "install and read back the complete 50816-byte repair image, then install and read back the same immutable inputs including the disjoint Boot-overlay scratch",
+    "run once and capture READY, both Chip planes, Bank 5 and the surviving Attic sentinel",
+    "prove stale-name rejection, then define and call one fresh nullary function",
+    "capture the cleared C2J and committed header"
+  ],
+  "acceptance": {
+    "same_product_identity_required": true,
+    "product_link_forbidden": true,
+    "promotion_forbidden": true,
+    "hardware_runs": 1,
+    "first_red": true,
+    "matrix_gate_effect": "C4 closes only after the host contract and same-identity hardware receipt are both green"
+  }
+}

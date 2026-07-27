@@ -1,0 +1,166 @@
+{
+  "format": "lisp65-c2-address-identity-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "owner-approved-c2.1-proof-authorized",
+  "owner_approval": "All five review decisions approved on 2026-07-19; C2.1 is authorized only as a separate internal proof target.",
+  "metadata_envelope": "Option A in config/c2-metadata-envelope-proposal.json approved on 2026-07-19; C2.1 emits and decodes that exact local 24-byte envelope.",
+  "claim_limit": "Approved C2.0 design contract only. It changes no product byte, authorizes no capacity, and makes no execution or performance claim until the separate C2.1 proof target passes.",
+  "design_laws": {
+    "substitution": "The C2 product decoder replaces the L65M materializer; the two never coexist in one product candidate.",
+    "physical_address_domain": "All 28-bit physical addresses are uint32 values or explicit DMA-list bytes and never pass through the target's 16-bit uintptr_t.",
+    "immutability": "Executable Attic bytes are never patched after staging. Session objects, literal resolutions and export cells live in a separate mutable plane.",
+    "attic_cache": "Every Attic tenant is identity-checked, generation-bound, reconstructible, and never the sole copy of user data.",
+    "fail_fast": "Every new device behavior receives a receipt-less pre-smoke before an authoritative chain."
+  },
+  "logical_callable": {
+    "lisp_object": "BCODE immediate",
+    "encoding": "existing 12-bit directory index in raw object range 0xc000..0xdffe",
+    "maximum_index": 4095,
+    "meaning": "session-local callable handle only; never a physical address",
+    "stale_rule": "BCODE values are valid only in the session generation that created their directory. A restage starts a new session and clears heap, directory and all resolution tables before publishing any callable."
+  },
+  "source_address": {
+    "type": "C2SourceAddress",
+    "encoding": "region-id:u8 plus little-endian offset:u24",
+    "offset_base": "0x08100000",
+    "maximum_relative_offset": 7340031,
+    "physical_computation": "uint32_t physical = region_base_u32 + offset_u24; checked for 28-bit overflow before DMA-list encoding",
+    "forbidden": [
+      "cast through uintptr_t",
+      "store a physical address in obj",
+      "publish an address without artifact identity and generation"
+    ]
+  },
+  "shelf_format": {
+    "name": "L65S-v4-direct",
+    "inherits": "The host-validated 32-byte header, 32-byte records, u24 region offsets and split code/metadata layout from the 2026-07-18 L65S-v4 model.",
+    "strictness": "The C2 decoder accepts only L65S-v4-direct and known flags. It rejects v3, widening-only v4 and unknown versions. The v1.1 product continues to accept only v3.",
+    "record_limit": 255,
+    "container_length_limit": 65535,
+    "staging_limit": 38400,
+    "identity": {
+      "host": "complete shelf SHA-256, region SHA-256 and product-set SHA-256",
+      "device": "product build identity, complete-catalog CRC32 and per-region CRC32",
+      "diagnostic_map": "host map SHA is bound to the exact shelf SHA and product-set SHA"
+    },
+    "media_rule": "Code and metadata are staged together before the single product-to-work-disk swap. No D81-only metadata side file is permitted."
+  },
+  "direct_container": {
+    "name": "C2I-v1",
+    "code_region": "Immutable normalized code objects. Literal-table-shaped bytes are zero in the stored image and are ignored by PUSHLIT.",
+    "metadata_region": "Entry records, literal descriptors, export descriptors and immutable strings. It is reset-persistent but never contains a session obj.",
+    "entry_record": {
+      "bytes": 16,
+      "fields": [
+        "code_offset_u24",
+        "code_length_u16",
+        "literal_first_u16",
+        "literal_count_u8",
+        "export_name_offset_u16_or_ffff",
+        "arity_u8",
+        "flags_u8",
+        "diagnostic_ordinal_u16",
+        "reserved_u16_zero"
+      ],
+      "code_length_limit": 65535,
+      "code_length_rule": "legal lengths are 1..65535; zero is a format error",
+      "anonymous_sentinel": "export_name_offset=0xffff; every legal offset is strictly below 0xffff"
+    },
+    "literal_descriptor": {
+      "bytes": 8,
+      "encoding": "kind:u8, flags:u8, argument0:u16, argument1:u24, reserved:u8=0",
+      "fixnum_rule": "fixnum-i16 is a signed transport field, but legal values are restricted to the dialect Fixnum range -16384..16383; every other value is a format error",
+      "kinds": [
+        "nil",
+        "true",
+        "fixnum-i16",
+        "immutable-string-offset-u24",
+        "container-entry-ordinal-u16",
+        "export-name-offset-u24",
+        "native-primitive-id-u16"
+      ],
+      "cross_container_rule": "Container-local references use ordinals. Cross-container references use exported names only. Late-bound exports are always name descriptors and are never rewritten to entry ordinals."
+    }
+  },
+  "mutable_session_plane": {
+    "session_generation": "nonzero u16; incremented on each stage/restage; wrap is fail-closed and requires a cold boot",
+    "directory": "BCODE index to image slot, entry ordinal, code length and literal-resolution base",
+    "resolution_table": "One obj per literal descriptor, rebuilt from immutable descriptors for the current session generation",
+    "export_cells": "Mutable function cells keyed by interned export symbol; late-bound replacement changes only the cell",
+    "export_rollback": "Before publication, a bounded journal records each target symbol, whether its function cell was bound, and its prior value. Failure restores changed cells in reverse order before any watermark rollback; success discards the journal.",
+    "publication_order": [
+      "verify shelf and region identity",
+      "allocate unpublished directory and resolution ranges",
+      "resolve literals and local ordinals",
+      "validate exports and late-bound constraints",
+      "journal prior bound state and value of every target export cell",
+      "publish directory range",
+      "publish export cells last"
+    ],
+    "rollback": "Any failure first restores overwritten function cells from the export journal, then restores directory, resolution and export watermarks. No partially published callable survives."
+  },
+  "code_window": {
+    "mechanism": "A single hot code window is refilled by Enhanced DMA from the identity-bound source address for the current entry and PC.",
+    "refill_key": "product identity, shelf identity, session generation, image slot, entry ordinal, code offset",
+    "checks": [
+      "entry and PC stay inside the immutable code region",
+      "source addition cannot overflow 28 bits",
+      "requested bytes do not cross the entry length",
+      "generation and shelf identity still match before every refill"
+    ],
+    "geometry": "C2.1 measures and pins window size, refill quantum and nested-call behavior; C2.0 does not spend capacity by assumption."
+  },
+  "reset_and_restage": {
+    "platform_reset": "Returns to platform firmware and is not a Lisp session restart.",
+    "cold_boot": "Stager verifies and reconstructs the complete shelf cache, then creates a new mutable session plane.",
+    "product_restart_c2_3": "Keeps verified immutable Attic tenants, increments session generation, clears mutable state, rebuilds resolutions and exports, and starts a fresh REPL.",
+    "hot_restage": "Forbidden. A shelf identity change requires a full new session before any new callable is published.",
+    "stale_reference_result": "No stale value remains reachable; any internal generation mismatch is a fail-closed runtime-catalog error."
+  },
+  "staged_swap": [
+    {
+      "stage": "C2.0",
+      "artifact": "host model and four-engine anonymous-helper proof closure",
+      "product_decoder": "unchanged v1.1 v3/L65M",
+      "promotion": "none"
+    },
+    {
+      "stage": "C2.1",
+      "artifact": "separate internal proof target using only L65S-v4-direct/C2I-v1",
+      "product_decoder": "not linked into the Workbench product",
+      "promotion": "proof-only"
+    },
+    {
+      "stage": "C2.2",
+      "artifact": "atomic Workbench product cut; all shipped containers converted",
+      "product_decoder": "C2 direct decoder replaces and funds itself from the retired L65M materializer",
+      "promotion": "new product identity and full fresh R4/R5/R6/G5/G6"
+    }
+  ],
+  "rollback_rule": "Rollback selects the complete previous v1.1 artifact set. No product candidate contains a dual decoder or mixed v3/v4 shelf.",
+  "required_negative_fixtures": [
+    "v3 shelf presented to C2 decoder",
+    "v4 shelf presented to v1.1 decoder",
+    "unknown v4 flag",
+    "region offset at or beyond the u24 envelope",
+    "28-bit base-plus-offset overflow",
+    "legal name offset attempting to use 0xffff",
+    "zero-length entry",
+    "fixnum descriptor outside -16384..16383",
+    "cross-container ordinal reference",
+    "late-bound edge encoded as an ordinal",
+    "region CRC mismatch",
+    "product/shelf build-identity mismatch",
+    "session generation mismatch after restage",
+    "hot restage attempted in a live session",
+    "failure after resolution allocation but before export publication",
+    "failure during export publication",
+    "code-window refill crossing entry bounds"
+  ],
+  "c2_0_exit": {
+    "contract": "owner-approved exact address, identity, reset and staged-swap contract",
+    "prototype": "one SHA-bound anonymous helper executes direct, funcall, apply and closure/tail-call coverage in all four engines",
+    "claim": "internal proof only; no product promotion"
+  }
+}

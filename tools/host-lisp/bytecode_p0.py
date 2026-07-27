@@ -193,7 +193,7 @@ PRIM_IDS = {
     63: "%buffer-read",
     64: "%buffer-write",
     65: "%buffer-alloc",
-    66: "%c1-control",
+    66: "%c2-control",
 }
 
 PRIM_NAME_IDS = {name: prim_id for prim_id, name in PRIM_IDS.items()}
@@ -1928,7 +1928,7 @@ class P0VM:
             return self.heap.alloc(T_BUF, values, mkfix(length))
         if prim_id == 66:
             if argc != 2 or not is_fix(args[0]):
-                raise VMError("TypeError", "%c1-control expects operation and value")
+                raise VMError("TypeError", "%c2-control expects operation and value")
             operation = fixval(args[0])
             if operation in (0, 1):
                 return args[0]
@@ -1936,7 +1936,7 @@ class P0VM:
                 return args[1]
             if operation == 30:
                 return self.heap.t_obj  # host witness; device transfer is non-returning
-            raise VMError("TypeError", "%c1-control operation out of range")
+            raise VMError("TypeError", "%c2-control operation out of range")
         raise VMError("DirMiss", "unsupported CALLPRIM id=%d argc=%d" % (prim_id, argc))
 
     def _compiler_form_obj(self, form):

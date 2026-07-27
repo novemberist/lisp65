@@ -1,0 +1,133 @@
+{
+  "format": "lisp65-c2-session-directory-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "owner-approved-option-a-product-layout-authorized",
+  "owner_decision": "Option A approved without amendment on 2026-07-19; the product-layout probe must use C2D-v1 and may not silently select descriptor-on-call.",
+  "finding": "C2I-v1 self-describes immutable containers, but the approved mutable session plane has no byte-level directory envelope. A product-layout link would otherwise hard-code the active image count or invent ad-hoc arrays that the future product decoder need not share.",
+  "claim_limit": "Read-only architecture and arithmetic proposal. It changes no product byte, authorizes no capacity and does not extend the completed C2.1 direct execution claims.",
+  "measured_inputs": {
+    "product_images": 6,
+    "image_keys": ["stdlib-p0", "ide", "idex", "m65d", "buffer", "lcc"],
+    "directory_entries": 583,
+    "literal_resolutions": 2084,
+    "directory_capacity": 608,
+    "current_bank0_directory_bytes_retired_by_c2": 761,
+    "current_post_boot_reserve_bytes": 1907,
+    "bank0_reserve_target_bytes": 1536,
+    "current_ext_code_post_used_bytes": 24584,
+    "current_ext_code_limit_bytes": 50816,
+    "current_runtime_materializer_slices": 28,
+    "current_runtime_materializer_code_bytes": 36744,
+    "current_runtime_overlay_bank_headroom_bytes": 64
+  },
+  "options": [
+    {
+      "id": "external-self-describing-session-directory",
+      "assessment": "recommended",
+      "summary": "Place a self-describing mutable directory and obj-resolution table in the freed Bank-5 code region. Bank 0 retains only one identity-bound hot header/image/entry/resolution cache and the DMA descriptor.",
+      "exact_current_bytes": {
+        "header": 32,
+        "images": 120,
+        "entries": 5830,
+        "resolutions": 4168,
+        "total": 10150,
+        "bank0_hot_state": 64,
+        "bank0_data_delta_after_retiring_v11_directory": -697,
+        "ext_headroom_if_it_replaces_current_post_code": 40666
+      }
+    },
+    {
+      "id": "descriptor-on-call",
+      "assessment": "fallback-needs-contract-amendment-and-hardware-latency-proof",
+      "summary": "Keep only image ranges and resolutions in Bank 5 and fetch each immutable C2I entry from Attic at call time. This saves the mutable entry table but no longer implements the approved statement that the runtime directory maps code length and resolution base.",
+      "exact_current_bytes": {
+        "header": 32,
+        "images": 120,
+        "resolutions": 4168,
+        "total": 4320,
+        "saved_against_recommended": 5830
+      }
+    },
+    {
+      "id": "fixed-bank0-entry-arrays",
+      "assessment": "rejected",
+      "summary": "Materialize the same session records in Bank 0. Even after retiring the complete v1.1 directory arrays, data alone consumes 9,389 net bytes and crosses the measured post-boot boundary before decoder or refill code exists.",
+      "exact_current_bytes": {
+        "new_tables": 10150,
+        "retired_v11_directory": 761,
+        "net_bank0_debit": 9389,
+        "resulting_post_boot_reserve": -7482,
+        "target_deficit_before_code": 9018
+      }
+    }
+  ],
+  "recommended_contract": {
+    "storage": "Bank 5 session region; never Attic and never a C pointer to a 28-bit source",
+    "header": {
+      "magic": "C2D\\0",
+      "bytes": 32,
+      "fields": [
+        {"name": "magic_4", "bytes": 4},
+        {"name": "version_u8", "bytes": 1},
+        {"name": "header_bytes_u8", "bytes": 1},
+        {"name": "image_record_bytes_u8", "bytes": 1},
+        {"name": "entry_record_bytes_u8", "bytes": 1},
+        {"name": "flags_u16_zero", "bytes": 2},
+        {"name": "session_generation_u16_nonzero", "bytes": 2},
+        {"name": "image_count_u16", "bytes": 2},
+        {"name": "entry_count_u16", "bytes": 2},
+        {"name": "resolution_count_u16", "bytes": 2},
+        {"name": "images_offset_u16", "bytes": 2},
+        {"name": "entries_offset_u16", "bytes": 2},
+        {"name": "resolutions_offset_u16", "bytes": 2},
+        {"name": "total_bytes_u16", "bytes": 2},
+        {"name": "reserved_u16_zero", "bytes": 2},
+        {"name": "shelf_catalog_crc32", "bytes": 4}
+      ]
+    },
+    "image_record": {
+      "bytes": 20,
+      "fields": [
+        "shelf_record_index_u8", "flags_u8_zero", "directory_base_u16",
+        "entry_count_u16", "resolution_base_u16", "resolution_count_u16",
+        "code_offset_u24", "metadata_offset_u24", "code_length_u16",
+        "metadata_length_u16"
+      ]
+    },
+    "entry_record": {
+      "bytes": 10,
+      "fields": [
+        "image_slot_u8", "flags_u8_zero", "entry_ordinal_u16",
+        "code_length_u16", "literal_resolution_base_u16",
+        "session_generation_u16"
+      ]
+    },
+    "resolution_record": "obj_u16",
+    "sections": {
+      "images_offset": "32",
+      "entries_offset": "images_offset + image_count * 20",
+      "resolutions_offset": "entries_offset + entry_count * 10",
+      "total_bytes": "resolutions_offset + resolution_count * 2"
+    },
+    "bounds": "All checked arithmetic is u32; every offset and total must fit the configured Bank-5 session region and u16 transport before access.",
+    "publication": "The header and all records remain unpublished until the existing export journal has succeeded. Header generation/counts/identity are the final mutable-plane commit marker.",
+    "rollback": "Failure restores export cells, then directory and resolution watermarks; the previous header remains authoritative.",
+    "reset": "A new nonzero generation rebuilds the entire region. Generation wrap requires cold boot. Hot restage remains forbidden."
+  },
+  "required_negative_fixtures": [
+    "bad session-directory magic or version",
+    "unknown header, image or entry width",
+    "zero session generation",
+    "nonzero flags or reserved fields",
+    "section arithmetic overflow or overlap",
+    "total outside the configured Bank-5 session region",
+    "image directory or resolution range outside header counts",
+    "entry image slot or ordinal outside its image",
+    "entry code length differs from immutable C2I entry",
+    "entry generation differs from the committed header",
+    "shelf catalog CRC differs from the verified immutable shelf",
+    "failure before final header publication preserves the previous session plane"
+  ],
+  "decision": "External self-describing Bank-5 session directory approved. Descriptor-on-call remains an unselected measured fallback; fixed Bank-0 arrays remain structurally rejected."
+}

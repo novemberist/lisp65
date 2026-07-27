@@ -1,0 +1,82 @@
+{
+  "format": "lisp65-c2-recursive-literal-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "owner-approved-option-a-c2i-v2-authorized",
+  "owner_decision": "Option A approved on 2026-07-19. C2I-v2 uses backward-only cons-pair descriptors and canonical LIST lowering; C2I-v1 remains historical proof evidence and no product accepts both versions.",
+  "finding": "The complete six-image manifest census contains recursive LIST literals, while the approved C2I-v1 descriptor vocabulary has no recursive aggregate representation. A full-composition C2 image cannot be emitted without a format decision.",
+  "claim_limit": "Read-only manifest census and format comparison. It changes no product byte, authorizes no capacity, and does not amend the historical C2I-v1 proof.",
+  "measured_inputs": {
+    "images": 6,
+    "literal_nodes": 2084,
+    "literal_kind_counts": {
+      "fixnum": 260,
+      "nil": 0,
+      "true": 0,
+      "symbol": 979,
+      "cons": 0,
+      "list": 4,
+      "string": 116,
+      "entry_ref": 725
+    },
+    "recursive_list_edges": 168,
+    "recursive_images": ["ide"],
+    "list_lengths": [34, 48, 74, 12],
+    "all_current_recursive_children_precede_parent": true,
+    "approved_c2d_v1_bytes_before_recursive_lowering": 10150
+  },
+  "options": [
+    {
+      "id": "c2i-v2-cons-pair-lowering",
+      "assessment": "recommended",
+      "summary": "Replace C2I-v1 for the future product with strict C2I-v2. Keep the 24-byte header and 8-byte descriptor, add kind 7 cons-pair, and canonically lower LIST nodes to backward-only cons chains ending in one NIL descriptor per image.",
+      "exact_current_delta": {
+        "new_cons_descriptors": 168,
+        "new_nil_descriptors": 1,
+        "removed_list_descriptors": 4,
+        "net_descriptor_growth": 165,
+        "immutable_metadata_growth_bytes": 1320,
+        "session_resolution_growth_bytes": 330,
+        "c2d_v1_bytes_after_lowering": 10480,
+        "projected_bank5_headroom_bytes": 40336
+      },
+      "strictness": "C2I-v2 accepts kinds 0..7 only. cons-pair argument0 is the car descriptor ordinal and argument1 is the cdr descriptor ordinal; both must be below the current descriptor ordinal and argument1 must fit u16. C2I-v2 rejects v1 and v1 rejects v2. No product carries both decoders."
+    },
+    {
+      "id": "c2i-v2-edge-section",
+      "assessment": "fallback-more-format-and-decoder-complexity",
+      "summary": "Expand the C2I header with a self-described u16 edge-index section and add CONS/LIST span descriptors. This preserves the current graph with fewer bytes but creates another section, more checked arithmetic, and cycle validation.",
+      "exact_current_delta": {
+        "edge_records": 168,
+        "edge_bytes": 336,
+        "header_growth_bytes_per_image_if_24_to_32": 8,
+        "six_image_header_growth_bytes": 48,
+        "minimum_immutable_metadata_growth_bytes": 384,
+        "session_resolution_growth_bytes": 0,
+        "c2d_v1_bytes": 10150
+      }
+    },
+    {
+      "id": "retain-l65m-recursive-materializer",
+      "assessment": "rejected",
+      "summary": "Keep the old literal-index/materializer path only for recursive values. This violates substitutive C2, retains proof-divergent legacy machinery, and creates a mixed decoder product state."
+    },
+    {
+      "id": "rewrite-four-ide-literals-in-source",
+      "assessment": "rejected-special-case",
+      "summary": "Rewrite the four current IDE list constants into runtime construction only to avoid the format gap. This changes product semantics and cost around one observed census instead of defining the aggregate representation required by future user code."
+    }
+  ],
+  "recommended_negative_fixtures": [
+    "C2I-v1 image presented to the C2I-v2 decoder",
+    "C2I-v2 image presented to the historical C2I-v1 decoder",
+    "cons-pair car reference is forward or self-referential",
+    "cons-pair cdr reference is forward or self-referential",
+    "cons-pair cdr u24 high byte is nonzero",
+    "recursive descriptor cycle",
+    "LIST lowering changes the resolved proper-list contents",
+    "LIST lowering changes sharing when the same original node is referenced twice"
+  ],
+  "c2_2_capacity_vocabulary_obligation": "The C2.2 repin must retire the old resident-EXT-code and 28-slice materializer vocabulary and define explicit budgets for immutable Attic code/metadata, the Bank-5 C2D mutable plane, the hot code window, and remaining runtime slices.",
+  "decision": "Strict C2I-v2 cons-pair lowering approved. The edge-section alternative remains unselected; retaining the materializer and source-special-casing remain rejected."
+}

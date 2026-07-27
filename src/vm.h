@@ -89,6 +89,10 @@ enum {
 extern uint8_t vm_status;
 const char *vm_status_message(void);   /* kurz; mit LISP65_VM_DIAGNOSTICS inkl. PC/Opcode/Stack/Funktion */
 lisp65_error_code vm_status_error_code(uint8_t status);
+/* One VM_DIRMISS seam: status travels in vm_status and the already-live
+ * SYMI/BCODE identity travels in the ordinary obj return value.  No persistent
+ * diagnostic latch or second status store is part of this contract. */
+obj vm_dirmiss_detail(obj detail);
 
 /* Plattform-Naht: laedt len Bytes vom Code-Ort (bank:off im erw. RAM) nach dst (hot).
  * MUSS vom Build bereitgestellt werden (Host: memcpy; mega65: Bulk-DMA). */

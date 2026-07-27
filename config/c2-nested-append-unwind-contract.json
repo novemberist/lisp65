@@ -1,0 +1,134 @@
+{
+  "format": "lisp65-c2-nested-append-unwind-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-bounded-contract-probe",
+  "scope": {
+    "product_links_authorized": 0,
+    "product_source_changes_authorized": 0,
+    "hardware_execution": "not authorized by this contract probe",
+    "performance_claim": "none"
+  },
+  "bound_first_red": {
+    "product_sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a",
+    "diagnosis": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link32-nested-eval-hardware-first-red-diagnosis.json",
+    "diagnosis_sha256": "f8696b3a7a06afd087f310b5262fe0f3fbd516af8f5a9ae164a796092724ae87",
+    "observed_delta_per_failed_nested_eval": {
+      "images": 1,
+      "entries": 1,
+      "resolutions": 7,
+      "roots": 1
+    }
+  },
+  "semantic_decision": {
+    "transaction_rule": "No authenticated runtime-overlay transaction remains active while Lisp bytecode executes. Stage, publish, cleanup and rollback are separate serial transactions; BUSY remains an anomaly rather than an expected nesting state.",
+    "persistent_side_effect_rule": "A successfully published persistent definition or library survives the later normal return or non-local abort of every ancestor transient evaluation, matching ordinary Lisp side-effect semantics.",
+    "transient_rule": "Executable wrappers are active only for their dynamic extent and leave no image, entry, resolution, root, export or Attic allocation after normal return or abort.",
+    "error_rule": "Every local error and non-local abort restores all uncommitted mutation byte-identically. Previously committed persistent descendants remain reachable and unchanged.",
+    "nesting_rule": "Overlay transactions do not nest. Transient evaluation records may nest to the explicitly bounded depth four; a fifth level fails before any mutation."
+  },
+  "alternatives": [
+    {
+      "id": "current-execute-inside-open-transaction",
+      "status": "rejected-by-link32-hardware",
+      "reason": "The inner eval sees BUSY and longjmp bypasses the outer suffix rollback."
+    },
+    {
+      "id": "serial-publish-then-run-current-suffix-rollback",
+      "status": "must-be-rejected-by-probe",
+      "reason": "It permits nested transient eval, but an outer rollback also removes a persistent definition appended after the outer checkpoint."
+    },
+    {
+      "id": "serial-publish-then-run-skip-rollback-after-descendant-commit",
+      "status": "must-be-rejected-by-probe",
+      "reason": "It preserves the definition only by leaking one outer transient image and its dependent ranges per occurrence."
+    },
+    {
+      "id": "serial-publish-then-run-disjoint-transient-lane",
+      "status": "selected-for-bounded-host-probe",
+      "reason": "Persistent appends grow from the low end while dynamically scoped transient records grow from the high end, so either class can be removed without crossing the other."
+    }
+  ],
+  "c2d_v4": {
+    "compatibility_rule": "C2D-v3 has not shipped in a product. The v3-to-v4 change before the first C2 release has no compatibility debt; the same change after a seal would require migration.",
+    "header_bytes": 48,
+    "version": 4,
+    "header_change": "The v3 flags_u16_zero field becomes transient_depth_u16 with legal range 0..4; every other header field and record width remains unchanged.",
+    "persistent_prefix": {
+      "source_kinds": [0, 1],
+      "allocation": "image, entry, resolution and root counts remain contiguous low-watermarks and preserve the existing append protocol",
+      "session_attic": "source-kind-1 code and metadata grow upward from offset zero"
+    },
+    "transient_suffix": {
+      "source_kind": 2,
+      "maximum_depth": 4,
+      "image_slots": "outermost uses 63; each deeper active record uses the next lower slot",
+      "entry_resolution_root_allocation": "each active record owns disjoint high-tail ranges derived from the previous active record; no separately maintained watermark",
+      "session_attic": "code and metadata grow downward from the one-MiB arena end",
+      "publication": "write and verify Attic bytes and inactive high-tail records first; increment transient_depth last",
+      "removal": "decrement transient_depth first, then zero records, resolutions, roots and Attic bytes",
+      "collision_rule": "Every low-prefix/high-suffix or Attic low/high collision fails before the unwind journal or any target byte changes"
+    },
+    "entry_lookup": "A callable directory ordinal is valid when it is in the committed low entry prefix or in exactly one active transient high-tail interval. A hole, overlap or inactive high-tail ordinal is a format error.",
+    "gc_roots": "The collector scans the committed low root prefix plus the root intervals of all active transient records. Both sets use the sole canonical C2D root-value plane; no second root representation is introduced.",
+    "generation_rule": "Header, every persistent record and every transient record carry the same nonzero generation. Restage invalidates transient_depth before changing generation; stale high-tail bytes are unreachable."
+  },
+  "unwind_journal": {
+    "base_offset": 50752,
+    "bytes": 64,
+    "region_end": 50816,
+    "identity": "C2J\\0, version 1, width 64 and CRC32 over bytes 0..59",
+    "fields": [
+      "state and operation",
+      "session generation",
+      "old persistent image, entry, resolution and root counts",
+      "old transient depth",
+      "target image slot and exact entry, resolution and root ranges",
+      "exact Session-Attic start and length",
+      "export-journal count",
+      "old low and high Attic watermarks",
+      "CRC32"
+    ],
+    "publication": "The journal is written and read back before the first target mutation and cleared last after success or complete restoration.",
+    "longjmp_cleanup": "The central abort landing validates the journal, restores export cells in reverse order, restores the old header state, zeros every named target range, clears the journal last, then unpublishes and wipes every active transient suffix record. It never rolls back an already committed persistent descendant.",
+    "invalid_journal": "A nonzero journal with invalid identity, range or CRC marks the session C2 plane unusable and requires disk reboot; cleanup never guesses."
+  },
+  "public_entry_seams": {
+    "eval": "uses the transient suffix and may recursively invoke every other seam",
+    "eval-string": "each form uses eval and therefore the same transient contract",
+    "load": "source forms use eval and therefore the same transient contract",
+    "load-lib": "a persistent low-prefix append may commit while transient suffix records are active",
+    "compile-string": "produces persistent C2I-v2 media bytes but performs no C2D append itself; its subsequent load-lib is covered by the persistent-descendant case"
+  },
+  "required_positive_cases": [
+    "nested transient eval returns and restores the entire plane and Attic byte-identically",
+    "two identical nested transient evals produce zero cumulative count or watermark growth",
+    "a persistent definition committed inside an outer transient remains callable after the outer transient returns",
+    "a persistent definition committed before a later error remains callable after ancestor transient abort cleanup",
+    "eval, eval-string, load and load-lib exercise their classified paths",
+    "restage first invalidates all transient handles and then changes generation"
+  ],
+  "required_negative_cases": [
+    "current execute-inside-open-transaction reproduces BUSY",
+    "serial current suffix rollback deletes a persistent descendant and is rejected",
+    "skip-rollback preserves the descendant but leaks the transient ancestor and is rejected",
+    "fifth transient depth is rejected before mutation",
+    "every persistent and transient append/unpublish cutpoint restores the exact prior committed state",
+    "longjmp at every active depth removes every transient range but preserves committed persistent descendants",
+    "corrupt unwind-journal identity, range or CRC fails closed without guessed cleanup",
+    "persistent/transient collision in every C2D plane and the Session-Attic arena is rejected before mutation",
+    "stale generation and inactive high-tail directory handles are rejected",
+    "missing transient root interval or overlapping root ownership is rejected"
+  ],
+  "capacity_gate_before_product_work": {
+    "bank0_text_headroom_bytes": 10,
+    "ordinary_bank0_bss_headroom_bytes": 19,
+    "resident_island_headroom_bytes": 109,
+    "runtime_slice_minimum_headroom_bytes": 11,
+    "e000_headroom_bytes": 386,
+    "e000_growth_policy": "closed-to-new-tenants",
+    "bank5_cost_of_unwind_journal_bytes": 64,
+    "rule": "The host contract probe authorizes no implementation. Any successor first requires a separately reviewed capacity/placement probe; any resident debit is a triage event and Boot-family lifetime substitution is the pre-named first candidate."
+  },
+  "claim_limit": "Contract and host-state-machine probe only. No product source, product SHA, capacity authorization, hardware result, latency claim or successor link is authorized."
+}

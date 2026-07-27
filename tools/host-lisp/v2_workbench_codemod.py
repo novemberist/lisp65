@@ -36,12 +36,13 @@ FILTER_PRODUCT_CASES_PATH = "config/v11-filter-product-cases.json"
 DIRECTORY_ONLY_EXT_RECLAIM_INLINE = ("%load-lib-note-loaded",)
 COMPILER_TIER_SOURCES = (
     "lib/lcc.lisp",
-    "lib/lcc-fasl.lisp",
     "lib/dialect-v2/lcc-profile.lisp",
 )
-C1_RESIDENT_COMPILER_SEAM = (
-    "%c1-compile-detached",
-    "%c1-compile-save",
+C2_RESIDENT_COMPILER_SEAM = (
+    "%c2-source-form",
+    "%c2-source-forms",
+    "%c2-compile-source",
+    "%c2-compile-save",
     "compile-error",
     "compile-string",
     "lcc-run",
@@ -473,7 +474,7 @@ def generate(closure_path: Path, output_root: Path) -> Path:
     compiler_functions: set[str] = set()
     for source in COMPILER_TIER_SOURCES:
         compiler_functions.update(Stdlib._defun_names([source]))
-    resident_keep = set(C1_RESIDENT_COMPILER_SEAM)
+    resident_keep = set(C2_RESIDENT_COMPILER_SEAM)
     resolved["resident"]["sources"] = [
         source for source in resolved["resident"]["sources"]
         if source not in COMPILER_TIER_SOURCES
@@ -483,7 +484,7 @@ def generate(closure_path: Path, output_root: Path) -> Path:
             name for name in resolved["resident"].get("functions", [])
             if name not in compiler_functions or name in resident_keep
         ],
-        C1_RESIDENT_COMPILER_SEAM,
+        C2_RESIDENT_COMPILER_SEAM,
     )
     resolved["resident"]["allow_omitted_defuns"] = [
         row for row in resolved["resident"].get("allow_omitted_defuns", [])

@@ -1,0 +1,44 @@
+{
+  "format": "lisp65-c2.1-direct-proof-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "internal-proof-implementation",
+  "claim_limit": "Separate C2.1 internal proof target only. It is not linked into either v1.1 product profile, authorizes no capacity and makes no product or hardware claim.",
+  "metadata_envelope": "local-24-byte-header",
+  "shelf": {
+    "magic": "L65S",
+    "version": 4,
+    "header_bytes": 32,
+    "record_bytes": 32,
+    "split_flag": 1,
+    "record_name": "c2proof",
+    "proof_build_id": "0xc2210001",
+    "region_id": 1,
+    "region_base": "0x08100000",
+    "maximum_relative_offset": 7340031
+  },
+  "session_generation": 1,
+  "window_bytes": 8,
+  "entries": [
+    {"ordinal": 0, "id": "anonymous-increment", "arity": 1, "literals": [], "route": "helper"},
+    {"ordinal": 1, "id": "direct-wrapper", "arity": 0, "literals": [{"kind": "container-entry-ordinal-u16", "ordinal": 0}], "route": "direct"},
+    {"ordinal": 2, "id": "funcall-wrapper", "arity": 0, "literals": [{"kind": "container-entry-ordinal-u16", "ordinal": 0}], "route": "funcall"},
+    {"ordinal": 3, "id": "apply-wrapper", "arity": 0, "literals": [{"kind": "container-entry-ordinal-u16", "ordinal": 0}], "route": "apply"},
+    {"ordinal": 4, "id": "closure-wrapper", "arity": 0, "literals": [{"kind": "container-entry-ordinal-u16", "ordinal": 0}], "route": "closure"},
+    {"ordinal": 5, "id": "tail-wrapper", "arity": 0, "literals": [{"kind": "container-entry-ordinal-u16", "ordinal": 0}], "route": "tail-call"}
+  ],
+  "expected_routes": {
+    "direct": 42,
+    "funcall": 42,
+    "apply": 42,
+    "closure": 42,
+    "tail-call": 42
+  },
+  "four_engine_fixture": "tests/bytecode/dialect-v2/c2/cases.json",
+  "required_engines": [
+    "native-c-treewalk",
+    "native-c-compiler-vm",
+    "python-p0-compiler-vm",
+    "lisp-lcc"
+  ]
+}

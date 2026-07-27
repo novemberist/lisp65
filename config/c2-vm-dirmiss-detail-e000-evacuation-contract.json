@@ -1,0 +1,69 @@
+{
+  "schema": "lisp65.c2.vm-dirmiss-detail-e000-evacuation.v1",
+  "status": "class-c-approved-window-evacuation",
+  "recorded_on": "2026-07-22",
+  "authority": {
+    "reason": "The permanent status-plus-detail seam grows resident Bank-0 text by 89 bytes and overlaps the fixed Handoff by 54 bytes.",
+    "required_bank0_relief_bytes": 86,
+    "standing_lto_noise_reserve_bytes": 32,
+    "e000_floor_bytes": 115
+  },
+  "candidate": {
+    "symbol": "vm_byte_args",
+    "measured_pre_move_bytes": 97,
+    "temperature": "hot CALLPRIM byte-domain validation",
+    "lifetime": "post-ownership only",
+    "destination_section": ".lisp65_c2_kernal_window.c2_resident",
+    "outbound_control_flow_edges": 0,
+    "fixed_data_edges": [
+      "vm_status"
+    ],
+    "new_facade_vector": false,
+    "new_section": false,
+    "new_state_bytes": 0
+  },
+  "rejected_candidates": [
+    {
+      "symbol": "vm_upval_nth",
+      "bytes": 93,
+      "reason": "hot but calls cell_type and cell_b outside the window"
+    },
+    {
+      "symbol": "sidx",
+      "bytes": 126,
+      "reason": "hot but calls ext_a and carries heap-addressing data edges"
+    },
+    {
+      "symbol": "sym_function",
+      "bytes": 108,
+      "reason": "hot but calls sidx and the DMA facade"
+    },
+    {
+      "symbol": "sym_value",
+      "bytes": 108,
+      "reason": "hot but calls sidx and the DMA facade"
+    },
+    {
+      "symbol": "lisp_input_event",
+      "bytes": 128,
+      "reason": "hot but calls the abort and event-poll paths"
+    },
+    {
+      "symbol": "crc32_update",
+      "bytes": 104,
+      "reason": "control-flow leaf but boot-cold, not a resident hot-path tenant"
+    }
+  ],
+  "gates": {
+    "whole_program_lto_truth": true,
+    "minimum_bank0_text_headroom_bytes": 32,
+    "minimum_e000_headroom_bytes": 115,
+    "pre_ownership": "fresh",
+    "data_reference": "fresh",
+    "facade": "fresh",
+    "kernal_freedom": "fresh",
+    "all_other_c2_lite_gates": "fresh",
+    "first_red": true
+  },
+  "claim_limit": "The contract authorizes one product-shaped WPLTO probe, then one product link and hardware run only if every gate is green."
+}

@@ -1,0 +1,27 @@
+{
+  "format": "lisp65-c2-l-full-keymap-probe-v2",
+  "version": 2,
+  "status": "product-consumer-cross-check",
+  "base": "config/v11-l-lite-keymap.json",
+  "canonical_binding_source": "config/v11-l-lite-keymap.json#modifier_bindings",
+  "event_source": {
+    "queue_state_and_modifiers": "0xd60a",
+    "petscii_and_dequeue": "0xd619",
+    "atomicity": "sample one queue head and dequeue exactly once",
+    "empty": "d60a.bit7=0; code zero is a valid event value"
+  },
+  "global_events": [
+    {
+      "id": "run-stop-abort",
+      "petscii": 3,
+      "required_modifiers": [],
+      "meaning": "abort running evaluation to a usable REPL; idle no-op"
+    }
+  ],
+  "generated_consumers": [
+    "build/c2.2/kernal-unmap/l-full-keymap.generated.h",
+    "build/c2.2/kernal-unmap/l-full-keymap-cases.generated.json",
+    "build/c2.2/kernal-unmap/l-full-keymap.generated.md"
+  ],
+  "claim_limit": "Product-consumer cross-check. Physical binding claims remain hardware-gated."
+}

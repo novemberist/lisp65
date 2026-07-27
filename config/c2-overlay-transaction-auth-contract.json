@@ -1,0 +1,53 @@
+{
+  "format": "lisp65-c2-overlay-transaction-auth-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-host-and-capacity-probe",
+  "scope": {
+    "product_links_authorized": 0,
+    "product_shas_changed": 0,
+    "hardware_execution": "not-authorized-by-this-contract",
+    "performance_claim": "none"
+  },
+  "authentication_boundary": {
+    "transaction": "one complete C2 top-level emit, append, optional execute and rollback operation",
+    "family_evidence": "catalog header, profile/build identity, directory shape and directory CRC are authenticated once at the first slice of each transaction",
+    "per_slice_evidence": [
+      "slot and record bounds",
+      "record identity, ABI, VMA, length and entry offset",
+      "payload CRC",
+      "target wipe and wipe verification"
+    ],
+    "generation_binding": "the selected session family and its nonzero generation must match at begin and every slice; a family change during a transaction fails closed",
+    "invalidation": [
+      "transaction end",
+      "transport error",
+      "abort cleanup",
+      "host/device reset",
+      "attempted family or generation switch while active"
+    ]
+  },
+  "security_argument": {
+    "invariant": "Within one session generation, family catalog evidence is immutable and identity-bound. Repeating its validation for every slice within one transaction adds no new evidence.",
+    "fresh_data_rule": "Record validation, payload CRC and wiping remain per slice because each slice carries fresh executable data.",
+    "between_transactions": "Every transaction starts unauthenticated; its first slice reruns full catalog authentication even when the generation is unchanged.",
+    "generation_change": "A new generation cannot inherit transaction trust and must authenticate the catalog again before any payload executes."
+  },
+  "required_negative_cases": [
+    "payload mutation between two transactions in the same generation is rejected by the remaining per-slice CRC",
+    "catalog/profile mutation after a generation change is rejected by fresh authentication",
+    "family or generation switch while a transaction is active is rejected and latches fail-closed",
+    "second slice in one transaction executes with one catalog proof but its own record and payload proof"
+  ],
+  "capacity_hard_gates": {
+    "ordinary_bank0_bss_headroom_min_bytes": 0,
+    "bank0_text_headroom_min_bytes": 0,
+    "e000_delta_bytes": 0,
+    "runtime_slice_cap_bytes": 1792,
+    "resident_island_capacity_bytes": 2048,
+    "known_link30_bss_headroom_bytes": 19,
+    "known_link30_e000_margin_bytes": 386,
+    "e000_policy": "closed to new tenants"
+  },
+  "first_red_rule": "Any failed source, semantic, mutation, capacity, placement or structure gate stops before a product link. Link 30 remains the candidate pin."
+}

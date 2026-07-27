@@ -1,0 +1,1057 @@
+{
+  "format": "lisp65-c2-kernal-unmap-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "link36-first-red-automatic-c2-lite-selected",
+  "claim_limit": "The one authorized Link 36 attempt stopped in its Resident-Island seed link with an 8-byte resident-text overlap. No product closure or hardware run occurred. The terminal-floor self-destruction clause has automatically selected C2-lite; no Link-36 retry, floor or anchor negotiation is permitted.",
+  "authority": {
+    "scope_memo": "docs/planning/v1.2-scope-memo.md",
+    "commission_heading": "KERNAL-unmap block — commissioned (owner go, 2026-07-20)",
+    "residency_audit": "config/c2-kernal-residency-audit.json",
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-substitution-lifetime-first-red-receipt.json",
+    "hardware_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "printed_to_pdf_pages": {
+        "map_and_kernal": [[9, 23], [10, 24], [11, 25]],
+        "vic_raster_irq": [[50, 64], [51, 65]],
+        "typed_event_queue": [[102, 116], [103, 117], [104, 118]]
+      }
+    }
+  },
+  "product_window_identity": {
+    "source": "single-product-link-28-post-link-window",
+    "source_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link28-post-link-publish-last-structural-receipt.json",
+    "source_elf": "tests/bytecode/dialect-v2/evidence/architecture-blocks/artifacts/c2-link28-post-link-publish-last-pass-20260720/root/lisp65-c2-substitution-linked.prg.elf",
+    "source_elf_sha256": "976c0a98356b430f4ec5a3dd56a23a12d2562d40dd9da6e4fb778ca1a43bc400",
+    "bytes": 8192,
+    "crc16": "0xacdc",
+    "sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd",
+    "rule": "The final Link 28 window is hashed after the sole product link. Host and hardware consumers bind only this post-link identity; no seed-window identity is a downstream comparison value."
+  },
+  "post_link_mutation_domain": {
+    "status": "passed",
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link28-post-link-publish-last-structural-receipt.json",
+    "total_product_bytes": 34,
+    "actual_changed_bytes": 32,
+    "actual_change_explanation": "two CRC operands and 30 verifier-table bytes changed; two table bytes already equaled their published values",
+    "domains": [
+      {
+        "name": "runtime-overlay-verifier-bindings",
+        "address": "0xb914",
+        "bytes": 32,
+        "role": "four publish-last runtime-family verifier tuples"
+      },
+      {
+        "name": "kernal-window-crc-high",
+        "address": "0xb4aa",
+        "bytes": 1,
+        "role": "high immediate operand of the post-copy window CRC comparison"
+      },
+      {
+        "name": "kernal-window-crc-low",
+        "address": "0xb4ae",
+        "bytes": 1,
+        "role": "low immediate operand of the post-copy window CRC comparison"
+      }
+    ],
+    "address_correction": "0xb86d was the historical Link 19 verifier-table address; the Link 28 ELF proves the current table at 0xb914",
+    "rules": [
+      "the product is linked exactly once before any domain byte changes",
+      "the post-link window SHA and CRC come from that one final ELF",
+      "a product-byte change outside these 34 named bytes is a hard error",
+      "a mutation of either CRC operand that no longer matches the post-link window is a hard error",
+      "adding any later domain byte is a contract change"
+    ]
+  },
+  "hardware_facts": {
+    "cpu_window": "0xe000..0xffff",
+    "gross_bytes": 8192,
+    "currency": "16-bit CPU address space only",
+    "map_rule": "MAP selects eight 8-KiB slabs and overrides legacy banking mechanisms.",
+    "typed_event": {
+      "queue_and_event_modifiers": "0xd60a",
+      "petscii_and_dequeue": "0xd619",
+      "rule": "capture code and event-time modifiers from one queue head, then dequeue exactly once"
+    },
+    "frame_irq_candidate": {
+      "raster_compare": "0xd012",
+      "irq_flag_ack": "0xd019",
+      "irq_mask": "0xd01a",
+      "status": "primary candidate; bounded probe must select and pin the actual source"
+    }
+  },
+  "capacity_model": {
+    "gross_window_bytes": 8192,
+    "fixed_resident_deficit_bytes": 3639,
+    "replacement_categories": [
+      "typed_queue_driver",
+      "irq_handler",
+      "nmi_and_freezer_return",
+      "frame_source",
+      "map_switch_and_guards",
+      "post_startup_output_seam",
+      "alignment_and_vectors"
+    ],
+    "probe_values": {
+      "replacement_resident_bytes": 490,
+      "future_margin_bytes": 4063,
+      "actual_live_window_bytes": 7806,
+      "actual_future_margin_bytes": 386
+    },
+    "equation": "future_margin_bytes = 8192 - 3639 - replacement_resident_bytes",
+    "pass_rule": "Every category is reported, arithmetic closes exactly, and future_margin_bytes is greater than zero.",
+    "memo_4_5k_status": "gross upper bound before replacement residents; not a result claim"
+  },
+  "window_growth_policy": {
+    "status": "profile-data-placement-and-reference-proof-passed-link-28-structural-closure",
+    "rule": "After the three exact complete-profile service-dispatch tables move into the owned E000 window, every remaining byte is contingency reserve for the named existing occupants. No later block may cite positive E000 headroom as authorization for another tenant.",
+    "moved_input_sections": [
+      ".rodata.eval_v2_workbench_service",
+      ".rodata.vm_callprim",
+      ".rodata.vm_native_call"
+    ],
+    "expected_moved_bytes": 342,
+    "projected_ordinary_bank0_bss_headroom_bytes": 19,
+    "ordinary_bank0_growth_policy": "full; the 19-byte projection is contingency reserve, not authorization for new resident code or state",
+    "required_proof": "Retained ELF relocations must resolve output-section-plus-addend targets into the moved component ranges, map every source address to exactly one sized function, and prove that function lies outside explicit pre-handoff function ranges and the main-prefix cutpoint; section-level .text provenance is insufficient.",
+    "reference_gate_status": "passed on an immutable zero-link replay: five retained relocations cover all three moved components and each source binds to exactly one positive-sized post-ownership function interval",
+    "reference_gate_first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link28-v2-profile-data-reference-gate-replay-first-red-receipt.json",
+    "reference_gate_pass_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link28-v2-profile-data-placement-gate-replay-receipt.json",
+    "matched_relocations": 5,
+    "pre_handoff_references": 0,
+    "measured_post_cut_margin_bytes": 386
+  },
+  "formal_reopening_2026_07_21": {
+    "authority": "owner decision recorded 2026-07-21 after the coordinated Link-33 Whole-Program First Red",
+    "status": "Link-36 First Red; automatic C2-lite successor selected",
+    "current_E000_S1_retirement_2026_07_24": {
+      "status": "owner-selected-current-C2.2-authority",
+      "historical_receipts_unchanged": true,
+      "retired_symbols": [
+        "rtov_run_batch",
+        "vm_runtime_overlay_exec_batch_island"
+      ],
+      "replacement": "full authenticated single-record path for every repetition",
+      "deliberate_cost": "cold batch operations are slower",
+      "semantic_change": "none"
+    },
+    "total_debit_cap_bytes": 450,
+    "purpose_binding": {
+      "bank0_text_minimum_relief_bytes": 167,
+      "bank0_text_effect": "the same relocation must close the positional ordinary-BSS deficit",
+      "resident_island_minimum_relief_bytes": 228,
+      "allowed_overhead": "only real alignment, facade and closure costs of those two named packages",
+      "forbidden": "general E000 budget, unrelated freight or opportunistic tenants"
+    },
+    "probe_candidate": {
+      "bank0_text_symbols": [
+        "c2_abort_driver",
+        "c2_facade_target_c2_dma"
+      ],
+      "resident_island_symbols": [
+        "vm_runtime_overlay_transaction_begin",
+        "vm_runtime_overlay_transaction_end",
+        "vm_runtime_overlay_exec_batch_island"
+      ],
+      "rationale": "function-granularity packages preserve the hot handle normalizer and entry materializer in the Island; one new fixed facade edge is the only anticipated closure overhead"
+    },
+    "final_floor_rule": {
+      "status": "owner-rebound-for-purpose-bound-crc-convergence-package",
+      "bytes": 63,
+      "previous_bytes": 115,
+      "authorized_debit_bytes": 52,
+      "source_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-facade15-section-replay-receipt.json",
+      "source_receipt_sha256": "67422c4b3c01873e3bf398326bcbc47cb8e7b5a5ad58330409405ba0b24bfc40",
+      "floor_break_authority": "owner-delegated, reviewer-decided 2026-07-21 after the corrected shared-driver WPLTO First Red",
+      "linker_and_kernal_freedom_gate": "actual E000 headroom must be at least 63 bytes",
+      "purpose_binding": "exactly the shared CRC-convergence retry driver and its necessary call seam; no unrelated tenant or freight",
+      "retry_window_section": ".lisp65_c2_kernal_window.crc_retry",
+      "retry_window_vma": "0xff44",
+      "retry_window_bytes": 52,
+      "fixed_scaffold_section": ".lisp65_c2_crc_retry_fixed",
+      "fixed_scaffold_range": "0xc335..0xc355",
+      "facade_vector_count": 16,
+      "crc_leaf_facade_vector": {"symbol": "c2_facade_rtov_crc_mem", "address": "0xb5f1", "bytes": 3},
+      "rule": "63 bytes is the terminal floor and has no third negotiation",
+      "future_resident_growth": "any future resident or E000 demand that would require less than 63 bytes automatically selects C2-lite without review, exception or owner escalation",
+      "wplto_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-crc-convergence-terminal-floor-wplto-receipt.json",
+      "wplto_receipt_sha256": "115cf83ccee353163b952e90a9b7c794f677777dc0a3e2ced04447ad24e8b3c9"
+    },
+    "link36_first_red_2026_07_21": {
+      "status": "FIRST RED before Resident-Island seed publication",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link36-crc-convergence-structural-receipt.json",
+      "receipt_sha256": "c78781351aab065000ae4668e3ec652f27aa91c28caead5813f201d00092e2c9",
+      "green_probe_text_bytes": 38014,
+      "link36_text_bytes": 38024,
+      "handoff_start": "0xb4a3",
+      "text_end_inclusive": "0xb4aa",
+      "resident_overlap_bytes": 8,
+      "product_closure_links": 0,
+      "hardware_runs": 0,
+      "disposition": "automatic C2-lite; no Link-36 retry, third floor, anchor move, exception or owner escalation"
+    },
+    "failure_rule": "more than 450 bytes total debit or any red structural/capacity gate stops for review; the cap is not widened",
+    "link33_after_final_floor_2026_07_21": {
+      "status": "first-red-before-product-link",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-bss-triage-structural-receipt.json",
+      "receipt_sha256": "43913289b06de8b86568793aabd93fb48ac9b52773257097ca70ef8fc55219ce",
+      "execution_accounting": {
+        "resident_island_seed_link_attempts": 1,
+        "product_closure_links": 0,
+        "hardware_runs": 0
+      },
+      "first_red": "the product-link driver reconstructed a stale profile before the Resident-Island seed link",
+      "driver_profile": {
+        "append_slices": 20,
+        "residency_triage_define": false,
+        "session_emitter_state_bytes": 346
+      },
+      "required_wplto_profile": {
+        "append_slices": 21,
+        "residency_triage_define": true,
+        "session_emitter_state_bytes": 10
+      },
+      "downstream_diagnostics": [
+        ".text overlaps the fixed Handoff",
+        "session-emitter state overlaps reopen gap0 and profile rodata",
+        "ordinary rodata predecessor relation fails",
+        "final E000 floor assertion fires"
+      ],
+      "final_floor": "historically-bound-at-115-bytes; successor authority is the terminal 63-byte CRC-convergence floor",
+      "recommended_next_cut": "make Link 33 consume the same configured SLICES/FEATURES/session-state profile object as the green WPLTO; do not restate fields independently",
+      "disposition": "return to review; no retry or hardware presmoke"
+    },
+    "profile_single_source_successor_2026_07_21": {
+      "authority": "owner-authorized after the stale-profile First Red",
+      "status": "binding-replay-passed-fresh-link33-first-red-at-stale-section-inventory-pin",
+      "canonical_object": "config/c2-link33-product-profile.json",
+      "canonical_object_sha256": "4ceb35d4bf31568229423d1d149f9d1172acc75739e9b3ce7edb355f30358764",
+      "binding_replay_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-product-profile-binding-replay-receipt.json",
+      "binding_replay_receipt_sha256": "2ac45ba1b02bc995693f8a8ee84034a233b4481f526db03c4a8a85258647d3c6",
+      "rule": "the green WPLTO probe and product-link driver consume one strict configured profile object; neither driver may reconstruct features, append slices, session-emitter state or facade geometry",
+      "hash_gate": "the pure WPLTO binding receipt and fresh product-link receipt must report the identical canonical-object SHA-256 before any seed or product link",
+      "historical_profile": {
+        "feature_defines": 9,
+        "append_slices": 21,
+        "session_emitter_state_bytes": 10,
+        "fixed_facade_vectors": 15,
+        "fixed_facade_handle_normalize_vma": 46540
+      },
+      "claim_limit": "the binding replay is read-only and claims profile equivalence only; the successor Link 33 inherits no structural or capacity green",
+      "profile_bound_link33_first_red": {
+        "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-profile-bound-structural-receipt.json",
+        "receipt_sha256": "7e128fcbe3caa248d78de9dcc7594c005829338a99cc61f60c2a7b0fb3e18715",
+        "execution_accounting": {
+          "resident_island_seed_links": 1,
+          "product_closure_links": 0,
+          "hardware_runs": 0
+        },
+        "profile_object_sha256": "4ceb35d4bf31568229423d1d149f9d1172acc75739e9b3ce7edb355f30358764",
+        "profile_hash_gate": "passed-before-seed-link",
+        "first_red": "the exact final-section inventory still pins the 140-name Link-28 shape and rejects the correct 167-name Link-33 seed shape",
+        "inventory_difference": {
+          "expected_old_names": 140,
+          "actual_profile_bound_names": 167,
+          "missing_old_names": 4,
+          "additional_profile_names": 31
+        },
+        "map_observation_not_acceptance": {
+          "bank0_text_headroom_bytes": 51,
+          "ordinary_bank0_bss_headroom_bytes": 229,
+          "fixed_hot_block_headroom_bytes": 33,
+          "resident_island_headroom_bytes": 7,
+          "e000_pre_package_headroom_bytes": 531,
+          "e000_in_window_debit_bytes": 416,
+          "facade_debit_bytes_outside_window": 6,
+          "total_formal_debit_bytes": 422,
+          "e000_final_headroom_bytes": 115
+        },
+        "disposition": "return to review; no inventory-pin change, product link, retry or hardware presmoke"
+      },
+      "profile_derived_inventory_successor": {
+        "authority": "owner-authorized after the 140-versus-167 inventory First Red",
+        "status": "pure-replay-passed-one-fresh-link33-authorized",
+        "replay_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-profile-derived-section-inventory-replay-receipt.json",
+        "replay_receipt_sha256": "d8e6d6f3784af87032b25eb6e8a548cee4c9cba6c6beb47b6d88b80aef2db130",
+        "rule": "the 140-name Link-28 pin is the stable envelope only; append sections and relocations come from the canonical configured append ABI, while the formal reopening and BSS-triage flags contribute their exact named sections",
+        "hard_edges": "exact name-set and count equality remain mandatory; both missing and additional names are red",
+        "required_attribution": {
+          "removed_link28_names": 4,
+          "added_link33_profile_names": 31,
+          "expected_link33_names": 167
+        },
+        "sequence": "pure replay against the immutable seed ELF; only a green receipt unlocks one new Link-33 output tree",
+        "replay_result": "167/167 exact names; all three missing/additional/same-count-old-profile mutations rejected; seed tree unchanged; zero compiler/linker/product/hardware runs",
+        "fresh_link33_result": {
+          "status": "FIRST RED at final product Slot-37 budget",
+          "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-profile-inventory-structural-receipt.json",
+          "receipt_sha256": "35e1ac3021b70f1bd8a6f0236356f9a6dc011d401075ec46bfff9bbb8f3fc3c7",
+          "execution_accounting": {
+            "resident_island_seed_links": 1,
+            "final_product_link_attempts": 1,
+            "completed_product_closure_links": 0,
+            "hardware_runs": 0
+          },
+          "passed_before_first_red": [
+            "canonical profile hash",
+            "profile-derived final seed inventory 167/167",
+            "LTO partition metadata disposition",
+            "Resident-Island materialization"
+          ],
+          "slot37": {
+            "seed_bytes": 1633,
+            "final_map_bytes": 1883,
+            "hard_cap_bytes": 1792,
+            "over_cap_bytes": 91,
+            "final_installer_code_bytes": 102,
+            "final_embedded_island_image_bytes": 1781,
+            "island_image_plus_annex_bytes": 2041,
+            "island_headroom_bytes": 7
+          },
+          "disposition": "return to review; no cap relaxation, retry, product identity or hardware presmoke"
+        },
+        "two_record_contract_probe": {
+          "authority": "owner-authorized after the 91-byte Slot-37 First Red",
+          "status": "passed-contract-capacity-no-product-link",
+          "contract": "config/c2-resident-island-two-record-contract.json",
+          "contract_sha256": "f7f85e1ceecce76e2ef4c6be5a3ac35072ae18fba4f74b6e41bf332cb6e0c796",
+          "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-resident-island-two-record-contract-probe-receipt.json",
+          "receipt_sha256": "5a52cb007dc85fffb68ab87cbff9f7108928571116713c6ce3ad1bd472f851a7",
+          "real_image_rule": "the exact 1781-byte Island image is extracted from the SHA-bound seed ELF; no placeholder is permitted",
+          "format_direction": "L65R-v2 keeps the 32-byte record and adds one DATA_ONLY flag with entry_offset=0xffff and ABI 0; new product emission is v2-only and stale v1 generations are rejected before restage",
+          "records": "one executable installer plus one non-executable identity-bound boot carrier, each independently under 1792 bytes",
+          "publish_rule": "authenticate record and payload, DMA directly from boot storage to 0x1800, authenticate destination CRC, publish READY last",
+          "measured": {
+            "installer_bytes": 102,
+            "installer_headroom_bytes": 1690,
+            "carrier_bytes": 1781,
+            "carrier_headroom_bytes": 11,
+            "boot_model_bytes": 14325,
+            "boot_store_headroom_bytes": 51211,
+            "split_alignment_cost_bytes": 154,
+            "negative_cases_rejected": 16
+          },
+          "execution_accounting": {
+            "compiler_runs": 0,
+            "linker_runs": 0,
+            "product_links": 0,
+            "hardware_runs": 0
+          },
+          "forbidden": "cap widening, placeholder image, executable claim for the carrier, overlay-to-overlay call, product link or hardware run",
+          "next_gate": "separate review of the L65R-v2 product implementation and product-shaped capacity/placement probe before any Link 33"
+        }
+      }
+    },
+    "probe_result": {
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-e000-reopening-placement-probe-receipt.json",
+      "receipt_sha256": "d94b29971dbe02157ca0807c2816d33789f728b7482f164ceb72ea3f7e3b587e",
+      "whole_program_lto_attempts": 1,
+      "product_links": 0,
+      "measured_total_debit_bytes": 419,
+      "measured_headroom_bytes": {
+        "bank0_text": 41,
+        "ordinary_bank0_bss": -379,
+        "resident_island": 7,
+        "e000": 115
+      },
+      "corrected_model": "absolute handoff/facade/fixed-state VMAs separate movable text from downstream rodata/data/BSS; text relief cannot close the independent ordinary-BSS deficit",
+      "disposition": "return to owner review; no retry, product link, final-floor binding or hardware presmoke"
+    },
+    "independent_bss_triage_2026_07_21": {
+      "authority": "owner-authorized exactly one product-shaped Whole-Program-LTO placement probe after the independent BSS First Red",
+      "baseline_overlap_bytes": 379,
+      "ordered_ladder": [
+        "proved lifetime unions",
+        "DMA-capable cold state to Bank 5",
+        "CPU-hot remainder to the fixed Bank-0 block within 273 bytes",
+        "unavoidable session-hot tail to E000 within the provisional 115 bytes"
+      ],
+      "ordinary_rodata_lma_advance_to_close_bytes": 212,
+      "unchanged_constraints": {
+        "e000_total_debit_cap_bytes": 450,
+        "resident_island": "closed",
+        "runtime_slice_cap_bytes": 1792,
+        "capacity_authority": "one Whole-Program-LTO map",
+        "first_red": "stop without retry",
+        "link_33_and_hardware": "require separate authorization"
+      },
+      "status": "WPLTO FIRST RED; resident walls map-green but explicit ordinary-rodata VMA/LMA anchor failed; no final floor bound",
+      "pre_lto_first_red": {
+        "cause": "removing the standalone facade output left an empty SECTIONS opener before the reopening assertions",
+        "linker_script_parse_attempts": 1,
+        "whole_program_lto_attempts": 0,
+        "map_or_product_artifacts": 0,
+        "final_floor": "not-bound",
+        "continuation": "owner-authorized exact parser repair then the still-unconsumed single WPLTO attempt; distinct immutable evidence required"
+      },
+      "whole_program_continuation_first_red": {
+        "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-bss-triage-placement-probe-continuation-receipt.json",
+        "receipt_sha256": "cdd28156df1113468c846e5c39f65d596f6c543f306dcea1b976943b5f4cd9f0",
+        "whole_program_lto_attempts": 1,
+        "successful_seed_links": 0,
+        "product_links": 0,
+        "hardware_runs": 0,
+        "measured_map_headroom_bytes": {
+          "bank0_text": 41,
+          "ordinary_bank0_bss": 229,
+          "fixed_hot_block": 33,
+          "resident_island": 7,
+          "e000": 115
+        },
+        "ordinary_rodata": {
+          "required_vma_lma": 46740,
+          "actual_vma_lma": 46584,
+          "delta_bytes": -156,
+          "gate": "failed"
+        },
+        "final_floor": "not-bound",
+        "root_cause": "a location-counter assignment inserted before the inherited llvm-mos .rodata output does not place that output; pinned lld starts it at the end of the explicit low-resident state",
+        "recommended_next_cut": "bind .rodata VMA/LMA to end(.lisp65_c2_kernal_state) at 0xb5f8 and preserve the 156-byte BSS dividend; a successor WPLTO attempt requires separate authorization",
+        "disposition": "return to owner review; no retry, Link 33 or hardware presmoke"
+      },
+      "predecessor_bound_successor_authorization": {
+        "authority": "owner-approved exactly one new WPLTO placement probe",
+        "prior_first_red_receipt_sha256": "cdd28156df1113468c846e5c39f65d596f6c543f306dcea1b976943b5f4cd9f0",
+        "required_relation": "ADDR(.rodata) == ADDR(.lisp65_c2_kernal_state) + SIZEOF(.lisp65_c2_kernal_state) and LOADADDR(.rodata) == ADDR(.rodata)",
+        "observed_expected_endpoint": 46584,
+        "location_counter_anchor": "forbidden",
+        "attempts": 1,
+        "evidence": "distinct and immutable",
+        "fresh_gates": "required; no inherited green",
+        "first_red": "stop without retry",
+        "green_disposition": "expose the measured E000 remainder as the candidate for a separate final-floor binding step",
+        "not_authorized": [
+          "final E000 floor contract mutation",
+          "Link 33 product identity",
+          "hardware presmoke"
+        ],
+        "status": "consumed-first-red",
+        "result": {
+          "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-bss-triage-predecessor-placement-probe-receipt.json",
+          "receipt_sha256": "6822becba7f644446e73643614cd2bb3881d8f6a41a508fcf3c110499e003683",
+          "whole_program_lto_attempts": 1,
+          "successful_seed_links": 1,
+          "product_links": 0,
+          "hardware_runs": 0,
+          "predecessor_relation": "passed-at-0xb5f8",
+          "measured_headroom_bytes": {
+            "bank0_text": 41,
+            "ordinary_bank0_bss": 229,
+            "fixed_hot_block": 33,
+            "resident_island": 7,
+            "e000": 115
+          },
+          "e000_debit_bytes": 419,
+          "first_red_gate": "fixed-facade",
+          "violation": "c2_entry_records at 0xf3ec in E000 directly executes JSR 0x1800 to Island c2_product_handle_normalize",
+          "later_gates": "not-reached",
+          "final_floor": "not-bound",
+          "disposition": "return to review; no retry, Link 33 or hardware presmoke"
+        },
+        "measured_followup_candidate": {
+          "change": "add a fifteenth three-byte fixed facade vector for c2_product_handle_normalize",
+          "placement": "0xb5cc..0xb5ce",
+          "layout": "shift I/O reveal and MAP switch by three bytes into the existing 0xb5e1..0xb5e3 alignment pocket; keep state at 0xb5e4 and rodata at 0xb5f8",
+          "projected_capacity_delta": 0,
+          "claim": "map projection only; facade-contract change and fresh WPLTO require separate authorization"
+        }
+      },
+      "facade15_successor_authorization": {
+        "authority": "owner-approved exactly one new WPLTO placement probe",
+        "prior_first_red_receipt_sha256": "6822becba7f644446e73643614cd2bb3881d8f6a41a508fcf3c110499e003683",
+        "fixed_facade_vector_count": 15,
+        "handle_normalize_vector_vma": 46540,
+        "io_reveal_vma": 46543,
+        "map_switch_vma": 46554,
+        "fixed_state_vma": 46564,
+        "ordinary_rodata_vma": 46584,
+        "capacity_rule": "consume only the existing three-byte alignment pocket; all five measured walls remain unchanged",
+        "attempts": 1,
+        "evidence": "distinct and immutable",
+        "fresh_gates": "required; no inherited green",
+        "first_red": "stop without retry",
+        "green_disposition": "expose the measured 115-byte E000 remainder for a separate final-floor binding step",
+        "not_authorized": [
+          "final E000 floor contract mutation",
+          "Link 33 product identity",
+          "hardware presmoke"
+        ],
+        "status": "consumed-first-red",
+        "result": {
+          "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-bss-triage-facade15-placement-probe-receipt.json",
+          "receipt_sha256": "59209a27d73a976df4f74f57683f720b9d6a1cfe6633c74f2bb291923351fa3f",
+          "whole_program_lto_attempts": 1,
+          "successful_seed_links": 1,
+          "product_links": 0,
+          "hardware_runs": 0,
+          "measured_headroom_bytes": {
+            "bank0_text": 41,
+            "ordinary_bank0_bss": 229,
+            "fixed_hot_block": 33,
+            "resident_island": 7,
+            "e000": 115
+          },
+          "e000_debit_bytes": 422,
+          "facade_vector_count": 15,
+          "facade_bytes": 45,
+          "handle_normalize_vector_vma": 46540,
+          "passed_before_first_red": [
+            "handoff",
+            "pre-ownership",
+            "profile-data-reference",
+            "fixed-facade",
+            "KERNAL-freedom",
+            "hot-refill-single-materializer"
+          ],
+          "first_red_gate": "preinstallation-Island relocation provenance",
+          "violation": "the retained relocation at 0xb5cd belongs to the fixed three-byte assembler vector at 0xb5cc, but the gate accepts only positive-sized C function intervals and reports source-function-unresolved",
+          "recommended_next_cut": "add exactly the contract-derived (.lisp65_c2_host_facade,0xb5cc,3,c2_facade_handle_normalize) source interval, pin wrong-address and wrong-size mutations, then replay the immutable ELF without relinking",
+          "final_floor": "not-bound",
+          "disposition": "return to review; no retry, Link 33 or hardware presmoke"
+        },
+        "provenance_replay_authorization": {
+          "authority": "owner-approved pure gate replay against the immutable WPLTO ELF",
+          "contract_interval": {
+            "section": ".lisp65_c2_host_facade",
+            "symbol": "c2_facade_handle_normalize",
+            "address": 46540,
+            "bytes": 3,
+            "end_exclusive": 46543
+          },
+          "required_negative_mutations": [
+            "wrong interval address",
+            "wrong interval size",
+            "unlisted facade relocation address"
+          ],
+          "compiler_runs": 0,
+          "linker_runs": 0,
+          "green_disposition": "bind the measured 115-byte E000 remainder as the final floor, then run fresh Link 33",
+          "first_red": "stop the chain immediately",
+          "status": "consumed-first-red",
+          "result": {
+            "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-facade15-provenance-replay-receipt.json",
+            "receipt_sha256": "0c55bc59500d2a3d2941b153cc1a3e029e899dcc4983b707f5717fc91dacfcd4",
+            "pure_gate_replay_attempts": 1,
+            "compiler_runs": 0,
+            "linker_runs": 0,
+            "product_links": 0,
+            "hardware_runs": 0,
+            "first_red": "symbol_sections returned no owning section for the zero-sized NOTYPE facade vector",
+            "observed_symbol_address": 46540,
+            "observed_facade_output": {
+              "address": 46498,
+              "bytes": 45
+            },
+            "recommended_next_cut": "derive ownership from the contractual facade output range or a section-index-preserving ELF view; keep the exact b5cc+3 interval and all three mutations",
+            "final_floor": "not-bound",
+            "disposition": "return to review; no replay retry, floor binding, Link 33 or hardware"
+          },
+          "section_index_successor_replay_authorization": {
+            "authority": "owner-approved pure successor replay",
+            "primary_section_truth": "ELF st_shndx decoded through llvm-readobj --symbols",
+            "independent_crosscheck": "the exact b5cc..b5ce interval lies within the st_shndx-owned 45-byte facade output",
+            "general_notype_exception": "forbidden",
+            "required_negative_mutations": [
+              "wrong interval address",
+              "wrong interval size",
+              "wrong ELF section index",
+              "unlisted facade relocation address"
+            ],
+            "compiler_runs": 0,
+            "linker_runs": 0,
+            "green_disposition": "bind the measured 115-byte E000 remainder as the final floor, then run fresh Link 33",
+            "first_red": "stop the chain immediately",
+            "status": "consumed-passed",
+            "result": {
+              "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link33-facade15-section-replay-receipt.json",
+              "receipt_sha256": "67422c4b3c01873e3bf398326bcbc47cb8e7b5a5ad58330409405ba0b24bfc40",
+              "pure_gate_replay_attempts": 1,
+              "compiler_runs": 0,
+              "linker_runs": 0,
+              "product_links": 0,
+              "hardware_runs": 0,
+              "st_shndx": 14,
+              "section": ".lisp65_c2_host_facade",
+              "range_crosscheck": "passed",
+              "negative_mutations": 4,
+              "immutable_input_tree": "unchanged",
+              "final_floor": "bound-at-115-bytes",
+              "next_gate": "fresh Link 33 with complete gate replay"
+            }
+          }
+        }
+      }
+    }
+  },
+  "link_28_first_red": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link28-window-identity-first-red-receipt.json",
+    "gate": "pre-link whole-KERNAL-window identity",
+    "expected_sha256": "70b5562c9f75a1f5f18face3068096203a6d365c1015cc269d8015f8e1cf10ce",
+    "actual_sha256": "2406ebb832aa05c8a694084935941735e8f16db01bd5a078033a46265de426dd",
+    "expected_crc16": "0xfc2b",
+    "actual_crc16": "0xacdc",
+    "changed_bytes": 167,
+    "changed_bytes_outside_profile_data": 0,
+    "root_cause": "The moved tables are immutable during execution but contain direct link-resolved Bank-0 function addresses. LTO changes those addresses between seed and materialized product, so the tables are not stable under a pre-link whole-window identity pin.",
+    "decision": "first-red stop; no retry, gate resume, hardware execution or promotion is authorized"
+  },
+  "state_machine": {
+    "ordered_states": [
+      "firmware-owned",
+      "replacement-armed",
+      "handoff-closed",
+      "product-owned"
+    ],
+    "freezer_states": ["freezer-suspended", "freezer-return"],
+    "transition_rules": [
+      "cold boot, CRT startup and C2 staging retain the KERNAL",
+      "typed input, abort, frame IRQ, output and owned vectors are verified before unmap",
+      "interrupt delivery is masked only for the bounded MAP/vector commit",
+      "product-owned is published only after mapping, vectors, abort and frame sources verify",
+      "freezer return verifies mapping and vector generation before any product instruction resumes",
+      "platform reset returns to the firmware-owned boot world"
+    ],
+    "fail_closed": {
+      "before_unmap": "leave KERNAL mapped",
+      "after_unmap": "do not resume product execution; require documented disk reboot"
+    }
+  },
+  "continuity_invariants": {
+    "run_stop_abort": {
+      "minimum_authoritative_sources": 1,
+      "handoff_rule": "new queue or matrix source is proven before STKEY 0x91 is retired",
+      "masked_window_rule": "a pending abort is latched and delivered before the next evaluator step"
+    },
+    "frame_source": {
+      "minimum_authoritative_sources": 1,
+      "handoff_rule": "owned source is installed and advancing before the firmware-maintained source is retired",
+      "observation_rule": "one monotonic product counter; switching sources may not hide duplicate, backward or missing transitions"
+    },
+    "publication_rule": "vector target bytes and their mapping become valid before the vector is published"
+  },
+  "input_and_keymap": {
+    "event_shape": "(key code modifiers)",
+    "queue_empty_is_not_code_zero": true,
+    "blocking_and_polling_share_one_capture": true,
+    "run_stop_meaning": "abort running evaluation to a usable REPL; idle no-op; never an editor binding",
+    "single_source": "config/v11-l-lite-keymap.json evolves through tools/host-lisp/v11_l_lite_keymap.py",
+    "generated_consumers": [
+      "lib/ide-keymap-generated.lisp",
+      "lib/tests/ide-keymap-eval-cases.generated.json",
+      "tests/bytecode/libs/p0-ide-keymap-cases.generated.json",
+      "tests/bytecode/libs/p0-ide-keymap-extra-cases.generated.json",
+      "tests/bytecode/dialect-v2/ide/l-lite-hardware-cases.generated.json",
+      "docs/generated/ide-keymap.md"
+    ],
+    "modifier_binding_authority": "config/v11-l-lite-keymap.json#modifier_bindings",
+    "end_to_end_gate": "tools/host-lisp/c2_l_full_keymap_end_to_end_gate.py",
+    "end_to_end_rule": "Every physical modifier binding is proved from the pinned queue tuple through product normalization to the generated action compiled by the Werkbank manifest; contract text or probe output alone is not evidence.",
+    "required_l_full_bindings": [
+      {"physical": "Control-Space", "command": "set-mark"},
+      {"physical": "Meta-x", "command": "execute-command"}
+    ],
+    "documentation_rule": "No physical modifier binding is documented until injected queue cases and a real-key hardware sample pass."
+  },
+  "interrupt_and_output": {
+    "frame_source_selection": "bounded probe selects and pins one owned source; VIC raster IRQ is the primary candidate",
+    "irq_rule": "acknowledge only the owned source, preserve machine context, never call Lisp and never allocate",
+    "source_less_irq_episode_rule": "C2K_SOURCELESS_IRQS is reset by each owned raster IRQ; exactly one source-less return IRQ is allowed per raster-delimited episode, while two consecutive source-less IRQs without an intervening owned raster IRQ fail closed",
+    "source_less_irq_episode_state": "C2K_SOURCELESS_IRQS at $FF86 is an episode latch and MUST NOT accumulate across successful Freezer returns",
+    "nmi_rule": "no evaluator work; Freezer return makes mapping validation unavoidable",
+    "chrout_rule": "audited CRT CHROUT may execute before main; no post-startup CHROUT edge is legal",
+    "reset_rule": "cold boot and hardware reset retain firmware mapping; unmap is a post-boot product transition"
+  },
+  "fixed_cross_domain_facade": {
+    "rule": "Code in the owned E000 window reaches moving Bank-0 implementations only through thirteen fixed three-byte tail-jump vectors. The original twelve addresses remain unchanged; c2_facade_gc_mark is appended for the C2-owned block root walker. All E000-referenced Bank-0 and zero-page state has explicit linker placement.",
+    "vector_base": "0xb5a2",
+    "vector_stride_bytes": 3,
+    "vector_count": 13,
+    "vector_symbols": [
+      "c2_facade_vm_code_load",
+      "c2_facade_c2_dma",
+      "c2_facade_overlay_call_family",
+      "c2_facade_c2e_cons",
+      "c2_facade_c2e_overlay",
+      "c2_facade_car",
+      "c2_facade_cdr",
+      "c2_facade_gc_collect",
+      "c2_facade_str_open",
+      "c2_facade_str_putc",
+      "c2_facade_intern",
+      "c2_facade_select_family",
+      "c2_facade_gc_mark"
+    ],
+    "fixed_state": {
+      "zero_page": {
+        "base": "0x0089",
+        "bytes": 7
+      },
+      "bank0": {
+        "base": "0xc080",
+        "bytes": 408,
+        "code_base": "0xc218",
+        "code_bytes": 45,
+        "c2e_cons_code_base": "0xc21d",
+        "c2e_cons_code_bytes": 40,
+        "headroom_to_runtime_overlay_bytes": 273
+      },
+      "owned_e000_session_state": {
+        "bytes": 346,
+        "lifetime": "product-owned session only"
+      }
+    },
+    "link_rules": [
+      "each vector address is a pinned contract value; the thirteenth vector c2_facade_gc_mark is fixed at 0xb5c6",
+      "the vector and fixed-state sections are explicitly placed under orphan-handling=error",
+      "the five-byte kb_cursor_off helper is pinned at 0xc218, the 40-byte c2e-cons facade target at 0xc21d, and any address or size drift is a link-gate failure",
+      "a direct E000-to-low-memory call outside the vector set is a link-gate failure",
+      "any vector or fixed-state address drift is a link-gate failure",
+      "the pre-ownership boot closure contains no edge or operand to session-only E000 code or state",
+      "vm_logical_relative_target and c2_product_gc_mark_roots live in the owned E000 code region and are unreachable before c2_kernal_take_ownership"
+    ]
+  },
+  "kernal_freedom_link_gate": {
+    "owned_section": ".lisp65_c2_kernal_window",
+    "owned_vector_section": ".lisp65_c2_vectors",
+    "forbidden_service_targets": ["0xffd2", "0xffe4"],
+    "forbidden_state_addresses": ["0x0091"],
+    "exact_non_alloc_output_allowlist": [
+      ".comment",
+      ".symtab",
+      ".strtab",
+      ".shstrtab",
+      ".lisp65_error_callsites"
+    ],
+    "required_non_alloc_proof_sections": [
+      ".lisp65_error_callsites"
+    ],
+    "lto_internal_metadata": {
+      "section": ".llvm_sympart",
+      "status": "exact-warning-wrapper-and-membership-inventory-passed",
+      "constraint": "--emit-relocs remains mandatory for the profile-data reference proof; only one exact section-and-origin diagnostic may be tolerated and every other orphan remains a hard error",
+      "disproved_handling": "the saved LTO object was produced and .llvm_sympart was named in /DISCARD/, but pinned lld still raised the native hard orphan error before emitting a final ELF",
+      "saved_failed_probe_lto_sha256": "a08604a37eae6f305fc8bd5a9b1546c4abfca1d154757ea4dc1f9ed69bec2ae0",
+      "authorized_fallback": {
+        "diagnostic_count": 1,
+        "diagnostic_section": ".llvm_sympart",
+        "diagnostic_origin": "the exact --lto-obj-path object for the current target",
+        "zero_or_multiple_diagnostics": "hard error",
+        "different_section_or_origin": "hard error",
+        "final_inventory_pin": "config/c2-final-section-inventory-pin.txt",
+        "final_inventory_entries": 140,
+        "final_sympart_contract": "exactly one 15-byte non-ALLOC INFO section at address zero with zero runtime load bytes"
+      },
+      "wrapper_probe_result": {
+        "exact_diagnostic": "passed",
+        "final_section_count": 140,
+        "final_section_name_set": "exact",
+        "missing_sections": 0,
+        "additional_sections": 0,
+        "ordering_only_first_red": "the pre-pin placed .llvm_sympart last; the final ELF places it after the five explicit INFO sections",
+        "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link28-v2-profile-data-placement-wrapper-inventory-order-first-red-receipt.json"
+      },
+      "membership_replay_result": {
+        "section_count_and_name_set": "passed",
+        "order": "provenance-only",
+        "final_relocation_sections": 57,
+        "lto_partition_metadata": "passed"
+      },
+      "function_provenance_replay_result": {
+        "status": "passed",
+        "moved_components": "3/3",
+        "matched_relocations": 5,
+        "pre_handoff_references": 0,
+        "unknown_overlapping_or_unsized_sources": 0,
+        "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link28-v2-profile-data-placement-gate-replay-receipt.json"
+      },
+      "claim_limit": "The wrapper, exact membership inventory, relocation retention and function-bound profile-data reference proof passed on one immutable ELF without a compiler or linker invocation. Link 28 and hardware remain not-run."
+    },
+    "rules": [
+      "all live bytes in 0xe000..0xffff belong to named C2-owned sections or vectors",
+      "no relocation, call edge or absolute operand targets a KERNAL service or retired STKEY",
+      "every post-unmap edge into 0xe000..0xffff resolves to an owned symbol",
+      "no KERNAL, CBM-I/O or legacy GETIN object/archive member remains in the post-unmap closure",
+      "the source and disassembly census has exactly one input path, one abort source and one frame owner"
+    ]
+  },
+  "freezer_fidelity": {
+    "classification": "hardware-only",
+    "xemu_claim": "non-authoritative queue/mapping dry run only; no Freezer safety PASS",
+    "repeatability": "multiple Freezer returns in one session remain legal; each real owned raster IRQ rearms exactly one subsequent source-less return IRQ",
+    "prechain_smoke": [
+      "typed physical modifier event",
+      "RUN/STOP during evaluation",
+      "advancing product frame counter",
+      "Freezer entry and return",
+      "map and vector generation re-established",
+      "one typed key event after return"
+    ]
+  },
+  "bounded_probe": {
+    "artifact_class": "isolated non-product proof target",
+    "required_outputs": [
+      "full ownership state machine and vector table",
+      "typed queue driver and generated L-full closure",
+      "pinned-toolchain MAP/vector disassembly",
+      "category-complete net capacity equation",
+      "continuity cutpoint proof",
+      "structural KERNAL-freedom link report",
+      "negative and mutation matrix"
+    ],
+    "product_artifacts_emitted": 0,
+    "next_if_green": "return for review before exactly one real substitution link",
+    "next_if_red": "first-red stop; no cap or claim softening"
+  },
+  "required_negative_cases": [
+    "unmap before typed queue readiness",
+    "retire STKEY before new abort source is proven",
+    "lose an abort latched during the handoff",
+    "retire firmware frame source before owned frame source advances",
+    "publish vector before target mapping",
+    "owned IRQ fails to acknowledge its raster source",
+    "IRQ calls Lisp or allocates",
+    "Freezer return with unknown map generation",
+    "resume product execution after failed post-unmap validation",
+    "post-unmap CHROUT edge",
+    "post-unmap GETIN edge",
+    "post-unmap STKEY read",
+    "edge into KERNAL window without an owned target symbol",
+    "legacy KERNAL or CBM-I/O object in post-unmap closure",
+    "typed event code and modifiers sampled from different queue heads",
+    "typed event dequeued more than once",
+    "queue empty represented as code zero",
+    "RUN/STOP routed to an editor command",
+    "generated keymap, test list and documentation drift",
+    "physical modifier documented without hardware sample",
+    "capacity category omitted from the net equation",
+    "gross 8192 bytes reported as future margin",
+    "replacement residents plus deficit leave zero or negative margin",
+    "platform reset treated as an in-product restart",
+    "Freezer safety PASS emitted by Xemu",
+    "fixed host-facade vector address drift",
+    "fixed Bank-0 or zero-page state address drift",
+    "owned-window call bypasses the fixed host facade"
+  ],
+  "handoff_reanchor_2026_07_21": {
+    "status": "owner-authorized-successor-pins-pending-wplto",
+    "authority": "config/c2-handoff-reanchor-authorization.json",
+    "historical_address_rule": "All earlier receipts and the Link-28 product_window_identity remain historical and are not rewritten. The values below are the sole active successor geometry.",
+    "reason": "The complete L65R-v2 WPLTO text ends at 0xb483, two bytes beyond the historical 0xb481 anchor. A 34-byte chain shift clears the overlap and establishes a standing 32-byte LTO-noise reserve.",
+    "low_resident_chain": {
+      "handoff": {"address": "0xb4a3", "bytes": 289},
+      "facade": {"address": "0xb5c4", "bytes": 45, "vector_count": 15, "vector_stride_bytes": 3},
+      "io_reveal": {"address": "0xb5f1", "bytes": 11},
+      "map_switch": {"address": "0xb5fc", "bytes": 10},
+      "state": {"address": "0xb606", "bytes": 20},
+      "ordinary_rodata_projected": {"address": "0xb61a", "bytes": 826},
+      "verifier_bindings_projected": {"address": "0xb954", "bytes": 32},
+      "ordinary_data_projected": {"address": "0xb974", "bytes": 22},
+      "ordinary_bss_projected": {"address": "0xb98a", "bytes": 1587, "end_exclusive": "0xbfbd"}
+    },
+    "facade_vectors": [
+      {"name": "c2_facade_vm_code_load", "address": "0xb5c4"},
+      {"name": "c2_facade_c2_dma", "address": "0xb5c7"},
+      {"name": "c2_facade_overlay_call_family", "address": "0xb5ca"},
+      {"name": "c2_facade_c2e_cons", "address": "0xb5cd"},
+      {"name": "c2_facade_c2e_overlay", "address": "0xb5d0"},
+      {"name": "c2_facade_car", "address": "0xb5d3"},
+      {"name": "c2_facade_cdr", "address": "0xb5d6"},
+      {"name": "c2_facade_gc_collect", "address": "0xb5d9"},
+      {"name": "c2_facade_str_open", "address": "0xb5dc"},
+      {"name": "c2_facade_str_putc", "address": "0xb5df"},
+      {"name": "c2_facade_intern", "address": "0xb5e2"},
+      {"name": "c2_facade_select_family", "address": "0xb5e5"},
+      {"name": "c2_facade_gc_mark", "address": "0xb5e8"},
+      {"name": "c2_facade_runtime_overlay_exec", "address": "0xb5eb"},
+      {"name": "c2_facade_handle_normalize", "address": "0xb5ee"}
+    ],
+    "publish_last_successor_projection": {
+      "runtime_overlay_verifier_bindings": {"address": "0xb954", "bytes": 32},
+      "kernal_window_crc_high": {"address": "0xb4cc", "bytes": 1},
+      "kernal_window_crc_low": {"address": "0xb4d0", "bytes": 1},
+      "total_named_bytes": 34,
+      "pin_rule": "The projection must be confirmed and successor-pinned from the real linked ELF before any product acceptance."
+    },
+    "capacity_contract": {
+      "bank0_text_headroom_min_bytes": 32,
+      "pre_fixed_pocket_min_bytes": 195,
+      "fixed_bank0_base": "0xc080",
+      "fixed_bank0_code_base": "0xc218",
+      "runtime_overlay_vma": "0xc356",
+      "post_fixed_pocket_bytes": 33,
+      "e000_final_floor_bytes": 63,
+      "previous_e000_final_floor_bytes": 115,
+      "crc_convergence_floor_break_bytes": 52,
+      "terminal_floor_self_trigger": "any successor demand below 63 bytes automatically selects C2-lite"
+    },
+    "wplto_exit": "One fresh WPLTO probe must pass every wall and structural gate. Link 33 remains unauthorized until separate review."
+  },
+  "c2_lite_append_final_hybrid_2026_07_22": {
+    "status": "owner-approved-current-authority-scope-cut-selection-pending",
+    "authority": "config/c2-append-final-hybrid-contract.json",
+    "history_rule": "The 115-byte Link-35 floor and 63-byte rejected Link-36 geometry remain immutable historical facts. This object alone is the current C2-lite append-final successor geometry.",
+    "e000": {
+      "active_floor_bytes": 54,
+      "reopen_gap0": {"address": "0xfca2", "bytes": 128, "end_exclusive": "0xfd22"},
+      "session_emitter_state": {"address": "0xfd22", "bytes": 10, "end_exclusive": "0xfd2c"},
+      "profile_rodata": {"address": "0xfd2c", "bytes": 342, "end_exclusive": "0xfe82"},
+      "resolved_predecessor_overlap_bytes": 26,
+      "self_defense": "Any future demand below 54 bytes automatically enters scope triage; no negotiation, exception, or fourth floor event."
+    },
+    "bank0_text": {
+      "noise_floor_bytes": 32,
+      "failed_wplto_headroom_bytes": 8,
+      "scope_cut_required_bytes": 24,
+      "selection": "Alex selects exactly one candidate before any product source cut or WPLTO."
+    },
+    "exit": "After selection, exactly one WPLTO must close text >=32, E000 >=54, Session aggregate <=65536, and every other wall. Product link and hardware remain separately blocked."
+  },
+  "append_plan_facade16_repin_2026_07_22": {
+    "status": "owner-authorized-pending-fresh-WPLTO",
+    "authority": "config/c2-append-final-hybrid-contract.json",
+    "historical_rule": "The handoff reanchor object above remains the immutable fifteen-vector history. This object alone is current for the append-final successor.",
+    "reason": "The facade gate found two owned-window calls to the fixed Island plan walker. A sixteenth three-byte vector restores the sole-exit contract.",
+    "low_resident_chain": {
+      "handoff": {"address": "0xb4a3", "moved": false},
+      "facade": {"address": "0xb5c4", "bytes": 48, "vector_count": 16},
+      "append_plan_vector": {"address": "0xb5f1", "bytes": 3, "target": "c2_append_plan_walk"},
+      "io_reveal": {"address": "0xb5f4", "bytes": 11},
+      "map_switch": {"address": "0xb5ff", "bytes": 10},
+      "state": {"address": "0xb609", "bytes": 20},
+      "ordinary_rodata_projected": {"address": "0xb61d", "bytes": 812},
+      "verifier_bindings_projected": {"address": "0xb949", "bytes": 40},
+      "ordinary_data_projected": {"address": "0xb971", "bytes": 2},
+      "ordinary_bss_projected": {"address": "0xb973", "bytes": 1587, "end_exclusive": "0xbfa6"}
+    },
+    "fixed_points": {
+      "fixed_bank0_base": "0xc080",
+      "fixed_bank0_code_base": "0xc218",
+      "runtime_overlay_vma": "0xc356"
+    },
+    "publish_last_projection": {
+      "runtime_overlay_verifier_bindings": {"address": "0xb949", "bytes": 40},
+      "kernal_window_crc_high": {"address": "0xb4cc", "bytes": 1},
+      "kernal_window_crc_low": {"address": "0xb4d0", "bytes": 1},
+      "total_named_bytes": 42
+    },
+    "exit": "Fresh WPLTO must qualify every wall, every structural gate and the Session aggregate. Only full green authorizes the successor product link already approved by the owner."
+  },
+  "link58_fixed_block_rtov_fail_relocation_2026_07_23": {
+    "status": "owner-authorized-pending-fresh-WPLTO",
+    "authority": "config/c2-matrix-addenda-cold-placement-contract.json",
+    "history_rule": "The 45-byte fixed-code and 33-byte pocket geometry above remains immutable history. This object alone is current for the Link-58 successor.",
+    "reason": "The current E5/B3/D3 package leaves 12 bytes of ordinary text against the mandatory 32-byte noise reserve. The named 21-byte rtov_fail leaf is moved intact; no instruction or ABI is changed.",
+    "candidate_reds": [
+      "The 30-byte mod-adjust leaf exposed six inherited .noinit bytes and the inherited ALIGN(__noinit_end + 1, 2) rule; its overlay floor missed by four bytes.",
+      "The 28-byte rtov_read leaf left the aligned overlay floor two bytes above the fixed overlay VMA."
+    ],
+    "fixed_points": {
+      "fixed_state_base": "0xc080",
+      "fixed_code_base": "0xc218",
+      "runtime_overlay_vma": "0xc356"
+    },
+    "fixed_code": [
+      {"symbol": "kb_cursor_off", "address": "0xc218", "bytes": 5},
+      {"symbol": "c2e_cons", "address": "0xc21d", "bytes": 40},
+      {"symbol": "rtov_fail", "address": "0xc245", "bytes": 21, "fixed_control_target": "rtov_wipe"}
+    ],
+    "hot_bss": {
+      "symbol": "heap",
+      "address": "0xc25a",
+      "bytes": 240,
+      "end_exclusive": "0xc34a"
+    },
+    "following_noinit": {
+      "address": "0xc34a",
+      "bytes": 6,
+      "end_exclusive": "0xc350",
+      "aligned_overlay_floor": "0xc352"
+    },
+    "capacity": {
+      "fixed_code_bytes": 66,
+      "fixed_block_headroom_bytes": 4,
+      "ordinary_text_credit_bytes": 21,
+      "projected_ordinary_text_headroom_bytes": 33,
+      "ordinary_text_required_bytes": 32
+    },
+    "gate": "The final ELF must bind section, symbol, size and address; the sole control relocation must resolve through structured ELF identity to the named resident rtov_wipe function. Wrong-address, wrong-size, wrong-section and added-edge mutations are mandatory.",
+    "exit": "One fresh WPLTO must show text >=32, fixed-block headroom >=0, E000 >=54, Session <=65536 and every structural gate green before Link 58."
+  },
+  "link60_heap_and_e000_repin_2026_07_24": {
+    "status": "owner-authorized-current-authority-WPLTO-green-publish-last-repin-approved",
+    "history_rule": "The Link-58 fixed-code, heap, noinit and $C352 floor pins above remain immutable historical geometry. This object alone is authoritative for the Link-60 successor.",
+    "reason": "Whole-program zero-page allocation moved rtov_fault to ordinary BSS. Three absolute rtov_fail accesses grew by one byte each; the named fixed leaf is therefore 24 bytes and the fixed code ends at $C25D. The existing 240-byte heap is re-pinned intact immediately afterward. Separately, the proved c2e_work_state lifetime union leaves the historical E000 session-emitter output as a zero-byte anchor.",
+    "fixed_points": {
+      "fixed_state_base": "0xc080",
+      "fixed_code_base": "0xc218",
+      "runtime_overlay_vma": "0xc356"
+    },
+    "fixed_code": [
+      {"symbol": "kb_cursor_off", "address": "0xc218", "bytes": 5},
+      {"symbol": "c2e_cons", "address": "0xc21d", "bytes": 40},
+      {
+        "symbol": "rtov_fail",
+        "address": "0xc245",
+        "bytes": 24,
+        "fixed_control_target": "rtov_wipe",
+        "absolute_data_target": "rtov_fault",
+        "absolute_data_edges": 3
+      }
+    ],
+    "hot_bss": {
+      "symbol": "heap",
+      "address": "0xc25d",
+      "bytes": 240,
+      "end_exclusive": "0xc34d"
+    },
+    "following_noinit": {
+      "address": "0xc34d",
+      "bytes": 6,
+      "end_exclusive": "0xc353",
+      "aligned_overlay_floor": "0xc354",
+      "headroom_to_overlay_bytes": 2
+    },
+    "e000": {
+      "active_floor_bytes": 54,
+      "session_emitter_state": {
+        "address": "0xfd22",
+        "bytes": 0,
+        "meaning": "explicit lifetime-union anchor; not an adjacency claim"
+      },
+      "profile_rodata": {
+        "address": "0xfd2c",
+        "bytes": 342,
+        "binding": "explicit predecessor-authority pin"
+      },
+      "required_relation": "The zero-byte state anchor remains $FD22 and profile RODATA remains $FD2C; the ten-byte interval between them is not a resident tenant or inferred placement."
+    },
+    "publish_last_repin": {
+      "owner_authorized_on": "2026-07-24",
+      "section": ".lisp65_runtime_overlay_verifier_bindings",
+      "historical_predecessor_address": "0xb94e",
+      "current_address": "0xb972",
+      "bytes": 40,
+      "delta_bytes": 36,
+      "determinism": "two independent whole-program observations agree at $B972",
+      "history_rule": "Historical $B94E receipts and drivers remain immutable evidence for their product identities; only current Link-60 authority and gates consume $B972.",
+      "post_link_domain": {
+        "runtime_overlay_verifier_bindings": {
+          "address": "0xb972",
+          "bytes": 40
+        },
+        "kernal_window_crc_high": {
+          "address": "0xb4cc",
+          "bytes": 1
+        },
+        "kernal_window_crc_low": {
+          "address": "0xb4d0",
+          "bytes": 1
+        },
+        "total_named_bytes": 42
+      }
+    },
+    "gate": "The final ELF binds fixed section/symbol/address/size, one executable rtov_wipe edge, exactly three rtov_fault data edges, the heap/noinit/alignment chain, the zero-byte E000 anchor and the independent profile pin. Historical receipts are not rewritten.",
+    "exit": "The sole WPLTO proved all non-pin geometry green and measured the 40-byte table deterministically at $B972. Owner-authorized artifact completion may publish only the named 42-byte post-link domain without another compiler or linker run; a fully green completion authorizes exactly one Link 60."
+  }
+}

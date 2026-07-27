@@ -1,0 +1,209 @@
+{
+  "format": "lisp65-c2-cpu-chip-write-completion-contract-v7",
+  "recorded_on": "2026-07-26",
+  "status": "owner-confirmed-single-submit-local-observation-completion",
+  "scope": {
+    "product_baseline": "Link 64 successor",
+    "physical_domains": [
+      "CPU-to-Bank-2 append code writes",
+      "CPU-to-Bank-5 C2D, export-journal and C2J writes"
+    ],
+    "excluded_domain": {
+      "name": "Attic/HyperRAM session-source cleanup",
+      "reason": "not Chip RAM; governed by the separate runtime-overlay DMA-completion contract and not part of the C1 Bank-2/Bank-5 identity claim"
+    }
+  },
+  "hardware_first_red": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link59-C1-Freezer-cutpoint4-late-chip-write-hardware-first-red.json",
+    "bank2_late_bytes": 9,
+    "bank5_export_journal_late_bytes": 2,
+    "observation": "both physical changes first appeared during the Freezer roundtrip after the rollback header had already been restored"
+  },
+  "ordering": [
+    "write C2J ACTIVE and prove that the ACTIVE bookend physically landed before the first transaction mutation",
+    "submit transaction mutations without private producer-local completion loops",
+    "on publication, run one gathered data barrier that proves every earlier ordered job landed and binds the touched target spans, then content-prove and publish the header",
+    "on abort, run one gathered data barrier before export restoration, predecessor-header restoration or any wipe",
+    "after successful publication or complete rollback, write C2J CLEAR last and prove that the CLEAR bookend physically landed before scratch release or another transaction"
+  ],
+  "completion": {
+    "definition": "target content equals the independently held expected content",
+    "timeout_frames": 64,
+    "readback_rule": "the readback destination is disjoint from the write source, is poisoned unequal exactly once, receives exactly one ordered trailing target read, and is then sampled locally without re-poison or read resubmission until equality or timeout",
+    "same_buffer_readback": "forbidden",
+      "retry_length_authority": {
+        "storage": "none",
+        "implementation": {
+          "symbol": "c2_completion_mode_length",
+          "form": "named, sized non-LTO assembler leaf",
+          "section": ".lisp65_rt_c2append_header",
+          "ABI": "mode in A, length in A, Z=0 on return",
+          "linked_calls": 4,
+          "permanent_gate": "the final ELF must contain exactly one sized function and exactly four direct C-to-ASM edges; disappearance, inlining, an unknown edge, a mutable load or a retry bypass is red"
+        },
+      "derivation": {
+        "C2J_ACTIVE_ROLLBACK_CLEAR": 64,
+        "header_PUBLISH": 48
+      },
+      "producer": "none: the completion mode fully determines the admitted content domain",
+      "consumer": "rematerialize the mode-derived constant immediately before the one poison pass, before the one target DMA, and before every local target comparison",
+      "forbidden": [
+        "retaining transfer length solely in llvm-mos __rc scratch across c2_stream_c2d_read",
+        "using c2_append_state.record[27] or any other phase-scratch byte as a retry-length authority",
+        "accepting a caller-supplied length that can disagree with the completion mode",
+        "re-poisoning the observed buffer or resubmitting the target read on a timeout retry"
+      ],
+        "hardware_first_reds": [
+          "Link 62 entered with $0040, retried with live scratch $bb04 and never reached the 64-frame timeout boundary",
+          "Link 63 reloaded record[27] as its alleged authority, but hardware observed $fc while the C2J call contract required $40; Slot 39 remained ACTIVE before Cutpoint 3",
+          "the first Link 64 WPLTO source form called an always-inline helper four times, but whole-program LTO removed the symbol, kept length live in $1a across c2_stream_c2d_read and sent the retry edge directly back to poison",
+          "the Link 64 product form re-poisoned and resubmitted on every retry; a read delivered after the immediate comparison was erased before the next comparison, reproducing good target content before and after a 64-frame timeout"
+        ]
+    },
+    "ordering_witness": "one content-proven read submitted after the transaction writes dominates every earlier job submitted through the same ordered DMA engine; its Bank-0 destination is observed locally until delivery and is never overwritten or resubmitted while pending",
+    "granularity": {
+      "transaction_data_barriers": 2,
+      "journal_bookends": 2,
+      "converged_points_per_transaction": 4,
+      "rule": "The two data barriers are amortized transaction boundaries. C2J ACTIVE and CLEAR are independent journal bookends protecting recoverability and are not folded into the data-barrier count."
+    },
+    "C2J_identity_seal": {
+      "format_crc": "The existing CRC32/IEEE in C2J bytes 60..63 remains the recovery-format integrity field.",
+      "bookend_crc": "CRC16/CCITT-FALSE over all 64 final emitted C2J bytes, including the format CRC32.",
+      "producer_rule": "The journal producer computes the bookend seal once after all fields and the format CRC32 are final and before submitting ACTIVE.",
+      "recovery_rule": "The journal validator checks the format CRC32 and all recovery bounds first, then binds the same CRC16 seal from the validated 64-byte snapshot before reconstruction or rollback.",
+      "consumer_rule": "The common ACTIVE/rollback bookend poll computes one target CRC16 with the existing rtov_crc_mem assembler leaf and compares it with the bound seal; rebuilding and comparing the twenty producer fields is forbidden.",
+      "scratch_storage": "c2_append_state.record[25..26]",
+      "scratch_lifetime": "The source-record CRC phase is complete before the seal is written; bytes 25..26 remain unowned through ACTIVE, publication or rollback and are released only after a content-proven CLEAR.",
+      "new_resident_cells": 0,
+      "new_BSS_bytes": 0
+    }
+  },
+  "boundary_amortization": {
+    "pre_header": "one common cold body drains all pre-publication Bank-2/Bank-5 jobs, observes the target identities of the touched spans and proves the header before committed/runtime publication",
+    "pre_rollback": "the same common cold body drains all forward jobs before the first restoration or wipe",
+    "C2J_ACTIVE": "must be independently content-converged and match its producer-bound CRC16 seal before mutation; otherwise an abort can find no usable journal",
+    "C2J_CLEAR": "must be independently content-converged last; otherwise stale ACTIVE can survive into the next transaction or a late zero can erase its new ACTIVE",
+    "implementation_rule": "one transported cold body serves all four modes and is invoked serially by the resident driver; overlays never call overlays",
+    "producer_rule": "producer and cleanup phases submit writes and maintain only bounded touched-span facts; poison/readback/timeout machinery is never materialized per producer or per block"
+  },
+  "quiescent_state": {
+    "bank2_aborted_suffix": "all zero, byteidentical to the pre-append suffix",
+    "bank5_export_scratch": "all zero outside an active append transaction",
+    "bank5_c2d_suffix": "byteidentical to the pre-append image/entry/resolution/root suffix",
+    "bank5_header": "byteidentical predecessor header",
+    "bank5_c2j": "all zero, cleared after every other restoration"
+  },
+  "active_product_write_inventory": [
+    {
+      "producer": "c2_append_stage_copy_phase",
+      "target": "Bank 2 append code interval",
+      "temperature": "cold Session overlay",
+      "disposition": "plain ordered writes; one gathered pre-header target proof replaces per-block convergence"
+    },
+    {
+      "producer": "c2_append_image_phase, c2_append_entries_phase and decoder resolution/root writers",
+      "target": "Bank 5 C2D mutable suffix",
+      "temperature": "cold Session overlays",
+      "disposition": "plain ordered writes; the gathered pre-header barrier and independently verified final header dominate publication"
+    },
+    {
+      "producer": "c2_append_header_phase",
+      "target": "Bank 5 C2D header",
+      "temperature": "cold Session overlay",
+      "disposition": "independent target convergence before c2_runtime/committed publication"
+    },
+    {
+      "producer": "c2_append_publish_plan_scan_phase and c2_append_publish_plan_resolve_phase",
+      "target": "Bank 5 export scratch",
+      "temperature": "cold Session overlays",
+      "disposition": "plain ordered writes; pre-header completion covers plan construction and the success/rollback tail bookend covers its later compaction and clearing"
+    },
+    {
+      "producer": "intern through sympool_write, nameoff_set and symval_set",
+      "target": "Bank 5 symbol pool, name-offset and value domains",
+      "temperature": "cold publication-resolution path",
+      "disposition": "included in the gathered pre-header ordered-job barrier; no private symbol-table completion path"
+    },
+    {
+      "producer": "c2_append_publish_exports_phase",
+      "target": "Bank 5 export rollback records and symbol-function cells",
+      "temperature": "cold Session overlay",
+      "disposition": "plain ordered writes; pre-rollback barrier dominates restoration and C2J CLEAR is the successful-publication tail fence"
+    },
+    {
+      "producer": "c2_append_journal_write_phase",
+      "target": "Bank 5 C2J",
+      "temperature": "cold Session overlay",
+      "disposition": "emit the format CRC32, bind one CRC16 seal over the final 64-byte record in free phase scratch, then independently converge the target and compare one leaf-computed seal before ACTIVE"
+    },
+    {
+      "producer": "c2_append_rollback_unpublish_phase",
+      "target": "Bank 5 restored symbol-function cells and predecessor header",
+      "temperature": "cold Session overlay",
+      "disposition": "may begin only after the gathered pre-rollback barrier; completion is amortized into the final CLEAR bookend"
+    },
+    {
+      "producer": "c2_append_rollback_finalize_phase",
+      "target": "Bank 2 code suffix and Bank 5 C2D suffix",
+      "temperature": "cold Session overlay",
+      "disposition": "plain ordered restoration writes after the pre-rollback barrier; C2J CLEAR is the final completion fence"
+    },
+    {
+      "producer": "c2_append_journal_clear_phase",
+      "target": "Bank 5 export scratch and C2J",
+      "temperature": "cold co-resident Session overlay",
+      "disposition": "export scratch zero first, C2J zero last, then the shared cold body proves the CLEAR bookend before bookkeeping is cleared"
+    },
+    {
+      "producer": "c2_session_emitter.c root descriptor store",
+      "target": "Bank 5 emitter-session scratch",
+      "temperature": "cold emitter overlay",
+      "disposition": "not a rollback booking and never verified against its own source; later disjoint consumer read remains separately gate-visible"
+    }
+  ],
+  "blind_readback_inventory": {
+    "same_source_and_destination_instances_before_fix": [
+      "c2_append_stage_phase",
+      "c2_append_stage_copy_phase"
+    ],
+    "same_source_and_destination_instances_after_fix": [],
+    "already_disjoint_but_previously_single_sample": [
+      "c2j_write_verified"
+    ],
+    "rule": "a disjoint buffer is necessary but not sufficient; it is poisoned and sampled until content convergence or timeout"
+  },
+  "fixtures": {
+    "cutpoint4_late_write_interleaving": "late Bank-2 and export-journal writes must be drained before rollback; deleting the fence recreates 9+2 physical residue",
+    "exact_abort_restoration": "Bank-2 suffix, Bank-5 C2D suffix, export scratch, predecessor header and C2J match their quiescent baseline byte-for-byte",
+    "same_buffer_negative": "aliasing expected and observed is rejected",
+    "timeout_negative": "a target that never converges returns the specific IO failure without publishing or clearing C2J",
+    "ACTIVE_removed": "mutation before a converged ACTIVE bookend is rejected",
+    "pre_header_barrier_removed": "header or committed publication with an outstanding Bank-2/Bank-5 write is rejected",
+    "pre_rollback_barrier_removed": "restoration or wipe with an outstanding forward write reproduces the Cutpoint-4 residue and is rejected",
+    "CLEAR_removed": "return or scratch reuse before a converged CLEAR bookend is rejected",
+    "private_loop_regression": "producer-local poison/readback/timeout loops are rejected; the shared cold body is the sole general completion implementation"
+    ,"C2J_target_corruption": "changing any tested target byte after emission breaks the bound bookend seal"
+    ,"C2J_seal_corruption": "changing the phase-scratch seal fails closed before ACTIVE or rollback"
+    ,"C2J_recovery_reseal_removed": "a validated recovery record without a newly bound seal cannot enter rollback"
+    ,"C2J_seal_before_format_crc": "binding the seal before bytes 60..63 are final is rejected"
+    ,"C2J_field_reconstruction_regression": "reintroducing the twenty-field comparison into the common poll is rejected"
+    ,"retry_length_scratch_clobber": "deliberately changing call scratch from $0040 to $bb04 after the nested read must not change the mode-derived retry length or hide the timeout boundary"
+    ,"retry_length_record_clobber": "deliberately changing record[27] to $fc before and after the nested read must be semantically inert; the linked poll must not read or write that byte"
+    ,"retry_length_mode_domain": "C2J modes rematerialize 64 and Publish rematerializes 48 before the one poison pass, the one target DMA and every local comparison; unknown modes fail closed"
+    ,"retry_read_self_poison": "a one-attempt-late read result must survive into the next comparison; moving poison or c2_stream_c2d_read inside the timeout retry loop is rejected"
+  },
+  "capacity": {
+    "bound_walls": {
+      "bank0_text_noise_headroom_min": 32,
+      "ordinary_bank0_bss_headroom_min": 0,
+      "fixed_hot_block_headroom_min": 0,
+      "resident_island_headroom_min": 0,
+      "e000_floor": 54,
+      "session_family_max": 65536,
+      "slice_max": 1792
+    },
+    "placement_rule": "the one general completion body is a cold transported phase driven by the resident serial driver; producer and cleanup overlays contain no private convergence machinery; the resident C2D write seam and E000 geometry remain byteidentical"
+  },
+    "claim_limit": "A green host/WPLTO probe proves contract shape, the linked non-LTO stateless length derivation, placement and capacity only. C1 remains OPEN until Cutpoints 3 and 4 are repeated on hardware against a successor product identity."
+}

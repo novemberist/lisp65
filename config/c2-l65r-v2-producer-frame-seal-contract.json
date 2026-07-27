@@ -1,0 +1,33 @@
+{
+  "format": "lisp65-c2-l65r-v2-producer-frame-seal-contract-v1",
+  "status": "owner-authorized-single-successor-wplto-probe",
+  "recorded_on": "2026-07-21",
+  "predecessor_first_red": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-verifier-frame-seal-capacity-probe-receipt.json",
+    "sha256": "badef4b0af31020286032f1475a21070ce219b546b355744fb8a6547480575d7",
+    "diagnosis": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-l65r-v2-verifier-frame-seal-capacity-first-red-diagnosis.json",
+    "diagnosis_sha256": "10890dc5ef835b96d7a7542d3b6e1625ec30cbe8a76d6708ffe29b3c001f717f"
+  },
+  "responsibilities": {
+    "record_verifier": "authenticate-and-seal-slot-8-frame",
+    "resident_dispatcher": "transport-sealed-frame-without-content-work",
+    "slot_8_installer": "verify-seal-before-scratch-reuse"
+  },
+  "single_truth": {
+    "seal_producer_count": 1,
+    "seal_consumer_count": 1,
+    "resident_seal_production": "forbidden",
+    "field_by_field_rebinding": "forbidden",
+    "second_install_context": "forbidden"
+  },
+  "gates": {
+    "seal_only_for_installer_slot": 8,
+    "post_authentication_mutation": "must-break-seal-before-installation",
+    "whole_program_lto_probe_count": 1,
+    "all_resident_walls": "must-be-green",
+    "installer_slice_cap_bytes": 1792,
+    "e000_final_floor_bytes": 115,
+    "link33_attempts_before_green_probe": 0
+  },
+  "claim_limit": "Producer-bound frame-seal semantics, WPLTO capacity and placement only; not Link 33, hardware, promotion or acceptance."
+}

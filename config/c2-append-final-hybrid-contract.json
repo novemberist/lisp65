@@ -1,0 +1,167 @@
+{
+  "format": "lisp65-c2-lite-v6-append-final-hybrid-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-22",
+  "status": "owner-authorized: facade vector 16 and three-byte successor repin",
+  "authority": {
+    "owner_decision": "Hybrid: bind the E000 floor at 54 bytes, preserve the 32-byte Bank-0 text noise reserve, and select exactly one sub-feature scope cut before WPLTO.",
+    "failed_wplto_diagnosis": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-consolidation-wplto-first-red-diagnosis.json",
+    "rollback_product": "build/c2.2/substitution/product-link-48-c2-lite-v6-zero-literal-execution/lisp65-c2-substitution-linked.prg"
+  },
+  "e000_geometry": {
+    "capacity_bytes": 8192,
+    "measured_live_bytes": 8138,
+    "active_floor_bytes": 54,
+    "predecessor_floor_bytes": 115,
+    "reopen_gap0": {
+      "address": "0xfca2",
+      "bytes": 128,
+      "end_exclusive": "0xfd22"
+    },
+    "session_emitter_state": {
+      "address": "0xfd22",
+      "bytes": 10,
+      "end_exclusive": "0xfd2c"
+    },
+    "profile_rodata": {
+      "address": "0xfd2c",
+      "bytes": 342,
+      "end_exclusive": "0xfe82"
+    },
+    "resolved_overlap_bytes": 26,
+    "self_defense": "Any future E000 demand below 54 bytes automatically triggers scope triage. There is no negotiation, exception, or fourth floor event."
+  },
+  "bank0_text": {
+    "failed_wplto_headroom_bytes": 8,
+    "required_noise_headroom_bytes": 32,
+    "scope_cut_required_bytes": 24,
+    "rule": "The 32-byte LTO-noise reserve is immutable. No scope cut is authorized until Alex selects exactly one candidate."
+  },
+  "scope_cut_candidates": [
+    {
+      "id": "numeric-early-errors",
+      "rank": 1,
+      "current_attributed_text_bytes": 81,
+      "map_symbol": "lisp65_error_render_pending",
+      "exact_current_range": "function offsets 0x07..0x57",
+      "cut": "Retire the four resident sentence renderers for E2e/E2f/E3d/E3e; retain the overlay renderer and the existing numeric Ehh fallback.",
+      "consequence": "Early catalog, Island, transport-timeout and family-stage failures show their stable numeric code instead of resident prose; status identity and fail-closed behavior are unchanged.",
+      "feature_threshold": "below"
+    },
+    {
+      "id": "visible-block-cursor",
+      "rank": 2,
+      "current_attributed_text_bytes": 65,
+      "map_symbol": "scr_cursor",
+      "exact_current_range": "whole linked function",
+      "cut": "Remove the visible reverse-video REPL block cursor and its hide/show calls.",
+      "consequence": "Editing and echo remain functional, but the current insertion cell is no longer visibly marked while waiting for input.",
+      "feature_threshold": "below"
+    },
+    {
+      "id": "mid-transaction-media-change-classification",
+      "rank": 3,
+      "current_attributed_text_bytes": 27,
+      "map_symbol": "io_disk_transaction_classify_status",
+      "exact_current_range": "whole linked function",
+      "cut": "Retire the post-read remapping from READ_INVALID to the more specific MEDIA_CHANGED status.",
+      "consequence": "A disk swap during a transaction still fails, but reports the generic invalid-read status rather than the dedicated media-changed distinction.",
+      "feature_threshold": "below-but-safety-diagnostic; lowest-ranked"
+    }
+  ],
+  "selection": {
+    "selected_candidate": "numeric-early-errors",
+    "selected_on": "2026-07-22",
+    "selected_attributed_text_bytes": 81,
+    "selection_authority": "Alex",
+    "product_source_changes_authorized": 1
+  },
+  "one_wplto_exit": {
+    "authorized_after_selection_only": true,
+    "status": "facade-16 successor WPLTO authorized after the ABI-fix WPLTO stopped at the fixed-facade gate",
+    "bank0_text_headroom_min_bytes": 32,
+    "e000_headroom_min_bytes": 54,
+    "session_aggregate_max_bytes": 65536,
+    "all_other_walls": "must pass fresh",
+    "result_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-wplto-first-red-diagnosis.json",
+    "abi_fix_wplto_runs_authorized": 1,
+    "successor_product_links_authorized_after_green_wplto": 1,
+    "defun_hardware_runs_authorized_after_green_product_link": 1,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "abi_fix_wplto_runs_consumed": 1,
+    "facade16_wplto_runs_authorized": 1,
+    "facade16_wplto_runs_consumed": 0,
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link48-append-final-hybrid-abi-wplto-facade-first-red-diagnosis.json",
+    "blocked_on": "Two E000 callsites reach the Island plan walker directly instead of through a pinned facade vector."
+  },
+  "append_plan_abi_repair": {
+    "authority": "Reviewer-approved after the final-ELF gate caught the fourth assembler-Leaf ABI mismatch before hardware",
+    "plan_pointer": "__rc2/__rc3",
+    "context_pointer": "__rc4/__rc5",
+    "result": "A",
+    "required_gate": "Every final-ELF caller plus the linked Leaf prologue must implement the same dataflow; all mutations remain mandatory."
+  },
+  "append_plan_facade16": {
+    "status": "owner-authorized",
+    "reason": "The ABI-correct WPLTO proved two owned-window exits to the fixed Island walker. Every such exit must cross a pinned facade seam.",
+    "feature": "LISP65_C2_APPEND_PLAN_FACADE",
+    "vector": {
+      "ordinal": 16,
+      "symbol": "c2_facade_append_plan_walk",
+      "address": "0xb5f1",
+      "bytes": 3,
+      "target": "c2_append_plan_walk"
+    },
+    "following_chain_shift_bytes": 3,
+    "low_resident_chain": {
+      "handoff": {"address": "0xb4a3", "moved": false},
+      "facade": {"address": "0xb5c4", "bytes": 48, "vector_count": 16},
+      "io_reveal": {"address": "0xb5f4", "bytes": 11},
+      "map_switch": {"address": "0xb5ff", "bytes": 10},
+      "state": {"address": "0xb609", "bytes": 20},
+      "ordinary_rodata": {"address": "0xb61d", "projected_bytes": 812},
+      "ordinary_data": {"address": "0xb971", "projected_bytes": 2},
+      "ordinary_bss": {"address": "0xb973", "projected_bytes": 1587, "projected_end_exclusive": "0xbfa6"}
+    },
+    "publish_last": {
+      "address": "0xb949",
+      "bytes": 40,
+      "kernal_crc_operands": ["0xb4cc", "0xb4d0"],
+      "total_named_bytes": 42
+    },
+    "fixed_points": ["0xc080", "0xc218", "0xc356"],
+    "required_gates": [
+      "fixed facade identity and sole-edge control flow",
+      "C/facade/ASM/C ABI including terminal tail-JMP",
+      "pre-ownership and profile-data reference closure",
+      "KERNAL freedom",
+      "publish-last address inventory",
+      "fresh Session aggregate qualification"
+    ],
+    "historical_rule": "Earlier 15-vector and publish-last receipts are immutable history. This object is the only active successor pin set."
+  },
+  "persistent_publish_header_completion": {
+    "status": "reviewer-authorized",
+    "hardware_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link49-facade16-missing-persistent-header-hardware-first-red.json",
+    "finding": "The persistent post-decode path reached scan and resolve, skipped mandatory header slot 40, and entered publish with staged=1 committed=0. Hardware rollback then restored a byte-empty suffix and cleared C2J.",
+    "canonical_plan": {
+      "symbol": "lisp65_c2_append_persistent_publish_plan",
+      "slots": [38, 39, 40, 41],
+      "names": ["scan", "resolve", "header_commit", "publish_exports"],
+      "bytes_with_terminator": 5
+    },
+    "rule": "Every plan kind is complete by construction. Omitting any mandatory station, including header slot 40, is a permanent negative mutation.",
+    "authorized_sequence": [
+      "source and end-to-end fixture repair",
+      "one product-shaped WPLTO truth run",
+      "one successor product link only after a fully green WPLTO",
+      "one defun hardware run only after a fully green product link"
+    ],
+    "counters": {"line1_product_first_reds": "2/3", "completed_latency_measurements": "0/2"}
+  },
+  "counters": {
+    "line1": "green; product First-Red budget remains 2/3",
+    "latency": "0/2"
+  }
+}

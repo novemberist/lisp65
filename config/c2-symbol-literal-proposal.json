@@ -1,0 +1,65 @@
+{
+  "format": "lisp65-c2-symbol-literal-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "owner-approved-option-a-c2i-v2-authorized",
+  "owner_decision": "Option A approved on 2026-07-19. C2I-v2 kind 8 represents general symbol values; kind 5 remains exclusive to compiler-proven cross-container export-call edges.",
+  "finding": "The six current manifests contain 979 general SYMBOL literal nodes. Literal spelling alone cannot prove that a value is a cross-container callable edge, so encoding every SYMBOL as the approved C2I export-name kind would invent semantics.",
+  "claim_limit": "Read-only semantic census and format comparison. It changes no product byte, authorizes no capacity and does not alter the approved recursive-literal lowering.",
+  "measured_inputs": {
+    "symbol_nodes": 979,
+    "distinct_symbol_names": 344,
+    "maximum_symbol_name_bytes": 33,
+    "all_names_canonical_ascii_1_through_255": true,
+    "per_image_symbol_nodes": {
+      "stdlib-p0": 234,
+      "ide": 326,
+      "idex": 124,
+      "m65d": 27,
+      "buffer": 0,
+      "lcc": 268
+    },
+    "c2d_v1_bytes_after_cons_lowering": 10480,
+    "projected_bank5_headroom_bytes": 40336
+  },
+  "options": [
+    {
+      "id": "c2i-v2-general-symbol-kind-8",
+      "assessment": "recommended",
+      "summary": "Add kind 8 general-symbol-name-offset while retaining kind 5 exclusively for a compiler-proven cross-container export edge. Both reuse the binary-safe local string pool; the mutable resolver interns kind 8 without claiming a function binding.",
+      "format_delta": {
+        "header_bytes": 0,
+        "entry_record_bytes": 0,
+        "literal_descriptor_bytes": 0,
+        "descriptor_count": 0,
+        "c2d_resolution_bytes": 0,
+        "c2d_v1_bytes": 10480,
+        "projected_bank5_headroom_bytes": 40336,
+        "decoder_branch_bytes": "unpriced-until-real-link"
+      },
+      "emitter_rule": "Every legacy SYMBOL node maps to kind 8. Kind 5 is emitted only when compiler provenance identifies a cross-container callable edge and the target is a declared export. Name equality alone is never provenance."
+    },
+    {
+      "id": "rename-kind-5-to-general-symbol",
+      "assessment": "rejected-weakens-export-edge-contract",
+      "summary": "Generalize the existing export-name kind to every symbol. This costs no record bytes but erases the format-level distinction that makes cross-container callable edges auditable."
+    },
+    {
+      "id": "infer-callable-role-from-name",
+      "assessment": "rejected-false-evidence",
+      "summary": "Classify a symbol as local/native/export because its spelling matches a function. The same literal representation is also used for quoted data and compiler opcode tables, so spelling does not prove use."
+    }
+  ],
+  "required_negative_fixtures": [
+    "general-symbol name record is empty",
+    "general-symbol name exceeds 255 bytes",
+    "general-symbol name contains NUL, reader whitespace or non-ASCII bytes",
+    "general-symbol offset is not a string-record boundary",
+    "kind 8 carries a nonzero flags or reserved byte",
+    "kind 8 argument0 differs from the referenced record length",
+    "kind 5 export edge names an undeclared export",
+    "emitter attempts to derive kind 5 solely from spelling"
+  ],
+  "consumer_rule": "Tree-shaking, who-calls, ide-help cross-references and every future call-graph consumer may treat only kind 5 as call evidence. Kind 8 is invisible to call graphs and may never be upgraded from spelling alone.",
+  "decision": "C2I-v2 kind 8 for general symbol values is approved. Kind 5 remains reserved for proven export edges; the two alternatives remain rejected."
+}

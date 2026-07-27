@@ -1,0 +1,72 @@
+{
+  "format": "lisp65-c2-preinstall-island-guard-contract-v1",
+  "recorded_on": "2026-07-20",
+  "status": "owner-authorized-one-host-and-capacity-probe",
+  "problem": "The Link-31 boot installer called transaction infrastructure in the resident Island before that Island had been installed. A reset-preserved Link-30 Island at $1800 therefore dispatched the call as an unrelated predecessor function.",
+  "runtime_rule": {
+    "inactive_transaction": "must not enter resident-Island transaction context",
+    "active_transaction_before_ready": "must fail closed without entering resident-Island transaction context",
+    "active_transaction_after_ready": "may enter the single transaction-context seam",
+    "publication": "rtov_island_state becomes READY only after copy and destination CRC succeed"
+  },
+  "permanent_gates": {
+    "stale_fixture": "install over the exact 1291-byte Link-30 resident Island and prove zero pre-install transaction-context calls",
+    "static_closure": "the installer-reachable Bank-0 closure has no unguarded control edge or consuming data reference into $1800..$1fff; the sole pre-READY data-reference exception is a machine-proven complete-destination zero wipe",
+    "guard_shape": "the sole permitted Island edge is dominated by inactive-transaction and Island-READY checks",
+    "mutation_matrix": [
+      "inactive plus stale Island does not call Island context",
+      "active plus not-ready fails closed without Island context",
+      "active plus ready calls the Island context",
+      "unguarded Island edge is rejected",
+      "installer-closure consuming Island data reference is rejected",
+      "exact $1800/zero/2048/__memset manufacturing write is accepted",
+      "wrong target, wrong length, nonzero fill, wrong callee, incomplete address pair and extra Island reference are rejected"
+    ]
+  },
+  "manufacturing_write_amendment_2026_07_21": {
+    "status": "owner-authorized-narrow-gate-correction-and-pure-replay",
+    "reason": "the written invariant already permits the installer to write and verify the destination while manufacturing it; the former gate incorrectly classified every retained data reference as consumption",
+    "sole_permitted_machine_tuple": {
+      "source": "vm_runtime_overlay_install_island",
+      "target": "__lisp65_resident_island_start",
+      "target_address": "0x1800",
+      "addend": 0,
+      "fill": 0,
+      "length_bytes": 2048,
+      "callee": "__memset",
+      "required_address_pair": ["R_MOS_ADDR16_LO", "R_MOS_ADDR16_HI"],
+      "linked_occurrences": 3
+    },
+    "all_other_pre_ready_reads_writes_or_calls": "fail-closed",
+    "replay_scope": {
+      "immutable_elf_sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b",
+      "compiler_runs": 0,
+      "linker_runs": 0,
+      "wplto_retries": 0,
+      "product_links": 0,
+      "hardware_runs": 0
+    }
+  },
+  "capacity_limits": {
+    "bank0_text_headroom_min_bytes": 0,
+    "bank0_text_reference_headroom_bytes": 72,
+    "bank0_bss_headroom_bytes": 19,
+    "resident_island_headroom_bytes": 108,
+    "runtime_slice_headroom_bytes": 10,
+    "e000_delta_required_bytes": 0
+  },
+  "scope": {
+    "host_lifecycle_probes": 1,
+    "product_shaped_seed_links": 1,
+    "product_closure_links": 0,
+    "hardware_runs": 0,
+    "successor_product_link": "blocked pending review of the probe receipt"
+  },
+  "historical_identity": {
+    "link30_island_length_bytes": 1291,
+    "link30_island_payload_sha256": "5d0141d0c78cfd29bacc993b0050c2ba5770938b36236f6c4e12bf740600b40a",
+    "link31_product_sha256": "bfa76fe560979ae59cedd2128300c3761de56f45039f3be24f5ed228cdda23e2",
+    "link31_first_red_diagnosis_sha256": "a6c6cfbdb34817d594cd58fae43b75e694f54ad412633221a47ca60ec326703e"
+  },
+  "first_red_rule": "Any semantic, mutation, static-closure, capacity, placement or frozen-budget red stops before a product link."
+}

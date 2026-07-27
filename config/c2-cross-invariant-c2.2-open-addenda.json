@@ -1,0 +1,314 @@
+{
+  "format": "lisp65-c2.2-cross-invariant-open-addenda-v1",
+  "recorded_on": "2026-07-23",
+  "status": "class-c-line-review-approved-implementation-authorized",
+  "scope": {
+    "matrix_rows": [
+      "B3",
+      "C3",
+      "D3",
+      "E5"
+    ],
+    "product_identity": {
+      "link": 57,
+      "prg_sha256": "7d568ceb7edab95a237ff3079fcf689768373a9ea48a5a43f355f6275ddc5df8",
+      "elf_sha256": "306ba2aca61bbd2b924f3b52fd03fbbd9db95330f9c81e1190329abc147bf950"
+    },
+    "not_in_scope": [
+      "product implementation",
+      "capacity or placement",
+      "compiler or product link",
+      "hardware execution",
+      "promotion or acceptance"
+    ]
+  },
+  "authorities": {
+    "matrix_review_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-cross-invariant-full-matrix-link57-review-receipt.json",
+    "kernal_unmap_contract": "config/c2-kernal-unmap-contract.json",
+    "dma_completion_contract": "config/c2-runtime-overlay-dma-completion-contract.json",
+    "nested_append_contract": "config/c2-nested-append-unwind-contract.json",
+    "error_registry": "config/error-texts.json",
+    "chipset_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220"
+    },
+    "core": {
+      "path": "build/upstream-verification/mega65-core",
+      "commit": "a9158930665763c592d004c895d52eff4a9eefc3"
+    }
+  },
+  "B3": {
+    "title": "RUN/STOP break x DMA transport in flight",
+    "decision": "defer-exactly-once-to-first-safe-evaluator-boundary",
+    "transport_state_machine": [
+      {
+        "state": "pre-submit",
+        "poll_or_longjmp": "forbidden inside the transport seam",
+        "break_action": "latch only",
+        "safe_exit": "the job has not been submitted; the caller may return to the evaluator boundary"
+      },
+      {
+        "state": "submitted-unproved",
+        "poll_or_longjmp": "forbidden",
+        "break_action": "latch only while DMA/convergence state remains owned by the seam",
+        "safe_exit": "none"
+      },
+      {
+        "state": "content-proved",
+        "poll_or_longjmp": "still forbidden until the seam has restored its descriptor, scratch and map invariants",
+        "break_action": "retain the latch",
+        "safe_exit": "return status to the first outer evaluator boundary"
+      },
+      {
+        "state": "safe-evaluator-boundary",
+        "poll_or_longjmp": "permitted",
+        "break_action": "consume the one pending latch and enter the sole C2J-aware abort landing",
+        "safe_exit": "usable REPL with exact rollback"
+      }
+    ],
+    "invariants": [
+      "No product DMA submit, convergence or content-proof closure calls lisp_poll, lisp_abort, longjmp or the C2J abort landing.",
+      "A RUN/STOP edge may set one pending bit during any transport state but may not unwind that state.",
+      "The pending bit is idempotent: repeated samples of one held press do not create multiple aborts.",
+      "The first safe evaluator boundary consumes the pending bit exactly once before the next Lisp evaluator step.",
+      "Descriptor bytes, transport scratch, C2D, C2J, exports and both Chip planes equal the corresponding no-break outcome until the normal abort landing performs its contracted rollback."
+    ],
+    "fixture": {
+      "cutpoints": [
+        "immediately-before-submit",
+        "after-submit-before-first-content-proof",
+        "during-convergence-after-at-least-one-mismatch",
+        "after-content-match-before-seam-return",
+        "first-safe-evaluator-boundary"
+      ],
+      "required_for_each_transport_seam": true,
+      "required_observations": [
+        "no non-local exit before the safe boundary",
+        "one pending abort",
+        "exactly one abort delivery",
+        "normal transport postcondition before rollback",
+        "byte-identical contracted rollback after delivery"
+      ],
+      "mutations": [
+        "poll-inside-submitted-transport",
+        "longjmp-inside-convergence",
+        "drop-pending-break",
+        "deliver-break-twice",
+        "deliver-after-one-extra-evaluator-step"
+      ]
+    },
+    "closure": "reviewed addendum plus linked closure inventory and all cutpoints green for every product DMA seam"
+  },
+  "C3": {
+    "title": "Freezer x handoff state machine",
+    "decision": "owner-qualified-cutpoints-and-exact-continuation-only",
+    "platform_distinction": {
+      "freezer": "double-RESTORE enters hypervisor trap 0x42 at an instruction-fetch boundary; it is not the guest NMI vector",
+      "guest_nmi": "guest NMI remains independently possible and is not masked by SEI",
+      "rule": "Freezer and guest NMI are separate proof obligations; neither may be inferred safe from IRQ masking"
+    },
+    "source_less_irq_episode": {
+      "state": "C2K_SOURCELESS_IRQS at $FF86 is an episode latch, not a session counter",
+      "reset": "every owned raster IRQ clears the latch before frame progress is published",
+      "allow": "the first source-less return IRQ after an owned raster IRQ is accepted and sets the latch",
+      "reject": "a second consecutive source-less IRQ without an intervening owned raster IRQ fails closed",
+      "freezer_sequence": "source-less, owned-raster, source-less is legal for arbitrarily many Freezer episodes",
+      "storm_sequence": "source-less, source-less without owned-raster progress remains fail-closed"
+    },
+    "cutpoints": [
+      {
+        "id": "H0",
+        "interval": "firmware-owned before SEI",
+        "map_owner": "firmware",
+        "vector_owner": "firmware",
+        "nmi_owner": "firmware",
+        "published_state": "firmware-owned",
+        "only_legal_continuation": "resume the exact frozen firmware-owned instruction; later C2 ownership begins from its first check"
+      },
+      {
+        "id": "H1",
+        "interval": "replacement-armed after SEI and before MAP commit",
+        "map_owner": "firmware",
+        "vector_owner": "firmware",
+        "nmi_owner": "firmware",
+        "published_state": "replacement-armed",
+        "only_legal_continuation": "resume the exact handoff instruction; no product vector, evaluator or session path is reachable; the remaining handoff checks run fresh"
+      },
+      {
+        "id": "H2",
+        "interval": "handoff-closed after MAP commit and before product-owned publication",
+        "map_owner": "C2",
+        "vector_owner": "C2",
+        "nmi_owner": "C2",
+        "published_state": "handoff-closed",
+        "only_legal_continuation": "resume only inside the handoff closure and complete map, vector, abort and frame validation before product-owned publication; any owner/identity mismatch fails closed"
+      },
+      {
+        "id": "H3",
+        "interval": "product-owned steady state",
+        "map_owner": "C2",
+        "vector_owner": "C2",
+        "nmi_owner": "C2",
+        "published_state": "product-owned",
+        "only_legal_continuation": "the identity-specific Freezer return proof validates map generation, vectors, E000 and both Chip planes before the fixture permits ordinary evaluator work"
+      }
+    ],
+    "nmi_rules": [
+      "The closure active at a cutpoint may return only to the same cutpoint interval; it may not jump directly to an evaluator or publish a later state.",
+      "The C2 NMI handler acknowledges only its owned source, preserves the complete machine context, allocates nothing and calls no Lisp.",
+      "An NMI observed while C2K_STATE is not product-owned cannot manufacture product-owned state.",
+      "A vector may become authoritative only after its complete target bytes and mapping are authoritative."
+    ],
+    "fixture": {
+      "host_state_machine": [
+        "all H0-H3 owner tuples",
+        "Freezer trap and guest NMI classified separately",
+        "resume-to-same-interval only",
+        "map/vector/state mismatch fails closed",
+        "no evaluator edge from H0-H2",
+        "two Freezer returns separated by owned raster progress are accepted",
+        "two consecutive source-less IRQs without raster progress fail closed"
+      ],
+      "hardware": {
+        "required_cutpoints": [
+          "H1 replacement-armed before MAP",
+          "H2 handoff-closed before product publication",
+          "H3 product-owned identity-specific Freezer roundtrip"
+        ],
+        "method": "a non-promotable cutpoint carrier resumes into a verifier, never directly into Lisp; the verifier either records the exact owner tuple and stops or fails closed",
+        "determinism_rule": "a cutpoint not deterministically reachable on the pinned core is not silently skipped; it remains OPEN with the precise platform limitation"
+      },
+      "mutations": [
+        "treat-SEI-as-NMI-mask",
+        "route-Freezer-through-guest-NMI",
+        "publish-product-owned-at-H1",
+        "resume-evaluator-from-H2",
+        "accept-wrong-map-generation",
+        "accept-vector-before-target",
+        "owned-raster-does-not-clear-source-less-latch",
+        "source-less-IRQ-clears-its-own-latch",
+        "accept-second-consecutive-source-less-IRQ",
+        "reject-first-source-less-IRQ"
+      ]
+    },
+    "closure": "reviewed addendum, complete host cutpoint matrix and all deterministically reachable hardware cutpoints green; no speculative resume"
+  },
+  "D3": {
+    "title": "typed queue overflow x break delivery",
+    "decision": "single-independent-matrix-edge-source",
+    "pinned_source": {
+      "selector_register": "0xd614",
+      "selector_value": 7,
+      "peek_register": "0xd613",
+      "active_low_mask": "0x80",
+      "matrix_ordinal": 63,
+      "normal_ascii": "0x03",
+      "meaning": "physical RUN/STOP level independent of the typed event queue"
+    },
+    "queue_fact": {
+      "visible_head_slots": 1,
+      "buffered_slots": 4,
+      "total_events": 5,
+      "overflow_behavior": "a sixth event is not enqueued while the five-event queue is full",
+      "authority": "pinned mega65-core iomapper.vhdl"
+    },
+    "source_rule": [
+      "RUN/STOP abort identity comes only from the matrix edge source, never from PETSCII table interpretation.",
+      "The selector is fixed before the owned raster IRQ is enabled; the IRQ samples D613 bit 7.",
+      "Released arms the source. The first active-low sample while armed sets pending and disarms. Held samples do nothing. A released sample rearms.",
+      "A typed queue head with PETSCII 0x03 is captured and dequeued exactly once but is discarded as an abort source, preventing duplicate delivery of the same physical press.",
+      "All non-RUN/STOP queue tuples retain their original code/modifier order and exactly-once dequeue semantics.",
+      "The pending matrix break is out-of-band from ordinary tuple order and is consumed exactly once at the B3 safe evaluator boundary."
+    ],
+    "single_truth_rule": "segment 7, bit 7 and PETSCII 0x03 are generated by a source-identity gate from the pinned core matrix ordinal 63; no product-local keymap table is permitted",
+    "fixture": {
+      "hardware_sequence": [
+        "hold product consumption and fill the typed queue with five distinct ordinary code/modifier tuples",
+        "prove the head plus four buffered events from the pinned core model",
+        "press and release physical RUN/STOP while the queue remains full",
+        "resume product polling",
+        "observe exactly one abort at the first safe evaluator boundary",
+        "drain and compare all five ordinary tuples in original order",
+        "prove a later queued PETSCII 0x03 cannot cause a second abort"
+      ],
+      "negative_cases": [
+        "matrix press not latched while queue full",
+        "held key produces two aborts",
+        "queued PETSCII 0x03 produces an abort",
+        "ordinary tuple reordered",
+        "ordinary tuple modifier changed",
+        "second handwritten RUN/STOP mapping introduced",
+        "wrong matrix segment",
+        "wrong matrix bit or polarity"
+      ]
+    },
+    "closure": "source-identity gate and queue-full physical hardware fixture green with exactly one abort and five unchanged ordinary tuples"
+  },
+  "E5": {
+    "title": "bounded nesting four x user-visible error",
+    "decision": "append-only-stable-depth-error",
+    "error": {
+      "code": 63,
+      "c_name": "LISP65_ERR_C2_NESTING_DEPTH",
+      "id": "c2-nesting-depth",
+      "domain": "runtime",
+      "audience": "user",
+      "text": "eval: nesting depth exceeded",
+      "numeric_fallback": "E3f",
+      "detail": {
+        "kind": "fixnum",
+        "value": 5,
+        "meaning": "the refused transient depth; the configured maximum remains four"
+      },
+      "registry_rule": "append after current code 62 and raise LISP65_ERROR_CODE_LIMIT from 63 to 64; all prior numeric identities remain byte-for-byte unchanged"
+    },
+    "failure_order": [
+      "read and authenticate the current transient depth",
+      "if the requested depth is five, set the stable innermost status and Fixnum detail",
+      "return before C2J publication, Attic write, record write, watermark change, export write or READY change",
+      "render through the normal L65E/Lisp error surface"
+    ],
+    "state_postcondition": [
+      "C2D header and all active rows byte-identical",
+      "C2J all zero",
+      "Session-Attic active interval byte-identical",
+      "Bank 2 and Bank 3 byte-identical",
+      "exports byte-identical",
+      "READY, family and generation unchanged",
+      "the REPL remains usable"
+    ],
+    "fixture": {
+      "surface": "real eval calling nested eval until the fifth transient installation is requested",
+      "required_cases": [
+        "depths one through four execute and restore exact state",
+        "depth five renders LISP65_ERR_C2_NESTING_DEPTH with Fixnum 5",
+        "depth five is catchable by the normal Lisp error boundary",
+        "the exact pre-call state is restored",
+        "a subsequent ordinary expression returns t"
+      ],
+      "mutations": [
+        "collapse-depth-five-to-VM_BADOPCODE",
+        "collapse-depth-five-to-LISP65_ERR_LCC_INSTALL",
+        "reuse-an-existing-error-code",
+        "omit-detail",
+        "publish-journal-before-depth-check",
+        "change-existing-error-number",
+        "leave-READY-zero",
+        "leave-one-C2D-byte-changed"
+      ]
+    },
+    "closure": "append-only registry and renderer gates green plus depth-five end-to-end fixture with exact state and usable REPL"
+  },
+  "review_gate": {
+    "required_decisions": [
+      "accept-or-amend-B3",
+      "accept-or-amend-C3",
+      "accept-or-amend-D3",
+      "accept-or-amend-E5"
+    ],
+    "implementation": "authorized-for-the-four-reviewed-addenda-and-their-fixtures",
+    "C1_hardware": "authorized-after-the-host-fixtures-and-WPLTO-closure-are-green",
+    "acceptance_chain": "blocked-until-all-C2.2-OPEN-rows-are-PROVEN-or-EXCLUDED"
+  },
+  "claim_limit": "The four addenda are line-reviewed and implementation is authorized. No row is PROVEN until its named source, mutation, WPLTO and, where required, hardware fixtures are green; the acceptance chain remains blocked until the matrix gate is rebound."
+}

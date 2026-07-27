@@ -17,6 +17,12 @@ unsigned char io_disk_byte(unsigned char i);
 /* D68B..D68F remains a private token of the guarded write capability. */
 /* Datei ab (track,sektor) folgen, in EXT akkumulieren und via load_source_stream auswerten. 1=ok. */
 unsigned char io_disk_load_chain(unsigned char track, unsigned char sector);
+/* C2 persistent-code seam: follow one 1581 chain into the canonical EXT
+ * staging window without interpreting or publishing it.  The sole C2
+ * decoder owns validation and the commit marker after this call. */
+#ifdef LISP65_C2_PRODUCT_CUT
+unsigned int io_disk_stage_chain(unsigned char track, unsigned char sector);
+#endif
 /* Boot-Ladeanzeige (S5): Reader-Fortschritt durch die Disk-Quelle in Promille (0..1000). */
 unsigned int io_disk_load_permille(void);
 /* Eine bereits nach DISK_EXT_FILE gestagete Quelle (len Bytes) kompilieren (Test/Boot ohne F011-Read). */

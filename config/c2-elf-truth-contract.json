@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-c2-shared-elf-truth-contract-v1",
+  "status": "post-promotion-migration-complete",
+  "source": "tools/host-lisp/elf_truth.py",
+  "tool_input": {
+    "producer": "llvm-readobj",
+    "style": "JSON",
+    "human_column_parsing": "forbidden"
+  },
+  "identity": {
+    "primary": "section-plus-symbol/addend",
+    "bare_vma": "never-an-owner-identity",
+    "overlapping_vmas": "preserve-all-section-owners",
+    "notype_and_zero_size": "retain-st_shndx",
+    "absolute_symbols": "fail-unless-name-and-value-registered",
+    "sized_intervals": "exactly-one-owner-required",
+    "contract_intervals": "explicit-name-section-start-size-kind"
+  },
+  "immediate_parser_replay_authorization_2026_07_21": {
+    "status": "owner-authorized-one-pure-replay",
+    "bound_elf_sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b",
+    "preceding_first_red_sha256": "c56302e76297f8a12481c013684139c34f135c2dfc004789fda80c19ebe65e08",
+    "diagnosis_sha256": "217a833186dc8583008e28afa47875a37c66b332026ab494013dffa8b28050b4",
+    "registered_absolute_markers": {
+      "__lisp65_workbench_runtime_overlay_vma": 50006
+    },
+    "execution_limits": {
+      "compiler_runs": 0,
+      "hardware_runs": 0,
+      "link33_attempts": 0,
+      "linker_runs": 0,
+      "product_closure_links": 0,
+      "pure_replays": 1,
+      "wplto_retries": 0
+    }
+  },
+  "fixed_hot_block_wall_pin_replay_authorization_2026_07_21": {
+    "status": "owner-authorized-pin-273-to-33-and-one-pure-replay",
+    "bound_elf_sha256": "c82b9bd0763e1c515e083c615b7f35742b571a262e75b03649a5798382110d2b",
+    "preceding_first_red_sha256": "c06df28dd7126cb4203665b5f3026278f9d55d1f8dc58addaa4b8fdbbf544f0f",
+    "diagnosis_sha256": "960fde9558d6fc9c1fbb4d6afdcff8eefa6a5688f98c6fb82309f65463a8dd65",
+    "old_pin_bytes": 273,
+    "new_pin_bytes": 33,
+    "arithmetic": "0xc356 - (0xc218 + 45 + 240) = 33",
+    "execution_limits": {
+      "compiler_runs": 0,
+      "hardware_runs": 0,
+      "link33_attempts": 0,
+      "linker_runs": 0,
+      "product_closure_links": 0,
+      "pure_replays": 1,
+      "wplto_retries": 0
+    }
+  },
+  "migration": {
+    "rule": "staged; each existing mutation suite is the regression net",
+    "completion_gate": "all named consumers migrated; post-promotion static gate keeps them on the shared structured view",
+    "consumers": {
+      "boot_lifetime": "migrated-shared-elf-truth",
+      "pre_ownership": "migrated-shared-elf-truth",
+      "fixed_facade": "migrated-shared-elf-truth",
+      "profile_data_reference": "migrated-shared-elf-truth",
+      "kernal_control_flow": "migrated-shared-elf-truth",
+      "final_section_inventory": "migrated-shared-elf-truth"
+    },
+    "instruction_decoder_boundary": "llvm-objdump remains only for opcode decoding; section, symbol, size and relocation ownership come exclusively from elf_truth",
+    "completion_gate_source": "tools/host-lisp/c2_elf_truth_migration_gate.py"
+  },
+  "claim_limit": "Host gate infrastructure only. No product bytes, linker run, product link, hardware execution, promotion or acceptance."
+}

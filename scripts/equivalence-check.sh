@@ -89,6 +89,21 @@ else
   grep -A2 "DRIFT" "$out/lcc-oracle.out" | head -12
   fail=1
 fi
+# ---- Quote-source parity: reader sugar through the product-emitter boundary ----
+# 'X and (quote X) are one language form.  Pin their reader normal form,
+# LCC/Python emission, and exact c2_session_emit_add input as one identity.
+if python3 tools/host-lisp/quote_emission_parity.py \
+    --binary "$out/equivalence-check" \
+    --reader build/reader-conformance-host \
+    --fixture tests/equivalence/quote-emission-parity.json \
+    --out "$out/quote-emission-parity.json" \
+    > "$out/quote-emission-parity.out" 2>&1; then
+  tail -1 "$out/quote-emission-parity.out"
+else
+  echo "equivalence-check: DRIFT (Quote-Emissionsparitaet):"
+  tail -8 "$out/quote-emission-parity.out"
+  fail=1
+fi
 # ---- Fifth diff: execute lcc-compiled code ----
 # vm = C compiler reference; lcc = Lisp compiler -> bc_assemble -> vm_run. Diff results.
 "$out/equivalence-check" vm  tests/equivalence/lcc-run-forms.lisp > "$out/vm-run.out"

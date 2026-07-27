@@ -1,0 +1,91 @@
+{
+  "format": "lisp65-c2.2-c1-freezer-cutpoint-contract-v2",
+  "status": "owner-reviewed-fixture-contract",
+  "recorded_on": "2026-07-23",
+  "matrix_row": "C1",
+  "product_authority": {
+    "link": 58,
+    "sha256": "4bab8371aa54060bef4ab9493e12dd6afd230baeb83a11f07daccdaa05000e6f",
+    "rule": "Link 58 is immutable. The fixture is a separate non-promotable identity built from the same source truth with one diagnostic-only define."
+  },
+  "link60_successor_authority": {
+    "link": 60,
+    "sha256": "7fc3bb84acf6039ea34ff863ba4f6d39458400a7848ae7077a8085ccd9cf2416",
+    "catalog": "strict L65R-v4, 51 dense records, region 0 plus the separately bound region-1 image",
+    "scope": "Repeat cutpoint 3 with the episode latch and cutpoint 4 with the CPU-to-Chip write-completion barriers. Cutpoints 1 and 2 retain their already accepted predecessor evidence.",
+    "rule": "Link 60 is immutable. The diagnostic carrier replaces only the four named cold region-0 slices, keeps region 1 byte-identical, is rebound to the Link-60 ELF, and is forced to the Link-60 main-family stage tuple without changing any resident product byte."
+  },
+  "diagnostic_identity": {
+    "feature": "LISP65_C2_C1_FREEZER_CUTPOINT_FIXTURE",
+    "promotable": false,
+    "screen_gap": {
+      "start": "0x17a0",
+      "end_exclusive": "0x1800",
+      "command": "0x17e0",
+      "reached": "0x17e1"
+    },
+    "resident_cells": 0,
+    "gc_roots": 0,
+    "product_bytes": 0,
+    "rule": "Each cold overlay pays its own hold sequence; no overlay calls another overlay. Every hold iteration reloads the command at 0x17e0 from memory and compares that fresh value with the cutpoint constant. No CPU register is assumed to survive the Freezer boundary."
+  },
+  "cutpoints": [
+    {
+      "id": 1,
+      "name": "journal-written",
+      "owner": "c2_append_header_phase completion-bookend branch",
+      "position": "after the emissions-bound C2J CRC has converged and the in-memory journal state changes to ACTIVE, before return",
+      "continuation": "normal append"
+    },
+    {
+      "id": 2,
+      "name": "staged-before-header",
+      "owner": "c2_append_header_phase",
+      "position": "after phase preconditions and before first header byte is copied or published",
+      "continuation": "normal append"
+    },
+    {
+      "id": 3,
+      "name": "header-before-exports",
+      "owner": "c2_append_publish_exports_phase",
+      "position": "after committed-header precondition and before first export-plan read or cell mutation",
+      "continuation": "normal append"
+    },
+    {
+      "id": 4,
+      "name": "abort-unpublish",
+      "owner": "c2_append_rollback_unpublish_phase",
+      "position": "after export restoration and old-header republication, before wipe/finalize and C2J clear",
+      "continuation": "rollback finalize, journal clear and usable REPL",
+      "reach_witness": "command 4 remains armed while the old header and exports are restored and C2J is still ACTIVE; this state tuple is unique and avoids crossing the rollback slice's 768-byte pack quantum",
+      "injection": "the same command forces a failure only after the export phase completed, so the ordinary rollback plan reaches this cutpoint"
+    }
+  ],
+  "hardware_protocol": {
+    "device_runs": {
+      "maximum": 2,
+      "rule": "Cutpoints 1 and 2 remain bound to their accepted predecessor runs. The Link-60 successor appointment repeats cutpoint 3 with the episode latch and cutpoint 4 with the write-completion barriers."
+    },
+    "freezer_roundtrips": 4,
+    "captures_per_cutpoint": [
+      "before-freeze-at-hold",
+      "after-thaw-at-same-hold",
+      "after-continuation"
+    ],
+    "freeze_identity": "Bank 2 and Bank 3 byte-identical; Bank 5 C2D/export/C2J byte-identical; E000 byte-identical except the three already contracted volatile bytes FF83, FF84 and FF86",
+    "normal_completion": "journal-written, staged-before-header and header-before-exports each publish one callable definition and leave C2J zero",
+    "abort_completion": "abort-unpublish publishes no callable definition, restores exact pre-append C2D/export state, leaves Bank 2/3 exact and clears C2J last"
+  },
+  "required_mutations": [
+    "wrong_command_address",
+    "wrong_reached_address",
+    "missing_each_of_four_cutpoints",
+    "wrong_cutpoint_id",
+    "abort_injection_before_export_completion",
+    "abort_unpublish_hold_before_old_header_restore",
+    "ordinary_hold_carries_id_in_register",
+    "state_proven_hold_carries_id_in_register",
+    "diagnostic_feature_present_in_product_profile"
+  ],
+  "claim_limit": "One non-promotable hardware fixture for matrix row C1. It is not a product link, promotion, acceptance-chain result or release claim."
+}

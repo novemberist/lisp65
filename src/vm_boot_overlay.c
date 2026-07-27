@@ -6,6 +6,11 @@
 #include "interrupt.h"
 #include "eval.h"
 #include "mem.h"
+#include "c2_lite_bank3_stage.h"
+#include "error_codes.h"
+#ifdef LISP65_C2_LITE_BANK3_STAGING
+#include "c2_kernal_facade.h"
+#endif
 
 #if defined(LISP65_BOOT_OVERLAY_WIPE) && !defined(LISP65_BOOT_STACK_PROBE)
 #error "LISP65_BOOT_OVERLAY_WIPE requires LISP65_BOOT_STACK_PROBE"
@@ -48,6 +53,19 @@ extern uint8_t __lisp65_workbench_overlay_end[];
                               __lisp65_workbench_overlay_start))
 #define OV_TARGET __lisp65_workbench_overlay_start
 #define OV_CALL() vm_workbench_boot_overlay_entry()
+#endif
+
+#if defined(LISP65_C2_LITE_BANK3_STAGING) && \
+    !defined(LISP65_BOOT_OVERLAY_HOST_TEST)
+extern uint8_t __lisp65_boot_bank3_stage_start[];
+extern uint8_t __lisp65_boot_bank3_stage_end[];
+void vm_bank3_boot_stage_entry(void);
+#define B3_VMA ((uint16_t)(uintptr_t)__lisp65_boot_bank3_stage_start)
+#define B3_ENTRY ((uint16_t)(uintptr_t)vm_bank3_boot_stage_entry)
+#define B3_LEN ((uint16_t)(__lisp65_boot_bank3_stage_end - \
+                           __lisp65_boot_bank3_stage_start))
+#define B3_CALL() vm_bank3_boot_stage_entry()
+#define B3_CHAIN_BANK 2u
 #endif
 
 #ifdef LISP65_BOOT_STACK_PROBE
@@ -207,7 +225,10 @@ static uint8_t ov_started;
 void vm_boot_overlay_host_reset(void) { ov_started = 0; }
 #endif
 
-static uint16_t ov_crc16(const uint8_t *p, uint16_t n) {
+/* The non-LTO bootstrap commit leaf calls this ordinary resident helper.  Keep
+ * it a sized ELF citizen instead of letting LTO clone the CRC into the seam. */
+__attribute__((noinline, used))
+uint16_t ov_crc16(const uint8_t *p, uint16_t n) {
     uint16_t crc = LISP65_BOOT_OVERLAY_CRC16_INIT;
     while (n--) {
         uint8_t bits = 8;
@@ -231,9 +252,114 @@ void vm_workbench_boot_overlay_entry(void) {
     eval_init();
 }
 
+#ifdef LISP65_C2_LITE_BANK3_STAGING
+/* The six-byte resident seam is emitted by c2_boot_chain_commit.s.  Keeping
+ * the Workbench geometry outside both overlay records prevents an overlay
+ * from owning a direct reference to its NOCROSSREFS sibling. */
+extern const uint16_t vm_boot_overlay_chain_expected[3];
+
+/* Record 1 has an 18-byte prefix reserved by the linker.  Once its code is
+ * executing beyond that prefix, it may reuse the prefix as the descriptor
+ * buffer for Record 2 without overwriting a live instruction. */
+static __attribute__((noinline, used,
+                      section(".lisp65_boot_bank3_stage")))
+uint16_t ov_bank_crc16(uint8_t bank, uint16_t length) {
+    uint8_t block[32];
+    uint16_t crc = LISP65_BOOT_OVERLAY_CRC16_INIT;
+    uint16_t offset = 0u;
+    while (offset != length) {
+        uint8_t i = 0u;
+        uint8_t chunk = (uint16_t)(length - offset) > sizeof block
+            ? sizeof block : (uint8_t)(length - offset);
+        c2_facade_vm_code_load(bank, offset, chunk, block);
+        while (i != chunk) {
+            uint8_t bits = 8u;
+            crc ^= (uint16_t)block[i++] << 8;
+            do {
+                crc = (crc & 0x8000u)
+                    ? (uint16_t)((crc << 1) ^
+                                 LISP65_BOOT_OVERLAY_CRC16_POLY)
+                    : (uint16_t)(crc << 1);
+            } while (--bits);
+        }
+        offset = (uint16_t)(offset + chunk);
+    }
+    return crc;
+}
+
+__attribute__((noinline, used, section(".lisp65_boot_bank3_stage")))
+uint8_t vm_boot_overlay_chain_prepare(void) {
+    uint8_t *header = __lisp65_boot_bank3_stage_start;
+    uint16_t expected_vma = vm_boot_overlay_chain_expected[0];
+    uint16_t expected_entry = vm_boot_overlay_chain_expected[1];
+    uint16_t expected_length = vm_boot_overlay_chain_expected[2];
+    uint16_t next = (uint16_t)(((uint32_t)LISP65_BOOT_OVERLAY_STAGE_OFF
+        + LISP65_BOOT_OVERLAY_HEADER_SIZE + B3_LEN + 0xffu) & ~0xffu);
+    uint16_t expected_crc;
+    uint32_t end = (uint32_t)next + LISP65_BOOT_OVERLAY_HEADER_SIZE
+        + expected_length;
+
+    if (end > 0x10000UL) return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_MAGIC;
+    c2_facade_vm_code_load((uint8_t)LISP65_BOOT_OVERLAY_STAGE_BANK,
+                           next, LISP65_BOOT_OVERLAY_HEADER_SIZE, header);
+    if (header[0] != LISP65_BOOT_OVERLAY_MAGIC_0 ||
+        header[1] != LISP65_BOOT_OVERLAY_MAGIC_1 ||
+        header[2] != LISP65_BOOT_OVERLAY_MAGIC_2 ||
+        header[3] != LISP65_BOOT_OVERLAY_MAGIC_3) return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_VERSION;
+    if (header[4] != LISP65_BOOT_OVERLAY_VERSION) return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_HEADER;
+    if (header[5] != LISP65_BOOT_OVERLAY_HEADER_SIZE) return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_PROFILE;
+    if (header[6] != (uint8_t)LISP65_BOOT_OVERLAY_PROFILE_BUILD_ID ||
+        header[7] != (uint8_t)(LISP65_BOOT_OVERLAY_PROFILE_BUILD_ID >> 8) ||
+        header[8] != (uint8_t)(LISP65_BOOT_OVERLAY_PROFILE_BUILD_ID >> 16) ||
+        header[9] != (uint8_t)(LISP65_BOOT_OVERLAY_PROFILE_BUILD_ID >> 24))
+        return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_VMA;
+    if (ov_u16(header + 10) != expected_vma) return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_ENTRY;
+    if (ov_u16(header + 12) != expected_entry) return 0;
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_LENGTH;
+    if (ov_u16(header + 14) != expected_length) return 0;
+    expected_crc = ov_u16(header + 16);
+
+    /* Record 1 owns all parsing and source verification for Record 2.  Bank 2
+     * is unpublished scratch here; the later C2-lite code stage replaces it
+     * before READY. */
+    c2_facade_c2_dma((uint16_t)(next + LISP65_BOOT_OVERLAY_HEADER_SIZE),
+                     (uint8_t)LISP65_BOOT_OVERLAY_STAGE_BANK,
+                     0u, B3_CHAIN_BANK, expected_length);
+    vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_CRC;
+    return ov_bank_crc16(B3_CHAIN_BANK, expected_length) == expected_crc;
+}
+
+__attribute__((section(".lisp65_boot_bank3_stage"), noinline, used))
+void vm_bank3_boot_stage_fail(void) {
+    lisp_abort_static(LISP65_ERR_RUNTIME_FAMILY_STAGE,
+                      "runtime family staging failed; redeploy");
+}
+
+/* c2_boot_chain_commit.s owns the sole resident commit seam.  C deliberately
+ * has no second implementation of that ABI. */
+#endif
+
 __attribute__((noinline)) uint8_t vm_install_staged_boot_overlay(void) {
     uint8_t *header = OV_TARGET;
     uint16_t expected_crc;
+#if defined(LISP65_C2_LITE_BANK3_STAGING) && \
+    !defined(LISP65_BOOT_OVERLAY_HOST_TEST)
+#define FIRST_VMA B3_VMA
+#define FIRST_ENTRY B3_ENTRY
+#define FIRST_LEN B3_LEN
+#define FIRST_CALL() B3_CALL()
+#else
+#define FIRST_VMA OV_VMA
+#define FIRST_ENTRY OV_ENTRY
+#define FIRST_LEN OV_LEN
+#define FIRST_CALL() OV_CALL()
+#endif
 
     if (ov_started) {
         vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_REENTRY;
@@ -241,10 +367,8 @@ __attribute__((noinline)) uint8_t vm_install_staged_boot_overlay(void) {
     }
     ov_started = 1;
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_LENGTH;
-    if (!OV_VMA || OV_LEN < LISP65_BOOT_OVERLAY_HEADER_SIZE) goto done;
+    if (!FIRST_VMA || FIRST_LEN < LISP65_BOOT_OVERLAY_HEADER_SIZE) goto done;
 
-    /* The execution window is dead until the verified payload replaces this
-     * descriptor. Only its expected CRC must survive that DMA (two bytes). */
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_MAGIC;
     vm_code_load((uint8_t)LISP65_BOOT_OVERLAY_STAGE_BANK,
                  (uint16_t)LISP65_BOOT_OVERLAY_STAGE_OFF,
@@ -263,29 +387,37 @@ __attribute__((noinline)) uint8_t vm_install_staged_boot_overlay(void) {
         header[8] != (uint8_t)(LISP65_BOOT_OVERLAY_PROFILE_BUILD_ID >> 16) ||
         header[9] != (uint8_t)(LISP65_BOOT_OVERLAY_PROFILE_BUILD_ID >> 24)) goto done;
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_VMA;
-    if (ov_u16(header + 10) != OV_VMA) goto done;
+    if (ov_u16(header + 10) != FIRST_VMA) goto done;
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_ENTRY;
-    if (ov_u16(header + 12) != OV_ENTRY) goto done;
+    if (ov_u16(header + 12) != FIRST_ENTRY) goto done;
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_LENGTH;
-    if (ov_u16(header + 14) != OV_LEN) goto done;
-
+    if (ov_u16(header + 14) != FIRST_LEN) goto done;
     expected_crc = ov_u16(header + 16);
 
     vm_code_load((uint8_t)LISP65_BOOT_OVERLAY_STAGE_BANK,
                  (uint16_t)(LISP65_BOOT_OVERLAY_STAGE_OFF +
                             LISP65_BOOT_OVERLAY_HEADER_SIZE),
-                 OV_LEN, OV_TARGET);
+                 FIRST_LEN, OV_TARGET);
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_CRC;
-    if (ov_crc16(OV_TARGET, OV_LEN) != expected_crc) goto done;
-
+    if (ov_crc16(OV_TARGET, FIRST_LEN) != expected_crc) goto done;
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_ENTRY_RUN;
     if (lisp_error_msg || mem_oom) goto done;
-    OV_CALL();
+    FIRST_CALL();
     if (lisp_error_msg || mem_oom) goto done;
+#if defined(LISP65_C2_LITE_BANK3_STAGING) && \
+    !defined(LISP65_BOOT_OVERLAY_HOST_TEST)
+    /* The tail-chained cold record and minimal commit seam own Record 2. */
+    if (vm_boot_overlay_status != VM_BOOT_OVERLAY_OK) goto done;
+#else
     vm_boot_overlay_status = VM_BOOT_OVERLAY_ERR_WIPE;
     if (!ov_wipe_target()) goto done;
     vm_boot_overlay_status = VM_BOOT_OVERLAY_OK;
+#endif
 done:
+#undef FIRST_VMA
+#undef FIRST_ENTRY
+#undef FIRST_LEN
+#undef FIRST_CALL
     return vm_boot_overlay_status;
 }
 #endif /* LISP65_VM && LISP65_STAGED_BOOT_OVERLAY */

@@ -1,0 +1,92 @@
+{
+  "format": "lisp65-c2-handoff-reanchor-authorization-v1",
+  "version": 1,
+  "authorized_on": "2026-07-21",
+  "status": "owner-authorized-one-contract-migration-and-one-wplto-probe",
+  "decision": "option-1-handoff-reanchor-only",
+  "feasibility_receipt": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-feasibility-receipt.json",
+    "sha256": "95a2db2630a47ad3916f961c7d547fb4086d9bf793c91eac085e8b6aeb7d10f7"
+  },
+  "geometry": {
+    "old_handoff_anchor": "0xb481",
+    "new_handoff_anchor": "0xb4a3",
+    "delta_bytes": 34,
+    "required_standing_text_headroom_bytes": 32,
+    "projected_pre_fixed_pocket_after_bytes": 195,
+    "fixed_points": ["0xc080", "0xc218", "0xc356"]
+  },
+  "authorized_work": [
+    "migrate the low-resident handoff/facade/state chain by exactly 34 bytes",
+    "repin the fifteen facade vectors and three publish-last addresses",
+    "migrate current authority and gate sources without rewriting historical receipts",
+    "run static mutation/selftests",
+    "run exactly one fresh product-shaped WPLTO capacity/placement probe with all structural gates"
+  ],
+  "hard_stops": [
+    "any fixed-point drift",
+    "text headroom below 32 bytes",
+    "pre-fixed pocket below 195 bytes",
+    "any runtime slice over 1792 bytes",
+    "E000 floor other than 115 bytes",
+    "any structural or identity gate red",
+    "any unapproved capacity drift"
+  ],
+    "not_authorized": [
+    "Link 33",
+    "hardware execution",
+    "banner trim",
+    "byte shaving",
+    "third E000 reopening",
+    "moving 0xc080, 0xc218 or 0xc356",
+        "rewriting historical receipts"
+    ],
+  "post_replay_link33_amendment_2026_07_21": {
+        "status": "owner-authorized-one-fresh-link33-after-green-wall-pin-replay",
+        "supersedes_for_this_attempt": "not_authorized:Link 33",
+        "wall_pin_replay": {
+            "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-handoff-reanchor-wplto-wall-pin-pure-replay-receipt.json",
+            "sha256": "53371fc692f60dd822b098c5172b80ff8b87f83911380abdc226d80724ee547d"
+        },
+        "required_replay_status": "passed-wall-pin-pure-replay-no-link33",
+        "execution_limits": {
+            "fresh_link33_attempts": 1,
+            "product_closure_links": 1,
+            "hardware_runs": 0
+        },
+    "first_red": "stop-before-hardware"
+  },
+  "post_preflight_authority_correction_2026_07_21": {
+    "status": "owner-authorized-one-fresh-link33-on-current-successor-pins",
+    "reason": "the fail-closed preflight compared current reanchored authority with immutable historical profile receipts; history remains identity-bound while current authority moves to the green WPLTO successor pins",
+    "preflight_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-handoff-reanchor-preflight-first-red-receipt.json",
+      "sha256": "260d317a2af7b235ec170d432724db5d229c9d524afa2932ed7c94809bd18874"
+    },
+    "preflight_diagnosis": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link33-handoff-reanchor-preflight-diagnosis.json",
+      "sha256": "37788f32b17bd878cf3e9dc66ed88abc8f772f36e5a747dc4c1476724e63eecf"
+    },
+    "current_profile_pin": {
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-profile-binding.json",
+      "sha256": "377afbeb6288ecf2bcf2db09b4ae3fa1d7ba6df7ad16d5be2e6de27360d6a3be",
+      "canonical_profile_sha256": "6226b60c3b9785bbef2210644c4ab558a2487e6cbfcbde25a1e99fe8cc9de2a6"
+    },
+    "current_inventory_pin": {
+      "path": "build/c2.2/substitution/link33-handoff-reanchor-wplto-wall-pin-replay/successor-pin-section-inventory.json",
+      "sha256": "f9ab8bffefaad67f52e73b72579d2a3f1b0e8550ecfa23b78fcbbf0d21496a64",
+      "expected_sections": 167
+    },
+    "historical_receipts": "identity-bound and immutable; not current profile or inventory authority",
+    "execution_limits": {
+      "fresh_link33_attempts_after_this_correction": 1,
+      "product_closure_links": 1,
+      "hardware_runs": 0
+    },
+    "first_red": "stop-before-hardware"
+  },
+  "rollback_identity": {
+    "path": "build/c2.2/substitution/product-link-32-preinstall-island-guard/lisp65-c2-substitution-linked.prg",
+    "sha256": "189548ea52b9af748217a0da94b7dc1d5daa5f17d190f5817f2fb4af486a676a"
+  }
+}

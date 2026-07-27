@@ -6,8 +6,9 @@ lisp65 is developed as a capacity-constrained hardware product. A source change
 is not complete merely because it compiles or passes a host test: product bytes,
 memory floors, artifact identity, and evidence bindings are part of the change.
 
-Release 1.0.0 is immutable. New work starts from the post-release branch and
-must not amend its product or R4/R5/G6 archive bytes. The private proof mirror
+Released product and acceptance seals are immutable. New work starts from the
+post-release branch and must not amend their product or R4/R5/R6/G5/G6 archive
+bytes. The private proof mirror
 had one owner-approved transport-only rewrite on 2026-07-18; the public release
 tag did not move, and recording-time private commit IDs remain resolvable
 through the checked transport map.
@@ -46,15 +47,42 @@ models, and unsealed fixtures. Its self-contained entry points are:
 python3 tools/host-lisp/public_export.py selftest
 python3 tools/host-lisp/public_export.py check
 make source-syntax-check
-make workbench-product
+python3 tools/host-lisp/asm_c_constant_contract.py selftest
 ```
 
 The first two commands verify the curated file boundary and reject private
-paths, credentials, LFS objects, and bundled binary tools. The Make targets
-check source syntax and build the canonical Workbench product with a separately
-installed toolchain. Do not use a bare `make`: the historical default target
-still describes the retired monolithic profile and is not the released
-Workbench build.
+paths, credentials, LFS objects, and bundled binary tools. The Make target
+checks source syntax. The assembler inventory gate binds every C/assembler
+mirror and classifies every non-mirror assembler source.
+
+The supported public C2-lite build uses the same single-emitter model as the
+sealed 1.2 product:
+
+```sh
+make clean
+make workbench-product
+```
+
+The target emits the six-image Lisp plane once, performs one whole-program LTO
+closure, completes the publish-last bindings, constructs both canonical D81
+images, and checks all 19 artifact roles against
+`config/c2-lite-public-build-authority.json`. The retired 1.1 compiler-tier
+composition is not part of this entry point.
+
+Maintainers qualify changes to the build path in two varied, detached fresh
+clones:
+
+```sh
+python3 tools/host-lisp/c2_lite_public_clean_build.py qualify \
+  --source-repository /path/to/lisp65 \
+  --source-commit COMMIT \
+  --llvm-mos-root /path/to/llvm-mos \
+  --output /path/to/clean-build-receipt.json
+```
+
+The clean-build gate proves binary reproduction. Hardware behavior and release
+acceptance remain bound to the signed R4/R5/R6/G5/G6 receipts and the
+self-verifying release bundle.
 
 ## Private proof gates
 
@@ -203,3 +231,12 @@ The intended public-facing description and topics are declared in
 GitHub CLI session, then read the repository metadata back and compare it with
 the file. Repository access and source licensing are separate decisions; do not
 make a private repository public merely to update its description.
+
+## Public contribution flow
+
+The public repository is a curated export rather than the proof authority.
+Public issues and DCO-signed changes are welcome; accepted contributions are
+reapplied to the private tree with attribution, run through its capacity and
+evidence gates, and return in a later public sync. See
+[`CONTRIBUTING.md`](../CONTRIBUTING.md) and the
+[public sync log](public-sync-log.md).

@@ -1,0 +1,75 @@
+{
+  "capacity": {
+    "boot_store_bytes": 65536,
+    "payload_alignment": 256,
+    "per_record_hard_cap_bytes": 1792,
+    "record_bytes": 32
+  },
+  "container": {
+    "data_only_flag": 8,
+    "entry_bytes": 32,
+    "header_bytes": 32,
+    "magic": "L65R",
+    "new_product_emission": "version-2-only",
+    "predecessor_version": 1,
+    "version": 2,
+    "version_policy": "strict-version-bound-no-feature-sniffing-no-dual-decoder"
+  },
+  "format": "lisp65-c2-resident-island-two-record-contract-v1",
+  "generation": {
+    "old_v1_attic_generation": "invalidated-before-v2-restage",
+    "stale_carrier": "reject-before-read",
+    "v2_boot_generation": "must-match-active-boot-family"
+  },
+  "installer_record": {
+    "abi_version": 1,
+    "data_only_flag": false,
+    "entry_offset": "within-payload",
+    "flags": 1,
+    "id": 8,
+    "name": "resident-island-installer",
+    "vma": 50006
+  },
+  "island_carrier_record": {
+    "abi_version": 0,
+    "capability_mask": 0,
+    "data_only_flag": true,
+    "destination": 6144,
+    "entry_offset": 65535,
+    "flags": 9,
+    "id": 9,
+    "name": "resident-island-image",
+    "roles": [
+      "boot",
+      "data-only"
+    ]
+  },
+  "probe_baseline": {
+    "failed_final_lto_sha256": "76d811ed13cb7c2512a56ec9466fc1af90f69862460b2ccc3d392774e43dd94f",
+    "installer_code_bytes": 102,
+    "island_crc16": 19555,
+    "island_image_bytes": 1781,
+    "island_image_sha256": "8651e7fb23139f642cf7988757cc9a4524c267c597c8df894bb9af67d5833a23",
+    "seed_elf_sha256": "50c596006b4cc86f0c1cbd27e557dfb351683fa123eaf27a8ba3513827a13f28"
+  },
+  "publication": {
+    "failure": "clear-ready-and-wipe-destination",
+    "sequence": [
+      "generation-authenticated",
+      "carrier-record-authenticated",
+      "carrier-payload-crc-authenticated",
+      "dma-copy-direct-from-boot-storage",
+      "destination-crc-authenticated",
+      "ready-published-last"
+    ]
+  },
+  "runtime_rules": {
+    "data_record_execution": "always-reject-before-payload-transfer",
+    "dma_source": "boot-storage-base-plus-record-file-offset",
+    "installer_overlay_loads": "forbidden-after-installer-entry",
+    "memory_size": "equals-file-size",
+    "no_overlay_calls_overlay": true,
+    "source_crc": "record-crc16-over-exact-carrier-payload",
+    "target_crc": "same-record-crc16-over-destination-after-dma"
+  }
+}

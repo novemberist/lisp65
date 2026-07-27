@@ -18,6 +18,10 @@
  * Muss vor dem ersten eval() aufgerufen werden. */
 void eval_init(void);
 
+/* Canonical t object published by eval_init. Product paths compare against
+ * this identity and do not intern the name again. */
+extern obj lisp_t;
+
 #if defined(LISP65_VM) && defined(LISP65_DIALECT_V2) && defined(LISP65_V2_TREE_PRIMITIVE_VIEW)
 /* Registry-generated classification of an installed Treewalk primitive.
  *  1: public native function (kind/value filled)

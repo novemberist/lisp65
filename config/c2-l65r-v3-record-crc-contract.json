@@ -1,0 +1,54 @@
+{
+  "format": "lisp65-l65r-v3-record-crc-contract-v1",
+  "recorded_on": "2026-07-21",
+  "status": "implemented-and-wplto-proven-link36-first-red-c2-lite-selected",
+  "authority": {
+    "contract": "docs/planning/c2.2-l65r-v3-record-crc-contract.md",
+    "completion_contract": "config/c2-runtime-overlay-dma-completion-contract.json",
+    "first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-runtime-overlay-crc-convergence-wplto-preflight-first-red.json"
+  },
+  "version": 3,
+  "entry_bytes": 32,
+  "record_crc16": {
+    "offset": 22,
+    "bytes": 2,
+    "algorithm": "CRC-16/CCITT-FALSE",
+    "domain": "the complete 32-byte entry with bytes 22..23 logically zero",
+    "emission": "written once by the sole L65R emitter while emitting the record",
+    "zero": "format-error",
+    "validation": "a standalone record read is consumed only after its embedded CRC converges"
+  },
+  "compatibility": {
+    "decoder": "strict-v3-only",
+    "v2": "rejected",
+    "dual_decoder": "forbidden",
+    "version_bump_cost": "free-before-first-shipment; L65R-v2 never left a device"
+  },
+  "transaction_authentication": {
+    "directory_pass": "once per append transaction and generation",
+    "later_slice_records": "self-authenticate by their emissions-bound record CRC",
+    "directory_reauthentication_per_slice": "forbidden",
+    "second_record_buffer": "forbidden"
+  },
+  "required_mutations": [
+    "wrong-record-crc",
+    "zero-record-crc",
+    "record-convergence-timeout",
+    "v3-decoder-receives-v2",
+    "second-record-crc-emitter"
+  ],
+  "capacity_gate": {
+    "kind": "product-shaped-whole-program-lto",
+    "all_bound_walls": true,
+    "e000_delta_bytes_at_initial_probe": 0,
+    "product_link_authorized": true,
+    "product_link_result": "FIRST RED before Resident-Island seed publication"
+  },
+  "subsequent_disposition": {
+    "implementation": "strict-v3 host and WPLTO gates passed",
+    "terminal_floor_probe": "passed at 63 bytes",
+    "link36": "FIRST RED before Resident-Island seed publication; no product closure",
+    "successor": "automatic C2-lite under the terminal-floor self-destruction clause",
+    "hardware": "not-run"
+  }
+}

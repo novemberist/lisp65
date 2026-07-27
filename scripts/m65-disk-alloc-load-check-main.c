@@ -6,7 +6,9 @@
 static char srcbuf[16384];
 
 int main(int argc, char **argv) {
-    const char *path = argc > 1 ? argv[1] : "lib/m65-disk-alloc.lisp";
+    const char *path = argc > 1
+        ? argv[1]
+        : "tests/fixtures/legacy/m65d/alloc-two-sector.lisp";
     FILE *f = fopen(path, "rb");
     size_t n;
     if (!f) {

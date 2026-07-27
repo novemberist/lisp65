@@ -1,0 +1,21 @@
+{
+  "format": "lisp65-c2-l-full-keymap-core-source-snapshot-v1",
+  "core_commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+  "upstream": "https://github.com/MEGA65/mega65-core.git",
+  "source_sha256": {
+    "src/hyppo/freeze.asm": "fd5f4cbd7c2c594388895293007055050e6c73a00fb6d423ff45b47bb51b58cd",
+    "src/hyppo/syspart.asm": "b436f778ab9232f81ccd78b3cb45dbda3181c838b113387b1b7844946c57bf74",
+    "src/hyppo/task.asm": "07497c4738023639300c7119e178c9a6233830026a017636fa840020472c9894",
+    "src/vhdl/c65uart.vhdl": "3679b4cce25823c3f813cdfa8fdc0038c9cfbbadfe86fb960e3db373670915b6",
+    "src/vhdl/gs4510.vhdl": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957",
+    "src/vhdl/iomapper.vhdl": "942a08a4622001048c38b065bee11edf1e4926f2db29dfc03f67bb7257db4bba",
+    "src/vhdl/keyboard_complex.vhdl": "d49f8c72c92a8cffe120f95942becf64fb9a9df694c5d018de030caac9cff32a",
+    "src/vhdl/matrix_to_ascii.vhdl": "068dab4dfea391e8c6ac06ac31108be2e29d9d4510becbcbc1b2125bcb535536",
+    "src/vhdl/viciv.vhdl": "8bc1db6e5e0e85fe1c1b777e899816362c6e0b06f9f49ee7fa8502b7b13b4ca2"
+  },
+  "proof_sources": {
+    "matrix": " signal matrix_petscii_normal : key_matrix_t := (\n    23 => x\"58\",\n    others => x\"00\"\n  );\n\n  signal matrix_petscii_control : key_matrix_t := (\n    60 => x\"ff\",\n    others => x\"ff\"\n  );\n\n        elsif bucky_key_internal(4)='1' then\n          petscii_matrix := matrix_petscii_normal;\n        elsif bucky_key_internal(2)='1' then\n          petscii_matrix := matrix_petscii_control;\n",
+    "iomapper": "      porto => petscii_key_buffered,\n              bucky_key_buffer(key_buffer_count) <= bucky_key;\n          bucky_key_buffered <= bucky_key_buffer(0);\n",
+    "uart": "          fastio_rdata(6 downto 0) <= unsigned(bucky_key_buffered(6 downto 0));\n          fastio_rdata <= unsigned(porto);\n"
+  }
+}

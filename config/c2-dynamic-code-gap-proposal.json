@@ -1,0 +1,96 @@
+{
+  "format": "lisp65-c2-dynamic-code-gap-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "option-a-owner-approved-bounded-probe-authorized",
+  "owner_decision": "Option A approved with generation, single-emitter, publish-last and no-product-byte conditions on 2026-07-19.",
+  "finding": "The complete C2D-v2 image represents the six immutable product shelf images and their 583 entries, but the shipped compiler surfaces create additional code after session publication. The current C2D entry has no dynamic source class, session-extension identity, append protocol or persistence encoding. Removing the legacy directory and all 28 L65M slices would therefore make lcc-run/defun and compile-string/load-lib unrepresentable; retaining them would violate the approved no-dual-decoder substitution.",
+  "claim_limit": "Read-only product-integration audit. No product source, product artifact, capacity pin or historical receipt changes. The green C2D-v2 decoder/GC proof remains valid for the six immutable images; the real product substitution link is blocked before product bytes until a dynamic-code contract is approved.",
+  "measured_facts": {
+    "immutable_product_images": 6,
+    "immutable_product_entries": 583,
+    "legacy_directory_capacity": 608,
+    "uncontracted_numeric_gap_if_misread_as_capacity": 25,
+    "c2d_v2_bytes": 11048,
+    "c2d_v2_bank5_headroom_bytes": 39768,
+    "legacy_l65m_runtime_slices_to_retire": 28,
+    "legacy_l65m_runtime_slice_bytes": 36744,
+    "public_compiler_entry_seams": [
+      "lcc-run",
+      "eval",
+      "eval-buffer",
+      "compile-string"
+    ],
+    "persistent_compile_max_payload_bytes": 8192,
+    "current_persistent_output_format": "L65M-v1 legacy container",
+    "current_product_dynamic_publishers": [
+      "src/lcc_install_overlay.c -> vm_dir_add",
+      "src/l65m_commit_overlay.c -> vm_dir_add"
+    ],
+    "engine_compatibility_publisher": "src/compile_repl.c -> vm_dir_add"
+  },
+  "why_capacity_is_not_a_contract": [
+    "The 25-entry arithmetic gap is neither declared append capacity nor enough for the existing 64-entry FASL producer limit.",
+    "Every approved C2D image record is bound to an immutable shelf record; every approved entry is image-slot plus immutable entry ordinal.",
+    "C2D-v2 root membership is derived from immutable C2I descriptor kinds, while session-created literals have no immutable descriptor stream in the approved format.",
+    "The final C2D header is a one-time session-plane commit marker; no append/publication journal for new images, entries, resolutions or roots is defined.",
+    "compile-string currently emits L65M, so retiring its only decoder without changing the producer breaks the already shipped compile/load workflow."
+  ],
+  "options": [
+    {
+      "id": "c2-session-extension-images",
+      "assessment": "recommended",
+      "summary": "Define one C2 session-extension image contract. Interactive and persistent compilation emit the same normalized immutable code plus C2I-v2 metadata; a verified unpublished Attic tenant and a session-extension identity record are published into C2D atomically. Disk persistence stores that same extension format. load-lib stages it, verifies it and uses the sole C2 decoder.",
+      "required_contract_work": [
+        "session-extension immutable identity and source-address domain",
+        "C2D image/entry/resolution/root append geometry and hard capacities",
+        "export journal plus final-header publication for append",
+        "abort, GC, reset and stale-generation behavior",
+        "compiler emitter conversion from L65M to C2I-v2 extension output",
+        "disk format/version boundary and explicit v1.1 L65M compatibility policy"
+      ],
+      "advantages": [
+        "one decoder and one literal/root model",
+        "preserves immutable-code and publish-last invariants",
+        "persistent and interactive compilation share one producer contract",
+        "all 28 L65M slices and the legacy directory remain genuinely retireable"
+      ]
+    },
+    {
+      "id": "mutable-session-code-lane",
+      "assessment": "fallback-needs-address-and-root-contract-amendment",
+      "summary": "Add a C2D entry source class for directly resolved mutable Bank-5 session code and keep compiler output outside C2I. This can avoid an Attic extension image per definition, but creates a second code-address, literal and root-publication domain inside C2 and needs independent persistence translation.",
+      "risks": [
+        "two execution source domains",
+        "new refill-key and generation rules",
+        "mutable literal roots need their own canonical ownership",
+        "persistent FASL still needs a separate on-disk encoding or conversion"
+      ]
+    },
+    {
+      "id": "legacy-l65m-transition-lane",
+      "assessment": "rejected",
+      "summary": "Keep the old L65M validator/commit slices and legacy Bank-0 directory only for compiled/user libraries while static product images use C2.",
+      "reason": "This is the expressly rejected mixed-decoder product, prevents retirement of the 28 slices and leaves the dated C1 load/commit path in the developer loop."
+    },
+    {
+      "id": "static-c2-product-without-compilation",
+      "assessment": "rejected",
+      "summary": "Link only the six immutable C2 images and disable lcc-run, compile-string and arbitrary load-lib.",
+      "reason": "This silently removes resident public workflows and fails the C2.2 exit requirement that all compiler entry seams, persistence and normal composition pass."
+    }
+  ],
+  "required_negative_fixtures_after_decision": [
+    "dynamic source presented without an identity-bound extension record",
+    "append exceeds image, entry, resolution or root capacity",
+    "failure after code stage but before final C2D publication",
+    "failure during export-cell publication restores the previous C2D header and roots",
+    "session extension from a stale generation",
+    "session-extension CRC or product identity mismatch",
+    "legacy L65M presented to the sole C2 product decoder",
+    "C2 extension presented to the historical L65M decoder",
+    "reset during unpublished extension staging",
+    "GC after every newly published heap literal during append"
+  ],
+  "next_authorized_action": "Run the bounded session-extension contract/emitter/append host probe. Product substitution remains stopped until its receipt is green and separately reviewed."
+}

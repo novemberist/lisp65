@@ -4,6 +4,10 @@
 #include "mem.h"
 #include "symbol.h"
 #include "v2_native_function_dispatch.h"
+#ifdef LISP65_C2_PRODUCT_CUT
+#include "c2_product_runtime.h"
+#include "c2_session_emitter.h"
+#endif
 #if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
 #include "buffer_overlay.h"
 #ifdef LISP65_RUNTIME_OVERLAY
@@ -28,7 +32,9 @@
 
 #if defined(LISP65_VM_SCREEN_PRIMS) && (defined(__MEGA65__) || defined(__C64__) || defined(__CBM__))
 #define LISP65_VM_REAL_KEYBOARD 1
+#ifndef LISP65_C2_KERNAL_UNMAP
 #include <cbm.h>
+#endif
 #endif
 
 #ifdef LISP65_HEARTBEAT   /* Diagnose: Schleifen-Ticker auf Bildschirm-RAM (Zeichen flackern) */
@@ -41,7 +47,15 @@
 
 
 uint8_t vm_status = VM_OK;
+/* C2 already owns the canonical truth object as eval_init:lisp_t.  Keeping a
+ * second VM-only cache made vm_init intern the same name again and retained a
+ * second identity derivation in resident text.  Non-C2 compiler-only profiles
+ * do not link eval.c, so they retain their private bootstrap cache. */
+#ifdef LISP65_C2_PRODUCT_CUT
+#define vm_t lisp_t
+#else
 static obj vm_t = NIL;
+#endif
 #ifdef LISP65_V2_WORKBENCH_SERVICES
 static obj vm_workbench_error_symbols[11];
 #endif
@@ -52,6 +66,7 @@ static obj vm_upvals = NIL;   /* M-closures: Upvalue-Liste des aktuell laufenden
 #endif
 #ifdef LISP65_VM_SCREEN_PRIMS
 static obj vm_k_key = NIL;
+static obj vm_k_shift = NIL, vm_k_control = NIL, vm_k_meta = NIL;
 #endif
 #ifdef LISP65_VM_DIAGNOSTICS
 static obj vm_pending_fn = NIL;
@@ -88,9 +103,10 @@ volatile uint8_t  vm_dbg_op = 0, vm_dbg_bank = 0;
 #ifndef VM_DIR_MAX
 #define VM_DIR_MAX 128
 #endif
-#ifdef LISP65_VM_DIAGNOSTICS
+#if defined(LISP65_VM_DIAGNOSTICS) && !defined(LISP65_C2_PRODUCT_CUT)
 static obj      dir_sym[VM_DIR_MAX];   /* nur Diagnose (vm_pending_fn); Aufloesung: s. dir_find */
 #endif
+#ifndef LISP65_C2_PRODUCT_CUT
 /* Bank-0-Footprint komprimiert (2026-07-04, Hebel-C-Spike): das Code-Blob liegt komplett in
  * EINER EXT-Bank (~20 KB < 64 KB) -> Bank als Einzelwert statt Array (-238 B). Und jedes
  * Code-Objekt ist <= 255 B (real max 234) -> dir_len als uint8_t (-238 B). Netto ~476 B .bss
@@ -164,6 +180,45 @@ __attribute__((noinline))
 #endif
 vm_dir_align8(void) {
     while ((dir_n & 7u) && dir_n < VM_DIR_MAX) dir_len[dir_n++] = 0;
+}
+#else
+/* C2D-v3 is the only directory.  These compatibility entry points remain so
+ * generic diagnostics can ask for counts, but no second publisher exists. */
+void vm_dir_reset(void) { }
+uint16_t vm_dir_count(void) { return c2_product_dir_count(); }
+uint16_t vm_dir_capacity(void) { return 2048u; }
+int vm_dir_add(obj sym, uint8_t bank, uint16_t off, uint16_t len) {
+    (void)sym; (void)bank; (void)off; (void)len; return -1;
+}
+void vm_dir_align8(void) { }
+#endif
+
+static uint16_t vm_directory_length(uint16_t ordinal) {
+#ifdef LISP65_C2_PRODUCT_CUT
+    return c2_product_entry_length(ordinal);
+#else
+    return ordinal < dir_n ? dir_len[ordinal] : 0u;
+#endif
+}
+
+static void vm_directory_address(uint16_t ordinal, uint8_t *bank,
+                                 uint16_t *offset) {
+#ifdef LISP65_C2_PRODUCT_CUT
+    *bank = LISP65_C2_CODE_BANK_TAG; *offset = ordinal;
+#else
+    *bank = dir_bank0; *offset = dir_off_get(ordinal);
+#endif
+}
+
+static uint8_t vm_object_load(uint8_t bank, uint16_t object,
+                              uint16_t relative, uint16_t length,
+                              uint8_t *destination) {
+#ifdef LISP65_C2_PRODUCT_CUT
+    if (bank == LISP65_C2_CODE_BANK_TAG)
+        return c2_product_entry_read(object, relative, destination, length);
+#endif
+    vm_code_load(bank, (uint16_t)(object + relative), length, destination);
+    return 1;
 }
 /* Callee-Aufloesung O(1) statt linearem dir_sym-Scan (2026-07-02): die Funktionszelle des
  * Symbols traegt den Directory-Index als BCODE-Immediate. Nebenwirkung erwuenscht:
@@ -283,6 +338,14 @@ lisp65_error_code vm_status_error_code(uint8_t status) {
     return LISP65_ERR_VM_BAD_BYTECODE;
 }
 
+/* Permanent status-plus-detail seam.  Keep this out of line so every producer
+ * shares one status write and cannot grow a private diagnostic convention. */
+__attribute__((noinline))
+obj vm_dirmiss_detail(obj detail) {
+    vm_status = VM_DIRMISS;
+    return detail;
+}
+
 /* Bridge VM -> Tree-Walker (K3): setzt eval.c für CALL-Fehltreffer (Symbol nicht kompiliert).
  * NULL = keine Bridge (Fehltreffer -> VM_DIRMISS). */
 #ifndef LISP65_V2_CARRIER_CUT
@@ -294,17 +357,24 @@ obj (*vm_treewalk_apply)(obj fn, obj arglist) = 0;
 
 /* Lauf per Directory-Index (Bridge Tree-Walker -> VM, aus apply). */
 obj vm_run_dir(int di, const obj *args, uint8_t n) {
-    if (di < 0 || di >= (int)dir_n || dir_len[di] == 0) {
-        vm_status = VM_DIRMISS;
+    uint16_t length;
+    uint8_t bank; uint16_t offset;
+    if (di < 0 || !(length = vm_directory_length((uint16_t)di))) {
 #ifdef LISP65_VM_DIAGNOSTICS
-        vm_diag_capture(vm_status, 0, 0, 0, NIL);
+        vm_diag_capture(VM_DIRMISS, 0, 0, 0, NIL);
 #endif
-        return NIL;
+        return vm_dirmiss_detail(
+            (di >= 0 && (uint16_t)di < 4096u) ? MK_BCODE((uint16_t)di) : NIL);
     }
 #ifdef LISP65_VM_DIAGNOSTICS
+#ifdef LISP65_C2_PRODUCT_CUT
+    vm_pending_fn = MK_BCODE(di);
+#else
     vm_pending_fn = dir_sym[di] != NIL ? dir_sym[di] : MK_BCODE(di);
 #endif
-    return vm_run(dir_bank0, dir_off_get(di), dir_len[di], args, n);
+#endif
+    vm_directory_address((uint16_t)di, &bank, &offset);
+    return vm_run(bank, offset, length, args, n);
 }
 
 #if defined(LISP65_COMPILE_REPL) || defined(LISP65_VM_NATIVE_APPLY) || defined(LISP65_LCC_INSTALL_CLOSURES)
@@ -339,23 +409,24 @@ static obj vm_upval_nth(uint8_t i) {                 /* i-te Upvalue-Listenzelle
     return u;
 }
 /* OP_CLOSURE: T_CLOSURE{a=MK_BCODE(di), b=(uv0..uvN-1)} aus nuv Stack-Werten bauen + pushen.
- * 0 = Fehler (Aufrufer -> goto done). GC-Semantik identisch zum alten Inline-Case. */
-static uint8_t vm_op_closure(obj sym, uint8_t nuv, uint16_t stack_base) {
+ * NIL = Erfolg; ein Fehler liefert sein Detail (nur VM_DIRMISS ist benannt).
+ * GC-Semantik identisch zum alten Inline-Case. */
+static obj vm_op_closure(obj sym, uint8_t nuv, uint16_t stack_base) {
     obj lst = NIL, clo; uint8_t k;
     int di = IS_BCODE(sym) ? (int)BCODE_IDX(sym) : dir_find(sym);
-    if (di < 0) { vm_status = VM_DIRMISS; return 0; }
+    if (di < 0) return vm_dirmiss_detail(sym);
     for (k = 0; k < nuv; k++) {                       /* letzter zuerst poppen -> Liste (uv0..) */
-        if (gc_rootsp <= stack_base) { vm_status = VM_BADOPCODE; return 0; }
+        if (gc_rootsp <= stack_base) { vm_status = VM_BADOPCODE; return NIL; }
         obj v = gc_rootstack[--gc_rootsp];
         lst = cons(v, lst);
-        if (lst == NIL) { vm_status = VM_HEAPOOM; return 0; }
+        if (lst == NIL) { vm_status = VM_HEAPOOM; return NIL; }
     }
     GC_PUSH(lst); clo = alloc(T_CLOSURE); GC_POPN(1);
-    if (clo == NIL) { vm_status = VM_HEAPOOM; return 0; }
+    if (clo == NIL) { vm_status = VM_HEAPOOM; return NIL; }
     cell_set_a(clo, MK_BCODE(di)); cell_set_b(clo, lst);
-    if (gc_rootsp >= GC_ROOTS) { vm_status = VM_STACKOVER; return 0; }
+    if (gc_rootsp >= GC_ROOTS) { vm_status = VM_STACKOVER; return NIL; }
     gc_rootstack[gc_rootsp++] = clo;
-    return 1;
+    return NIL;
 }
 #endif
 
@@ -657,15 +728,21 @@ void vm_init(void) {
 #endif
 #ifdef LISP65_VM_SCREEN_PRIMS
     vm_k_key = intern("key");
+    vm_k_shift = intern("shift");
+    vm_k_control = intern("control");
+    vm_k_meta = intern("meta");
 #endif
 }
 
 #ifdef LISP65_VM_SCREEN_PRIMS
 /* Gleiches Eventformat wie eval.c:key_event: (key code mods). */
-static obj vm_key_event(int c) {
+static obj vm_key_event(int c, uint8_t event_modifiers) {
     obj mods = NIL, e;
-    if (c >= 0xC1 && c <= 0xDA) { c -= 0x80; mods = cons(intern("shift"), NIL); }
+    if (c >= 0xC1 && c <= 0xDA) { c -= 0x80; event_modifiers |= LISP65_KEYMOD_SHIFT; }
     else if (c >= 'A' && c <= 'Z') c += 0x20;
+    if (event_modifiers & LISP65_KEYMOD_SHIFT) mods = cons(vm_k_shift, mods);
+    if (event_modifiers & LISP65_KEYMOD_CONTROL) mods = cons(vm_k_control, mods);
+    if (event_modifiers & LISP65_KEYMOD_META) mods = cons(vm_k_meta, mods);
     GC_PUSH(mods);
     e = cons(gc_rootstack[GC_TOP], NIL);
     GC_SET(GC_TOP, e);
@@ -759,7 +836,21 @@ static obj vm_workbench_compile_error(uint8_t pid) {
 /* noinline (Diaet 2026-07-02): inline in vm_run kostete 1752 B, out-of-line 1506 —
  * netto -246 B .text; CALLPRIM ist ohnehin ein Bridge-/Stringpfad, kein Zyklenzaehlen. */
 #ifdef LISP65_DIALECT_V2
-static __attribute__((noinline)) uint8_t vm_byte_args(obj *a, uint8_t n, uint8_t expected) {
+#if defined(LISP65_C2_KERNAL_UNMAP) && \
+    defined(LISP65_C2_LITE_CHIP_RAM)
+/* Post-ownership hot leaf.  The complete C2-lite execution path owns the
+ * KERNAL window before CALLPRIM can run.  This helper has no outbound
+ * control-flow edge; it only reads its arguments and writes vm_status on a
+ * rejected byte-domain value.  Keeping it in the existing C2-resident slab
+ * restores the contracted Bank-0 LTO-noise reserve without a new facade
+ * vector, section, state cell, or pre-ownership dependency. */
+#define VM_BYTE_ARGS_FN __attribute__((noinline, \
+    section(".lisp65_c2_kernal_window.c2_resident")))
+#else
+#define VM_BYTE_ARGS_FN __attribute__((noinline))
+#endif
+static VM_BYTE_ARGS_FN uint8_t
+vm_byte_args(obj *a, uint8_t n, uint8_t expected) {
     uint8_t i;
     if (n != expected) { vm_status = VM_ARITY; return 0; }
     for (i = 0; i < n; i++) {
@@ -769,6 +860,7 @@ static __attribute__((noinline)) uint8_t vm_byte_args(obj *a, uint8_t n, uint8_t
     }
     return 1;
 }
+#undef VM_BYTE_ARGS_FN
 #endif
 
 #if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
@@ -1017,14 +1109,31 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
     case 13:  /* read-key */
         if (n != 0) { vm_status = VM_TYPEERROR; return NIL; }
 #ifdef LISP65_VM_REAL_KEYBOARD
-        { int c; do { lisp_poll(); c = cbm_k_getin(); } while (c == 0); return vm_key_event(c); }
+        {
+#ifdef LISP65_C2_KERNAL_UNMAP
+            lisp65_key_event event;
+            (void)lisp_input_event(1u, 0u, &event);
+            return vm_key_event(event.code, event.modifiers);
 #else
-        return vm_key_event(0);
+            int c; do { lisp_poll(); c = cbm_k_getin(); } while (c == 0);
+            return vm_key_event(c, 0u);
+#endif
+        }
+#else
+        return vm_key_event(0, 0u);
 #endif
     case 14:  /* poll-key */
         if (n != 0) { vm_status = VM_TYPEERROR; return NIL; }
 #ifdef LISP65_VM_REAL_KEYBOARD
-        { int c = cbm_k_getin(); return c == 0 ? NIL : vm_key_event(c); }
+        {
+#ifdef LISP65_C2_KERNAL_UNMAP
+            lisp65_key_event event;
+            return lisp_input_event(0u, 0u, &event)
+                ? vm_key_event(event.code, event.modifiers) : NIL;
+#else
+            int c = cbm_k_getin(); return c == 0 ? NIL : vm_key_event(c, 0u);
+#endif
+        }
 #else
         return NIL;
 #endif
@@ -1039,8 +1148,20 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
     case 17:  /* %disk-load-file — io.c streamt die Datei aus EXT via load_source_stream */
         if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
         return io_disk_load_chain((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
-#ifdef LISP65_DISK_LIBS
+#if defined(LISP65_DISK_LIBS) || defined(LISP65_C2_PRODUCT_CUT)
     case 18:  /* %disk-load-lib — Bytecode-Lib nach Bank 5 stagen + registrieren (Stufe 2) */
+#ifdef LISP65_C2_PRODUCT_CUT
+        if (n == 1)
+            return c2_product_static_image_named(a[0]) ? vm_t : NIL;
+        if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) {
+            vm_status = VM_TYPEERROR; return NIL;
+        }
+        {
+            uint16_t staged = io_disk_stage_chain((uint8_t)FIXVAL(a[0]),
+                                                  (uint8_t)FIXVAL(a[1]));
+            return staged && c2_product_append_staged(staged) ? vm_t : NIL;
+        }
+#else
 #ifdef LISP65_ATTIC_LIBRARY_SHELF
         if (n == 1) {
             return io_attic_load_lib(a[0]) ? vm_t : NIL;
@@ -1048,6 +1169,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
         if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
         return io_disk_load_lib((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
+#endif
 #endif
 #ifdef MEGA65_F011_WRITE
     case 21:  /* %disk-poke */
@@ -1134,12 +1256,24 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (mode != 0 && mode != 1) { vm_status = VM_TYPEERROR; return NIL; }
 #if defined(LISP65_VM_SCREEN_PRIMS) && defined(LISP65_VM_REAL_KEYBOARD)
         if (mode) {
+#ifdef LISP65_C2_KERNAL_UNMAP
+            lisp65_key_event event;
+            (void)lisp_input_event(1u, 0u, &event);
+            return vm_key_event(event.code, event.modifiers);
+#else
             int c;
             do { lisp_poll(); c = cbm_k_getin(); } while (c == 0);
-            return vm_key_event(c);
+            return vm_key_event(c, 0u);
+#endif
         } else {
+#ifdef LISP65_C2_KERNAL_UNMAP
+            lisp65_key_event event;
+            return lisp_input_event(0u, 0u, &event)
+                ? vm_key_event(event.code, event.modifiers) : NIL;
+#else
             int c = cbm_k_getin();
-            return c == 0 ? NIL : vm_key_event(c);
+            return c == 0 ? NIL : vm_key_event(c, 0u);
+#endif
         }
 #else
         return NIL;
@@ -1165,10 +1299,17 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
     case 63: /* %buffer-read */
     case 64: /* %buffer-write */
     case 65: /* %buffer-alloc */
+#ifdef LISP65_C2_PRODUCT_CUT
+        return vm_buffer_call(pid, a, n);
+    case 66: /* %c2-control -- the sole born-code emitter */
+        if (n != 2) { vm_status = VM_ARITY; return NIL; }
+        return c2_session_emit_control(a[0], a[1]);
+#else
 #ifdef LISP65_C1_COMPILER_TIER
-    case 66: /* %c1-control */
+    case 66: /* historical C1 carrier (excluded from the C2 product cut) */
 #endif
         return vm_buffer_call(pid, a, n);
+#endif
 #endif
     default: vm_status = VM_BADOPCODE; return NIL;
     }
@@ -1215,7 +1356,19 @@ static uint16_t vm_frame_fill(uint16_t base, const obj *args, uint8_t n,
 }
 
 #ifdef LISP65_DIALECT_V2
-static uint8_t vm_arity_accepts(uint8_t actual, uint8_t nargs, uint8_t flags) {
+#if defined(LISP65_C2_KERNAL_UNMAP) && \
+    defined(LISP65_C2_LITE_VM_ARITY_E000)
+/* Post-ownership hot leaf: two VM call sites enter it after the KERNAL
+ * handoff; it has no outbound call or data edge.  Keeping it in the already
+ * owned C2-resident slab restores a real Bank-0 LTO-noise margin without a
+ * new section, vector, state byte, or pre-ownership dependency. */
+#define VM_ARITY_FN __attribute__((noinline, \
+    section(".lisp65_c2_kernal_window.c2_resident")))
+#else
+#define VM_ARITY_FN
+#endif
+static VM_ARITY_FN uint8_t vm_arity_accepts(
+        uint8_t actual, uint8_t nargs, uint8_t flags) {
     uint8_t optional = CO_OPTIONAL_COUNT(flags);
     uint8_t minimum;
     if (!(flags & CO_FLAG_STRICT_ARITY)) return 0;
@@ -1224,6 +1377,7 @@ static uint8_t vm_arity_accepts(uint8_t actual, uint8_t nargs, uint8_t flags) {
     if (actual < minimum) return 0;
     return (flags & CO_FLAG_REST) || actual <= nargs;
 }
+#undef VM_ARITY_FN
 #endif
 
 /* C-STACK-DIAET (2026-07-03): alles Header-Abgeleitete lebt als file-scope-Static statt
@@ -1252,6 +1406,35 @@ obj vm_run(uint8_t bank, uint16_t off, uint16_t len,
     if (lisp_stack_low()) { vm_status = VM_STACKOVER; return NIL; }
 #endif
     return vm_run_inner(bank, off, len, args, nargs_actual);
+}
+
+/* Relative bytecode edges live in the logical u16 payload-PC domain.  The
+ * C pointer is only a cache cursor inside vm_codebuf and must never carry a
+ * target across a streamed-window boundary.  In the C2 product this pure,
+ * shared calculation lives in the already-owned fixed window; all VM entry
+ * paths are structurally after c2_kernal_take_ownership(). */
+#ifdef LISP65_C2_KERNAL_UNMAP
+#define VM_LOGICAL_PC_HELPER \
+    __attribute__((noinline, section(".lisp65_c2_kernal_window.c2_resident")))
+#else
+#define VM_LOGICAL_PC_HELPER __attribute__((noinline))
+#endif
+static VM_LOGICAL_PC_HELPER uint8_t
+vm_logical_relative_target(uint16_t next, uint16_t payload_length,
+                           int8_t delta, uint16_t *target) {
+    uint16_t result;
+    if (delta < 0) {
+        uint8_t back = (uint8_t)(-(int16_t)delta);
+        if (next < back) return 0;
+        result = (uint16_t)(next - back);
+    } else {
+        uint8_t forward = (uint8_t)delta;
+        if (next >= payload_length
+            || forward >= (uint16_t)(payload_length - next)) return 0;
+        result = (uint16_t)(next + forward);
+    }
+    *target = result;
+    return 1;
 }
 
 static __attribute__((noinline))
@@ -1305,7 +1488,7 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
      * fensterweise per Bulk-DMA nach (WIN_ENSURE), waehrend Header+littab resident bleiben. */
 #define OBJ_SETUP() do { \
         uint16_t l0_ = (len < VM_CODEBUF) ? len : VM_CODEBUF; \
-        vm_code_load(bank, off, l0_, cbuf); \
+        if (!vm_object_load(bank, off, 0, l0_, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
         vm_buf_bank = bank; vm_buf_off = off; \
         if (cbuf[CO_OFF_MAGIC] != CO_MAGIC) { vm_status = VM_BADOPCODE; goto done; } \
         nargs   = cbuf[CO_OFF_NARGS]; \
@@ -1319,7 +1502,7 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         if ((uint16_t)(hdrlen + 3) > VM_CODEBUF) { vm_status = VM_BADOPCODE; goto done; } \
         littab      = cbuf + CO_OFF_LITTAB; \
         code        = cbuf + hdrlen;                 /* Fenster-Basis (Payload-Offset win) */ \
-        payload_off = (uint16_t)(off + hdrlen); \
+        payload_off = hdrlen; \
         payload_len = (uint16_t)(len - hdrlen); \
         pwin_max    = (uint16_t)(VM_CODEBUF - hdrlen); \
         win = 0; \
@@ -1337,16 +1520,16 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #define BUF_ENSURE_MINE(pcur_) do { \
         if (vm_buf_bank != bank || vm_buf_off != off) { \
             /* fremde Fn resident: Header laden + ALLE Ableitungen reparsen */ \
-            vm_code_load(bank, off, (uint16_t)CO_OFF_LITTAB, cbuf); \
+            if (!vm_object_load(bank, off, 0, (uint16_t)CO_OFF_LITTAB, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
             nargs   = cbuf[CO_OFF_NARGS]; \
             nlocals = cbuf[CO_OFF_NLOCS]; \
             flags   = cbuf[CO_OFF_FLAGS]; \
             nlits   = cbuf[CO_OFF_NLITS]; \
             hdrlen  = (uint16_t)(CO_OFF_LITTAB + 2 * (uint16_t)nlits); \
-            vm_code_load(bank, off, hdrlen, cbuf); \
+            if (!vm_object_load(bank, off, 0, hdrlen, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
             littab      = cbuf + CO_OFF_LITTAB; \
             code        = cbuf + hdrlen; \
-            payload_off = (uint16_t)(off + hdrlen); \
+            payload_off = hdrlen; \
             payload_len = (uint16_t)(len - hdrlen); \
             pwin_max    = (uint16_t)(VM_CODEBUF - hdrlen); \
             vm_buf_bank = bank; vm_buf_off = off; \
@@ -1370,9 +1553,27 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
             if (pc_ < win || (uint16_t)(win + winlen) < need_) { \
                 win = pc_; \
                 winlen = (uint16_t)(((uint16_t)(payload_len - pc_) < pwin_max) ? (uint16_t)(payload_len - pc_) : pwin_max); \
-                vm_code_load(bank, (uint16_t)(payload_off + pc_), winlen, cbuf + hdrlen); \
+                if (!vm_object_load(bank, off, (uint16_t)(payload_off + pc_), winlen, cbuf + hdrlen)) { vm_status = VM_BADOPCODE; goto done; } \
                 ip = code; \
             } \
+        } \
+    } while (0)
+#define JUMP_REL(delta_) do { \
+        uint16_t next__ = (uint16_t)(win + (uint16_t)(ip - code)); \
+        uint16_t target__; \
+        if (!vm_logical_relative_target(next__, payload_len, \
+                                        (int8_t)(delta_), &target__)) { \
+            vm_status = VM_BADOPCODE; goto done; \
+        } \
+        if (target__ >= win && (uint16_t)(target__ - win) < winlen) { \
+            ip = code + (uint16_t)(target__ - win); \
+        } else { \
+            /* Never form a C pointer outside vm_codebuf.  The old direct \
+             * `ip += delta` relied on out-of-array pointer arithmetic when a \
+             * relative edge crossed a streamed window.  That is undefined C \
+             * behavior and the MOS/LTO product build did in fact misexecute \
+             * the banner separator's PC 72 -> PC 8 backedge. */ \
+            win = target__; winlen = 0; ip = code; streaming = 1; \
         } \
     } while (0)
 #define RD8()  (*ip++)                              /* Byte am Cursor (nach WIN_ENSURE in-window) */
@@ -1461,8 +1662,18 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         case OP_CDR:  a = POP(); PUSH(IS_PTR(a) ? cell_b(a) : NIL); break;
         case OP_CONSP:a = POP(); PUSH((IS_PTR(a) && cell_type(a) == T_CONS) ? vm_t : NIL); break;
 
-        case OP_JMPREL:    { int8_t d = (int8_t)RD8(); ip += d; break; }
-        case OP_JFALSEREL: { int8_t d = (int8_t)RD8(); if (POP() == NIL) ip += d; break; }
+        /* One shared emission site: the logical-PC seam is deliberately not
+         * duplicated into both switch arms. */
+        case OP_JMPREL:
+            a = NIL;
+            goto relative_branch;
+        case OP_JFALSEREL:
+            a = POP();
+relative_branch: {
+            int8_t d = (int8_t)RD8();
+            if (a == NIL) JUMP_REL(d);
+            break;
+        }
 
         case OP_CALL: {   /* Callee = littab[idx] (Symbol) -> Directory (VM) | Tree-Walker-Bridge */
             LA(7);   /* G */
@@ -1475,17 +1686,19 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
             uint16_t pcur = (uint16_t)(win + (uint16_t)(ip - code));
             if (n > VM_MAXARGS) { vm_status = VM_BADOPCODE; goto done; }
             for (i = n; i > 0; i--) cargs[i-1] = POP();
-            if (di >= 0 && di < (int)dir_n && dir_len[di]) {
+            if (di >= 0 && vm_directory_length((uint16_t)di)) {
 #ifdef LISP65_VM_DIAGNOSTICS
                 vm_pending_fn = sym;
 #endif
-                res = vm_run(dir_bank0, dir_off_get(di), dir_len[di], cargs, n);  /* -> VM (anderer Puffer, Paritaet) */
+                res = vm_run_dir(di, cargs, n);  /* -> VM (anderer Puffer, Paritaet) */
 #ifndef LISP65_V2_CARRIER_CUT
             } else if (vm_treewalk_call) {
                 res = vm_treewalk_call(sym, cargs, n);          /* -> Tree-Walker (kann re-entrant VM clobbern) */
 #endif
-            } else { vm_status = VM_DIRMISS; goto done; }
-            if (vm_status != VM_OK) goto done;
+            } else {
+                r = vm_dirmiss_detail(sym); goto done;
+            }
+            if (vm_status != VM_OK) { r = res; goto done; }
             BUF_ENSURE_MINE(pcur);   /* Callee ueberschrieb Puffer+Globals -> reparsen */
             PUSH(res);
             break;
@@ -1498,16 +1711,17 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
             obj cargs[VM_MAXARGS]; unsigned i;
             if (n > VM_MAXARGS) { vm_status = VM_BADOPCODE; goto done; }
             for (i = n; i > 0; i--) cargs[i-1] = POP();
-            if (di < 0 || di >= (int)dir_n || !dir_len[di]) {   /* Tail-Aufruf an nicht-kompilierte Fn -> Tree-Walker, Ergebnis = Rueckgabe */
+            if (di < 0 || !vm_directory_length((uint16_t)di)) {   /* Tail-Aufruf an nicht-kompilierte Fn -> Tree-Walker, Ergebnis = Rueckgabe */
 #ifndef LISP65_V2_CARRIER_CUT
                 if (vm_treewalk_call) { r = vm_treewalk_call(sym, cargs, n); goto done; }
 #endif
-                vm_status = VM_DIRMISS; goto done;
+                r = vm_dirmiss_detail(sym); goto done;
             }
 #ifdef LISP65_VM_DIAGNOSTICS
             run_fn = sym;
 #endif
-            bank = dir_bank0; off = dir_off_get(di); len = dir_len[di];
+            len = vm_directory_length((uint16_t)di);
+            vm_directory_address((uint16_t)di, &bank, &off);
             OBJ_SETUP();   /* neues Objekt: Header + Payload-Fenster (streambar) */
 #ifdef LISP65_DIALECT_V2
             if (!vm_arity_accepts(n, nargs, flags)) { vm_status = VM_ARITY; goto done; }
@@ -1531,7 +1745,7 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
             if (n > VM_MAXARGS) { vm_status = VM_BADOPCODE; goto done; }
             for (i = n; i > 0; i--) cargs[i-1] = POP();
             res = vm_callprim(pid, cargs, n);   /* funcall/apply (7/8) koennen re-entrant die VM clobbern */
-            if (vm_status != VM_OK) goto done;
+            if (vm_status != VM_OK) { r = res; goto done; }
             BUF_ENSURE_MINE(pcur);   /* funcall/apply (7/8): Puffer+Globals reparsen falls geclobbert */
             PUSH(res);
             break;
@@ -1546,7 +1760,8 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         case OP_CLOSURE: {   /* Closure bauen (schwere Schleife+alloc -> vm_op_closure, spart Switch-Bloat).
                               * littab[li] = Helfer (Symbol ODER BCODE-Immediate: lcc-Self-Hosting, kein __L-Leck). */
             uint8_t li = RD8(), nuv = RD8();
-            if (!vm_op_closure(LIT(li), nuv, vb)) goto done;
+            obj detail = vm_op_closure(LIT(li), nuv, vb);
+            if (vm_status != VM_OK) { r = detail; goto done; }
             break;
         }
         case OP_SETUPVAL: {   /* M-closures Phase 2: Wert poppen + i-te Upvalue schreiben (per-Closure persistent) */
@@ -1587,6 +1802,7 @@ done:
 #undef OBJ_SETUP
 #undef BUF_ENSURE_MINE
 #undef WIN_ENSURE
+#undef JUMP_REL
 #undef RD8
 #undef nargs
 #undef nlocals

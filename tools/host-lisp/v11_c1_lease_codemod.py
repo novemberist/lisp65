@@ -98,6 +98,33 @@ def transform_load_lib(source: str) -> str:
     return source[:start] + replacement + source[end:]
 
 
+def validate_c2_profile(eval_source: str, load_source: str) -> None:
+    """C2 retires the C1 lease rather than transforming it in generated code."""
+    forbidden = (
+        "%c1-control",
+        "%c1-compile",
+        '(%disk-load-lib "lcc")',
+    )
+    combined = eval_source + "\n" + load_source
+    present = [item for item in forbidden if item in combined]
+    if present:
+        raise LeaseCodemodError(
+            "mixed C1/C2 generated profile: " + ", ".join(present))
+    required = (
+        "(defun lcc-run (form)",
+        "(%c2-control 0 nil)",
+        "(%c2-control 1",
+        "(%c2-control 2 nil)",
+        "(defun %c2-compile-source (source)",
+    )
+    missing = [item for item in required if item not in eval_source]
+    if missing:
+        raise LeaseCodemodError(
+            "C2 single-emitter profile missing: " + ", ".join(missing))
+    if eval_source.count("(defun lcc-run (form)") != 1:
+        raise LeaseCodemodError("C2 lcc-run entry is not single-source")
+
+
 def run_base(selftest: bool) -> None:
     command = [sys.executable, str(BASE)]
     if selftest:
@@ -133,6 +160,22 @@ def selftest() -> None:
     transformed_load = transform_load_lib(load_path.read_text(encoding="utf-8"))
     if transformed_load.count("(%c1-control 2 nil)") != 1:
         raise LeaseCodemodError("load-lib transformation selftest failed")
+    c2_fixture = '''(defun lcc-run (form) (%c2-compile-form form))
+(defun %c2-compile-source (source)
+  (if (%c2-control 0 nil)
+      (%c2-control 1 source)
+      (%c2-control 2 nil)))
+'''
+    validate_c2_profile(c2_fixture, "(defun load-lib (name) name)\n")
+    try:
+        validate_c2_profile(
+            c2_fixture + "(%c1-control 2 nil)\n",
+            "(defun load-lib (name) name)\n",
+        )
+    except LeaseCodemodError:
+        pass
+    else:
+        raise LeaseCodemodError("mixed C1/C2 profile mutation was accepted")
 
 
 def main() -> int:
@@ -148,12 +191,15 @@ def main() -> int:
         run_base(False)
         eval_path = GENERATED / "lib/dialect-v2/eval-runtime.lisp"
         load_path = GENERATED / "lib/stdlib-load-lib.lisp"
-        transformed_eval = transform_eval(eval_path.read_text(encoding="utf-8"))
+        eval_source = eval_path.read_text(encoding="utf-8")
+        load_source = load_path.read_text(encoding="utf-8")
+        if "%c2-control" in eval_source:
+            validate_c2_profile(eval_source, load_source)
+            print("v11-c1-lease-codemod: PASS profile=c2-single-emitter generated-probe-sources=0")
+            return 0
+        transformed_eval = transform_eval(eval_source)
         eval_path.write_text(transformed_eval, encoding="utf-8")
-        load_path.write_text(
-            transform_load_lib(load_path.read_text(encoding="utf-8")),
-            encoding="utf-8",
-        )
+        load_path.write_text(transform_load_lib(load_source), encoding="utf-8")
     except (LeaseCodemodError, OSError, subprocess.CalledProcessError) as exc:
         print(f"v11-c1-lease-codemod: FAIL: {exc}")
         return 1

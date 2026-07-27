@@ -1,9 +1,14 @@
 /* lisp65 — Abbruch/Fehler (Lane K) */
 #include "interrupt.h"
 
-#ifdef LISP65_RUNTIME_OVERLAY
+#if defined(LISP65_RUNTIME_OVERLAY) && !defined(LISP65_C2_PRODUCT_CUT)
 #include "l65m_commit_overlay.h"
+#endif
+#ifdef LISP65_RUNTIME_OVERLAY
 #include "vm_runtime_overlay.h"
+#endif
+#ifdef LISP65_C2_NESTED_APPEND_V5
+#include "c2_product_runtime.h"
 #endif
 
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
@@ -35,23 +40,37 @@ static char error_hex_digit(uint8_t digit) {
     return (char)(digit + (digit < 10u ? '0' : (uint8_t)('a' - 10)));
 }
 
+#ifndef LISP65_C2_NUMERIC_EARLY_ERRORS
 static uint8_t error_render_resident(lisp65_error_code code) {
     const char *text;
     if (code == LISP65_ERR_RUNTIME_CATALOG)
         text = "E2e catalog missing; redeploy";
     else if (code == LISP65_ERR_RUNTIME_ISLAND)
         text = "E2f runtime island invalid; redeploy";
+    else if (code == LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT)
+        text = "E3d runtime transport timeout; reboot";
+    else if (code == LISP65_ERR_RUNTIME_FAMILY_STAGE)
+        text = "E3e runtime family staging failed; redeploy";
     else return 0;
     while (*text) emit(*text++);
     return 1;
 }
 #endif
+#endif
 
 static void lisp_abort_jump(void) {
     if (!lisp_toplevel_active) return;
 #ifdef LISP65_RUNTIME_OVERLAY
+#ifndef LISP65_C2_PRODUCT_CUT
     l65m_commit_abort_cleanup();
+#endif
+#ifdef LISP65_C2_NESTED_APPEND_V5
+    /* Errors and RUN/STOP share this exact landing.  C2J cleanup therefore
+     * cannot drift into an error-only rollback mechanism. */
+    (void)c2_product_abort_cleanup();
+#else
     (void)vm_runtime_overlay_abort_cleanup();
+#endif
 #endif
     longjmp(lisp_toplevel, 1);
 }
@@ -96,7 +115,9 @@ uint8_t lisp65_error_render_pending(void) {
 
     /* The Workbench owns only numeric errors; dynamic text remains a host API. */
     if (code == LISP65_ERR_NONE) return 0;
+#ifndef LISP65_C2_NUMERIC_EARLY_ERRORS
     if (error_render_resident(code)) return 1;
+#endif
 #endif
 #ifdef LISP65_NUMERIC_ERRORS
     if (lisp65_error_render_code(code, pending_symbol)) return 1;
@@ -121,8 +142,32 @@ uint8_t lisp65_error_render_pending(void) {
 
 void lisp_poll(void) {
 #ifdef DEVICE
+#ifdef LISP65_C2_KERNAL_UNMAP
+    lisp65_key_event event;
+    /* Evaluator polling prioritises the one global safety event.  Ordinary
+     * keystrokes typed while computation is running are not editor input and
+     * are deliberately drained rather than represented a second time. */
+    while (c2_kernal_event_poll(&event))
+        if (event.code == LISP65_KEY_RUN_STOP)
+            lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+#else
     /* STKEY $91 == $7F, wenn RUN/STOP gedrueckt (KERNAL-IRQ aktualisiert es). */
     if (*(volatile unsigned char *)0x91 == 0x7F)
         lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
 #endif
+#endif
 }
+
+#ifdef LISP65_C2_KERNAL_UNMAP
+uint8_t lisp_input_event(uint8_t blocking, uint8_t idle,
+                         lisp65_key_event *event) {
+    do {
+        if (!c2_kernal_event_poll(event)) continue;
+        if (event->code != LISP65_KEY_RUN_STOP) return 1u;
+        if (!idle)
+            lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+        /* RUN/STOP at an idle REPL has exactly no meaning. */
+    } while (blocking);
+    return 0u;
+}
+#endif

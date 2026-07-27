@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2-kernal-residency-audit-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "read-only-audit",
+  "reference": {
+    "path": "docs/reference/mega65-chipset-reference.pdf",
+    "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+    "snapshot_date": "2026-04-08",
+    "pages": [
+      5,
+      6,
+      9,
+      10,
+      11,
+      53,
+      102,
+      103,
+      104
+    ]
+  },
+  "product_elf": "build/products/workbench/overlay-stack-guard/lisp65-workbench-overlay-linked.prg.elf",
+  "expected_active_vectors": {
+    "ffd2": {
+      "name": "CHROUT",
+      "count": 1,
+      "owner": "llvm-mos CRT startup before main"
+    },
+    "ffe4": {
+      "name": "GETIN",
+      "count": 4,
+      "owner": "REPL plus three VM key-event/read paths"
+    }
+  },
+  "expected_passive_dependencies": [
+    {
+      "source": "src/interrupt.c",
+      "needle": "*(volatile unsigned char *)0x91 == 0x7F",
+      "meaning": "RUN/STOP abort consumes KERNAL-IRQ-maintained STKEY"
+    }
+  ],
+  "expected_non_dependencies": {
+    "screen": "Workbench output uses the native screen driver after CRT startup.",
+    "disk": "MEGA65 Workbench disk I/O uses F011/HyperTrap; the cbm_k file branch is excluded from this profile.",
+    "latency_clock": "C1 acceptance reads $D7FA directly rather than a KERNAL jiffy variable. The hardware meaning of $D7FA remains separately pinned by its existing probe receipt.",
+    "custom_interrupts": "The current Workbench installs no IRQ or NMI handler."
+  },
+  "unmap_candidate": {
+    "cpu_window": "0xe000..0xffff",
+    "bytes": 8192,
+    "currency": "16-bit CPU address space only; no additional physical RAM",
+    "earliest_stage": "C2.1 layout decision after a typed-event input path and an owned IRQ/NMI design exist",
+    "forbidden_claim": "KERNAL unmapping is not a Bank-0, EXT or Attic capacity gain."
+  }
+}

@@ -87,8 +87,8 @@
 #ifndef LISP65_ERROR_OVERLAY_SLOT
 #error "LISP65_ERROR_OVERLAY_SLOT is required"
 #endif
-#if LISP65_ERROR_OVERLAY_SLOT != 36u
-#error "dedicated L65E renderer is pinned to catalog slot 36"
+#if LISP65_ERROR_OVERLAY_SLOT >= LISP65_RUNTIME_OVERLAY_HARD_MAX_SLICES
+#error "dedicated L65E renderer slot exceeds the runtime-overlay catalog"
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -101,7 +101,13 @@
 #define L65E_SLICE_DATA
 #endif
 
+#ifdef __mos__
+/* The target renderer is a named assembler leaf and consumes this exact,
+ * generator-owned table.  External linkage is private to that slice seam. */
+const uint8_t l65e_table[] L65E_SLICE_DATA =
+#else
 static const uint8_t l65e_table[] L65E_SLICE_DATA =
+#endif
     LISP65_ERROR_TEXT_TABLE_INITIALIZER;
 
 _Static_assert(sizeof l65e_table == LISP65_ERROR_TEXT_TABLE_BYTES,
@@ -113,8 +119,22 @@ _Static_assert(LISP65_ERROR_TEXT_TABLE_COUNT + 1u == LISP65_ERROR_CODE_LIMIT,
 LISP65_ERROR_TEXT_CODE_BINDINGS(L65E_ASSERT_CODE)
 #undef L65E_ASSERT_CODE
 
+#ifndef __mos__
 static uint16_t L65E_SLICE l65e_u16(const uint8_t *p) {
     return (uint16_t)((uint16_t)p[0] | ((uint16_t)p[1] << 8));
+}
+
+static char l65e_hex_digit(uint8_t value) {
+    value &= 15u;
+    return (char)((value < 10u ? 0x30u : 0x57u) + value);
+}
+
+static void l65e_emit_bcode_ordinal(obj detail) {
+    uint16_t ordinal = BCODE_IDX(detail);
+    emit(' '); emit('#');
+    emit(l65e_hex_digit((uint8_t)(ordinal >> 8)));
+    emit(l65e_hex_digit((uint8_t)(ordinal >> 4)));
+    emit(l65e_hex_digit((uint8_t)ordinal));
 }
 
 /* The build gate proves every generated shared span is inside the table; the
@@ -132,11 +152,23 @@ L65E_SLICE uint8_t lisp65_error_overlay_entry(void *opaque) {
         return LISP65_ERROR_OVERLAY_ERR_ABI;
     if (!context->code || context->code > LISP65_ERROR_TEXT_TABLE_COUNT)
         return LISP65_ERROR_OVERLAY_ERR_CODE;
-    if (context->symbol != NIL &&
-        context->code != LISP65_ERR_UNDEFINED_FUNCTION &&
-        (context->code < LISP65_ERR_FASL_ENTRIES_OVERFLOW ||
-         context->code > LISP65_ERR_LCC_INVALID_PARAMETER_LIST))
-        return LISP65_ERROR_OVERLAY_ERR_SYMBOL;
+    if (context->code == LISP65_ERR_C2_NESTING_DEPTH) {
+        if (!IS_FIX(context->detail) || FIXVAL(context->detail) != 5)
+            return LISP65_ERROR_OVERLAY_ERR_SYMBOL;
+    } else if (context->detail != NIL) {
+        uint8_t detail_hi = (uint8_t)((uint16_t)context->detail >> 8);
+        if (((uint16_t)context->detail & 1u) || detail_hi < 0xc0u) {
+            return LISP65_ERROR_OVERLAY_ERR_SYMBOL;
+        } else if (context->code == LISP65_ERR_VM_UNDEFINED_FUNCTION) {
+            if (detail_hi >= 0xe0u)
+                return LISP65_ERROR_OVERLAY_ERR_SYMBOL;
+        } else if (detail_hi < 0xe0u ||
+                   (context->code != LISP65_ERR_UNDEFINED_FUNCTION &&
+                    (context->code < LISP65_ERR_FASL_ENTRIES_OVERFLOW ||
+                     context->code > LISP65_ERR_LCC_INVALID_PARAMETER_LIST))) {
+            return LISP65_ERROR_OVERLAY_ERR_SYMBOL;
+        }
+    }
     index = (uint16_t)(LISP65_ERROR_TEXT_TABLE_HEADER_BYTES +
                        ((uint16_t)(context->code - 1u) << 1));
     descriptor = l65e_u16(l65e_table + index);
@@ -146,14 +178,21 @@ L65E_SLICE uint8_t lisp65_error_overlay_entry(void *opaque) {
                         (descriptor & LISP65_ERROR_TEXT_TABLE_REF_OFFSET_MASK));
 
     while (length--) emit((char)l65e_table[offset++]);
-    if (context->symbol != NIL) {
-        const char *symbol_name = symname(context->symbol);
-        while (*symbol_name) emit(*symbol_name++);
+    if (context->detail != NIL) {
+        if (context->code == LISP65_ERR_C2_NESTING_DEPTH) {
+            emit(' '); emit('5');
+        } else if (context->code == LISP65_ERR_VM_UNDEFINED_FUNCTION) {
+            l65e_emit_bcode_ordinal(context->detail);
+        } else {
+            const char *symbol_name = symname(context->detail);
+            while (*symbol_name) emit(*symbol_name++);
+        }
     }
     return LISP65_ERROR_OVERLAY_OK;
 }
+#endif /* !__mos__: host oracle; target entry is the named assembler leaf */
 
-uint8_t lisp65_error_render_code(lisp65_error_code code, obj symbol) {
+uint8_t lisp65_error_render_code(lisp65_error_code code, obj detail) {
     lisp65_error_overlay_context context;
     vm_runtime_overlay_status transport;
     uint8_t result;
@@ -161,7 +200,7 @@ uint8_t lisp65_error_render_code(lisp65_error_code code, obj symbol) {
     context.context_tag = LISP65_ERROR_OVERLAY_CONTEXT_TAG;
     context.context_contract = LISP65_ERROR_OVERLAY_CONTEXT_CONTRACT;
     context.code = code;
-    context.symbol = symbol;
+    context.detail = detail;
     transport = vm_runtime_overlay_exec((uint8_t)LISP65_ERROR_OVERLAY_SLOT,
                                         &context, &result);
     return transport == VM_RUNTIME_OVERLAY_OK &&

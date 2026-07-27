@@ -1,0 +1,67 @@
+{
+  "schema": "lisp65.c2.append-suffix-read-domain.v1",
+  "recorded_on": "2026-07-23",
+  "status": "owner-authorized-product-fix",
+  "authority": {
+    "link54_hardware_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link54-phase06a-cutpoint-hardware-first-red.json",
+      "sha256": "08cb5b0a3a258a47614bb01f60ca71ace2c20101f3b1442c9bc137765fe64ad8"
+    },
+    "execution_contract": "config/c2-lite-execution-contract.json",
+    "decoder_context_contract": "scripts/c2-stream-decoder.h"
+  },
+  "classification": {
+    "06a": "suffix-only normalized-code and zero-literal validation",
+    "06b": "suffix-only export-name validation",
+    "07": "suffix-only non-pair resolution beginning at resolution_first",
+    "08": "suffix-only pair resolution closing at resolution_count"
+  },
+  "range_rule": {
+    "boot": "Before READY, image_first is zero and the authenticated immutable Shelf domain may be read in full.",
+    "append": "After READY, only c2_decode_active == &c2aw.append may use c2_stream_shelf_read, every address must carry C2_SESSION_SOURCE_TAG, and the untagged span must lie wholly inside [c2aw.attic, c2aw.attic + c2aw.length).",
+    "hot": "No resumable execution consumer may call c2_stream_shelf_read after READY.",
+    "failure": "A wrong domain, missing tag, lower-bound underflow, end overflow or absent active append context fails before starting DMA."
+  },
+  "cold_enforcement": {
+    "producer": "The staged Append transaction is the sole authority for its private source domain: c2aw.attic and c2aw.length are authenticated before c2aw.append is finalized, and no second seal is materialized in the decoder context.",
+    "barrier": "c2_append_source_domain_guard is a named noinline member of Session overlay phase 04. Before READY it admits only image_first zero; after READY it requires c2_decode_active == &c2aw.append, a staged nonempty transaction and a nonwrapping span wholly inside the Session bank before the first source read.",
+    "closure": "The serial decoder enters post-READY decoding only at phase 04; phases 05a, 05b, 06a, 06b, 07 and 08 are reachable only after the phase-04 barrier, and source-consuming publication is reachable only after decoder finished.",
+    "consumer_dataflow": "Suffix image rows are Session-kind records produced before phase 04; their tagged code/metadata coordinates derive directly from the same active transaction and all validated subordinate intervals remain inside its private span.",
+    "handoff": "Phase 04 consumes the existing transaction scratch directly. No new marker, pointer, state byte or alternate context identity crosses the load boundary; shelf_bytes and c2d_bytes remain canonical throughout.",
+    "resident_seam": "c2_stream_shelf_read remains byteidentical to Link 54; it performs transport only after the cold closure has authorized the Session source domain."
+  },
+  "boot_full_staging": {
+    "image_first": 0,
+    "rule": "All four phases visit every image from zero through image_count-1."
+  },
+  "append_suffix": {
+    "rule": "All four phases visit exactly image_first through image_count-1 and never inspect a prefix image.",
+    "persistent_example": {"image_first": 6, "image_count": 7, "visited": [6]},
+    "transient_example": {"image_first": 63, "image_count": 64, "visited": [63]}
+  },
+  "capacity": {
+    "new_state_bytes": 0,
+    "new_gc_roots": 0,
+    "new_format_bytes": 0,
+    "resident_window_delta_bytes": 0,
+    "slice_cap_bytes": 1792,
+    "e000_floor_bytes": 54,
+    "bank0_text_noise_floor_bytes": 32
+  },
+  "required_mutations": [
+    "phase06a_starts_at_zero",
+    "phase06b_starts_at_zero",
+    "phase07_starts_at_zero",
+    "phase08_starts_at_zero",
+    "boot_skips_image_zero",
+    "append_reads_prefix",
+    "ready_accepts_shelf_domain",
+    "ready_accepts_missing_session_tag",
+    "ready_accepts_foreign_decode_context",
+    "ready_accepts_before_transaction_span",
+    "ready_accepts_after_transaction_span",
+    "ready_accepts_wrapped_transaction_span",
+    "domain_failure_starts_dma"
+  ],
+  "next_gate": "One product-shaped WPLTO probe; if and only if every wall and closure gate is green, build product Link 55. Hardware remains a later gate."
+}

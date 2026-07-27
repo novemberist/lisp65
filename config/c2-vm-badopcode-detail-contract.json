@@ -1,0 +1,130 @@
+{
+  "schema": "lisp65.c2.vm-badopcode-detail-retirement-contract.v1",
+  "decision": {
+    "class": "C",
+    "approved_on": "2026-07-22",
+    "choice": "option_3_withdraw_permanent_BADOPCODE_detail",
+    "reason": "keeping a logical cursor live taxes vm_run_inner by 390 bytes on every instruction; the 14-byte constructor was not the cost",
+    "approved_scope": [
+      "restore_VM_BADOPCODE_to_status_only",
+      "preserve_complete_DIRMISS_SYMI_and_BCODE_detail",
+      "bind_prequalified_two_byte_hold_recipe",
+      "one_nonpromotable_product_shaped_WPLTO",
+      "conditional_successor_product_link_after_green_WPLTO"
+    ],
+    "not_authorized": [
+      "hardware_run",
+      "floor_anchor_or_ceiling_change",
+      "DIRMISS_detail_reduction"
+    ]
+  },
+  "baseline": {
+    "link": 50,
+    "product_sha256": "3e13c9101b53ba89b8fb33e0f11c641ca53803b3f447831c5e1243475f7bc216",
+    "elf_sha256": "0ac6121a0e1b484efafd81334fbe5c14909b8b741e20ee1f41caa615524f7f47",
+    "structural_receipt_sha256": "e7f47adebda448583efa6e28d86ff28bb335adf3178853b5177e736cccd36170"
+  },
+  "measured_scope_decision": {
+    "receipt_sha256": "b0301c4e684741529e96b72643161e3722fffbc7e924a7d797e194b02001b315",
+    "constructor_bytes": 14,
+    "vm_run_inner_delta_bytes": 390,
+    "whole_product_text_delta_bytes": 456,
+    "required_recovery_for_32_byte_noise_reserve": 451
+  },
+  "product_contract": {
+    "badopcode_status": "VM_BADOPCODE",
+    "badopcode_detail": "NIL-only",
+    "dirmiss_status": "VM_DIRMISS",
+    "dirmiss_detail": ["NIL", "SYMI", "BCODE"],
+    "inner_status_precedence": "an already non-OK nested status is returned unchanged; the non-authoritative result object is normalized to NIL",
+    "new_cells": 0,
+    "new_roots": 0,
+    "new_latches": 0
+  },
+  "capacity_recovery": {
+    "kind": "retire_nonauthoritative_error_result_liveness",
+    "object": "c2_product_install",
+    "edges": 2,
+    "semantic_reason": "lcc_install_obj immediately consumes every non-OK result through vm_check_status; only vm_status is authoritative on those edges",
+    "required_recovery_bytes": 6,
+    "measured_recovery_bytes": "bound by the fresh capacity-recovery WPLTO receipt",
+    "forbidden_regressions": [
+      "overwrite_non_OK_inner_status",
+      "restore_non_NIL_error_result_liveness",
+      "reduce_DIRMISS_detail"
+    ]
+  },
+  "canonical_t_recovery": {
+    "kind": "consume_existing_canonical_identity",
+    "objects": [
+      "c2_product_install",
+      "vm_t product cache"
+    ],
+    "private_derivations_retired": [
+      "c2_facade_intern(\"t\") in c2_product_install",
+      "the second eval_init intern(\"t\") after vm_init"
+    ],
+    "canonical_authority": "in the C2 product vm_init publishes its sole intern(\"t\") result directly through eval_init's existing two-byte lisp_t object; eval_init consumes that identity and only publishes its value binding",
+    "semantic_reason": "the transient-definition predicate compares object identity and must consume the same interned t already used by the evaluator",
+    "non_C2_rule": "compiler-only profiles that do not link eval.c retain their private vm_t bootstrap cache",
+    "new_cells": 0,
+    "new_roots": 0,
+    "new_latches": 0,
+    "required_bank0_text_headroom_bytes": 32,
+    "forbidden_regressions": [
+      "restore_private_t_interning",
+      "restore_product_private_vm_t_cache",
+      "restore_eval_init_second_t_intern",
+      "compare_against_NIL_or_vm_t",
+      "remove_canonical_initialization",
+      "add_a_second_t_cache"
+    ]
+  },
+  "renderer": {
+    "badopcode": "text only; no suffix",
+    "dirmiss_symbol": "symbol name",
+    "dirmiss_bcode": " #xxx",
+    "e5_addendum": "code 63 plus Fixnum 5 through the existing terminal numeric-detail seam",
+    "l65e_expected_shape": {
+      "entry_bytes": 333,
+      "bcode_ordinal_leaf_bytes": 68,
+      "table_bytes": 803,
+      "slice_bytes": 1204,
+      "slice_cap_bytes": 1320
+    }
+  },
+  "compensating_control": {
+    "kind": "prequalified_nonpromotable_post_link_hold_recipe",
+    "config": "config/c2-badopcode-hold-shelf-recipe.json",
+    "gate": "tools/host-lisp/c2_badopcode_hold_shelf_gate.py",
+    "resident_bytes": 0,
+    "use": "instantiate a fresh diagnostic identity only after a future BADOPCODE recurrence"
+  },
+  "required_mutations": [
+    "restore_typed_constructor",
+    "restore_terminal_fixnum_dispatch",
+    "restore_fixnum_renderer_leaf",
+    "restore_install_stage_registry",
+    "drop_DIRMISS_SYMI",
+    "drop_DIRMISS_BCODE",
+    "restore_nonauthoritative_error_result",
+    "overwrite_inner_status"
+    ,
+    "restore_private_t_interning",
+    "replace_canonical_t_with_NIL",
+    "remove_canonical_t_initialization",
+    "restore_private_static_t_cache"
+  ],
+  "capacity_contract": {
+    "bank0_text_noise_reserve_bytes": 32,
+    "e000_floor_bytes": 54,
+    "session_family_limit_bytes": 65536,
+    "all_other_walls": "nonnegative",
+    "whole_program_lto_is_authoritative": true
+  },
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3 closed",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  }
+}

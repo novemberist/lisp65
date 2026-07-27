@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-c2-runtime-slice-lifetime-substitution-contract-v1",
+  "recorded_on": "2026-07-19",
+  "status": "attempted-first-red-not-promoted",
+  "claim_limit": "C2.2 placement contract and one real substitution link; no product, hardware, latency or release claim before that link and its later smoke gates pass.",
+  "format_boundary": {
+    "runtime_store": "L65R-v1",
+    "file_offset_bits_per_family": 16,
+    "bytes_per_family": 65536,
+    "maximum_dense_slots_per_family": 64,
+    "general_multibank_store": "not introduced; recorded C3-class growth path"
+  },
+  "families": {
+    "boot-validation": {
+      "id": 1,
+      "physical_base": "0x08200000",
+      "generation": 0,
+      "slots": [
+        "catalog-verifier", "record-verifier", "c2-decode-00",
+        "c2-decode-00b", "c2-decode-01", "c2-decode-02a", "c2-decode-02b",
+        "c2-decode-03", "resident-island-installer"
+      ]
+    },
+    "session-runtime": {
+      "id": 2,
+      "physical_base": "0x08000000",
+      "generation": "nonzero-current-c2-generation",
+      "slot_groups": [
+        "catalog-and-record-verifiers", "c2-decode-04-through-13b",
+        "c2-session-emitter", "c2-append-and-publication",
+        "error-text-renderer", "first-class-buffer-services"
+      ]
+    }
+  },
+  "transition": {
+    "initial_state": "inactive",
+    "prepare_operation": "c2_product_prepare_boot invalidates all C2 reachability and generation before selecting boot-validation",
+    "switch_cutpoint": "after successful phase 3 and before any phase 4 call",
+    "switch_preconditions": [
+      "transport idle and execution window wiped",
+      "new C2 generation is nonzero",
+      "boot-validation is the active family",
+      "no product directory or export has been published"
+    ],
+    "postcondition": "session-runtime is the only executable family for the generation",
+    "reverse_transition": "forbidden; restage begins with the generation-invalidating prepare operation"
+  },
+  "measured_input": {
+    "boot_only_phases": ["00", "01", "02a", "02b", "03"],
+    "boot_only_raw_bytes": 6605,
+    "boot_only_rounded_bytes": 7168,
+    "bank0_relief_required_bytes": 3049,
+    "single_store_overflow_bytes": 256,
+    "combined_deficit_bytes": 3305
+  },
+  "required_negative_cases": [
+    "boot phase after session handoff",
+    "session phase before handoff",
+    "boot re-entry while generation remains live",
+    "session handoff with generation zero",
+    "wrong family catalog or physical base",
+    "second session handoff",
+    "family switch while transport busy",
+    "simultaneously executable boot and session families"
+  ],
+  "link_rule": "After the addendum receipt, run exactly one complete product substitution link with every capacity dimension and the one-truth closure; stop on its first red."
+}

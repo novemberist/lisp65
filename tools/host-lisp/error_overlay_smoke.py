@@ -116,6 +116,80 @@ int main(void) {
                  "symbol render did not use the allocation-free accessor")) return 1;
 
     clear_observations();
+    if (!require(lisp65_error_render_code(LISP65_ERR_VM_UNDEFINED_FUNCTION,
+                                          MK_BCODE(0x2a5)),
+                 "BCODE ordinal render failed") ||
+        !require(!strcmp(output, "vm: undefined function #2a5"),
+                 "BCODE ordinal suffix differs") ||
+        !require(!symname_calls && !allocation_calls,
+                 "BCODE ordinal was treated as a symbol or allocated")) return 1;
+
+    clear_observations();
+    if (!require(lisp65_error_render_code(LISP65_ERR_VM_UNDEFINED_FUNCTION,
+                                          MK_BCODE(0)),
+                 "zero BCODE ordinal render failed") ||
+        !require(!strcmp(output, "vm: undefined function #000"),
+                 "zero BCODE ordinal lost fixed width")) return 1;
+
+    clear_observations();
+    if (!require(lisp65_error_render_code(LISP65_ERR_VM_UNDEFINED_FUNCTION,
+                                          MK_BCODE(0xfff)),
+                 "maximum BCODE ordinal render failed") ||
+        !require(!strcmp(output, "vm: undefined function #fff"),
+                 "maximum BCODE ordinal differs")) return 1;
+
+    clear_observations();
+    if (!require(!lisp65_error_render_code(LISP65_ERR_UNDEFINED_FUNCTION,
+                                           MK_BCODE(0x2a5)),
+                 "BCODE under a symbol-only code was accepted") ||
+        !require(!output_length && !symname_calls && !allocation_calls,
+                 "rejected BCODE caused a side effect")) return 1;
+
+    clear_observations();
+    if (!require(!lisp65_error_render_code(LISP65_ERR_VM_UNDEFINED_FUNCTION,
+                                           (obj)0x0002u),
+                 "foreign even detail was accepted") ||
+        !require(!output_length && !symname_calls && !allocation_calls,
+                 "foreign detail caused a side effect")) return 1;
+
+    clear_observations();
+    if (!require(lisp65_error_render_code(LISP65_ERR_C2_NESTING_DEPTH,
+                                          MKFIX(5)),
+                 "nesting-depth Fixnum render failed") ||
+        !require(!strcmp(output, "eval: nesting depth exceeded 5"),
+                 "nesting-depth suffix differs") ||
+        !require(!symname_calls && !allocation_calls,
+                 "nesting-depth detail resolved a symbol or allocated")) return 1;
+
+    clear_observations();
+    if (!require(!lisp65_error_render_code(LISP65_ERR_C2_NESTING_DEPTH,
+                                           MKFIX(4)),
+                 "nesting-depth Fixnum 4 was accepted") ||
+        !require(!output_length && !symname_calls && !allocation_calls,
+                 "rejected nesting-depth Fixnum 4 caused a side effect")) return 1;
+
+    clear_observations();
+    if (!require(!lisp65_error_render_code(LISP65_ERR_C2_NESTING_DEPTH,
+                                           MKFIX(6)),
+                 "nesting-depth Fixnum 6 was accepted") ||
+        !require(!output_length && !symname_calls && !allocation_calls,
+                 "rejected nesting-depth Fixnum 6 caused a side effect")) return 1;
+
+    clear_observations();
+    if (!require(!lisp65_error_render_code(LISP65_ERR_C2_NESTING_DEPTH,
+                                           MK_SYMI(5)),
+                 "nesting-depth symbol detail was accepted") ||
+        !require(!output_length && !symname_calls && !allocation_calls,
+                 "rejected nesting-depth symbol caused a side effect")) return 1;
+
+    clear_observations();
+    if (!require(!lisp65_error_render_code(LISP65_ERR_C2_NESTING_DEPTH,
+                                           NIL),
+                 "nesting-depth NIL detail was accepted") ||
+        !require(!output_length && !symname_calls && !allocation_calls,
+                 "rejected nesting-depth NIL caused a side effect")) return 1;
+
+    clear_observations();
     if (!require(lisp65_error_render_code(LISP65_ERR_FASL_ENTRIES_OVERFLOW,
                                           MK_SYMI(7)),
                  "compile-sentinel symbol render failed") ||
@@ -137,7 +211,7 @@ int main(void) {
     context.context_tag = LISP65_ERROR_OVERLAY_CONTEXT_TAG;
     context.context_contract = LISP65_ERROR_OVERLAY_CONTEXT_CONTRACT;
     context.code = omitted_codes[0];
-    context.symbol = NIL;
+    context.detail = NIL;
     if (!require(lisp65_error_overlay_entry(&context) ==
                      LISP65_ERROR_OVERLAY_ERR_CODE,
                  "textless entry did not return the sparse-code status") ||
@@ -172,7 +246,7 @@ int main(void) {
         !require(!output_length && !allocation_calls,
                  "latched fallback emitted or allocated")) return 1;
 
-    puts("error-overlay smoke: ok (tag-first+text+symbol+textless+alloc0+busy/latch)");
+    puts("error-overlay smoke: ok (tag-first+text+symbol+bcode12-boundaries+depth5-fixnum+textless+alloc0+busy/latch)");
     return 0;
 }
 """
@@ -231,6 +305,7 @@ def main() -> int:
         mos_cc = ROOT / "tools" / "llvm-mos" / "bin" / "mos-mega65-clang"
         if mos_cc.exists():
             mos_object = tmp / "error-overlay.o"
+            mos_ordinal_object = tmp / "l65e-bcode-ordinal.o"
             subprocess.run(
                 [
                     str(mos_cc),
@@ -255,9 +330,20 @@ def main() -> int:
                 cwd=ROOT,
                 check=True,
             )
+            subprocess.run(
+                [
+                    str(mos_cc),
+                    "-c",
+                    str(ROOT / "src" / "l65e_bcode_ordinal.s"),
+                    "-o",
+                    str(mos_ordinal_object),
+                ],
+                cwd=ROOT,
+                check=True,
+            )
             section_output = subprocess.run(
                 [str(ROOT / "tools" / "llvm-mos" / "bin" / "llvm-objdump"),
-                 "-h", str(mos_object)],
+                 "-h", str(mos_object), str(mos_ordinal_object)],
                 cwd=ROOT,
                 check=True,
                 capture_output=True,
@@ -267,23 +353,17 @@ def main() -> int:
             for line in section_output.splitlines():
                 fields = line.split()
                 if len(fields) >= 3 and fields[1].startswith(".lisp65_rt_l65e"):
-                    sections[fields[1]] = int(fields[2], 16)
+                    sections[fields[1]] = (
+                        sections.get(fields[1], 0) + int(fields[2], 16)
+                    )
             code_bytes = sections.get(".lisp65_rt_l65e", 0)
             table_bytes = sections.get(".lisp65_rt_l65e_data", 0)
             total_bytes = code_bytes + table_bytes
             hard_limit = 1320
-            if total_bytes > hard_limit:
-                raise RuntimeError(
-                    f"WorkBench L65E slice is {total_bytes} bytes, limit {hard_limit}"
-                )
-            print(
-                "error-overlay MOS workbench sections: "
-                f"code={code_bytes} table={table_bytes} total={total_bytes} "
-                f"headroom={hard_limit - total_bytes}"
-            )
             symbol_output = subprocess.run(
                 [str(ROOT / "tools" / "llvm-mos" / "bin" / "llvm-nm"),
-                 "-S", "--size-sort", str(mos_object)],
+                 "-S", "--size-sort", str(mos_object),
+                 str(mos_ordinal_object)],
                 cwd=ROOT,
                 check=True,
                 capture_output=True,
@@ -291,6 +371,16 @@ def main() -> int:
             ).stdout
             sizes = [line for line in symbol_output.splitlines()
                      if "l65e_" in line or "lisp65_error_overlay_entry" in line]
+            if total_bytes > hard_limit:
+                raise RuntimeError(
+                    f"WorkBench L65E slice is {total_bytes} bytes, limit {hard_limit}; "
+                    + "; ".join(sizes)
+                )
+            print(
+                "error-overlay MOS workbench sections: "
+                f"code={code_bytes} table={table_bytes} total={total_bytes} "
+                f"headroom={hard_limit - total_bytes}"
+            )
             print("error-overlay MOS symbols: " + "; ".join(sizes))
     return 0
 

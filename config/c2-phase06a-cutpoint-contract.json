@@ -1,0 +1,95 @@
+{
+  "schema": "lisp65.c2.phase06a-read-cutpoint.v1",
+  "decision": {
+    "class": "C",
+    "approved_on": "2026-07-23",
+    "scope": "five-way cold read provenance inside c2-decode-06a",
+    "product_links_authorized_after_green_wplto": 1,
+    "authorized_product_link": 54
+  },
+  "authority": {
+    "link53_hardware_first_red": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link53-first-fault-stamp-hardware-first-red.json",
+      "bytes": 5218,
+      "sha256": "55bc7f61b7ee580d4b0029858210eecc07cd507035e3ca2de8e9ccac5e423b53"
+    },
+    "observed_primary_slot": 5,
+    "observed_session_slice": "c2-decode-06a",
+    "observed_decoder_phase": 6,
+    "observed_error": "C2_STREAM_ERR_IO",
+    "observed_trace_flags": 128
+  },
+  "storage": {
+    "object": "c2_stream_context.reserved",
+    "existing_bytes_reused": 1,
+    "new_bss_bytes": 0,
+    "new_gc_roots": 0,
+    "new_latches": 0,
+    "initial_value": 0,
+    "success_handoff_value": 106,
+    "lifetime": "phase-06a/06b handoff byte inside the existing append decoder context; cleanup preserves the append subobject"
+  },
+  "cutpoints": [
+    {
+      "name": "image_record",
+      "value": 97,
+      "before": "c2_image_read"
+    },
+    {
+      "name": "metadata_header",
+      "value": 98,
+      "before": "c2_stream_shelf_read(meta, h, sizeof(h))"
+    },
+    {
+      "name": "entry_record",
+      "value": 99,
+      "before": "c2_stream_shelf_read(meta + eo + local * 16, e, sizeof(e))"
+    },
+    {
+      "name": "code_header",
+      "value": 100,
+      "before": "c2_stream_shelf_read(code + at, co, sizeof(co))"
+    },
+    {
+      "name": "literal_block",
+      "value": 101,
+      "before": "c2_stream_shelf_read(code + at + 7 + done, zeros, n)"
+    }
+  ],
+  "rules": {
+    "write_before_read": "each marker is stored immediately before its named read class; a failure leaves that value intact",
+    "success": "phase 06a replaces the last cutpoint with 0x6a only after every image and entry has passed",
+    "consumer": "phase 06b accepts exactly 0x6a and rejects every intermediate cutpoint",
+    "scope": "the markers diagnose cold decoder reads only; no hot execution, refill or renderer path consumes them",
+    "source_domains": "static boot images may use the authenticated product shelf; dynamic append images use the transaction-private Session source selected by c2_stream_product_image_read",
+    "cleanup": "the Link-53 first-error lock preserves Session slot 5 while c2_stream_context.reserved preserves the sub-cutpoint"
+  },
+  "capacity": {
+    "slice_cap_bytes": 1792,
+    "link53_phase06a_bytes": 1452,
+    "link53_phase06a_headroom_bytes": 340,
+    "bank0_text_noise_reserve_bytes": 32,
+    "e000_floor_bytes": 54,
+    "session_family_limit_bytes": 65536,
+    "whole_program_lto_is_authoritative": true
+  },
+  "required_mutations": [
+    "missing_image_record_marker",
+    "missing_metadata_header_marker",
+    "missing_entry_record_marker",
+    "missing_code_header_marker",
+    "missing_literal_block_marker",
+    "marker_after_its_read",
+    "duplicate_marker_value",
+    "completion_marker_drift",
+    "phase06b_accepts_intermediate_marker",
+    "initial_reserved_guard_removed",
+    "failure_clears_marker",
+    "hot_phase13_writes_cutpoint",
+    "cutpoint_count_drift"
+  ],
+  "counters": {
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  }
+}

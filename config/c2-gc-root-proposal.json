@@ -1,0 +1,75 @@
+{
+  "format": "lisp65-c2-gc-root-proposal-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "product-substitution-blocked-owner-decision-required",
+  "finding": "C2D values live in Bank 5, outside the current collector's Bank-0 shadow-root and symbol-table scans. Heap values stored only in C2D can be reclaimed during later descriptor allocation before publication.",
+  "claim_limit": "Read-only architecture and arithmetic proposal. It changes no product byte, authorizes no capacity and does not claim a C2 product link or device execution.",
+  "measured": {
+    "resolution_count": 2249,
+    "kind_counts": {
+      "0_nil": 1,
+      "2_fixnum": 260,
+      "3_immutable_string": 116,
+      "4_local_entry": 725,
+      "5_export_edge": 0,
+      "7_cons_pair": 168,
+      "8_general_symbol": 979
+    },
+    "additional_gc_roots": 284,
+    "additional_gc_root_bytes": 568,
+    "symbol_requests": 979,
+    "unique_interned_symbols": 344,
+    "current_c2d_v1_bytes": 10480,
+    "bank5_session_region_bytes": 50816,
+    "current_c2d_v1_headroom_bytes": 40336
+  },
+  "options": [
+    {
+      "id": "scan-complete-resolution-table",
+      "assessment": "format-neutral-but-hardware-latency-proof-required",
+      "c2d_bytes": 10480,
+      "gc_scan_bytes": 4498,
+      "gc_scan_reads_at_32_bytes": 141
+    },
+    {
+      "id": "c2d-v2-contiguous-root-vector",
+      "assessment": "recommended",
+      "header_bytes": 32,
+      "header_change": "version 2; former reserved_u16 becomes root_count_u16; roots_offset is derived after resolutions",
+      "root_kinds": [3, 7],
+      "c2d_bytes": 11048,
+      "bank5_session_headroom_bytes": 39768,
+      "gc_scan_bytes": 568,
+      "gc_scan_reads_at_32_bytes": 18,
+      "scan_byte_reduction_percent": 87.4,
+      "product_decoder_versions": [2]
+    },
+    {
+      "id": "symbol-rooted-keeper-list",
+      "assessment": "fallback-duplicates-root-state",
+      "additional_cons_cells": 284,
+      "additional_ext_heap_bytes": 2272
+    }
+  ],
+  "recommended_invariants": [
+    "resolution and root sections are zero before the first allocating descriptor",
+    "only kind 3 and kind 7 append to the root vector",
+    "no allocation occurs between returning a new heap value and publishing it to both C2D slots",
+    "the collector scans every root slot during construction and the published session",
+    "root_cursor equals root_count before final header publication",
+    "failure clears the active root-scan binding before restoring the prior mutable plane",
+    "C2D-v1 remains historical proof evidence; the product decoder accepts only C2D-v2"
+  ],
+  "required_negative_fixtures": [
+    "root count differs from immutable descriptor census",
+    "root section arithmetic overlap or total mismatch",
+    "nonzero root slot before resolution",
+    "non-root descriptor attempts root append",
+    "root cursor underflow, overflow or final mismatch",
+    "GC stress during kind-3 and kind-7 construction preserves earlier values",
+    "rollback removes active scan before restoring prior plane",
+    "strict C2D-v1/v2 decoder mismatch in both directions"
+  ],
+  "decision_requested": "Approve Option B: C2D-v2 contiguous root vector, then resume the streaming decoder and product-layout substitution link."
+}

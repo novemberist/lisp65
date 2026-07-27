@@ -1,0 +1,53 @@
+{
+  "format": "lisp65-c2i-v2-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-19",
+  "status": "owner-approved-full-composition-emission-authorized",
+  "inherits": [
+    "config/c2-address-identity-contract.json",
+    "config/c2-metadata-envelope-proposal.json",
+    "config/c2-recursive-literal-proposal.json",
+    "config/c2-symbol-literal-proposal.json"
+  ],
+  "header": {
+    "magic": "C2I\\0",
+    "format_version": 2,
+    "header_bytes": 24,
+    "entry_bytes": 16,
+    "literal_bytes": 8,
+    "flags": 0
+  },
+  "entry_record": {
+    "unchanged_from_c2i_v1": true,
+    "code_length_range": [1, 65535],
+    "anonymous_name_offset": 65535,
+    "legal_name_offset_maximum": 65534
+  },
+  "literal_kinds": [
+    {"id": 0, "name": "nil"},
+    {"id": 1, "name": "true"},
+    {"id": 2, "name": "fixnum-i16"},
+    {"id": 3, "name": "immutable-string-offset-u24"},
+    {"id": 4, "name": "container-entry-ordinal-u16"},
+    {"id": 5, "name": "proven-export-name-offset-u24"},
+    {"id": 6, "name": "native-primitive-id-u16"},
+    {"id": 7, "name": "backward-cons-pair"},
+    {"id": 8, "name": "general-symbol-name-offset-u24"}
+  ],
+  "lowering": {
+    "source_order": "The current six-manifest literal_index is a complete topological permutation. A repeated source-node reference in any future input must retain one descriptor identity rather than duplicate the resolved value.",
+    "entry_roots": "Each entry literal_index range becomes one contiguous C2 resolution range. Internal list-tail pairs are emitted before that range.",
+    "list": "One shared NIL descriptor is added in every image that contains a LIST. A LIST of N>0 children becomes N backward-only cons descriptors; its head occupies the original root slot.",
+    "cons": "Legacy CONS becomes one backward-only cons descriptor.",
+    "pair_reference_rule": "Both descriptor ordinals are strictly below the pair descriptor ordinal; self and forward references are format errors.",
+    "resolver": "One forward pass over descriptors; no recursive decoder walk.",
+    "sharing": "Two edges to the same descriptor ordinal resolve to the same object identity. Sharing may not be reconstructed by value."
+  },
+  "symbol_provenance": {
+    "legacy_symbol_kind": 8,
+    "export_edge_kind": 5,
+    "kind5_emission_rule": "Only explicit compiler edge provenance naming a declared export may emit kind 5; spelling equality is insufficient.",
+    "call_graph_consumers": "Tree-shaking, who-calls, ide-help cross-references and every future call-graph consumer read only kind 5. Kind 8 is invisible."
+  },
+  "strict_version_boundary": "The future product decoder accepts C2I-v2 only. Historical C2I-v1 proof decoders reject v2; no product contains both."
+}

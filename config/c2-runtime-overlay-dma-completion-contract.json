@@ -1,0 +1,201 @@
+{
+  "format": "lisp65-c2-runtime-overlay-dma-completion-contract-v2",
+  "recorded_on": "2026-07-21",
+  "status": "implemented-and-wplto-proven-link36-first-red-c2-lite-selected",
+  "authority": {
+    "scope_memo": "docs/planning/v1.2-scope-memo.md",
+    "contract": "docs/planning/c2.2-runtime-overlay-dma-completion-contract.md",
+    "link35_hardware_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link35-dma-completion-hardware-first-red-diagnosis.json",
+    "cycle2_fixed_patch": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link35-hold-before-wipe-fixed-patch-cycle2-receipt.json",
+    "cycle2_hardware": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link35-hold-before-wipe-cycle2-hardware-receipt.json",
+    "terminal_wplto": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-crc-convergence-terminal-floor-wplto-receipt.json",
+    "link36_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link36-crc-convergence-structural-receipt.json"
+  },
+  "documented_semantics": {
+    "ordinary_dma": "CPU instruction execution is documented as stopped until the DMA job has completed",
+    "enhanced_dma": "D705 selects Enhanced-DMA options and retains F018/F018B job semantics",
+    "software_busy_register": "none documented for ordinary DMAgic jobs",
+    "chipset_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "pdf_page": 84,
+      "printed_page": 70
+    },
+    "user_guide_revision": "0210345cd9cf19629010277732280e9e7248771e",
+    "core_development_revision": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "tested_device_core_identity": {
+      "status": "missing-mandatory-before-upstream-submission",
+      "next_reproduction_fields": [
+        "core-id",
+        "core-version",
+        "bitstream-build-or-release",
+        "device-model"
+      ]
+    }
+  },
+  "hardware_curve": {
+    "source_physical": "0x08200200",
+    "destination_cpu": "0xc356",
+    "bytes": 1156,
+    "expected_crc16": "0xe856",
+    "completion_marker": "0xa5",
+    "captures": [
+      {
+        "elapsed_after_launch_ms": 1,
+        "crc16": "0xe8d8",
+        "nonmatching_bytes": 1133
+      },
+      {
+        "elapsed_after_launch_ms": 691,
+        "crc16": "0xe856",
+        "nonmatching_bytes": 0
+      },
+      {
+        "elapsed_after_launch_ms": 2381,
+        "crc16": "0xe856",
+        "nonmatching_bytes": 0
+      }
+    ],
+    "held_state": {
+      "family": "boot",
+      "island_state": "INSTALLING",
+      "loaded_len": 1156,
+      "busy": 1,
+      "fault": 0,
+      "wipe_reached": false,
+      "verifier_reached": false
+    },
+    "conclusion": "marker A5 is an acceptance/ordering witness but not a completion boundary; the destination converges afterward"
+  },
+  "completion_protocol": {
+    "kind": "frame-bounded-authoritative-crc-convergence",
+    "transport_return_meaning": "destination-untrusted",
+    "marker_meaning": "job-acceptance-and-ordering-witness-only",
+    "frame_source": "c2_kernal_frame_count",
+    "frame_hz": 50,
+    "timeout_constant": "LISP65_RTOV_COMPLETION_TIMEOUT_FRAMES",
+    "timeout_frames": 64,
+    "timeout_nominal_ms": 1280,
+    "observed_upper_bound_ms": 691,
+    "observed_quantized_frames": 35,
+    "margin_frames_after_quantized_observation": 29,
+    "margin_ms_after_raw_observation": 589,
+    "edge_order": "authoritative CRC match is tested before timeout; match at frame 64 succeeds and mismatch at frame 64 times out",
+    "frame_arithmetic": "unsigned 16-bit modulo subtraction",
+    "timeout_status": "VM_RUNTIME_OVERLAY_ERR_COMPLETION_TIMEOUT",
+    "timeout_status_position": "append-only; existing enum values retain their numbers",
+    "outer_status_rule": "first innermost status wins; timeout may not be replaced by ERR_ISLAND/E2f"
+  },
+  "covered_seams": [
+    {
+      "id": "catalog-header",
+      "proof": "embedded-header-crc",
+      "disposition": "repeat-complete-header-read-until-self-crc-or-timeout"
+    },
+    {
+      "id": "catalog-directory-chunks",
+      "proof": "header-bound-directory-crc",
+      "disposition": "repeat-complete-directory-pass-until-crc-or-timeout"
+    },
+    {
+      "id": "requested-record-entry",
+      "proof": "L65R-v3-emissions-bound-record-crc",
+      "disposition": "repeat-one-standalone-record-read-until-its-embedded-nonzero-crc-matches-or-timeout"
+    },
+    {
+      "id": "catalog-verifier-payload",
+      "proof": "verifier-tuple-crc",
+      "disposition": "poll-complete-target-crc-before-entry"
+    },
+    {
+      "id": "record-verifier-payload",
+      "proof": "verifier-tuple-crc",
+      "disposition": "poll-complete-target-crc-before-entry"
+    },
+    {
+      "id": "application-payload",
+      "proof": "authenticated-record-payload-crc",
+      "disposition": "poll-complete-target-crc-before-execution"
+    },
+    {
+      "id": "island-carrier-record",
+      "proof": "L65R-v3-emissions-bound-record-crc",
+      "disposition": "repeat-one-standalone-carrier-record-read-until-its-embedded-nonzero-crc-matches-or-timeout"
+    },
+    {
+      "id": "island-source-crc-chunks",
+      "proof": "carrier-record-payload-crc",
+      "disposition": "repeat-complete-streamed-source-crc-pass-until-match-or-timeout"
+    },
+    {
+      "id": "island-carrier-destination",
+      "proof": "authenticated-final-carrier-record-payload-crc",
+      "disposition": "carry-record-length-and-crc-through-the-serial-phase-handoff-and-poll-complete-destination-crc-before-ready; prerequisite-seed-identity-is-not-a-runtime-comparison"
+    }
+  ],
+  "record_read_rule": {
+    "standalone_record_reads_after_directory_authentication": "permitted only with L65R-v3 embedded-record-CRC convergence",
+    "storage": "existing-32-byte-verifier-scratch",
+    "second_record_buffer": "forbidden",
+    "directory_reauthentication": "forbidden on trusted later slices",
+    "meaning": "the record proves its own emitted bytes without undoing transaction amortization"
+  },
+  "permanent_gates": {
+    "single_transport": "one target rtov_read implementation; no direct target trigger elsewhere",
+    "nine_seam_inventory": "exact IDs and source tokens are pinned",
+    "dominance": "every consumer is dominated by its assigned complete-object content proof",
+    "record_convergence": "both standalone record reads are dominated by strict L65R-v3 embedded-CRC convergence",
+    "timeout": "one 64-frame constant and the owned 50-Hz frame source",
+    "status": "specific append-only completion timeout survives every outer layer",
+    "marker": "retained only as ordering/diagnostic witness; never accepted as completion",
+    "mutations": [
+      "remove-one-seam",
+      "accept-marker-as-completion",
+      "accept-wrong-requested-record-crc",
+      "accept-zero-carrier-record-crc",
+      "accept-v2-record-in-v3-decoder",
+      "change-timeout-from-64",
+      "change-frame-source",
+      "check-timeout-before-crc-match",
+      "replace-completion-timeout-with-ERR_ISLAND",
+      "add-second-target-transport"
+    ]
+  },
+  "contract_model": {
+    "required_cases": [
+      "immediate-match",
+      "observed-match-at-35-frames",
+      "mismatch-at-63-then-match-at-64",
+      "mismatch-at-64-timeout",
+      "uint16-frame-wrap",
+      "marker-with-wrong-content"
+    ],
+    "product_source_status": "L65R-v3 implementation authorized; capacity not yet proven"
+  },
+  "capacity_probe_requirements": [
+    "common-frame-bounded-convergence-driver",
+    "append-only-timeout-status-and-truthful-display",
+    "L65R-v3-record-self-CRC-convergence",
+    "repeated-complete-object-crc-work",
+    "credit-from-removed-one-shot-crc-and-record-read-paths",
+    "all-bound-walls-and-structural-gates"
+  ],
+  "hardware_requirements_after_product_authorization": [
+    "per-seam-convergence-frames",
+    "boot-to-repl",
+    "definition-first-call",
+    "warm-second-call",
+    "gc-blockreads-and-frames",
+    "freezer-e000-identity",
+    "nested-eval",
+    "tested-device-core-id-and-version"
+  ],
+  "upstream": {
+    "id": "L10",
+    "project": "mega65-core",
+    "status": "candidate-with-measured-curve-needs-named-core-reproduction",
+    "reason": "CPU-visible Attic-to-Bank0 target converged between timed captures after both documented CPU resumption and chained marker publication"
+  },
+  "next_gate": "Class-C Whole-Program capacity/placement probe; no product link is authorized by this contract",
+  "claim_limit": "Contract, seam inventory and host model only; zero product bytes, zero compiler/product links, zero hardware runs."
+}

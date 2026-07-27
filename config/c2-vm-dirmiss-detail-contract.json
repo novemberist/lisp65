@@ -1,0 +1,111 @@
+{
+  "schema": "lisp65.c2.vm-dirmiss-detail-contract.v1",
+  "decision": {
+    "class": "C",
+    "approved_on": "2026-07-22",
+    "approved_scope": [
+      "contract",
+      "source_and_mutation_gates",
+      "one_product_shaped_wplto_probe"
+    ],
+    "not_authorized": [
+      "promotable_product_link",
+      "hardware_run",
+      "anchor_floor_or_ceiling_change"
+    ]
+  },
+  "baseline": {
+    "link": 44,
+    "product_sha256": "db3112e6503ca96d572cccb7a399c91eb06028faeaa05e595454fb9502b7f926"
+  },
+  "seam": {
+    "producer": "vm_dirmiss_detail",
+    "status_channel": "vm_status",
+    "detail_channel": "ordinary_obj_return_value",
+    "terminal_consumer": "vm_check_status",
+    "persistent_terminal_cells": [
+      "pending_code",
+      "pending_symbol"
+    ],
+    "forbidden_storage": [
+      "new_diagnostic_global",
+      "new_gc_root",
+      "c2j_field"
+    ],
+    "allowed_detail_domains": [
+      "SYMI",
+      "BCODE",
+      "NIL"
+    ],
+    "symbol_render_mapping": {
+      "status": "VM_DIRMISS",
+      "detail": "SYMI",
+      "abort_code": "LISP65_ERR_UNDEFINED_FUNCTION",
+      "consumer": "lisp_abort_symbol"
+    },
+    "non_symbol_mapping": {
+      "details": [
+        "BCODE",
+        "NIL"
+      ],
+      "abort_code": "LISP65_ERR_VM_UNDEFINED_FUNCTION",
+      "consumer": "lisp_abort_code"
+    },
+    "precedence": "innermost_non_ok_result_wins"
+  },
+  "producers": [
+    {
+      "id": "compile_inner_helper",
+      "source": "src/compile_repl.c",
+      "detail": "u.fn[i].name"
+    },
+    {
+      "id": "compile_defun",
+      "source": "src/compile_repl.c",
+      "detail": "defname"
+    },
+    {
+      "id": "vm_run_dir",
+      "source": "src/vm.c",
+      "detail": "representable_MK_BCODE_di_or_NIL"
+    },
+    {
+      "id": "op_closure",
+      "source": "src/vm.c",
+      "detail": "sym"
+    },
+    {
+      "id": "op_call",
+      "source": "src/vm.c",
+      "detail": "sym"
+    },
+    {
+      "id": "op_tailcall",
+      "source": "src/vm.c",
+      "detail": "sym"
+    }
+  ],
+  "required_mutations": [
+    "omit_each_of_six_producers",
+    "op_call_detail_to_nil",
+    "op_tailcall_detail_to_nil",
+    "overwrite_nested_op_call_detail",
+    "discard_nested_callprim_detail",
+    "introduce_stale_global_detail",
+    "render_bcode_as_symbol",
+    "bypass_symbol_renderer"
+  ],
+  "capacity_baseline_headroom_bytes": {
+    "bank0_text": 35,
+    "fixed_hot_block": 33,
+    "ordinary_bank0_bss": 86,
+    "resident_island": 170,
+    "e000": 353,
+    "session_aggregate": 98
+  },
+  "counters": {
+    "class_b_diagnostic_cycles": "3/3",
+    "line1_product_first_reds": "2/3",
+    "completed_latency_measurements": "0/2"
+  }
+}

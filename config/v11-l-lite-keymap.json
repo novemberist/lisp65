@@ -1,17 +1,38 @@
 {
-  "format": "lisp65-v11-l-lite-keymap-v1",
-  "version": 1,
-  "status": "wave3-probe",
+  "format": "lisp65-v11-keymap-v2",
+  "version": 2,
+  "status": "c2-l-full-product",
   "event_model": {
-    "profile": "getin-code-l-lite",
+    "profile": "typed-event-l-full-with-l-lite-code-fallback",
     "prefix_code": 24,
     "printable_min": 32,
     "printable_max": 126,
     "printable_command": 1110,
-    "modifier_identity": "not-claimed-until-L-full",
-    "physical_meta": "not-available",
-    "command_launcher": ["C-x x", "C-x Return"]
+    "modifier_identity": "consumed-from-the-same-typed-queue-event",
+    "modifier_masks": {"control": 4, "meta": 16},
+    "physical_meta": "buffered-alt-is-meta",
+    "command_launcher": ["M-x", "C-x x", "C-x Return"]
   },
+  "modifier_bindings": [
+    {
+      "id": "control-space",
+      "display": "C-Space",
+      "raw_petscii": 255,
+      "normalized_code": 255,
+      "required_modifiers": ["control"],
+      "command": 1115,
+      "new_surface": true
+    },
+    {
+      "id": "meta-x",
+      "display": "M-x",
+      "raw_petscii": 88,
+      "normalized_code": 120,
+      "required_modifiers": ["meta"],
+      "command": 1013,
+      "new_surface": true
+    }
+  ],
   "commands": [
     {"id": 1001, "name": "save-buffer", "route": "save", "description": "Save the current buffer"},
     {"id": 1002, "name": "find-file", "route": "find", "description": "Open a file"},
@@ -132,7 +153,6 @@
     }
   ],
   "removed_bindings": [
-    {"display": "C-Space", "reason": "GETIN code zero means queue empty in L-lite"},
     {"display": "RUN/STOP in editor", "reason": "RUN/STOP has one meaning: abort a running evaluation"},
     {"display": "RUN/STOP at REPL", "reason": "idle RUN/STOP is a no-op"}
   ]

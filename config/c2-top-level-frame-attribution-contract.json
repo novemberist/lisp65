@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-c2-top-level-frame-attribution-contract-v1",
+  "recorded_on": "2026-07-23",
+  "status": "authorized-nonpromotable-attribution-before-latency-attempt-2",
+  "scope": {
+    "question": "Attribute the 60/61-frame fixed cost of one transient top-level expression before any second acceptance measurement.",
+    "product_semantics": "unchanged",
+    "promotable": false,
+    "hardware_runs": 1,
+    "latency_attempts_consumed": 0
+  },
+  "clock": {
+    "authority": "product-owned KERNAL frame counter",
+    "low_address": "0xff83",
+    "high_address": "0xff84",
+    "stored_width_bytes": 1,
+    "delta": "(next-current)&0xff",
+    "admissibility": "The complete observed top-level interval must be below 256 frames; otherwise the diagnostic is red and no delta is interpreted."
+  },
+  "storage": {
+    "symbol": "lisp65_c2_phase_scratch",
+    "scratch_bytes": 304,
+    "offset": 287,
+    "result_bytes": 15,
+    "end_exclusive": 302,
+    "installer_trace_offset": 302,
+    "installer_trace_bytes": 2,
+    "lifetime_proof": "c2_append_state must be statically bounded at or below offset 287. The first stamp is after the final successful emitter-state read; the emitter may overlap the result span only before that cutpoint.",
+    "new_bss_bytes": 0,
+    "new_roots": 0,
+    "new_pointers": 0,
+    "new_strings": 0
+  },
+  "stations": [
+    {"index": 0, "id": "emit_final_crc", "symbol": "c2_session_emit_final_crc_phase"},
+    {"index": 1, "id": "append_envelope", "symbol": "c2_append_envelope_phase"},
+    {"index": 2, "id": "reserve_transient_bounds", "symbol": "c2_append_reserve_transient_bounds_phase"},
+    {"index": 3, "id": "stage_copy", "symbol": "c2_append_stage_copy_phase"},
+    {"index": 4, "id": "stage_plane", "symbol": "c2_append_stage_plane_phase"},
+    {"index": 5, "id": "decode_04", "symbol": "c2_stream_phase_04"},
+    {"index": 6, "id": "decode_06a", "symbol": "c2_stream_phase_06a"},
+    {"index": 7, "id": "decode_09", "symbol": "c2_stream_phase_09"},
+    {"index": 8, "id": "decode_12", "symbol": "c2_stream_phase_12"},
+    {"index": 9, "id": "append_header", "symbol": "c2_append_header_phase"},
+    {"index": 10, "id": "inner_vm", "symbol": "c2_product_install"},
+    {"index": 11, "id": "rollback_prepare", "symbol": "c2_append_rollback_prepare_phase"},
+    {"index": 12, "id": "rollback_unpublish", "symbol": "c2_append_rollback_unpublish_phase"},
+    {"index": 13, "id": "rollback_finalize", "symbol": "c2_append_rollback_finalize_phase"},
+    {"index": 14, "id": "journal_clear", "symbol": "c2_append_journal_clear_phase"}
+  ],
+  "interpretation": {
+    "full_plane_target_verification": "A dominant stage_copy to stage_plane interval would support the full-plane/target-verification hypothesis.",
+    "overlay_ceremony": "Distributed deltas across phase entries identify per-slice load/authenticate/wipe or journal overhead instead.",
+    "vm_cost": "inner_vm to rollback_prepare isolates execution plus the second transaction opening.",
+    "claim_limit": "This diagnostic attributes elapsed frames only. It is not a latency acceptance measurement and cannot be promoted."
+  },
+  "capacity": {
+    "bank0_text_noise_floor_bytes": 32,
+    "e000_floor_bytes": 54,
+    "runtime_slice_cap_bytes": 1792,
+    "session_family_cap_bytes": 65536,
+    "wplto_is_authority": true
+  },
+  "required_mutations": [
+    "wrong frame-counter address",
+    "scratch offset overlaps live append state",
+    "result vector overlaps installer trace",
+    "missing station",
+    "duplicate station index",
+    "swapped stage-copy and stage-plane station",
+    "diagnostic feature leaks into the canonical product profile",
+    "non-modulo delta interpretation"
+  ]
+}

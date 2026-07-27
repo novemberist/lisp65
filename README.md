@@ -3,38 +3,42 @@
 lisp65 is a native, interactive Lisp workbench for the
 [MEGA65](https://mega65.org/). It combines a Common Lisp-inspired language,
 an on-device bytecode compiler, an Emacs-style full-screen editor, and
-transactional 1581 disk persistence.
+transactional 1581 disk persistence. This repository is a curated public
+source snapshot of a private proof repository; accepted public changes are
+validated there and returned in credited syncs.
 
-The current release is **lisp65 1.1.0**, using **Dialect V2**.
+The current release is **lisp65 1.2.0**, using **Dialect V2**.
 
 ## Highlights
 
 - Native REPL and self-hosted `lcc` compiler on the MEGA65
 - Lisp-2 semantics, macros, closures, higher-order functions, and strict arity
-- Full-screen editor with 41 generated-and-tested key bindings
+- Full-screen editor with one generated-and-tested L-full keymap
 - On-demand IDE, IDEX, M65D, and first-class Buffer libraries
-- Attic-backed library shelf: staged libraries remain available after the disk swap
+- C2-lite Chip-RAM execution with verified, publish-last cold staging
+- Newly defined nullary functions callable within the 16-frame acceptance ceiling
 - Copy-on-write saves and persistent compilation with read-back verification
+- Byte-identical rollback and a usable REPL after RUN/STOP
 - Start from an SD-backed D81 image without a connected development PC
 - Reproducible, self-verifying release bundle with hardware-bound receipts
 
 ## Get the release
 
-Download `lisp65-1.1.0.tar.gz` from the
-[v1.1.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.1.0).
+Download `lisp65-1.2.0.tar.gz` from the
+[v1.2.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.2.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.1.0.tar.gz
-cd lisp65-1.1.0
+tar -xzf lisp65-1.2.0.tar.gz
+cd lisp65-1.2.0
 python3 verify.py
 ```
 
 Do not use a bundle that fails verification. The verifier checks every package
-file, all 14 sealed product artifacts, and the embedded Wave 3 hardware-
-acceptance seal without consulting the repository or the network.
+file, the promoted product and package identities, and the embedded G5/G6
+hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.1.0 release notes](docs/releases/1.1.0.md) for the complete change
+See the [1.2.0 release notes](docs/releases/1.2.0.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -68,7 +72,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.1.0.
+identity. There is no on-device disk formatter in 1.2.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -76,23 +80,24 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.1.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.2.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
 
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
-| Finite session metadata | The sealed profile leaves 334 symbol entries, 5,079 name-pool bytes, and 168 directory entries. Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | C2 separates immutable code from mutable session state; `unload` remains a later dependency-aware feature. |
-| Definition-to-call latency | The first call after a persistent definition takes about 1.90–1.96 seconds on the reference machine; isolated longer observations exist. Warm expressions take about 0.20 seconds. | Enter related definitions as one block to amortize the reload. C2 direct-Attic execution is the committed 1.2 cure. |
+| Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | The C2D session store separates immutable code from mutable session state; dependency-aware reclamation remains later work. |
+| Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
+| Calls with arguments | The 1.2 latency cure covers published nullary calls. The final informative one-argument measurement was 68 frames with no limit. | Generalized n-ary direct call is named 1.2.x freight, not a hidden 1.2 claim. |
 | Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
-| No standalone application builder | The compiler creates L65M modules for the current Workbench; it does not produce a self-contained runtime or bootable application disk. | A ship-builder remains a 1.2 product goal. |
-| Editor safety and discoverability | Buffers have fixed capacities. There is no undo/redo, interactive completion, integrated help, or full structural editing. | These remain measured post-1.1 work; no release date is promised. |
+| No standalone application builder | The compiler creates L65M modules for the current Workbench; it does not produce a self-contained runtime or bootable application disk. | A ship-builder remains later work. |
+| Editor safety and discoverability | Buffers have fixed capacities. There is no undo/redo, interactive completion, integrated help, or full structural editing. | These remain measured post-1.2 work; no release date is promised. |
 | File sizes are bounded | M65D and editor saves support 1–8,192 bytes. Evaluator `load` has a separate 38,400-byte staging ceiling; memory may become the practical limit earlier. | Larger files require a future storage/runtime design. |
 | Xemu-only use has limited fidelity | Xemu is useful for logic and boot choreography, but F011 writes, SD buffer mapping, Freezer behavior, reset semantics, and timing remain hardware claims. | Emulator-valid tests remain a prefilter, never a hardware substitute. |
 | Storage workflow remains narrow | One drive is supported, there is no on-device formatter, and a documented Freezer race can let at most one already-started sector cross a media boundary before status 12 stops further writes. | Keep backups. Multi-drive and core-assisted mount locking remain later work. |
-| Banner colors persist after scrolling | The screen driver scrolls character cells but not color RAM, so text crossing the former banner rows can inherit its colors. Data and program state are unaffected. | The color-RAM rider requires the C2 runtime-layout evolution. |
-| Function metadata is incomplete | Exact arity is proven for 101 entries; 34 native or macro entries remain explicitly unresolved, so no complete integrated-help claim is made. | C2.2 supplies the metadata/carrier evolution. |
+| Banner colors persist after scrolling | The screen driver scrolls character cells but not color RAM, so text crossing the former banner rows can inherit its colors. Data and program state are unaffected. | A later color-RAM-aware scroll path must preserve the native post-boot ownership contract. |
+| Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
 Buffers print as the opaque marker `?`; inspect them with `buffer-ref` and
 `buffer-length`. The physical product-medium write-protect case is not
@@ -105,19 +110,21 @@ acceptance.
 
 ## Verification status
 
-Release 1.1.0 binds product artifact set
-`048639695dd7ad9c35bd8e92b2ec4c0fba1e365385cfc680e90bb3ba1a860024`:
+Release 1.2.0 binds product artifact set
+`37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d`
+and package set
+`82ddc3d7fd8bc048b2803081866aa5320a08bd226d18b063c403a33fc9e7e038`:
 
-- G3: passed as an emulator prefilter
-- G5: 14/14 hardware cases passed
-- G6: 5/5 profile-applicable hardware cases passed on one physical MEGA65
-- Physical product-medium write protection: not applicable in the tested
-  stock-core SD-D81 profile
+- G5: 9/9 fresh hardware cases passed
+- G6: 5/5 fresh package, boot, restage, work-media, and product-media cases
+  passed on one physical MEGA65
+- The promoted archive is self-contained, offline-verifiable, reproducibly
+  packed, and mutation-tested
 
-The G6 acceptance archive is self-contained, verified offline, reproducibly
-packed, and rejects deliberate mutations. Exact hashes and toolchain provenance
-are recorded in the [1.1.0 release receipt](releases/lisp65-1.1.0-receipt.json)
-and [manifest](releases/lisp65-1.1.0-manifest.json).
+Exact hashes and claim limits are recorded in the
+[1.2.0 release notes](docs/releases/1.2.0.md). The maintained limitations and
+retired 1.1 latency exception are in
+[Known Issues and Retired Exceptions](docs/known-issues.md).
 
 The public repository is a curated source snapshot with independent Git
 history. Its Git commit and tag object IDs therefore differ from the private
@@ -127,25 +134,39 @@ authoritative product and evidence SHAs.
 ## Building from source
 
 The source tree is primarily for lisp65 development. It requires GNU Make,
-Python 3, a C99 host compiler, `c1541`, LLVM-MOS, and the MEGA65 tools. The
-public repository does not redistribute third-party tool bundles.
+Python 3, and a C99 host compiler for the self-contained source gates. Some
+development targets additionally require `c1541`, LLVM-MOS, and the MEGA65
+tools. The public repository does not redistribute third-party tool bundles.
 
 ```sh
-make doctor DOCTOR_GATE=G2
+python3 tools/host-lisp/public_export.py selftest
 python3 tools/host-lisp/public_export.py check
 make source-syntax-check
-make workbench-product
+python3 tools/host-lisp/asm_c_constant_contract.py selftest
 ```
 
 Start with the [Development Guide](docs/development.md). Aggregate proof gates
 that consume sealed evidence are available only in the private proof repository.
+With the pinned LLVM-MOS SDK and `c1541` installed, the public C2-lite build is:
+
+```sh
+make clean
+make workbench-product
+```
+
+The target uses the single C2 emitter, one WPLTO closure, and the canonical
+media packer. Its final gate requires all 19 roles to reproduce the sealed 1.2
+artifact-set identity. The independently verifiable release bundle remains the
+authority for hardware-acceptance claims.
 
 ## Documentation
 
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
-- [Release Notes for 1.1.0](docs/releases/1.1.0.md)
+- [Release Notes for 1.2.0](docs/releases/1.2.0.md)
+- [Known Issues and Retired Exceptions](docs/known-issues.md)
+- [Contributing](CONTRIBUTING.md)
 - [Development Guide](docs/development.md)
 - [Architecture Overview](docs/architecture-overview.md)
 - [Documentation Index](docs/README.md)

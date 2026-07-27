@@ -4,6 +4,7 @@
 #include "symbol.h"
 #include "mem.h"
 #include "interrupt.h"
+#include "c2_kernal_layout.h"
 
 
 /* Index/nsym sind uint16 -> bis zu 65534 Symbole moeglich (Limit = MAX_SYM/NAMEPOOL).
@@ -120,7 +121,8 @@ static void sympool_write(uint16_t off, const char *src, uint16_t len) {
 /* The reader contract remains separately capped at 31 characters.  Name
  * comparison and lookup use one bulk transfer into a Bank-0 scratch buffer;
  * EXT mode therefore performs one DMA instead of one DMA per byte. */
-char sym_name_scratch[LISP65_SYMBOL_NAME_BUFFER];
+char LISP65_C2_FIXED_BANK0("sym_name_scratch")
+    sym_name_scratch[LISP65_SYMBOL_NAME_BUFFER];
 
 /* Namen aus dem Pool mit einem C-String vergleichen (0 = gleich): 1 Bulk-Read + lokaler strcmp. */
 static int sympool_streq(uint16_t off, const char *name) {

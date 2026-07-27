@@ -1,0 +1,35 @@
+{
+  "format": "lisp65-eval-surface-v1",
+  "description": "Semantic route closure for the C2.1 anonymous-helper direct-image proof. Exact C2 bytes are separately decoded and executed by the C2 proof target.",
+  "cases": [
+    {
+      "name": "c2-anonymous-direct",
+      "forms": ["((lambda (x) (+ x 1)) 41)"],
+      "expect": "42"
+    },
+    {
+      "name": "c2-anonymous-funcall",
+      "forms": ["(funcall (lambda (x) (+ x 1)) 41)"],
+      "expect": "42"
+    },
+    {
+      "name": "c2-anonymous-apply",
+      "forms": ["(apply (lambda (x) (+ x 1)) (cons 41 nil))"],
+      "expect": "42"
+    },
+    {
+      "name": "c2-anonymous-closure",
+      "forms": ["(let ((f (lambda (x) (+ x 1)))) (funcall f 41))"],
+      "expect": "42"
+    },
+    {
+      "name": "c2-tail-call",
+      "forms": [
+        "(defun %c2-tail-helper (x) (+ x 1))",
+        "(defun %c2-tail-wrapper (x) (%c2-tail-helper x))",
+        "(%c2-tail-wrapper 41)"
+      ],
+      "expect": "42"
+    }
+  ]
+}

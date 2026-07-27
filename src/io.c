@@ -382,6 +382,12 @@ static unsigned int disk_chain_to_scratch(unsigned char track, unsigned char sec
     return n;
 }
 
+#ifdef LISP65_C2_PRODUCT_CUT
+unsigned int io_disk_stage_chain(unsigned char track, unsigned char sector) {
+    return disk_chain_to_scratch(track, sector);
+}
+#endif
+
 /* %disk-load-file: Datei ab (T,S) in den EXT-Puffer folgen, dann via load_source_stream in den
  * Reader streamen (Quelltext-LOAD). 1=ok, 0=leer. */
 unsigned char io_disk_load_chain(unsigned char track, unsigned char sector) {

@@ -104,7 +104,7 @@ BUFFER_ALLOC_ENTRY uint8_t lisp65_buffer_overlay_alloc_entry(void *opaque) {
     if (!context->argc || !IS_FIX(context->args[0])) return VM_TYPEERROR;
     operation = FIXVAL(context->args[0]);
     if (context->argc != 2) return VM_ARITY;
-#ifdef LISP65_C1_COMPILER_TIER
+#if defined(LISP65_C1_COMPILER_TIER) || defined(LISP65_C2_PRODUCT_CUT)
     if (operation == 0 || operation == 2) {
         /* make-buffer, or compiler staging window -> detached buffer */
         if (!IS_FIX(context->args[1]) || FIXVAL(context->args[1]) < 0)
