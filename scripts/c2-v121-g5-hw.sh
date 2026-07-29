@@ -4,11 +4,13 @@ set -eu
 cd "$(dirname "$0")/.."
 
 ACTION=${1:-prepare}
-BASE=build/c2.2/v1.2.1-acceptance/r5
+BASE=${BASE:-build/c2.2/v1.2.1-acceptance/r5}
 SESSION=$BASE/hardware-session-01
 EVIDENCE=$SESSION/g5
 DEPLOYMENT=$SESSION/deployment.json
-PY=tools/host-lisp/c2_v121_g5_hardware.py
+PY=${PY:-tools/host-lisp/c2_v121_g5_hardware.py}
+G2_PY=${G2_PY:-}
+G2_CONTRACT=${G2_CONTRACT:-}
 TOOLS=${TOOLS:-tools/m65tools}
 DEVICE=${DEVICE:-/dev/ttyUSB1}
 TIMEOUT=${TIMEOUT:-40}
@@ -125,6 +127,22 @@ if re.search(rf"^\s*\({result}\s+\d+\s+\d+\)\s*$", text, re.M) is None:
 PY
 }
 
+run_optional_g2_measurement() {
+  [ -n "$G2_PY" ] || return 0
+  g2_dir=$SESSION/g2-symbol-value-cost
+  mkdir -p "$g2_dir"
+  control=$(jq -r '.rows[0].form' "$G2_CONTRACT")
+  measured=$(jq -r '.rows[1].form' "$G2_CONTRACT")
+  control_status=0
+  measured_status=0
+  run_form "$g2_dir" g2-boundp-control-1000 "$control" 120 ||
+    control_status=$?
+  run_form "$g2_dir" g2-symbol-value-1000 "$measured" 120 ||
+    measured_status=$?
+  python3 "$G2_PY" close \
+    --control-exit "$control_status" --measured-exit "$measured_status"
+}
+
 counter_snapshot() {
   cs_prefix=$1
   python3 scripts/hw-jtag-counters.py \
@@ -165,6 +183,9 @@ run_runtime_until_runstop() {
 }
 
 python3 "$PY" prepare
+if [ -n "$G2_PY" ]; then
+  python3 "$G2_PY" prepare
+fi
 [ "$ACTION" != prepare ] || exit 0
 
 if [ "$ACTION" = verify ]; then
@@ -337,6 +358,7 @@ PY
 
     python3 "$PY" close
     python3 "$PY" verify
+    run_optional_g2_measurement
     echo "v1.2.1 G5: PASS — neun frische Fälle, exaktes R5-Medium."
     ;;
 esac

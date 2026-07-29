@@ -14,7 +14,7 @@ import c2_phase_f_s1_link67 as S1  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-c1-freezer-cutpoint-contract.json"
-ALLOWED = {0xFF83, 0xFF84, 0xFF86}
+ALLOWED = {0xFF83, 0xFF84, 0xFF86, 0xFF89}
 
 
 def main() -> int:
@@ -24,8 +24,10 @@ def main() -> int:
             contract["hardware_protocol"]["freeze_identity"]
             == (
                 "Bank 2 and Bank 3 byte-identical; Bank 5 C2D/export/C2J "
-                "byte-identical; E000 byte-identical except the three already "
-                "contracted volatile bytes FF83, FF84 and FF86"),
+                "byte-identical; E000 byte-identical except the four "
+                "contracted volatile bytes FF83, FF84, FF86 and FF89; "
+                "FF89 is the source-less-path D019 diagnostic witness and "
+                "not product state"),
             "canonical Freezer volatile-cell contract drift",
         )
         observations = S1.load(S1.OBSERVATIONS)

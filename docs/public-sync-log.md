@@ -4,6 +4,20 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.2.2 — prepared 2026-07-29
+
+- Fixed undefined-function diagnostics so they report the complete symbol
+  name instead of a truncated or padded fragment.
+- Removed the corresponding Known Issue and carried all other product
+  boundaries forward unchanged.
+- Rebound the permanent public clean-build gate to the fresh v1.2.2 19-role
+  product identity.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-B publication
+authorization.
+
 ## v1.2.1 — prepared 2026-07-29
 
 - Added the native Dialect V2 `while` form and documented its streamed-backedge

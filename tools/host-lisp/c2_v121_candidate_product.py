@@ -30,6 +30,8 @@ CAN = BASE.CAN
 BUILD = ROOT / "build/c2.2/v1.2.1-candidate-product"
 MANIFEST = BUILD / "canonical-product-manifest.json"
 DRIVER = Path(__file__).resolve()
+RELEASE = "v1.2.1"
+LINK = 77
 
 
 class CandidateError(RuntimeError):
@@ -67,7 +69,7 @@ def run(command: list[str], label: str) -> str:
 def configure() -> dict[str, Path]:
     """Bind all producers and consumers to the current Link-77 freight."""
     V.configure_candidate()
-    BASE.LINK = 77
+    BASE.LINK = LINK
     BASE.ROOT_BUILD = BUILD
     BASE.PROBE_BUILD = BUILD
     BASE.LINK_BUILD = BUILD
@@ -238,7 +240,7 @@ def build_manifest(
         "while_manifest": CAN.bind(V.WHILE_MANIFEST),
     })
     value["candidate"] = {
-        "release": "v1.2.1",
+        "release": RELEASE,
         "pre_promotion": True,
         "public_build_authority_changed": False,
         "source_driver": CAN.bind(DRIVER),
@@ -325,7 +327,7 @@ def build_action() -> int:
         "while": features["while"]["receipt"],
         "target_stdlib_header": header_binding,
     }
-    (paths["receipts"] / "v1.2.1-feature-gates.json").write_bytes(
+    (paths["receipts"] / f"{RELEASE}-feature-gates.json").write_bytes(
         CAN.json_bytes(feature_receipt))
     print(
         "c2-v1.2.1-candidate-product: PASS "
@@ -342,7 +344,7 @@ def check_action() -> int:
     configure()
     value = CAN.check()
     require(
-        value.get("candidate", {}).get("release") == "v1.2.1"
+        value.get("candidate", {}).get("release") == RELEASE
         and value["static_plane"]["bank2_static_code_bytes"]
             == V.EXPECTED_STATIC
         and value["static_plane"]["bank2_sha256"] == V.EXPECTED_BANK2_SHA,

@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.2.1. Sealed
+This is the maintained user-facing issue register for lisp65 1.2.2. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -54,23 +54,10 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Active display issue: shortened undefined-function names
-
-Status: **diagnosed; correction scheduled after 1.2.1**
-
-An undefined-function error can show only the end of the function name, or
-show it with leading spaces. For example, a call to `intern` may be reported
-with only `i` visible.
-
-The undefined-function error is real, but the displayed name detail can be
-wrong. Check the original form for the function you called; do not treat the
-shortened text as a different symbol. Ordinary recovery still returns to the
-REPL.
-
-## Not delivered in 1.2.1: `defstruct` and dynamic packages
+## Not delivered in 1.2.2: `defstruct` and dynamic packages
 
 `defstruct` and the associated dynamic package-loading freight are not part of
-the v1.2.1 user surface. Their host-side designs and test artifacts are
+the v1.2.2 user surface. Their host-side designs and test artifacts are
 development material, not commands promised by this release.
 
 ## Informative performance positions
@@ -84,6 +71,13 @@ These measurements are visible by design but carry no release limit:
 
 The argument and GC values are measurements, not hard release limits. The
 nullary first-call and warm-call ceilings remain the claims below.
+
+An additional v1.2.2 measurement found no frame difference between 1,000
+otherwise identical `boundp` and `symbol-value` operations. The 2-byte
+Bank-5 symbol-value read path therefore contributes less than half a frame
+when projected across the 480 such reads in the isolated 89-frame collection
+envelope. It is not the dominant GC term; that dominant term remains
+unattributed. This is an informative measurement, not a GC latency claim.
 
 ## Retired: 1.1 definition-to-first-call latency exception
 

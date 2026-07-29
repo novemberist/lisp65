@@ -59,6 +59,44 @@ extern uint16_t gc_lane_min_free_after;
 extern uint16_t gc_lane_last_alloc_high;
 extern uint16_t gc_lane_last_frozen;
 #endif
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+/* Host-only work accounting for one collection.  These counters describe
+ * logical collector work and modeled EXT transfers; they are not target
+ * cycle or wall-clock measurements. */
+enum {
+    GC_ATTR_OUTSIDE = 0,
+    GC_ATTR_ROOTS,
+    GC_ATTR_SYMBOLS,
+    GC_ATTR_TRACE,
+    GC_ATTR_ARENA,
+    GC_ATTR_SWEEP,
+    GC_ATTR_PHASES
+};
+extern uint32_t gc_attr_dma_reads[GC_ATTR_PHASES];
+extern uint32_t gc_attr_dma_writes[GC_ATTR_PHASES];
+extern uint32_t gc_attr_dma_bytes[GC_ATTR_PHASES];
+extern uint32_t gc_attr_total_dma_reads[GC_ATTR_PHASES];
+extern uint32_t gc_attr_total_dma_writes[GC_ATTR_PHASES];
+extern uint32_t gc_attr_total_dma_bytes[GC_ATTR_PHASES];
+extern uint32_t gc_attr_mark_attempts[GC_ATTR_PHASES];
+extern uint32_t gc_attr_new_marks[GC_ATTR_PHASES];
+extern uint32_t gc_attr_mark_walk_visits[GC_ATTR_PHASES];
+extern uint16_t gc_attr_shadow_roots;
+extern uint16_t gc_attr_symbol_rows;
+extern uint16_t gc_attr_symbol_value_reads;
+extern uint16_t gc_attr_symbol_function_reads;
+extern uint16_t gc_attr_trace_passes;
+extern uint32_t gc_attr_trace_hot_visits;
+extern uint32_t gc_attr_trace_ext_visits;
+extern uint16_t gc_attr_arena_slots;
+extern uint16_t gc_attr_arena_marked_slots;
+extern uint16_t gc_attr_arena_copy_jobs;
+extern uint32_t gc_attr_arena_copy_bytes;
+extern uint16_t gc_attr_sweep_hot_visits;
+extern uint16_t gc_attr_sweep_ext_visits;
+extern uint16_t gc_attr_sweep_hot_reclaimed;
+extern uint16_t gc_attr_sweep_ext_reclaimed;
+#endif
 #if !defined(__mos__) && defined(LISP65_EXT_HEAP_HOST_DMA_MODEL)
 extern uint32_t ext_host_dma_read_jobs;
 extern uint32_t ext_host_dma_write_jobs;

@@ -621,7 +621,7 @@ def observe_thaw(out: Path, cutpoint: int, freezer_output: str) -> None:
         "Bank2_thaw_identity": "byteidentical",
         "Bank3_thaw_identity": "byteidentical",
         "Bank5_C2D_export_C2J_thaw_identity": "byteidentical",
-        "E000_thaw_identity": "byteidentical-except-FF83-FF84-FF86",
+        "E000_thaw_identity": "byteidentical-except-FF83-FF84-FF86-FF89",
         "same_hold_after_thaw": True,
         "C2J_cleared_last": True,
         "abort_exact_rollback": (
@@ -831,7 +831,7 @@ def record_cutpoint2_first_red(out: Path, operator_observation: str) -> None:
         "Bank2_thaw_identity": "byteidentical",
         "Bank3_thaw_identity": "byteidentical",
         "Bank5_C2D_export_C2J_thaw_identity": "byteidentical",
-        "E000_thaw_identity": "byteidentical-except-FF83-FF84-FF86",
+        "E000_thaw_identity": "byteidentical-except-FF83-FF84-FF86-FF89",
         "same_hold_after_thaw": True,
         "release_control": "command=0 reached=2",
         "C2J_after_release": "unchanged-ACTIVE",

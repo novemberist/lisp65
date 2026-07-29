@@ -185,8 +185,8 @@ lisp65_error_overlay_entry:
 	lda	__rc4
 	ldx	__rc5
 	jsr	symname
-	sta	__rc2
-	stx	__rc3
+	; symname returns its stable name pointer in __rc2/__rc3.  A/X are
+	; incidental on return and must not be copied over that pointer.
 .Lsymbol_more:
 	ldz	#0
 	lda	(__rc2),z

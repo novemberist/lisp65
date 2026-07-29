@@ -1,0 +1,66 @@
+{
+  "format": "lisp65-c2.2-link78-d1-d2-bundled-hardware-session-v1",
+  "recorded_on": "2026-07-29",
+  "status": "owner-authorized-one-session-hardware-not-run",
+  "candidate": {
+    "link": 78,
+    "product_sha256": "77f1c734e0818e5765d893627e4f7f514d62ca312a22b8123ead5d1c3ab40c36",
+    "elf_sha256": "763cb2a9acd5275b618e13ce10a9f9acddbc2980a97d417b6b3f8b6e7e30c7d9",
+    "profile_sha256": "7a6a1015e0f0c1682c5b589db2aadb9300364fb7c7275827175a2e0d4c20b3e1",
+    "product_build_id": "0x0957c9d5"
+  },
+  "policy": {
+    "one_physical_session": true,
+    "no_per_row_approval": true,
+    "verified_input": true,
+    "quote_transport": "long form only",
+    "d1_before_d2": true,
+    "d2_is_a_question_not_an_investigation": true,
+    "d2_unexpected_result": "stop-and-return-Class-C-without-device-diagnosis",
+    "crash_red_frame_or_undefined_state": "session-terminal",
+    "new_product_links_during_session": 0
+  },
+  "rows": [
+    {
+      "id": "dirmiss-full-name",
+      "group": "D1",
+      "form": "(intern-renderer-missing)",
+      "expected_error_prefix": "*** undefined function:",
+      "expected_symbol": "intern-renderer-missing",
+      "expect_poll_seconds": 45
+    },
+    {
+      "id": "post-dirmiss-repl",
+      "group": "D1",
+      "form": "(+ 4 5)",
+      "expected_result": "9",
+      "expect_poll_seconds": 30
+    },
+    {
+      "id": "require-defstruct",
+      "group": "D2",
+      "form": "(require (quote defstruct))",
+      "expected_result": "t",
+      "expect_poll_seconds": 240
+    },
+    {
+      "id": "define-point",
+      "group": "D2",
+      "form": "(defstruct point x y)",
+      "expected_result": "t",
+      "expect_poll_seconds": 300
+    },
+    {
+      "id": "construct-point",
+      "group": "D2",
+      "form": "(make-point 3 4)",
+      "expected_result": "(point 3 4)",
+      "expect_poll_seconds": 60
+    }
+  ],
+  "claims": {
+    "D1_green": "the complete missing function name is rendered and the REPL remains live",
+    "D2_green": "require, defstruct expansion and the generated constructor all complete on Link 78",
+    "D2_red": "the observation returns to Class C; no cause, IRQ attribution or fix is inferred"
+  }
+}

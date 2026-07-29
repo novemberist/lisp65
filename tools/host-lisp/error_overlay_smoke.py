@@ -4,12 +4,15 @@
 from __future__ import annotations
 
 import pathlib
+import re
 import subprocess
 import tempfile
 import textwrap
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+RENDERER_SOURCE = ROOT / "src" / "l65e_bcode_ordinal.s"
+FULL_SYMBOL = "intern-renderer-missing"
 
 
 HARNESS = r"""
@@ -42,7 +45,7 @@ static uint8_t allocation_calls;
 void emit(char c) { output[output_length++] = c; output[output_length] = 0; }
 const char *symname(obj symbol) {
     symname_calls++;
-    return IS_SYMI(symbol) ? "missing" : "gensym";
+    return IS_SYMI(symbol) ? "intern-renderer-missing" : "gensym";
 }
 
 obj alloc(uint8_t type) {
@@ -110,8 +113,9 @@ int main(void) {
     if (!require(lisp65_error_render_code(LISP65_ERR_UNDEFINED_FUNCTION,
                                           MK_SYMI(7)),
                  "symbol render failed") ||
-        !require(!strcmp(output, "undefined function: missing"),
-                 "symbol suffix differs") ||
+        !require(!strcmp(output,
+                         "undefined function: intern-renderer-missing"),
+                 "complete symbol name differs") ||
         !require(symname_calls == 1 && !allocation_calls,
                  "symbol render did not use the allocation-free accessor")) return 1;
 
@@ -193,7 +197,7 @@ int main(void) {
     if (!require(lisp65_error_render_code(LISP65_ERR_FASL_ENTRIES_OVERFLOW,
                                           MK_SYMI(7)),
                  "compile-sentinel symbol render failed") ||
-        !require(!strcmp(output, "compile failedmissing"),
+        !require(!strcmp(output, "compile failedintern-renderer-missing"),
                  "compile-sentinel symbol suffix differs") ||
         !require(symname_calls == 1 && !allocation_calls,
                  "compile-sentinel symbol suffix allocated")) return 1;
@@ -202,7 +206,7 @@ int main(void) {
     if (!require(lisp65_error_render_code(
                      LISP65_ERR_LCC_INVALID_PARAMETER_LIST, MK_SYMI(7)),
                  "invalid-parameter-list symbol render failed") ||
-        !require(!strcmp(output, "compile failedmissing"),
+        !require(!strcmp(output, "compile failedintern-renderer-missing"),
                  "invalid-parameter-list symbol suffix differs") ||
         !require(symname_calls == 1 && !allocation_calls,
                  "invalid-parameter-list symbol suffix allocated")) return 1;
@@ -246,13 +250,127 @@ int main(void) {
         !require(!output_length && !allocation_calls,
                  "latched fallback emitted or allocated")) return 1;
 
-    puts("error-overlay smoke: ok (tag-first+text+symbol+bcode12-boundaries+depth5-fixnum+textless+alloc0+busy/latch)");
+    puts("error-overlay smoke: ok (cases=20 full-symbol=intern-renderer-missing target-mutations=5 tag-first+text+bcode12-boundaries+depth5-fixnum+textless+alloc0+busy/latch)");
     return 0;
 }
 """
 
 
+def renderer_source_contract(source: str) -> None:
+    """Require the linked ABI result to remain the renderer's name pointer."""
+    instructions: list[str] = []
+    found = False
+    for raw_line in source.splitlines():
+        code = raw_line.split(";", 1)[0].strip()
+        if not found:
+            if re.fullmatch(r"jsr\s+symname", code):
+                found = True
+            continue
+        if not code or code.endswith(":"):
+            continue
+        instructions.append(" ".join(code.split()))
+        if len(instructions) == 2:
+            break
+    if not found:
+        raise RuntimeError("L65E renderer no longer calls symname")
+    if instructions != ["ldz #0", "lda (__rc2),z"]:
+        raise RuntimeError(
+            "L65E renderer must consume symname's __rc2/__rc3 result "
+            f"directly, observed {instructions!r}"
+        )
+
+
+def renderer_source_mutations(source: str) -> list[str]:
+    """Prove the source contract rejects the known pointer-loss class."""
+    anchor = "\tjsr\tsymname"
+    anchor_at = source.index(anchor)
+    prefix = source[:anchor_at]
+    renderer_tail = source[anchor_at:]
+
+    def mutate_tail(old: str, new: str) -> str:
+        return prefix + renderer_tail.replace(old, new, 1)
+
+    mutations = {
+        "restore-incidental-A-store": mutate_tail(
+            "\tjsr\tsymname\n",
+            "\tjsr\tsymname\n\tsta\t__rc2\n",
+        ),
+        "restore-incidental-X-store": mutate_tail(
+            "\tjsr\tsymname\n",
+            "\tjsr\tsymname\n\tstx\t__rc3\n",
+        ),
+        "nonzero-Z-before-name-read": mutate_tail(
+            "\tldz\t#0\n\tlda\t(__rc2),z",
+            "\tldz\t#1\n\tlda\t(__rc2),z",
+        ),
+        "wrong-name-pointer-byte": mutate_tail(
+            "\tlda\t(__rc2),z",
+            "\tlda\t(__rc3),z",
+        ),
+        "symname-call-removed": mutate_tail(
+            "\tjsr\tsymname",
+            "\tjsr\temit",
+        ),
+    }
+    rejected: list[str] = []
+    for name, mutation in mutations.items():
+        if mutation == source:
+            raise RuntimeError(f"renderer mutation did not change source: {name}")
+        try:
+            renderer_source_contract(mutation)
+        except RuntimeError:
+            rejected.append(name)
+    if len(rejected) != len(mutations):
+        missing = sorted(set(mutations) - set(rejected))
+        raise RuntimeError(f"renderer source mutations survived: {missing}")
+    return rejected
+
+
+def renderer_object_contract(disassembly: str) -> None:
+    """Bind the source rule to the emitted MOS instruction stream."""
+    lines = disassembly.splitlines()
+    try:
+        relocation = next(
+            index for index, line in enumerate(lines)
+            if re.search(r"R_MOS_ADDR16\s+symname\b", line)
+        )
+    except StopIteration as exc:
+        raise RuntimeError("emitted L65E object has no symname relocation") from exc
+    instructions: list[str] = []
+    first_read_uses_rc2 = False
+    for line in lines[relocation + 1:]:
+        instruction = re.match(
+            r"^\s*[0-9a-f]+:\s+([a-z]+)\s*(.*?)\s*(?:;.*)?$",
+            line,
+        )
+        if instruction:
+            instructions.append(
+                " ".join(
+                    f"{instruction.group(1)} {instruction.group(2)}".split()
+                )
+            )
+            if len(instructions) > 2:
+                break
+            continue
+        if (
+            len(instructions) == 2
+            and re.search(r"R_MOS_ADDR8\s+__rc2\b", line)
+        ):
+            first_read_uses_rc2 = True
+    if (
+        instructions[:2] != ["ldz #$0", "lda ($0),z"]
+        or not first_read_uses_rc2
+    ):
+        raise RuntimeError(
+            "emitted L65E object does not consume symname's __rc2/__rc3 "
+            f"pointer directly: {instructions[:2]!r}, rc2={first_read_uses_rc2}"
+        )
+
+
 def main() -> int:
+    renderer_source = RENDERER_SOURCE.read_text(encoding="ascii")
+    renderer_source_contract(renderer_source)
+    rejected = renderer_source_mutations(renderer_source)
     with tempfile.TemporaryDirectory(prefix="l65e-smoke-") as tmp_name:
         tmp = pathlib.Path(tmp_name)
         subprocess.run(
@@ -369,6 +487,21 @@ def main() -> int:
                 capture_output=True,
                 text=True,
             ).stdout
+            disassembly = subprocess.run(
+                [
+                    str(
+                        ROOT / "tools" / "llvm-mos" / "bin" / "llvm-objdump"
+                    ),
+                    "-dr",
+                    "--no-show-raw-insn",
+                    str(mos_ordinal_object),
+                ],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout
+            renderer_object_contract(disassembly)
             sizes = [line for line in symbol_output.splitlines()
                      if "l65e_" in line or "lisp65_error_overlay_entry" in line]
             if total_bytes > hard_limit:
@@ -382,6 +515,10 @@ def main() -> int:
                 f"headroom={hard_limit - total_bytes}"
             )
             print("error-overlay MOS symbols: " + "; ".join(sizes))
+            print(
+                "error-overlay target pointer contract: "
+                f"ok (mutations={len(rejected)} full-symbol={FULL_SYMBOL})"
+            )
     return 0
 
 

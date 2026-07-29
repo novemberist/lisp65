@@ -412,7 +412,7 @@ ROWS: list[dict[str, Any]] = [
                 "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
                 "c2.2-product-link57-keymap-nullary-latency-attempt2-hardware-presmoke.json",
                 "/product_identity and /rows/freezer_identity",
-                "Link 57 identity; 8189/8192 E000 bytes preserved; only FF83/FF84/FF86 volatile",
+                "Link 57 observed 8189/8192 E000 bytes preserved; the complete volatile authority is FF83/FF84/FF86/FF89",
             )
         ],
         "This proof is identity-specific and must be rerun for every later product identity.",

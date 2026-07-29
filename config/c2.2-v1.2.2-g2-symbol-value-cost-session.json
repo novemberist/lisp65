@@ -1,0 +1,107 @@
+{
+  "format": "lisp65-c2.2-v1.2.2-g2-symbol-value-cost-session-v1",
+  "recorded_on": "2026-07-29",
+  "status": "host-qualified-queued-for-next-bundled-hardware-session",
+  "scope": "Two zero-product-byte target timing rows that bound the 480 symbol-value reads inside the accepted 89-frame GC envelope.",
+  "candidate_binding": {
+    "baseline_link": 78,
+    "product_sha256": "77f1c734e0818e5765d893627e4f7f514d62ca312a22b8123ead5d1c3ab40c36",
+    "elf_sha256": "763cb2a9acd5275b618e13ce10a9f9acddbc2980a97d417b6b3f8b6e7e30c7d9",
+    "structural_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link78-dirmiss-renderer-structural-receipt.json",
+    "rebind_rule": "If a successor product is the next bundled-session candidate, rerun this host gate against its actually bound compiler carrier before measuring."
+  },
+  "clock": {
+    "low_address": "$FF83",
+    "high_address": "$FF84",
+    "snapshot": "high-low-high",
+    "valid_snapshot": "the two high-byte reads are equal",
+    "delta": "unsigned 16-bit end-start modulo 65536",
+    "frame_milliseconds": 20,
+    "reason": "The 1000-read interval may exceed one byte; the old modulo-256 timing contract is not admissible here."
+  },
+  "iterations": 1000,
+  "input_transport": {
+    "maximum_form_characters": 76,
+    "rule": "Every submitted form must fit the verified-input screen echo. Longer equivalent forms are a harness First Red and are never retried on the device."
+  },
+  "setup_forms": [
+    {
+      "id": "g2-frame-snapshot",
+      "form": "(defun %f()(list(peek 255 132)(peek 255 131)(peek 255 132)))",
+      "result": "%f"
+    }
+  ],
+  "rows": [
+    {
+      "id": "g2-boundp-control-1000",
+      "class": "matched-control",
+      "form": "(let((a(%f)))(let((r(dotimes(i 1000)(boundp(quote t)))))(list a(%f))))",
+      "result_tuple": "((start-high-1 start-low start-high-2) (end-high-1 end-low end-high-2))",
+      "primitive": {
+        "name": "boundp",
+        "id": 57,
+        "target_path": "resident symbnd bitmap"
+      }
+    },
+    {
+      "id": "g2-symbol-value-1000",
+      "class": "measured",
+      "form": "(let((a(%f)))(let((r(dotimes(i 1000)(symbol-value(quote t)))))(list a(%f))))",
+      "result_tuple": "((start-high-1 start-low start-high-2) (end-high-1 end-low end-high-2))",
+      "primitive": {
+        "name": "symbol-value",
+        "id": 19,
+        "target_path": "sym_value -> symval_get -> one 2-byte Bank-5 DMA"
+      }
+    }
+  ],
+  "compiled_shape_contract": {
+    "compiler": "the compiler carrier actually bound by Link 78",
+    "headers_equal": true,
+    "literal_tables_equal": true,
+    "payload_bytes": 49,
+    "only_payload_difference": {
+      "offset": 27,
+      "control": 57,
+      "measured": 19,
+      "preceded_by": "CALLPRIM",
+      "followed_by_argc": 1
+    },
+    "meaning": "Loop, frame snapshots, refills, literal traffic and VM call framing are byte-for-byte matched; only the selected primitive differs."
+  },
+  "adjudication": {
+    "control_frames": "frames(g2-boundp-control-1000)",
+    "measured_frames": "frames(g2-symbol-value-1000)",
+    "excess_frames_per_1000": "measured_frames - control_frames",
+    "excess_frames_per_read": "(measured_frames - control_frames) / 1000",
+    "excess_microseconds_per_1000": "(measured_frames - control_frames) * 20000",
+    "excess_microseconds_per_read": "(measured_frames - control_frames) * 20",
+    "required_value_string": "symval-minus-boundp=<delta>f/1000 = <delta/1000>f/read = <delta*20>us/read; projected-480=<delta*480/1000>f/89f",
+    "projected_480_read_excess_frames": "(measured_frames - control_frames) * 480 / 1000",
+    "whole_collection_authority_frames": 89,
+    "majority_threshold_frames": 44.5,
+    "dominant_outcome": "If the projected 480-read excess is at least 44.5 frames, Bank-5 symbol-value access is a measured dominant lever and a block-read proposal may be scoped.",
+    "non_dominant_outcome": "If it is below 44.5 frames, this matched measurement does not establish symbol access as dominant; no GC cut is authorized and the remaining trace/arena/sweep split stays unknown.",
+    "claim_limit": "The difference is CALLPRIM-19 minus the form-identical CALLPRIM-57 control. It is not named as the absolute cost of symval_get: the control still performs one resident bitmap lookup per iteration."
+  },
+  "cost_constant_applicability": {
+    "directly_comparable_2_byte_vm_dma_reads": [
+      "symval_get",
+      "nameoff_get",
+      "symfn_ext_get"
+    ],
+    "reference_only_not_directly_multipliable": [
+      "sympool_read/symname: a larger bulk transfer with different length amortization",
+      "Prim-67 %c2d-byte: a one-byte c2_stream_c2d_read path rather than the symval vm_dma call"
+    ],
+    "R2_rule": "Use the reported microseconds per read directly only for counted 2-byte vm_dma reads. The 399 Prim-67 resolver reads may be compared as scale evidence, but their time is not calculated from this constant without a separate path-equivalence proof."
+  },
+  "policy": {
+    "product_bytes": 0,
+    "new_product_links": 0,
+    "dedicated_hardware_sessions": 0,
+    "run_only_in_next_already-authorized_bundled_session": true,
+    "g3_remains_closed_until_result": true,
+    "unexpected_error_red_frame_hang_or_unstable_snapshot": "measurement-invalid-no-inference"
+  }
+}

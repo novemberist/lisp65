@@ -246,7 +246,7 @@ def record_cutpoint3_first_red(
         "Bank2_thaw_identity": "byteidentical",
         "Bank3_thaw_identity": "byteidentical",
         "Bank5_C2D_export_C2J_thaw_identity": "byteidentical",
-        "E000_thaw_identity": "byteidentical-except-FF83-FF84-FF86",
+        "E000_thaw_identity": "byteidentical-except-FF83-FF84-FF86-FF89",
         "command_memory_after_release": [0, 3],
         "C2J_after_release": "unchanged-ACTIVE",
         "continuation_liveness": "failed",

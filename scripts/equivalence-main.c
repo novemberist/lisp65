@@ -383,6 +383,56 @@ int main(int argc, char **argv) {
 #endif
         fputc('\n', stderr);
     }
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    if (getenv("LISP65_EQ_GC_WORK_REPORT")) {
+        fprintf(stderr,
+            "gc-work: shadow_roots=%u symbol_rows=%u symbol_value_reads=%u "
+            "symbol_function_reads=%u trace_passes=%u trace_hot_visits=%lu "
+            "trace_ext_visits=%lu arena_slots=%u arena_marked_slots=%u "
+            "arena_copy_jobs=%u arena_copy_bytes=%lu sweep_hot_visits=%u "
+            "sweep_ext_visits=%u sweep_hot_reclaimed=%u "
+            "sweep_ext_reclaimed=%u",
+            (unsigned)gc_attr_shadow_roots,
+            (unsigned)gc_attr_symbol_rows,
+            (unsigned)gc_attr_symbol_value_reads,
+            (unsigned)gc_attr_symbol_function_reads,
+            (unsigned)gc_attr_trace_passes,
+            (unsigned long)gc_attr_trace_hot_visits,
+            (unsigned long)gc_attr_trace_ext_visits,
+            (unsigned)gc_attr_arena_slots,
+            (unsigned)gc_attr_arena_marked_slots,
+            (unsigned)gc_attr_arena_copy_jobs,
+            (unsigned long)gc_attr_arena_copy_bytes,
+            (unsigned)gc_attr_sweep_hot_visits,
+            (unsigned)gc_attr_sweep_ext_visits,
+            (unsigned)gc_attr_sweep_hot_reclaimed,
+            (unsigned)gc_attr_sweep_ext_reclaimed);
+        {
+            static const char *const names[GC_ATTR_PHASES] = {
+                "outside", "roots", "symbols", "trace", "arena", "sweep"
+            };
+            unsigned i;
+            for (i = 0; i < GC_ATTR_PHASES; ++i) {
+                fprintf(stderr,
+                    " %s_dma_reads=%lu %s_dma_writes=%lu %s_dma_bytes=%lu "
+                    "%s_total_dma_reads=%lu %s_total_dma_writes=%lu "
+                    "%s_total_dma_bytes=%lu "
+                    "%s_mark_attempts=%lu %s_new_marks=%lu "
+                    "%s_mark_walk_visits=%lu",
+                    names[i], (unsigned long)gc_attr_dma_reads[i],
+                    names[i], (unsigned long)gc_attr_dma_writes[i],
+                    names[i], (unsigned long)gc_attr_dma_bytes[i],
+                    names[i], (unsigned long)gc_attr_total_dma_reads[i],
+                    names[i], (unsigned long)gc_attr_total_dma_writes[i],
+                    names[i], (unsigned long)gc_attr_total_dma_bytes[i],
+                    names[i], (unsigned long)gc_attr_mark_attempts[i],
+                    names[i], (unsigned long)gc_attr_new_marks[i],
+                    names[i], (unsigned long)gc_attr_mark_walk_visits[i]);
+            }
+        }
+        fputc('\n', stderr);
+    }
+#endif
 #if !defined(__mos__) && defined(LISP65_EXT_HEAP_HOST_DMA_MODEL)
     if (ext_host_dma_faults) {
         fputs("equivalence-check: FIRST RED: modeled EXT DMA verification failed\n",

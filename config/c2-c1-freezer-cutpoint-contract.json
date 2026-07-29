@@ -72,7 +72,7 @@
       "after-thaw-at-same-hold",
       "after-continuation"
     ],
-    "freeze_identity": "Bank 2 and Bank 3 byte-identical; Bank 5 C2D/export/C2J byte-identical; E000 byte-identical except the three already contracted volatile bytes FF83, FF84 and FF86",
+    "freeze_identity": "Bank 2 and Bank 3 byte-identical; Bank 5 C2D/export/C2J byte-identical; E000 byte-identical except the four contracted volatile bytes FF83, FF84, FF86 and FF89; FF89 is the source-less-path D019 diagnostic witness and not product state",
     "normal_completion": "journal-written, staged-before-header and header-before-exports each publish one callable definition and leave C2J zero",
     "abort_completion": "abort-unpublish publishes no callable definition, restores exact pre-append C2D/export state, leaves Bank 2/3 exact and clears C2J last"
   },

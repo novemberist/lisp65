@@ -1,9 +1,9 @@
-# lisp65 1.2.1 User Guide
+# lisp65 1.2.2 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.2.1` release bundle
+- The extracted `lisp65-1.2.2` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -188,8 +188,7 @@ further writes. The release does not claim atomicity inside that window.
 - Do not use interrupt-generating cartridges while lisp65 is running. Passive
   cartridges are unaffected; a held cartridge interrupt deliberately stops
   the product on a red-bordered screen.
-- An undefined-function error can display a shortened or padded function name.
-  The error itself is valid; check the function name in the form you entered.
+- Undefined-function errors report the complete function name.
 - One post-GC out-of-memory event in a 1,200-allocation `while` workload was
   not reproduced by the follow-up run. Preserve the exact form and preceding
   steps if a small-live-set OOM recurs.

@@ -1,0 +1,82 @@
+{
+  "format": "lisp65-c2-fail-closed-blackbox-contract-v1",
+  "version": 1,
+  "recorded_on": "2026-07-29",
+  "status": "terminal-first-red-withdrawn",
+  "disposition": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.2-fail-closed-blackbox-terminal-first-red.json",
+    "reason": "The linked E000 IRQ edge bypassed the fixed facade. A new facade needs 3 bytes; the fixed block has 2.",
+    "product": "candidate withdrawn; Link 78 remains authoritative",
+    "budget": "one WPLTO consumed; no successor product link or hardware run",
+    "defstruct": "permanently parked for this era"
+  },
+  "scope": "Second consecutive source-less IRQ in one raster-delimited episode",
+  "entry": {
+    "source": "c2_kernal_irq_handler",
+    "target": "c2_kernal_sourceless_fail_blackbox",
+    "rule": "Only the already-terminal second-source-less absolute JMP may change; every returning IRQ path remains instruction-identical.",
+    "reason_code": "0xb2",
+    "visible_code": "F2"
+  },
+  "capture": {
+    "rule": "All witnesses are stored before SEI and before any call, branch, DMA, validation or loop. The prefix is straight-line and cannot fail.",
+    "stack_rule": "After the hardware IRQ frame and PHA/PHX/PHY/PHZ, TSX-relative $0106,X is interrupted PC low and $0107,X is interrupted PC high.",
+    "cells": [
+      {"name": "reason", "address": "0xff80", "source": "constant 0xb2"},
+      {"name": "episode_latch", "address": "0xff82", "source": "0xff86"},
+      {"name": "d019", "address": "0xff89", "source": "existing source-less classification capture: $d019 & $1f"},
+      {"name": "autoiec_mask", "address": "0xff8a", "source": "0xd697"},
+      {"name": "audiodma_mask", "address": "0xff8b", "source": "0xd713"},
+      {"name": "d01a", "address": "0xff8c", "source": "0xd01a"},
+      {"name": "interrupted_pc_low", "address": "0xff8d", "source": "0x0106,X"},
+      {"name": "interrupted_pc_high", "address": "0xff8e", "source": "0x0107,X"},
+      {"name": "ethernet_mask", "address": "0xff8f", "source": "0xd6e1"}
+    ],
+    "state_geometry": {
+      "section": ".lisp65_c2_kernal_window.state",
+      "base": "0xff80",
+      "bytes": 16,
+      "growth_bytes": 0,
+      "alias_rule": "FF80, FF82, FF8A and FF8B are terminal aliases of event/break state; after capture no returning path exists."
+    }
+  },
+  "display": {
+    "enabled": true,
+    "rule": "After capture and SEI, write ASCII F and 2 to screen cells 0 and 1 exclusively through c2_kernal_output_cell.",
+    "direct_screen_stores": 0,
+    "failure_priority": "Memory capture is mandatory; visible output may be removed only by a new owner decision."
+  },
+  "residency": {
+    "capture_body": "ordinary resident .text",
+    "window_delta_bytes": 0,
+    "generic_fail_closed_body": "byte-identical",
+    "e000_floor_bytes": 54,
+    "bank0_text_noise_floor_bytes": 32
+  },
+  "proof": {
+    "gate": "tools/host-lisp/c2_fail_closed_blackbox_gate.py",
+    "nonfailure_delta_rule": "The linked IRQ handler byte sequence must equal the predecessor except for the two-byte operand of the already-terminal absolute JMP.",
+    "mutations": [
+      "capture on owned raster path",
+      "capture on first source-less return",
+      "missing or wrong witness",
+      "wrong IRQ stack offset",
+      "SEI before capture completes",
+      "call, branch, DMA or validation in capture prefix",
+      "direct screen store",
+      "state growth",
+      "generic fail-closed change"
+    ]
+  },
+  "hard_budget": {
+    "wplto_probes": 1,
+    "product_links": 1,
+    "hardware_runs": 1,
+    "hardware_rows": [
+      "(require (quote defstruct))",
+      "(defstruct point x y)",
+      "(make-point 3 4)"
+    ],
+    "terminal_rule": "After the one run, attribute from the blackbox or park defstruct permanently for this era. No instrument revision or further diagnostic round."
+  }
+}

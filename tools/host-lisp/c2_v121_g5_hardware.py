@@ -29,6 +29,7 @@ HARNESS_FIRST_RED = SESSION / "harness-first-red.json"
 RESTAGE_ROUTE = SESSION / "restage-route-observation.json"
 FORMAT = "lisp65-c2-lite-v1.2.1-G5-hardware-session-v1"
 TRANSPORT_FORMAT = "lisp65-c2-lite-v1.2.1-media-transport-hardware-receipt-v1"
+REMOTE_MEDIA = "L65V121.D81"
 
 
 class G5Error(RuntimeError):
@@ -135,7 +136,7 @@ def prepare() -> dict[str, Any]:
         "profile_build_id": runbook["profile_build_id"],
         "source_commit": runbook["source_commit"],
         "remote_head": runbook["remote_head"],
-        "remote_media": "L65V121.D81",
+        "remote_media": REMOTE_MEDIA,
         "product_d81": binding(product),
         "work_d81": binding(work),
         "elf": binding(elf),

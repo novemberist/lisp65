@@ -39,6 +39,13 @@ CASES = [
     "work-media-write-read-power-cycle",
     "product-media-remains-byteidentical",
 ]
+CASE_DIRS = (
+    "case-01-offline",
+    "case-02-cold-boot",
+    "case-03-restage",
+    "case-04-work-media",
+    "case-05-product-media",
+)
 TARGETS = (
     ("c2-bank2-static-code-plane", "bank2-code", 0x00020000),
     ("c2-session-family-region-0", "bank3-session", 0x00030000),
@@ -274,7 +281,7 @@ def repl_form(
 ) -> list[dict[str, Any]]:
     run([
         "timeout", "45s", str(REPL),
-        "--tools", "tools/m65tools", "--device", DEVICE,
+        "--tools", str(M65.parent), "--device", DEVICE,
         "--out-dir", root.relative_to(ROOT).as_posix(),
         "--prefix", prefix, "--verified-input",
         "--timeout", "25", "--expect-poll", "15",
@@ -290,9 +297,10 @@ def repl_evidence(root: Path, prefix: str) -> list[dict[str, Any]]:
     return [bind(path) for path in paths if path.is_file()]
 
 
-def bind_remount_deadline_first_red(root: Path) -> Path:
+def bind_remount_deadline_first_red(
+    root: Path, prefix: str = "work-remount-before-write",
+) -> Path:
     """Bind an exact result rejected only by the coarse poll deadline."""
-    prefix = "work-remount-before-write"
     screen = root / f"{prefix}.txt"
     image = root / f"{prefix}.png"
     runner = root / f"{prefix}.runner.log"
@@ -322,7 +330,7 @@ def bind_remount_deadline_first_red(root: Path) -> Path:
         "--form-text", "(m65d-remount)", "--expect", "0",
     ], "independent remount result replay",
         output=root / f"{prefix}-independent-replay.log")
-    receipt = root / "harness-first-red-remount-deadline.json"
+    receipt = root / f"harness-first-red-{prefix}-deadline.json"
     write(receipt, {
         "format": "lisp65-G6-harness-first-red-v1",
         "version": 1,
@@ -427,8 +435,7 @@ def boot() -> None:
         require(
             not (root / "receipt.json").exists()
             and product_readback.is_file() and work_readback.is_file()
-            and (root / "core-registers.bin").is_file()
-            and list(root.glob("cold-repl*")),
+            and (root / "core-registers.bin").is_file(),
             "G6 cold-boot evidence is not a resumable harness-first-red",
         )
     else:
@@ -439,7 +446,8 @@ def boot() -> None:
             f"put {work} {REMOTE_WORK}",
             f"get {REMOTE_WORK} {work_readback}",
             "exit",
-        ], "upload exact R6 media", root / "upload.log")
+        ], "upload exact R6 media", root / "upload.log",
+            timeout_seconds=240)
         require(product_readback.read_bytes() == product.read_bytes(),
                 "uploaded R6 product media differs")
         require(work_readback.read_bytes() == work.read_bytes(),
@@ -450,6 +458,8 @@ def boot() -> None:
         )
         time.sleep(30)
         memsave(0x0FFD3632, 4, root / "core-registers.bin", "core identity")
+        repl_form(root, "cold-repl", "(+ 2 3)", "5")
+    if not (root / "cold-repl.txt").is_file():
         repl_form(root, "cold-repl", "(+ 2 3)", "5")
     require(product_readback.read_bytes() == product.read_bytes(),
             "uploaded R6 product media differs")
@@ -768,12 +778,78 @@ def work_write() -> None:
 
 
 def work_resume() -> None:
+    _manifest, by_role = manifest_state()
     root = OUT / "case-04-work-media"
     require(
         (root / "write-phase.json").is_file()
         and not (root / "resume-phase.json").exists(),
         "work-media write phase is not ready",
     )
+    remount_log = root / "postcycle-product-remount.log"
+    if not remount_log.is_file():
+        # Freezer-mounted D81 images are not retained across a reboot in the
+        # qualified stock-core profile.  The inherited G6 operator text said
+        # to wait for the product REPL after the physical cycle, contradicting
+        # the public user guide.  Bind the stable BASIC state, then remount
+        # the exact byte-verified R6 product image just as case 2 does.
+        screen = run([
+            "timeout", "20s", str(M65), "-l", DEVICE,
+            f"--screenshot={root / 'postcycle-basic.png'}",
+        ], "capture post-cycle BASIC context",
+            output=root / "postcycle-basic.ansi.txt", timeout=25)
+        screen_text = re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", screen)
+        (root / "postcycle-basic.txt").write_text(
+            screen_text, encoding="utf-8",
+        )
+        require(
+            any(marker in screen_text.upper()
+                for marker in ("READY.", "MEGA65", "COMMODORE")),
+            "physical power-cycle did not reach stable BASIC",
+        )
+        product = artifact(by_role, "product-d81")
+        upload_readback = (
+            OUT / "case-02-cold-boot/uploaded-product-readback.d81"
+        )
+        require(
+            upload_readback.is_file()
+            and upload_readback.read_bytes() == product.read_bytes(),
+            "post-cycle R6 product medium lacks byte-verified upload",
+        )
+        ftp(
+            [f"mount {REMOTE_PRODUCT}", "exit"],
+            "remount exact R6 product media after physical cycle",
+            remount_log,
+        )
+        write(root / "harness-first-red-freezer-mount-persistence.json", {
+            "format": "lisp65-G6-harness-first-red-v1",
+            "version": 1,
+            "id": "freezer-mount-not-retained-across-physical-reboot",
+            "classification": "harness-only",
+            "contradiction": {
+                "inherited_operator_instruction": (
+                    f"mount {REMOTE_PRODUCT}; return with F3; physically "
+                    "power-cycle; wait for the lisp65 REPL"
+                ),
+                "qualified_profile": (
+                    "Freezer-mounted D81 is not retained across reboot; "
+                    "physical power-cycle reaches BASIC"
+                ),
+            },
+            "recovery": {
+                "medium": bind(product),
+                "prior_upload_readback": bind(upload_readback),
+                "action": "host-remount-exact-R6-product-after-cold-BASIC",
+                "product_retry": "not-applicable-no-product-line-ran",
+            },
+            "evidence": [
+                bind(root / "postcycle-basic.png"),
+                bind(root / "postcycle-basic.ansi.txt"),
+                bind(root / "postcycle-basic.txt"),
+                bind(remount_log),
+            ],
+            "result": "bound-harness-first-red-exact-media-remounted",
+        })
+        time.sleep(30)
     cold = repl_form(root, "postcycle-repl", "(+ 4 5)", "9")
     memsave(0x0FFD3632, 4, root / "postcycle-core-registers.bin",
             "post-cycle core identity")
@@ -793,13 +869,19 @@ def work_resume() -> None:
         "version": 1,
         "phase": "post-physical-power-cycle-product-repl",
         "cycle_id": cycle_id,
-        "operator_confirmation": "physical-power-cycle-completed",
+        "operator_confirmation": (
+            "physical-power-cycle-to-BASIC-completed; exact-R6-product-"
+            "medium-remounted-by-bound-host-path"
+        ),
         "product_label": {
             "track": 40, "sector": 0, "offset": 7,
             "petscii_byte": 211, "text": "L65SYS",
         },
         "core_registers": bind(root / "postcycle-core-registers.bin"),
-        "evidence": cold + libraries + label,
+        "evidence": (
+            [bind(root / "harness-first-red-freezer-mount-persistence.json")]
+            + cold + libraries + label
+        ),
         "next_operator_action": (
             f"open Freezer; mount {REMOTE_WORK}; return with F3"
         ),
@@ -825,6 +907,18 @@ def work_read() -> None:
         and not list(root.glob("work-read-after-cycle*"))
     ):
         first_red = bind_late_remount_success(root)
+        label = repl_evidence(root, "work-label-after-cycle")
+        remount = (
+            repl_evidence(root, "work-remount-after-cycle")
+            + [bind(first_red)]
+        )
+    elif (
+        (root / "work-remount-after-cycle-timing.json").is_file()
+        and not list(root.glob("work-read-after-cycle*"))
+    ):
+        first_red = bind_remount_deadline_first_red(
+            root, "work-remount-after-cycle",
+        )
         label = repl_evidence(root, "work-label-after-cycle")
         remount = (
             repl_evidence(root, "work-remount-after-cycle")
@@ -943,9 +1037,12 @@ def media_finalize(
     write(root / "receipt.json", receipt)
 
     case_receipts = [
-        next(OUT.glob(f"case-{index:02d}-*/receipt.json"))
-        for index in range(1, 6)
+        OUT / directory / "receipt.json" for directory in CASE_DIRS
     ]
+    require(
+        all(path.is_file() for path in case_receipts),
+        "one or more canonical G6 case receipts are absent",
+    )
     top = {
         "format": "lisp65-c2-lite-G6-hardware-receipt-v2",
         "version": 2,
@@ -1041,9 +1138,11 @@ def media_finalize_existing() -> None:
 def status() -> None:
     manifest, _ = manifest_state()
     print(f"G6 set={manifest['product']['artifact_set_sha256']}")
-    for index, case in enumerate(CASES, 1):
-        matches = list(OUT.glob(f"case-{index:02d}-*/receipt.json"))
-        state = "passed" if len(matches) == 1 else "not-run"
+    for index, (directory, case) in enumerate(
+        zip(CASE_DIRS, CASES, strict=True), 1,
+    ):
+        state = "passed" if (OUT / directory / "receipt.json").is_file() \
+            else "not-run"
         print(f"{index}/5 {state} {case}")
 
 

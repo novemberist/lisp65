@@ -52,6 +52,7 @@ EXPECTED_CASES = [
     "media/destructive-restage-recovery",
 ]
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
+E000_VOLATILE_ADDRESSES = {0xFF83, 0xFF84, 0xFF86, 0xFF89}
 
 
 class CloseError(RuntimeError):
@@ -319,7 +320,7 @@ def collect(
     ]
     require(
         {int(row["address"], 16) for row in e000_differences}
-        <= {0xFF83, 0xFF84, 0xFF86},
+        <= E000_VOLATILE_ADDRESSES,
         "Freezer changed an uncontracted E000 byte",
     )
     require(
@@ -468,7 +469,7 @@ def collect(
             "value_string": (
                 f"F3-return=yes bank2={bank2_sha} bank3={bank3_sha} "
                 f"E000-live-diffs={len(e000_differences)} continuation=9 "
-                "limit=identity-except-FF83-FF84-FF86"
+                "limit=identity-except-FF83-FF84-FF86-FF89"
             ),
             "evidence": [
                 bind(freezer / "bank2-before.bin"),

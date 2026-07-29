@@ -35,6 +35,73 @@
 
 Cell LISP65_C2_FIXED_BANK0_HOT_BSS("heap") heap[HEAP_CELLS];
 
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+/* This probe is compiled only by the host attribution lane.  It deliberately
+ * lives beside the real collector/accessors so the counters cannot drift
+ * into a second GC implementation. */
+uint32_t gc_attr_dma_reads[GC_ATTR_PHASES];
+uint32_t gc_attr_dma_writes[GC_ATTR_PHASES];
+uint32_t gc_attr_dma_bytes[GC_ATTR_PHASES];
+uint32_t gc_attr_total_dma_reads[GC_ATTR_PHASES];
+uint32_t gc_attr_total_dma_writes[GC_ATTR_PHASES];
+uint32_t gc_attr_total_dma_bytes[GC_ATTR_PHASES];
+uint32_t gc_attr_mark_attempts[GC_ATTR_PHASES];
+uint32_t gc_attr_new_marks[GC_ATTR_PHASES];
+uint32_t gc_attr_mark_walk_visits[GC_ATTR_PHASES];
+uint16_t gc_attr_shadow_roots;
+uint16_t gc_attr_symbol_rows;
+uint16_t gc_attr_symbol_value_reads;
+uint16_t gc_attr_symbol_function_reads;
+uint16_t gc_attr_trace_passes;
+uint32_t gc_attr_trace_hot_visits;
+uint32_t gc_attr_trace_ext_visits;
+uint16_t gc_attr_arena_slots;
+uint16_t gc_attr_arena_marked_slots;
+uint16_t gc_attr_arena_copy_jobs;
+uint32_t gc_attr_arena_copy_bytes;
+uint16_t gc_attr_sweep_hot_visits;
+uint16_t gc_attr_sweep_ext_visits;
+uint16_t gc_attr_sweep_hot_reclaimed;
+uint16_t gc_attr_sweep_ext_reclaimed;
+static uint8_t gc_attr_phase;
+
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PHASE_MUTATION
+#define GC_ATTR_PHASE(p) (gc_attr_phase = GC_ATTR_ROOTS)
+#else
+#define GC_ATTR_PHASE(p) (gc_attr_phase = (p))
+#endif
+
+static void gc_attr_reset(void) {
+    uint8_t i;
+    for (i = 0; i < GC_ATTR_PHASES; ++i) {
+        gc_attr_dma_reads[i] = 0;
+        gc_attr_dma_writes[i] = 0;
+        gc_attr_dma_bytes[i] = 0;
+        gc_attr_mark_attempts[i] = 0;
+        gc_attr_new_marks[i] = 0;
+        gc_attr_mark_walk_visits[i] = 0;
+    }
+    gc_attr_shadow_roots = 0;
+    gc_attr_symbol_rows = 0;
+    gc_attr_symbol_value_reads = 0;
+    gc_attr_symbol_function_reads = 0;
+    gc_attr_trace_passes = 0;
+    gc_attr_trace_hot_visits = 0;
+    gc_attr_trace_ext_visits = 0;
+    gc_attr_arena_slots = 0;
+    gc_attr_arena_marked_slots = 0;
+    gc_attr_arena_copy_jobs = 0;
+    gc_attr_arena_copy_bytes = 0;
+    gc_attr_sweep_hot_visits = 0;
+    gc_attr_sweep_ext_visits = 0;
+    gc_attr_sweep_hot_reclaimed = 0;
+    gc_attr_sweep_ext_reclaimed = 0;
+    gc_attr_phase = GC_ATTR_OUTSIDE;
+}
+#else
+#define GC_ATTR_PHASE(p) ((void)0)
+#endif
+
 #ifdef LISP65_EXT_HEAP
 /* Erweiterter Heap-Ueberlauf: flach in EXT_BANK, 8-Byte-Zellen (type@0, a@2, b@4),
  * Zugriff ausschliesslich via F018-DMA — der EINZIGE Weg, der erweitertes RAM zuverlaessig in
@@ -74,6 +141,10 @@ static uint8_t ext_host_dma_span(uint16_t off, uint8_t *bytes,
             if (ext_sim[(uint32_t)off + i] != stage[i])
                 ext_host_dma_faults++;
         ext_host_dma_write_jobs++;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_dma_writes[gc_attr_phase]++;
+        gc_attr_total_dma_writes[gc_attr_phase]++;
+#endif
     } else {
         for (i = 0; i < n; ++i) stage[i] = ext_sim[(uint32_t)off + i];
         for (i = 0; i < n; ++i) bytes[i] = 0xa5u;
@@ -82,8 +153,16 @@ static uint8_t ext_host_dma_span(uint16_t off, uint8_t *bytes,
             if (bytes[i] != ext_sim[(uint32_t)off + i])
                 ext_host_dma_faults++;
         ext_host_dma_read_jobs++;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_dma_reads[gc_attr_phase]++;
+        gc_attr_total_dma_reads[gc_attr_phase]++;
+#endif
     }
     ext_host_dma_bytes += n;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    gc_attr_dma_bytes[gc_attr_phase] += n;
+    gc_attr_total_dma_bytes[gc_attr_phase] += n;
+#endif
 #ifdef LISP65_EXT_HEAP_HOST_DMA_MODEL_MUTATION
     /* Gate self-test: a transport whose verification reports a fault must
      * never be accepted merely because the copied payload happened to work. */
@@ -326,6 +405,9 @@ void gc_mark(obj o) {
         o = markstack[--sp];
         while (IS_PTR(o)) {
             uint16_t i = (uint16_t)o >> 1;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+            gc_attr_mark_walk_visits[gc_attr_phase]++;
+#endif
             if (i >= MAX_CELLS) { gc_badobj++; break; }   /* korruptes obj: NIE OOB marken/traversieren
                                                            * (MARK_SET haette wild in .bss geschrieben) */
             if (MARK_GET(i)) break;
@@ -354,6 +436,9 @@ static uint8_t gc_mark_children_ext(uint16_t i);
 
 static uint8_t gc_mark1(obj o) {
     uint16_t i;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    gc_attr_mark_attempts[gc_attr_phase]++;
+#endif
     if (!IS_PTR(o)) return 0;
     i = (uint16_t)o >> 1;
     if (i >= MAX_CELLS) { gc_badobj++; return 0; }   /* korruptes obj: verwerfen */
@@ -368,6 +453,9 @@ static uint8_t gc_mark1(obj o) {
 #endif
     if (MARK_GET(i)) return 0;
     MARK_SET(i);
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    gc_attr_new_marks[gc_attr_phase]++;
+#endif
     return 1;
 }
 
@@ -445,6 +533,11 @@ void gc_collect(void) {
     gc_lane_last_free_before = mem_free_cells();
     gc_lane_last_reclaimed = 0;
 #endif
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    /* Reset after the free-before observer so its EXT reads are not charged
+     * to the collection it is observing. */
+    gc_attr_reset();
+#endif
 #ifdef LISP65_EXT_HEAP
     allocs_since_gc = 0;
 #endif
@@ -463,7 +556,13 @@ void gc_collect(void) {
      * die einzige Konstruktklasse, die auf echter mega65-HW nachweislich traegt
      * (Markstack-gc_mark fror dort deterministisch ein; docs/mvp-hw-findings.md).
      * Kosten O(HEAP_CELLS * Kettentiefe): bei <=512 Zellen ~ms-Bereich, irrelevant. */
-    for (i = 0; i < gc_rootsp; i++) gc_mark1(gc_rootstack[i]);
+    GC_ATTR_PHASE(GC_ATTR_ROOTS);
+    for (i = 0; i < gc_rootsp; i++) {
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_shadow_roots++;
+#endif
+        gc_mark1(gc_rootstack[i]);
+    }
 #ifdef LISP65_C2_PRODUCT_CUT
     /* C2D root values are the sole canonical home of heap-valued immutable
      * literals.  gc_mark is non-moving and therefore performs no writeback. */
@@ -472,17 +571,31 @@ void gc_collect(void) {
     LA(18);   /* R: roots markiert */
 
     n = sym_count();
+    GC_ATTR_PHASE(GC_ATTR_SYMBOLS);
     for (s = 0; s < n; s++) {
 #ifdef LISP65_GC_SCAN_PROBE
         gc_symbol_scan_visits++;
 #endif
         obj sym = sym_nth(s);
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_symbol_rows++;
+#endif
         gc_mark1(sym);
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_symbol_value_reads++;
+#endif
         gc_mark1(sym_value(sym));
 #ifdef LISP65_SYMFN_EXT
-        if (sym_function_ptrp(sym))
+        if (sym_function_ptrp(sym)) {
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+            gc_attr_symbol_function_reads++;
+#endif
             gc_mark1(sym_function(sym));
+        }
 #else
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_symbol_function_reads++;
+#endif
         gc_mark1(sym_function(sym));
 #endif
     }
@@ -494,10 +607,25 @@ void gc_collect(void) {
      * unabhaengig von der Scan-Richtung. Das spart die zweite Schleifen-Kopie (.text). */
     do {
         changed = 0;
-        for (i = HEAP_CELLS - 1; i >= 1; i--) changed |= gc_mark_children_hot(i);
+        GC_ATTR_PHASE(GC_ATTR_TRACE);
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_trace_passes++;
+#endif
+        for (i = HEAP_CELLS - 1; i >= 1; i--) {
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+            gc_attr_trace_hot_visits++;
+#endif
+            changed |= gc_mark_children_hot(i);
+        }
 #ifdef LISP65_EXT_HEAP
-        if (ext_mark_hi >= ext_mark_lo)
-            for (i = ext_mark_hi; i >= ext_mark_lo; i--) changed |= gc_mark_children_ext(i);
+        if (ext_mark_hi >= ext_mark_lo) {
+            for (i = ext_mark_hi; i >= ext_mark_lo; i--) {
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+                gc_attr_trace_ext_visits++;
+#endif
+                changed |= gc_mark_children_ext(i);
+            }
+        }
 #endif
     } while (changed);
 
@@ -510,9 +638,11 @@ void gc_collect(void) {
 #ifdef LISP65_STRING_ARENA
     /* Arena-Kompaktierung: lebende (markierte) T_STR-Bytes low->high umkopieren, tote
      * fallen weg. Marks noch gueltig (MARK_CLEAR erst beim naechsten GC). Vor dem Sweep. */
+    GC_ATTR_PHASE(GC_ATTR_ARENA);
     str_arena_compact();
 #endif
 
+    GC_ATTR_PHASE(GC_ATTR_SWEEP);
     freelist = NIL;
 #ifdef LISP65_EXT_HEAP
     /* Absteigend NUR bis zur Watermark: die Region darueber wurde nie vergeben und haengt
@@ -525,20 +655,32 @@ void gc_collect(void) {
          * Minimal-Harnesse) entstuende ein Freelist-Zyklus ueber Zelle alloc_high+1. */
         if (alloc_high > 0 && alloc_high + 1 < MAX_CELLS) freelist = (obj)((uint16_t)(alloc_high + 1) << 1);
         for (i = alloc_high; i > lo; i--) {          /* Runtime-EXT (Frozen-Region nie) */
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+            gc_attr_sweep_ext_visits++;
+#endif
             if (!MARK_GET(i)) {
                 cell_set_a((obj)(i << 1), freelist);
                 freelist = (obj)(i << 1);
 #ifdef LISP65_GC_LANE_PROBE
                 gc_lane_last_reclaimed++;
 #endif
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+                gc_attr_sweep_ext_reclaimed++;
+#endif
             }
         }
         for (i = HEAP_CELLS - 1; i >= 1; i--) {      /* Hot immer; zuletzt -> Spitze */
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+            gc_attr_sweep_hot_visits++;
+#endif
             if (!MARK_GET(i)) {
                 heap[i].a = freelist;
                 freelist = (obj)(i << 1);
 #ifdef LISP65_GC_LANE_PROBE
                 gc_lane_last_reclaimed++;
+#endif
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+                gc_attr_sweep_hot_reclaimed++;
 #endif
             }
         }
@@ -555,6 +697,7 @@ void gc_collect(void) {
     }
 #endif
 #ifdef LISP65_GC_LANE_PROBE
+    GC_ATTR_PHASE(GC_ATTR_OUTSIDE);
     gc_lane_last_free_after = mem_free_cells();
     if (gc_lane_last_free_after < gc_lane_min_free_after)
         gc_lane_min_free_after = gc_lane_last_free_after;
@@ -566,6 +709,7 @@ void gc_collect(void) {
     gc_lane_last_frozen = 0;
 #endif
 #endif
+    GC_ATTR_PHASE(GC_ATTR_OUTSIDE);
     LA(20);   /* T: sweep fertig */
 }
 
@@ -733,7 +877,16 @@ static uint8_t *str_alt = str_buf_b;   /* Kompaktier-Ziel */
 static uint8_t str_read_byte(uint16_t off)             { return str_cur[off]; }
 static void    str_write_byte(uint16_t off, uint8_t b) { str_cur[off] = b; }
 /* n Bytes vom aktiven Fenster[src] ins Alt-Fenster[dst] (Kompaktierung). */
-static void    str_copy_to_alt(uint16_t dst, uint16_t src, uint16_t n) { uint16_t i; for (i = 0; i < n; i++) str_alt[dst + i] = str_cur[src + i]; }
+static void    str_copy_to_alt(uint16_t dst, uint16_t src, uint16_t n) {
+    uint16_t i;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    if (gc_attr_phase == GC_ATTR_ARENA && n) {
+        gc_attr_arena_copy_jobs++;
+        gc_attr_arena_copy_bytes += n;
+    }
+#endif
+    for (i = 0; i < n; i++) str_alt[dst + i] = str_cur[src + i];
+}
 static void    str_swap_buffers(void) { uint8_t *t = str_cur; str_cur = str_alt; str_alt = t; }
 #else
 #ifndef STR_ARENA_BANK
@@ -770,6 +923,12 @@ static void str_write_byte(uint16_t off, uint8_t b) {
 }
 static void str_copy_to_alt(uint16_t dst, uint16_t src, uint16_t n) {
     if (!n) return;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+    if (gc_attr_phase == GC_ATTR_ARENA) {
+        gc_attr_arena_copy_jobs++;
+        gc_attr_arena_copy_bytes += n;
+    }
+#endif
     ext_dma((uint16_t)(str_cur_off + src), STR_ARENA_BANK,
             (uint16_t)(str_alt_off + dst), STR_ARENA_BANK, n);
 }
@@ -808,7 +967,13 @@ static void str_arena_compact(void) {
     ntop = str_frozen;
     for (i = 1; i < MAX_CELLS; i++) {
         obj o;
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_arena_slots++;
+#endif
         if (!MARK_GET(i)) continue;            /* nur lebende Zellen */
+#ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
+        gc_attr_arena_marked_slots++;
+#endif
         o = (obj)(uint16_t)(i << 1);
 #ifdef LISP65_FIRST_CLASS_BUFFER
         /* T_STR=5 and T_BUF=7 are the only current kinds whose bit-1-fold is

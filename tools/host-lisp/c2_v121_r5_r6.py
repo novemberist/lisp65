@@ -7,6 +7,7 @@ import argparse
 from datetime import date
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 from typing import Any
@@ -17,7 +18,8 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import c2_lite_r5_r6 as R6  # noqa: E402
 
 
-BASE = ROOT / "build/c2.2/v1.2.1-acceptance"
+RELEASE = os.environ.get("C2_ACCEPTANCE_RELEASE", "v1.2.1")
+BASE = ROOT / f"build/c2.2/{RELEASE}-acceptance"
 R5_PREFLIGHT = BASE / "r5/r5-preflight-receipt.json"
 G5 = BASE / "r5/hardware-session-01/g5-hardware-receipt.json"
 R5_BIND_ROOT = BASE / "r5-tested"
@@ -91,10 +93,10 @@ def configure() -> None:
     R6.R5_ACCEPTED_STATUSES = {"passed-tested-R5-bind"}
     R6.R5_PROOF_NAME = "r5-preflight-receipt.json"
     R6.R5_PACKAGE_CLAIM = "passed-tested-R5-bind"
-    R6.R5_DESCRIPTION = "fresh-G5-tested v1.2.1 R5 set"
+    R6.R5_DESCRIPTION = f"fresh-G5-tested {RELEASE} R5 set"
     R6.R5_MAPPING = "all-19-tested-R5-roles-exactly-once"
-    R6.R6_ID = "R6-from-v1.2.1-tested-R5"
-    R6.R6_RECEIPT_ID = "R6-v1.2.1-tested-set"
+    R6.R6_ID = f"R6-from-{RELEASE}-tested-R5"
+    R6.R6_RECEIPT_ID = f"R6-{RELEASE}-tested-set"
     R6.RECORDED_ON = date.today().isoformat()
 
 
@@ -143,9 +145,9 @@ def bind_tested_r5() -> dict[str, Any]:
         for row in rows
     ]
     receipt = {
-        "format": "lisp65-c2-lite-v1.2.1-tested-R5-receipt-v1",
+        "format": f"lisp65-c2-lite-{RELEASE}-tested-R5-receipt-v1",
         "version": 1,
-        "id": "v1.2.1-R5-tested-set",
+        "id": f"{RELEASE}-R5-tested-set",
         "status": "passed-tested-R5-bind",
         "recorded_on": date.today().isoformat(),
         "authority": {

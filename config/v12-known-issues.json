@@ -1,7 +1,7 @@
 {
   "format": "lisp65-v12-known-issues-register-v1",
   "version": 1,
-  "release": "1.2.1",
+  "release": "1.2.2",
   "recorded_on": "2026-07-29",
   "active": [
     {
@@ -43,20 +43,10 @@
       "claim_limit": "The observation is retained as intermittent and unreproduced. No GC fix or GC latency ceiling is claimed."
     },
     {
-      "id": "dirmiss-truncated-function-name",
-      "status": "attributed-fix-parked-v1.2.2",
-      "user_rule": "An undefined-function error may show only the end of the function name or pad it with spaces. The error is valid; check the function name in the original form.",
-      "authority": {
-        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-dirmiss-renderer-attribution-receipt.json",
-        "sha256": "60b74cb92ee1fec1916b0906fdabd90066c0eb23cba61fc51a4ca2f69f707845"
-      },
-      "claim_limit": "Only the displayed name detail is unreliable. Symbol lookup, symname and the symbol read seam are not implicated by this issue."
-    },
-    {
       "id": "defstruct-dynamic-library-freight",
       "status": "not-delivered-parked",
-      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.1 user surface.",
-      "claim_limit": "Host-side designs and fixtures create no v1.2.1 delivery claim."
+      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.2 user surface.",
+      "claim_limit": "Host-side designs and fixtures create no v1.2.2 delivery claim."
     }
   ],
   "informative": [
@@ -69,6 +59,12 @@
       "id": "gc-envelope",
       "value": "17 frames; one collection; 96 contract block reads",
       "limit": null
+    },
+    {
+      "id": "symbol-value-read-cost",
+      "value": "0 frame delta per 1000 reads; less than 20 microseconds per read; projected 480 reads less than 0.5 frame",
+      "limit": null,
+      "claim_boundary": "Direct for the measured 2-byte vm_dma symbol-value path; reference only for bulk symbol-name reads and prim 67. The dominant term of the isolated 89-frame GC envelope remains unattributed."
     },
     {
       "id": "cold-boot-observation",
@@ -113,10 +109,10 @@
     }
   ],
   "release_authority": {
-    "product_artifact_set_sha256": "2115b955512a3b794f68d5f2a1d160708cb89184735b7a0984a7cfc61c38f63f",
-    "package_set_sha256": "04de1bbba86b9fa7adc030b471e6d74af04eb0aa93912693a79b9996e53b511b",
-    "G5_receipt_sha256": "362668ac8e2939aed5c461caf7beeb2d21c44b81a31b8b17d3c3d1b652d3c5ba",
-    "G6_receipt_sha256": "b45622802288c5f762ab919efc92d2f91082858d9d12dd648ff408b9fb4049f4",
-    "acceptance_archive_sha256": "1521f197fe2ea560ce46aab354c63533fc6e352968308401a3d8653595581a8c"
+    "product_artifact_set_sha256": "359809d4a6b3bde95b9624f375ae38c32446ea54024a58691e07eb4673bcf7de",
+    "package_set_sha256": "129cbf443beb4433bcf87388c2131a8f084df3b2e812b21fb5893f008932d651",
+    "G5_receipt_sha256": "b30d0b40b60e34cf56133bd56d34e9b9f6d4acb232eaf175b93c67d822dc5e4f",
+    "G6_receipt_sha256": "0b38280dc46bc5e4984432733fe48794d17722b45e9dd3933d7c9f92350234d6",
+    "acceptance_archive_sha256": "e317bc0525e27c8eb604e70e1018bc8276677959e9b1e455a4687032568e13bc"
   }
 }
