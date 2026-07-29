@@ -16,6 +16,18 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE_FORMAT = "lisp65-c2-lite-r6-g6-hardware-archive-v1"
 PRODUCT_SET = "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d"
 PACKAGE_SET = "82ddc3d7fd8bc048b2803081866aa5320a08bd226d18b063c403a33fc9e7e038"
+R6_SHIP_REL = Path(
+    "build/c2.2/acceptance/r6-successor-v11/ship"
+)
+R6_RECEIPT_REL = Path(
+    "build/c2.2/acceptance/r6-successor-v11/r6-packaging-receipt.json"
+)
+G6_SESSION_REL = Path(
+    "build/c2.2/acceptance/g6-successor-v11/session-01"
+)
+TOP_RELEASE_CLAIM = "not-promoted-until-remote-head-seal"
+SEAL_RELEASE_CLAIM = "promoted-v1.2"
+RELEASE_LABEL = "v1.2"
 CASE_IDS = (
     "offline-package-verification",
     "cold-boot-from-exact-R6-product-media",
@@ -110,13 +122,9 @@ def verify_nested_bindings(root: Path, value: Any, label: str) -> int:
 
 
 def verify_r6(root: Path) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
-    manifest_path = (
-        root / "build/c2.2/acceptance/r6-successor-v11/ship/manifest.json"
-    )
-    receipt_path = (
-        root / "build/c2.2/acceptance/r6-successor-v11"
-        / "r6-packaging-receipt.json"
-    )
+    ship_root = root / R6_SHIP_REL
+    manifest_path = ship_root / "manifest.json"
+    receipt_path = root / R6_RECEIPT_REL
     manifest = load(manifest_path, "R6 manifest")
     receipt = load(receipt_path, "R6 receipt")
     require(
@@ -148,7 +156,7 @@ def verify_r6(root: Path) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
             f"R6 role row malformed: {index}",
         )
         path = safe_path(
-            root / "build/c2.2/acceptance/r6-successor-v11/ship",
+            ship_root,
             row.get("ship_path"), f"R6 role {row['role']}",
         )
         require(
@@ -168,7 +176,7 @@ def verify_r6(root: Path) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
             f"R6 package row malformed: {index}",
         )
         path = safe_path(
-            root / "build/c2.2/acceptance/r6-successor-v11/ship",
+            ship_root,
             row["path"], f"R6 package file {index}",
         )
         require(
@@ -183,9 +191,7 @@ def verify_r6(root: Path) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
 
 def verify_acceptance(root: Path) -> dict[str, Any]:
     manifest, roles = verify_r6(root)
-    session = (
-        root / "build/c2.2/acceptance/g6-successor-v11/session-01"
-    )
+    session = root / G6_SESSION_REL
     top_path = session / "g6-hardware-receipt.json"
     top = load(top_path, "G6 top receipt")
     require(
@@ -197,7 +203,7 @@ def verify_acceptance(root: Path) -> dict[str, Any]:
         and top.get("claims") == {
             "G5": "passed-nine-of-nine",
             "G6": "passed-five-of-five",
-            "release": "not-promoted-until-remote-head-seal",
+            "release": TOP_RELEASE_CLAIM,
         },
         "G6 top receipt drift",
     )
@@ -320,22 +326,20 @@ def verify_archive() -> None:
     top = verify_acceptance(SCRIPT_ROOT / "payload")
     require(
         archive_manifest.get("top_receipt_sha256")
-        == sha(
-            SCRIPT_ROOT / "payload/build/c2.2/acceptance"
-            / "g6-successor-v11/session-01/g6-hardware-receipt.json"
-        )
+        == sha(SCRIPT_ROOT / "payload" / G6_SESSION_REL
+               / "g6-hardware-receipt.json")
         and archive_manifest.get("claims") == {
             "G5": "passed-nine-of-nine",
             "G6": "passed-five-of-five",
-            "release": "promoted-v1.2",
+            "release": SEAL_RELEASE_CLAIM,
         }
         and top["claims"]["release"]
-        == "not-promoted-until-remote-head-seal",
+        == TOP_RELEASE_CLAIM,
         "seal promotion boundary drift",
     )
     print(
         "C2-LITE R6/G6 SEAL OFFLINE PASS "
-        f"files={len(rows)} source={source} release=v1.2"
+        f"files={len(rows)} source={source} release={RELEASE_LABEL}"
     )
 
 

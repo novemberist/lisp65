@@ -10,6 +10,10 @@
 #define LISP65_C2D_BASE 0u
 #define LISP65_C2D_BYTES 33840u
 #define LISP65_C2D_REGION_BYTES 50816u
+
+/* Resident Bank-5 C2D transport.  Public consumers must impose their own
+ * narrower semantic domain before calling the region-level reader. */
+uint8_t c2_stream_c2d_read(uint16_t offset, void *dst, uint16_t length);
 #define LISP65_C2_SHELF_PHYSICAL 0x08100000UL
 #define LISP65_C2_SESSION_PHYSICAL 0x08400000UL
 #define LISP65_C2_SESSION_BYTES 0x00100000UL
@@ -627,9 +631,8 @@ obj c2_product_install(obj fnlist, obj definition_name);
 /* Load an already staged one-record C2 image (persistent compile output). */
 uint8_t c2_product_append_staged(uint16_t length);
 
-/* True only for an exact immutable image name in the generation-bound product
- * shelf.  This preserves load-lib idempotence without resurrecting the old
- * Attic shelf validator or inventing a second catalogue. */
+/* Return nonzero only for an exact immutable image in the
+ * generation-bound shelf. */
 uint8_t c2_product_static_image_named(obj name);
 
 #endif

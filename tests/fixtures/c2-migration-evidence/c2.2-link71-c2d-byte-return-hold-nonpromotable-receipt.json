@@ -1,0 +1,81 @@
+{
+  "ELF_truth": {
+    "call": "0x7782 JSR 0xfe88 vm_c2d_byte",
+    "hold_PC": "0x7786",
+    "patched_successor": "0x7785 JMP 0x6b52"
+  },
+  "answer": {
+    "A": "0x87",
+    "C2D_byte_0": "0x43",
+    "PC": "0x7786",
+    "X": "0x00",
+    "Z": "0x00",
+    "args_address": "0xceaf",
+    "args_bytes": "433244000630200a",
+    "expected_result_observed": true,
+    "vm_status": 0
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 622512,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94"
+    },
+    "driver": {
+      "bytes": 12663,
+      "path": "tools/host-lisp/c2_defstruct_link71_c2d_byte_return_hold.py",
+      "sha256": "8a356a2b804ba3c29d7f9f4019570da81783b0fe7cc8b299f15be35d6ac1f9c7"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "session_deployment": {
+      "bytes": 7228,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/deployment.json",
+      "sha256": "bbf94d0475386703c4d67f6282b5124870fd77c7dd428975f3d3cd028d418ba5"
+    }
+  },
+  "capture": {
+    "bytes": 7102,
+    "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/c2d-byte-return-hold-NONPROMOTABLE/capture-summary.json",
+    "sha256": "2838decd4f6cbae95cb35f654be5828316e59a45600713c6446991bc87fb6c46"
+  },
+  "capture_protocol": {
+    "dynamic_witness": "read eight bytes from the restored __rc2/__rc3 pointer found in the first zero-page snapshot",
+    "rule": "issue t1 exactly once, never issue t0, then read registers and all witnesses from the already-stopped serial monitor",
+    "snapshots": 3
+  },
+  "claim_limit": "One nonpromotable Link-71 private-C2D-byte return-edge capture; no product, require, defstruct or release qualification.",
+  "format": "lisp65-c2.2-Link71-c2d-byte-return-hold-v1",
+  "outcomes": {
+    "AX_0087_Z_00_status_00": "leaf and C2D reader returned correctly; the fault is after the CALLPRIM leaf-return edge",
+    "other": "the captured register, status, argument-buffer and C2D witnesses attribute the private primitive failure"
+  },
+  "patch": {
+    "PRG_file_offset": 22406,
+    "after": "7880fe",
+    "artifact": {
+      "address": "0x00007785",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/c2d-byte-return-hold-NONPROMOTABLE/c2d-byte-return-hold.bin",
+      "sha256": "ecfd175f590d113b784e9d50c335e3d78701dcdf59166ae6e0f7e347e6ae7046"
+    },
+    "before": "4c526b",
+    "deployed_product_bytes_delta": 0,
+    "late_RAM_bytes_changed": 3,
+    "product_file_bytes_delta": 0,
+    "runtime_address": "0x7785",
+    "semantics": "replace the common jump immediately after JSR vm_c2d_byte with SEI/BRA-self; A/X/Z and the restored CALLPRIM argument pointer remain live"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "status": "completed-nonpromotable-return-edge-capture",
+  "test": {
+    "expected_C2D_byte_0": "0x43",
+    "expected_tagged_result_AX": "0x0087",
+    "form": "(%require-c2d-byte (cons 0 0))"
+  }
+}

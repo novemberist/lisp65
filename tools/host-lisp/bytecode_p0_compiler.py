@@ -16,7 +16,10 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bytecode_p0 as B  # noqa: E402
-from v2_native_function_views_generated import ACTIVE_CALLPRIMS  # noqa: E402
+from v2_native_function_views_generated import (  # noqa: E402
+    ACTIVE_CALLPRIMS,
+    COMPILE_REPL_CALLPRIMS,
+)
 
 
 class CompileError(Exception):
@@ -52,7 +55,8 @@ PRIM_CALLS = {
     "%disk-write-sector": 22,
 }
 
-PRIM_CALLS_V2 = dict(ACTIVE_CALLPRIMS)
+PRIM_CALLS_V2 = dict(COMPILE_REPL_CALLPRIMS)
+PRIM_CALLS_V2_PREBUILT = dict(ACTIVE_CALLPRIMS)
 
 
 def _abi_profile(strict_arity, abi_profile):
@@ -227,6 +231,7 @@ class FunctionCompiler:
         strict_arity=False,
         abi_profile=None,
         abi_ledger=None,
+        prebuilt_primitives=False,
     ):
         if len(params) > 255:
             raise CompileError("too many params")
@@ -249,7 +254,14 @@ class FunctionCompiler:
         self.strict_arity = strict_arity
         self.abi_profile = _abi_profile(strict_arity, abi_profile)
         self.abi_ledger = _abi_ledger(self.abi_profile, abi_ledger)
-        self.prim_calls = PRIM_CALLS_V2 if self.abi_profile == "dialect-v2" else PRIM_CALLS
+        self.prebuilt_primitives = bool(prebuilt_primitives)
+        self.prim_calls = (
+            PRIM_CALLS_V2_PREBUILT
+            if self.abi_profile == "dialect-v2" and self.prebuilt_primitives
+            else PRIM_CALLS_V2
+            if self.abi_profile == "dialect-v2"
+            else PRIM_CALLS
+        )
         self.payload = bytearray()
         self.last_mnemonic = None
         self.literals = []
@@ -385,6 +397,8 @@ class FunctionCompiler:
             self.compile_dotimes(args, tail=tail)
         elif op == "dolist":
             self.compile_dolist(args, tail=tail)
+        elif op == "while":
+            self.compile_while(args, tail=tail)
         elif op == "+":
             self.compile_binary(args, "ADD")
         elif op == "-":
@@ -401,6 +415,14 @@ class FunctionCompiler:
             self.compile_compare_chain(args, ">")
         elif op == ">=":
             self.compile_compare_chain(args, "<")
+        elif op == "logand":
+            self.compile_binary(args, "LOGAND")
+        elif op == "logior":
+            self.compile_binary(args, "LOGIOR")
+        elif op == "logxor":
+            self.compile_binary(args, "LOGXOR")
+        elif op == "ash":
+            self.compile_binary(args, "ASH")
         elif op == "remainder":
             self.compile_binary(args, "REMAINDER")
         elif op == "mod":
@@ -643,6 +665,18 @@ class FunctionCompiler:
         for form in body:
             self.compile_expr(form)
             self.emit("DROP")
+
+    def compile_while(self, args, tail=False):
+        if not args:
+            raise CompileError("while needs a test")
+        loop_start = len(self.payload)
+        self.compile_expr(args[0])
+        exit_op = self.emit("JFALSEREL", 0)
+        self.compile_loop_body(args[1:])
+        back_op = self.emit("JMPREL", 0)
+        self.patch_rel8(back_op + 1, loop_start, context="while")
+        self.patch_rel8(exit_op + 1, len(self.payload), context="while")
+        self.emit("PUSHNIL")
 
     def compile_dotimes(self, args, tail=False):
         var, count_form, result_form, body = self.parse_loop_spec(args, "dotimes")
@@ -903,6 +937,7 @@ class FunctionCompiler:
             strict_arity=self.strict_arity,
             abi_profile=self.abi_profile,
             abi_ledger=self.abi_ledger,
+            prebuilt_primitives=self.prebuilt_primitives,
         )
         code = fc.compile_body(lambda_form[2:])
         self.helpers.append((name, code))
@@ -948,17 +983,19 @@ class FunctionCompiler:
 
 
 def compile_source(
-    src, heap, strict_arity=False, abi_profile=None, abi_ledger=None
+    src, heap, strict_arity=False, abi_profile=None, abi_ledger=None,
+    prebuilt_primitives=False,
 ):
     form = parse_one(src)
     return compile_top_form(
         form, heap, strict_arity=strict_arity, abi_profile=abi_profile,
-        abi_ledger=abi_ledger,
+        abi_ledger=abi_ledger, prebuilt_primitives=prebuilt_primitives,
     )
 
 
 def compile_top_form_with_helpers(
-    form, heap, strict_arity=False, abi_profile=None, abi_ledger=None
+    form, heap, strict_arity=False, abi_profile=None, abi_ledger=None,
+    prebuilt_primitives=False,
 ):
     abi_profile = _abi_profile(strict_arity, abi_profile)
     abi_ledger = _abi_ledger(abi_profile, abi_ledger)
@@ -985,6 +1022,7 @@ def compile_top_form_with_helpers(
             strict_arity=strict_arity,
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
+            prebuilt_primitives=prebuilt_primitives,
         )
         return None, fc.compile_body(form[2:]), helpers
     if head == "defun":
@@ -1008,17 +1046,19 @@ def compile_top_form_with_helpers(
             strict_arity=strict_arity,
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
+            prebuilt_primitives=prebuilt_primitives,
         )
         return name, fc.compile_body(form[3:]), helpers
     raise CompileError("unsupported top-level form: %r" % head)
 
 
 def compile_top_form(
-    form, heap, strict_arity=False, abi_profile=None, abi_ledger=None
+    form, heap, strict_arity=False, abi_profile=None, abi_ledger=None,
+    prebuilt_primitives=False,
 ):
     name, code, helpers = compile_top_form_with_helpers(
         form, heap, strict_arity=strict_arity, abi_profile=abi_profile,
-        abi_ledger=abi_ledger,
+        abi_ledger=abi_ledger, prebuilt_primitives=prebuilt_primitives,
     )
     if helpers:
         raise CompileError("top-level form needs helper code objects")
@@ -1026,7 +1066,8 @@ def compile_top_form(
 
 
 def compile_program(
-    src, heap, strict_arity=False, abi_profile=None, abi_ledger=None
+    src, heap, strict_arity=False, abi_profile=None, abi_ledger=None,
+    prebuilt_primitives=False,
 ):
     abi_profile = _abi_profile(strict_arity, abi_profile)
     abi_ledger = _abi_ledger(abi_profile, abi_ledger)
@@ -1052,7 +1093,7 @@ def compile_program(
     for form in forms:
         name, code, helpers = compile_top_form_with_helpers(
             form, heap, strict_arity=strict_arity, abi_profile=abi_profile,
-            abi_ledger=abi_ledger,
+            abi_ledger=abi_ledger, prebuilt_primitives=prebuilt_primitives,
         )
         if name in code_by_name:
             raise CompileError("duplicate code object: %s" % name)

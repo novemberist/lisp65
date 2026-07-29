@@ -1,0 +1,61 @@
+{
+  "extends": "p0-stdlib-require-resolver.json",
+  "sources": [
+    "lib/stdlib-random.lisp"
+  ],
+  "functions": [
+    "%random-add14",
+    "%random-seed-step",
+    "%random-normalize-seed",
+    "%random-fill",
+    "random-seed",
+    "%random-hardware-seed",
+    "%random-ensure-state",
+    "%random-next",
+    "%random-16384-remainder",
+    "%random-draw-below",
+    "random"
+  ],
+  "tailcall_self": [
+    "%random-fill",
+    "%random-draw-below"
+  ],
+  "cases": [
+    {
+      "name": "random-state-width",
+      "expr": "(progn (random-seed 1) (length (symbol-value '%random-state)))",
+      "expect": "55"
+    },
+    {
+      "name": "random-one",
+      "expr": "(progn (random-seed 1) (random 1))",
+      "expect": "0"
+    },
+    {
+      "name": "random-seed-reproducible",
+      "expr": "(let ((a (progn (random-seed 1234) (list (random 1000) (random 1000) (random 1000))))) (let ((b (progn (random-seed 1234) (list (random 1000) (random 1000) (random 1000))))) (equal a b)))",
+      "expect": "t"
+    },
+    {
+      "name": "random-negative-seed-normalization",
+      "expr": "(let ((a (progn (random-seed -1) (random 997)))) (let ((b (progn (random-seed 16383) (random 997)))) (= a b)))",
+      "expect": "t"
+    },
+    {
+      "name": "random-range-nondivisor",
+      "expr": "(progn (random-seed 42) (< (random 1000) 1000))",
+      "expect": "t"
+    },
+    {
+      "name": "random-rejection-path",
+      "expr": "(progn (random-seed 7286) (random 1000))",
+      "expect": "179"
+    },
+    {
+      "name": "random-seed-edge-low",
+      "expr": "(random-seed -16384)",
+      "expect": "0"
+    }
+  ],
+  "description": "Phase-V1 pure-Lisp random freight in the base composition; no require/runtime-overlay dependency."
+}

@@ -1864,7 +1864,7 @@ vm_runtime_overlay_status vm_runtime_overlay_transaction_begin(
     return VM_RUNTIME_OVERLAY_OK;
 }
 
-LISP65_C2_REOPEN_GAP1_FN
+LISP65_C2_REOPEN_GAP2_FN
 vm_runtime_overlay_status vm_runtime_overlay_transaction_end(void) {
     vm_runtime_overlay_status status;
     if (!RTOV_TRANSACTION_ACTIVE())
@@ -2114,6 +2114,10 @@ void vm_runtime_overlay_host_reset(void) {
     rtov_transaction_context_calls = 0;
     memset(lisp65_resident_island_host_target, 0,
            LISP65_RUNTIME_ISLAND_CAPACITY);
+}
+
+void vm_runtime_overlay_host_force_busy(uint8_t busy) {
+    rtov_busy = busy ? 1u : 0u;
 }
 
 void vm_runtime_overlay_host_island_copy_fault(uint8_t enabled) {

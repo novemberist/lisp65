@@ -258,14 +258,31 @@ class Extension:
     combined_crc: int
 
 
-def build_extension(image: F.Emitted) -> bytes:
+SESSION_RECORD_ID = b"SESS\0\0\0\0"
+
+
+def build_extension(
+        image: F.Emitted, *, build_id: int = PROBE_BUILD_ID) -> bytes:
+    require(0 < build_id <= 0xFFFFFFFF,
+            "extension product build identity range")
     data, _rows, _catalog_crc = F.build_shelf([image])
     candidate = bytearray(data)
-    struct.pack_into("<I", candidate, 22, PROBE_BUILD_ID)
+    struct.pack_into("<I", candidate, 22, build_id)
+    # A one-record session artifact has no record-local name namespace.  Its
+    # canonical identity is the fixed SESS tag consumed by the product
+    # envelope verifier; library names live once in the L65I index.
+    candidate[32:40] = SESSION_RECORD_ID
+    struct.pack_into(
+        "<I", candidate, 18,
+        zlib.crc32(candidate[32:64]) & 0xFFFFFFFF)
     return bytes(candidate)
 
 
-def decode_extension(data: bytes, expected: F.Emitted | None = None) -> Extension:
+def decode_extension(
+        data: bytes, expected: F.Emitted | None = None, *,
+        expected_build_id: int = PROBE_BUILD_ID) -> Extension:
+    require(0 < expected_build_id <= 0xFFFFFFFF,
+            "extension expected product build identity range")
     require(len(data) >= F.SHELF_HEADER_BYTES + F.SHELF_RECORD_BYTES,
             "extension shorter than header and record")
     require(data[:4] == b"L65S" and data[4] == 4, "extension magic/version")
@@ -277,13 +294,15 @@ def decode_extension(data: bytes, expected: F.Emitted | None = None) -> Extensio
     require(catalog_offset == 32 and catalog_bytes == 32 and payload_offset == 64,
             "extension canonical section layout")
     require(total == len(data) <= 8192, "extension truncation, trailing data or size")
-    require(struct.unpack_from("<I", data, 22)[0] == PROBE_BUILD_ID,
+    require(struct.unpack_from("<I", data, 22)[0] == expected_build_id,
             "extension product build identity")
     require(u16(data, 26) == 1 and data[28:32] == b"\0" * 4,
             "extension header flags/reserved")
     record = data[32:64]
     require(zlib.crc32(record) & 0xFFFFFFFF == catalog_crc,
             "extension catalog CRC")
+    require(record[:4] == SESSION_RECORD_ID[:4],
+            "extension session record identity")
     require(record[30] == 1 and record[31] == 0,
             "extension record flags/reserved")
     code_offset, code_length = u24(record, 8), u16(record, 11)
@@ -727,6 +746,8 @@ def envelope_negatives(baseline: bytes) -> list[str]:
         ("record-count", lambda x: x.__setitem__(7, 2), False),
         ("build-identity", lambda x: x.__setitem__(22, x[22] ^ 1), False),
         ("catalog-crc", lambda x: x.__setitem__(18, x[18] ^ 1), False),
+        ("session-record-identity",
+         lambda x: x.__setitem__(32, ord("X")), True),
         ("code-crc", lambda x: x.__setitem__(50, x[50] ^ 1), True),
         ("metadata-crc", lambda x: x.__setitem__(54, x[54] ^ 1), True),
         ("combined-crc", lambda x: x.__setitem__(58, x[58] ^ 1), True),

@@ -1,9 +1,9 @@
-# lisp65 1.2 User Guide
+# lisp65 1.2.1 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.2.0` release bundle
+- The extracted `lisp65-1.2.1` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -19,7 +19,7 @@ Run from the extracted bundle directory:
 python3 verify.py
 ```
 
-Do not use a bundle that fails. The verifier checks every packaged file, all 14
+Do not use a bundle that fails. The verifier checks every packaged file, all 19
 product artifacts, and the embedded hardware-acceptance evidence without using
 the live repository or network.
 
@@ -183,8 +183,16 @@ further writes. The release does not claim atomicity inside that window.
 - The dated 1.1 definition-to-first-call exception is retired. The 1.2
   acceptance measured a newly published nullary call at 1 frame cold and
   0 frames warm, with claimed ceilings of 16 and 10 frames respectively.
-  Calls with arguments are not covered by that claim; the final informative
-  one-argument measurement was 68 frames.
+  The fresh v1.2.1 acceptance run also measured the one-argument direct-call
+  path at 0 frames; that informative value is not a separate hard limit.
+- Do not use interrupt-generating cartridges while lisp65 is running. Passive
+  cartridges are unaffected; a held cartridge interrupt deliberately stops
+  the product on a red-bordered screen.
+- An undefined-function error can display a shortened or padded function name.
+  The error itself is valid; check the function name in the form you entered.
+- One post-GC out-of-memory event in a 1,200-allocation `while` workload was
+  not reproduced by the follow-up run. Preserve the exact form and preceding
+  steps if a small-live-set OOM recurs.
 - M65D/editor saves support 1–8,192 bytes. Evaluator `load` has a separate
   38,400-byte staging ceiling; memory may constrain practical input earlier.
 - The compiler builds Workbench L65M modules, not standalone runtimes or

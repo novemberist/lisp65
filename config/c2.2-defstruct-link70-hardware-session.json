@@ -1,0 +1,87 @@
+{
+  "format": "lisp65-c2.2-defstruct-link70-hardware-session-v1",
+  "recorded_on": "2026-07-27",
+  "status": "owner-authorized-bundled-hardware-not-run",
+  "candidate": {
+    "link": 70,
+    "product_sha256": "da53d89b8a60e259516ed20615f02aa373daf9a707517cadfe5557c1276514c6",
+    "elf_sha256": "a875c96ab35ba81ef158134d98fbb37343b2c01fe3ba24fbf581f9daa740dd40",
+    "d81_sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+  },
+  "policy": {
+    "one_device_session": true,
+    "first_red": true,
+    "verified_input": true,
+    "quote_transport": "long form only",
+    "new_product_links": 0
+  },
+  "rows": [
+    {
+      "id": "boot-watch",
+      "form": "(list (+ 2 3) (function-kind (quote intern)) (function-kind (quote require)))",
+      "expect": "(5 primitive bytecode)"
+    },
+    {
+      "id": "require-first",
+      "form": "(require (quote defstruct))",
+      "expect": "t"
+    },
+    {
+      "id": "require-repeat",
+      "form": "(require (quote defstruct))",
+      "expect": "t"
+    },
+    {
+      "id": "define-point",
+      "form": "(defstruct point x y)",
+      "expect": "t"
+    },
+    {
+      "id": "construct-point",
+      "form": "(make-point 3 4)",
+      "expect": "(point 3 4)"
+    },
+    {
+      "id": "read-point-x",
+      "form": "(point-x (make-point 3 4))",
+      "expect": "3"
+    },
+    {
+      "id": "read-point-y",
+      "form": "(point-y (make-point 3 4))",
+      "expect": "4"
+    },
+    {
+      "id": "point-predicate",
+      "form": "(point-p (make-point 3 4))",
+      "expect": "t"
+    },
+    {
+      "id": "copy-point",
+      "form": "(copy-point (make-point 3 4))",
+      "expect": "(point 3 4)"
+    },
+    {
+      "id": "functional-update",
+      "form": "(point-with-y (make-point 3 4) 8)",
+      "expect": "(point 3 8)"
+    },
+    {
+      "id": "canonical-place-mutation",
+      "form": "(progn (setq *point-probe* (make-point 3 4)) (setf (point-x *point-probe*) 9) *point-probe*)",
+      "expect": "(point 9 4)"
+    },
+    {
+      "id": "require-repeat-after-use",
+      "form": "(require (quote defstruct))",
+      "expect": "t"
+    }
+  ],
+  "structural_busy_fixture": {
+    "window_bytes": 1792,
+    "transport": "VM_RUNTIME_OVERLAY_ERR_BUSY",
+    "entry": "not-run",
+    "window": "byte-identical",
+    "family_generation_negatives": 4
+  }
+}

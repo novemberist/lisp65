@@ -7,6 +7,24 @@ cc="${HOSTCC:-cc}"
 corpus="${1:-tests/equivalence/forms.lisp}"
 out=build/equivalence
 mkdir -p "$out"
+completion_journal="$out/equivalence-completion.lanes"
+completion_receipt="$out/equivalence-completion.json"
+rm -f "$completion_receipt"
+: > "$completion_journal"
+mark_lane() {
+  lane=$1
+  actual=$2
+  expected=$3
+  [ "$actual" -gt 0 ] || {
+    echo "equivalence-check: FIRST RED: lane $lane executed zero cases" >&2
+    exit 1
+  }
+  [ "$actual" -eq "$expected" ] || {
+    echo "equivalence-check: FIRST RED: lane $lane executed $actual/$expected cases" >&2
+    exit 1
+  }
+  printf '%s\t%s\t%s\n' "$lane" "$actual" "$expected" >> "$completion_journal"
+}
 
 $cc -std=c99 -Wall -Wno-unused-function \
   -DLISP65_COMPILE_REPL -DLISP65_VM -DLISP65_VM_GLOBAL_PRIMS -DLISP65_EVAL_PRIMS -DLISP65_EVAL_CONTROL_SF -DLISP65_VM_APPLY_OPFN -DLISP65_MACROEXPAND_PRIM -DLISP65_LCC_INSTALL \
@@ -30,6 +48,7 @@ else
   echo "(voll: $out/drift.diff)"
   fail=1
 fi
+mark_lane control-sf-parity "$(grep -c '=>' "$out/tree.out" || true)" 99
 
 # ---- Second run: disk-macro route through lib/prelude-macros.lisp ----
 # Treewalk omits LISP65_EVAL_CONTROL_SF; cond/and/or/case come from preloaded defmacros.
@@ -53,6 +72,7 @@ else
   echo "(voll: $out/drift-macros.diff)"
   fail=1
 fi
+mark_lane disk-macro-parity "$(grep -c '=>' "$out/tree-macros.out" || true)" 99
 
 # ---- Third diff: case, macro route versus compiler; CONTROL_SF has no sf_case ----
 "$out/equivalence-nogate" tree tests/equivalence/forms-case.lisp --preload lib/prelude-macros.lisp > "$out/tree-case.out"
@@ -64,6 +84,7 @@ else
   grep '^[+-]' "$out/drift-case.diff" | grep -v '^[+-][+-]' | head -10
   fail=1
 fi
+mark_lane case-parity "$(grep -c '=>' "$out/tree-case.out" || true)" 6
 
 # ---- Macro-only sanity: broader disk-macro semantics not yet supported by the device compiler ----
 "$out/equivalence-nogate" tree tests/equivalence/forms-macros-only.lisp --preload lib/prelude-macros.lisp > "$out/tree-macros-only.out"
@@ -79,6 +100,8 @@ else
   grep '^[+-]' "$out/drift-macros-only.diff" | grep -v '^[+-][+-]' | head -10
   fail=1
 fi
+mark_lane macro-only-semantics \
+  "$(grep -c '=>' "$out/tree-macros-only.out" || true)" 3
 
 # ---- Fourth diff: lcc byte oracle ----
 # lib/lcc.lisp must emit bytes identical to the Python reference compiler.
@@ -89,6 +112,7 @@ else
   grep -A2 "DRIFT" "$out/lcc-oracle.out" | head -12
   fail=1
 fi
+mark_lane lcc-byte-oracle "$(grep -c '=> OK$' "$out/lcc-oracle.out" || true)" 100
 # ---- Quote-source parity: reader sugar through the product-emitter boundary ----
 # 'X and (quote X) are one language form.  Pin their reader normal form,
 # LCC/Python emission, and exact c2_session_emit_add input as one identity.
@@ -104,6 +128,24 @@ else
   tail -8 "$out/quote-emission-parity.out"
   fail=1
 fi
+mark_lane quote-emission-parity \
+  "$(jq -r '.cases | length' "$out/quote-emission-parity.json")" 5
+# ---- Product-shaped Session execution: emitter -> append -> C2D-v6 -> VM ----
+# Definitions must be separate persistent Session appends.  This permanently
+# rejects the historical direct REPL-store/installer shortcut and binds every
+# cross-entry symbolic literal to the exact canonical intern() SYMI identity.
+if python3 tools/host-lisp/c2_product_session_host.py \
+    --fixture tests/equivalence/c2-product-session-cross-entry.json \
+    --out "$out/c2-product-session-host" \
+    > "$out/c2-product-session-host.out" 2>&1; then
+  tail -1 "$out/c2-product-session-host.out"
+else
+  echo "equivalence-check: DRIFT (C2D-v6 Session-Ausfuehrung):"
+  tail -8 "$out/c2-product-session-host.out"
+  fail=1
+fi
+mark_lane c2d-v6-session-execution \
+  "$(jq -r '.cases | length' "$out/c2-product-session-host/result.json")" 2
 # ---- Fifth diff: execute lcc-compiled code ----
 # vm = C compiler reference; lcc = Lisp compiler -> bc_assemble -> vm_run. Diff results.
 "$out/equivalence-check" vm  tests/equivalence/lcc-run-forms.lisp > "$out/vm-run.out"
@@ -116,6 +158,7 @@ else
   grep '^[+-]' "$out/drift-lccrun.diff" | grep -v '^[+-][+-]' | head -16
   fail=1
 fi
+mark_lane lcc-execution-parity "$(grep -c '=>' "$out/lcc-run.out" || true)" 50
 # ---- Seventh diff: macros, tree versus lcc ----
 "$out/equivalence-nogate" tree tests/equivalence/lcc-macro-forms.lisp --preload lib/prelude-macros.lisp > "$out/tree-macro.out" 2>/dev/null
 "$out/equivalence-check" lcc  tests/equivalence/lcc-macro-forms.lisp --preload lib/lcc.lisp > "$out/lcc-macro.out"
@@ -127,6 +170,7 @@ else
   grep '^[+-]' "$out/drift-macro4.diff" | grep -v '^[+-][+-]' | head -14
   fail=1
 fi
+mark_lane macro-lcc-parity "$(grep -c '=>' "$out/lcc-macro.out" || true)" 25
 # ---- Eighth diff: P5 fixed point; lcc compiles itself ----
 # The corpus contains lcc's source and probes. One lane uses treewalk lcc; the other first
 # compiles lcc to bytecode. An empty diff proves lcc(lcc) == lcc.
@@ -142,6 +186,8 @@ else
   grep '^[+-]' "$out/drift-fixpoint.diff" | grep -v '^[+-][+-]' | head -14
   fail=1
 fi
+mark_lane lcc-fixed-point \
+  "$(grep -c 'lcc-compile-obj' tests/equivalence/lcc-fixpoint-probes.lisp || true)" 8
 # ---- Ninth diff: P6b lcc-first REPL; (lcc-run form) equals the C compiler ----
 # Wrapper echoes differ, so compare only value columns.
 grep -vE '^;|^$' tests/equivalence/lcc-run-forms.lisp | sed 's/.*/(lcc-run (quote &))/' > "$out/lccrepl.lisp"
@@ -156,4 +202,9 @@ else
   grep '^[+-]' "$out/drift-lccrepl.diff" | grep -v '^[+-][+-]' | head -12
   fail=1
 fi
-exit $fail
+mark_lane lcc-first-repl "$(grep -c . "$out/vals-lcc.txt" || true)" 50
+
+python3 tools/host-lisp/equivalence_completion_canary.py finalize \
+  --journal "$completion_journal" \
+  --receipt "$completion_receipt" \
+  --status "$fail"

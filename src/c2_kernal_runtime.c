@@ -14,6 +14,7 @@
 #include "c2-kernal-window.generated.h"
 
 #define C2K_SECTION __attribute__((noinline, section(".lisp65_c2_kernal_handoff")))
+#define C2K_BOOT_ONLY __attribute__((noinline, section(".text.c2_kernal_boot_only")))
 #define REG8(address) (*(volatile uint8_t *)(address))
 
 #define CIA1_ICR REG8(0xdc0d)
@@ -23,6 +24,9 @@
 #define VIC_D012 REG8(0xd012)
 #define VIC_D019 REG8(0xd019)
 #define VIC_D01A REG8(0xd01a)
+#define ETHERNET_IRQ REG8(0xd6e1)
+#define AUTOIEC_IRQ  REG8(0xd697)
+#define AUDIODMA_IRQ REG8(0xd713)
 
 #define C2K_FRAME_LO        REG8(LISP65_C2_FRAME_LO_ADDRESS)
 #define C2K_FRAME_HI        REG8(LISP65_C2_FRAME_HI_ADDRESS)
@@ -62,8 +66,11 @@ static C2K_SECTION void c2k_copy(uint32_t source, uint32_t target,
         ::: "a", "memory");
 }
 
-static C2K_SECTION uint16_t c2k_crc16(const volatile uint8_t *source,
-                                      uint16_t length) {
+/* This verifier is consumed exactly once while ownership is being acquired.
+ * Keep the fixed handoff for the code that must remain on its pinned facade;
+ * ordinary resident text is already owned when this boot-only body runs. */
+static C2K_BOOT_ONLY uint16_t c2k_crc16(
+        const volatile uint8_t *source, uint16_t length) {
     uint16_t crc = 0xffffu;
     while (length--) {
         uint8_t bit;
@@ -97,6 +104,19 @@ C2K_SECTION uint8_t c2_kernal_take_ownership(void) {
     CIA2_ICR = 0x7fu; (void)CIA2_ICR;
     VIC_D01A = 0u;
     VIC_D019 = 0xffu;
+
+    /* Raster is the sole product-owned IRQ.  Firmware/hypervisor state may
+     * leave these otherwise unrelated source families enabled, including
+     * Audio-DMA even when this product never uses it.  Mask every internal
+     * foreign source while SEI is still in force, then prove the enable
+     * fields read back disabled before publishing the owned vectors. */
+    ETHERNET_IRQ = 0u;
+    AUTOIEC_IRQ = 0xf0u;
+    AUDIODMA_IRQ = 0u;
+    if ((ETHERNET_IRQ & 0xc0u) != 0u
+        || (AUTOIEC_IRQ & 0x0fu) != 0u
+        || (AUDIODMA_IRQ & 0x0fu) != 0u)
+        return 0u;
 
     c2k_copy(C2_KERNAL_WINDOW_STAGE_PHYSICAL,
              C2_KERNAL_WINDOW_CPU_BASE, C2_KERNAL_WINDOW_BYTES);

@@ -1,0 +1,56 @@
+{
+  "ELF_truth": {
+    "append_call": "0x2515 JSR 0xe7e2 c2_append_begin",
+    "patched_call": "0x251a JSR 0xffd4 vm_runtime_overlay_transaction_end",
+    "saved_result": "0x2518 STA $18"
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 622512,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94"
+    },
+    "driver": {
+      "bytes": 9246,
+      "path": "tools/host-lisp/c2_defstruct_link71_pre_transaction_end_hold.py",
+      "sha256": "219140a6c423f5d3f1200dd94b170eff5ad3866783df36b54a3980795e98ebfe"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "source_deployment": {
+      "bytes": 7372,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/deployment.json",
+      "sha256": "080714bffaa3e3a50979a99532aec0df237d7a2bfeb4b79390398a16bf419384"
+    }
+  },
+  "claim_limit": "One nonpromotable Link-71 append/auth boundary attribution.",
+  "format": "lisp65-c2.2-Link71-pre-transaction-end-hold-v1",
+  "outcomes": {
+    "A_0_owner_0": "append itself returned false because its final owner release observed a prematurely cleared owner",
+    "A_1_owner_0_transaction_trusted": "append succeeded; transaction_end is the only remaining source of the later false result",
+    "owner_2": "append returned before its final scratch release; control flow differs from the bound ELF"
+  },
+  "patch": {
+    "PRG_file_offset": 1307,
+    "after": "7880fe",
+    "artifact": {
+      "address": "0x0000251a",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/pre-transaction-end-hold-NONPROMOTABLE/pre-transaction-end-hold.bin",
+      "sha256": "ecfd175f590d113b784e9d50c335e3d78701dcdf59166ae6e0f7e347e6ae7046"
+    },
+    "before": "20d4ff",
+    "deployed_product_bytes_delta": 0,
+    "late_RAM_bytes_changed": 3,
+    "product_file_bytes_delta": 0,
+    "runtime_address": "0x251a",
+    "semantics": "SEI once, then BRA to itself after c2_append_begin's result was stored at the live c2_product_append_staged frame offset $18 and before transaction_end."
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "status": "ready-authorized-nonpromotable-append-auth-discriminator"
+}

@@ -201,24 +201,23 @@ def validate_product_link(policy: dict) -> dict:
         != product_block.get("artifact_set_sha256")
         or full_reproducibility.get("artifact_set_sha256")
         != product_block.get("artifact_set_sha256")
-        or full_reproducibility.get("product_receipt_sha256")
-        != sha(current_receipt_path.read_bytes())
     ):
-        raise ProductCaseError("R3 current product receipt/reproducibility parity drift")
+        raise ProductCaseError("R3 historical product receipt/reproducibility parity drift")
     current_rows = [
         row for group in ("core", "libraries")
         for row in current_receipt.get("artifacts", {}).get(group, [])
     ]
     if len(current_rows) != 8:
-        raise ProductCaseError("R3 current core/library inventory drift")
+        raise ProductCaseError("R3 historical core/library inventory drift")
+    sealed_rows = full_reproducibility.get("product_artifacts", [])
     for row in current_rows:
-        path = ROOT / row["path"]
-        if (
-            path.is_symlink() or not path.is_file()
-            or path.stat().st_size != row["bytes"]
-            or sha(path.read_bytes()) != row["sha256"]
-        ):
-            raise ProductCaseError(f"R3 current product artifact drift: {row['path']}")
+        # R3 is immutable historical evidence.  Bind its receipt rows to the
+        # independently reproduced sealed inventory, not to mutable paths in
+        # today's C2-lite build tree.
+        if row not in sealed_rows:
+            raise ProductCaseError(
+                f"R3 historical product artifact drift: {row.get('path')}"
+            )
     return report
 
 

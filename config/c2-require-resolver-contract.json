@@ -1,0 +1,217 @@
+{
+  "format": "lisp65-c2-require-resolver-contract-v1",
+  "recorded_on": "2026-07-27",
+  "status": "class-C-product-shaped-WPLTO-probe-authorized",
+  "scope": {
+    "product_links": 0,
+    "hardware_runs": 0,
+    "promotable": false,
+    "baseline": "Link 67",
+    "first_red": [
+      "any bound wall crossing",
+      "any anchor or floor movement",
+      "any new Session catalog record",
+      "any L65I or C2D format widening",
+      "any second loaded-library registry"
+    ]
+  },
+  "surface": {
+    "form": "(require 'canonical-library-symbol)",
+    "success": "t",
+    "already_loaded": "t",
+    "failure": "nil with the innermost existing append or disk status preserved",
+    "autoload": false,
+    "unload": false
+  },
+  "index": {
+    "file_name": "L65INDEX",
+    "format": "L65I-v1",
+    "header_bytes": 32,
+    "row_bytes": 48,
+    "maximum_rows": 32,
+    "maximum_dependencies_per_row": 8,
+    "header": {
+      "magic": "L65I",
+      "version_byte": 1,
+      "record_count_byte": 8,
+      "record_bytes_u16": 9,
+      "records_crc16_ccitt_u16": 11,
+      "index_identity_crc32_u32": 13,
+      "header_crc16_ccitt_u16": 17,
+      "header_crc_coverage": "bytes 0..16",
+      "reserved_zero_bytes": "19..31"
+    },
+    "row": {
+      "name_ascii_zero_padded": "0..15",
+      "artifact_track": 16,
+      "artifact_sector": 17,
+      "c2_combined_crc32": "18..21",
+      "dependency_count": 22,
+      "dependency_ordinals_ff_padded": "23..30",
+      "execution_source": 31,
+      "artifact_bytes_u16": "32..33",
+      "bank2_code_delta_u16": "34..35",
+      "image_delta_u8": 36,
+      "entry_delta_u16": "37..38",
+      "resolution_delta_u16": "39..40",
+      "root_delta_u16": "41..42",
+      "append_scratch_delta_u16": "43..44",
+      "row_crc16_ccitt_u16": "45..46",
+      "row_crc_coverage": "bytes 0..44",
+      "reserved_zero": 47
+    },
+    "records_crc_coverage": "all complete 48-byte rows including row CRC and reserved byte",
+    "identity_rule": "index_identity_crc32 is CRC32 over the complete row bytes",
+    "one_emitter": true,
+    "data_never_evaluated": true,
+    "unknown_versions_or_execution_sources": "fail closed"
+  },
+  "loaded_truth": {
+    "registry": "forbidden",
+    "authority": "generation-bound persistent C2D-v6 image rows",
+    "key": [
+      "current nonzero generation",
+      "canonical L65S-v4 combined CRC32 at C2D row bytes 28..31"
+    ],
+    "static_prefix": "the six immutable product images are not library identities",
+    "same_name_different_identity": "fail closed through index lock plus exact active-index universe equality",
+    "index_lock": "records CRC16 plus index identity, stored only as generation-lifetime Lisp orchestration state",
+    "active_universe": "Bank-2 Lisp first proves the six immutable C2D image rows and derives their contiguous Bank-2 end, then walks every persistent C2D image row, rejects duplicate or foreign combined identities, proves contiguous Bank-2 code coordinates from that derived static end, and derives idempotence from the same rows; no shadow loaded list or private static-size constant is materialized"
+  },
+  "idempotence_fastpath": {
+    "position": "before L65I parsing",
+    "authority": "generation-bound persistent C2D-v6 image rows plus the already established canonical L65I index lock",
+    "cache": "one-entry non-authoritative resolution hint containing library symbol, canonical index lock, target identity, exact post-publication C2D state values and the complete ordered persistent identity sequence",
+    "loaded_registry": false,
+    "hit_requirements": [
+      "same canonical library symbol",
+      "same non-NIL canonical index lock",
+      "same generation, image count, entry count, resolution count, root count and transient watermark",
+      "same complete ordered persistent C2D identity sequence"
+    ],
+    "mismatch": "fall through to the unchanged L65I parser, full world proof and resolver; the cache never decides failure and never marks a library loaded",
+    "cache_binding": "only after successful publication, a second full world proof and a current-C2D proof of the requested identity",
+    "immutable_proof_reuse": "header shape/caps/layout, static prefix, active layout and transient fronts are proved on the slow path before cache publication. Between serialized top-level operations no legal product writer can mutate those fields without changing the fast-path generation/count/front discriminators; a permanent no-writer gate is required before promotion.",
+    "host_success_criteria": {
+      "repeat_vm_step_reduction_min_percent": 90,
+      "repeat_prim67_read_reduction_min_percent": 90,
+      "bank2_delta_max_bytes": 512,
+      "resident_delta_bytes": 0
+    },
+    "measured_candidate": {
+      "bank2_delta_bytes": 462,
+      "resident_delta_bytes": 0,
+      "baseline_repeat_vm_steps": 134788,
+      "candidate_repeat_vm_steps": 2750,
+      "vm_step_reduction_percent": 97.96,
+      "baseline_repeat_prim67_reads": 384,
+      "candidate_repeat_prim67_reads": 26,
+      "prim67_read_reduction_percent": 93.23
+    }
+  },
+  "private_c2d_primitive": {
+    "name": "%c2d-byte",
+    "prim_id": 67,
+    "abi_policy": "append-only dialect-v2 identity; private internal carrier, excluded from apply and function-kind",
+    "arguments": "(lo hi), each a strict Fixnum in 0..255",
+    "argument_validation": "consume the one resident vm_byte_args(a,n,2) validator; after that proof, the selected eighth non-LTO leaf owns only address construction, bound, read and typed result",
+    "address": "lo | (hi << 8)",
+    "published_range": "0..33839; 33840 and above fail closed",
+    "operation": "read exactly one byte through the existing resident c2_stream_c2d_read and return a Fixnum",
+    "read_length_encoding": "length is exactly 0x0001. The preferred independent LDA #0 / STA __rc5 form measured two bytes too large for the immutable 54-byte E000 floor; the accepted fallback is the adjacent LDZ #0 / STZ __rc5 pair, whose Z=0 dominance is proved by the global 45GS02 STZ gate.",
+    "string_protocol": false,
+    "query_context": false,
+    "overlay_roundtrip": false,
+    "write_capability": false,
+    "decisions_forbidden": [
+      "identity scan",
+      "dependency ordering",
+      "active-count or active-universe decision",
+      "transient-front derivation",
+      "Bank-2-front derivation",
+      "capacity decision"
+    ],
+    "ordinary_name_behavior": "static six-image lookup remains byte-for-byte equivalent",
+    "owner": "CALLPRIM case 67 consumes vm_byte_args once, then delegates once to the named, sized non-LTO vm_c2d_byte leaf; the leaf uses the existing resident C2D reader",
+    "new_session_records": 0,
+    "new_resident_state": 0
+  },
+  "capacity": {
+    "currencies": [
+      "Bank-2 persistent/transient exact meet",
+      "C2D image rows against transient depth",
+      "C2D entries against the transient high edge",
+      "C2D resolutions against the transient high edge",
+      "C2D roots against the transient high edge",
+      "append scratch below 0xbd00"
+    ],
+    "preflight": "Bank-2 Lisp derives persistent and transient fronts from authenticated C2D rows and closes the aggregate dependency plan in every currency before the first append",
+    "wide_arithmetic": "u16 low/high pairs in Lisp, including the explicit 65536 upper edge represented as (0 . 256)",
+    "persistent_bank2_edge": "derive the canonical static-plane end from C2D slots 0..5, require each persistent image row to begin at the preceding edge and to carry the exact L65I-measured code length, then advance by that length",
+    "transient_bank2_edge": "walk source-kind-2 image rows from slot 63 downward and require each code base plus length to equal the preceding high edge",
+    "stage_recheck": "the existing append transaction repeats authoritative bounds before mutation"
+  },
+  "ordering": {
+    "dependency_order": "declared order, depth-first, each library at most once",
+    "cycle": "fail closed before mutation",
+    "artifact_path": "D81 track/sector chain staged by the existing cold disk path",
+    "append_path": "c2_product_append_staged",
+    "publication": "existing C2J, target verification and publish-last path",
+    "idempotence": "derive from C2D after successful publication; never mark before publication"
+  },
+  "placement": {
+    "lisp_resolver": "Bank-2 static code plane",
+    "native_resolver": "one private %c2d-byte CALLPRIM case and its eighth non-LTO vm_c2d_byte leaf in the existing reopen_gap1 window pocket; no native resolver, string command, query context or overlay roundtrip remains",
+    "resident_delta_bytes": "measured by WPLTO against Link 67; no wall, floor or anchor may move",
+    "new_session_catalog_records": 0,
+    "slice_cap_bytes": 1792,
+    "link67_resident_headroom": {
+      "bank0_text": 90,
+      "e000": 151,
+      "fixed_hot": 2,
+      "ordinary_bss": 137,
+      "island": 69
+    },
+    "profile_rodata": "append-only Prim-ID 67 expands only the canonical CALLPRIM table from 164 to 166 bytes; total immutable profile data is 344 bytes under the named require-resolver geometry selector"
+  },
+  "required_gates": [
+    "real L65S-v4 combined CRCs, not SHA-derived surrogates",
+    "binary L65I header, row and aggregate CRC validation",
+    "dependency order and generation-scoped idempotence",
+    "parser-free idempotence path reduces both repeat VM steps and Prim-67 reads by at least 90 percent, stays within 512 Bank-2 bytes and adds zero resident bytes",
+    "foreign persistent identity, wrong generation, wrong index lock, stale cache and different library all fall through to the full parser/resolver path",
+    "one-entry idempotence cache is proved non-authoritative and no loaded-library registry exists",
+    "ELF/source no-writer proof closes reuse of immutable C2D header/static/layout proofs between serialized top-level operations",
+    "same-name/different-identity and stale-index rejection",
+    "all six independent capacity currencies, exact meet and one-byte overflow",
+    "twelve append cutpoints replayed against the Bank-2 orchestration contract",
+    "thirty-eight resolver mutations replayed against the Bank-2 orchestration contract",
+    "no new loaded registry",
+    "no private static Bank-2 size constant in the Lisp resolver",
+    "no runtime Attic execution edge",
+    "ABI-ledger, native-registry and compiler parity for append-only Prim-ID 67",
+    "ELF dataflow proof that case 67 bounds the published C2D plane, calls c2_stream_c2d_read once for one byte and returns a Fixnum",
+    "ELF-derived assembler inventory and ABI policy for vm_c2d_byte, including C caller, reader edge, named size and Z=0 returns",
+    "source proof that vm_c2d_byte materializes the one-byte read length as 0x0001 through an adjacent LDZ #0 / STZ pair, with a nonzero-Z regression mutation",
+    "global 45GS02 STZ Z-dominance proof over all handwritten src/scripts assembler, including C inline assembler, arbitrary-Z hardware interrupt entries and per-site INZ/LDZ #1 mutations",
+    "ELF/source absence of the retired string/query/overlay protocol",
+    "native ELF absence of identity, transient-front, Bank-2-front and capacity decisions",
+    "Session record count unchanged",
+    "all Link-67 walls nonnegative with floors and anchors unchanged; resident delta reported, never assumed"
+  ],
+  "authorized_successor_after_first_red": {
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-resolver-wplto-first-red.json",
+    "measured_native_query_bytes": 3491,
+    "decision": "Option 3 successor: Bank-2 Lisp orchestration with private %c2d-byte(lo,hi) Prim-ID 67",
+    "rejected": {
+      "non_lto_native_compression": "would preserve orchestration in the wrong language",
+      "semantic_native_split": "would preserve the wrong temperature/distribution across more records"
+    },
+    "measurement": "the successor WPLTO reports Bank-2 delta and linked resident primitive delta separately before any product link or hardware run",
+    "private_primitive_first_red_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-require-resolver-private-c2d-byte-wplto-first-red.json",
+    "private_primitive_measurement": "the hand-expanded C case added 252 bytes in vm_callprim and 256 resident text bytes in total",
+    "approved_consolidation": "consume the existing resident vm_byte_args(a,n,2) validator once; retain only address construction, published-plane bound, one-byte read and typed result in case 67",
+    "success_criterion": "total resident .text growth against Link 67 is at most 58 bytes, preserving at least 32 bytes of the measured 90-byte text headroom",
+    "automatic_fallback": "selected: the one-validator C form measured +168 resident text bytes and missed the 58-byte ceiling; vm_c2d_byte is therefore the eighth non-LTO assembler leaf under the ELF-derived ABI gate, with no further C-form iteration"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "format": "lisp65-c2-top-level-published-value-call-contract-v1",
+  "recorded_on": "2026-07-27",
+  "scope": "F1 n-ary published direct call",
+  "baseline": {
+    "release": "v1.2.0",
+    "healed_path": "published nullary bytecode direct call",
+    "measured_open_case": "published calls with one or more arguments paid the full compile/append ceremony"
+  },
+  "direct_path": {
+    "outer_shape": "proper call list with a symbol operator",
+    "operator_requirement": "function-kind(operator) == bytecode",
+    "argument_forms": [
+      "fixnum",
+      "string",
+      "nil",
+      "t",
+      "exact unary quote"
+    ],
+    "argument_conversion": "self-evaluating values pass unchanged; exact unary quote contributes its quoted object",
+    "action": "nullary retains funcall; n-ary uses apply with the proven value list",
+    "transaction_effect": "none",
+    "generation_binding": "function-kind and funcall/apply consume the current published function cell"
+  },
+  "arity_authority": {
+    "source": "the published CodeObject header consumed by vm_arity_accepts",
+    "fixed_arity": "eligible",
+    "optional_arity": "eligible when the value-form guard passes",
+    "rest_arity": "eligible when the value-form guard passes",
+    "wrong_arity": "the VM rejects it through the ordinary arity status",
+    "reason": "a Lisp-side fixed/rest registry would be a second metadata truth and would not cover session-created entries"
+  },
+  "mandatory_fallbacks": [
+    "defun",
+    "defmacro",
+    "macro calls",
+    "primitive calls",
+    "undefined operators",
+    "special forms",
+    "argument variables other than nil and t",
+    "nested argument calls",
+    "non-quote compound argument forms",
+    "malformed quote forms",
+    "improper outer call lists",
+    "every atom"
+  ],
+  "safety": {
+    "compiler_path": "the historical %c2-compile-form -> lcc-install branch remains the only fallback",
+    "argument_semantics": "the direct path is allowed only where argument evaluation is observationally identical to value extraction",
+    "error_path": "funcall/apply retain VM strict-arity and inner-status-wins handling",
+    "new_resident_state_bytes": 0,
+    "new_transaction_state_bytes": 0,
+    "new_roots": 0,
+    "performance_claim": "none before S1 hardware measurement"
+  },
+  "required_fixtures": [
+    "published nullary bytecode call retains the established direct path",
+    "published fixed-arity call with fixnum values bypasses compile/install",
+    "published call with exact quote values bypasses compile/install and is byte-equivalent to compiled evaluation",
+    "optional and rest CodeObject arity remain governed by the VM",
+    "wrong arity reaches the VM arity rejection without compiling a wrapper",
+    "variable and nested-call arguments reach %c2-compile-form",
+    "primitive, macro, undefined, special and malformed forms reach %c2-compile-form",
+    "direct and compiled paths agree for every admitted value class"
+  ],
+  "prohibitions": [
+    "no direct evaluation of variables or nested forms",
+    "no private arity table or cached function identity",
+    "no primitive or macro direct path",
+    "no weakening of CRC, wipe, journal, rollback or publish-last contracts",
+    "no hardware claim before the bundled S1 session"
+  ]
+}

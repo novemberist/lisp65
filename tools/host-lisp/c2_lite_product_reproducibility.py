@@ -28,6 +28,9 @@ BUILD_COMMANDS = (
     ("python3", "tools/host-lisp/c2_lite_canonical_product.py", "build"),
     ("python3", "tools/host-lisp/c2_lite_media_product.py", "build"),
 )
+MEDIA_MANIFEST_RELATIVE = Path(
+    "build/c2.2/canonical-media/candidate-manifest.json")
+MEDIA_MANIFEST_FORMAT = "lisp65-c2-lite-canonical-media-product-v1"
 AXES = (
     {
         "id": "fresh-clone-seed-23-pago-pago-2002",
@@ -227,12 +230,10 @@ def build_one(parent: Path, commit: str,
             label=f"{axis['id']} build step {index}")
         for index, command in enumerate(BUILD_COMMANDS, 1)
     ]
-    manifest_path = checkout / (
-        "build/c2.2/canonical-media/candidate-manifest.json")
+    manifest_path = checkout / MEDIA_MANIFEST_RELATIVE
     manifest = load(manifest_path, "fresh C2-lite media manifest")
     require(
-        manifest.get("format")
-            == "lisp65-c2-lite-canonical-media-product-v1"
+        manifest.get("format") == MEDIA_MANIFEST_FORMAT
         and manifest.get("status")
             == "passed-complete-C2-lite-two-media-product"
         and manifest.get("artifact_count") == 19
@@ -382,8 +383,7 @@ def validate(value: dict[str, Any]) -> None:
     require(
         isinstance(generator, dict)
         and set(generator) == {"path", "bytes", "sha256"}
-        and generator["path"]
-            == "tools/host-lisp/c2_lite_product_reproducibility.py"
+        and generator["path"] == GENERATOR.relative_to(ROOT).as_posix()
         and type(generator["bytes"]) is int and generator["bytes"] > 0,
         "C2-lite reproducibility generator binding drift")
     lower_sha(generator["sha256"], "generator.sha256")
@@ -496,7 +496,7 @@ def selftest() -> None:
         "measured_on": "2026-07-26",
         "source_commit": "0" * 40,
         "generator": {
-            "path": "tools/host-lisp/c2_lite_product_reproducibility.py",
+            "path": GENERATOR.relative_to(ROOT).as_posix(),
             "bytes": 1, "sha256": "b" * 64,
         },
         "variation_axes": [

@@ -14,6 +14,7 @@ import tempfile
 from typing import Any, Callable
 
 import block_bank_delta_policy as BANK_DELTA
+import history_transport_rewrite as TRANSPORT
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -72,8 +73,9 @@ def strings(value: Any, label: str) -> list[str]:
 def commit(value: Any, label: str) -> str:
     if not isinstance(value, str) or len(value) != 40 or any(c not in "0123456789abcdef" for c in value):
         raise ContractError(f"{label} is not a full commit id")
+    resolved = TRANSPORT.resolve_commit(value)
     result = subprocess.run(
-        ["git", "cat-file", "-e", f"{value}^{{commit}}"], cwd=ROOT,
+        ["git", "cat-file", "-e", f"{resolved}^{{commit}}"], cwd=ROOT,
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
     if result.returncode:

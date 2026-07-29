@@ -343,10 +343,14 @@ if [ "$expect_poll_sec" -gt 0 ]; then
       capture_screen "$prefix"
       capture_ready=1
       if python3 tools/host-lisp/repl_screen_check.py \
-          --screen "$captured_text" --forms "$forms_tmp" \
+          --screen "$captured_text" --image "$captured_shot" \
+          --forms "$forms_tmp" \
           --expect "$expect" >/dev/null 2>&1; then
         break
+      else
+        poll_status=$?
       fi
+      [ "$poll_status" -eq 7 ] && break
       [ "$(date +%s)" -lt "$deadline" ] || break
       sleep 1
     done
@@ -369,7 +373,8 @@ if [ -n "$expect" ]; then
   if [ "$dry_run" = "1" ]; then
     echo "DRY-RUN: python3 tools/host-lisp/repl_screen_check.py --screen $text --forms $forms_tmp --expect '$expect'"
   elif python3 tools/host-lisp/repl_screen_check.py \
-      --screen "$text" --forms "$forms_tmp" --expect "$expect"; then
+      --screen "$text" --image "$shot" \
+      --forms "$forms_tmp" --expect "$expect"; then
     echo "PASS letztes REPL-Resultat: $expect"
   else
     check_status=$?

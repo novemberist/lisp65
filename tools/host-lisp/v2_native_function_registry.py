@@ -241,7 +241,7 @@ def validate(registry: dict, ledger: dict) -> dict:
         if "compile-repl" not in set(restricted.get(name, {}).get("restricted_views", []))
     }
     lcc_rows = _lcc_rows((ROOT / "lib" / "dialect-v2" / "lcc-profile.lisp").read_text(encoding="utf-8"))
-    if {name: ident for name, ident in lcc_rows.items() if ident in active} != compile_repl:
+    if {name: ident for name, ident in lcc_rows.items() if name in all_active} != compile_repl:
         raise RegistryError("LCC CALLPRIM view drift")
     eval_rows = _eval_primitive_rows((ROOT / "src" / "eval.c").read_text(encoding="utf-8"))
     expected_eval_rows = {row["name"]: row["tree_id"] for row in entries}
@@ -333,11 +333,14 @@ def header_text(registry: dict, state: dict) -> str:
 
 def python_views_text(state: dict) -> str:
     active = sorted(state["active"].items(), key=lambda item: item[1])
+    compile_repl = sorted(
+        state["compile_repl"].items(), key=lambda item: item[1])
     designators = sorted(state["callprim"].values())
     restrictions = {name: row["reason"] for name, row in sorted(state["restricted"].items())}
     return (
         '"""Generated primitive-view inventory; do not edit."""\n\n'
         f"ACTIVE_CALLPRIMS = {dict(active)!r}\n"
+        f"COMPILE_REPL_CALLPRIMS = {dict(compile_repl)!r}\n"
         f"FUNCTION_DESIGNATOR_IDS = frozenset({designators!r})\n"
         f"RESTRICTION_REASONS = {restrictions!r}\n"
     )

@@ -77,14 +77,54 @@ PROFILE_RODATA_BASE = 0xFD12
 SEALED_V2_PROFILE_PARITY_IDENTITY: str | None = None
 C2_LITE_HYBRID_E000_FLOOR_BYTES = 54
 C2_LITE_HYBRID_PROFILE_RODATA_BASE = 0xFD2C
-LINK60_VERIFIER_BINDING_BASE = 0xB972
+# Current post-promotion product geometry.  Historical Link-60/66 replay
+# drivers retain their own $B972 authority; new product-shaped WPLTO consumes
+# this one current pin.
+LINK60_VERIFIER_BINDING_BASE = 0xB98A
 VERIFIER_BINDING_SECTION = ".lisp65_runtime_overlay_verifier_bindings"
 VERIFIER_BINDING_BYTES = 32
+
+
+def configure_require_resolver_profile_geometry() -> None:
+    """Bind the append-only Prim-ID 67 table growth before linker rendering.
+
+    The complete-profile CALLPRIM table carries one uint16 entry per active
+    identity.  Activating private Prim-ID 67 therefore changes only that
+    canonical table from 164 to 166 bytes.  This named selector keeps the
+    released Link-67 geometry as the module default and forbids an arbitrary
+    caller-selected profile width.
+    """
+    global PROFILE_RODATA_BYTES
+    if (PROFILE_RODATA_INPUT_SECTIONS[".rodata.eval_v2_workbench_service"] != 32
+            or PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_callprim"] != 164
+            or PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_native_call"] != 146):
+        raise ValueError("require-resolver profile selector order drift")
+    PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_callprim"] = 166
+    PROFILE_RODATA_BYTES = sum(PROFILE_RODATA_INPUT_SECTIONS.values())
+
+
+def configure_defstruct_foundation_profile_geometry() -> None:
+    """Bind public Prim-ID 68 after the require-resolver geometry selector.
+
+    `intern` is public in both the CALLPRIM dispatch table and the native
+    function-designator table.  Each canonical surface therefore gains one
+    uint16 row.  The selector is deliberately order-sensitive: a product
+    carrying the defstruct foundations must first select the accepted
+    Prim-ID-67 geometry and may then append exactly these two bound rows.
+    """
+    global PROFILE_RODATA_BYTES
+    if (PROFILE_RODATA_INPUT_SECTIONS[".rodata.eval_v2_workbench_service"] != 32
+            or PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_callprim"] != 166
+            or PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_native_call"] != 146):
+        raise ValueError("defstruct-foundation profile selector order drift")
+    PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_callprim"] = 168
+    PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_native_call"] = 148
+    PROFILE_RODATA_BYTES = sum(PROFILE_RODATA_INPUT_SECTIONS.values())
 FAMILY_STAGE_BINDINGS = False
 FAMILY_STAGE_BINDING_BYTES = 8
 VERIFIER_BINDING_BASE = 0xB954
-KERNAL_CRC_BINDING_HIGH_ADDRESS = 0xB4CC
-KERNAL_CRC_BINDING_LOW_ADDRESS = 0xB4D0
+KERNAL_CRC_BINDING_HIGH_ADDRESS = 0xB4F4
+KERNAL_CRC_BINDING_LOW_ADDRESS = 0xB4FA
 KERNAL_CRC_BINDING_BYTES = 2
 TOTAL_PUBLISH_LAST_BYTES = VERIFIER_BINDING_BYTES + KERNAL_CRC_BINDING_BYTES
 KERNAL_CRC_BINDING_SENTINEL = 0xA55A
@@ -258,11 +298,25 @@ BOOT_ISLAND_CARRIER_SLOT = BOOT_ISLAND_SLOT + 1
 SESSION_EMITTER_SLOT_BASE = 2 + len(SESSION_DECODER_SLICES)
 SESSION_APPEND_SLOT_BASE = SESSION_EMITTER_SLOT_BASE + len(C2_EMITTER_SLICES)
 SESSION_SERVICE_SLOT_BASE = SESSION_APPEND_SLOT_BASE + len(C2_APPEND_SLICES)
+INTERN_SESSION_SERVICE = False
 
 VERIFIER_SPECS = [
     "0:catalog-verifier:.lisp65_rt_rtov_catalog:__lisp65_rt_rtov_catalog_start:__lisp65_rt_rtov_catalog_end:__lisp65_rt_rtov_catalog_entry:runtime+reusable:1:0:vm_runtime_overlay_catalog_verifier",
     "1:record-verifier:.lisp65_rt_rtov_record:__lisp65_rt_rtov_record_start:__lisp65_rt_rtov_record_end:__lisp65_rt_rtov_record_entry:runtime+reusable:1:0:vm_runtime_overlay_record_verifier",
 ]
+
+
+def session_service_specs() -> list[str]:
+    rows = [
+        f"{SESSION_SERVICE_SLOT_BASE}:error-text-renderer:.lisp65_rt_l65e:__lisp65_rt_l65e_start:__lisp65_rt_l65e_end:__lisp65_rt_l65e_entry:runtime+reusable:1:0:lisp65_error_overlay_entry",
+        f"{SESSION_SERVICE_SLOT_BASE + 1}:first-class-buffer-read:.lisp65_rt_buffer_read:__lisp65_rt_buffer_read_start:__lisp65_rt_buffer_read_end:__lisp65_rt_buffer_read_entry:runtime+reusable:1:0:lisp65_buffer_overlay_read_entry",
+        f"{SESSION_SERVICE_SLOT_BASE + 2}:first-class-buffer-write:.lisp65_rt_buffer_write:__lisp65_rt_buffer_write_start:__lisp65_rt_buffer_write_end:__lisp65_rt_buffer_write_entry:runtime+reusable:1:0:lisp65_buffer_overlay_write_entry",
+        f"{SESSION_SERVICE_SLOT_BASE + 3}:first-class-buffer-alloc:.lisp65_rt_buffer_alloc:__lisp65_rt_buffer_alloc_start:__lisp65_rt_buffer_alloc_end:__lisp65_rt_buffer_alloc_entry:runtime+reusable:1:0:lisp65_buffer_overlay_alloc_entry",
+    ]
+    if INTERN_SESSION_SERVICE:
+        rows.append(
+            f"{SESSION_SERVICE_SLOT_BASE + 4}:intern-session-service:.lisp65_rt_intern_service:__lisp65_rt_intern_service_start:__lisp65_rt_intern_service_end:__lisp65_rt_intern_service_entry:runtime+reusable:1:0:lisp65_intern_service_entry")
+    return rows
 
 
 def checked_public_projection(names: list[str]) -> dict[str, str]:
@@ -312,15 +366,11 @@ SESSION_SLICE_SPECS = VERIFIER_SPECS + [
 ] + [
     f"{SESSION_APPEND_SLOT_BASE + index}:c2-append-{APPEND_PUBLIC_NAMES[name]}:.lisp65_rt_c2append_{name}:__lisp65_rt_c2append_{name}_start:__lisp65_rt_c2append_{name}_end:__lisp65_rt_c2append_{name}_entry:runtime+reusable:1:0:{entry}{session_region_suffix(name)}"
     for index, (name, entry) in enumerate(C2_APPEND_SLICES)
-] + [
-    f"{SESSION_SERVICE_SLOT_BASE}:error-text-renderer:.lisp65_rt_l65e:__lisp65_rt_l65e_start:__lisp65_rt_l65e_end:__lisp65_rt_l65e_entry:runtime+reusable:1:0:lisp65_error_overlay_entry",
-    f"{SESSION_SERVICE_SLOT_BASE + 1}:first-class-buffer-read:.lisp65_rt_buffer_read:__lisp65_rt_buffer_read_start:__lisp65_rt_buffer_read_end:__lisp65_rt_buffer_read_entry:runtime+reusable:1:0:lisp65_buffer_overlay_read_entry",
-    f"{SESSION_SERVICE_SLOT_BASE + 2}:first-class-buffer-write:.lisp65_rt_buffer_write:__lisp65_rt_buffer_write_start:__lisp65_rt_buffer_write_end:__lisp65_rt_buffer_write_entry:runtime+reusable:1:0:lisp65_buffer_overlay_write_entry",
-    f"{SESSION_SERVICE_SLOT_BASE + 3}:first-class-buffer-alloc:.lisp65_rt_buffer_alloc:__lisp65_rt_buffer_alloc_start:__lisp65_rt_buffer_alloc_end:__lisp65_rt_buffer_alloc_entry:runtime+reusable:1:0:lisp65_buffer_overlay_alloc_entry",
-]
+] + session_service_specs()
 
 UNIQUE_SLICE_COUNT = (2 + len(C2_DECODER_SLICES) + len(C2_EMITTER_SLICES)
-                      + len(C2_APPEND_SLICES) + 5)
+                      + len(C2_APPEND_SLICES) + 5
+                      + (1 if INTERN_SESSION_SERVICE else 0))
 
 
 def assert_unique_public_specs() -> None:
@@ -360,16 +410,21 @@ def configure_append_slices(slices: list[tuple[str, str]]) -> None:
     ] + [
         f"{SESSION_APPEND_SLOT_BASE + index}:c2-append-{APPEND_PUBLIC_NAMES[name]}:.lisp65_rt_c2append_{name}:__lisp65_rt_c2append_{name}_start:__lisp65_rt_c2append_{name}_end:__lisp65_rt_c2append_{name}_entry:runtime+reusable:1:0:{entry}{session_region_suffix(name)}"
         for index, (name, entry) in enumerate(C2_APPEND_SLICES)
-    ] + [
-        f"{SESSION_SERVICE_SLOT_BASE}:error-text-renderer:.lisp65_rt_l65e:__lisp65_rt_l65e_start:__lisp65_rt_l65e_end:__lisp65_rt_l65e_entry:runtime+reusable:1:0:lisp65_error_overlay_entry",
-        f"{SESSION_SERVICE_SLOT_BASE + 1}:first-class-buffer-read:.lisp65_rt_buffer_read:__lisp65_rt_buffer_read_start:__lisp65_rt_buffer_read_end:__lisp65_rt_buffer_read_entry:runtime+reusable:1:0:lisp65_buffer_overlay_read_entry",
-        f"{SESSION_SERVICE_SLOT_BASE + 2}:first-class-buffer-write:.lisp65_rt_buffer_write:__lisp65_rt_buffer_write_start:__lisp65_rt_buffer_write_end:__lisp65_rt_buffer_write_entry:runtime+reusable:1:0:lisp65_buffer_overlay_write_entry",
-        f"{SESSION_SERVICE_SLOT_BASE + 3}:first-class-buffer-alloc:.lisp65_rt_buffer_alloc:__lisp65_rt_buffer_alloc_start:__lisp65_rt_buffer_alloc_end:__lisp65_rt_buffer_alloc_entry:runtime+reusable:1:0:lisp65_buffer_overlay_alloc_entry",
-    ]
+    ] + session_service_specs()
     UNIQUE_SLICE_COUNT = (2 + len(C2_DECODER_SLICES)
                           + len(C2_EMITTER_SLICES)
-                          + len(C2_APPEND_SLICES) + 5)
+                          + len(C2_APPEND_SLICES) + 5
+                          + (1 if INTERN_SESSION_SERVICE else 0))
     assert_unique_public_specs()
+
+
+def configure_intern_session_service() -> None:
+    """Add the stateless, on-demand Session service exactly once."""
+    global INTERN_SESSION_SERVICE
+    if INTERN_SESSION_SERVICE:
+        return
+    INTERN_SESSION_SERVICE = True
+    configure_append_slices(list(C2_APPEND_SLICES))
 
 
 def configure_runtime_overlay_v4(region1_names: set[str]) -> None:
@@ -436,7 +491,8 @@ def configure_bank3_staging_slices() -> None:
     ]
     UNIQUE_SLICE_COUNT = (2 + len(C2_DECODER_SLICES)
                           + len(C2_EMITTER_SLICES)
-                          + len(C2_APPEND_SLICES) + 6)
+                          + len(C2_APPEND_SLICES) + 6
+                          + (1 if INTERN_SESSION_SERVICE else 0))
     assert_unique_public_specs()
 
 
@@ -886,18 +942,44 @@ def _kernal_crc_binding_locations(elf: Path) -> dict[str, int]:
         raise RuntimeError("KERNAL CRC binding ownership function is not unique")
     records = _machine_instruction_records(ownership[0]["lines"])
     candidates: list[tuple[dict[str, object], dict[str, object]]] = []
-    for index in range(len(records) - 3):
-        first, branch_a, second, branch_b = records[index:index + 4]
-        if (first["mnemonic"] == "cpx" and branch_a["mnemonic"] == "bne"
-                and second["mnemonic"] == "cmp"
+    for call_index in range(len(records) - 4):
+        call = records[call_index]
+        if (call["mnemonic"] != "jsr"
+                or "c2k_crc16" not in str(call["operand"])):
+            continue
+        first = records[call_index + 1]
+        branch_a = records[call_index + 2]
+        if not (
+            first["mnemonic"] == "cpx"
+            and branch_a["mnemonic"] == "bne"
+            and first["encoding"][0] == 0xE0
+            and len(first["encoding"]) == 2
+            and re.fullmatch(r"#\$[0-9a-f]{1,2}", str(first["operand"]))
+        ):
+            continue
+        # llvm-mos may normalize the C boolean result register between the
+        # high- and low-byte comparisons.  Bind the two immediate operands
+        # to the unique c2k_crc16 call rather than requiring adjacency.
+        for second_index in range(call_index + 3,
+                                  min(call_index + 6, len(records) - 1)):
+            second = records[second_index]
+            branch_b = records[second_index + 1]
+            middle = records[call_index + 3:second_index]
+            if (
+                second["mnemonic"] == "cmp"
                 and branch_b["mnemonic"] == "bne"
-                and first["encoding"][0] == 0xE0
                 and second["encoding"][0] == 0xC9
-                and len(first["encoding"]) == 2
                 and len(second["encoding"]) == 2
-                and re.fullmatch(r"#\$[0-9a-f]{1,2}", str(first["operand"]))
-                and re.fullmatch(r"#\$[0-9a-f]{1,2}", str(second["operand"]))):
-            candidates.append((first, second))
+                and re.fullmatch(
+                    r"#\$[0-9a-f]{1,2}", str(second["operand"]))
+                and all(
+                    row["mnemonic"] in {"lda", "ldx", "ldy"}
+                    and re.fullmatch(
+                        r"#\$[0-9a-f]{1,2}", str(row["operand"]))
+                    for row in middle
+                )
+            ):
+                candidates.append((first, second))
     if len(candidates) != 1:
         raise RuntimeError(
             f"KERNAL CRC binding compare sequence count is {len(candidates)}, expected 1")
@@ -1107,16 +1189,23 @@ def linker_script() -> str:
         "        .lisp65_rt_buffer_write { KEEP(*(.lisp65_rt_buffer_write)) }",
         "        .lisp65_rt_buffer_alloc { KEEP(*(.lisp65_rt_buffer_alloc)) }",
     ])
+    if INTERN_SESSION_SERVICE:
+        sections.append(
+            "        .lisp65_rt_intern_service { KEEP(*(.lisp65_rt_intern_service)) }")
     new_overlay = (
         "    OVERLAY __lisp65_workbench_runtime_overlay_vma : NOCROSSREFS "
         "AT(ORIGIN(c2_runtime_load)) {\n"
         + "\n".join(sections) + "\n"
     )
     text = replace_region(text, overlay_start, overlay_end, new_overlay)
+    final_runtime_section = (
+        ".lisp65_rt_intern_service"
+        if INTERN_SESSION_SERVICE else ".lisp65_rt_buffer_alloc")
     text = re.sub(
         r"__lisp65_resident_island_seed_lma =\n\s+ALIGN\(LOADADDR\(\.lisp65_rt_c1_compiler\) \+ SIZEOF\(\.lisp65_rt_c1_compiler\), 0x100\);",
         "__lisp65_resident_island_seed_lma =\n"
-        "    ALIGN(LOADADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc), 0x100);",
+        f"    ALIGN(LOADADDR({final_runtime_section}) + "
+        f"SIZEOF({final_runtime_section}), 0x100);",
         text,
     )
     symbol_start = "__lisp65_rt_rtov_catalog_start ="
@@ -1149,6 +1238,11 @@ def linker_script() -> str:
         "__lisp65_rt_buffer_write_start = ADDR(.lisp65_rt_buffer_write); __lisp65_rt_buffer_write_end = ADDR(.lisp65_rt_buffer_write) + SIZEOF(.lisp65_rt_buffer_write);",
         "__lisp65_rt_buffer_alloc_start = ADDR(.lisp65_rt_buffer_alloc); __lisp65_rt_buffer_alloc_end = ADDR(.lisp65_rt_buffer_alloc) + SIZEOF(.lisp65_rt_buffer_alloc);",
     ])
+    if INTERN_SESSION_SERVICE:
+        symbols.append(
+            "__lisp65_rt_intern_service_start = ADDR(.lisp65_rt_intern_service); "
+            "__lisp65_rt_intern_service_end = ADDR(.lisp65_rt_intern_service) + "
+            "SIZEOF(.lisp65_rt_intern_service);")
     text = replace_region(text, symbol_start, symbol_end, "\n".join(symbols) + "\n")
     entry_start = "__lisp65_rt_rtov_catalog_entry ="
     entry_end = "__lisp65_rt_island_00_entry ="
@@ -1179,6 +1273,9 @@ def linker_script() -> str:
         "__lisp65_rt_buffer_write_entry = lisp65_buffer_overlay_write_entry;",
         "__lisp65_rt_buffer_alloc_entry = lisp65_buffer_overlay_alloc_entry;",
     ])
+    if INTERN_SESSION_SERVICE:
+        entries.append(
+            "__lisp65_rt_intern_service_entry = lisp65_intern_service_entry;")
     text = replace_region(text, entry_start, entry_end, "\n".join(entries) + "\n")
     assert_start = "ASSERT(SIZEOF(.lisp65_rt_rtov_catalog)"
     assert_end = "ASSERT(SIZEOF(.lisp65_rt_island_00)"
@@ -1212,6 +1309,13 @@ def linker_script() -> str:
         "ASSERT(SIZEOF(.lisp65_rt_buffer_write) > 0 && SIZEOF(.lisp65_rt_buffer_write) <= 1792 && __lisp65_rt_buffer_write_end <= __lisp65_workbench_runtime_overlay_limit, \"buffer writer exceeds its stack-safe window\");",
         "ASSERT(SIZEOF(.lisp65_rt_buffer_alloc) > 0 && SIZEOF(.lisp65_rt_buffer_alloc) <= 1792 && __lisp65_rt_buffer_alloc_end <= __lisp65_workbench_runtime_overlay_limit, \"buffer allocator exceeds its stack-safe window\");",
     ])
+    if INTERN_SESSION_SERVICE:
+        assertions.append(
+            "ASSERT(SIZEOF(.lisp65_rt_intern_service) > 0 && "
+            "SIZEOF(.lisp65_rt_intern_service) <= 1792 && "
+            "__lisp65_rt_intern_service_end <= "
+            "__lisp65_workbench_runtime_overlay_limit, "
+            "\"intern Session service exceeds its stack-safe window\");")
     text = replace_region(text, assert_start, assert_end, "\n".join(assertions) + "\n")
     memory_layout = (
         "MEMORY {\n"
@@ -1518,6 +1622,28 @@ ASSERT(ADDR(.lisp65_c2_kernal_window.state) == 0xff80 &&
 ASSERT(ADDR(.lisp65_c2_vectors) == 0xfffa && SIZEOF(.lisp65_c2_vectors) == 6,
        "C2 owned vector geometry drift");
 """
+    callprim_profile_bytes = PROFILE_RODATA_INPUT_SECTIONS[
+        ".rodata.vm_callprim"]
+    native_profile_bytes = PROFILE_RODATA_INPUT_SECTIONS[
+        ".rodata.vm_native_call"]
+    if (callprim_profile_bytes != 164
+            or native_profile_bytes != 146
+            or PROFILE_RODATA_BYTES != 342):
+        kernal_layout = kernal_layout.replace(
+            "__lisp65_c2_profile_rodata_callprim_start == 164",
+            "__lisp65_c2_profile_rodata_callprim_start == "
+            f"{callprim_profile_bytes}",
+            1)
+        kernal_layout = kernal_layout.replace(
+            "__lisp65_c2_profile_rodata_native_start == 146",
+            "__lisp65_c2_profile_rodata_native_start == "
+            f"{native_profile_bytes}",
+            1)
+        kernal_layout = kernal_layout.replace(
+            "SIZEOF(.lisp65_c2_kernal_window.profile_rodata) == 342",
+            "SIZEOF(.lisp65_c2_kernal_window.profile_rodata) == "
+            f"{PROFILE_RODATA_BYTES}",
+            1)
     if E000_REOPENING:
         # The fourteenth vector is appended to the sole facade output.  Moving
         # the following low-resident seams keeps every pre-existing vector
@@ -1830,9 +1956,12 @@ def source_list(extra_definitions: tuple[str, ...] = ()) -> list[str]:
         str(ROOT / "src/c2_kernal_window.s"),
         str(ROOT / "src/rtov_crc_mem.s"),
         str(ROOT / "src/c2_completion_mode_length.s"),
+        str(ROOT / "src/lisp65_ash_tagged.s"),
         str(ROOT / "src/l65e_bcode_ordinal.s"),
         str(ROOT / "src/c2_append_plan_walk.s"),
     ])
+    if "LISP65_C2_REQUIRE_RESOLVER" in extra_definitions:
+        sources.append(str(ROOT / "src/vm_c2d_byte.s"))
     if "LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT" in extra_definitions:
         sources.append(str(ROOT / "src/c2_journal_prepare_select.s"))
     if "LISP65_RTOV_DMA_COMPLETION_FENCE" in extra_definitions:
@@ -1877,6 +2006,11 @@ def definitions(artifacts: dict[str, object]) -> list[str]:
         f"LISP65_BUFFER_OVERLAY_WRITE_SLOT={SESSION_SERVICE_SLOT_BASE + 2}",
         f"LISP65_BUFFER_OVERLAY_ALLOC_SLOT={SESSION_SERVICE_SLOT_BASE + 3}",
     ]
+    if INTERN_SESSION_SERVICE:
+        result.extend([
+            "LISP65_INTERN_SESSION_SERVICE",
+            f"LISP65_INTERN_SERVICE_SLOT={SESSION_SERVICE_SLOT_BASE + 4}",
+        ])
     if BANK3_STAGING_SLICES:
         result.append(
             f"LISP65_C2_BANK3_STAGE_SESSION_SLOT={BOOT_BANK3_STAGE_SLOT}")
@@ -2836,6 +2970,11 @@ def final_section_inventory_expectation() -> dict[str, object]:
         profile_names.extend(bank3_stage_sections)
         profile_names.extend(
             f".rela{name}" for name in bank3_stage_sections)
+    if INTERN_SESSION_SERVICE:
+        service_sections = [".lisp65_rt_intern_service"]
+        profile_names.extend(service_sections)
+        profile_names.extend(
+            f".rela{name}" for name in service_sections)
     if typed_queue_profile:
         profile_names.append(
             ".rela.lisp65_c2_kernal_window.typed_queue_driver")
@@ -2859,12 +2998,16 @@ def final_section_inventory_expectation() -> dict[str, object]:
         "e000_reopening": E000_REOPENING,
         "bss_triage": BSS_TRIAGE,
         "family_stage_bindings": FAMILY_STAGE_BINDINGS,
+        "session_service": (
+            "intern-session-service"
+            if INTERN_SESSION_SERVICE else None),
         "typed_queue_profile": typed_queue_profile,
         "derivation": (
             "Link-28 stable envelope minus its append ABI, plus the configured "
             "decoder/append ABIs and the exact E000-reopening/BSS-triage "
             "section sets and, when enabled by the same product profile, the "
-            "two Bank-3 stage sections with their relocation sections; the "
+            "two Bank-3 stage sections or one Session-service section with "
+            "their relocation sections; the "
             "configured typed-queue profile replaces the retired frame-source "
             "and event-poll members and adds its actual relocation section; "
             "the target ELF is never an expectation source"),
@@ -3469,7 +3612,7 @@ def handoff_z_abi_gate(out: Path, target: Path,
     errors = _handoff_z_abi_errors(
         ownership[0]["lines"], copy[0]["lines"], reveal[0]["lines"],
         map_switch[0]["lines"],
-        reveal_address=HOST_FACADE_BASE + host_facade_bytes())
+        reveal_address=int(reveal[0]["address"]))
     if errors:
         raise RuntimeError(f"handoff ABI red: {errors}")
     sections = section_table(elf)
@@ -3485,7 +3628,7 @@ def handoff_z_abi_gate(out: Path, target: Path,
         ),
         "required_prefix": [
             "sei", "ldz #$00",
-            f"jsr ${HOST_FACADE_BASE + host_facade_bytes():04x}",
+            f"jsr ${int(reveal[0]['address']):04x}",
         ],
         "observed_prefix": [
             f"{mnemonic} {operand}".rstrip()
@@ -6038,8 +6181,8 @@ def main() -> int:
                 publish_before, bytes(corrupt), publish_domains))
         assert TOTAL_PUBLISH_LAST_BYTES == 34
         assert VERIFIER_BINDING_BASE == 0xB954
-        assert KERNAL_CRC_BINDING_HIGH_ADDRESS == 0xB4CC
-        assert KERNAL_CRC_BINDING_LOW_ADDRESS == 0xB4D0
+        assert KERNAL_CRC_BINDING_HIGH_ADDRESS == 0xB4F4
+        assert KERNAL_CRC_BINDING_LOW_ADDRESS == 0xB4FA
         try:
             checked_public_projection(["literal_prep", "literal-prep"])
         except RuntimeError:

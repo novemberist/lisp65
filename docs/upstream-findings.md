@@ -7,7 +7,7 @@ upstream release before filing it.
 
 Updated: 2026-07-27. Current-upstream verification details remain in
 [`upstream-verification-2026-07-19.md`](upstream-verification-2026-07-19.md).
-A refreshed, paste-ready L4–L10 packet is retained in the private proof
+A refreshed, paste-ready L4–L11 packet is retained in the private proof
 repository. Nothing was filed while preparing it.
 
 ## llvm-mos
@@ -217,6 +217,25 @@ defect is a slow-memory completion/drain bug or a documentation mismatch.
 Local product work specifies content-defined completion independently of
 upstream disposition. Contract:
 `docs/planning/c2.2-runtime-overlay-dma-completion-contract.md`.
+
+### L11 — Audio-DMA interrupt documentation contradicts tested-core RTL
+
+The MEGA65 Chipset Reference says that the audio DMA subsystem “cannot
+presently generate interrupts.” Exact tested core
+`03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6` implements and routes those
+interrupts:
+
+- [`gs4510.vhdl` lines 4533–4549](https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L4533-L4549)
+  gate each of four channel events with its enable, set the flag, and clear
+  the one-shot enable; and
+- [`gs4510.vhdl` lines 4551–4553](https://github.com/MEGA65/mega65-core/blob/03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6/src/vhdl/gs4510.vhdl#L4551-L4553)
+  assert both `irq_internal` and CPU `irq_pending`.
+
+This is a documentation-class finding, not a claim that the RTL is defective.
+lisp65 clears the four flags and enables at `$D713` before enabling its owned
+raster IRQ because inherited firmware or hypervisor state could otherwise
+leave an interrupt armed. Recheck current core and documentation before filing
+an upstream correction.
 
 ## MEGA65 documentation
 

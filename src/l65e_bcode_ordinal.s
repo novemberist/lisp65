@@ -209,18 +209,23 @@ lisp65_error_overlay_entry:
 	pla
 .Lerr_code:
 	lda	#5
-	rts
+	bra	.Lreturn_status
 .Lerr_detail:
 	lda	#7
-	rts
+	bra	.Lreturn_status
 .Lerr_abi:
 	lda	#2
-	rts
+	bra	.Lreturn_status
 .Lerr_context:
 	lda	#1
-	rts
+	bra	.Lreturn_status
 .Lok:
 	lda	#0
+.Lreturn_status:
+	; llvm-mos C code may immediately use STZ as a zero store.  Error paths
+	; have advanced Z through the context header, so restore the C-boundary
+	; invariant independently of which status is returned in A.
+	ldz	#0
 	rts
 .Llisp65_error_overlay_entry_end:
 	.size	lisp65_error_overlay_entry, .Llisp65_error_overlay_entry_end-lisp65_error_overlay_entry

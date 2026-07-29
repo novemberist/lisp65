@@ -115,6 +115,10 @@ OP_SPECS = [
     OpSpec(17, "MOD"),
     OpSpec(18, "LESS"),
     OpSpec(19, "GREATER"),
+    OpSpec(20, "LOGAND"),
+    OpSpec(21, "LOGIOR"),
+    OpSpec(22, "LOGXOR"),
+    OpSpec(23, "ASH"),
     OpSpec(24, "REMAINDER"),
     OpSpec(28, "JMPREL", "rel8"),
     OpSpec(29, "JFALSEREL", "rel8"),
@@ -194,6 +198,8 @@ PRIM_IDS = {
     64: "%buffer-write",
     65: "%buffer-alloc",
     66: "%c2-control",
+    67: "%c2d-byte",
+    68: "intern",
 }
 
 PRIM_NAME_IDS = {name: prim_id for prim_id, name in PRIM_IDS.items()}
@@ -309,6 +315,7 @@ EVAL_PRIMITIVE_NAMES = frozenset(
         "apply",
         "set-symbol-function",
         "gensym",
+        "intern",
         "boundp",
         "set",
         "key-event",
@@ -1133,6 +1140,24 @@ class P0VM:
                 elif op == 19:
                     a, b = fix2()
                     stack.append(self.heap.t_obj if a > b else NIL)
+                elif op in (20, 21, 22):
+                    a, b = fix2()
+                    raw = (a & b) if op == 20 else (a | b) if op == 21 else (a ^ b)
+                    raw &= 0x7fff
+                    stack.append(mkfix(raw - 0x8000 if raw & 0x4000 else raw))
+                elif op == 23:
+                    a, b = fix2()
+                    if b < -14 or b > 14:
+                        raise VMError("TypeError", "ash count outside -14..14")
+                    if b < 0:
+                        stack.append(mkfix(a >> -b))
+                    else:
+                        value = a
+                        for _ in range(b):
+                            if value < -8192 or value > 8191:
+                                raise VMError("TypeError", "ash left overflow")
+                            value <<= 1
+                        stack.append(mkfix(value))
                 elif op == 24:
                     a, b = fix2()
                     if b == 0:
@@ -1937,6 +1962,26 @@ class P0VM:
             if operation == 30:
                 return self.heap.t_obj  # host witness; device transfer is non-returning
             raise VMError("TypeError", "%c2-control operation out of range")
+        if prim_id == 67:
+            if argc != 2 or not is_fix(args[0]) or not is_fix(args[1]):
+                raise VMError("TypeError", "%c2d-byte expects low and high bytes")
+            lo = fixval(args[0])
+            hi = fixval(args[1])
+            if lo < 0 or lo > 255 or hi < 0 or hi > 255:
+                raise VMError("TypeError", "%c2d-byte address byte out of range")
+            offset = lo | (hi << 8)
+            if offset >= 33840:
+                raise VMError("TypeError", "%c2d-byte offset outside published C2D")
+            return mkfix(0)  # target-only read seam; host resolver supplies its own C2D oracle
+        if prim_id == 68:
+            if argc != 1:
+                raise VMError("ArityError", "intern expects one string")
+            if not self.heap.stringp(args[0]):
+                raise VMError("TypeError", "intern expects one string")
+            name = self.heap.string_to_text(args[0])
+            if len(name) > 33:
+                raise VMError("TypeError", "intern name too long")
+            return self.heap.intern(name)
         raise VMError("DirMiss", "unsupported CALLPRIM id=%d argc=%d" % (prim_id, argc))
 
     def _compiler_form_obj(self, form):

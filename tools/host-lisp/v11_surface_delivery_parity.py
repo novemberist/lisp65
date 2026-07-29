@@ -50,7 +50,7 @@ def defun_names(text: str) -> set[str]:
 
 
 def reference_public_names(text: str) -> set[str]:
-    start_marker = "The current Wave 1 candidate surface includes:"
+    start_marker = "The released surface includes:"
     end_marker = "The complete native visibility"
     if text.count(start_marker) != 1 or text.count(end_marker) != 1:
         raise ParityError("language-reference public-surface section drift")
@@ -278,7 +278,7 @@ def selftest() -> None:
     closure = {"implemented_bindings": {"native-service": []}}
     workbench_profile = "WORKBENCH_DEFINES := -DLISP65_VM_SCREEN_PRIMS\n"
     reference = (
-        "The current Wave 1 candidate surface includes:\n\n- symbols: `eval`, `filter`.\n\n"
+        "The released surface includes:\n\n- symbols: `eval`, `filter`.\n\n"
         "The complete native visibility follows.\n"
     )
     verify_values(

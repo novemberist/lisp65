@@ -1,0 +1,58 @@
+{
+  "format": "lisp65-c2-bound-artifact-source-parity-contract-v1",
+  "policy": "A source-side model is not evidence for a product-bound artifact. Every bound artifact class with a source counterpart must be inventoried and checked at the bound representation.",
+  "classes": [
+    {
+      "id": "device-lcc-carrier",
+      "coverage": "direct-bound-execution",
+      "sources": [
+        "lib/lcc.lisp",
+        "lib/dialect-v2/lcc-profile.lisp",
+        "config/v2-native-function-registry.json"
+      ],
+      "verifier": "tools/host-lisp/c2_bound_artifact_source_parity.py"
+    },
+    {
+      "id": "keymaps",
+      "coverage": "generated-source-and-product-consumer",
+      "sources": [
+        "config/v11-l-lite-keymap.json",
+        "lib/ide-keymap-generated.lisp"
+      ],
+      "verifier": "tools/host-lisp/c2_l_full_keymap_end_to_end_gate.py"
+    },
+    {
+      "id": "generated-tables",
+      "coverage": "registry-generated-exact-output",
+      "sources": [
+        "config/v2-native-function-registry.json",
+        "src/v2_native_function_dispatch.h",
+        "tools/host-lisp/v2_native_function_views_generated.py",
+        "tests/bytecode/dialect-v2/native-function-routes/cases.generated.json"
+      ],
+      "verifier": "tools/host-lisp/v2_native_function_registry.py"
+    },
+    {
+      "id": "single-emitter-manifests",
+      "coverage": "product-bound-manifest-hash-source-closure-and-canonical-byte-replay",
+      "sources": [
+        "tools/host-lisp/bytecode_p0.py",
+        "tools/host-lisp/bytecode_p0_compiler.py",
+        "tools/host-lisp/bytecode_p0_stdlib.py",
+        "tools/host-lisp/c2_full_emission.py",
+        "tools/host-lisp/c2_lite_v6_product_probe.py",
+        "tools/host-lisp/c2_substitution_artifacts.py",
+        "tools/host-lisp/c2_session_extension_probe.py"
+      ],
+      "verifier": "tools/host-lisp/c2_bound_artifact_source_parity.py"
+    }
+  ],
+  "uncovered_classes": [],
+  "mutation_requirements": [
+    "stale-source-hash",
+    "stale-carrier-primitive-map",
+    "carrier-not-bound-by-product",
+    "bound-manifest-hash-drift",
+    "stale-manifest-source-hash"
+  ]
+}

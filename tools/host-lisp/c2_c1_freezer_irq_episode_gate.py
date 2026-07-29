@@ -33,6 +33,12 @@ def irq_body(source: str) -> str:
 def source_gate(source: str) -> dict[str, object]:
     body = irq_body(source)
     owned = """\
+\t; IRQ entry inherits arbitrary interrupted Z.  On the 45GS02 STZ stores
+\t; that register, so establish the handler-local zero authority once.
+\tldz #0
+\tlda $d019
+\tand #$01
+\tbeq .Lsource_less
 \t; A is already exactly one after the owned-source mask.
 \tsta $d019
 \t; Rearm one legitimate source-less return for the next raster-delimited
@@ -61,6 +67,9 @@ def source_gate(source: str) -> dict[str, object]:
         if residue in body:
             raise AssertionError(f"session-counter residue remains: {residue!r}")
     return {
+        "45GS02_STZ_semantics": "memory := Z register",
+        "IRQ_entry_Z": "arbitrary",
+        "handler_local_Z_zero_authority": "ldz #0 immediately after phz",
         "owned_raster_reset": True,
         "first_source_less_accept": True,
         "second_consecutive_source_less_fail_closed": True,
@@ -68,9 +77,14 @@ def source_gate(source: str) -> dict[str, object]:
     }
 
 
-def step(latch: int, event: str) -> tuple[int, str]:
+def step(latch: int, event: str, interrupted_z: int,
+         *, normalize_z: bool = True) -> tuple[int, str]:
+    # 45GS02 STZ stores the Z register.  The product establishes a
+    # handler-local zero authority after PHZ; omitting it must make a
+    # nonzero interrupted Z visible in the episode latch.
+    z = 0 if normalize_z else interrupted_z
     if event == "raster":
-        return 0, "continue"
+        return z, "continue"
     if event != "source-less":
         raise ValueError(event)
     if latch:
@@ -78,11 +92,13 @@ def step(latch: int, event: str) -> tuple[int, str]:
     return 1, "continue"
 
 
-def run_sequence(events: list[str]) -> tuple[int, list[str]]:
+def run_sequence(events: list[str], *, normalize_z: bool = True,
+                 interrupted_z: int = 3) -> tuple[int, list[str]]:
     latch = 0
     outcomes: list[str] = []
     for event in events:
-        latch, outcome = step(latch, event)
+        latch, outcome = step(
+            latch, event, interrupted_z, normalize_z=normalize_z)
         outcomes.append(outcome)
         if outcome == "fail-closed":
             break
@@ -98,6 +114,11 @@ def semantic_gate() -> dict[str, object]:
         raise AssertionError("raster-delimited Freezer episodes were rejected")
     if storm_outcomes != ["continue", "fail-closed"]:
         raise AssertionError("consecutive source-less IRQ stream was accepted")
+    _, broken_outcomes = run_sequence(
+        ["raster", "source-less"], normalize_z=False, interrupted_z=3)
+    if broken_outcomes != ["continue", "fail-closed"]:
+        raise AssertionError(
+            "semantic oracle still treats 45GS02 STZ as store-zero")
     return {
         "double_freezer_fixture": {
             "events": repeated[:3],
@@ -115,6 +136,11 @@ def semantic_gate() -> dict[str, object]:
             "outcomes": storm_outcomes,
             "final_latch": storm_latch,
             "status": "PROVEN",
+        },
+        "nonzero_interrupted_Z_negative": {
+            "interrupted_Z": 3,
+            "without_handler_LDZ0": broken_outcomes,
+            "status": "REJECTED",
         },
     }
 
@@ -143,6 +169,24 @@ def contract_gate() -> dict[str, object]:
 
 def mutation_gate(source: str) -> dict[str, object]:
     mutations = {
+        "handler-Z-normalization-removed": source.replace(
+            "\tphz\n"
+            "\t; IRQ entry inherits arbitrary interrupted Z.  On the 45GS02 STZ stores\n"
+            "\t; that register, so establish the handler-local zero authority once.\n"
+            "\tldz #0\n",
+            "\tphz\n",
+            1,
+        ),
+        "nonzero-Z-injected-before-episode-reset": source.replace(
+            "\tstz C2K_SOURCELESS_IRQS\n\tinc C2K_FRAME_LO",
+            "\tinz\n\tstz C2K_SOURCELESS_IRQS\n\tinc C2K_FRAME_LO",
+            1,
+        ),
+        "explicit-nonzero-Z-before-episode-reset": source.replace(
+            "\tstz C2K_SOURCELESS_IRQS\n\tinc C2K_FRAME_LO",
+            "\tldz #1\n\tstz C2K_SOURCELESS_IRQS\n\tinc C2K_FRAME_LO",
+            1,
+        ),
         "owned-raster-reset-removed": source.replace(
             "\tstz C2K_SOURCELESS_IRQS\n\tinc C2K_FRAME_LO",
             "\tinc C2K_FRAME_LO",
@@ -178,6 +222,8 @@ def mutation_gate(source: str) -> dict[str, object]:
         raise AssertionError("episode source mutations were not all rejected")
 
     semantic_mutations = [
+        "model-STZ-as-constant-zero",
+        "arbitrary-IRQ-Z-without-normalization",
         "no-raster-rearm",
         "source-less-self-rearm",
         "accept-second-source-less",

@@ -46,7 +46,7 @@ DELIVERIES = {
 FROZEN_SYNTAX = [
     "and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function",
     "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq",
-    "unless", "unquote", "unquote-splicing", "when",
+    "unless", "unquote", "unquote-splicing", "when", "while",
 ]
 FROZEN_LAMBDA_MARKERS = ["&rest"]
 TARGET_LAMBDA_MARKERS = ["&optional", "&rest"]
@@ -56,8 +56,9 @@ FROZEN_READER_TOKENS = ["#'", "'", ",", ",@", ".", "`"]
 FROZEN_DEFERRED_CONTROL_FORMS = ["catch", "on-error", "throw"]
 FROZEN_RETAINED_MACROS = [
     "and", "case", "cond", "defun", "dolist", "dotimes", "let", "let*",
-    "or", "unless", "when",
+    "or", "unless", "when", "while",
 ]
+COMPILER_OWNED_MACRO_SURFACES = {"while"}
 SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{7,127}$")
 DECISION_ANCHOR = re.compile(r"^decision:([a-z][a-z0-9-]*)$")
 DECISION_ALIASES = {
@@ -711,7 +712,7 @@ def _syntax(value: Any) -> dict[str, Any]:
     current = _strings(item["special_forms_current"], "syntax.special_forms_current", nonempty=True)
     target = _strings(item["special_forms_target"], "syntax.special_forms_target", nonempty=True)
     if current != FROZEN_SYNTAX or target != FROZEN_SYNTAX:
-        raise MigrationError("AP8.3 must not change special forms")
+        raise MigrationError("special-form inventory drift")
     if (
         _strings(item["lambda_markers_current"], "syntax.lambda_markers_current", nonempty=True)
         != FROZEN_LAMBDA_MARKERS
@@ -797,7 +798,7 @@ def _syntax(value: Any) -> dict[str, Any]:
         raise MigrationError("cannot resolve native compiler special-form inventory")
     native_forms = sorted(re.findall(r'"([^"]+)"', match.group(1)))
     expected_native = sorted(
-        ["if", "when", "unless", "and", "or", "cond", "case", "let", "let*", "progn", "setq", "quote", "lambda", "function", "dotimes", "dolist"]
+        ["if", "when", "unless", "and", "or", "cond", "case", "let", "let*", "progn", "setq", "quote", "lambda", "function", "dotimes", "dolist", "while"]
     )
     if native_forms != expected_native or not set(native_forms) <= set(current):
         raise MigrationError("native compiler special-form binding drift")
@@ -811,8 +812,10 @@ def _syntax(value: Any) -> dict[str, Any]:
         defined_macros.update(re.findall(r"^\(defmacro\s+([^\s()]+)", source.read_text(encoding="utf-8"), re.M))
     if set(names) & set(retained_macros):
         raise MigrationError("macro migration/retention partition overlaps")
-    if set(names) | set(retained_macros) != defined_macros:
+    if set(names) | (set(retained_macros) - COMPILER_OWNED_MACRO_SURFACES) != defined_macros:
         raise MigrationError("macro migration/retention partition is not source-complete")
+    if COMPILER_OWNED_MACRO_SURFACES & defined_macros:
+        raise MigrationError("compiler-owned macro surface acquired a second macro truth")
     reader_text = (ROOT / "src" / "reader.c").read_text(encoding="utf-8")
     for marker in ("quasiquote", "unquote", "unquote-splicing", "function"):
         if f'"{marker}"' not in reader_text:

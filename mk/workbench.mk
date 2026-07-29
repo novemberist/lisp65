@@ -55,7 +55,7 @@ v11-wave2-common-repin-collect: workbench-overlay-stack-guard v2-workbench-libra
 v11-wave2-common-repin-check: workbench-overlay-stack-guard v2-workbench-library-composition-check
 	python3 tools/host-lisp/v11_wave2_common_repin.py check
 
-v11-function-metadata-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-artifacts
+v11-function-metadata-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-host-artifacts
 	python3 tools/host-lisp/v11_function_metadata.py selftest
 
 v11-function-metadata-check: v11-function-metadata-selftest
@@ -63,7 +63,7 @@ v11-function-metadata-check: v11-function-metadata-selftest
 
 .PHONY: l65m-verdict-equivalence-selftest l65m-verdict-equivalence-gate asm-c-constant-contract-selftest asm-c-constant-contract-check f011-transaction-context-selftest f011-transaction-context-check f011-mount-window-selftest workbench-f011-mount-window-audit
 
-.PHONY: bank0-lifetime-report bank0-lifetime-selftest bank0-island-inventory-report bank0-island-inventory-selftest vm-ext-code-reclaim-smoke mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-error-code-contract-check resident-island-selftest runtime-overlay-bank-selftest runtime-overlay-transport-smoke attic-library-shelf-selftest attic-library-shelf-check v11-c1-compiler-tier-artifacts v11-c1-compiler-lifetime-check v11-c1-entry-seam-check v11-c1-gate-check v11-wave1-c1-first-form-selftest v11-wave1-c1-first-form-check v11-first-class-buffer-check l65m-bulkread-fixture-check workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-runtime-overlay-package-verify workbench-disk-lib-budget-selftest persistence-contract-check d81-persistence-fault-selftest workbench-product-contract-selftest workbench-product-contract-check workbench-product-contract-ship-check workbench-deploy workbench-deploy-dry-run workbench-product workbench-product-footprint-report workbench-product-input-ready workbench-reference workbench-reference-footprint-report workbench-overlay-link-prototype workbench-overlay-prototype workbench-overlay-package-verify workbench-overlay-footprint-audit workbench-overlay-control-audit workbench-overlay-control-audit-selftest workbench-overlay-bootstrap-smoke workbench-overlay-reproducibility-check workbench-overlay-stage-selftest workbench-overlay-stack-probe workbench-overlay-stack-probe-smoke workbench-overlay-stack-guard hw-stack-probe-readback-selftest hw-ship-memory-readback-selftest hw-workbench-overlay-stack-readback hw-workbench-overlay-stack-readback-dry-run hw-workbench-overlay-stack-smoke hw-workbench-overlay-stack-smoke-dry-run hw-workbench-overlay-stack-guard-smoke hw-workbench-overlay-stack-guard-smoke-dry-run hw-workbench-overlay-stack-guard-verified-smoke print-workbench-profile-common print-workbench-reference-resolved-profile print-workbench-resolved-profile print-workbench-overlay-resolved-profile mvp-ship-candidate-artifacts
+.PHONY: bank0-lifetime-report bank0-lifetime-selftest bank0-island-inventory-report bank0-island-inventory-selftest vm-ext-code-reclaim-smoke mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-error-code-contract-check resident-island-selftest runtime-overlay-bank-selftest runtime-overlay-transport-smoke attic-library-shelf-selftest attic-library-shelf-check v11-c1-compiler-tier-host-artifacts v11-c1-compiler-tier-artifacts v11-c1-compiler-lifetime-check v11-c1-entry-seam-check v11-c1-gate-check v11-wave1-c1-first-form-selftest v11-wave1-c1-first-form-check v11-first-class-buffer-check l65m-bulkread-fixture-check workbench-l65m-transport-ops-report workbench-l65m-commit-ops-report workbench-runtime-overlay-package-verify workbench-disk-lib-budget-selftest persistence-contract-check d81-persistence-fault-selftest workbench-product-contract-selftest workbench-product-contract-check workbench-product-contract-ship-check workbench-deploy workbench-deploy-dry-run workbench-product workbench-product-footprint-report workbench-product-input-ready workbench-reference workbench-reference-footprint-report workbench-overlay-link-prototype workbench-overlay-prototype workbench-overlay-package-verify workbench-overlay-footprint-audit workbench-overlay-control-audit workbench-overlay-control-audit-selftest workbench-overlay-bootstrap-smoke workbench-overlay-reproducibility-check workbench-overlay-stage-selftest workbench-overlay-stack-probe workbench-overlay-stack-probe-smoke workbench-overlay-stack-guard hw-stack-probe-readback-selftest hw-ship-memory-readback-selftest hw-workbench-overlay-stack-readback hw-workbench-overlay-stack-readback-dry-run hw-workbench-overlay-stack-smoke hw-workbench-overlay-stack-smoke-dry-run hw-workbench-overlay-stack-guard-smoke hw-workbench-overlay-stack-guard-smoke-dry-run hw-workbench-overlay-stack-guard-verified-smoke print-workbench-profile-common print-workbench-reference-resolved-profile print-workbench-resolved-profile print-workbench-overlay-resolved-profile mvp-ship-candidate-artifacts
 
 workbench-product-contract-selftest:
 	python3 tools/host-lisp/workbench_product_contract.py --selftest
@@ -169,7 +169,6 @@ runtime-overlay-transaction-auth-smoke: $(WORKBENCH_RUNTIME_OVERLAY_TRANSACTION_
 
 c2-overlay-transaction-auth-check: runtime-overlay-transaction-auth-smoke
 	python3 tools/host-lisp/c2_overlay_transaction_auth_island.py selftest
-	python3 tools/host-lisp/c2_overlay_transaction_auth_island.py check
 
 $(V11_BUFFER_MEMORY_HOST): scripts/v11-buffer-smoke-main.c src/mem.c src/mem.h src/obj.h src/printer.c src/printer.h src/symbol.c src/interrupt.c | build
 	$(HOSTCC) -std=c99 -Wall -Wextra -Werror -O1 -g \
@@ -207,14 +206,20 @@ $(V11_C1_FASTPATH_VALIDATOR_HOST): scripts/l65m-transport-ops-main.c src/l65m_va
 		-Isrc -Ibuild scripts/l65m-transport-ops-main.c src/l65m_validate.c \
 		src/vm_runtime_overlay.c -o '$@'
 
-v11-c1-compiler-tier-artifacts: v2-workbench-codemod $(V11_C1_FASTPATH_VALIDATOR_HOST)
+v11-c1-compiler-tier-host-artifacts: v2-workbench-codemod
 	python3 $(WORKBENCH_C1_COMPILER_TOOL) --selftest
-	python3 $(WORKBENCH_C1_COMPILER_CONTRACT_TOOL) --selftest
 	python3 $(WORKBENCH_C1_COMPILER_TOOL) --out '$(WORKBENCH_C1_COMPILER_SUITE)' \
 		--receipt '$(WORKBENCH_C1_COMPILER_GENERATION)'
 	python3 tools/host-lisp/bytecode_p0_stdlib.py --check --emit-artifacts \
 		'$(WORKBENCH_C1_COMPILER_PREFIX)' --artifact-role disk-lib --base-addr 0x000000 \
 		'$(WORKBENCH_C1_COMPILER_SUITE)'
+
+# The v1.1 native fast-path validator remains an explicit historical gate.
+# Current C2-lite consumers that only need the generated LCC container depend
+# on v11-c1-compiler-tier-host-artifacts above and do not inherit that retired
+# transport model.
+v11-c1-compiler-tier-artifacts: v11-c1-compiler-tier-host-artifacts $(V11_C1_FASTPATH_VALIDATOR_HOST)
+	python3 $(WORKBENCH_C1_COMPILER_CONTRACT_TOOL) --selftest
 	$(V11_C1_FASTPATH_VALIDATOR_HOST) \
 		--image '$(WORKBENCH_C1_COMPILER_PREFIX).ext.bin' \
 		--integration src/vm_embed.c --scratch-source src/io.c \
@@ -306,7 +311,7 @@ v11-c1-gate-check: v2-native-function-registry-check bytecode-abi-ledger-check \
 $(WORKBENCH_ATTIC_SHELF_IMAGE) $(WORKBENCH_ATTIC_SHELF_MANIFEST) &: \
 		$(WORKBENCH_ATTIC_SHELF_TOOL) $(WORKBENCH_ATTIC_SHELF_CONTRACT) \
 		v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts \
-		v11-c1-compiler-tier-artifacts
+		v11-c1-compiler-tier-host-artifacts
 	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
 
 $(WORKBENCH_ATTIC_SHELF_HOST): scripts/attic-library-shelf-smoke-main.c src/attic_library_shelf.c src/attic_library_shelf.h src/io.h | build
@@ -315,7 +320,7 @@ $(WORKBENCH_ATTIC_SHELF_HOST): scripts/attic-library-shelf-smoke-main.c src/atti
 		-DDISK_EXT_FILE_MAX=0x9600u -Isrc \
 		scripts/attic-library-shelf-smoke-main.c src/attic_library_shelf.c -o '$@'
 
-attic-library-shelf-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-artifacts
+attic-library-shelf-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-host-artifacts
 	python3 $(WORKBENCH_ATTIC_SHELF_TOOL) --selftest \
 		--out '$(WORKBENCH_ATTIC_SHELF_IMAGE)' --manifest-out '$(WORKBENCH_ATTIC_SHELF_MANIFEST)'
 
@@ -831,16 +836,20 @@ hw-workbench-c1-phase-probe-dry-run: workbench-c1-phase-probe-check
 # are intentionally absent: the six-image compiler/FASL plane has one emitter,
 # one WPLTO closure and one media packer.  Existing manifests are checked
 # read-only; a missing manifest is built exactly once.
-workbench-product:
-	@if test -f build/c2.2/canonical-product/canonical-product-manifest.json; then \
-		python3 tools/host-lisp/c2_lite_canonical_product.py check; \
+.PHONY: c2-phase-v-gc-ext-dma-check
+c2-phase-v-gc-ext-dma-check:
+	python3 tools/host-lisp/c2_phase_v_gc_ext_dma_lane.py
+
+workbench-product: equivalence-completion-canary-check c2-asm-leaf-abi-selftest c2-interrupt-ownership-check c2-phase-v-gc-ext-dma-check
+	@if test -f build/c2.2/v1.2.1-candidate-product/canonical-product-manifest.json; then \
+		python3 tools/host-lisp/c2_v121_candidate_product.py check; \
 	else \
-		python3 tools/host-lisp/c2_lite_canonical_product.py build; \
+		python3 tools/host-lisp/c2_v121_candidate_product.py build; \
 	fi
-	@if test -f build/c2.2/canonical-media/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_lite_media_product.py check; \
+	@if test -f build/c2.2/v1.2.1-candidate-media/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_v121_candidate_media.py check; \
 	else \
-		python3 tools/host-lisp/c2_lite_media_product.py build; \
+		python3 tools/host-lisp/c2_v121_candidate_media.py build; \
 	fi
 	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 

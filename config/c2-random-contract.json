@@ -1,0 +1,53 @@
+{
+  "format": "lisp65-c2-random-base-composition-v1",
+  "recorded_on": "2026-07-28",
+  "scope": "Phase V1 pure-Lisp random freight in the base composition",
+  "public_surface": {
+    "random": {
+      "syntax": "(random n)",
+      "domain": "positive fixnum n, 1 through 16383",
+      "result": "uniform fixnum in [0,n)",
+      "invalid_domain": "existing arithmetic error path; no new native status or string"
+    },
+    "random-seed": {
+      "syntax": "(random-seed seed)",
+      "domain": "signed 15-bit fixnum",
+      "result": "the normalized 14-bit seed",
+      "reproducibility": "equal explicit seeds recreate byteidentical 55-slot state and output sequence"
+    }
+  },
+  "generator": {
+    "kind": "additive lagged Fibonacci",
+    "recurrence": "X(n) = (X(n-24) + X(n-55)) mod 16384",
+    "state": "55 fixnums plus one ring cursor, held only in canonical Lisp symbol values",
+    "modular_add": "branch before addition so no signed-15-bit intermediate overflows",
+    "range_mapping": "rejection sampling; accept through 16383 - (16384 mod n), then mod n",
+    "plain_modulo_bias": "forbidden"
+  },
+  "seeding": {
+    "explicit": "random-seed is authoritative for tests, games, replays and debugging",
+    "lazy_default": "the first random call samples VIC raster $D012, CIA1 timer A low $DC04, CIA2 timer A low $DD04 and SID voice-3 noise $D41B through existing peek",
+    "input_timing": "the lazy call time naturally includes user/key timing in the two free-running timers; no key is consumed and no second input queue truth is introduced",
+    "native_state": 0
+  },
+  "placement": {
+    "code": "Bank-2 base composition",
+    "resident_code_bytes": 0,
+    "resident_state_bytes": 0,
+    "new_resident_gc_roots": 0,
+    "static_plane_root_records": 0,
+    "runtime_overlay_records": 0,
+    "require_dependency": false
+  },
+  "required_proofs": [
+    "same seed gives same sequence",
+    "negative and normalized equivalent seeds agree",
+    "state has exactly 55 slots",
+    "results remain within [0,n)",
+    "a non-divisor range exercises rejection sampling",
+    "n=1 returns zero",
+    "zero and non-number arguments fail through the existing arithmetic path",
+    "no native, resident, overlay or require dependency is introduced"
+  ],
+  "claim_limit": "Host-first contract and bytecode execution until the final bundled Phase-I/Phase-V/K2 hardware session."
+}

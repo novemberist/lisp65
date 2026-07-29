@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2-session-service-contract-v1",
+  "recorded_on": "2026-07-27",
+  "status": "authorized-product-probe-pending",
+  "pattern_class": "Session-Service-Record",
+  "definition": {
+    "load": "on demand through the canonical runtime-overlay loader",
+    "state": "stateless; request and result live only in the synchronous resident call context",
+    "window": "exclusive owner of the single $C356 runtime-overlay window for the duration of one call",
+    "generation": "bound to the currently selected, nonzero Session-family generation",
+    "publication": "the service record is emitted and authenticated by the one Session-family L65R emitter"
+  },
+  "first_instance": {
+    "name": "intern-session-service",
+    "operation": "validated Lisp string to canonical interned symbol",
+    "resident_work": [
+      "the established synchronous runtime-service stub",
+      "one constant slot selection",
+      "arity check",
+      "string-domain check through the same one-copy predicate as public stringp",
+      "symbol-name length check"
+    ],
+    "service_work": [
+      "defensive symbol-name length recheck",
+      "copy the validated immutable string to the canonical name scratch",
+      "NUL termination",
+      "canonical intern"
+    ]
+  },
+  "closure": {
+    "overlay_to_service": "no runtime-overlay body may request the service",
+    "service_while_overlay": "a service request while the window is busy returns VM_RUNTIME_OVERLAY_ERR_BUSY before wipe, read, DMA or entry",
+    "busy_window_identity": "the occupied window is byte-identical before and after the rejected request",
+    "session_only": "the service is absent from the Boot catalog and callable only with the selected Session family and generation",
+    "vm_code_buffer_lifetime": "the shared resident service facade invalidates the vm_codebuf bank/object owner before writing its synchronous context there; every successful CALLPRIM return therefore reloads and reparses the caller before consuming another literal or opcode"
+  },
+  "required_gates": [
+    "one named Session catalog record and one entry symbol",
+    "no mutable service-local state",
+    "no overlay-to-service call edge in the linked ELF",
+    "busy rejection dominates every window mutation and payload read",
+    "busy-call fixture preserves the complete window byte-for-byte",
+    "inactive, Boot-family, zero-generation and stale-generation calls reject",
+    "service record bounds, CRC, entry and family identity use the canonical L65R path",
+    "vm_codebuf context overwrite is dominated by bank/object owner invalidation and the linked CALLPRIM successor retains BUF_ENSURE_MINE",
+    "one Session pack quantum and no Boot record"
+  ],
+  "capacity": {
+    "slice_limit_bytes": 1792,
+    "packing_quantum_bytes": 512,
+    "resident_rule": "the existing shared transport stub, one slot selection and the required pre-load argument validation may debit resident code; conversion remains cold",
+    "first_red": "any terminal wall, Session aggregate overflow, or second execution window"
+  },
+  "claim_limit": "Contract and product-shaped WPLTO only. No successor link, hardware, require or defstruct runtime claim."
+}

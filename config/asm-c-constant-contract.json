@@ -16,7 +16,7 @@
         "ASM_L65M_REPEAT_PHASE_OFFSET"
       ],
       "kind": "generated-c-contract",
-      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1"],
+      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1", "ldz\t#0"],
       "path": "src/l65m_batch_repeat.s"
     },
     {
@@ -165,6 +165,12 @@
       "reason": "BCODE ordinal renderer is covered by the ELF-derived C/ASM ABI gate."
     },
     {
+      "path": "src/lisp65_ash_tagged.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_bitops_gate.py",
+      "reason": "ASH is covered by its tagged-domain, range, mutation, and linked ABI gates."
+    },
+    {
       "path": "src/rtov_crc_mem.s",
       "class": "elf-gated-product-leaf",
       "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
@@ -181,6 +187,12 @@
       "class": "elf-gated-product-leaf",
       "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
       "reason": "Verifier binding leaf is covered by linked callsite and ABI gates."
+    },
+    {
+      "path": "src/vm_c2d_byte.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_require_resolver_gate.py",
+      "reason": "Private C2D byte reader is covered by resolver domain, mutation, and linked ABI gates."
     }
   ],
   "generated_include": "build/generated/asm-c-contract.inc",

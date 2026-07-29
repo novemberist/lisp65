@@ -69,6 +69,9 @@ c2_kernal_irq_handler:
 	phx
 	phy
 	phz
+	; IRQ entry inherits arbitrary interrupted Z.  On the 45GS02 STZ stores
+	; that register, so establish the handler-local zero authority once.
+	ldz #0
 	lda $d019
 	and #$01
 	beq .Lsource_less

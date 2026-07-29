@@ -1,8 +1,8 @@
 {
   "format": "lisp65-v12-known-issues-register-v1",
   "version": 1,
-  "release": "1.2.0",
-  "recorded_on": "2026-07-27",
+  "release": "1.2.1",
+  "recorded_on": "2026-07-29",
   "active": [
     {
       "id": "c2.2-freezer-during-active-definition",
@@ -13,22 +13,66 @@
         "sha256": "ecff5ab35452c1ad6c5bfd7e53b7a2684662ecc034125b66fbfdd01ca804b424"
       },
       "claim_limit": "Idle Freezer identity is product-bound hardware evidence. The active-definition crossing is not PROVEN."
+    },
+    {
+      "id": "c2-lite-interrupt-generating-cartridge",
+      "status": "unsupported-hardware-profile",
+      "user_rule": "Do not use a cartridge that generates IRQ or NMI while lisp65 is running. Passive cartridges are unaffected. Cold-restart without the interrupt-generating cartridge after a red fail-closed screen.",
+      "authority": {
+        "path": "config/c2-interrupt-ownership-policy.json",
+        "sha256": "6a9cb864ea9c449c93ab9bc2159f5ff5eae585d0962033d331c6032da31d928e",
+        "device_core_commit": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6"
+      },
+      "claim_limit": "One foreign or source-less IRQ per raster-delimited episode is tolerated. A held or repeating cartridge interrupt is unsupported and deliberately fails closed."
+    },
+    {
+      "id": "intermittent-post-gc-oom",
+      "status": "observed-once-not-reproduced",
+      "user_rule": "If vm: out of memory appears despite a small live data set, preserve the exact form and preceding steps, restart lisp65, and include those details in a bug report.",
+      "observed": {
+        "workload": "600 while iterations with two short-lived cons allocations per iteration",
+        "allocations": 1200,
+        "target_cells": 1072,
+        "result": "post-GC vm: out of memory"
+      },
+      "followup": "The same 1200-allocation hardware workload completed without the error; host and modeled EXT-heap lanes also completed.",
+      "authority": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link77-phase-v-bundled-hardware-preparation-receipt.json",
+        "sha256": "f4f3214437d44e7b448bce5a7cf07a6bfa1476749cc37239284fd4048503b9b8"
+      },
+      "claim_limit": "The observation is retained as intermittent and unreproduced. No GC fix or GC latency ceiling is claimed."
+    },
+    {
+      "id": "dirmiss-truncated-function-name",
+      "status": "attributed-fix-parked-v1.2.2",
+      "user_rule": "An undefined-function error may show only the end of the function name or pad it with spaces. The error is valid; check the function name in the original form.",
+      "authority": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.1-dirmiss-renderer-attribution-receipt.json",
+        "sha256": "60b74cb92ee1fec1916b0906fdabd90066c0eb23cba61fc51a4ca2f69f707845"
+      },
+      "claim_limit": "Only the displayed name detail is unreliable. Symbol lookup, symname and the symbol read seam are not implicated by this issue."
+    },
+    {
+      "id": "defstruct-dynamic-library-freight",
+      "status": "not-delivered-parked",
+      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.1 user surface.",
+      "claim_limit": "Host-side designs and fixtures create no v1.2.1 delivery claim."
     }
   ],
   "informative": [
     {
       "id": "published-call-with-argument",
-      "value": "68 frames",
+      "value": "0 frames in the fresh v1.2.1 G5 run",
       "limit": null
     },
     {
       "id": "gc-envelope",
-      "value": "89 frames; one collection; 96 contract block reads",
+      "value": "17 frames; one collection; 96 contract block reads",
       "limit": null
     },
     {
       "id": "cold-boot-observation",
-      "value": "27.653-second upper bound to a captured screen; prompt may have appeared earlier",
+      "value": "27.653-second historical upper bound to a captured screen; prompt may have appeared earlier",
       "limit": null
     }
   ],
@@ -46,25 +90,33 @@
         "performance_bar": "not-passed"
       },
       "retirement_values": {
-        "acceptance_first_call_frames": 1,
-        "acceptance_warm_call_frames": 0,
-        "final_G5_first_call_frames": 0,
-        "final_G5_warm_call_frames": 0,
+        "v1.2.0_acceptance_first_call_frames": 1,
+        "v1.2.0_acceptance_warm_call_frames": 0,
+        "v1.2.1_G5_first_call_frames": 0,
+        "v1.2.1_G5_warm_call_frames": 0,
         "claimed_first_call_ceiling_frames": 16,
         "claimed_warm_call_ceiling_frames": 10
       },
-      "evidence": {
-        "link66_hardware_receipt": {
-          "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link66-bundled-hardware-measurements-receipt.json",
-          "sha256": "93396a7f6fe423837c9ae7e38380b6045853acdca9808e3950a8c617f9ac0d8e"
-        },
-        "G5_receipt_sha256": "d317833ccd68d129493e824c1a89995b819ddc6464ce4f50534f1fb46cd8dbc0",
-        "G6_receipt_sha256": "b4e494b025fd7dd3404cc14a363980f54ae0e051f0e12285f092facc67c94685",
-        "promotion_id": "c2-lite-r6-g6-hardware-acceptance-19aa835",
-        "product_artifact_set_sha256": "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d",
-        "package_set_sha256": "82ddc3d7fd8bc048b2803081866aa5320a08bd226d18b063c403a33fc9e7e038"
+      "claim_limit": "Retires only the published nullary definition-to-first-call exception. It creates no GC or boot-latency claim."
+    },
+    {
+      "id": "v12-published-call-with-argument-68-frame-position",
+      "status": "superseded-by-v1.2.1-direct-call-path",
+      "historical_value": "68 frames, informative, no limit",
+      "v1.2.1_value": "0 frames, informative, no limit",
+      "authority": {
+        "G5_receipt_sha256": "362668ac8e2939aed5c461caf7beeb2d21c44b81a31b8b17d3c3d1b652d3c5ba",
+        "product_artifact_set_sha256": "2115b955512a3b794f68d5f2a1d160708cb89184735b7a0984a7cfc61c38f63f",
+        "package_set_sha256": "04de1bbba86b9fa7adc030b471e6d74af04eb0aa93912693a79b9996e53b511b"
       },
-      "claim_limit": "Retires only the published nullary definition-to-first-call exception. It creates no n-ary, GC or boot-latency claim."
+      "claim_limit": "The zero-frame argument value is a hardware measurement, not a hard release ceiling."
     }
-  ]
+  ],
+  "release_authority": {
+    "product_artifact_set_sha256": "2115b955512a3b794f68d5f2a1d160708cb89184735b7a0984a7cfc61c38f63f",
+    "package_set_sha256": "04de1bbba86b9fa7adc030b471e6d74af04eb0aa93912693a79b9996e53b511b",
+    "G5_receipt_sha256": "362668ac8e2939aed5c461caf7beeb2d21c44b81a31b8b17d3c3d1b652d3c5ba",
+    "G6_receipt_sha256": "b45622802288c5f762ab919efc92d2f91082858d9d12dd648ff408b9fb4049f4",
+    "acceptance_archive_sha256": "1521f197fe2ea560ce46aab354c63533fc6e352968308401a3d8653595581a8c"
+  }
 }

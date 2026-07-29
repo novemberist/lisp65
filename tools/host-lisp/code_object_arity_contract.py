@@ -291,7 +291,8 @@ def _audit_emitters(values: dict[str, int]) -> dict[str, int]:
     surface_overrides = {
         "%lcc-finish", "%lcc-do-p", "%lcc-expr-ops2", "%lcc-sf-p",
         "%lcc-opform-p", "%lcc-prim", "%lcc-v2-prim2", "%lcc-v2-prim3",
-        "%lcc-v2-prim4",
+        "%lcc-v2-prim4", "%lcc-v2-prim5", "%lcc-v2-bitop",
+        "%lcc-v2-bitop-binary",
     }
     arity_overrides = {
         "%lcc-imm-binds", "%lcc-compile-defun", "%lcc-compile-lambda",

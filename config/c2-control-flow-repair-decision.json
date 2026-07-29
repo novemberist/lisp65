@@ -1,0 +1,79 @@
+{
+  "format": "lisp65-c2-control-flow-repair-decision-v1",
+  "recorded_on": "2026-07-27",
+  "status": "owner-accepted-paper-decision-implementation-not-authorized",
+  "scope": {
+    "phase": "F5",
+    "product_source_changes_authorized": 0,
+    "product_links_authorized": 0,
+    "hardware_runs": 0,
+    "performance_claim": "none"
+  },
+  "taxonomy": {
+    "planning_label": "one control-flow repair",
+    "correction": "while is structured local iteration, not a non-local-exit primitive",
+    "non_local_exit_candidate": "catch/throw"
+  },
+  "decision": {
+    "selected": "while",
+    "rejected_for_this_cut": "catch/throw",
+    "reason": "while closes the documented unbounded-iteration gap using the existing compiler branch ABI, whereas catch/throw requires a new dynamically scoped Lisp unwind stack that the C2J top-level abort landing does not provide"
+  },
+  "while_contract": {
+    "syntax": "(while test form*)",
+    "test": "evaluated before every iteration; NIL terminates and every other object continues",
+    "body": "evaluated left-to-right on each admitted iteration; intermediate values are discarded",
+    "result": "NIL after normal termination",
+    "control_effect": "local structured iteration only",
+    "lowering": "both device and host compilers use the existing JFALSEREL and JMPREL opcodes; no VM opcode, resident dispatcher, root, journal field or runtime state is added",
+    "failure": "missing test, improper syntax or an out-of-range relative branch fails compilation closed",
+    "excluded": [
+      "break",
+      "continue",
+      "return-from",
+      "catch",
+      "throw",
+      "condition restart"
+    ]
+  },
+  "c2_lite_evidence": {
+    "transaction_rule": "no authenticated runtime-overlay transaction remains active while Lisp bytecode executes",
+    "abort_shape": "all error and RUN/STOP exits pass through c2_product_abort_cleanup and then longjmp to the sole REPL top-level landing",
+    "journal_shape": "C2J restores transaction state and wipes transient suffix records; it does not retain resumable Lisp control frames",
+    "transient_shape": "active transient records are bounded execution identities, not catch frames or continuations",
+    "compiler_shape": "dotimes and dolist already prove constant-stack loop lowering through JFALSEREL and JMPREL in both compilers"
+  },
+  "catch_throw_cost": {
+    "required_new_truths": [
+      "a dynamically scoped stack of catch tag, VM frame, logical PC and value-stack depth",
+      "GC rooting for evaluated catch tags and thrown values across nested VM calls",
+      "precise unwinding to an inner bytecode continuation rather than the REPL top level",
+      "a distinction between catchable throw and fatal error or RUN/STOP abort",
+      "parity across device compiler, host compiler, evaluator bridge and nested vm_run_dir calls"
+    ],
+    "why_c2j_is_not_reusable": "the C2J landing deliberately rolls back the current transaction, unpublishes active transient wrappers and longjmps to the REPL; using it for catch would destroy the dynamic context that catch must resume",
+    "capacity_class": "unmeasured resident VM and root-state change; incompatible with treating F5 as a paper-only stretch probe"
+  },
+  "future_boundary": {
+    "catch_throw": "deferred to a separately commissioned condition-and-unwind project",
+    "error": "the existing fatal error path remains top-level and is not advertised as user-catchable",
+    "no_dual_mechanism": true
+  },
+  "required_future_while_proof": [
+    "zero iterations return NIL",
+    "multiple iterations preserve left-to-right side effects",
+    "every non-NIL object is true",
+    "test and body may allocate and trigger GC",
+    "a long-running loop has constant VM and C stack depth",
+    "malformed syntax and relative-branch overflow fail closed",
+    "device compiler, host compiler, host VM and device VM agree",
+    "language reference, migration surface and both special-form inventories include while"
+  ],
+  "prohibitions": [
+    "do not describe while as non-local exit",
+    "do not model C2J or transient records as Lisp catch frames",
+    "do not add catch/throw, block/return-from, tagbody/go or restarts in the while cut",
+    "do not add a new VM opcode when the existing relative-branch ABI suffices",
+    "do not implement F5 before a separately authorized product cut"
+  ]
+}

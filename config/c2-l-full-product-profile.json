@@ -1,23 +1,25 @@
 {
   "format": "lisp65-c2-l-full-product-profile-v1",
-  "recorded_on": "2026-07-23",
+  "recorded_on": "2026-07-28",
   "authority": {
     "kind": "fresh-single-emitter-static-plane-dataflow",
     "emitter": "tools/host-lisp/c2_lite_canonical_product.py",
-    "product_manifest": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/product/substitution-artifacts.json",
-    "compiled_ide_manifest": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/ide.manifest.json",
-    "bank2_static_plane": "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/v6-semantics/bank2-static-code.bin",
+    "product_manifest": "build/post-promotion/phase-v/random-while/product-shaped-wplto-v2/static-plane/narrow-static/product/substitution-artifacts.json",
+    "compiled_ide_manifest": "build/bytecode/dialect-v2/libs/ide.manifest.json",
+    "bank2_static_plane": "build/post-promotion/phase-v/random-while/product-shaped-wplto-v2/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+    "manifest_source_bindings": "build/post-promotion/phase-v/random-while/product-shaped-wplto-v2/receipts/bound-artifact-manifest-source-bindings.json",
     "rule": "The gate derives identity from the freshly emitted single-emitter artifacts. Historical private receipts are acceptance evidence, never clean-build inputs."
   },
-  "product_build_id": "0x3c5fc295",
+  "product_build_id": "0x0957c9d5",
   "images": 6,
-  "entries": 590,
-  "resolutions": 2273,
-  "roots": 283,
+  "entries": 696,
+  "resolutions": 2760,
+  "roots": 340,
+  "direct_entry_refs": 656,
   "bank2_static_code": {
-    "bytes": 34542,
-    "sha256": "cbb8f59b3cf3f2dc44b8ad7e9edb7158b2fe2406d6322e95daa9b0d33c0e2890",
-    "headroom_bytes": 30994
+    "bytes": 41485,
+    "sha256": "cac8e6392de04b9086f37d77b38db7a2f2fd99e904b7b985c50af93db4b16c09",
+    "headroom_bytes": 24051
   },
   "compiled_keymap_delta": {
     "ide_entries": 2,
@@ -29,6 +31,77 @@
     "lcc_run_bytes_after": 109,
     "new_entries": 0,
     "new_resolutions": 1
+  },
+  "published_value_call_delta": {
+    "baseline_release": "v1.2.0",
+    "stdlib_code_bytes": 206,
+    "new_entries": 6,
+    "new_resolutions": 10,
+    "new_roots": 0,
+    "resident_bytes": 0,
+    "contract": "config/c2-top-level-published-value-call-contract.json"
+  },
+  "bitops_delta": {
+    "baseline": "F1 product-shaped candidate",
+    "stdlib_code_bytes": 44,
+    "lcc_code_bytes": 198,
+    "bank2_static_code_bytes": 242,
+    "new_entries": 6,
+    "new_resolutions": 16,
+    "new_roots": 0,
+    "resident_state_bytes": 0,
+    "contract": "config/c2-bitops-contract.json"
+  },
+  "require_resolver_delta": {
+    "baseline": "Link 67",
+    "stdlib_code_bytes": 5251,
+    "new_entries": 74,
+    "new_resolutions": 377,
+    "new_roots": 57,
+    "resident_state_bytes": 0,
+    "native_policy_decisions": 0,
+    "native_seam": "private Prim-ID 67 %c2d-byte(lo,hi), one authenticated C2D-byte read",
+    "contract": "config/c2-require-resolver-contract.json"
+  },
+  "require_header_crc_fix_delta": {
+    "baseline": "Link 70 hardware First Red",
+    "stdlib_code_bytes": 0,
+    "new_entries": 0,
+    "new_resolutions": 0,
+    "new_roots": 0,
+    "resident_bytes": 0,
+    "change": "Every sealed L65I header byte 0 through 16 now advances the one canonical header CRC16"
+  },
+  "require_idempotence_fastpath_delta": {
+    "baseline": "Link 75",
+    "stdlib_code_bytes": 462,
+    "new_entries": 5,
+    "new_resolutions": 26,
+    "new_roots": 0,
+    "resident_bytes": 0,
+    "repeat_VM_step_reduction_percent": 97.9598,
+    "repeat_prim67_read_reduction_percent": 93.2292,
+    "contract": "docs/planning/c2.2-require-idempotence-fastpath.md"
+  },
+  "random_base_delta": {
+    "baseline": "Link 76",
+    "stdlib_code_bytes": 489,
+    "new_entries": 11,
+    "new_resolutions": 31,
+    "new_roots": 0,
+    "resident_bytes": 0,
+    "contract": "config/c2-random-contract.json"
+  },
+  "while_delta": {
+    "baseline": "Link 76 plus random base composition",
+    "lcc_code_bytes": 250,
+    "new_entries": 3,
+    "new_resolutions": 18,
+    "new_roots": 0,
+    "new_direct_entry_refs": 13,
+    "resident_state_bytes": 0,
+    "new_opcodes": 0,
+    "contract": "config/c2-while-contract.json"
   },
   "rule": "The target decoder consumes the exact Bank-2 byte count from src/c2_lite_static_plane.h. The prelink gate binds that header to this profile and this profile to the canonical six-image emission; neither the decoder nor a link driver may reconstruct the count."
 }

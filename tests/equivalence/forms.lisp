@@ -126,6 +126,14 @@ g
 (or 5 nil)
 (let ((x 5)) (and (> x 1) (< x 9)))
 
+; ---- while: native treewalk and both bytecode compilers ----
+(while nil)
+(let ((i 0) (s 0)) (progn (while (< i 4) (setq s (+ s i)) (setq i (+ i 1))) s))
+(let ((i 0)) (progn (while (if (< i 3) (quote continue) nil) (setq i (+ i 1))) i))
+(let ((i 0)) (progn (while (progn (setq i (+ i 1)) (< i 4))) i))
+(while)
+(while nil . 1)
+
 ; ---- binary truncating division; division by zero must agree as an error ----
 (/ 20 4)
 (/ 7 2)

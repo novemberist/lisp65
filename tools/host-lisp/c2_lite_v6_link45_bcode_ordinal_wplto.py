@@ -211,13 +211,27 @@ def source_gate(*, run_smoke: bool) -> dict[str, Any]:
     mutations = semantic_mutations()
     smoke: dict[str, Any] | None = None
     if run_smoke:
+        shape_contract = json.loads(
+            RENDERER_SHAPE_CONTRACT.read_text(encoding="utf-8"))
+        expected = shape_contract["renderer"]["l65e_expected_shape"]
+        code_bytes = (
+            expected["entry_bytes"] + expected["bcode_ordinal_leaf_bytes"])
+        smoke_shape = (
+            f"code={code_bytes} table={expected['table_bytes']} "
+            f"total={expected['slice_bytes']} "
+            f"headroom="
+            f"{expected['slice_cap_bytes'] - expected['slice_bytes']}")
         completed = subprocess.run(
             ["python3", str(SMOKE)], cwd=ROOT, check=True,
             capture_output=True, text=True)
-        require("total=1204 headroom=116" in completed.stdout
+        require(smoke_shape in completed.stdout
                 and "bcode12-boundaries" in completed.stdout,
                 "host/MOS L65E smoke did not bind expected semantics/capacity")
-        smoke = {"status": "passed", "stdout": completed.stdout.splitlines()}
+        smoke = {
+            "status": "passed",
+            "canonical_shape": smoke_shape,
+            "stdout": completed.stdout.splitlines(),
+        }
     return {
         "status": "passed-closed-NIL-SYMI-BCODE-one-cell-render-contract",
         "detail_domains": ["NIL", "SYMI", "BCODE"],

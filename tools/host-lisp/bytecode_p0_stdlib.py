@@ -1436,7 +1436,7 @@ def _resident_suites(suite, seen=None):
 
 def _compile_function_objects(
     functions, forms_by_name, heap, macro_names=None, existing_names=None, label="suite",
-    strict_arity=False, abi_profile=None,
+    strict_arity=False, abi_profile=None, prebuilt_primitives=False,
 ):
     names = []
     code_by_name = {}
@@ -1449,9 +1449,16 @@ def _compile_function_objects(
         form = forms_by_name[name]
         if name in macro_names:
             form = ["defun", name, form[2]] + form[3:]
-        compiled_name, code, helpers = C.compile_top_form_with_helpers(
-            form, heap, strict_arity=strict_arity, abi_profile=abi_profile
-        )
+        try:
+            compiled_name, code, helpers = C.compile_top_form_with_helpers(
+                form, heap, strict_arity=strict_arity,
+                abi_profile=abi_profile,
+                prebuilt_primitives=prebuilt_primitives,
+            )
+        except Exception as error:
+            raise StdlibCheckError(
+                "%s function %s: %s" % (label, name, error)
+            ) from error
         if compiled_name != name:
             raise StdlibCheckError("compiled name mismatch for %s" % name)
         names.append(name)
@@ -1512,6 +1519,7 @@ def _add_code_to_directory(heap, directory, names, code_by_name, label):
 
 
 def _compile_suite(suite, base_addr=PB.DEFAULT_BASE_ADDR, include_cases=True):
+    prebuilt_primitives = suite.get("format") == SUITE_FORMAT_DISK_LIB
     functions, forms_by_name, macro_names, inliner = _suite_functions_and_forms(suite)
     cases = list(suite.get("cases", []))
     if not cases:
@@ -1556,6 +1564,7 @@ def _compile_suite(suite, base_addr=PB.DEFAULT_BASE_ADDR, include_cases=True):
         label="target suite",
         strict_arity=bool(suite.get("strict_arity", False)),
         abi_profile=suite.get("abi_profile"),
+        prebuilt_primitives=prebuilt_primitives,
     )
 
     if include_cases:
@@ -1569,6 +1578,7 @@ def _compile_suite(suite, base_addr=PB.DEFAULT_BASE_ADDR, include_cases=True):
                 heap,
                 strict_arity=bool(suite.get("strict_arity", False)),
                 abi_profile=suite.get("abi_profile"),
+                prebuilt_primitives=prebuilt_primitives,
             )
             names.append(compiled_name)
             code_by_name[compiled_name] = code
@@ -2581,6 +2591,7 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             case_heap,
             strict_arity=bool(suite.get("strict_arity", False)),
             abi_profile=abi_profile,
+            prebuilt_primitives=suite.get("format") == SUITE_FORMAT_DISK_LIB,
         )
         for helper_name, helper_code in helpers:
             helper_obj = case_heap.intern(helper_name)

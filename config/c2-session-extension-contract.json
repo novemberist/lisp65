@@ -21,9 +21,10 @@
     "flags": 1,
     "maximum_total_bytes": 8192,
     "build_identity": "header build_id_u32 must equal the running product build identity",
+    "record_identity": "record bytes 0..3 are the fixed ASCII tag SESS; library names exist only in the generated L65I index and never occupy the one-record session envelope",
     "identity": "catalog CRC32 plus code CRC32, metadata CRC32 and combined image CRC32; host artifact SHA256 binds all bytes",
     "layout": "header, one record, normalized code, C2I-v2 metadata; all checked arithmetic closes exactly and optional C2I alignment is zero",
-    "strictness": "Reject L65S-v3, widening-only v4, count other than one, unknown flags, wrong build identity, CRC mismatch, overlap, truncation or trailing bytes"
+    "strictness": "Reject L65S-v3, widening-only v4, count other than one, a record identity other than SESS, unknown flags, wrong build identity, CRC mismatch, overlap, truncation or trailing bytes"
   },
   "session_attic_arena": {
     "region_id": 2,

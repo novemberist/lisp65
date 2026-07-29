@@ -165,7 +165,7 @@ static obj sf_quote, sf_quasiquote, sf_if, sf_progn, sf_lambda, sf_function,
  * LISP65_EVAL_CONTROL_SF (Aequivalenz-Suite-Befund: Compiler kann sie, Treewalk nicht =
  * Werkbank-REPL-Loch; Zuschalten braucht Diaet — historische Messung ~600 B). `case` fehlt
  * weiter bewusst (Drift-Arbeitsliste). */
-static obj sf_defun, sf_when, sf_unless, sf_let, sf_letstar, sf_dotimes, sf_dolist;
+static obj sf_defun, sf_when, sf_unless, sf_let, sf_letstar, sf_dotimes, sf_dolist, sf_while;
 #ifdef LISP65_DIALECT_V2
 static obj sf_defvar, sf_optional;
 #ifdef LISP65_DIALECT_FAMILY_HARNESS
@@ -190,7 +190,7 @@ obj lisp_t;
 
 enum { P_ADD, P_SUB, P_MUL, P_MOD, P_CONS, P_CAR, P_CDR, P_CONSP, P_EQ, P_EQL,
        P_LT, P_GT, P_NUMEQ, P_LE, P_GE,
-       P_LIST, P_FUNCALL, P_APPLY, P_SETFN, P_GENSYM, P_BOUNDP, P_SYMVAL,
+       P_LIST, P_FUNCALL, P_APPLY, P_SETFN, P_GENSYM, P_INTERN, P_BOUNDP, P_SYMVAL,
        P_PEEK, P_POKE, P_LOAD,
        P_STRINGP, P_STR2LIST, P_LIST2STR, P_STRLEN, P_STRREF,
        P_NUMBERP, P_SYMBOLP, P_WRITECHAR, P_PRIN1,
@@ -433,7 +433,7 @@ static void write_readable_obj(obj x) {
     print_obj(x);
 }
 
-#if defined(LISP65_DIALECT_V2) && !defined(LISP65_V2_CARRIER_CUT)
+#ifndef LISP65_V2_CARRIER_CUT
 static uint8_t primitive_exact_arity(obj args, uint8_t expected) {
     uint8_t actual = 0;
     while (IS_PTR(args) && cell_type(args) == T_CONS) {
@@ -447,6 +447,7 @@ wrong:
     return 0;
 }
 
+#ifdef LISP65_DIALECT_V2
 static uint8_t primitive_byte_arg(obj value) {
     if (!IS_FIX(value) || FIXVAL(value) < 0 || FIXVAL(value) > 255) {
         lisp_abort_static(LISP65_ERR_VM_TYPE, "vm: type error");
@@ -454,6 +455,7 @@ static uint8_t primitive_byte_arg(obj value) {
     }
     return 1;
 }
+#endif
 #endif
 
 /* args ist bereits ausgewertet; von apply mit gepushtem args/fn aufgerufen. */
@@ -616,6 +618,37 @@ static obj apply_prim(int16_t id, obj args) {
 #endif
     case P_SETFN:   set_sym_function(car(args), cadr(args)); return cadr(args);
     case P_GENSYM:  return gensym();
+    case P_INTERN: {
+        obj string;
+        uint16_t length;
+        uint8_t copied = 0;
+        if (!primitive_exact_arity(args, 1)) return NIL;
+        string = car(args);
+        if (!(IS_PTR(string) && cell_type(string) == T_STR)) {
+            lisp_abort_static(LISP65_ERR_VM_TYPE, "vm: type error");
+            return NIL;
+        }
+#ifdef LISP65_STRING_ARENA
+        length = str_len(string);
+#else
+        {
+            obj cursor;
+            length = 0;
+            for (cursor = cell_a(string);
+                 IS_PTR(cursor) && cell_type(cursor) == T_CONS;
+                 cursor = cell_b(cursor)) {
+                if (length > LISP65_SYMBOL_NAME_MAX) break;
+                length++;
+            }
+        }
+#endif
+        if (length > LISP65_SYMBOL_NAME_MAX) {
+            lisp_abort_static(LISP65_ERR_VM_TYPE, "vm: type error");
+            return NIL;
+        }
+        STR_NAME_COPY(string, sym_name_scratch, LISP65_SYMBOL_NAME_MAX, copied);
+        return intern(sym_name_scratch);
+    }
     case P_BOUNDP: {
         obj s = car(args);
         return (is_sym(s) && sym_boundp(s)) ? lisp_t : NIL;
@@ -1700,6 +1733,27 @@ static obj eval_env(obj e, obj env) {
                     gc_rootsp = b2;      /* tail_prep pusht body+env selbst vor jeder Auswertung */
                     e = tail_prep(cdr(args), env); continue;
                 }
+                if (op == sf_while) {
+                    /* Flache, bindungsfreie Schleife. `e` und `env` bleiben die
+                     * tragenden Roots; test/body sind daraus stets erreichbar. */
+                    obj p = args, test, body;
+                    uint8_t pollc = 0;
+                    if (!(IS_PTR(p) && cell_type(p) == T_CONS)) {
+                        lisp_abort_static(LISP65_ERR_WRONG_ARGUMENT_COUNT, "wrong argument count");
+                        gc_rootsp = base; return NIL;
+                    }
+                    while (IS_PTR(p) && cell_type(p) == T_CONS) p = cell_b(p);
+                    if (p != NIL) {
+                        lisp_abort_static(LISP65_ERR_WRONG_ARGUMENT_COUNT, "wrong argument count");
+                        gc_rootsp = base; return NIL;
+                    }
+                    test = car(args); body = cdr(args);
+                    while (eval_env(test, env) != NIL) {
+                        loop_body(body, env);
+                        if (((uint8_t)++pollc & 0x3F) == 0) lisp_poll();
+                    }
+                    gc_rootsp = base; return NIL;
+                }
                 if (op == sf_dotimes || op == sf_dolist) {
                     /* (dotimes (var count [result]) body...) | (dolist (var listform [result]) body...)
                      * FLACHE C-Schleife: EINE Binding-Zelle, je Runde nur cell_set_b — kein Alloc,
@@ -1952,6 +2006,7 @@ WORKBENCH_BOOTNAME(funcall, "funcall");
 WORKBENCH_BOOTNAME(apply, "apply");
 WORKBENCH_BOOTNAME(setfn, "set-symbol-function");
 WORKBENCH_BOOTNAME(gensym, "gensym");
+WORKBENCH_BOOTNAME(intern, "intern");
 WORKBENCH_BOOTNAME(boundp, "boundp");
 #if defined(LISP65_DIALECT_V2) && !defined(LISP65_TREEWALK_STDLIB_BRIDGES)
 WORKBENCH_BOOTNAME(symbol_value, "symbol-value");
@@ -2080,6 +2135,7 @@ WORKBENCH_BOOTNAME(let, "let");
 WORKBENCH_BOOTNAME(letstar, "let*");
 WORKBENCH_BOOTNAME(dotimes, "dotimes");
 WORKBENCH_BOOTNAME(dolist, "dolist");
+WORKBENCH_BOOTNAME(while, "while");
 #endif
 WORKBENCH_BOOTNAME(t, "t");
 
@@ -2114,6 +2170,7 @@ WORKBENCH_BOOTFN void eval_init(void) {
     defprim(BOOTNAME(funcall), P_FUNCALL); defprim(BOOTNAME(apply), P_APPLY);
     defprim(BOOTNAME(setfn), P_SETFN);
     defprim(BOOTNAME(gensym), P_GENSYM);
+    defprim(BOOTNAME(intern), P_INTERN);
     defprim(BOOTNAME(boundp), P_BOUNDP);
 #if defined(LISP65_DIALECT_V2) && !defined(LISP65_TREEWALK_STDLIB_BRIDGES)
     defprim(BOOTNAME(symbol_value), P_SYMVAL);
@@ -2230,6 +2287,7 @@ WORKBENCH_BOOTFN void eval_init(void) {
 #endif
     sf_let = intern(BOOTNAME(let));       sf_letstar = intern(BOOTNAME(letstar));
     sf_dotimes = intern(BOOTNAME(dotimes)); sf_dolist = intern(BOOTNAME(dolist));
+    sf_while = intern(BOOTNAME(while));
 #ifdef LISP65_DIALECT_V2
     sf_defvar = intern("defvar"); sf_optional = intern("&optional");
 #ifdef LISP65_DIALECT_FAMILY_HARNESS

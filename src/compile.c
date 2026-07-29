@@ -65,6 +65,7 @@ static void patch_here(uint16_t opidx) { patch_to(opidx, cc->codelen); }
 static uint8_t op_is(obj op, const char *name) { return op == intern(name); }
 static uint16_t list_len(obj l) { uint16_t n = 0; while (IS_PTR(l) && cell_type(l) == T_CONS) { n++; l = cell_b(l); } return n; }
 static uint8_t is_cons(obj o) { return IS_PTR(o) && cell_type(o) == T_CONS; }
+static uint8_t is_proper_list(obj l) { while (is_cons(l)) l = cell_b(l); return l == NIL; }
 #ifdef LISP65_DIALECT_V2
 static uint8_t is_symbol(obj o) { return IS_SYMI(o) || (IS_PTR(o) && cell_type(o) == T_SYM); }
 #endif
@@ -335,6 +336,21 @@ static void compile_cmpchain(obj args, uint8_t negopc) {
 /* Body einer Schleife: jede Form kompilieren + DROP (Statement-Semantik, kein Stack-Wachstum). */
 static void compile_loop_body(obj body) {
     for (; is_cons(body); body = cell_b(body)) { compile_expr(cell_a(body)); emit1(OP_DROP); }
+}
+
+/* while testet vor jeder Runde, verwirft alle Body-Werte und liefert NIL. */
+static void compile_while(obj args) {
+    obj body;
+    uint16_t loop_start, exit_op, back_op;
+    if (!is_cons(args) || !is_proper_list(args)) { cu->err = 1; return; }
+    body = cell_b(args);
+    loop_start = cc->codelen;
+    compile_expr(cell_a(args));
+    exit_op = emit_branch(OP_JFALSEREL);
+    compile_loop_body(body);
+    back_op = emit_branch(OP_JMPREL); patch_to(back_op, loop_start);
+    patch_here(exit_op);
+    emit1(OP_PUSHNIL);
 }
 
 /* dotimes (var count [result]): var 0..count-1, Body je Iteration; Wert = result (var=count danach). */
@@ -680,7 +696,7 @@ static void compile_immediate_lambda(obj lam, obj callargs) {
 
 int bc_is_special_form(obj sym) {
     static const char *sf[] = { "if","when","unless","and","or","cond","case","let","let*",
-                                "progn","setq","quote","lambda","function","dotimes","dolist" };
+                                "progn","setq","quote","lambda","function","dotimes","dolist","while" };
     uint8_t i;
     for (i = 0; i < (uint8_t)(sizeof(sf) / sizeof(sf[0])); i++)
         if (op_is(sym, sf[i])) return 1;
@@ -730,6 +746,7 @@ static void compile_expr(obj form) {
         else if (op_is(op, "cond"))     compile_cond(args);
         else if (op_is(op, "dotimes"))  compile_dotimes(args);
         else if (op_is(op, "dolist"))   compile_dolist(args);
+        else if (op_is(op, "while"))    compile_while(args);
         else if (op_is(op, "case"))     compile_case(args);
         else if (op_is(op, "<="))       compile_cmpchain(args, OP_GREATER);
         else if (op_is(op, ">="))       compile_cmpchain(args, OP_LESS);

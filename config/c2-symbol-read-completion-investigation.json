@@ -1,0 +1,99 @@
+{
+  "format": "lisp65-c2-symbol-read-completion-investigation-v2",
+  "recorded_on": "2026-07-28",
+  "status": "real-resolver-host-green-mixed-DMA-main-before-require-retry-no-fix",
+  "authority": {
+    "product": "Link 75 bound compiler carrier",
+    "trigger_finding": "c2.2-link75-dirmiss-detail-hold-nonpromotable-receipt.json",
+    "historical_completion_contract": "config/c2-runtime-overlay-dma-completion-contract.json"
+  },
+  "scope": {
+    "readers": [
+      "sympool_read",
+      "nameoff_get",
+      "symval_get",
+      "symfn_get"
+    ],
+    "transport": "normal F018B through the shared c2_dma_list and $D700",
+    "excluded": [
+      "product fix",
+      "new product link",
+      "standalone hardware trip",
+      "normal-DMA core defect claim"
+    ]
+  },
+  "required_order": [
+    "ELF-derived reader inventory with hot/cold attribution",
+    "static descriptor and completion-lifetime attribution",
+    "execute the exact compiled Link-75 Lisp resolver against exact C2D and D81 host-side",
+    "post-symname-return hold first in the next otherwise-required hardware session",
+    "DMA single/paired/mixed measurement in the same session regardless of the post-symname result",
+    "require/defstruct retry only after the DMA outcome is classified or its attributed fix is qualified",
+    "fix-form review only after the first applicable discriminator has classified the mechanism"
+  ],
+  "temperature_policy": {
+    "hot": "symfn_get/dir_find and any per-call function-cell lookup may not acquire per-access CRC or frame-scale polling",
+    "warm": "symval_get and GC/evaluator consumers require a bounded amortized form",
+    "cold": "name and nameoff readers may use content-defined retry if outcome A requires it"
+  },
+  "measurement": {
+    "promotable": false,
+    "promotable_product_delta": 0,
+    "diagnostic_artifact_delta": "stage 0 is a size-neutral patch; stage 1 is diagnostic-only and must pass its own slice/aggregate capacity gate; promotable product delta remains zero",
+    "product_link": false,
+    "stage0": {
+      "name": "post-symname-return-hold",
+      "position": "first diagnostic row of the next otherwise-required product hardware session",
+      "trigger": "(intern-renderer-missing)",
+      "capture": "sym_name_scratch immediately after symname returns and before renderer pointer/length consumption",
+      "patch": "Link-75 feasibility: slot 47, JSR at $C46F, two-byte BRA self-loop at $C472, session offset $EB1C, bytes 85 04 -> 80 FE",
+      "lifecycle": "capture three times, then discard the diagnostic variant"
+    },
+    "stage1": {
+      "condition": "unconditional before the next require retry: the exact host resolver performs 399 Prim-67 Bank-5 byte reads, so renderer exoneration cannot exonerate resolver transport",
+      "row": "(intern)",
+      "trigger_contract": "invoke the diagnostic error-overlay through an arity failure of the already-interned primitive; no new symbol or literal root may be created",
+      "position": "after stage0 adjudication in the same device appointment",
+      "iterations": 256,
+      "batches": 3,
+      "source_bytes": 2,
+      "single_lane": "one submission followed by immediate and settled observations while c2_dma_list remains untouched",
+      "paired_lane": "two immediately consecutive submissions of the same source into disjoint destinations through the same c2_dma_list",
+      "mixed_lane": {
+        "precondition": "C2J is CLEAR, no append/emitter owns phase scratch, and the diagnostic owns Bank-0 source/destination buffers plus [published_c2d_end,published_c2d_end+64) inside the uncommitted append-scratch span",
+        "link75_geometry": "published_c2d_end=33840 ($8430), 64-byte target ends at $8470, strictly below the $BD00 Region-1 floor",
+        "sequence": [
+          "one actual %c2d-byte(0,0) Prim-67 read: Bank 5 -> Bank 0, expected $43",
+          "one 64-byte record-shaped seed with iteration-distinct contents: Bank 0 -> Bank 5 append scratch",
+          "after the seed submission returns, poison and lifetime-reuse its probe-owned 64-byte Bank-0 buffer, then read back: Bank 5 append scratch -> Bank 0",
+          "one two-byte canonical lisp_t value-cell read: Bank 5 -> Bank 0, expected the live lisp_t word"
+        ],
+        "safety": "no published C2D byte, code byte, symbol cell, Service record or persistent counter is written; a successor must rederive the published end and exact-meet proof instead of inheriting $8430"
+      },
+      "reproducibility": {
+        "batches": 3,
+        "iterations_per_batch": 256,
+        "reset": "each batch reinitializes the Bank-0 buffers identically and replays the same deterministic 64-byte payload sequence derived from iteration and byte index",
+        "receipt": "retain one 256-bit failure bitmap per checked mixed observation (Prim67, 64-byte roundtrip, 2-byte cell) and batch, the first failing substep/sample, and a hash of the complete ordered observations",
+        "classification": {
+          "stable": "all mixed failure bitmaps are zero",
+          "deterministic": "a nonzero failure signature, first failing substep and samples are byteidentical in all three batches",
+          "intermittent": "at least one mixed failure occurs but the three signatures are not byteidentical"
+        }
+      },
+      "source_oracle": "read-only JTAG capture of the rebound Bank-5 source before and after the row",
+      "lifecycle": "diagnostic session-overlay variant is discarded after capture"
+    }
+  },
+  "decision_rule": {
+    "post_symname_scratch_correct": "renderer consumption fault for the DIRMISS detail finding; continue DMA measurement independently for resolver transport",
+    "post_symname_scratch_damaged": "continue with the DMA single/paired/mixed measurement",
+    "single_destination_changes_without_resubmit": "candidate A: real target nonconvergence",
+    "single_stable_pair_unstable": "candidate B: descriptor/back-to-back submission lifetime",
+    "both_stable": "no reproduction in the homogeneous lanes; the mixed lane remains independently authoritative",
+    "single_never_converges": "read seam confirmed but discriminator insufficient; return to review",
+    "mixed_deterministic": "same mixed boundary and observation fail in all three batches; ordering/descriptor discipline is the leading fix class, subject to attribution",
+    "mixed_intermittent": "mixed failures vary by batch or iteration; content-defined completion/convergence is the leading fix class, subject to attribution",
+    "mixed_stable": "the real-shape boundary sequence did not reproduce; no fix may be selected from this campaign"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "format": "lisp65-c2.2-link77-phase-v-bundled-hardware-session-v1",
+  "recorded_on": "2026-07-29",
+  "status": "owner-authorized-link77-bound-hardware-not-run",
+  "candidate": {
+    "link": 77,
+    "product_sha256": "9e8999c0de31e306ee957f4912b7fa0baa52c55d58dfe8a933b1c02462e1faa3",
+    "elf_sha256": "ede88619d0e9711b8d5144495ca84f0414ee38352f882df8aadf5372504e9889",
+    "manifest": "build/post-promotion/link77-random-while/canonical-product-manifest.json",
+    "structural_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link77-random-while-structural-receipt.json"
+  },
+  "rows": [
+    {
+      "id": "boot-repl",
+      "group": "regression",
+      "form": "(+ 1 2)",
+      "expected_result": "3",
+      "first_red": true
+    },
+    {
+      "id": "while-zero",
+      "group": "while",
+      "form": "(while nil)",
+      "expected_result": "nil",
+      "first_red": true
+    },
+    {
+      "id": "while-multiple",
+      "group": "while",
+      "form": "(let((i 0)(s 0))(progn(while(< i 4)(setq s(+ s i))(setq i(+ i 1)))s))",
+      "expected_result": "6",
+      "first_red": true
+    },
+    {
+      "id": "while-nonboolean-truth",
+      "group": "while",
+      "form": "(let((i 0))(progn(while(if(< i 3)(quote continue)nil)(setq i(+ i 1)))i))",
+      "expected_result": "3",
+      "first_red": true
+    },
+    {
+      "id": "while-long-constant-stack",
+      "group": "while",
+      "form": "(let((i 0))(progn(while(< i 200)(setq i(+ i 1)))i))",
+      "expected_result": "200",
+      "first_red": true
+    },
+    {
+      "id": "while-allocation-gc",
+      "group": "while",
+      "form": "(let((i 0))(progn(while(car(cons(< i 600)nil))(car(cons i nil))(setq i(+ i 1)))i))",
+      "expected_result": "600",
+      "target_capacity_proof": {
+        "heap_cells": 48,
+        "extended_cells": 1024,
+        "allocations": 1200,
+        "reason": "The 1200 transient cons allocations exceed the complete 1072-cell target heap, so a successful result proves collection without requiring an impossible live set."
+      },
+      "first_red": true
+    },
+    {
+      "id": "while-run-stop",
+      "group": "while",
+      "form": "(while t)",
+      "operator_action": "press physical RUN/STOP once, then leave the device untouched",
+      "expected_status": "*** stopped (run/stop)",
+      "postcondition": "a fresh lisp65 prompt is visible",
+      "first_red": true
+    },
+    {
+      "id": "post-run-stop-repl",
+      "group": "regression",
+      "form": "(+ 1 2)",
+      "expected_result": "3",
+      "first_red": true
+    },
+    {
+      "id": "random-state-width",
+      "group": "random",
+      "form": "(progn(random-seed 1)(length(symbol-value(quote %random-state))))",
+      "expected_result": "55",
+      "first_red": true
+    },
+    {
+      "id": "random-rejection-path",
+      "group": "random",
+      "form": "(progn(random-seed 7286)(random 1000))",
+      "expected_result": "179",
+      "first_red": true
+    },
+    {
+      "id": "random-seed-reproducible",
+      "group": "random",
+      "form": "(let((a(progn(random-seed 1234)(list(random 1000)(random 1000)(random 1000)))))(let((b(progn(random-seed 1234)(list(random 1000)(random 1000)(random 1000)))))(equal a b)))",
+      "expected_result": "t",
+      "first_red": true
+    },
+    {
+      "id": "random-range",
+      "group": "random",
+      "form": "(progn(random-seed 42)(< (random 1000)1000))",
+      "expected_result": "t",
+      "first_red": true
+    },
+    {
+      "id": "irq-mask-readback",
+      "group": "interrupt-ownership",
+      "form": "(list(logand(peek 214 225)192)(logand(peek 214 151)15)(logand(peek 215 19)15))",
+      "expected_result": "(0 0 0)",
+      "registers": [
+        "$D6E1 & $C0",
+        "$D697 & $0F",
+        "$D713 & $0F"
+      ],
+      "first_red": true
+    },
+    {
+      "id": "dirmiss-full-name",
+      "group": "diagnostic",
+      "form": "(intern-renderer-missing)",
+      "expected_error_prefix": "*** undefined function:",
+      "expected_symbol": "intern-renderer-missing",
+      "first_red": true
+    },
+    {
+      "id": "post-dirmiss-repl",
+      "group": "regression",
+      "form": "(+ 4 5)",
+      "expected_result": "9",
+      "first_red": true
+    }
+  ],
+  "dirmiss_adjudication": {
+    "prior_post_symname_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-link75-post-symname-hardware-v2-receipt.json",
+    "prior_outcome": "R-post-symname-scratch-correct-renderer-consumption",
+    "renderer_vma_interval": "$C356..$C4A8",
+    "renderer_bytes": 339,
+    "link75_link77_renderer_sha256": "7ddf36a80772dcd8028a91bd2a8b65341bc2414e01a3b3501cfb41c2558e2021",
+    "rule": "The Link-77 renderer body is byteidentical to the already held Link-75 body. The normal product row therefore tests the user-visible seam directly; a full name closes K2, while a wrong name is a renderer-consumption First Red with the earlier post-symname attribution retained."
+  },
+  "session_policy": {
+    "physical_device_sessions": 1,
+    "order": "exact row order",
+    "first_red": "stop at the first unexpected result, error, red frame, crash, hang or unusable REPL",
+    "operator_pauses": [
+      "one physical RUN/STOP press during while-run-stop"
+    ],
+    "no_per_row_approval": true,
+    "no_inherited_hardware_green": true,
+    "diagnostic_product_delta": 0,
+    "new_product_links": 0
+  },
+  "claim_limit": "A SHA-bound one-session plan only. No on-metal while, random, IRQ-mask or DIRMISS claim exists until all rows are recorded green."
+}

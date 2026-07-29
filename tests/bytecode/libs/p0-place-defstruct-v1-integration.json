@@ -1,0 +1,99 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "place-defstruct-integration",
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
+  "d81_name": "DEFSTRUCT",
+  "provides": ["place", "defstruct"],
+  "requires": ["core"],
+  "description": "End-to-end host integration for the canonical transactional Place registry and defstruct v1.",
+  "sources": [
+    "lib/stdlib-places.lisp",
+    "lib/defstruct.lisp"
+  ],
+  "functions": [
+    "%places-consp",
+    "%putf",
+    "%setf-registry-find",
+    "%setf-place-setter",
+    "%setf-register-begin",
+    "%setf-register",
+    "%setf-register-commit",
+    "%setf-register-abort",
+    "%setf-expand-registered",
+    "%setf-expand-list",
+    "%setf-expand",
+    "setf",
+    "incf",
+    "decf",
+    "push",
+    "pop",
+    "%defstruct-symbol",
+    "%defstruct-slot-symbol",
+    "%defstruct-member",
+    "%defstruct-slots-valid-p",
+    "%defstruct-names-free-p",
+    "%defstruct-slot-names",
+    "%defstruct-generated-names",
+    "%defstruct-constructor-form",
+    "%defstruct-predicate-form",
+    "%defstruct-copy-form",
+    "%defstruct-update-values",
+    "%defstruct-one-slot-forms",
+    "%defstruct-slot-forms",
+    "%defstruct-register-forms",
+    "%defstruct-expansion",
+    "defstruct"
+  ],
+  "require_all_defuns": true,
+  "require_all_defmacros": true,
+  "resident_suite": "p0-stdlib-require-resolver.json",
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "defstruct-two-slot-constructor-form",
+      "expr": "(%defstruct-constructor-form 'probe-point-a '(x y))",
+      "expect": "(defun make-probe-point-a (x y) (list (quote probe-point-a) x y))"
+    },
+    {
+      "name": "defstruct-generated-name-set",
+      "expr": "(%defstruct-generated-names 'probe-point-b '(x y))",
+      "expect": "(make-probe-point-b probe-point-b-p copy-probe-point-b probe-point-b-x probe-point-b-set-x probe-point-b-with-x probe-point-b-y probe-point-b-set-y probe-point-b-with-y)"
+    },
+    {
+      "name": "defstruct-register-chain-publish-last",
+      "expr": "(%defstruct-register-forms 'probe-point-c '(x y))",
+      "expect": "(if (%setf-register (quote probe-point-c-x) (quote probe-point-c-set-x)) (if (%setf-register (quote probe-point-c-y) (quote probe-point-c-set-y)) (%setf-register-commit) (%setf-register-abort)) (%setf-register-abort))"
+    },
+    {
+      "name": "defstruct-duplicate-slot-rejected",
+      "expr": "(%defstruct-slots-valid-p '(x x) nil)",
+      "expect": "nil"
+    },
+    {
+      "name": "defstruct-three-slot-layout-valid",
+      "expr": "(%defstruct-slots-valid-p '(name age city) nil)",
+      "expect": "t"
+    },
+    {
+      "name": "place-conflicting-duplicate-rejected",
+      "expr": "(progn (%setf-register-begin) (%setf-register 'probe-place 'probe-setter-a) (%setf-register 'probe-place 'probe-setter-b))",
+      "expect": "nil"
+    },
+    {
+      "name": "place-rollback-invisible",
+      "expr": "(progn (%setf-register-abort) (%setf-register-begin) (%setf-register 'probe-rolled-back 'probe-setter) (%setf-register-abort) (%setf-place-setter 'probe-rolled-back))",
+      "expect": "nil"
+    },
+    {
+      "name": "place-previous-commit-survives-later-rollback",
+      "expr": "(progn (%setf-register-begin) (%setf-register 'probe-committed 'probe-setter) (%setf-register-commit) (%setf-register-begin) (%setf-register 'probe-failing 'probe-other-setter) (%setf-register-abort) (%setf-place-setter 'probe-committed))",
+      "expect": "probe-setter"
+    },
+    {
+      "name": "unknown-place-remains-unregistered",
+      "expr": "(%setf-place-setter 'probe-unknown)",
+      "expect": "nil"
+    }
+  ]
+}

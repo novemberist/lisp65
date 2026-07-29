@@ -1,0 +1,45 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "defstruct",
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
+  "d81_name": "DEFSTRUCT",
+  "provides": ["defstruct"],
+  "requires": ["place"],
+  "description": "Host-first defstruct v1 freight: positional tagged-list structures with readers, functional updates, copy, predicate and canonical setf-place registration.",
+  "sources": ["lib/defstruct.lisp"],
+  "functions": [
+    "%defstruct-symbol",
+    "%defstruct-slot-symbol",
+    "%defstruct-member",
+    "%defstruct-slots-valid-p",
+    "%defstruct-names-free-p",
+    "%defstruct-slot-names",
+    "%defstruct-generated-names",
+    "%defstruct-constructor-form",
+    "%defstruct-predicate-form",
+    "%defstruct-copy-form",
+    "%defstruct-update-values",
+    "%defstruct-one-slot-forms",
+    "%defstruct-slot-forms",
+    "%defstruct-register-forms",
+    "%defstruct-expansion",
+    "defstruct"
+  ],
+  "require_all_defuns": true,
+  "require_all_defmacros": true,
+  "resident_suite": "p0-stdlib-require-resolver.json",
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "defstruct-generated-name-seam",
+      "expr": "(%defstruct-symbol \"make-\" 'point \"\")",
+      "expect": "make-point"
+    },
+    {
+      "name": "defstruct-kind",
+      "expr": "(function-kind 'defstruct)",
+      "expect": "macro"
+    }
+  ]
+}

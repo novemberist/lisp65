@@ -8,6 +8,10 @@
 #include "c2_product_runtime.h"
 #include "c2_session_emitter.h"
 #endif
+#ifdef LISP65_INTERN_SESSION_SERVICE
+#include "intern_service_overlay.h"
+#include "vm_runtime_overlay.h"
+#endif
 #if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
 #include "buffer_overlay.h"
 #ifdef LISP65_RUNTIME_OVERLAY
@@ -768,8 +772,32 @@ static __attribute__((noinline)) obj vm_mod_adjust(obj remainder, obj divisor) {
 }
 #endif
 
+#if defined(LISP65_MEGA65_MATH_OVERRIDE)
+extern obj lisp65_ash_tagged(obj value, obj count);
+#else
+static __attribute__((noinline)) obj lisp65_ash_tagged(obj a, obj b) {
+    int16_t x = FIXVAL(a), y = FIXVAL(b);
+    uint8_t shift;
+    if (y < -14 || y > 14) { vm_status = VM_TYPEERROR; return NIL; }
+    if (y < 0) return MKFIX((int16_t)(x >> (uint8_t)(-y)));
+    shift = (uint8_t)y;
+    while (shift--) {
+        if (x < -8192 || x > 8191) {
+            vm_status = VM_TYPEERROR;
+            return NIL;
+        }
+        x = (int16_t)(x << 1);
+    }
+    return MKFIX(x);
+}
+#endif
+
 static __attribute__((noinline)) obj vm_fixbinop(uint8_t op, obj a, obj b) {
     int16_t x = FIXVAL(a), y = FIXVAL(b);
+    if (op == OP_ASH) return lisp65_ash_tagged(a, b);
+    if (op == OP_LOGAND) return (obj)(a & b);
+    if (op == OP_LOGIOR) return (obj)(a | b);
+    if (op == OP_LOGXOR) return (obj)((a ^ b) | 1u);
     switch (op) {
     case OP_ADD: return MKFIX(x + y);
     case OP_SUB: return MKFIX(x - y);
@@ -861,6 +889,21 @@ vm_byte_args(obj *a, uint8_t n, uint8_t expected) {
     return 1;
 }
 #undef VM_BYTE_ARGS_FN
+
+#if defined(LISP65_INTERN_SESSION_SERVICE) || \
+    defined(LISP65_V2_NATIVE_STRING_CODECS)
+/* Prim 0 and Prim 68 share one resident string-domain truth.  Keeping the
+ * extended-heap-aware cell_type expansion out of both switch arms is the
+ * capacity condition that lets the operation-specific conversion remain a
+ * single cold Session-service record. */
+static __attribute__((noinline)) uint8_t vm_string_arg_p(obj value) {
+    return IS_PTR(value) && cell_type(value) == T_STR;
+}
+#endif
+#endif
+
+#ifdef LISP65_C2_REQUIRE_RESOLVER
+extern obj vm_c2d_byte(obj *args);
 #endif
 
 #if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
@@ -877,6 +920,15 @@ static __attribute__((noinline)) obj vm_buffer_call(
         (lisp65_buffer_overlay_context *)(void *)vm_codebuf;
     uint8_t slot = (uint8_t)(LISP65_BUFFER_OVERLAY_READ_SLOT +
                              pid - LISP65_BUFFER_PRIM_FIRST);
+#ifdef LISP65_INTERN_SESSION_SERVICE
+    if (pid == 68u) slot = LISP65_INTERN_SERVICE_SLOT;
+#endif
+    /* The synchronous overlay context deliberately reuses vm_codebuf.  Retire
+     * its owner before the first context byte is written: OP_CALLPRIM's
+     * BUF_ENSURE_MINE must reload the caller even when no nested VM invocation
+     * changed the ordinary bank/object tag. */
+    vm_buf_bank = 0xFFu;
+    vm_buf_off = 0xFFFFu;
     context->args = a;
     context->argc = n;
 #ifdef LISP65_RUNTIME_OVERLAY
@@ -904,7 +956,12 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
     int16_t k;
     switch (pid) {
-    case 0: return (n >= 1 && IS_PTR(a[0]) && cell_type(a[0]) == T_STR) ? vm_t : NIL;  /* stringp */
+    case 0:
+#ifdef LISP65_INTERN_SESSION_SERVICE
+        return (n >= 1 && vm_string_arg_p(a[0])) ? vm_t : NIL;          /* stringp */
+#else
+        return (n >= 1 && IS_PTR(a[0]) && cell_type(a[0]) == T_STR) ? vm_t : NIL;
+#endif
     case 5: return (n >= 1 && (IS_SYMI(a[0]) || (IS_PTR(a[0]) && cell_type(a[0]) == T_SYM))) ? vm_t : NIL;  /* symbolp */
     case 6: return (n >= 1 && IS_FIX(a[0])) ? vm_t : NIL;                              /* numberp */
 #if defined(LISP65_DIALECT_V2) && defined(LISP65_V2_NATIVE_CAPABILITIES)
@@ -984,7 +1041,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
     case 28: {                                                                         /* %string-codes */
         uint16_t l, i; obj lst = NIL;
         if (n != 1) { vm_status = VM_ARITY; return NIL; }
-        if (!IS_PTR(a[0]) || cell_type(a[0]) != T_STR) {
+        if (!vm_string_arg_p(a[0])) {
             vm_status = VM_TYPEERROR; return NIL;
         }
         l = str_len(a[0]);
@@ -1293,6 +1350,33 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
         return a[2];
     }
+    case 68: { /* intern -- canonical public string-to-symbol operation */
+#ifdef LISP65_INTERN_SESSION_SERVICE
+        uint16_t length;
+        if (n != 1) { vm_status = VM_ARITY; return NIL; }
+        if (!vm_string_arg_p(a[0])) {
+            vm_status = VM_TYPEERROR; return NIL;
+        }
+        length = str_len(a[0]);
+        if (length > LISP65_SYMBOL_NAME_MAX) {
+            vm_status = VM_TYPEERROR; return NIL;
+        }
+        return vm_buffer_call(pid, a, n);
+#else
+        uint16_t length;
+        if (n != 1) { vm_status = VM_ARITY; return NIL; }
+        if (!IS_PTR(a[0]) || cell_type(a[0]) != T_STR) {
+            vm_status = VM_TYPEERROR; return NIL;
+        }
+        length = str_len(a[0]);
+        if (length > LISP65_SYMBOL_NAME_MAX) {
+            vm_status = VM_TYPEERROR; return NIL;
+        }
+        str_copy_out(a[0], sym_name_scratch, length);
+        sym_name_scratch[length] = '\0';
+        return intern(sym_name_scratch);
+#endif
+    }
 #endif
 #if defined(LISP65_FIRST_CLASS_BUFFER) && !defined(LISP65_BUFFER_NO_PRIMS)
     /* Numeric labels are intentionally visible to the registry parity gate. */
@@ -1304,6 +1388,9 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
     case 66: /* %c2-control -- the sole born-code emitter */
         if (n != 2) { vm_status = VM_ARITY; return NIL; }
         return c2_session_emit_control(a[0], a[1]);
+    case 67: /* %c2d-byte -- private read-only published-C2D seam */
+        if (!vm_byte_args(a, n, 2u)) return NIL;
+        return vm_c2d_byte(a);
 #else
 #ifdef LISP65_C1_COMPILER_TIER
     case 66: /* historical C1 carrier (excluded from the C2 product cut) */
@@ -1641,7 +1728,9 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         case OP_STOREL:   { uint8_t n = RD8(); a = POP(); SLOT(n) = a; break; }
         case OP_DROP:     (void)POP(); break;
 
-        case OP_ADD: case OP_SUB: case OP_MUL: case OP_DIV: case OP_REMAINDER: case OP_MOD:
+        case OP_ADD: case OP_SUB: case OP_MUL: case OP_DIV:
+        case OP_REMAINDER: case OP_MOD:
+        case OP_LOGAND: case OP_LOGIOR: case OP_LOGXOR: case OP_ASH:
         case OP_LESS: case OP_GREATER: {
             obj r;
             b = POP(); a = POP(); NEEDFIX2;

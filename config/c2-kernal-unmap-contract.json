@@ -656,6 +656,9 @@
   "interrupt_and_output": {
     "frame_source_selection": "bounded probe selects and pins one owned source; VIC raster IRQ is the primary candidate",
     "irq_rule": "acknowledge only the owned source, preserve machine context, never call Lisp and never allocate",
+    "45gs02_stz_rule": "STZ stores the Z register, not a constant zero. Hardware IRQ/NMI entry inherits arbitrary Z; c2_kernal_irq_handler MUST execute LDZ #0 immediately after PHZ before any STZ, and PLZ restores the interrupted Z on return.",
+    "handwritten_assembler_gate": "Every STZ in handwritten .s/.S sources and C inline assembler under src and scripts is source-derived and must be dominated by Z=0. The same gate proves every regular ASM return/tail and every ASM-to-external call edge carries Z=0; interrupt RTI/firmware-chain edges instead preserve the arbitrary interrupted entry Z. It models STZ as memory := Z and rejects per-site INZ/LDZ #1 plus INZ-before-return/tail mutations; hardware entries are not hidden behind the C-called leaf inventory.",
+    "lesson_closure_rule": "A platform or toolchain lesson recorded only in prose is not closed. Every such lesson requires a permanent gate or a written explanation why no gate is possible.",
     "source_less_irq_episode_rule": "C2K_SOURCELESS_IRQS is reset by each owned raster IRQ; exactly one source-less return IRQ is allowed per raster-delimited episode, while two consecutive source-less IRQs without an intervening owned raster IRQ fail closed",
     "source_less_irq_episode_state": "C2K_SOURCELESS_IRQS at $FF86 is an episode latch and MUST NOT accumulate across successful Freezer returns",
     "nmi_rule": "no evaluator work; Freezer return makes mapping validation unavoidable",
@@ -1053,5 +1056,48 @@
     },
     "gate": "The final ELF binds fixed section/symbol/address/size, one executable rtov_wipe edge, exactly three rtov_fault data edges, the heap/noinit/alignment chain, the zero-byte E000 anchor and the independent profile pin. Historical receipts are not rewritten.",
     "exit": "The sole WPLTO proved all non-pin geometry green and measured the 40-byte table deterministically at $B972. Owner-authorized artifact completion may publish only the named 42-byte post-link domain without another compiler or linker run; a fully green completion authorizes exactly one Link 60."
+  },
+  "link76_interrupt_ownership_crc_relocation_2026_07_28": {
+    "status": "owner-authorized-frozen-WPLTO-artifact-pin",
+    "owner_authorized_on": "2026-07-28",
+    "reason": "Strict interrupt ownership grew the previously exact-fit handoff by 42 bytes. The unchanged 108-byte boot-only c2k_crc16 body moved to ordinary resident text; the facade and handoff base remain fixed.",
+    "history_rule": "Historical $B4CC/$B4D0 operands remain immutable evidence for Link 33 through Link 75. Link 76 and successors consume only this object.",
+    "placement": {
+      "c2k_crc16": {
+        "section": ".text.c2_kernal_boot_only",
+        "address": "0xa1dd",
+        "bytes": 108,
+        "direct_callers": [
+          "c2_kernal_take_ownership"
+        ],
+        "post_ownership_reachable": false
+      },
+      "handoff": {
+        "address": "0xb4a3",
+        "bytes": 223,
+        "headroom_to_facade_bytes": 66
+      },
+      "facade": {
+        "address": "0xb5c4",
+        "bytes": 48,
+        "moved": false
+      }
+    },
+    "publish_last_repin": {
+      "kernal_window_crc_high": {
+        "address": "0xb4f4",
+        "bytes": 1
+      },
+      "kernal_window_crc_low": {
+        "address": "0xb4fa",
+        "bytes": 1
+      },
+      "runtime_overlay_verifier_bindings": {
+        "address": "0xb972",
+        "bytes": 40
+      },
+      "total_named_bytes": 42
+    },
+    "artifact_rule": "The frozen WPLTO ELF is resumed artifact-side. The semantic c2k_crc16-call-relative operand finder, the exact pins, publish-last domains, pre-ownership closure and whole-ELF single-caller gate must all pass without another compiler or linker invocation."
   }
 }

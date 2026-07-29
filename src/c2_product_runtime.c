@@ -806,16 +806,17 @@ uint16_t c2_product_dir_count(void) {
 uint8_t c2_product_static_image_named(obj name) {
     uint8_t record[32], image;
     uint16_t length, i;
-    if (!c2_ready || !IS_PTR(name) || cell_type(name) != T_STR) return 0;
+    if (!c2_ready || !IS_PTR(name) || cell_type(name) != T_STR) return 0u;
     length = str_len(name);
-    if (!length || length > 8u) return 0;
+    if (!length || length > 8u) return 0u;
     for (image = 0; image < 6u && image < c2_runtime.image_count; ++image) {
         if (!c2_stream_shelf_read(32u + (uint32_t)image * 32u,
-                                  record, sizeof record)) return 0;
+                                  record, sizeof record)) return 0u;
         for (i = 0; i < length && record[i] == str_byte(name, i); ++i) { }
-        if (i == length && (length == 8u || record[length] == 0u)) return 1;
+        if (i == length && (length == 8u || record[length] == 0u))
+            return 1u;
     }
-    return 0;
+    return 0u;
 }
 
 C2_KERNAL_RESIDENT uint16_t c2_product_entry_length(uint16_t ordinal) {

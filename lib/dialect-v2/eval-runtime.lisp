@@ -4,18 +4,72 @@
 (defun eval (form)
   (lcc-run form))
 
-(defun lcc-run (form)
-  ; A published nullary bytecode call is already a complete execution object.
-  ; Recompiling it as a transient wrapper would reopen the full append,
-  ; publication and rollback transaction without adding semantics.  Keep the
-  ; fast path deliberately narrow: macros, primitives, argument evaluation,
-  ; special forms and unbound names all retain the proven compiler path.
-  (if (if (consp form)
-          (if (null (cdr form))
-              (eq (function-kind (car form)) 'bytecode)
+; Public strict-binary designators. Direct compilation lowers the body call
+; to dialect-v2 opcodes 20..23; funcall/apply invoke the same compiled body.
+(defun logand (a b) (logand a b))
+(defun logior (a b) (logior a b))
+(defun logxor (a b) (logxor a b))
+(defun ash (value count) (ash value count))
+
+(defun %c2-direct-quoted-value-p (form)
+  (if (consp form)
+      (if (eq (car form) 'quote)
+          (if (consp (cdr form))
+              (null (cdr (cdr form)))
               nil)
           nil)
-      (funcall (car form))
+      nil))
+
+(defun %c2-direct-value-p (form)
+  (if (numberp form)
+      t
+      (if (stringp form)
+          t
+          (if (eq form nil)
+              t
+              (if (eq form 't)
+                  t
+                  (%c2-direct-quoted-value-p form))))))
+
+(defun %c2-direct-values-p (forms)
+  (if forms
+      (if (consp forms)
+          (if (%c2-direct-value-p (car forms))
+              (%c2-direct-values-p (cdr forms))
+              nil)
+          nil)
+      t))
+
+(defun %c2-direct-value (form)
+  (if (%c2-direct-quoted-value-p form) (car (cdr form)) form))
+
+(defun %c2-direct-values (forms)
+  (if forms
+      (cons (%c2-direct-value (car forms))
+            (%c2-direct-values (cdr forms)))
+      nil))
+
+(defun %c2-published-direct-call-p (form)
+  (if (consp form)
+      (if (symbolp (car form))
+          (if (eq (function-kind (car form)) 'bytecode)
+              (%c2-direct-values-p (cdr form))
+              nil)
+          nil)
+      nil))
+
+(defun lcc-run (form)
+  ; A published bytecode call whose arguments are already values is a complete
+  ; execution object.  Recompiling it as a transient wrapper would reopen the
+  ; full append, publication and rollback transaction without adding
+  ; semantics.  The CodeObject/VM remains the one arity authority; this guard
+  ; only proves that no argument evaluation is being skipped.  Variables,
+  ; nested calls, special forms, malformed lists and unbound names retain the
+  ; proven compiler path.
+  (if (%c2-published-direct-call-p form)
+      (if (null (cdr form))
+          (funcall (car form))
+          (apply (car form) (%c2-direct-values (cdr form))))
       (let ((compiled (%c2-compile-form form)))
         (cond ((if (consp form) (eq (car form) 'defmacro) nil)
                (%set-macro (car (cdr form)) (lcc-install compiled nil)))

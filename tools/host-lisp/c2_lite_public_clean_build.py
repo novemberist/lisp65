@@ -19,7 +19,8 @@ from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[2]
 AUTHORITY = ROOT / "config/c2-lite-public-build-authority.json"
-MANIFEST = ROOT / "build/c2.2/canonical-media/candidate-manifest.json"
+MANIFEST = ROOT / (
+    "build/c2.2/v1.2.1-candidate-media/candidate-manifest.json")
 BUILD_COMMAND = ("make", "--no-print-directory", "workbench-product")
 AXES = (
     {
@@ -167,8 +168,8 @@ def artifact_projection(
 def check_root(root: Path) -> dict[str, Any]:
     auth = authority(root)
     manifest_path = root / (
-        "build/c2.2/canonical-media/candidate-manifest.json")
-    manifest = load(manifest_path, "canonical media manifest")
+        "build/c2.2/v1.2.1-candidate-media/candidate-manifest.json")
+    manifest = load(manifest_path, "v1.2.1 public media manifest")
     rows = artifact_projection(root, manifest, auth["sealed_roles"])
     require(
         manifest.get("artifact_set_sha256")

@@ -1,0 +1,101 @@
+{
+  "authority": {
+    "driver": {
+      "bytes": 11475,
+      "path": "tools/host-lisp/c2_defstruct_link71_sess_pre_rollback_capture.py",
+      "sha256": "5b642814598bc884c24bb8c68771618224efdb8cf04e0dcfd69670ea8accfb33"
+    },
+    "media": {
+      "bytes": 819200,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-rebind/require-defstruct-sess-bound.d81",
+      "sha256": "f77997a9045f6642fc1ae1cd8f197790de5ad526f92e4518ff00451b12cd7b7c"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "role": "c2-resident-prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "session_deployment": {
+      "bytes": 7228,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/deployment.json",
+      "sha256": "bbf94d0475386703c4d67f6282b5124870fd77c7dd428975f3d3cd028d418ba5"
+    },
+    "window": {
+      "address": "0x087fe000",
+      "bytes": 8192,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/c2-product-kernal-window.bin",
+      "sha256": "bff92b183ebc2491008bb96a80e33f18bcb74f1a130166222183b3e48606f2f5"
+    }
+  },
+  "capture_protocol": {
+    "ranges": [
+      {
+        "address": "0x00000000",
+        "bytes": 160,
+        "name": "zero-page"
+      },
+      {
+        "address": "0x0000b9a0",
+        "bytes": 96,
+        "name": "resident-state-low"
+      },
+      {
+        "address": "0x0000bfa0",
+        "bytes": 96,
+        "name": "resident-state-high"
+      },
+      {
+        "address": "0x0000c000",
+        "bytes": 1024,
+        "name": "software-stack-window"
+      },
+      {
+        "address": "0x0000c0c6",
+        "bytes": 304,
+        "name": "phase-scratch"
+      },
+      {
+        "address": "0x0000ff80",
+        "bytes": 16,
+        "name": "kernal-window-state"
+      },
+      {
+        "address": "0x00050000",
+        "bytes": 48,
+        "name": "c2d-header"
+      },
+      {
+        "address": "0x0005c640",
+        "bytes": 64,
+        "name": "c2j"
+      }
+    ],
+    "reason": "repeated halt/resume while the diagnostic SEI loop is active can synthesize two consecutive source-less IRQs and correctly trip c2_kernal_fail_closed",
+    "rule": "issue t1 exactly once, never issue t0, and read registers plus every memory witness through the already-stopped serial monitor",
+    "snapshots": 3
+  },
+  "claim_limit": "One nonpromotable SESS-bound DEFSTRUCT primary-failure capture; no product, require, defstruct, or release qualification.",
+  "format": "lisp65-c2.2-Link71-SESS-pre-rollback-safe-capture-v1",
+  "patch": {
+    "after": "7880fe",
+    "artifact": {
+      "address": "0x0000e9bc",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/defstruct-only-pre-rollback-safe-NONPROMOTABLE/pre-rollback-hold.bin",
+      "sha256": "ecfd175f590d113b784e9d50c335e3d78701dcdf59166ae6e0f7e347e6ae7046"
+    },
+    "before": "20e3e9",
+    "product_bytes_delta": 0,
+    "runtime_address": "0xe9bc"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "status": "ready-authorized-nonpromotable-single-halt-capture",
+  "test": {
+    "form": "(require (quote defstruct))",
+    "hold": "replace the common c2_append_begin rollback call with SEI/BRA-self and stop before rollback mutates provenance",
+    "precondition": "PLACE is loaded first through (%disk-load-lib 39 1), which must return t"
+  }
+}

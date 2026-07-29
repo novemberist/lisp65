@@ -26,6 +26,10 @@ MEASUREMENTS = ROOT / (
     "c2.2-product-link66-bundled-hardware-measurements-receipt.json")
 MEDIA_CONTRACT = ROOT / "config/c2-lite-media-product.json"
 FORMAT = "lisp65-c2-lite-r4-product-candidate-assertions-v1"
+MATRIX_BINDING_KEY = "matrix_terminal_disposition"
+MEASUREMENTS_BINDING_KEY = "link66_measurement_context"
+ASSERTIONS_SOURCE_BOUND = True
+R5_HARDWARE_RESULTS = "fresh-only-no-Link66-inheritance"
 
 
 class R4Error(RuntimeError):
@@ -99,8 +103,8 @@ def build_assertions(repro: dict[str, Any]) -> dict[str, Any]:
         },
         "bindings": {
             "media_contract": binding(MEDIA_CONTRACT),
-            "matrix_terminal_disposition": binding(MATRIX),
-            "link66_measurement_context": binding(MEASUREMENTS),
+            MATRIX_BINDING_KEY: binding(MATRIX),
+            MEASUREMENTS_BINDING_KEY: binding(MEASUREMENTS),
         },
         "capacity_delta": capacity(identity),
         "r5_handoff": {
@@ -108,7 +112,7 @@ def build_assertions(repro: dict[str, Any]) -> dict[str, Any]:
                 "sealed-c2-lite-r4-product-candidate-archive",
             "live_tree": "not-an-authority",
             "required_artifact_set_sha256": identity,
-            "hardware_results": "fresh-only-no-Link66-inheritance",
+            "hardware_results": R5_HARDWARE_RESULTS,
         },
     }
 
@@ -165,9 +169,19 @@ def seal(receipt_path: Path, sealed_on: str) -> None:
         "--follow", MATRIX.relative_to(ROOT).as_posix(),
         "--follow", MEASUREMENTS.relative_to(ROOT).as_posix(),
         "--follow", MEDIA_CONTRACT.relative_to(ROOT).as_posix(),
-        "--assertions-file", ASSERTIONS.relative_to(ROOT).as_posix(),
         "--reproducibility-receipt", receipt_path.relative_to(ROOT).as_posix(),
     ]
+    if ASSERTIONS_SOURCE_BOUND:
+        argv.extend([
+            "--assertions-file", ASSERTIONS.relative_to(ROOT).as_posix(),
+        ])
+    else:
+        argv.extend([
+            "--assertions", json.dumps(
+                build_assertions(repro), sort_keys=True,
+                separators=(",", ":"),
+            ),
+        ])
     for row in repro["product_artifacts"]:
         argv.extend(["--product-artifact", row["path"]])
     argv.extend(["--output", ARCHIVE.relative_to(ROOT).as_posix()])

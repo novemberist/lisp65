@@ -573,19 +573,34 @@ def fresh_roots_fronts_product_gate(elf: Path) -> dict[str, Any]:
     session = elf.parent / "runtime-overlays-session-final.bin"
     overflow = elf.parent / "runtime-overlays-session-final-region1.bin"
     manifest = load(elf.parent / "runtime-overlays-session-final.json")
+    service_enabled = PRODUCT.INTERN_SESSION_SERVICE
+    expected_records = 52 if service_enabled else 51
+    expected_session_bytes = (
+        int(manifest["storage"]["size"])
+        if service_enabled else 64926)
+    service_rows = [
+        row for row in manifest["slices"]
+        if row["name"] == "intern-session-service"]
     require(
         0 < section.bytes <= 1792
         and all(symbol.section == section.name and symbol.bytes > 0
                 for symbol in symbols.values())
         and ".lisp65_rt_c2append_roots" not in truth.sections_by_name
         and ".lisp65_rt_c2append_fronts" not in truth.sections_by_name
-        and session.stat().st_size == 64926
+        and session.stat().st_size == expected_session_bytes
+        and expected_session_bytes <= 65536
         and overflow.stat().st_size == 1956
         and manifest["catalog"]["version"] == 4
-        and manifest["catalog"]["slice_count"] == 51
-        and manifest["storage"]["size"] == 64926
+        and manifest["catalog"]["slice_count"] == expected_records
+        and manifest["storage"]["size"] == expected_session_bytes
         and manifest["overflow_storage"]["used"] == 1956
-        and manifest["overflow_storage"]["capacity"] == 2032,
+        and manifest["overflow_storage"]["capacity"] == 2032
+        and (
+            len(service_rows) == 1
+            and service_rows[0]["id"] == 51
+            and service_rows[0]["section"] == ".lisp65_rt_intern_service"
+            and service_rows[0]["region_id"] == 0
+            if service_enabled else not service_rows),
         "current roots/fronts two-region product gate red")
     return {
         "status": "passed-one-slice-two-entry-current-v4-product",
@@ -768,6 +783,9 @@ def fresh_current_product_postlink_gate() -> dict[str, Any]:
         "successor_bank3_pack"]["session"]
     overflow = session_manifest["overflow_storage"]
     session_binding = bind(session_path)
+    service_enabled = PRODUCT.INTERN_SESSION_SERVICE
+    expected_records = 52 if service_enabled else 51
+    expected_session_bytes = int(session_manifest["storage"]["size"])
     require(
         internal["status"]
             in {
@@ -776,7 +794,8 @@ def fresh_current_product_postlink_gate() -> dict[str, Any]:
             }
         and all(session_binding[key] == runtime_family[key]
                 for key in ("path", "bytes", "sha256"))
-        and session_manifest["storage"]["size"] == 64926
+        and expected_session_bytes <= 65536
+        and (service_enabled or expected_session_bytes == 64926)
         and session_manifest["storage"]["sha256"] == sha(session_path)
         and overflow["used"] == 1956
         and overflow["capacity"] == 2032
@@ -784,9 +803,12 @@ def fresh_current_product_postlink_gate() -> dict[str, Any]:
         and replacement["status"] == "passed"
         and capacity["status"]
             == "passed-current-v4-two-region-session-aggregate"
-        and capacity["session_catalog_records"] == 51
-        and capacity["session_family_bytes"] == 64926
-        and capacity["session_family_headroom_bytes"] == 610
+        and capacity["session_catalog_records"] == expected_records
+        and capacity["session_service_records"]
+            == (1 if service_enabled else 0)
+        and capacity["session_family_bytes"] == expected_session_bytes
+        and capacity["session_family_headroom_bytes"]
+            == 65536 - expected_session_bytes
         and walls["bank0_text_headroom_bytes"] >= 32
         and walls["ordinary_bank0_bss_headroom_bytes"] >= 0
         and walls["fixed_hot_block_headroom_bytes"] >= 0
@@ -899,12 +921,14 @@ def fresh_link50_authority() -> dict[str, Any]:
 
 def fresh_session_capacity_gate(
         shape: dict[str, Any], elf: Path) -> dict[str, Any]:
-    """Qualify the current 51-record v4/two-region Session geometry.
+    """Qualify the current v4/two-region Session geometry.
 
     The inherited consolidation gate encodes the pre-v4 48-record layout.
     Current source adds three independently addressable rollback wipes in
-    Region 1.  Validate that complete configured inventory and its exact
-    packed result instead of replaying the historical record-count assertion.
+    Region 1.  A configured Session service may append exactly one bounded
+    Region-0 record.  Validate that complete configured inventory and its
+    exact packed result instead of replaying a historical record-count
+    assertion.
     """
     gate = LINK50.BASE.CONS
     truth = gate.ElfTruth.read(
@@ -928,21 +952,36 @@ def fresh_session_capacity_gate(
     rollback = [
         row["name"] for row in append_rows
         if row["name"].startswith("c2-append-rollback-")]
+    service_enabled = PRODUCT.INTERN_SESSION_SERVICE
+    expected_records = 52 if service_enabled else 51
+    service_rows = [
+        row for row in rows if row["name"] == "intern-session-service"]
+    service_bytes = (
+        truth.section(".lisp65_rt_intern_service").bytes
+        if service_enabled else 0)
     require(
-        len(rows) == 51
-        and len(set(sections)) == 51
+        len(rows) == expected_records
+        and len(set(sections)) == expected_records
         and [(row["id"], row["name"]) for row in region1_rows] == [
             (42, "c2-append-rollback-wipe-plane"),
             (43, "c2-append-rollback-wipe-chip"),
             (44, "c2-append-rollback-wipe-attic"),
         ]
         and len(append_rows) == 24
-        and [(row["id"], row["name"]) for row in rows[47:]] == [
+        and [(row["id"], row["name"]) for row in rows[47:51]] == [
             (47, "error-text-renderer"),
             (48, "first-class-buffer-read"),
             (49, "first-class-buffer-write"),
             (50, "first-class-buffer-alloc"),
         ]
+        and (
+            len(service_rows) == 1
+            and service_rows[0]["id"] == 51
+            and service_rows[0]["section"] == ".lisp65_rt_intern_service"
+            and service_rows[0]["region_id"] == 0
+            and service_rows[0]["roles"] == ["runtime", "reusable"]
+            and 0 < service_bytes <= 512
+            if service_enabled else not service_rows)
         and rollback == [
             "c2-append-rollback-unpublish",
             "c2-append-rollback-wipe-plane",
@@ -950,9 +989,10 @@ def fresh_session_capacity_gate(
             "c2-append-rollback-wipe-attic",
             "c2-append-rollback-finalize",
         ]
-        and modeled == session["bytes"] == 64926
-        and session["headroom_bytes"] == 610
-        and manifest["storage"]["size"] == 64926
+        and modeled == session["bytes"] == manifest["storage"]["size"]
+        and modeled <= 65536
+        and session["headroom_bytes"] == 65536 - modeled
+        and (service_enabled or modeled == 64926)
         and manifest["overflow_storage"]["used"] == 1956
         and manifest["overflow_storage"]["capacity"] == 2032
         and 0 < fused.bytes <= 1792
@@ -966,6 +1006,8 @@ def fresh_session_capacity_gate(
         "publish_clear_headroom_bytes": 1792 - fused.bytes,
         "retired_sections_present": retired,
         "session_catalog_records": len(rows),
+        "session_service_records": len(service_rows),
+        "session_service_bytes": service_bytes,
         "append_records": len(append_rows),
         "session_family_bytes": modeled,
         "session_family_headroom_bytes": 65536 - modeled,
@@ -974,7 +1016,7 @@ def fresh_session_capacity_gate(
 
 
 def fresh_generated_direct_entry_gate() -> dict[str, Any]:
-    """Run the generated-source direct-entry proof at the current 638 rows."""
+    """Run the generated-source direct-entry proof at the current profile."""
     gate = LINK49.BASE_LINK.DIRECT
     direct = gate.DIRECT
     generated = gate.OUT / "generated-product-sources"
@@ -995,13 +1037,16 @@ def fresh_generated_direct_entry_gate() -> dict[str, Any]:
             direct.PHASE_12, direct.TARGET_DEFINES,
         ) = old
     parity = value["cross_parity"]
+    expected_refs = int(load(PROFILE)["direct_entry_refs"])
     require(
-        parity["direct_entry_references"] == 638
+        parity["direct_entry_references"] == expected_refs
         and parity["fixnum_decodable_published_values"] == 0
         and parity["target_phase12_negative_classes"] == 4,
         "current generated C2-lite direct-entry closure red")
     return {
-        "status": "passed-generated-current-product-sources-638-of-638",
+        "status": (
+            "passed-generated-current-product-sources-"
+            f"{expected_refs}-of-{expected_refs}"),
         "cross_parity": parity,
         "single_truth": value["single_truth"],
         "target_execution": value["target_execution"],
@@ -1330,6 +1375,7 @@ def configure_wplto() -> dict[str, Any]:
     DIRECT_ENTRY.SHELF = STATIC_PRODUCT / "product-shelf-v4-direct.bin"
     DIRECT_ENTRY.C2D = STATIC_PRODUCT / "initial.c2d-v3.bin"
     profile = load(PROFILE)
+    expected_direct_refs = int(profile["direct_entry_refs"])
     DIRECT_ENTRY.EXPECTED_GEOMETRY = {
         "images": int(profile["images"]),
         "entries": int(profile["entries"]),
@@ -1337,8 +1383,8 @@ def configure_wplto() -> dict[str, Any]:
         "roots": int(profile["roots"]),
         "images_offset": 48,
     }
-    DIRECT_ENTRY.EXPECTED_DIRECT_REFS = 638
-    REAL_DIRECT.EXPECTED_DIRECT_REFS = 638
+    DIRECT_ENTRY.EXPECTED_DIRECT_REFS = expected_direct_refs
+    REAL_DIRECT.EXPECTED_DIRECT_REFS = expected_direct_refs
     REAL_DIRECT.EXPECTED_CHANGED_BINDINGS = {
         "initial_c2d", "normalized_plane", "product_shelf",
         "substitution_artifacts",
@@ -1356,7 +1402,7 @@ def configure_wplto() -> dict[str, Any]:
     LINK49.BASELINE_SHA = sha(LINK49.BASELINE)
     LINK49.BASELINE_RECEIPT = STATIC_RECEIPT
     LINK49.BASELINE_RECEIPT_SHA = sha(STATIC_RECEIPT)
-    LINK49.BASE_LINK.EXPECTED_DIRECT_REFS = 638
+    LINK49.BASE_LINK.EXPECTED_DIRECT_REFS = expected_direct_refs
     global _ORIGINAL_HOLD_SHELF_QUALIFY
     _ORIGINAL_HOLD_SHELF_QUALIFY = HOLD_SHELF.qualify
     HOLD_SHELF.qualify = fresh_hold_shelf_qualify
@@ -1401,7 +1447,7 @@ def configure_wplto() -> dict[str, Any]:
             str(STATIC_PRODUCT / "substitution-artifacts.json"),
         "LISP65_DIRECT_ENTRY_BUILD": str(REAL_DIRECT.BUILD),
         "LISP65_DIRECT_ENTRY_RECEIPT": str(REAL_DIRECT.RECEIPT),
-        "LISP65_DIRECT_ENTRY_EXPECTED_REFS": "638",
+        "LISP65_DIRECT_ENTRY_EXPECTED_REFS": str(expected_direct_refs),
         "LISP65_DIRECT_ENTRY_EXPECTED_CHANGED_BINDINGS": ",".join(sorted(
             REAL_DIRECT.EXPECTED_CHANGED_BINDINGS)),
         "LISP65_DIRECT_ENTRY_PUBLIC_CLEAN_BUILD": "1",
@@ -1543,7 +1589,8 @@ def run_wplto() -> dict[str, Any]:
         "status":
             "passed-one-current-WPLTO-closure-at-typed-historical-"
             "qualification-boundary",
-        "publish_last_authority": "0xb972",
+        "publish_last_authority":
+            f"0x{PRODUCT.LINK60_VERIFIER_BINDING_BASE:04x}",
         "historical_profile_label":
             "0xb94e retained only inside the sealed legacy profile text",
         "historical_checker_boundary": {
@@ -1576,7 +1623,7 @@ def verify_published_verifier_binding(
     byte_count = PRODUCT.runtime_binding_bytes()
     require(
         section is not None
-        and section["address"] == 0xB972
+        and section["address"] == PRODUCT.LINK60_VERIFIER_BINDING_BASE
         and section["bytes"] == byte_count == 40,
         "published verifier binding geometry drift")
     start = section["address"]
@@ -1707,7 +1754,8 @@ def complete_artifacts() -> dict[str, Any]:
         product, boot_unbound[1], session_unbound[1])
     window = load(FINAL / "kernal-window-publish-last.json")
     publish = PRODUCT.total_publish_last_gate(
-        FINAL, product, window, binding, expected_verifier_base=0xB972)
+        FINAL, product, window, binding,
+        expected_verifier_base=PRODUCT.LINK60_VERIFIER_BINDING_BASE)
     boot_final = PRODUCT.overlay_pack_family(
         FINAL, product, profile, "boot", "final")
     session_final = PRODUCT.overlay_pack_family(

@@ -64,6 +64,20 @@ def parse_doc_ops(text):
     return ops
 
 
+def parse_doc_opcode_extensions(text):
+    sec = section(text, r"^## Opcode extensions", r"^## Prim-ID extensions")
+    ops = {}
+    for line in sec.splitlines():
+        line = line.strip()
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) < 3 or cells[0].startswith("---") or cells[0] == "Opcode":
+            continue
+        ops[int(strip_md(cells[0]))] = (strip_md(cells[1]), strip_md(cells[2]))
+    return ops
+
+
 def expand_doc_numbers(cell):
     cell = cell.replace(" ", "")
     if "\u2013" in cell or "-" in cell:
@@ -313,6 +327,10 @@ def run(verbose=False):
     python_callprim_cases = parse_python_callprim_cases(read_text(BYTECODE_P0_PATH))
 
     doc_ops = parse_doc_ops(doc_text)
+    for opcode, identity in parse_doc_opcode_extensions(doc_extension_text).items():
+        if opcode in doc_ops:
+            raise ValueError("duplicate opcode in live ABI extension: %d" % opcode)
+        doc_ops[opcode] = identity
     doc_prims = parse_doc_prims(doc_text)
     for prim_id, name in parse_doc_prim_extensions(doc_extension_text).items():
         if prim_id in doc_prims:
@@ -334,7 +352,7 @@ def run(verbose=False):
     expected_prim_profiles = {
         "dialect-v1": {"active": list(range(23)), "tombstone": []},
         "dialect-v2": {
-            "active": [0] + list(range(3, 26)) + [28, 29] + list(range(30, 34)) + list(range(35, 40)) + list(range(41, 66)),
+            "active": [0] + list(range(3, 26)) + [28, 29] + list(range(30, 34)) + list(range(35, 40)) + list(range(41, 69)),
             "tombstone": [1, 2, 26, 27, 34, 40],
         },
     }

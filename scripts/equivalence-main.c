@@ -44,8 +44,20 @@ static uint8_t  lcc_store[16384];
 static uint16_t lcc_off = 0;
 static int      lcc_mode = 0;
 static int use_crepl = 0;   /* nur der vm-Modus (C-Compiler) nutzt die crepl-Region */
+#ifdef LISP65_EQUIVALENCE_OVERLAY_OBSERVER
+void c2_equivalence_overlay_after_code_load(
+    uint8_t bank, uint16_t off, uint16_t len,
+    const uint8_t *source, const uint8_t *destination);
+int c2_equivalence_overlay_assert(void);
+#endif
 void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst) {
-    (void)bank; memcpy(dst, (use_crepl ? crepl_store : lcc_store) + off, len);
+    const uint8_t *source = (use_crepl ? crepl_store : lcc_store) + off;
+    memcpy(dst, source, len);
+#ifdef LISP65_EQUIVALENCE_OVERLAY_OBSERVER
+    c2_equivalence_overlay_after_code_load(bank, off, len, source, dst);
+#else
+    (void)bank;
+#endif
 }
 
 /* Plattform-Naht fuer das lcc-install-PRIM (eval.c): Host = lcc_store-Append. */
@@ -236,6 +248,12 @@ int main(int argc, char **argv) {
     }
     else if (lcc_mode) { eval_init(); vm_init(); vm_dir_reset(); }   /* Treewalk traegt lcc; VM fuehrt aus */
     else              { eval_init(); }
+#ifdef LISP65_EXT_HEAP
+    /* Product-shaped GC lanes freeze the boot allocation prefix before the
+     * tested top-level form.  Normal equivalence runs retain their historical
+     * initialization unless the lane explicitly requests this state. */
+    if (getenv("LISP65_EQ_FREEZE_BOOT")) gc_freeze_boot();
+#endif
 #ifdef LISP65_EVAL_SCREEN_PRIMS
     scr_init();
 #endif
@@ -328,6 +346,61 @@ int main(int argc, char **argv) {
             putchar('\n');
         }
         lisp_toplevel_active = 0;
+    }
+#ifdef LISP65_EQUIVALENCE_OVERLAY_OBSERVER
+    if (!c2_equivalence_overlay_assert()) {
+        fputs("c2-prim68-buffer-reload: FIRST RED\n", stderr);
+        return 4;
+    }
+#endif
+#ifdef LISP65_GC_LANE_PROBE
+    if (getenv("LISP65_EQ_GC_LANE_REPORT")) {
+        fprintf(stderr,
+            "gc-lane: runs=%u marked=%u reclaimed=%u free_before=%u "
+            "free_after=%u min_free_after=%u alloc_high=%u frozen=%u "
+            "final_free=%u mem_oom=%u",
+            (unsigned)gc_runs,
+            (unsigned)gc_lane_last_marked,
+            (unsigned)gc_lane_last_reclaimed,
+            (unsigned)gc_lane_last_free_before,
+            (unsigned)gc_lane_last_free_after,
+            (unsigned)gc_lane_min_free_after,
+            (unsigned)gc_lane_last_alloc_high,
+            (unsigned)gc_lane_last_frozen,
+            (unsigned)mem_free_cells(),
+            (unsigned)mem_oom);
+#if !defined(__mos__) && defined(LISP65_EXT_HEAP_HOST_DMA_MODEL)
+        fprintf(stderr,
+            " dma_model=1 dma_reads=%lu dma_writes=%lu dma_bytes=%lu "
+            "dma_faults=%u",
+            (unsigned long)ext_host_dma_read_jobs,
+            (unsigned long)ext_host_dma_write_jobs,
+            (unsigned long)ext_host_dma_bytes,
+            (unsigned)ext_host_dma_faults);
+#else
+        fputs(" dma_model=0 dma_reads=0 dma_writes=0 dma_bytes=0 dma_faults=0",
+              stderr);
+#endif
+        fputc('\n', stderr);
+    }
+#if !defined(__mos__) && defined(LISP65_EXT_HEAP_HOST_DMA_MODEL)
+    if (ext_host_dma_faults) {
+        fputs("equivalence-check: FIRST RED: modeled EXT DMA verification failed\n",
+              stderr);
+        return 7;
+    }
+#endif
+#endif
+    /* Optional proof hook for allocation-heavy semantic fixtures.  It changes
+     * neither the normal corpus output nor engine semantics; it merely keeps a
+     * supposed GC test from going green without having collected at all. */
+    if (getenv("LISP65_EQ_REQUIRE_GC") && gc_runs == 0) {
+        fputs("equivalence-check: FIRST RED: fixture did not trigger GC\n", stderr);
+        return 5;
+    }
+    if (getenv("LISP65_EQ_REQUIRE_NO_OOM") && mem_oom) {
+        fputs("equivalence-check: FIRST RED: fixture left mem_oom set\n", stderr);
+        return 6;
     }
     return 0;
 }

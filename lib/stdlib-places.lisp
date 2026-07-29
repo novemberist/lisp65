@@ -2,7 +2,7 @@
 ; docs/modularization-review-lane-k.md + ansi-cl-inventory §Places). Reine Lisp-Lib —
 ; NULL Bank-0-Kosten; Kandidat für die "place"-Pilot-Lib (PLACE auf D81).
 ;
-; v1-Fläche (feste Expander, KEINE generalisierten setf-Expander):
+; v1-Fläche (feste Expander plus EINE kanonische Erweiterungstabelle):
 ;   (setf sym v) (setf (car p) v) (setf (cdr p) v) (setf (getf sym k) v)
 ;   (incf place [n]) (decf place [n]) (push v place) (pop place)
 ; EHRLICHE v1-Grenzen (dokumentiert, CL-naiv):
@@ -11,6 +11,13 @@
 ;   - (setf (getf ...)) verlangt ein SYMBOL als plist-Träger (schreibt via setq zurück).
 ;   - Unbekannte Place-Formen expandieren zu einem Aufruf der undefinierten
 ;     %places-error-unsupported-place -> LAUTER Abort mit Namen in der Fehlermeldung.
+;
+; Bibliotheks-Erweiterungen werden publish-last registriert.  Die sichtbare
+; Tabelle (*setf-place-registry*) ändert sich erst bei %setf-register-commit;
+; ein abgebrochener Installationslauf lässt höchstens unsichtbare Pending-
+; Daten zurück, die der nächste begin verwirft.  Damit kann ein fehlgeschlagenes
+; require/Append niemals einen Place einer nicht publizierten Bibliothek zeigen.
+; Identische Doppelregistrierung ist idempotent, widersprüchliche ist fail-closed.
 
 (defun %places-consp (x)
   (if x (if (numberp x) nil (if (symbolp x) nil (if (stringp x) nil t))) nil))
@@ -23,25 +30,101 @@
           (cons (car pl) (cons (car (cdr pl)) (%putf (cdr (cdr pl)) k v))))
       (cons k (cons v nil))))
 
+(defun %setf-registry-find (reader rows)
+  (if rows
+      (if (eq reader (car (car rows)))
+          (cdr (car rows))
+          (%setf-registry-find reader (cdr rows)))
+      nil))
+
+(defun %setf-place-setter (reader)
+  (%setf-registry-find
+   reader
+   (if (boundp '*setf-place-registry*)
+       (symbol-value '*setf-place-registry*)
+       nil)))
+
+(defun %setf-register-begin ()
+  ; A stale pending value is deliberately discarded: it can only belong to
+  ; an aborted, never-published installation episode.
+  (set-symbol-value
+   '*setf-place-pending*
+   (if (boundp '*setf-place-registry*)
+       (symbol-value '*setf-place-registry*)
+       nil))
+  (set-symbol-value '*setf-place-open* t)
+  t)
+
+(defun %setf-register (reader setter)
+  (if (if (symbolp reader) (symbolp setter) nil)
+      (if (if (boundp '*setf-place-open*)
+              (symbol-value '*setf-place-open*)
+              nil)
+          (let ((old
+                  (%setf-registry-find
+                   reader (symbol-value '*setf-place-pending*))))
+            (if old
+                (if (eq old setter) t nil)
+                (progn
+                  (set-symbol-value
+                   '*setf-place-pending*
+                   (cons (cons reader setter)
+                         (symbol-value '*setf-place-pending*)))
+                  t)))
+          nil)
+      nil))
+
+(defun %setf-register-commit ()
+  (if (if (boundp '*setf-place-open*)
+          (symbol-value '*setf-place-open*)
+          nil)
+      (progn
+        (set-symbol-value
+         '*setf-place-registry*
+         (symbol-value '*setf-place-pending*))
+        (set-symbol-value '*setf-place-pending* nil)
+        (set-symbol-value '*setf-place-open* nil)
+        t)
+      nil))
+
+(defun %setf-register-abort ()
+  (set-symbol-value '*setf-place-pending* nil)
+  (set-symbol-value '*setf-place-open* nil)
+  nil)
+
+(defun %setf-expand-registered (place vform g)
+  (let ((setter (%setf-place-setter (car place))))
+    (if setter
+        (list 'let (list (list g vform))
+              (cons setter (append (cdr place) (list g)))
+              g)
+        (list '%places-error-unsupported-place))))
+
+(defun %setf-expand-list (place vform)
+  (let ((g (gensym)))
+    (cond ((eq (car place) 'car)
+           (list 'let (list (list g vform))
+                 (list 'rplaca (car (cdr place)) g) g))
+          ((eq (car place) 'cdr)
+           (list 'let (list (list g vform))
+                 (list 'rplacd (car (cdr place)) g) g))
+          ((eq (car place) 'getf)
+           (list 'let (list (list g vform))
+                 (list 'setq (car (cdr place))
+                       (list '%putf
+                             (car (cdr place))
+                             (car (cdr (cdr place)))
+                             g))
+                 g))
+          (t (%setf-expand-registered place vform g)))))
+
 ; Expander-Kern: baut die Zuweisungs-Form für eine Place. Wert-Form wird als GENSYM-let
 ; gebunden, damit setf den WERT zurückgibt und val nur EINMAL ausgewertet wird.
 (defun %setf-expand (place vform)
   (if (symbolp place)
       (list 'setq place vform)
       (if (%places-consp place)   ; Dialekt-Falle: nicht jeder Traeger hat ein natives consp-Primitiv.
-          (let ((g (gensym)))
-            (cond ((eq (car place) 'car)
-                   (list 'let (list (list g vform))
-                         (list 'rplaca (car (cdr place)) g) g))
-                  ((eq (car place) 'cdr)
-                   (list 'let (list (list g vform))
-                         (list 'rplacd (car (cdr place)) g) g))
-                  ((eq (car place) 'getf)
-                   (list 'let (list (list g vform))
-                         (list 'setq (car (cdr place))
-                               (list '%putf (car (cdr place)) (car (cdr (cdr place))) g))
-                         g))
-                  (t (list '%places-error-unsupported-place))))
+          (%setf-expand-list place vform)
           (list '%places-error-unsupported-place))))
 
 (defmacro setf (place vform) (%setf-expand place vform))

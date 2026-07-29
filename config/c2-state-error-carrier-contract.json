@@ -1,0 +1,95 @@
+{
+  "format": "lisp65-c2-state-error-carrier-contract-v1",
+  "recorded_on": "2026-07-27",
+  "scope": "F3 gc, room and error(String)",
+  "public_functions": {
+    "gc": {
+      "arity": 0,
+      "effect": "exactly one complete synchronous collection",
+      "result": "canonical t"
+    },
+    "room": {
+      "arity": 0,
+      "result_order": [
+        "heap-free",
+        "heap-capacity",
+        "symbol-free",
+        "symbol-capacity",
+        "namepool-free",
+        "namepool-capacity",
+        "directory-free",
+        "directory-capacity"
+      ],
+      "snapshot_rule": "all eight counters are captured before allocating the result",
+      "result": "proper list of eight signed-15-bit nonnegative fixnums"
+    },
+    "error": {
+      "arity": 1,
+      "argument": "String",
+      "result": "non-returning top-level abort",
+      "status_code": 64,
+      "rendering": "the exact String bytes follow the existing three-star error prefix and one space",
+      "exclusions": [
+        "numeric user code",
+        "handler",
+        "restart",
+        "resumable continuation"
+      ]
+    }
+  },
+  "required_routes": [
+    "direct",
+    "funcall",
+    "apply"
+  ],
+  "carrier": {
+    "primitive_id": 63,
+    "existing_name": "%buffer-read",
+    "existing_runtime_slice": ".lisp65_rt_buffer_read",
+    "private_selectors": {
+      "4": "gc",
+      "5": "room",
+      "6": "error"
+    },
+    "public_selector_access": false,
+    "resident_dispatcher_added": false,
+    "resident_state_bytes": 0,
+    "new_roots": 0
+  },
+  "error_transport": {
+    "producer": "the error selector validates T_STR and calls lisp_abort_symbol",
+    "state": "the existing pending status plus object-detail cell",
+    "renderer": "the existing L65E overlay with one allocation-free String branch",
+    "static_error_text_added": false,
+    "new_string_pool_bytes": 0,
+    "inner_status_wins": true
+  },
+  "capacity": {
+    "policy": "F3 ships only if product-shaped WPLTO proves zero resident demand relative to F2",
+    "f2_wall_baseline": {
+      "bank0_text_headroom_bytes": 90,
+      "e000_headroom_bytes": 151,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 69
+    },
+    "buffer_read_slice_cap_bytes": 1792,
+    "error_renderer_slice_cap_bytes": 1320,
+    "on_resident_debit": "park F3 for halt number 2; do not negotiate a wall",
+    "hardware_claim": "none before bundled S1"
+  },
+  "required_fixtures": [
+    "direct funcall and apply for gc room and error",
+    "gc invokes exactly one synchronous collection and returns canonical t",
+    "room returns one proper eight-fixnum list in the fixed order",
+    "room snapshots all counters before allocating its observer result",
+    "room result construction is GC rooted and allocation failure is fail-closed",
+    "error transports the exact String through status code 64 and the existing object-detail cell",
+    "error rendering allocates zero cells and resolves zero symbols",
+    "non-String error argument is rejected before abort",
+    "wrong arity is rejected for all three public functions",
+    "selectors outside 0 through 6 remain rejected",
+    "the one carrier primitive ID and one existing read slice remain the only transport",
+    "product-shaped WPLTO reports zero resident demand relative to F2"
+  ]
+}

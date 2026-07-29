@@ -1,0 +1,87 @@
+{
+  "format": "lisp65-c2-bitops-contract-v1",
+  "recorded_on": "2026-07-27",
+  "scope": "F2 signed-15-bit bit operations",
+  "public_functions": [
+    "logand",
+    "logior",
+    "logxor",
+    "ash"
+  ],
+  "call_contract": {
+    "arity": "exactly two",
+    "argument_domain": "signed-15-bit fixnum",
+    "routes": [
+      "direct",
+      "funcall",
+      "apply"
+    ],
+    "wrong_arity_status": "VM_ARITY",
+    "wrong_type_status": "VM_TYPEERROR"
+  },
+  "value_contract": {
+    "fixnum_min": -16384,
+    "fixnum_max": 16383,
+    "logical_ops": "operate on the low 15-bit two-complement representation and reinterpret bit 14 as the signed fixnum sign",
+    "ash_right": "arithmetic signed shift",
+    "ash_left": "checked at every step and rejects a result outside the signed-15-bit range",
+    "ash_count_min": -14,
+    "ash_count_max": 14,
+    "ash_count_failure": "VM_TYPEERROR",
+    "ash_overflow_failure": "VM_TYPEERROR"
+  },
+  "abi": {
+    "profile": "dialect-v2",
+    "opcodes": {
+      "20": "LOGAND",
+      "21": "LOGIOR",
+      "22": "LOGXOR",
+      "23": "ASH"
+    },
+    "operand": "none",
+    "dialect_v1": "IDs 20 through 23 remain reserved and decode fail-closed",
+    "identity_policy": "permanent non-reusable opcode identities",
+    "prim_ids_added": 0
+  },
+  "implementation": {
+    "public_designators": "strict-arity bytecode wrappers in the C2-lite static plane",
+    "compiler_lowering": "direct v2 opcode emission",
+    "resident_vm": "four members of the existing fixnum-binary dispatch group; logical operations extend its shared noinline body and ASH calls one named 112-byte non-LTO leaf in the resident island",
+    "ash_leaf": "lisp65_ash_tagged; regular named/sized ELF function; llvm-mos ABI value A/X, count __rc2/__rc3, result A/X, Z=0",
+    "ash_leaf_bytes": 112,
+    "resident_state_bytes": 0,
+    "new_roots": 0,
+    "frozen_v1_lcc": "unchanged",
+    "v2_lcc": "owns the v2-only opcode mirror and lowering"
+  },
+  "required_views": [
+    "live ABI contract",
+    "ABI ledger",
+    "C opcode enum",
+    "C VM dispatch",
+    "Python P0 decoder and VM",
+    "Python P0 compiler",
+    "dialect-v2 resident LCC mirror and lowering",
+    "public bytecode designators",
+    "ELF-derived assembler-leaf ABI inventory"
+  ],
+  "required_fixtures": [
+    "direct funcall and apply for every public function",
+    "negative operands for all three logical operations",
+    "ash arithmetic-right for negative values",
+    "ash left boundary success at -8192 and 8191",
+    "ash count -14 and +14",
+    "wrong arity",
+    "non-fixnum operands",
+    "ash count below -14 and above +14",
+    "ash left overflow below -8192 and above 8191",
+    "dialect-v1 rejects all four opcode bytes",
+    "dialect-v2 decodes all four opcode bytes by canonical name"
+  ],
+  "capacity": {
+    "expected_bank2_only_public_surface": true,
+    "resident_code_must_fit_existing_text_reserve": true,
+    "resident_state_delta_bytes": 0,
+    "hardware_claim": "none before bundled S1"
+  }
+}

@@ -34,6 +34,14 @@ R6_OUT = ROOT / "build/c2.2/acceptance/r6-successor-v11"
 R6_SHIP = R6_OUT / "ship"
 R6_RECEIPT = R6_OUT / "r6-packaging-receipt.json"
 ROLE_COUNT = 19
+R5_ACCEPTED_STATUSES = {"passed-successor-rebind"}
+R5_PROOF_NAME = "historical-r5-preflight-receipt.json"
+R5_PACKAGE_CLAIM = "passed-successor-rebind"
+R5_DESCRIPTION = "fresh-G5-tested R5 successor"
+R5_MAPPING = "all-19-R5-successor-roles-exactly-once"
+R6_ID = "R6-from-R5-successor-v11"
+R6_RECEIPT_ID = "R6-from-tested-R5-successor-v11"
+RECORDED_ON = "2026-07-27"
 CHANGED_ROLES = {
     "cold-stager", "product-d81", "product-mount-descriptor",
 }
@@ -481,7 +489,7 @@ def build_ship(root: Path, r5: dict[str, Any]) -> dict[str, Any]:
     copy_bound(CONTRACT, root / "proof/acceptance-contract.json")
     copy_bound(R5_RECEIPT, root / "proof/r5-successor-rebind-receipt.json")
     copy_bound(G5, root / "proof/g5-hardware-receipt.json")
-    copy_bound(OLD_R5, root / "proof/historical-r5-preflight-receipt.json")
+    copy_bound(OLD_R5, root / f"proof/{R5_PROOF_NAME}")
     for version, directory, receipt_name in CHAIN:
         source_root = ROOT / "build/c2.2/acceptance/g5" / directory
         copy_bound(
@@ -495,8 +503,7 @@ def build_ship(root: Path, r5: dict[str, Any]) -> dict[str, Any]:
     readme = (
         "LISP65 C2-LITE R6 CANDIDATE\n"
         "============================\n\n"
-        "This package contains exactly the 19 roles of the fresh-G5-tested "
-        "R5 successor.\n"
+        f"This package contains exactly the 19 roles of the {R5_DESCRIPTION}.\n"
         f"Artifact set: {r5['successor_identity']['artifact_set_sha256']}\n"
         "G5: PASSED (fresh nine-case hardware run)\n"
         "G6: NOT RUN\n"
@@ -510,9 +517,9 @@ def build_ship(root: Path, r5: dict[str, Any]) -> dict[str, Any]:
     manifest = {
         "format": "lisp65-c2-lite-R6-package-v1",
         "version": 1,
-        "id": "R6-from-R5-successor-v11",
+        "id": R6_ID,
         "status": "passed-transform-and-package-only",
-        "recorded_on": "2026-07-27",
+        "recorded_on": RECORDED_ON,
         "authority": {
             "R5_successor_receipt": bind(R5_RECEIPT),
             "fresh_G5_receipt": bind(G5),
@@ -524,7 +531,7 @@ def build_ship(root: Path, r5: dict[str, Any]) -> dict[str, Any]:
             "product_build_id": r5["successor_identity"]["product_build_id"],
             "profile_build_id": r5["successor_identity"]["profile_build_id"],
             "artifacts": shipped,
-            "mapping": "all-19-R5-successor-roles-exactly-once",
+            "mapping": R5_MAPPING,
             "product_bytes": "byteidentical-to-R5-successor",
         },
         "media": {
@@ -544,7 +551,7 @@ def build_ship(root: Path, r5: dict[str, Any]) -> dict[str, Any]:
             "hardware_runs": 0,
         },
         "claims": {
-            "R5": "passed-successor-rebind",
+            "R5": R5_PACKAGE_CLAIM,
             "G5": "passed-fresh-nine-case-G5",
             "R6": "passed-exact-19-role-package",
             "G6": "not-run",
@@ -581,7 +588,7 @@ def package() -> dict[str, Any]:
     require(R5_RECEIPT.is_file(), "R5 successor receipt is missing")
     r5 = load(R5_RECEIPT, "R5 successor receipt")
     require(
-        r5.get("status") == "passed-successor-rebind"
+        r5.get("status") in R5_ACCEPTED_STATUSES
         and r5.get("result") == "passed",
         "R5 successor is not passed",
     )
@@ -672,9 +679,9 @@ def package() -> dict[str, Any]:
     receipt = {
         "format": "lisp65-c2-lite-R6-packaging-receipt-v1",
         "version": 1,
-        "id": "R6-from-tested-R5-successor-v11",
+        "id": R6_RECEIPT_ID,
         "status": "passed-R6-package",
-        "recorded_on": "2026-07-27",
+        "recorded_on": RECORDED_ON,
         "authority": {
             "R5_successor_receipt": bind(R5_RECEIPT),
             "fresh_G5_receipt": bind(G5),
@@ -684,7 +691,7 @@ def package() -> dict[str, Any]:
         },
         "product_artifact_set_sha256": manifest["product"]["artifact_set_sha256"],
         "artifact_count": ROLE_COUNT,
-        "mapping": "all-19-R5-successor-roles-exactly-once",
+        "mapping": R5_MAPPING,
         "package_set_sha256": manifest["package_set_sha256"],
         "double_pack": "passed-byteidentical",
         "offline_verification": {

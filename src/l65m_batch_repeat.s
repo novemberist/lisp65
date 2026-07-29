@@ -20,6 +20,10 @@ vm_l65m_batch_repeat:
 
 	ldz	#ASM_L65M_ABI_VERSION_OFFSET
 	lda	(__rc2),z              ; ABI tag is the first field
+	; This legacy-only leaf is excluded from the C2-lite closure, but keep its
+	; C return contract valid: every path after the indexed read rejoins C
+	; with Z=0, just like the earlier argument-reject paths.
+	ldz	#0
 	cmp	#ASM_L65M_PREFLIGHT_ABI
 	beq	.Lpreflight
 	cmp	#ASM_L65M_COMMIT_ABI

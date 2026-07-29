@@ -376,18 +376,29 @@ class V6Plane:
         return binding is not None and binding[1] == generation
 
 
-def emit_resolutions(plane: V6Plane, image: F.Emitted, *, directory_base: int,
-                     resolution_base: int, root_base: int) -> tuple[bytes, bytes]:
+def emit_resolutions(
+        plane: V6Plane, image: F.Emitted, *, directory_base: int,
+        resolution_base: int, root_base: int,
+        direct_resolver: Callable[[F.Desc, int, int], int] | None = None,
+) -> tuple[bytes, bytes]:
+    """Emit one image's resolution/root words.
+
+    ``direct_resolver`` is a host-fixture seam for consumers that own a real
+    symbol table.  The product-shaped probe keeps its historical synthetic
+    witnesses by default; combined Session runners can instead bind a symbol
+    descriptor to the exact result of their canonical ``intern`` operation.
+    """
     resolutions = bytearray()
     roots = bytearray()
     root = root_base
+    resolve = direct_resolver or direct_value
     for local, desc in enumerate(image.descriptors):
         if desc.kind in ROOT_KINDS:
             resolutions += p16(R.root_ref(root))
             roots += p16(G.pointer_for(root))
             root += 1
         else:
-            resolutions += p16(direct_value(
+            resolutions += p16(resolve(
                 desc, resolution_base + local, directory_base))
     return bytes(resolutions), bytes(roots)
 
@@ -495,8 +506,11 @@ def validate_plane(plane: V6Plane) -> dict[str, int]:
             "roots_checked": plane.roots}
 
 
-def append_image(plane: V6Plane, image: F.Emitted, *, transient: bool,
-                 fail_at: str | None = None) -> dict[str, Any]:
+def append_image(
+        plane: V6Plane, image: F.Emitted, *, transient: bool,
+        fail_at: str | None = None,
+        direct_resolver: Callable[[F.Desc, int, int], int] | None = None,
+) -> dict[str, Any]:
     before = plane.snapshot()
     roots = sum(desc.kind in ROOT_KINDS for desc in image.descriptors)
     if transient:
@@ -527,7 +541,8 @@ def append_image(plane: V6Plane, image: F.Emitted, *, transient: bool,
         point("after-code-copy")
         resolution_blob, root_blob = emit_resolutions(
             plane, image, directory_base=entry_base,
-            resolution_base=resolution_base, root_base=root_base)
+            resolution_base=resolution_base, root_base=root_base,
+            direct_resolver=direct_resolver)
         rpos = C2D_RESOLUTIONS_OFFSET + resolution_base * 2
         plane.c2d[rpos:rpos + len(resolution_blob)] = resolution_blob
         point("after-resolutions")
@@ -985,15 +1000,15 @@ C2_COLD_ENTRY_FN uint8_t c2_entry_records(
 uint8_t c2_product_static_image_named(obj name) {
     static const char names[] = "stdlib\0ide\0idex\0m65d\0buffer\0lcc\0";
     uint16_t length, i, at = 0;
-    if (!c2_ready || !IS_PTR(name) || cell_type(name) != T_STR) return 0;
+    if (!c2_ready || !IS_PTR(name) || cell_type(name) != T_STR) return 0u;
     length = str_len(name);
     while (at < sizeof names - 1u) {
         for (i = 0; names[at + i] && i < length
                     && (uint8_t)names[at + i] == str_byte(name, i); ++i) { }
-        if (i == length && names[at + i] == 0) return 1;
+        if (i == length && names[at + i] == 0) return 1u;
         while (names[at++]) { }
     }
-    return 0;
+    return 0u;
 }''')
     runtime_source = replace_c_function(runtime_source, "c2_product_entry_length", r'''
 C2_KERNAL_RESIDENT uint16_t c2_product_entry_length(uint16_t ordinal) {

@@ -1,0 +1,94 @@
+{
+  "base_geometry": {
+    "build_id": 4127107008,
+    "catalog_crc32": 2272652198,
+    "code_bytes": 40243,
+    "entries": 676,
+    "generation": 1,
+    "images": 6,
+    "immutable_images": 6,
+    "resolutions": 2677,
+    "roots": 340
+  },
+  "base_geometry_source": {
+    "bank2_code_sha256": "a5e64b7e3348ec8237c95fb86848c4f6c7e1db80d7110d49595623f3b5e4e62b",
+    "c2d_v6_sha256": "8ca728b39d37853be56a719b46e4ec21f2312ed4e008288382cb8bf24dec0cab",
+    "identity": "Link-73 pre-Session static-plane geometry",
+    "note": "Only the published counters, generation, identities, and Bank-2 frontier seed this host runner; static entry payloads are outside this fixture's execution closure."
+  },
+  "cases": [
+    {
+      "bindings": [
+        {
+          "entry": "h",
+          "literal_index": 0,
+          "symbol": "g"
+        }
+      ],
+      "definitions": [
+        {
+          "entry": "g",
+          "source": "(defun g () 1)"
+        },
+        {
+          "entry": "h",
+          "source": "(defun h () (g))"
+        }
+      ],
+      "expect": {
+        "fixnum": 1
+      },
+      "invoke": {
+        "args": [],
+        "entry": "h"
+      },
+      "name": "separate-session-appends-cross-entry"
+    },
+    {
+      "bindings": [
+        {
+          "entry": "%is",
+          "literal_index": 1,
+          "symbol": "%is"
+        }
+      ],
+      "definitions": [
+        {
+          "entry": "%is",
+          "source": "(defun %is (n) (if (> n 0) (progn (intern \"abc\") (%is (- n 1))) t))"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "count": 3,
+            "kind": "CALLPRIM",
+            "target": "intern"
+          },
+          {
+            "count": 3,
+            "kind": "TAILCALL",
+            "target": "%is"
+          }
+        ],
+        "symbol": "t"
+      },
+      "invoke": {
+        "args": [
+          3
+        ],
+        "entry": "%is"
+      },
+      "name": "prim68-intern-recursive-reproducer"
+    }
+  ],
+  "format": "lisp65-c2-product-session-host-fixture-v1",
+  "profile": "dialect-v2",
+  "purpose": "Permanent host execution gate for compiler -> one C2I-v2 emitter -> persistent C2D-v6 Session append -> hot materialization -> VM execution.",
+  "scope": {
+    "hardware": false,
+    "legacy_installer": false,
+    "product_link": false,
+    "session_appends_must_be_separate": true
+  }
+}

@@ -1,0 +1,301 @@
+{
+  "format": "lisp65-c2-interrupt-ownership-policy-v1",
+  "recorded_on": "2026-07-28",
+  "status": "owner-accepted-product-cut-authorized",
+  "scope": {
+    "product_baseline": "Link 75 source closure",
+    "device_core_version": "git-03b24c6b",
+    "device_core_commit": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6",
+    "device_core_identity_bytes": "6b4cb203",
+    "product_files_read": [
+      "src/c2_kernal_runtime.c",
+      "src/c2_kernal_window.s"
+    ],
+    "product_changes": 0,
+    "links": 0,
+    "hardware_runs": 0
+  },
+  "authorities": {
+    "chipset_reference": {
+      "path": "docs/reference/mega65-chipset-reference.pdf",
+      "sha256": "107610ae3ea9f7e3f1e78915dcbe2cae1a6f404ca2e538762524a7e58cced220",
+      "relevant_pdf_pages": {
+        "vic_irq_registers": [64, 65],
+        "audio_dma": [97, 99],
+        "ethernet": [123, 124, 128],
+        "f011": [133, 143]
+      },
+      "precedence": "Where prose and the tested-core RTL disagree, the exact tested-core RTL controls this product policy."
+    },
+    "tested_core_sources": {
+      "repository": "https://github.com/MEGA65/mega65-core",
+      "commit": "03b24c6b9d0e456f762fdca0d2dd66ec3c3e1fc6",
+      "files": {
+        "machine.vhdl": "e6cd4d787c6b126cb8a123885fac1edd0b96e7f1cccbedbe83417874e59004b5",
+        "iomapper.vhdl": "08441ffc382b018a327668749bc28b20c5079c4dc6c3b40ea8f5f0bc41489a7c",
+        "mega65r6.vhdl": "123caccc6558a01910e812c1b6e5c1bd84d7ce52125614bea6c73fd073570d35",
+        "expansion_port_controller.vhdl": "e9a2b645305e681f26fcb1b0244dc5a3f481bde1d9dae0f18ca6614e8e3bd33a",
+        "viciv.vhdl": "81aa438fa0c2d5b6e040ba5f24db2401ed0c18e140138d355cbe3ce037f5091b",
+        "cia6526.vhdl": "ec717a6e3872a7cf55494b0cacd2af7cba70b36f074bcf3576037ae3520c49a8",
+        "ethernet.vhdl": "169058dc90b40358b4c6a4aa758a3a7ce7854fa864e0cfa34bededcee2b66d1b",
+        "iec_serial.vhdl": "3762ed67685a1e6d0f8ca79a08e62baf3985295e057a7dcb96139715c4d09657",
+        "buffereduart.vhdl": "a33b12cb626ff32c5c3a3eada560cb0a66bae21a08808a01e7e6adde61cd0af0",
+        "gs4510.vhdl": "d44ae3906e1b0a826ca8e511c73ef1f50223b7de507a3ed349082fdefe58034e"
+      }
+    }
+  },
+  "interrupt_graph_closure": {
+    "irq": {
+      "machine": "combinedirq = external_board_irq AND io_irq AND vic_irq",
+      "mega65r6": "external_board_irq is tied inactive; cartridge_irq remains a separate physical input",
+      "io_mapper": "io_irq = CIA1 AND Ethernet AND Buffered-UART AND Auto-IEC",
+      "cpu_internal": "Audio-DMA can set irq_pending without traversing io_irq"
+    },
+    "nmi": {
+      "machine": "combinednmi = external_board_nmi AND CIA2_nmi AND RESTORE_nmi",
+      "mega65r6": "external_board_nmi is tied inactive; cartridge_nmi remains a separate physical input",
+      "delivery": "NMI is edge-triggered; the hypervisor may replay a pending NMI/IRQ but does not originate a new device source"
+    },
+    "closure_rule": "A peripheral not present in these exact RTL cones cannot assert the CPU IRQ or NMI input on the bound core."
+  },
+  "inventory": [
+    {
+      "id": "vic-raster",
+      "vector": "IRQ",
+      "subsources": ["raster compare"],
+      "route": "VIC-IV -> vic_irq -> combinedirq",
+      "current_classification": "owned-and-handled",
+      "current_evidence": "$D01A bit 0 is the sole enabled VIC mask; the handler acknowledges $D019 bit 0 and advances the frame counter.",
+      "proposed_policy": "unchanged"
+    },
+    {
+      "id": "vic-collision",
+      "vector": "IRQ",
+      "subsources": ["sprite-background collision", "sprite-sprite collision"],
+      "route": "VIC-IV -> vic_irq -> combinedirq when the corresponding mask is enabled",
+      "current_classification": "masked-and-acknowledged-at-ownership",
+      "current_evidence": "$D01A is cleared and $D019 is acknowledged before raster-only enable.",
+      "proposed_policy": "unchanged"
+    },
+    {
+      "id": "vic-lightpen-rasterx",
+      "vector": "IRQ",
+      "subsources": ["lightpen/touch", "raster-X"],
+      "route": "VIC-IV internal flags",
+      "current_classification": "structurally-line-inactive-on-bound-core",
+      "current_evidence": "mask_lightpen and mask_rasterx initialize to zero and have no write path in the bound RTL; they cannot pull vic_irq low.",
+      "proposed_policy": "pin the RTL fact; no product write"
+    },
+    {
+      "id": "cia1",
+      "vector": "IRQ",
+      "subsources": ["timer A", "timer B", "TOD alarm", "serial port", "FLAG"],
+      "route": "CIA1 -> io_irq -> combinedirq",
+      "current_classification": "masked-and-acknowledged-at-ownership",
+      "current_evidence": "$DC0D receives $7F and is then read.",
+      "proposed_policy": "unchanged"
+    },
+    {
+      "id": "ethernet",
+      "vector": "IRQ",
+      "subsources": ["receive queue", "transmit complete"],
+      "route": "45E100 -> io_irq -> combinedirq",
+      "current_classification": "unhandled",
+      "current_evidence": "$D6E1 is not touched by c2_kernal_take_ownership.",
+      "proposed_policy": "write $00 to $D6E1 while SEI is active; this disables RX/TX IRQ enables without resetting the controller. The exact RTL leaves status state intact, which is harmless while both enables are zero."
+    },
+    {
+      "id": "buffered-uart",
+      "vector": "IRQ",
+      "subsources": [
+        "RX byte for each of eight UARTs",
+        "RX high-water for each of eight UARTs",
+        "TX low-water for each of eight UARTs"
+      ],
+      "route": "Buffered-UART nominal output -> io_irq",
+      "current_classification": "structurally-line-inactive-on-bound-core",
+      "current_evidence": "The bound RTL drives irq <= '1' unconditionally; mask/status fields are readable/writable but never participate in an assertion.",
+      "proposed_policy": "pin the RTL fact; no product write"
+    },
+    {
+      "id": "auto-iec",
+      "vector": "IRQ",
+      "subsources": ["receive complete", "ready/transmit complete", "protocol timeout"],
+      "route": "automatic IEC controller -> io_irq -> combinedirq",
+      "current_classification": "unhandled",
+      "current_evidence": "$D697 is not touched by c2_kernal_take_ownership.",
+      "proposed_policy": "write $F0 to $D697 while SEI is active; ones in bits 7..4 acknowledge the aggregate and three event flags, while zero bits 3..0 disable the master and all sources"
+    },
+    {
+      "id": "audio-dma",
+      "vector": "IRQ",
+      "subsources": ["channel 0", "channel 1", "channel 2", "channel 3"],
+      "route": "GS4510 internal Audio-DMA -> irq_pending",
+      "current_classification": "unhandled",
+      "current_evidence": "$D713 is not touched by c2_kernal_take_ownership; the exact core can set irq_pending for an enabled channel.",
+      "proposed_policy": "write $00 to $D713 while SEI is active; this clears four flags and disables four enables without stopping audio playback",
+      "reference_conflict": "The chipset PDF says Audio-DMA cannot presently interrupt; the exact tested-core RTL implements and routes the four interrupts, so RTL wins."
+    },
+    {
+      "id": "cartridge-irq",
+      "vector": "IRQ",
+      "subsources": ["expansion-port /IRQ"],
+      "route": "cartridge pin -> expansion-port controller -> combinedirq",
+      "current_classification": "external-unmaskable-input",
+      "current_evidence": "The expansion-port controller forwards cart_irq directly; there is no device-independent acknowledge.",
+      "proposed_policy": "exclude interrupt-generating cartridges from the C2-lite supported hardware profile; a held line remains covered by the existing consecutive-source-less fail-closed guard"
+    },
+    {
+      "id": "cia2",
+      "vector": "NMI",
+      "subsources": ["timer A", "timer B", "TOD alarm", "serial port", "FLAG"],
+      "route": "CIA2 -> io_nmi -> combinednmi",
+      "current_classification": "masked-and-acknowledged-at-ownership",
+      "current_evidence": "Timer A is stopped; $DD0D receives $7F and is then read. All five sources are masked.",
+      "proposed_policy": "unchanged"
+    },
+    {
+      "id": "restore-freezer",
+      "vector": "NMI plus one possible deferred IRQ on return",
+      "subsources": ["RESTORE key", "Freezer return", "hypervisor pending-delivery replay"],
+      "route": "keyboard complex / hypervisor -> combinednmi; deferred IRQ may return through the IRQ vector",
+      "current_classification": "owned-by-existing-C3-episode-contract",
+      "current_evidence": "The NMI handler acknowledges CIA2, counts the event and returns; the raster-delimited episode latch accepts exactly one source-less return IRQ and rejects a consecutive stream.",
+      "proposed_policy": "unchanged; the new ownership masks execute before CLI and do not weaken the episode latch"
+    },
+    {
+      "id": "cartridge-nmi",
+      "vector": "NMI",
+      "subsources": ["expansion-port /NMI"],
+      "route": "cartridge pin -> expansion-port controller -> combinednmi",
+      "current_classification": "external-unmaskable-input",
+      "current_evidence": "The expansion-port controller forwards cart_nmi directly; NMI is edge-triggered and there is no device-independent acknowledge.",
+      "proposed_policy": "exclude interrupt-generating cartridges from the C2-lite supported hardware profile"
+    },
+    {
+      "id": "r6-board-irq-nmi",
+      "vector": "IRQ and NMI",
+      "subsources": ["generic machine external IRQ", "generic machine external NMI"],
+      "route": "generic machine inputs",
+      "current_classification": "structurally-inactive-on-MEGA65-R6",
+      "current_evidence": "mega65r6 declares both intermediate signals initialized high and never assigns them; cartridge inputs travel through the separately inventoried expansion path.",
+      "proposed_policy": "pin the RTL fact; no product write"
+    },
+    {
+      "id": "brk",
+      "vector": "IRQ vector ingress",
+      "subsources": ["BRK instruction"],
+      "route": "CPU instruction decoder -> IRQ vector without a device line",
+      "current_classification": "software-exception-not-device-source",
+      "current_evidence": "No intentional product path uses BRK; raw byte presence is not a control-flow proof.",
+      "proposed_policy": "the successor gate must reject any decoded reachable BRK in the product closure; wild execution remains fail-closed territory"
+    },
+    {
+      "id": "f011-sd",
+      "vector": "none on bound core",
+      "subsources": ["F011 IRQ status flag", "SD/F011 virtualisation"],
+      "route": "no edge into io_irq, io_nmi, vic_irq or CPU-internal irq_pending",
+      "current_classification": "structurally-impossible",
+      "current_evidence": "The chipset PDF explicitly says F011 interrupts are not implemented on the 45GS27, and the exact io_irq cone has no F011/SD input.",
+      "proposed_policy": "no product write; correct the old R-1 assumption that mounted D81 media can directly assert a CPU IRQ"
+    },
+    {
+      "id": "classic-uart",
+      "vector": "none on bound core",
+      "subsources": ["C65 6551 UART IRQ", "C65 6551 UART NMI"],
+      "route": "no edge into the interrupt cones",
+      "current_classification": "structurally-impossible",
+      "current_evidence": "The classic UART interrupt controls are not implemented/routed; the separately inventoried Buffered-UART output is permanently inactive.",
+      "proposed_policy": "no product write"
+    },
+    {
+      "id": "normal-dmagic",
+      "vector": "none",
+      "subsources": ["F018A/F018B list completion", "enhanced DMA completion"],
+      "route": "CPU is held until the ordinary job completes; no completion IRQ enters the graph",
+      "current_classification": "structurally-impossible",
+      "current_evidence": "Only Audio-DMA has the CPU-internal interrupt route.",
+      "proposed_policy": "no product write"
+    },
+    {
+      "id": "remaining-peripherals",
+      "vector": "none except through an inventoried parent",
+      "subsources": ["keyboard queue", "touch panel", "SID/FM/audio mixer", "RTC", "1541 core"],
+      "route": "no direct edge into the exact interrupt cones",
+      "current_classification": "structurally-impossible-as-independent-sources",
+      "current_evidence": "Keyboard events are polled; RESTORE is separate. Touch can set the already-inventoried masked VIC lightpen flag. The other blocks have no interrupt edge in the exact graph.",
+      "proposed_policy": "no product write"
+    }
+  ],
+  "inventory_summary": {
+    "owned_source_families": ["vic-raster", "restore-freezer"],
+    "already_masked_source_families": ["vic-collision", "cia1", "cia2"],
+    "new_internal_mask_families": ["ethernet", "auto-iec", "audio-dma"],
+    "structurally_impossible_or_line_inactive": [
+      "vic-lightpen-rasterx",
+      "buffered-uart",
+      "r6-board-irq-nmi",
+      "f011-sd",
+      "classic-uart",
+      "normal-dmagic",
+      "remaining-peripherals"
+    ],
+    "external_profile_exclusions": ["cartridge-irq", "cartridge-nmi"],
+    "non_device_vector_ingress": ["brk"]
+  },
+  "proposed_contract": {
+    "ownership_order": [
+      "SEI and normalize Z",
+      "select MEGA65 I/O personality",
+      "mask and acknowledge CIA1, CIA2 and all VIC sources",
+      "write $00 to Ethernet $D6E1",
+      "write $F0 to Auto-IEC $D697",
+      "write $00 to Audio-DMA $D713",
+      "prove all new enable fields read back disabled",
+      "publish and map the owned window",
+      "acknowledge VIC again, enable raster only, then CLI"
+    ],
+    "readback_requirements": {
+      "$D6E1": "bits 7..6 == 0",
+      "$D697": "bits 3..0 == 0; status bits may change without asserting because all enables are zero",
+      "$D713": "bits 3..0 == 0"
+    },
+    "handler_policy": "No new device handler is added. The product owns only VIC raster. All other software-maskable internal sources are disabled before CLI; the existing source-less episode guard stays byte-for-byte in force.",
+    "supported_hardware_profile": "No interrupt-generating expansion cartridge may be active while the C2-lite product owns the vectors. Passive cartridges remain outside this interrupt policy. One foreign/source-less IRQ per raster-delimited episode is tolerated for a legitimate Freezer return; a held or repeating cartridge interrupt storm is unsupported and deliberately fail-closed.",
+    "diagnostic_boundary": "Under the supported profile and the reachable-BRK gate, a source-less IRQ after the new masks is the already-contracted Freezer/hypervisor return class; two consecutive entries without raster progress still fail closed."
+  },
+  "required_gates_before_link": [
+    "Core-graph inventory equality: every leaf in the tested-core IRQ/NMI cone is classified exactly once.",
+    "Ownership-source gate: the three new writes occur after I/O personality selection, under SEI, and before CLI.",
+    "Readback gate: the three enable masks are checked before raster enable.",
+    "Negative mutation per family: omit or alter the Ethernet, Auto-IEC or Audio-DMA mask and the gate is red.",
+    "Wrong-register mutations $D6E0/$D696/$D712 are red.",
+    "Audio-DMA-as-impossible and F011-as-IRQ-source mutations are red against the exact RTL.",
+    "Decoded reachable BRK mutation is red.",
+    "The existing raster-only, Freezer-episode, Z-boundary, owned-window and KERNAL-freedom gates replay unchanged."
+  ],
+  "capacity_and_claim_limits": {
+    "placement": "resident ownership handoff, before CLI",
+    "expected_shape": "three constant MMIO masks plus bounded readback; measured only by a fresh WPLTO after owner acceptance",
+    "no_budget_claim": true,
+    "no_product_fix_claim": false,
+    "defstruct_claim": "none; this is independent robustness work and does not close the parked red-frame case",
+    "halt_rule": "Halt #2 accepted the strict policy as one unit on 2026-07-28. Product implementation, one WPLTO and one successor link are authorized."
+  },
+  "owner_review": {
+    "decision": "accepted-as-one-unit-2026-07-28",
+    "strict_policy": [
+      "mask Ethernet, Auto-IEC and Audio-DMA at ownership",
+      "retain VIC-raster as the sole owned IRQ",
+      "retain the existing Freezer source-less episode guard",
+      "exclude interrupt-generating cartridges from the supported C2-lite profile",
+      "bind F011/SD and Buffered-UART as structurally non-sources on the tested core"
+    ],
+    "implementation_conditions": [
+      "Publish the interrupt-generating cartridge storm exclusion in docs/known-issues.md and config/v12-known-issues.json.",
+      "Reject omission of each new source mask and carry a bundled hardware line that reads $D6E1, $D697 and $D713 after boot.",
+      "Add the exact-core Audio-DMA PDF/RTL contradiction to docs/upstream-owner-bundle-2026-07-27.md with exact VHDL lines.",
+      "Correct parked R-1: F011 is excluded; inherited Audio-DMA enable state is a plausible but unproven red-frame mechanism."
+    ]
+  }
+}

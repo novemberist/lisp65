@@ -30,6 +30,10 @@ FRESH_MANIFESTS = (
     ROOT / "build/bytecode/dialect-v2/libs/buffer.manifest.json",
     ROOT / "build/c2.2/substitution/lcc.manifest.json",
 )
+_HISTORICAL_DEFAULT_PRODUCT = FRESH_PRODUCT
+_HISTORICAL_DEFAULT_IDE = FRESH_IDE
+_HISTORICAL_DEFAULT_BANK2 = FRESH_BANK2
+_HISTORICAL_DEFAULT_MANIFESTS = FRESH_MANIFESTS
 
 
 class GateError(RuntimeError):
@@ -136,10 +140,29 @@ def source_bundle() -> dict[str, Any]:
         profile["authority"]["kind"] ==
             "fresh-single-emitter-static-plane-dataflow",
         "static-plane profile does not name the public build authority")
-    substitution = load(FRESH_PRODUCT)
-    ide = load(FRESH_IDE)
-    require(FRESH_BANK2.is_file(), "fresh Bank-2 static plane absent")
-    code = FRESH_BANK2.read_bytes()
+    authority = profile["authority"]
+    default_mode = (
+        FRESH_PRODUCT == _HISTORICAL_DEFAULT_PRODUCT
+        and FRESH_IDE == _HISTORICAL_DEFAULT_IDE
+        and FRESH_BANK2 == _HISTORICAL_DEFAULT_BANK2
+        and FRESH_MANIFESTS == _HISTORICAL_DEFAULT_MANIFESTS
+    )
+    if default_mode:
+        product_path = ROOT / authority["product_manifest"]
+        ide_path = ROOT / authority["compiled_ide_manifest"]
+        bank2_path = ROOT / authority["bank2_static_plane"]
+        substitution = load(product_path)
+        manifest_paths = tuple(
+            ROOT / row["path"] for row in substitution["manifests"])
+    else:
+        product_path = FRESH_PRODUCT
+        ide_path = FRESH_IDE
+        bank2_path = FRESH_BANK2
+        manifest_paths = FRESH_MANIFESTS
+        substitution = load(product_path)
+    ide = load(ide_path)
+    require(bank2_path.is_file(), "fresh Bank-2 static plane absent")
+    code = bank2_path.read_bytes()
     receipt = {
         "status":
             "passed-L-full-plus-published-nullary-six-image-product-and-C2D-v6-plane",
@@ -151,7 +174,7 @@ def source_bundle() -> dict[str, Any]:
                     "bytes": path.stat().st_size,
                     "sha256": sha(path),
                 }
-                for path in FRESH_MANIFESTS
+                for path in manifest_paths
             ],
         },
         "c2d_v6": {

@@ -1,0 +1,56 @@
+{
+  "ELF_truth": {
+    "call": "0x7905 JSR 0x24cb c2_product_append_staged",
+    "normal_successor_semantics": "convert uint8 append result to canonical T/NIL before returning from vm_callprim",
+    "patched_successor": "0x7908 JMP 0x749f"
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 622512,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94"
+    },
+    "driver": {
+      "bytes": 9776,
+      "path": "tools/host-lisp/c2_defstruct_link71_post_append_return_hold.py",
+      "sha256": "093aba07715b7f81f6935dca94216249778d5fdb7919f6f2bc3125a3e9a455d1"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "source_deployment": {
+      "bytes": 7372,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/deployment.json",
+      "sha256": "080714bffaa3e3a50979a99532aec0df237d7a2bfeb4b79390398a16bf419384"
+    }
+  },
+  "claim_limit": "One nonpromotable Link-71 return-edge attribution.  Product, require, and defstruct remain unqualified.",
+  "format": "lisp65-c2.2-Link71-post-append-return-hold-v1",
+  "outcomes": {
+    "A_nonzero_status_OK": "append and vm_callprim primitive body pass; failure is in the outer VM continuation after CALLPRIM",
+    "A_zero_status_OK": "append returned false without setting VM status despite all Slot-39/40 error exits being excluded",
+    "status_nonzero": "append path set a VM error outside the instrumented Slot-39/40 phase exits"
+  },
+  "patch": {
+    "PRG_file_offset": 22793,
+    "after": "7880fe",
+    "artifact": {
+      "address": "0x00007908",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/post-append-return-hold-NONPROMOTABLE/post-append-return-hold.bin",
+      "sha256": "ecfd175f590d113b784e9d50c335e3d78701dcdf59166ae6e0f7e347e6ae7046"
+    },
+    "before": "4c9f74",
+    "deployed_product_bytes_delta": 0,
+    "late_RAM_bytes_changed": 3,
+    "product_file_bytes_delta": 0,
+    "runtime_address": "0x7908",
+    "semantics": "SEI once, then BRA to itself immediately after c2_product_append_staged returns; A/X/status and the vm_callprim/outer-VM software frames remain live."
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "status": "ready-authorized-nonpromotable-post-append-discriminator"
+}

@@ -2,14 +2,14 @@
 #ifndef LISP65_V2_NATIVE_FUNCTION_DISPATCH_H
 #define LISP65_V2_NATIVE_FUNCTION_DISPATCH_H
 
-#define LISP65_V2_NATIVE_FUNCTION_COUNT 39
-#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 38
+#define LISP65_V2_NATIVE_FUNCTION_COUNT 40
+#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 39
 #define LISP65_V2_NATIVE_KIND_FOLD_IDENTITY 1
 #define LISP65_V2_NATIVE_KIND_FOLD_REQUIRED 2
 #define LISP65_V2_NATIVE_KIND_CALLPRIM 3
 #define LISP65_V2_NATIVE_KIND_OPFN 4
 
-#define LISP65_V2_CALLPRIM_ACTIVE_COUNT 57
+#define LISP65_V2_CALLPRIM_ACTIVE_COUNT 59
 #define LISP65_V2_CALLPRIM_ACTIVE_ROWS(X) \
     X("stringp", 0) \
     X("string-length", 3) \
@@ -67,7 +67,9 @@
     X("set", 59) \
     X("key-event", 60) \
     X("peek", 61) \
-    X("poke", 62)
+    X("poke", 62) \
+    X("%c2d-byte", 67) \
+    X("intern", 68)
 
 #define LISP65_V2_NATIVE_FUNCTION_TREE_ROWS(X) \
     X(P_ADD, 1, OP_ADD) \
@@ -108,7 +110,8 @@
     X(P_SET, 3, 59) \
     X(P_KEYEVENT, 3, 60) \
     X(P_PEEK, 3, 61) \
-    X(P_POKE, 3, 62)
+    X(P_POKE, 3, 62) \
+    X(P_INTERN, 3, 68)
 
 #define LISP65_V2_NATIVE_FUNCTION_INTRINSIC_ALIAS_COUNT 2
 #define LISP65_V2_NATIVE_FUNCTION_INTRINSIC_ALIAS_ROWS(X) \
@@ -129,7 +132,7 @@
 #define LISP65_V2_NATIVE_FUNCTION_FOLD_REQUIRED_MATCH(sym) (((sym) == intern("-")) || ((sym) == intern("/")))
 #define LISP65_V2_NATIVE_FUNCTION_FOLD_REQUIRED_VALUE(sym) (((sym) == intern("-") ? OP_SUB : OP_DIV))
 
-#define LISP65_V2_NATIVE_FUNCTION_CALLPRIM_COUNT 23
+#define LISP65_V2_NATIVE_FUNCTION_CALLPRIM_COUNT 24
 #define LISP65_V2_NATIVE_FUNCTION_CALLPRIM_ROWS(X) \
     X("stringp", 0) \
     X("string-length", 3) \
@@ -153,7 +156,8 @@
     X("set", 59) \
     X("key-event", 60) \
     X("peek", 61) \
-    X("poke", 62)
+    X("poke", 62) \
+    X("intern", 68)
 
 #define LISP65_V2_NATIVE_FUNCTION_OPFN_COUNT 12
 #define LISP65_V2_NATIVE_FUNCTION_OPFN_ROWS(X) \
@@ -173,7 +177,7 @@
 #define LISP65_V2_NATIVE_FUNCTION_BOUNDP_COUNT 0
 #define LISP65_V2_NATIVE_FUNCTION_BOUNDP_ROWS(X)
 
-#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 38
+#define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_COUNT 39
 #define LISP65_V2_NATIVE_FUNCTION_EXCLUSION_ROWS(X) \
     X("read-key", 13) \
     X("poll-key", 14) \
@@ -212,6 +216,7 @@
     X("%buffer-read", 63) \
     X("%buffer-write", 64) \
     X("%buffer-alloc", 65) \
-    X("%c2-control", 66)
+    X("%c2-control", 66) \
+    X("%c2d-byte", 67)
 
 #endif

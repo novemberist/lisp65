@@ -5,6 +5,15 @@
 ; Complete v2 override: Prim-IDs 1/2/26/27 are permanent tombstones in this
 ; profile. The remaining %string-* codecs are compiler-internal and absent
 ; from the public dialect surface despite having stable CALLPRIM identities.
+(defun %lcc-v2-bitop (name)
+  (cond ((eq name 'logand) 20) ((eq name 'logior) 21)
+        ((eq name 'logxor) 22) ((eq name 'ash) 23) (t nil)))
+
+(defun %lcc-v2-bitop-binary (cs lvls args opname)
+  (%lcc-emit (%lcc-expr (%lcc-expr cs lvls (car args))
+                         lvls (car (cdr args)))
+             (%lcc-v2-bitop opname)))
+
 (defun %lcc-v2-prim2 (name)
   (cond ((eq name 'symbol-value) 19) ((eq name 'set-symbol-value) 20)
         ((eq name '%disk-poke) 21) ((eq name '%disk-write-sector) 22)
@@ -39,9 +48,15 @@
         ((eq name 'boundp) 57)
         ((eq name '%list-malformed-error) 58)
         ((eq name 'set) 59)
+        (t (%lcc-v2-prim5 name))))
+
+(defun %lcc-v2-prim5 (name)
+  (cond
         ((eq name 'key-event) 60)
         ((eq name 'peek) 61)
         ((eq name 'poke) 62)
+        ((eq name '%c2d-byte) 67)
+        ((eq name 'intern) 68)
         (t nil)))
 
 (defun %lcc-prim (name)
@@ -245,12 +260,17 @@
 ; Keep the native constant-stack implementations for dotimes/dolist, but do
 ; not classify the removed do/do* source names as compiler forms.
 (defun %lcc-do-p (op)
-  (cond ((eq op 'dotimes) t) ((eq op 'dolist) t) (t nil)))
+  (cond ((eq op 'dotimes) t) ((eq op 'dolist) t)
+        ((eq op 'while) t) (t nil)))
 
 ; `remainder` remains an internal opcode mnemonic for decoding old P0
 ; artifacts. It is deliberately absent from the v2 source-operation dispatch.
 (defun %lcc-expr-ops2 (cs lvls op args form)
-  (cond ((eq op 'mod) (%lcc-binary cs lvls args 'mod))
+  (cond ((eq op 'logand) (%lcc-v2-bitop-binary cs lvls args 'logand))
+        ((eq op 'logior) (%lcc-v2-bitop-binary cs lvls args 'logior))
+        ((eq op 'logxor) (%lcc-v2-bitop-binary cs lvls args 'logxor))
+        ((eq op 'ash) (%lcc-v2-bitop-binary cs lvls args 'ash))
+        ((eq op 'mod) (%lcc-binary cs lvls args 'mod))
         ((eq op 'cons) (%lcc-binary cs lvls args 'cons))
         ((eq op 'car)  (%lcc-unary cs lvls args 'car))
         ((eq op 'cdr)  (%lcc-unary cs lvls args 'cdr))
@@ -271,6 +291,8 @@
 (defun %lcc-opform-p (op)
   (cond ((eq op '+) t) ((eq op '-) t) ((eq op '*) t) ((eq op '/) t)
         ((eq op '<) t) ((eq op '>) t) ((eq op '=) t) ((eq op 'eq) t)
-        ((eq op 'eql) t) ((eq op 'mod) t) ((eq op 'cons) t)
+        ((eq op 'eql) t) ((eq op 'logand) t) ((eq op 'logior) t)
+        ((eq op 'logxor) t) ((eq op 'ash) t) ((eq op 'mod) t)
+        ((eq op 'cons) t)
         ((eq op 'car) t) ((eq op 'cdr) t) ((eq op 'consp) t)
         ((eq op 'not) t) ((eq op 'null) t) (t nil)))

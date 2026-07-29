@@ -40,6 +40,10 @@ OMIT = {
     "lcc-run",
 }
 FORMAT = "lisp65-v11-c1-compiler-tier-suite-generator-v1"
+RESIDENT_SUITE = (
+    "build/bytecode/dialect-v2/suites/"
+    "p0-stdlib-einsuite-core-workbench-subset.json"
+)
 
 
 class CompilerTierError(RuntimeError):
@@ -88,6 +92,10 @@ def generate(out: Path) -> dict:
     missing = sorted(set(EXPORTS) - set(functions))
     if missing:
         raise CompilerTierError("missing compiler exports: " + ", ".join(missing))
+    resident = Stdlib._read_suite(ROOT / RESIDENT_SUITE)
+    resident_overrides = sorted(
+        set(functions) & set(resident.get("functions", []))
+    )
     suite = {
         "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
         "name": "c1-compiler-tier",
@@ -100,10 +108,8 @@ def generate(out: Path) -> dict:
         ),
         "sources": generated_sources,
         "functions": functions,
-        "resident_suite": (
-            "build/bytecode/dialect-v2/suites/"
-            "p0-stdlib-einsuite-core-workbench-subset.json"
-        ),
+        "resident_suite": RESIDENT_SUITE,
+        "resident_overrides": resident_overrides,
         "strict_arity": True,
         "abi_profile": "dialect-v2",
         "max_call_args": 12,
@@ -140,6 +146,7 @@ def generate(out: Path) -> dict:
         "functions": len(functions),
         "exports": list(EXPORTS),
         "omitted": sorted(OMIT),
+        "resident_overrides": resident_overrides,
         "replacement_counts": replacement_counts,
         "inputs": inputs,
         "outputs": outputs,

@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-c2-interrupt-ownership-hardware-line-v1",
+  "recorded_on": "2026-07-28",
+  "status": "prepared-for-final-bundled-device-session",
+  "product_identity": "successor-of-Link-75-after-green-WPLTO",
+  "precondition": "Fresh boot reaches the C2-lite REPL with the product-owned raster IRQ running.",
+  "form": "(list(logand(peek 214 225)192)(logand(peek 214 151)15)(logand(peek 215 19)15))",
+  "expected": "(0 0 0)",
+  "registers": [
+    {
+      "family": "ethernet",
+      "address": "$D6E1",
+      "peek_high": 214,
+      "peek_low": 225,
+      "enable_mask": 192,
+      "expected_masked_value": 0
+    },
+    {
+      "family": "auto-iec",
+      "address": "$D697",
+      "peek_high": 214,
+      "peek_low": 151,
+      "enable_mask": 15,
+      "expected_masked_value": 0
+    },
+    {
+      "family": "audio-dma",
+      "address": "$D713",
+      "peek_high": 215,
+      "peek_low": 19,
+      "enable_mask": 15,
+      "expected_masked_value": 0
+    }
+  ],
+  "claim_rule": "Only an exact (0 0 0) result on the linked successor product closes the hardware row. Source and ELF gates do not substitute for this post-boot observation.",
+  "session_rule": "This line rides in the single final Phase-I/Phase-V/K2 bundled device session; it does not commission a separate hardware start."
+}

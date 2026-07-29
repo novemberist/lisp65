@@ -56,7 +56,7 @@
     "legacy_source_aliases": "forbidden",
     "p0_decode_compatibility": "permanent",
     "abi_ledger": "config/bytecode-abi-ledger.json",
-    "abi_ledger_sha256": "97c0a9d87618b01856fcad2464d421cab1b6c5ef299d5e89ab4e702288e0dbb0"
+    "abi_ledger_sha256": "f85f472900059506cbed35d8320df38c1c0a2fb7fcd49d9434db1bdf2d971f23"
   },
   "artifact_arity_contract": {
     "decision": "decision:strict-arity-codeobject",
@@ -375,8 +375,8 @@
   },
   "syntax": {
     "coverage": "explicit-v1-snapshot",
-    "special_forms_current": ["and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function", "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq", "unless", "unquote", "unquote-splicing", "when"],
-    "special_forms_target": ["and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function", "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq", "unless", "unquote", "unquote-splicing", "when"],
+    "special_forms_current": ["and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function", "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq", "unless", "unquote", "unquote-splicing", "when", "while"],
+    "special_forms_target": ["and", "case", "cond", "defmacro", "defun", "dolist", "dotimes", "function", "if", "lambda", "let", "let*", "or", "progn", "quasiquote", "quote", "setq", "unless", "unquote", "unquote-splicing", "when", "while"],
     "macro_migrations": [
       {"name": "decf", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"},
       {"name": "defparameter", "disposition": "keep", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "bank5-preload", "target_library": null, "semantic_status": "specified"},
@@ -387,7 +387,7 @@
       {"name": "push", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"},
       {"name": "setf", "disposition": "move-library", "family": "prelude-control", "source_delivery": "bank5-preload", "target_delivery": "disk-on-demand", "target_library": "places", "semantic_status": "specified"}
     ],
-    "retained_macros": ["and", "case", "cond", "defun", "dolist", "dotimes", "let", "let*", "or", "unless", "when"],
+    "retained_macros": ["and", "case", "cond", "defun", "dolist", "dotimes", "let", "let*", "or", "unless", "when", "while"],
     "lambda_list_forms_current": ["dotted", "fixed", "rest-marker", "variadic-symbol"],
     "lambda_list_forms_target": ["fixed", "optional-marker", "rest-marker"],
     "lambda_markers_current": ["&rest"],
@@ -407,11 +407,11 @@
       "acceptance": {"min_symbol_savings": 1, "min_namepool_savings_bytes": 1},
       "measurement": {
         "differential_receipt": "tests/bytecode/dialect-v2/evidence/prelude-control/differential-receipt.json",
-        "differential_receipt_sha256": "f939fba74158e74a78a735eae4f577a737c3b8b51e400f1ab47fe11a69498061",
+        "differential_receipt_sha256": "06fa5bcc3cc7bb4c6be4a68bf2df663f644e49554c3eed94430a97a297126619",
         "baseline_manifest": "tests/bytecode/dialect-v2/evidence/prelude-control/dialect-v1-manifest.json",
         "baseline_manifest_sha256": "ec0da4e5c1081a2f78f2293cad4b8cfdef20e35e7575bb57971bbadb94b5ad39",
         "candidate_manifest": "tests/bytecode/dialect-v2/evidence/prelude-control/dialect-v2-manifest.json",
-        "candidate_manifest_sha256": "bf882ba085f0360568d18f7370de23804cea6a054825121c25bb9a8214c8a1ff"
+        "candidate_manifest_sha256": "850662bf8f73e1ca1a2d13cab1f4a2e5b0ee3ace94a244dda4a8ed70309947df"
       }
     },
     {
@@ -495,7 +495,7 @@
       "ide-idex-m65d-private-inline-52-names"
     ],
     "comparison_report": "tests/bytecode/dialect-v2/evidence/dialect-v2-budget-comparison.json",
-    "comparison_report_sha256": "00b637afaca4c419b34fd6a7ca996a41fe9682ef66503ff00e002cb20e5fe910"
+    "comparison_report_sha256": "7223ee00aea9b871374d63f5cd37c47db77ab82cf7888e78796b17f58b1517cd"
   },
   "open_decisions": [
     {"id": "assq-assoc-semantics", "status": "resolved", "blocks_profile_switch": true},
@@ -537,7 +537,7 @@
   "switch_criteria": {
     "authority": "hardware-G5",
     "matrix_contract": "config/dialect-v2-g5-matrix.json",
-    "matrix_contract_sha256": "02089e40f9b3bae7346be338e0962f48482a32fab524e2a051877f34f5d234af",
+    "matrix_contract_sha256": "09cabc992517cfd7a625ec13e3a786358d22e52967226f2743855a2c944a717c",
     "release_effect": "none-without-G6"
   }
 }

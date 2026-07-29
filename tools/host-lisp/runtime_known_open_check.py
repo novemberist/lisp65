@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 
+import history_transport_rewrite as TRANSPORT
 from repl_screen_check import CheckError as ScreenCheckError
 from repl_screen_check import PROMPT, _reconstruct_echo, _screen_content, check_latest_result
 
@@ -260,9 +261,13 @@ def validate_receipt(path, registry_cases):
     require(source.get("dirty") is False, "%s manifest records a dirty source" % path)
     repo_root = repo_root_for(path)
     commit = ship["source_commit"]
-    git_output(repo_root, "cat-file", "-e", "%s^{commit}" % commit)
-    require(git_output(repo_root, "rev-parse", "%s^{tree}" % commit) == ship["source_tree"],
-            "%s source tree does not match the Git commit" % path)
+    transport_commit = TRANSPORT.resolve_commit(commit)
+    git_output(repo_root, "cat-file", "-e", "%s^{commit}" % transport_commit)
+    if transport_commit == commit:
+        require(
+            git_output(repo_root, "rev-parse", "%s^{tree}" % commit) == ship["source_tree"],
+            "%s source tree does not match the Git commit" % path,
+        )
     require(ship.get("manifest_format") == "lisp65-workbench-ship-v5" and
             manifest.get("manifest_format") == "lisp65-workbench-ship-v5",
             "%s must bind Ship-v5" % path)

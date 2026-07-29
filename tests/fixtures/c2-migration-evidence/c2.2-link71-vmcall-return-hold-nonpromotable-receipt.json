@@ -1,0 +1,71 @@
+{
+  "ELF_truth": {
+    "call": "0x52b7 JSR 0x6aa0 vm_callprim",
+    "hold_PC": "0x52bb",
+    "patched_successor": "0x52ba LDY #0x0d; STA (__rc0),Y"
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 622512,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94"
+    },
+    "driver": {
+      "bytes": 10405,
+      "path": "tools/host-lisp/c2_defstruct_link71_vmcall_return_hold.py",
+      "sha256": "3e17150f5dcce5ead96204a125e4ce7d6582752da0c2a46357733e5880fbf8a0"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "session_deployment": {
+      "bytes": 7228,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/deployment.json",
+      "sha256": "bbf94d0475386703c4d67f6282b5124870fd77c7dd428975f3d3cd028d418ba5"
+    }
+  },
+  "capture_protocol": {
+    "rule": "one t1, no t0; three monitor-only reads of registers, VM state, code buffer and the dynamic vm_run_inner frame",
+    "snapshots": 3
+  },
+  "claim_limit": "One nonpromotable Link-71 vm_callprim return-edge capture.",
+  "format": "lisp65-c2.2-Link71-vmcall-return-hold-v1",
+  "harness_first_red": {
+    "observed_PC": "0xe094",
+    "reason": "the patched site is the common return of every CALLPRIM; the live REPL key path reached it before Prim-ID 67, and subsequent monitor traffic correctly tripped the source-less-IRQ fail-closed guard",
+    "resolution": "replace the broad patch with a Prim-ID-67-scoped marker trampoline; no product inference is drawn"
+  },
+  "outcomes": {
+    "AX_0087_status_00": "the complete CALLPRIM dispatch and epilogue returned correctly; attribution advances into BUF_ENSURE_MINE",
+    "other": "the CALLPRIM epilogue or its ABI restoration is overruled"
+  },
+  "patch": {
+    "PRG_file_offset": 12987,
+    "after": "7880fe",
+    "artifact": {
+      "address": "0x000052ba",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-return-hold-NONPROMOTABLE/vmcall-return-hold.bin",
+      "sha256": "ecfd175f590d113b784e9d50c335e3d78701dcdf59166ae6e0f7e347e6ae7046"
+    },
+    "before": "a00d91",
+    "deployed_product_bytes_delta": 0,
+    "late_RAM_bytes_changed": 3,
+    "product_file_bytes_delta": 0,
+    "runtime_address": "0x52ba"
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "session_authority": {
+    "media_sha256": "f77997a9045f6642fc1ae1cd8f197790de5ad526f92e4518ff00451b12cd7b7c",
+    "product_sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+  },
+  "status": "harness-first-red-common-site-not-primitive-scoped",
+  "test": {
+    "expected_vm_callprim_result_AX": "0x0087",
+    "form": "(%require-c2d-byte (cons 0 0))"
+  }
+}

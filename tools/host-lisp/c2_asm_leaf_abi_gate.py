@@ -19,6 +19,7 @@ import sys
 from typing import Any, Sequence
 
 import c2_crc_codegen_gate as DISASM
+import c2_stz_z_dominance_gate as STZ
 from elf_truth import ElfTruth, ElfTruthError, Relocation
 
 
@@ -119,6 +120,25 @@ ABI_POLICIES = {
         "section_token": ".section\t.text.mega65_math_mod_adjust",
         "linked": "required-when-C-called",
         "abi": "C->ASM: tagged remainder A/X; tagged divisor __rc2/__rc3; result A/X",
+    },
+    "lisp65_ash_tagged": {
+        "source": ROOT / "src/lisp65_ash_tagged.s",
+        "section_token": ".section\t.lisp65_resident_island",
+        "linked": "required-when-C-called",
+        "abi": (
+            "C->ASM: tagged value A/X; tagged count __rc2/__rc3; "
+            "tagged result A/X; VM_TYPEERROR/NIL on invalid count or "
+            "left-shift overflow; Z=0"),
+    },
+    "vm_c2d_byte": {
+        "source": ROOT / "src/vm_c2d_byte.s",
+        "section_token":
+            ".section\t.lisp65_c2_kernal_window.reopen_gap1",
+        "linked": "required-when-C-called",
+        "abi": (
+            "C->ASM: validated obj argument pointer __rc2/__rc3; "
+            "obj result A/X; ASM->C c2_stream_c2d_read: offset A/X, "
+            "destination __rc2/__rc3, length __rc4/__rc5; Z=0"),
     },
 }
 
@@ -896,6 +916,7 @@ def audit_elf(elf: Path, *, out: Path | None = None,
     rows = DISASM.disassembly_rows(completed.stdout)
     linked = _linked_inventory(truth, rows,
                                require_bank3_chain=require_bank3_chain)
+    stz_dominance = STZ.audit(linked_inventory=linked)
     derived_callers = _c_called_asm_inventory(truth)
     crc_callers = _crc_caller_inventory(truth, rows)
     append_plan_callers = _append_plan_caller_inventory(truth, rows)
@@ -904,10 +925,12 @@ def audit_elf(elf: Path, *, out: Path | None = None,
     l65e_entry = _l65e_entry_abi_gate(truth, rows)
     journal_prepare = _journal_prepare_selector_abi_gate(truth, rows)
     value = {
-        "format": "lisp65-c2-assembler-leaf-abi-dataflow-v2",
+        "format": "lisp65-c2-assembler-leaf-abi-dataflow-v3",
         "elf": str(elf),
         "status": "passed-all-assembler-leaf-abi-contracts",
         "source_inventory": sources,
+        "handwritten_STZ_Z_dominance": stz_dominance,
+        "handwritten_STZ_and_Z_boundary_discipline": stz_dominance,
         "linked_inventory": linked,
         "ELF_derived_C_called_inventory": derived_callers,
         "rtov_crc_mem_callers": crc_callers,
@@ -920,7 +943,12 @@ def audit_elf(elf: Path, *, out: Path | None = None,
             "derives the complete linked C-called leaf set. Every discovered "
             "surface has an ABI policy or the build is red. CRC and the "
             "runtime-overlay L65E entry additionally prove their real caller "
-            "register setup from structured relocations and dataflow."),
+            "register setup from structured relocations and dataflow. Every "
+            "handwritten 45GS02 STZ is source-derived and must be dominated "
+            "by a proven Z=0 state. Every regular handwritten return and "
+            "ASM-to-external edge must likewise carry Z=0; interrupt entries "
+            "outside the C-called leaf universe instead prove preservation "
+            "of the interrupted Z value."),
     }
     if out is not None:
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -934,6 +962,9 @@ def selftest() -> dict[str, str]:
              for path in sorted((ROOT / "src").glob("*.s"))}
     source_inventory(texts)
     rejected: dict[str, str] = {}
+    stz = STZ.selftest()
+    for name in stz["mutations"]:
+        rejected[f"STZ-Z-dominance:{name}"] = "rejected"
     declarations = _declared_asm_functions(texts)
     for name, row in ABI_POLICIES.items():
         mutated = dict(texts)
@@ -1078,7 +1109,7 @@ def selftest() -> dict[str, str]:
         else:
             raise GateError(
                 f"journal selector tail-Z mutation survived: {target}")
-    require(len(rejected) == len(ABI_POLICIES) + 20,
+    require(len(rejected) == len(ABI_POLICIES) + 20 + stz["rejected"],
             "assembler ABI mutation count drift")
     return rejected
 
@@ -1103,8 +1134,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             require_bank3_chain=not args.no_bank3_chain)
         print("c2-asm-leaf-abi-gate: " + result["status"])
         return 0
-    except (GateError, ElfTruthError, OSError, subprocess.CalledProcessError,
-            ValueError) as error:
+    except (GateError, STZ.GateError, ElfTruthError, OSError,
+            subprocess.CalledProcessError, ValueError) as error:
         print("c2-asm-leaf-abi-gate: FAIL: " + str(error), file=sys.stderr)
         return 1
 

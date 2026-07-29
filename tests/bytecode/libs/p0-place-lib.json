@@ -1,6 +1,8 @@
 {
   "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
   "name": "place",
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
   "d81_name": "PLACE",
   "provides": [
     "setf",
@@ -19,6 +21,14 @@
   "functions": [
     "%places-consp",
     "%putf",
+    "%setf-registry-find",
+    "%setf-place-setter",
+    "%setf-register-begin",
+    "%setf-register",
+    "%setf-register-commit",
+    "%setf-register-abort",
+    "%setf-expand-registered",
+    "%setf-expand-list",
     "%setf-expand",
     "setf",
     "incf",
@@ -60,6 +70,31 @@
       "name": "place-setf-expand-symbol",
       "expr": "(%setf-expand 'x 4)",
       "expect": "(setq x 4)"
+    },
+    {
+      "name": "place-register-publish-last",
+      "expr": "(progn (%setf-register-begin) (%setf-register 'point-x 'point-set-x) (%setf-register-commit) (%setf-place-setter 'point-x))",
+      "expect": "point-set-x"
+    },
+    {
+      "name": "place-register-identical-idempotent",
+      "expr": "(progn (%setf-register-begin) (%setf-register 'point-x 'point-set-x))",
+      "expect": "t"
+    },
+    {
+      "name": "place-register-conflict-rejected",
+      "expr": "(%setf-register 'point-x 'other-setter)",
+      "expect": "nil"
+    },
+    {
+      "name": "place-register-abort-invisible",
+      "expr": "(progn (%setf-register-abort) (%setf-register-begin) (%setf-register 'rolled-back-place 'rolled-back-setter) (%setf-register-abort) (%setf-place-setter 'rolled-back-place))",
+      "expect": "nil"
+    },
+    {
+      "name": "place-unknown-remains-unsupported",
+      "expr": "(%setf-place-setter 'unknown-place)",
+      "expect": "nil"
     }
   ]
 }

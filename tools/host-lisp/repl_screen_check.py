@@ -8,10 +8,13 @@ from dataclasses import dataclass
 from pathlib import Path
 import tempfile
 
+from PIL import Image
+
 
 RESULT_MISMATCH = 4
 ECHO_MISMATCH = 5
 SCREEN_MALFORMED = 6
+FAIL_CLOSED_FRAME = 7
 PROMPT = "lisp65> "
 SCREEN_WIDTH = 80
 
@@ -20,6 +23,30 @@ SCREEN_WIDTH = 80
 class CheckError(Exception):
     code: int
     message: str
+
+
+def check_fail_closed_frame(image_path: Path) -> None:
+    try:
+        with Image.open(image_path) as image:
+            rgb = image.convert("RGB")
+            width, height = rgb.size
+            samples = (
+                rgb.getpixel((0, 0)),
+                rgb.getpixel((width - 1, 0)),
+                rgb.getpixel((0, height - 1)),
+                rgb.getpixel((width - 1, height - 1)),
+            )
+    except OSError as error:
+        raise CheckError(
+            SCREEN_MALFORMED,
+            f"cannot read screenshot image {image_path}: {error}",
+        ) from error
+    if all(red >= 240 and green <= 16 and blue <= 16
+           for red, green, blue in samples):
+        raise CheckError(
+            FAIL_CLOSED_FRAME,
+            "red fail-closed frame is visible",
+        )
 
 
 def _screen_content(raw_line: str) -> str:
@@ -290,6 +317,20 @@ def selftest() -> None:
     ]
     with tempfile.TemporaryDirectory(prefix="lisp65-repl-screen-") as raw_tmp:
         tmp = Path(raw_tmp)
+        normal_image = tmp / "normal.png"
+        fail_closed_image = tmp / "fail-closed.png"
+        Image.new("RGB", (8, 8), (0, 0, 0)).save(normal_image)
+        Image.new("RGB", (8, 8), (255, 0, 0)).save(fail_closed_image)
+        check_fail_closed_frame(normal_image)
+        try:
+            check_fail_closed_frame(fail_closed_image)
+        except CheckError as error:
+            if error.code != FAIL_CLOSED_FRAME:
+                raise AssertionError(
+                    "fail-closed image returned the wrong status"
+                ) from error
+        else:
+            raise AssertionError("fail-closed image survived")
         for name, lines, form, expect, expected_code in cases:
             screen = tmp / f"{name}.txt"
             forms = tmp / f"{name}.forms"
@@ -351,13 +392,17 @@ def selftest() -> None:
                 actual_code = error.code
             if actual_code != expected_code:
                 raise AssertionError(f"{name}: expected rc={expected_code}, got rc={actual_code}")
-    print(f"repl-screen-check selftest: PASS ({len(cases) + len(active_cases)} cases)")
+    print(
+        "repl-screen-check selftest: PASS "
+        f"({len(cases) + len(active_cases) + 2} cases)"
+    )
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--selftest", action="store_true")
     parser.add_argument("--screen", type=Path)
+    parser.add_argument("--image", type=Path)
     parser.add_argument("--forms", type=Path)
     parser.add_argument("--form-text")
     parser.add_argument("--expect")
@@ -382,6 +427,8 @@ def main() -> int:
         selftest()
         return 0
     try:
+        if args.image is not None:
+            check_fail_closed_frame(args.image)
         expected_form = args.form_text if args.form_text is not None else _last_form(args.forms)
         if args.active_input:
             check_active_input(args.screen, expected_form)

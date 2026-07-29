@@ -31,6 +31,29 @@ OFFLINE_VERIFIER = ROOT / "tools/host-lisp/c2_lite_g6_offline.py"
 ARCHIVE_FORMAT = "lisp65-c2-lite-r6-g6-hardware-archive-v1"
 PRODUCT_SET = "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d"
 PACKAGE_SET = "82ddc3d7fd8bc048b2803081866aa5320a08bd226d18b063c403a33fc9e7e038"
+CONTRACT_ID = "c2-lite-r6-g6-hardware-acceptance-v1.2"
+ARCHIVE_ID_PREFIX = "c2-lite-r6-g6-hardware-acceptance"
+REGISTERED_SUBJECT = "c2-lite-v1.2-link66-r6-g6"
+SEAL_RELEASE_CLAIM = "promoted-v1.2"
+RELEASE_LABEL = "v1.2"
+SEAL_EQUALS_PROMOTION = True
+R5_RECEIPT = (
+    ROOT / "build/c2.2/acceptance/r5-successor-v11"
+    / "r5-successor-rebind-receipt.json"
+)
+R6_RECEIPT = (
+    ROOT / "build/c2.2/acceptance/r6-successor-v11"
+    / "r6-packaging-receipt.json"
+)
+R6_MANIFEST = (
+    ROOT / "build/c2.2/acceptance/r6-successor-v11/ship"
+    / "manifest.json"
+)
+G5_TOP_RECEIPT = (
+    ROOT / "build/c2.2/acceptance/g5/replay-v11-hybrid-dma"
+    / "session-01/g5-hardware-receipt.json"
+)
+ACCEPTANCE_CONTRACT = ROOT / "config/c2-lite-acceptance-chain.json"
 TOP_RECEIPT = (
     ROOT / "build/c2.2/acceptance/g6-successor-v11/session-01"
     / "g6-hardware-receipt.json"
@@ -158,26 +181,27 @@ def commit_date(value: str) -> str:
 
 def contract() -> dict[str, Any]:
     value = load(CONTRACT, "seal contract")
+    expected_input = {
+        "G5_top_receipt_sha256": sha(G5_TOP_RECEIPT),
+        "G6_top_receipt_sha256": sha(TOP_RECEIPT),
+        "R5_successor_receipt_sha256": sha(R5_RECEIPT),
+        "R6_manifest_sha256": sha(R6_MANIFEST),
+        "R6_package_set_sha256": PACKAGE_SET,
+        "R6_receipt_sha256": sha(R6_RECEIPT),
+        "acceptance_contract_sha256": sha(ACCEPTANCE_CONTRACT),
+        "product_artifact_set_sha256": PRODUCT_SET,
+    }
     require(
         value.get("format") == "lisp65-c2-lite-r6-g6-seal-contract-v1"
         and value.get("version") == 1
-        and value.get("id") == "c2-lite-r6-g6-hardware-acceptance-v1.2"
+        and value.get("id") == CONTRACT_ID
         and value.get("status") == "owner-authorized"
         and value.get("kind") == "hardware-acceptance"
-        and value.get("input") == {
-            "G5_top_receipt_sha256": "d317833ccd68d129493e824c1a89995b819ddc6464ce4f50534f1fb46cd8dbc0",
-            "G6_top_receipt_sha256": "b4e494b025fd7dd3404cc14a363980f54ae0e051f0e12285f092facc67c94685",
-            "R5_successor_receipt_sha256": "43fb8e58a20576ebdbd726d650fd92518ba27d6aedd33c6c70633408fed3eb54",
-            "R6_manifest_sha256": "d7f5c29a0577fd9117c13ea934a467f0be86b2e4629390fcc9b1c4d84bda2324",
-            "R6_package_set_sha256": PACKAGE_SET,
-            "R6_receipt_sha256": "170e1b60ba4fd5f52db73644ece82567b72331eb3d6b2b82fc0661cfc30c9fd8",
-            "acceptance_contract_sha256": "9eec58328cd7da6f8a97cb9241b6f4f8584df8627d78c063c275ba5280c5203a",
-            "product_artifact_set_sha256": PRODUCT_SET,
-        }
+        and value.get("input") == expected_input
         and value.get("claims") == {
             "G5": "passed-nine-of-nine",
             "G6": "passed-five-of-five",
-            "release": "promoted-v1.2",
+            "release": SEAL_RELEASE_CLAIM,
         }
         and value.get("capacity_delta") == {
             "attic_bytes": 0,
@@ -188,6 +212,17 @@ def contract() -> dict[str, Any]:
             "resident_bytes": 0,
         },
         "seal contract semantic drift",
+    )
+    promotion = value.get("promotion")
+    require(
+        isinstance(promotion, dict)
+        and promotion.get("product_byte_changes") == 0
+        and promotion.get("remote_source_binding")
+        == "source-commit-is-remote-ancestor"
+        and promotion.get("seal_equals_promotion")
+        is SEAL_EQUALS_PROMOTION
+        and promotion.get("subject") == REGISTERED_SUBJECT,
+        "seal promotion contract drift",
     )
     return value
 
@@ -242,36 +277,19 @@ def archive_bytes(
     require(
         SAFE_ID_RE.fullmatch(archive_id) is not None
         and archive_id
-        == f"c2-lite-r6-g6-hardware-acceptance-{source_commit[:7]}",
+        == f"{ARCHIVE_ID_PREFIX}-{source_commit[:7]}",
         "archive id must bind source commit",
     )
     require(sealed_on == commit_date(source_commit),
             "sealed_on must equal source commit date")
     authority = contract()
     for path, key in (
-        (
-            ROOT / "build/c2.2/acceptance/r5-successor-v11"
-            / "r5-successor-rebind-receipt.json",
-            "R5_successor_receipt_sha256",
-        ),
-        (
-            ROOT / "build/c2.2/acceptance/r6-successor-v11"
-            / "r6-packaging-receipt.json",
-            "R6_receipt_sha256",
-        ),
-        (
-            ROOT / "build/c2.2/acceptance/r6-successor-v11/ship"
-            / "manifest.json",
-            "R6_manifest_sha256",
-        ),
-        (
-            ROOT / "build/c2.2/acceptance/g5/replay-v11-hybrid-dma"
-            / "session-01/g5-hardware-receipt.json",
-            "G5_top_receipt_sha256",
-        ),
+        (R5_RECEIPT, "R5_successor_receipt_sha256"),
+        (R6_RECEIPT, "R6_receipt_sha256"),
+        (R6_MANIFEST, "R6_manifest_sha256"),
+        (G5_TOP_RECEIPT, "G5_top_receipt_sha256"),
         (TOP_RECEIPT, "G6_top_receipt_sha256"),
-        (ROOT / "config/c2-lite-acceptance-chain.json",
-         "acceptance_contract_sha256"),
+        (ACCEPTANCE_CONTRACT, "acceptance_contract_sha256"),
     ):
         require(sha(path) == authority["input"][key],
                 f"seal authority drift: {key}")
@@ -407,8 +425,9 @@ def negative_test(path: Path) -> None:
             safe_extract(path, directory)
             if mutation == "product-byte":
                 target = (
-                    directory / "payload/build/c2.2/acceptance"
-                    / "r6-successor-v11/ship/media/lisp65-product.d81"
+                    directory / "payload"
+                    / R6_MANIFEST.parent.relative_to(ROOT)
+                    / "media/lisp65-product.d81"
                 )
                 require(target.is_file(), "negative product target missing")
                 data = bytearray(target.read_bytes())
@@ -416,8 +435,9 @@ def negative_test(path: Path) -> None:
                 target.write_bytes(data)
             elif mutation == "case-receipt":
                 target = (
-                    directory / "payload/build/c2.2/acceptance"
-                    / "g6-successor-v11/session-01/case-05-product-media"
+                    directory / "payload"
+                    / TOP_RECEIPT.parent.relative_to(ROOT)
+                    / "case-05-product-media"
                     / "receipt.json"
                 )
                 mutate_json(
@@ -498,7 +518,7 @@ def seal(
     print(
         "c2-lite-r6-g6-seal: WROTE "
         f"packs=2 bytes={output.stat().st_size} sha256={sha(output)} "
-        f"source={source_commit} release=v1.2"
+        f"source={source_commit} release={RELEASE_LABEL}"
     )
 
 
@@ -509,9 +529,9 @@ def registered_verify() -> None:
     matches = [
         row for row in rows
         if isinstance(row, dict)
-        and row.get("subject") == "c2-lite-v1.2-link66-r6-g6"
+        and row.get("subject") == REGISTERED_SUBJECT
     ]
-    require(len(matches) == 1, "C2-lite v1.2 promotion entry not unique")
+    require(len(matches) == 1, "C2-lite promotion entry not unique")
     row = matches[0]
     require(
         set(row) == {
@@ -523,13 +543,13 @@ def registered_verify() -> None:
         and SHA1_RE.fullmatch(row["source_commit"]) is not None
         and isinstance(row.get("archive_sha256"), str)
         and SHA256_RE.fullmatch(row["archive_sha256"]) is not None,
-        "C2-lite v1.2 promotion schema drift",
+        "C2-lite promotion schema drift",
     )
     archive_path = ROOT / Path(*PurePosixPath(row["archive"]).parts)
     require(
         archive_path.is_file() and not archive_path.is_symlink()
         and sha(archive_path) == row["archive_sha256"],
-        "registered C2-lite v1.2 archive drift",
+        "registered C2-lite archive drift",
     )
     verify_archive(archive_path)
     print(
@@ -540,11 +560,13 @@ def registered_verify() -> None:
 
 def selftest() -> None:
     value = contract()
-    require(value["promotion"]["seal_equals_promotion"] is True,
+    require(
+        value["promotion"]["seal_equals_promotion"]
+        is SEAL_EQUALS_PROMOTION,
             "seal/promotion boundary drift")
     print(
         "c2-lite-r6-g6-seal: SELFTEST PASS "
-        "G5=9/9 G6=5/5 product-delta=0 release=v1.2"
+        f"G5=9/9 G6=5/5 product-delta=0 release={RELEASE_LABEL}"
     )
 
 

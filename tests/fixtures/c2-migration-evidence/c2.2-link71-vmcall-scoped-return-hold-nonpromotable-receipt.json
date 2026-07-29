@@ -1,0 +1,122 @@
+{
+  "authority": {
+    "ELF": {
+      "bytes": 622512,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94"
+    },
+    "driver": {
+      "bytes": 18903,
+      "path": "tools/host-lisp/c2_defstruct_link71_vmcall_scoped_return_hold.py",
+      "sha256": "90692c050a089eead5dfdde1d8317c1917ecd79bd2c864721c0cd3e4f9d557e1"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "session_deployment": {
+      "bytes": 7228,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/deployment.json",
+      "sha256": "bbf94d0475386703c4d67f6282b5124870fd77c7dd428975f3d3cd028d418ba5"
+    }
+  },
+  "capture_protocol": {
+    "hold_PC": "0x17be",
+    "rule": "the target wait is IRQ-friendly NOP/BRA because A/X are already saved in memory; deploy ends at a fresh REPL with no armed JTAG episode, the commissioned form is entered once on the physical keyboard, followed by one t1, no t0, and three monitor-only snapshots"
+  },
+  "claim_limit": "One nonpromotable Prim-ID-67-scoped vm_callprim return capture.",
+  "format": "lisp65-c2.2-Link71-vmcall-scoped-return-hold-v1",
+  "injected_diagnostic": {
+    "changed_product_bytes": 5,
+    "deployed_product_bytes_delta": 0,
+    "diagnostic_product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-scoped-return-hold-NONPROMOTABLE/lisp65-Link71-vmcall-scoped-return-NONPROMOTABLE.prg",
+      "sha256": "bf21c292b575cf04774a73e714e16d00194c765c6a1c4513d4aa69ef11093fd7"
+    },
+    "free_span": "0x17a0..0x17ff before resident island 0x1800",
+    "hook": {
+      "address": "0x000017a0",
+      "bytes": 40,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-scoped-return-hold-NONPROMOTABLE/scoped-return-hook.bin",
+      "sha256": "6a1357552af06ea6cb7cae5309ca9cb2c421c68e5fc5fdf3c47f5f938de8b769"
+    },
+    "product_file_bytes_delta": 0,
+    "single_prestart_preload": {
+      "address": "0x000017a0",
+      "bytes": 83,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-scoped-return-hold-NONPROMOTABLE/scoped-return-preload.bin",
+      "sha256": "034be5a8fa1bb7dafa5ffca8863963152126af725600a6099eb2e0f29dd051a9"
+    },
+    "state": {
+      "address": "0x000017f0",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-scoped-return-hold-NONPROMOTABLE/scoped-return-state.bin",
+      "sha256": "709e80c88487a2411e1ee4dfb9f22a861492d20c4765150c0c794abd70f8147c"
+    }
+  },
+  "patches": [
+    {
+      "PRG_file_offset": 22406,
+      "address": "0x7785",
+      "after": "4ca017",
+      "artifact": {
+        "address": "0x00007785",
+        "bytes": 3,
+        "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-scoped-return-hold-NONPROMOTABLE/leaf-successor-jump.bin",
+        "sha256": "63c7ab905e3e8fd509cf54f82418828308ae20f1a137938096c481d2f2927a6b"
+      },
+      "before": "4c526b"
+    },
+    {
+      "PRG_file_offset": 12987,
+      "address": "0x52ba",
+      "after": "4cb417",
+      "artifact": {
+        "address": "0x000052ba",
+        "bytes": 3,
+        "path": "build/post-promotion/link71-defstruct-session-record-identity-hardware-replay-v3/vmcall-scoped-return-hold-NONPROMOTABLE/common-return-hook-jump.bin",
+        "sha256": "49f83239f59869bed004cc395c4356122c42a03631c5e8754bc317526fbeb9b5"
+      },
+      "before": "a00d91"
+    }
+  ],
+  "prior_first_reds": [
+    {
+      "answer": "an unrelated REPL CALLPRIM reached the unqualified common hook first",
+      "class": "common-site-scope"
+    },
+    {
+      "answer": "the scoped SEI loop plus subsequent monitor entry tripped the product's correct source-less-IRQ guard",
+      "class": "SEI-monitor-interaction"
+    },
+    {
+      "answer": "verified input used separate type, screenshot and RETURN JTAG episodes before the form could execute; the diagnostic now submits both text and RETURN in one keyboard-virtualisation command",
+      "class": "verified-input-multi-episode"
+    },
+    {
+      "answer": "even one unverified -T keyboard episode reached the product's second-sourceless-IRQ fail-closed path before the scoped marker was set; virtual input is therefore excluded from this diagnostic",
+      "class": "virtual-input-single-episode"
+    },
+    {
+      "answer": "even a single late monitor arm reached the correct second-sourceless-IRQ fail-closed path before the physical form; the successor uses a size-identical prepatched diagnostic PRG and no post-start JTAG",
+      "class": "runtime-monitor-arm"
+    }
+  ],
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "scope_proof": {
+    "broad_hook_first_red": "the predecessor attempt patched the common site directly and was correctly discarded after an unrelated REPL CALLPRIM reached it first",
+    "common_path": "marker zero preserves every unrelated CALLPRIM return by executing the replaced LDY/STA pair and jumping to 0x52be",
+    "leaf_path": "only the successor of JSR vm_c2d_byte sets marker 0x67",
+    "target_path": "marker 0x67 holds after the unchanged common vm_callprim epilogue has returned to vm_run_inner"
+  },
+  "status": "ready-authorized-nonpromotable-scoped-return-capture",
+  "test": {
+    "expected_vm_callprim_result_AX": "0x0087",
+    "form": "(%require-c2d-byte (cons 0 0))"
+  }
+}

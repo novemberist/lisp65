@@ -30,6 +30,15 @@ SOURCES = ("lib/lcc.lisp", "lib/dialect-v2/lcc-profile.lisp")
 EXPORTS = ("%c2-compile-form",)
 OMIT = {"lcc-compile", "lcc-lits", "lcc-run"}
 FORMAT = "lisp65-c2-product-compiler-tier-suite-generator-v1"
+BOUND_CARRIER_PRIM68_FORM = (
+    '(defun %is (n) (if (> n 0) '
+    '(progn (intern "abc") (%is (- n 1))) t))'
+)
+BOUND_CARRIER_WHILE_FORM = (
+    "(defun %while-bound-probe () "
+    "(let ((i 0)) "
+    "(progn (while (< i 3) (setq i (+ i 1))) i)))"
+)
 
 
 class C2CompilerTierError(RuntimeError):
@@ -46,6 +55,34 @@ def _relative(path: Path) -> str:
 
 def _json_bytes(value: object) -> bytes:
     return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
+
+def _list_item(expression: str, index: int) -> str:
+    value = expression
+    for _ in range(index):
+        value = f"(cdr {value})"
+    return f"(car {value})"
+
+
+def _bound_carrier_prim68_probe() -> str:
+    objects = (
+        f"(%c2-compile-form (quote {BOUND_CARRIER_PRIM68_FORM}))"
+    )
+    main = _list_item(objects, 0)
+    code_bytes = _list_item(main, 4)
+    return _list_item(code_bytes, 9)
+
+
+def _bound_carrier_while_probe() -> str:
+    objects = (
+        f"(%c2-compile-form (quote {BOUND_CARRIER_WHILE_FORM}))"
+    )
+    main = _list_item(objects, 0)
+    code_bytes = _list_item(main, 4)
+    # The branch back to the loop head is the first JMPREL in the canonical
+    # payload.  Reaching this byte executes the packed carrier's while
+    # lowering; it cannot pass by merely finding the source token.
+    return _list_item(code_bytes, 21)
 
 
 def generate(out: Path) -> dict:
@@ -115,11 +152,23 @@ def generate(out: Path) -> dict:
             for name, sources in sorted(definition_sources.items())
             if len(sources) > 1
         },
-        "cases": [{
-            "name": "c2-expression-detaches-codeobject",
-            "expr": "(car (car (%c2-compile-form (quote (+ 1 2)))))",
-            "expect": "0",
-        }],
+        "cases": [
+            {
+                "name": "c2-expression-detaches-codeobject",
+                "expr": "(car (car (%c2-compile-form (quote (+ 1 2)))))",
+                "expect": "0",
+            },
+            {
+                "name": "bound-carrier-prim68-intern-lowering",
+                "expr": _bound_carrier_prim68_probe(),
+                "expect": "68",
+            },
+            {
+                "name": "bound-carrier-while-lowering-executes",
+                "expr": _bound_carrier_while_probe(),
+                "expect": "28",
+            },
+        ],
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     data = _json_bytes(suite)

@@ -1,0 +1,141 @@
+{
+  "format": "lisp65-c2-while-product-contract-v1",
+  "recorded_on": "2026-07-29",
+  "status": "owner-authorized-successor-product-link",
+  "scope": {
+    "phase": "V2",
+    "surface": "while",
+    "product_source_changes_authorized": 1,
+    "wplto_probes_authorized": 1,
+    "wplto_probes_consumed": 1,
+    "product_links_authorized": 1,
+    "hardware_runs": 0,
+    "performance_claim": "none"
+  },
+  "taxonomy": {
+    "class": "structured local iteration",
+    "not": "non-local exit",
+    "public_surface_catalog_kind": "macro",
+    "implementation_kind": "compiler and tree-walk special form"
+  },
+  "syntax": {
+    "form": "(while test form*)",
+    "minimum_arguments": 1,
+    "test": "exactly the first argument",
+    "body": "zero or more remaining proper-list forms",
+    "malformed": [
+      "(while)",
+      "an improper argument list",
+      "a generated branch outside the signed rel8 interval"
+    ]
+  },
+  "semantics": {
+    "test": "evaluated before every iteration in the surrounding lexical environment",
+    "truth": "NIL terminates; every other object continues",
+    "body": "evaluated left-to-right for every admitted iteration; every body value is discarded",
+    "empty_body": "legal; the test is still reevaluated and RUN/STOP remains observable",
+    "result": "NIL after normal termination",
+    "scope": "while introduces no binding or dynamic extent of its own",
+    "error_and_abort": "test/body errors and RUN/STOP use the existing top-level abort landing; while adds no catchable exit"
+  },
+  "lowering": {
+    "bytecode": [
+      "loop_start",
+      "compile test",
+      "JFALSEREL loop_exit",
+      "compile each body form followed by DROP",
+      "JMPREL loop_start",
+      "loop_exit: PUSHNIL"
+    ],
+    "relative_branch_domain": {
+      "minimum": -128,
+      "maximum": 127,
+      "exact_meets": "both -128 and 127 are legal; values outside fail compilation closed"
+    },
+    "new_vm_opcodes": 0,
+    "new_runtime_state": 0,
+    "new_resident_gc_roots": 0,
+    "new_c2j_fields": 0,
+    "new_runtime_overlay_records": 0
+  },
+  "execution_views": {
+    "native_treewalk": "src/eval.c interns sf_while, evaluates a flat C loop, roots test/body/environment across allocation and polls at least once per 64 admitted empty-body iterations",
+    "native_bytecode_compiler": "src/compile.c emits the existing JFALSEREL/JMPREL loop and classifies while in bc_is_special_form",
+    "host_bytecode_compiler": "tools/host-lisp/bytecode_p0_compiler.py emits the byte-identical control-flow shape and checks signed rel8 bounds",
+    "device_lcc": "lib/lcc.lisp plus the dialect-v2 profile emit the same existing branch ABI; the generated and product-bound compiler carrier must contain the new surface",
+    "vm": "host and target VMs are unchanged; their existing JFALSEREL/JMPREL implementation executes the result"
+  },
+  "surface_truths": [
+    "config/dialect-migration-contract.json current and target special-form inventories",
+    "config/dialect-v2-surface.json public surface catalog",
+    "src/compile.c bc_is_special_form and expression dispatch",
+    "src/eval.c interned special-form and tree-walk dispatch",
+    "tools/host-lisp/bytecode_p0_compiler.py expression dispatch",
+    "lib/dialect-v2/lcc-profile.lisp device-LCC special-form and loop dispatch",
+    "the generated compiler tier and the product-bound LCC carrier",
+    "language and migration documentation"
+  ],
+  "required_proofs": {
+    "semantic": [
+      "zero iterations return NIL",
+      "multiple iterations preserve left-to-right side effects",
+      "a non-NIL non-boolean test value continues",
+      "the test is reevaluated once per attempted iteration",
+      "zero body forms are legal",
+      "allocation and GC in both test and body preserve live values",
+      "errors and RUN/STOP retain the existing cleanup semantics"
+    ],
+    "structural": [
+      "a long loop has constant VM, C and GC-root-stack depth",
+      "body values are dropped and do not accumulate on the operand stack",
+      "both exact rel8 meets are accepted and both one-byte overflows are rejected",
+      "malformed syntax fails closed in every compiler/evaluator view",
+      "no opcode, C2J field, permanent root, resident state or overlay record is added"
+    ],
+    "parity": [
+      "native treewalk",
+      "native C compiler plus target VM",
+      "host compiler plus host VM",
+      "device LCC carrier plus target VM"
+    ],
+    "binding": [
+      "source-to-generated-tier-to-bound-carrier parity",
+      "public surface and migration inventory parity",
+      "the final product manifest binds the while-capable carrier"
+    ],
+    "streamed_backedge": [
+      "a while backedge crosses a target VM streamed code-window boundary and reloads the target window",
+      "the proof reports logical VM steps and window-refill count separately",
+      "the per-iteration refill cost is documented as a language performance property rather than a correctness defect"
+    ]
+  },
+  "capacity_policy": {
+    "bank2": "measured from the random-bearing base composition; no fixed estimate is promoted",
+    "resident": "WPLTO must retain at least 32 bytes text noise reserve, the 54-byte E000 floor and every other Link-76 wall",
+    "no_geometry_renegotiation": true,
+    "first_red": "if the complete four-view implementation does not fit, park while and return an exact scope number; do not shave or move walls"
+  },
+  "hardware_session": {
+    "timing": "one final bundled Phase-I/Phase-V/K2 session after a separately authorized successor link",
+    "required_lines": [
+      "zero-iteration and multi-iteration result",
+      "non-boolean truth and ordered side effects",
+      "long constant-stack loop",
+      "allocation/GC in test and body",
+      "RUN/STOP from an empty-body infinite loop returns to a live prompt"
+    ]
+  },
+  "excluded": [
+    "break",
+    "continue",
+    "return-from",
+    "catch",
+    "throw",
+    "block",
+    "tagbody",
+    "go",
+    "condition restarts",
+    "reuse of C2J as a Lisp unwind stack"
+  ],
+  "owner_decision": "Accepted at Halt #3 on 2026-07-29. After the one product-shaped WPLTO completed green, the owner separately authorized exactly one successor product link carrying while together with random. Hardware remains limited to the later bundled session."
+}

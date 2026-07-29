@@ -2999,6 +2999,24 @@ eval-surface-contract-check: $(EQUIVALENCE_HOST)
 equivalence-check: $(READER_CONFORMANCE_HOST)
 	sh scripts/equivalence-check.sh
 
+.PHONY: equivalence-completion-canary-selftest equivalence-completion-canary-check
+equivalence-completion-canary-selftest:
+	python3 tools/host-lisp/equivalence_completion_canary.py selftest
+
+equivalence-completion-canary-check: equivalence-completion-canary-selftest equivalence-check
+	python3 tools/host-lisp/equivalence_completion_canary.py check \
+		--receipt build/equivalence/equivalence-completion.json
+
+.PHONY: c2-product-session-host-check
+c2-product-session-host-check:
+	python3 tools/host-lisp/c2_product_session_host.py \
+		--fixture tests/equivalence/c2-product-session-cross-entry.json \
+		--out build/equivalence/c2-product-session-host
+
+.PHONY: c2-asm-leaf-abi-selftest
+c2-asm-leaf-abi-selftest:
+	python3 tools/host-lisp/c2_asm_leaf_abi_gate.py --selftest
+
 stdlib-embed-whatif-check:
 	python3 tools/host-lisp/stdlib_embed_whatif.py $(BYTECODE_STRING_POLISH_SUITE) $(BYTECODE_FIXED_SUITE) >/dev/null
 
@@ -3114,7 +3132,7 @@ $(L65M_NATIVE_LOADER_HOST): scripts/l65m-native-loader-main.c src/l65m_commit_ov
 l65m-native-loader-check: $(L65M_NATIVE_LOADER_HOST)
 	$(L65M_NATIVE_LOADER_HOST)
 
-$(L65M_V2_PRODUCT_HEADER): v2-workbench-artifacts v11-c1-compiler-tier-artifacts tools/host-lisp/l65m_v2_product_cases.py \
+$(L65M_V2_PRODUCT_HEADER): v2-workbench-artifacts v11-c1-compiler-tier-host-artifacts tools/host-lisp/l65m_v2_product_cases.py \
 		config/directory-only-l65m-v2-implementation.json \
 		config/directory-only-interlibrary-api.json \
 		build/bytecode/dialect-v2/libs/ide.ext.bin \
@@ -3406,6 +3424,7 @@ $(GC_SMOKE_EXT_HOST): scripts/gc-smoke-main.c src/mem.c src/mem.h src/symbol.c s
 
 gc-smoke: $(GC_SMOKE_HOST) $(GC_SMOKE_EXT_HOST)
 	$(GC_SMOKE_HOST)
+	$(GC_SMOKE_EXT_HOST)
 
 READER_CONFORMANCE_CFLAGS := -std=c99 -Wall -Wextra -fsanitize=address,undefined -fno-omit-frame-pointer -DHEAP_CELLS=8192 -DMAX_SYM=160 -DNAMEPOOL=4096 -Isrc
 READER_CONFORMANCE_SRCS := scripts/reader-conformance-main.c src/reader.c src/mem.c src/symbol.c src/interrupt.c

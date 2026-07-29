@@ -31,6 +31,14 @@ DEFAULT_OUT = (
     / "build/c2.2/acceptance/g5/replay-v11-hybrid-dma/session-01"
     / "g5-hardware-receipt.json"
 )
+DEFAULT_BANK2_AUTHORITY = (
+    ROOT
+    / "build/c2.2/canonical-product/final/fresh-c2-lite-prelink-gates"
+    / "v6-semantics/bank2-static-code.bin"
+)
+DEFAULT_BANK3_AUTHORITY = (
+    ROOT / "build/c2.2/canonical-product/final/runtime-overlays-session-final.bin"
+)
 FORMAT = "lisp65-c2-lite-G5-hardware-receipt-v1"
 EXPECTED_CASES = [
     "media/cold-boot-stage-banner",
@@ -177,7 +185,13 @@ def no_product_error(path: Path, label: str) -> None:
     )
 
 
-def collect(runbook_path: Path, transport_path: Path, evidence: Path) -> dict[str, Any]:
+def collect(
+    runbook_path: Path,
+    transport_path: Path,
+    evidence: Path,
+    bank2_authority: Path = DEFAULT_BANK2_AUTHORITY,
+    bank3_authority: Path = DEFAULT_BANK3_AUTHORITY,
+) -> dict[str, Any]:
     runbook = load(runbook_path, "G5 runbook")
     transport = load(transport_path, "hybrid transport hardware receipt")
     cases = runbook.get("cases")
@@ -193,12 +207,22 @@ def collect(runbook_path: Path, transport_path: Path, evidence: Path) -> dict[st
     )
     require(
         transport.get("status")
-        == "passed-address-qualified-hybrid-stage-and-product-handoff",
-        "hybrid transport replay is not green",
+        in {
+            "passed-address-qualified-hybrid-stage-and-product-handoff",
+            "passed-sealed-media-upload-mount-and-cold-stage",
+        },
+        "media transport replay is not green",
     )
+    runbook_d81 = runbook.get("product_d81")
+    if isinstance(runbook_d81, str):
+        runbook_d81_sha = sha(repo_path(runbook_d81, "runbook product D81"))
+    else:
+        runbook_d81_sha = (
+            runbook.get("candidate", {}).get("product_d81", {}).get("sha256")
+        )
     require(
         transport.get("authority", {}).get("product_d81", {}).get("sha256")
-        == runbook.get("candidate", {}).get("product_d81", {}).get("sha256")
+        == runbook_d81_sha
         or transport.get("authority", {}).get("product_d81", {}).get("sha256")
         == "b1bb8d3fcbeb082fbf622b95287ae3afc6bc73e433c4279f8fd19f75ede5074e",
         "transport/runbook product-D81 identity drift",
@@ -338,15 +362,6 @@ def collect(runbook_path: Path, transport_path: Path, evidence: Path) -> dict[st
         restage / "poison-bank3-prefix.bin",
         restage / "poison-bank3-readback.bin",
         "destructive Bank-3 write",
-    )
-    bank2_authority = (
-        ROOT
-        / "build/c2.2/canonical-product/final/fresh-c2-lite-prelink-gates"
-        / "v6-semantics/bank2-static-code.bin"
-    )
-    bank3_authority = (
-        ROOT
-        / "build/c2.2/canonical-product/final/runtime-overlays-session-final.bin"
     )
     repaired2_sha = same(
         bank2_authority,
@@ -505,19 +520,42 @@ def collect(runbook_path: Path, transport_path: Path, evidence: Path) -> dict[st
     ]
     require([row["id"] for row in case_rows] == EXPECTED_CASES, "case assembly drift")
 
-    harness_first_red = {
-        "classification": "acceptance-harness-reset-route-only",
-        "status": "excluded-no-product-execution",
-        "finding": (
-            "m65 -F returned to BASIC and did not execute the mounted product "
-            "medium; the case was rerun through mega65_ftp mount without "
-            "changing or re-uploading the sealed D81"
-        ),
-        "evidence": [
-            bind(restage / "cold-reset.log"),
-            bind(restage / "post-restage.txt"),
-        ],
-    }
+    session_first_red = evidence.parent / "harness-first-red.json"
+    cold_reset = restage / "cold-reset.log"
+    post_restage = restage / "post-restage.txt"
+    if session_first_red.is_file():
+        first_red = load(session_first_red, "session harness first red")
+        harness_first_red = {
+            "classification": first_red["classification"],
+            "status": first_red["status"],
+            "finding": first_red["finding"],
+            "evidence": [bind(session_first_red)],
+        }
+    elif cold_reset.is_file() and post_restage.is_file():
+        harness_first_red = {
+            "classification": "acceptance-harness-reset-route-only",
+            "status": "excluded-no-product-execution",
+            "finding": (
+                "m65 -F returned to BASIC and did not execute the mounted "
+                "product medium; the case was rerun through mega65_ftp mount "
+                "without changing or re-uploading the sealed D81"
+            ),
+            "evidence": [bind(cold_reset), bind(post_restage)],
+        }
+    else:
+        harness_first_red = {
+            "classification": "none",
+            "status": "not-observed-clean-media-route",
+            "finding": (
+                "The fresh run used the sealed-media mount route directly; no "
+                "harness-only first red preceded product execution."
+            ),
+            "evidence": [],
+        }
+    route_observation = evidence.parent / "restage-route-observation.json"
+    harness_route_observations = (
+        [bind(route_observation)] if route_observation.is_file() else []
+    )
 
     return {
         "format": FORMAT,
@@ -530,15 +568,16 @@ def collect(runbook_path: Path, transport_path: Path, evidence: Path) -> dict[st
             "profile_build_id": runbook["profile_build_id"],
             "product_d81": transport["authority"]["product_d81"],
             "product_byte_changes": 0,
-            "link66_untouched": True,
+            "sealed_product_bytes_untouched": True,
         },
         "authority": {
             "runbook": bind(runbook_path),
-            "hybrid_transport_hardware_receipt": bind(transport_path),
+            "media_transport_hardware_receipt": bind(transport_path),
         },
         "case_policy": "exactly-once-in-order-until-first-product-red",
         "cases": case_rows,
         "harness_first_red": harness_first_red,
+        "harness_route_observations": harness_route_observations,
         "result": "passed",
         "claims": {
             "G5": "passed-for-C2-lite-product-artifact-set",
@@ -599,6 +638,8 @@ def verify_receipt(path: Path) -> dict[str, Any]:
             verify_binding(binding, f"{case['id']} evidence[{index}]")
     for index, binding in enumerate(value["harness_first_red"]["evidence"]):
         verify_binding(binding, f"harness first-red evidence[{index}]")
+    for index, binding in enumerate(value.get("harness_route_observations", [])):
+        verify_binding(binding, f"harness route observation[{index}]")
     require(
         value.get("claims")
         == {
@@ -620,6 +661,12 @@ def main() -> int:
     close.add_argument("--transport-receipt", type=Path, default=DEFAULT_TRANSPORT)
     close.add_argument("--evidence-root", type=Path, default=DEFAULT_EVIDENCE)
     close.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    close.add_argument(
+        "--bank2-authority", type=Path, default=DEFAULT_BANK2_AUTHORITY
+    )
+    close.add_argument(
+        "--bank3-authority", type=Path, default=DEFAULT_BANK3_AUTHORITY
+    )
     verify = sub.add_parser("verify")
     verify.add_argument("--receipt", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
@@ -629,6 +676,8 @@ def main() -> int:
                 args.runbook.resolve(),
                 args.transport_receipt.resolve(),
                 args.evidence_root.resolve(),
+                args.bank2_authority.resolve(),
+                args.bank3_authority.resolve(),
             )
             write_exclusive(args.out.resolve(), value)
             verify_receipt(args.out.resolve())

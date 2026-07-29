@@ -48,12 +48,84 @@ Cell LISP65_C2_FIXED_BANK0_HOT_BSS("heap") heap[HEAP_CELLS];
 #ifndef __mos__
 /* Host-Simulation: gleiche 8-Byte-Zellen in einem Array (GC-/Ueberlauf-Logik host-testbar). */
 static uint8_t ext_sim[(uint32_t)EXT_CELLS * 8u];
+#ifdef LISP65_EXT_HEAP_HOST_DMA_MODEL
+/* Product-shaped host lane: cell access still runs through the real
+ * Mark/Sweep accessors below, but every EXT read/write crosses a staged,
+ * checked copy boundary rather than directly dereferencing ext_sim.
+ * This models the semantics of the target DMA without pretending to model
+ * its completion timing. */
+uint32_t ext_host_dma_read_jobs;
+uint32_t ext_host_dma_write_jobs;
+uint32_t ext_host_dma_bytes;
+uint16_t ext_host_dma_faults;
+
+static uint8_t ext_host_dma_span(uint16_t off, uint8_t *bytes,
+                                 uint8_t n, uint8_t write) {
+    uint8_t stage[2], i;
+    if (!n || n > sizeof stage
+        || (uint32_t)off + n > (uint32_t)sizeof ext_sim) {
+        ext_host_dma_faults++;
+        return 0;
+    }
+    if (write) {
+        for (i = 0; i < n; ++i) stage[i] = bytes[i];
+        for (i = 0; i < n; ++i) ext_sim[(uint32_t)off + i] = stage[i];
+        for (i = 0; i < n; ++i)
+            if (ext_sim[(uint32_t)off + i] != stage[i])
+                ext_host_dma_faults++;
+        ext_host_dma_write_jobs++;
+    } else {
+        for (i = 0; i < n; ++i) stage[i] = ext_sim[(uint32_t)off + i];
+        for (i = 0; i < n; ++i) bytes[i] = 0xa5u;
+        for (i = 0; i < n; ++i) bytes[i] = stage[i];
+        for (i = 0; i < n; ++i)
+            if (bytes[i] != ext_sim[(uint32_t)off + i])
+                ext_host_dma_faults++;
+        ext_host_dma_read_jobs++;
+    }
+    ext_host_dma_bytes += n;
+#ifdef LISP65_EXT_HEAP_HOST_DMA_MODEL_MUTATION
+    /* Gate self-test: a transport whose verification reports a fault must
+     * never be accepted merely because the copied payload happened to work. */
+    ext_host_dma_faults++;
+#endif
+    return 1;
+}
+
+uint8_t ext_type(uint16_t i) {
+    uint8_t b = 0;
+    (void)ext_host_dma_span((uint16_t)(EXT_OFF(i) + 0u), &b, 1u, 0u);
+    return b;
+}
+obj ext_a(uint16_t i) {
+    uint8_t b[2] = {0, 0};
+    (void)ext_host_dma_span((uint16_t)(EXT_OFF(i) + 2u), b, 2u, 0u);
+    return (obj)((uint16_t)b[0] | (uint16_t)b[1] << 8);
+}
+obj ext_b(uint16_t i) {
+    uint8_t b[2] = {0, 0};
+    (void)ext_host_dma_span((uint16_t)(EXT_OFF(i) + 4u), b, 2u, 0u);
+    return (obj)((uint16_t)b[0] | (uint16_t)b[1] << 8);
+}
+void ext_set_type(uint16_t i, uint8_t t) {
+    (void)ext_host_dma_span((uint16_t)(EXT_OFF(i) + 0u), &t, 1u, 1u);
+}
+void ext_set_a(uint16_t i, obj v) {
+    uint8_t b[2] = {(uint8_t)(uint16_t)v, (uint8_t)((uint16_t)v >> 8)};
+    (void)ext_host_dma_span((uint16_t)(EXT_OFF(i) + 2u), b, 2u, 1u);
+}
+void ext_set_b(uint16_t i, obj v) {
+    uint8_t b[2] = {(uint8_t)(uint16_t)v, (uint8_t)((uint16_t)v >> 8)};
+    (void)ext_host_dma_span((uint16_t)(EXT_OFF(i) + 4u), b, 2u, 1u);
+}
+#else
 uint8_t ext_type(uint16_t i){ return ext_sim[(uint32_t)EXT_OFF(i)]; }
 obj     ext_a(uint16_t i)   { uint32_t o=(uint32_t)EXT_OFF(i)+2; return (obj)(uint16_t)(ext_sim[o]|((uint16_t)ext_sim[o+1]<<8)); }
 obj     ext_b(uint16_t i)   { uint32_t o=(uint32_t)EXT_OFF(i)+4; return (obj)(uint16_t)(ext_sim[o]|((uint16_t)ext_sim[o+1]<<8)); }
 void    ext_set_type(uint16_t i,uint8_t t){ ext_sim[(uint32_t)EXT_OFF(i)]=t; }
 void    ext_set_a(uint16_t i,obj v){ uint32_t o=(uint32_t)EXT_OFF(i)+2; ext_sim[o]=(uint8_t)(uint16_t)v; ext_sim[o+1]=(uint8_t)((uint16_t)v>>8); }
 void    ext_set_b(uint16_t i,obj v){ uint32_t o=(uint32_t)EXT_OFF(i)+4; ext_sim[o]=(uint8_t)(uint16_t)v; ext_sim[o+1]=(uint8_t)((uint16_t)v>>8); }
+#endif
 /* Host: Disk-Scratch-Simulation (io.c-Disk ist geraet-only; hier nur fuer eventuelle Host-Tests). */
 static uint8_t ext_disk_sim[256u + DISK_EXT_FILE_MAX];   /* Dir-Sektor + Datei-Fenster */
 void    ext_disk_put(uint16_t off, uint8_t v){ if (off < sizeof(ext_disk_sim)) ext_disk_sim[off] = v; }
@@ -229,6 +301,15 @@ uint16_t gc_runs = 0;     /* Statistik: Anzahl gc_collect-Laeufe */
 #ifdef LISP65_GC_SCAN_PROBE
 uint32_t gc_symbol_scan_visits = 0; /* Exakter Linearitaetszaehler fuer das Host-Timinggate. */
 #endif
+#ifdef LISP65_GC_LANE_PROBE
+uint16_t gc_lane_last_marked;
+uint16_t gc_lane_last_reclaimed;
+uint16_t gc_lane_last_free_before;
+uint16_t gc_lane_last_free_after;
+uint16_t gc_lane_min_free_after = 0xffffu;
+uint16_t gc_lane_last_alloc_high;
+uint16_t gc_lane_last_frozen;
+#endif
 #ifdef LISP65_DMA_PROF
 uint32_t perf_allocs = 0; /* alloc()-Aufrufe (Diagnose-Naht wie dma_cell; 32 Bit: Bursts > 64K) */
 uint32_t perf_vm_ops = 0; /* VM-Instruktionen (vm.c-Dispatch; Kostenanteil Interpretation) */
@@ -360,6 +441,10 @@ static void str_arena_compact(void);
 #endif
 
 void gc_collect(void) {
+#ifdef LISP65_GC_LANE_PROBE
+    gc_lane_last_free_before = mem_free_cells();
+    gc_lane_last_reclaimed = 0;
+#endif
 #ifdef LISP65_EXT_HEAP
     allocs_since_gc = 0;
 #endif
@@ -416,6 +501,12 @@ void gc_collect(void) {
 #endif
     } while (changed);
 
+#ifdef LISP65_GC_LANE_PROBE
+    gc_lane_last_marked = 0;
+    for (i = 1; i < MAX_CELLS; ++i)
+        if (MARK_GET(i)) gc_lane_last_marked++;
+#endif
+
 #ifdef LISP65_STRING_ARENA
     /* Arena-Kompaktierung: lebende (markierte) T_STR-Bytes low->high umkopieren, tote
      * fallen weg. Marks noch gueltig (MARK_CLEAR erst beim naechsten GC). Vor dem Sweep. */
@@ -434,10 +525,22 @@ void gc_collect(void) {
          * Minimal-Harnesse) entstuende ein Freelist-Zyklus ueber Zelle alloc_high+1. */
         if (alloc_high > 0 && alloc_high + 1 < MAX_CELLS) freelist = (obj)((uint16_t)(alloc_high + 1) << 1);
         for (i = alloc_high; i > lo; i--) {          /* Runtime-EXT (Frozen-Region nie) */
-            if (!MARK_GET(i)) { cell_set_a((obj)(i << 1), freelist); freelist = (obj)(i << 1); }
+            if (!MARK_GET(i)) {
+                cell_set_a((obj)(i << 1), freelist);
+                freelist = (obj)(i << 1);
+#ifdef LISP65_GC_LANE_PROBE
+                gc_lane_last_reclaimed++;
+#endif
+            }
         }
         for (i = HEAP_CELLS - 1; i >= 1; i--) {      /* Hot immer; zuletzt -> Spitze */
-            if (!MARK_GET(i)) { heap[i].a = freelist; freelist = (obj)(i << 1); }
+            if (!MARK_GET(i)) {
+                heap[i].a = freelist;
+                freelist = (obj)(i << 1);
+#ifdef LISP65_GC_LANE_PROBE
+                gc_lane_last_reclaimed++;
+#endif
+            }
         }
     }
 #else
@@ -445,8 +548,23 @@ void gc_collect(void) {
         if (!MARK_GET(i)) {
             heap[i].a = freelist;
             freelist = (obj)(i << 1);
+#ifdef LISP65_GC_LANE_PROBE
+            gc_lane_last_reclaimed++;
+#endif
         }
     }
+#endif
+#ifdef LISP65_GC_LANE_PROBE
+    gc_lane_last_free_after = mem_free_cells();
+    if (gc_lane_last_free_after < gc_lane_min_free_after)
+        gc_lane_min_free_after = gc_lane_last_free_after;
+#ifdef LISP65_EXT_HEAP
+    gc_lane_last_alloc_high = alloc_high;
+    gc_lane_last_frozen = gc_frozen;
+#else
+    gc_lane_last_alloc_high = HEAP_CELLS - 1;
+    gc_lane_last_frozen = 0;
+#endif
 #endif
     LA(20);   /* T: sweep fertig */
 }

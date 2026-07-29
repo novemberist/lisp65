@@ -825,6 +825,27 @@
       "expect": "128"
     },
     {
+      "name": "native-39-intern-direct",
+      "forms": [
+        "(symbolp (intern \"registry-intern\"))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-39-intern-funcall",
+      "forms": [
+        "(symbolp (funcall (function intern) \"registry-intern\"))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "native-39-intern-apply",
+      "forms": [
+        "(symbolp (apply (function intern) (cons \"registry-intern\" nil)))"
+      ],
+      "expect": "t"
+    },
+    {
       "name": "safety-peek-arity-low-direct",
       "forms": [
         "(peek 208)"
@@ -1451,6 +1472,13 @@
       "name": "view-38-poke-function-kind",
       "forms": [
         "(eq (function-kind (quote poke)) (quote primitive))"
+      ],
+      "expect": "t"
+    },
+    {
+      "name": "view-39-intern-function-kind",
+      "forms": [
+        "(eq (function-kind (quote intern)) (quote primitive))"
       ],
       "expect": "t"
     }

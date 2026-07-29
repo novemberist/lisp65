@@ -167,7 +167,11 @@ vm_runtime_overlay_status vm_runtime_overlay_last_status(void);
 LISP65_C2_REOPEN_GAP0_FN
 vm_runtime_overlay_status vm_runtime_overlay_transaction_begin(
     uint8_t expected_family, uint16_t expected_generation);
-LISP65_C2_REOPEN_GAP1_FN
+/* Prim-ID growth expands the immutable profile table upward.  Keep the
+ * transaction terminator in the third named E000 packing hole: it is the
+ * same post-ownership citizen and the move preserves the terminal floor
+ * while preventing immutable data from overlapping the status cells. */
+LISP65_C2_REOPEN_GAP2_FN
 vm_runtime_overlay_status vm_runtime_overlay_transaction_end(void);
 #endif
 
@@ -191,6 +195,7 @@ uint8_t vm_runtime_overlay_fault_latched(void);
 /* The isolated smoke uses this instead of a device reset between mutations. */
 uint8_t vm_runtime_overlay_active(void);
 void vm_runtime_overlay_host_reset(void);
+void vm_runtime_overlay_host_force_busy(uint8_t busy);
 void vm_runtime_overlay_host_island_copy_fault(uint8_t enabled);
 void vm_runtime_overlay_host_island_frame_fault(uint8_t enabled);
 void vm_runtime_overlay_host_assume_island_ready(void);

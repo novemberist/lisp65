@@ -271,8 +271,8 @@ def validate(index: dict[str, Any]) -> None:
 def collect() -> tuple[dict[str, Any], dict[str, Any]]:
     index, stats = build_index()
     validate(index)
-    require(stats["records"] == 135 and stats["exact_arity"] == 101
-            and stats["unresolved_arity"] == 34,
+    require(stats["records"] == 136 and stats["exact_arity"] == 101
+            and stats["unresolved_arity"] == 35,
             "current public metadata coverage drift")
     index_bytes = canonical(index)
     receipt = {
@@ -301,7 +301,7 @@ def collect() -> tuple[dict[str, Any], dict[str, Any]]:
         "delivery_gate": {
             "ide_help_ready": False,
             "reasons": [
-                "34 public records still lack an arity authority",
+                f"{stats['unresolved_arity']} public records still lack an arity authority",
                 "the single L65S-v4 real-link attempt failed and device metadata moved behind C2",
             ],
             "one_swap_rule": "future device index stays reset-persistent and product-identity-bound",

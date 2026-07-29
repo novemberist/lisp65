@@ -1,0 +1,134 @@
+{
+  "schema": "lisp65-c2.2-link74-lit1-two-timepoint-discriminator-v1",
+  "status": "prequalified-spec-no-hardware",
+  "promotable": false,
+  "product_link": 74,
+  "purpose": "Compare the live materialized second literal of the real Prim-68 reproducer immediately before vm_codebuf takeover and immediately after the owner reload.",
+  "authority": {
+    "product_prg": {
+      "path": "build/post-promotion/link74-asm-z-boundary/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "e0a925f085786c02444ba259b90eb0d811234656243ca728d2a675a05e71eab9",
+      "bytes": 41566
+    },
+    "product_elf": {
+      "path": "build/post-promotion/link74-asm-z-boundary/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "98e9c22657e29c5dd921beadde32cecd8d27c305c51ffc3cbc07c377e90077c7",
+      "bytes": 622564
+    },
+    "boot_bin": {
+      "path": "build/post-promotion/link74-asm-z-boundary/final/runtime-overlays-boot-final.bin",
+      "sha256": "87530503ca79520753a42528e0b5eff461cdac68325a55825d4d6b0c56ed9039",
+      "bytes": 19402
+    },
+    "boot_catalog": {
+      "path": "build/post-promotion/link74-asm-z-boundary/final/runtime-overlays-boot-final.json",
+      "sha256": "77ebbcf5adafb745ad1019fd6e5bd2c82e3f2178803b073a5b09785ef1b4858f",
+      "bytes": 11513
+    }
+  },
+  "linked_symbols": {
+    "vm_codebuf": {
+      "address": 49056,
+      "bytes": 56
+    },
+    "vm_buf_bank": {
+      "address": 49112,
+      "bytes": 1
+    },
+    "vm_buf_off": {
+      "address": 47538,
+      "bytes": 2
+    },
+    "vm_buffer_call": {
+      "address": 7817,
+      "bytes": 65
+    },
+    "vm_run_inner": {
+      "address": 17343,
+      "bytes": 7913
+    },
+    "c2_runtime": {
+      "address": 49284,
+      "bytes": 46
+    }
+  },
+  "capture": {
+    "code_header": {
+      "start": 49056,
+      "bytes": 11
+    },
+    "literal_1": {
+      "low": 49065,
+      "high": 49066,
+      "semantic_requirement": "The little-endian word is a SYMI whose live target name is %is."
+    },
+    "owner": {
+      "bank": 49112,
+      "ordinal_low": 47538,
+      "ordinal_high": 47539
+    },
+    "runtime_context": {
+      "start": 49284,
+      "bytes": 46,
+      "entries_offset_low": 49304,
+      "entries_offset_high": 49305,
+      "resolutions_offset_low": 49306,
+      "resolutions_offset_high": 49307
+    }
+  },
+  "expected_word": {
+    "source": "live-c2d-resolution-plane",
+    "host_numeric_ordinal_is_authority": false,
+    "derivation": [
+      "ordinal = little_endian(memory[$b9b2:$b9b4])",
+      "entry_row = c2d_read(entries_offset + ordinal * 10, 10)",
+      "resolution_base = little_endian(entry_row[6:8])",
+      "expected = c2d_read(resolutions_offset + (resolution_base + 1) * 2, 2)",
+      "expected must be a SYMI whose live target name is %is"
+    ]
+  },
+  "checkpoints": [
+    {
+      "id": "initial-before-prim68-takeover",
+      "pc": 7823,
+      "meaning": "Prim 68 has been selected; vm_codebuf has not yet been invalidated or overwritten by the overlay-call context.",
+      "patch": {
+        "artifact": "boot_bin",
+        "slice_id": 11,
+        "slice_name": "resident-island-image",
+        "slice_vma": 6144,
+        "slice_file_offset": 17664,
+        "relative_offset": 1679,
+        "artifact_offset": 19343,
+        "before_hex": "a93380",
+        "after_hex": "4c8f1e",
+        "restore_before_resume_hex": "a93380"
+      }
+    },
+    {
+      "id": "reload-before-literal-consumption",
+      "pc": 21563,
+      "meaning": "The full owner header reload returned successfully; literal-table pointer setup and literal consumption have not begun.",
+      "patch": {
+        "artifact": "product_prg",
+        "load_address": 8193,
+        "artifact_offset": 13372,
+        "before_hex": "a2a7a0",
+        "after_hex": "4c3b54"
+      }
+    }
+  ],
+  "hardware_procedure": [
+    "Build one SHA-bound nonpromotable diagnostic identity from Link 74 with both patches and with all affected carrier, record, payload and product identities rebound; do not relink.",
+    "Boot to the REPL and run the real %is Prim-68 reproducer.",
+    "At PC $1e8f capture the code header, LIT(1), owner cells and c2_runtime three times; derive the independent expected word from the live C2D entry and resolution planes.",
+    "Restore bytes a9 33 80 at $1e8f in live memory and resume without rebooting, retaining the same live session entry.",
+    "At PC $543b capture the same cells three times. No resume is required.",
+    "Discard the diagnostic identity after adjudication; it is never promotable."
+  ],
+  "decision": {
+    "transport_or_materialization_fault": "Either materialized LIT(1) sample differs from the independently derived live C2D expected word. Initial mismatch indicts initial materialization/read; initial match plus reload mismatch indicts post-service owner reload or its physical transport.",
+    "transport_correct_consumption_fault": "The live C2D expected word, initial LIT(1), and reloaded LIT(1) are byteidentical, and the word is the SYMI named %is. Physical materialization, ownership and reload are then excluded; the remaining fault is literal selection or dir_find consumption after reload."
+  },
+  "claim_limit": "This document prequalifies one exact target-only discriminator. It records no hardware result, changes no product byte, creates no product link and makes no promotion claim."
+}

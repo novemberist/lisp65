@@ -22,16 +22,29 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEPLOYMENT = ROOT / (
+DEPLOYMENT = ROOT / os.environ.get(
+    "C2_XEMU_DEPLOYMENT",
     "build/c2.2/c1-freezer-hardware-link64-cutpoints3-4-attempt4-"
     "NONPROMOTABLE/deployment.json")
-OUT = ROOT / "build/c2.2/link64-append-xemu-dry-repro-NONAUTHORITATIVE"
+OUT = ROOT / os.environ.get(
+    "C2_XEMU_OUT",
+    "build/c2.2/link64-append-xemu-dry-repro-NONAUTHORITATIVE")
 RECEIPT = OUT / "receipt.json"
 XEMU = Path(os.environ.get(
     "XMEGA65", os.path.expanduser("~/.local/bin/xmega65")))
 SAFE_RUN = ROOT / "scripts/xmega65-safe-run.sh"
 SOCKET = Path(f"/tmp/lisp65-link64-xemu-{os.getpid()}.sock")
 TIMEOUT = os.environ.get("XMEGA65_TIMEOUT", "240")
+BOOT_WAIT_SECONDS = int(os.environ.get("C2_XEMU_BOOT_WAIT_SECONDS", "30"))
+MEDIA = (
+    ROOT / os.environ["C2_XEMU_D81"]
+    if os.environ.get("C2_XEMU_D81") else None)
+FORM = os.environ.get(
+    "C2_XEMU_FORM", "(defun %c1e () (quote t))")
+LABEL = os.environ.get("C2_XEMU_LABEL", "Link-64")
+RECEIPT_FORMAT = os.environ.get(
+    "C2_XEMU_RECEIPT_FORMAT",
+    "lisp65-c2-link64-xemu-append-dry-repro-v1")
 PHASE_SCRATCH = 0xC0C6
 PHASE_SCRATCH_BYTES = 304
 C2J = 0x5C640
@@ -185,6 +198,8 @@ def start_xemu() -> subprocess.Popen[bytes]:
         "-headless", "-testing", "-sleepless", "-besure", "-fastboot",
         "-uartmon", SOCKET.as_posix(),
     ]
+    if MEDIA is not None:
+        command.extend(["-8", MEDIA.as_posix()])
     return subprocess.Popen(
         command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         start_new_session=True)
@@ -213,10 +228,10 @@ def main() -> int:
     product_path = ROOT / deployment["product"]["path"]
     product = product_path.read_bytes()
     require((product[0] | product[1] << 8) == 0x2001,
-            "Link-64 PRG is not based at $2001")
+            f"{LABEL} PRG is not based at $2001")
     payload = product[2:]
     basic = re.search(rb"\x9e\s*(\d+)", payload)
-    require(basic is not None, "Link-64 BASIC SYS address absent")
+    require(basic is not None, f"{LABEL} BASIC SYS address absent")
     sys_address = basic.group(1).decode()
     for item in deployment["preloads"]:
         path = ROOT / item["path"]
@@ -224,7 +239,9 @@ def main() -> int:
                 and sha256(path) == item["sha256"],
                 f"deployment preload drift: {path}")
     require(sha256(product_path) == deployment["product"]["sha256"],
-            "Link-64 product drift")
+            f"{LABEL} product drift")
+    if MEDIA is not None:
+        require(MEDIA.is_file(), f"{LABEL} D81 absent: {MEDIA}")
 
     OUT.mkdir(parents=True, exist_ok=True)
     process = start_xemu()
@@ -265,12 +282,15 @@ def main() -> int:
         # serves it as many small transactions, so observation would dominate
         # the safe-run deadline.  One snapshot after the measured boot window
         # is both cheaper and less intrusive.
-        time.sleep(30)
+        time.sleep(BOOT_WAIT_SECONDS)
         boot_screen = screen_text(monitor)
+        (OUT / "boot-screen.txt").write_text(
+            boot_screen, encoding="utf-8")
         require("lisp65>" in boot_screen,
-                "Link-64 did not reach its REPL in Xemu")
+                f"{LABEL} did not reach its REPL in Xemu; "
+                f"screen tail={boot_screen.rstrip()[-240:]!r}")
 
-        form = "(defun %c1e () (quote t))"
+        form = FORM
         monitor.type_line(form)
         time.sleep(8)
         final_screen = screen_text(monitor)
@@ -281,7 +301,7 @@ def main() -> int:
         (OUT / "screen.txt").write_text(final_screen, encoding="utf-8")
         record = phase[RECORD_OFFSET:RECORD_OFFSET + 32]
         value = {
-            "format": "lisp65-c2-link64-xemu-append-dry-repro-v1",
+            "format": RECEIPT_FORMAT,
             "recorded_on": "2026-07-25",
             "status": (
                 "NONAUTHORITATIVE-XEMU-REPRODUCED"
@@ -294,6 +314,7 @@ def main() -> int:
                 "deployment": bind(DEPLOYMENT),
                 "product": bind(product_path),
                 "driver": bind(Path(__file__)),
+                **({"media": bind(MEDIA)} if MEDIA is not None else {}),
             },
             "execution": {
                 "compiler_runs": 0,
@@ -342,11 +363,11 @@ if __name__ == "__main__":
             ReproError) as error:
         OUT.mkdir(parents=True, exist_ok=True)
         value = {
-            "format": "lisp65-c2-link64-xemu-append-dry-repro-v1",
+            "format": RECEIPT_FORMAT,
             "recorded_on": "2026-07-25",
             "status": "FIRST-RED-NONAUTHORITATIVE-XEMU-SILENT",
             "claim_limit": (
-                "Xemu did not reach the Link-64 REPL. This is tool/emulator "
+                f"Xemu did not reach the {LABEL} REPL. This is tool/emulator "
                 "evidence only and supports no product, hardware, matrix, "
                 "latency, promotion, acceptance, or release inference."),
             "authority": {
@@ -365,5 +386,5 @@ if __name__ == "__main__":
         RECEIPT.write_text(
             json.dumps(value, indent=2, sort_keys=True) + "\n",
             encoding="utf-8")
-        print(f"c2-link64-xemu-append-dry-repro: FIRST RED: {error}")
+        print(f"{LABEL}-xemu-dry-repro: FIRST RED: {error}")
         raise SystemExit(2)

@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 1.1.0**. The product version is 1.1.0;
+This living reference describes **lisp65 1.2.1**. The product version is 1.2.1;
 the language remains Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -44,6 +44,26 @@ Core definition and control forms include `defun`, `defmacro`, `lambda`,
 `or`, `when`, `unless`, `dotimes`, and `dolist`. The historical `do` form and
 the public `remainder` name are not part of Dialect V2.
 
+The 1.2.1 release adds:
+
+```lisp
+(while test form*)
+```
+
+`test` is evaluated before every iteration. `nil` terminates; every other
+value continues. Body forms run left-to-right and their values are discarded;
+an empty body is legal. Normal termination returns `nil`. `while` adds no
+binding or non-local-exit extent.
+
+The compiler uses the existing signed `JFALSEREL`/`JMPREL` bytecode. In a
+large streamed CodeObject, a backward edge whose target lies outside the
+current 128-byte VM code window reloads that target window. Such a layout
+therefore pays one target-window refill per admitted iteration, in addition
+to any forward refill required by the body. This is a documented performance
+property; it does not change loop semantics. For tight loops, keep the loop
+body small or place it in a small helper function so that the backward edge
+stays within one code window.
+
 ## Functions
 
 The released surface includes:
@@ -57,6 +77,7 @@ The released surface includes:
   `symbolp`, `numberp`, `stringp`, `null`, `not`;
 - symbols and functions: `symbol-name`, `boundp`, `function-kind`, `eval`,
   `funcall`, `apply`, `set`, `symbol-value`;
+- random numbers: `random`, `random-seed`;
 - strings: `string-length`, `string-ref`, `search`;
 - reader, output, and system work: `read-from-string`, `write`, `write-char`,
   `terpri`, `load-lib`, `load-libs`, `edit`, and the documented
@@ -64,6 +85,11 @@ The released surface includes:
 
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
+
+`random` returns an unbiased value from zero through one less than its positive
+fixnum argument. `(random-seed seed)` makes a run reproducible; otherwise the
+first call seeds from read-only MEGA65 timer state and human input timing. The
+generator is suitable for games and simulations, not cryptography.
 
 `filter` and `read-from-string` were added in 1.1. `read-from-string` reads the
 first object from a String; malformed input uses the ordinary reader error

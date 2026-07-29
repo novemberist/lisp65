@@ -1,0 +1,143 @@
+{
+  "format": "lisp65-c2.2-s1-freight-session-contract-v1",
+  "recorded_on": "2026-07-27",
+  "status": "passed-link67-f1-f2-s1-hardware",
+  "scope": "one bundled device session after halt number 2 and the single approved F1/F2 product link",
+  "candidate": {
+    "link": 67,
+    "product_sha256": "1b6fb1a524a71a63489848531b30e1d399b871ed5b863c93be7232f3362e44f3",
+    "elf_sha256": "25e563ba41283fb1ce21624a84f618b2337f889510dee19261509dc29e465f32",
+    "manifest": "build/post-promotion/link67-f1-f2/canonical-product-manifest.json",
+    "structural_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-product-link67-f1-f2-structural-receipt.json"
+  },
+  "clock": {
+    "frame_register": "$d7fa",
+    "frame_milliseconds": 20,
+    "delta": "unsigned byte difference end-start modulo 256"
+  },
+  "rows": [
+    {
+      "id": "boot-watch",
+      "class": "regression",
+      "form": "(list(peek 255 132)(peek 255 131)(peek 255 132))",
+      "pass": "the two high-byte reads agree and the boot counter is at most 1500 frames",
+      "limit_frames": 1500,
+      "first_red": true
+    },
+    {
+      "id": "f1-define-fixed",
+      "class": "setup",
+      "form": "(defun %s1n(a b)(cons a b))",
+      "pass": "the REPL echoes %s1n and remains usable",
+      "first_red": true
+    },
+    {
+      "id": "f1-nary-cold",
+      "class": "claim",
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1n 7 8)))))(list r a(peek 215 250))))",
+      "expected_result": "(7 . 8)",
+      "limit_frames": 16,
+      "first_red": true
+    },
+    {
+      "id": "f1-nary-warm",
+      "class": "claim",
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1n 7 8)))))(list r a(peek 215 250))))",
+      "expected_result": "(7 . 8)",
+      "limit_frames": 10,
+      "first_red": true
+    },
+    {
+      "id": "nullary-define-regression",
+      "class": "setup",
+      "form": "(defun %s1z()(quote t))",
+      "pass": "the REPL echoes %s1z and remains usable",
+      "first_red": true
+    },
+    {
+      "id": "nullary-cold-regression",
+      "class": "regression",
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1z)))))(list r a(peek 215 250))))",
+      "expected_result": "t",
+      "limit_frames": 16,
+      "first_red": true
+    },
+    {
+      "id": "nullary-warm-regression",
+      "class": "regression",
+      "form": "(let((a(peek 215 250)))(let((r(eval(quote(%s1z)))))(list r a(peek 215 250))))",
+      "expected_result": "t",
+      "limit_frames": 10,
+      "first_red": true
+    },
+    {
+      "id": "f2-bitops-positive",
+      "class": "claim",
+      "form": "(list(logand -1 42)(logior -43 1)(logxor -43 1)(ash -84 -1)(ash 8191 1))",
+      "expected_result": "(42 -43 -44 -42 16382)",
+      "first_red": true
+    },
+    {
+      "id": "f2-bitops-type-negative",
+      "class": "expected-error",
+      "form": "(logand(quote x)1)",
+      "expected_status": "type error",
+      "postcondition": "the following arithmetic row must still execute",
+      "first_red": true
+    },
+    {
+      "id": "post-error-repl",
+      "class": "regression",
+      "form": "(+ 1 2)",
+      "expected_result": "3",
+      "first_red": true
+    },
+    {
+      "id": "idle-freezer-roundtrip",
+      "class": "regression",
+      "operator_action": "enter the Freezer and return with F3",
+      "pass": "the current product identity survives and the next row executes",
+      "first_red": true
+    },
+    {
+      "id": "post-freezer-repl",
+      "class": "regression",
+      "form": "(+ 4 5)",
+      "expected_result": "9",
+      "first_red": true
+    }
+  ],
+  "f3_disposition": {
+    "status": "parked-not-in-S1-product",
+    "reason": "the required single cold carrier measured 2552 bytes against its 1792-byte cap",
+    "gc_room_error_rows": "omitted rather than inherited or simulated"
+  },
+  "session_policy": {
+    "hardware_sessions": 1,
+    "hardware_attempts_total": 2,
+    "accepted_product_rows": 12,
+    "attempt_1_disposition": "harness-invalid-boot-watch-fixed-waits-no-product-claim",
+    "attempt_2_disposition": "passed-one-session-twelve-of-twelve",
+    "attempt_2_authorized": true,
+    "authorization_scope": "continue autonomous S1 test execution without per-test approval; pause only for required physical operator action or a genuine new product/contract question",
+    "order": "exact row order",
+    "first_red": "stop at the first unexpected output, malformed timing tuple, limit overrun, crash, hang or unusable REPL",
+    "preloaded_instruments": [
+      "screen/transcript capture",
+      "frame-register parser",
+      "current-product identity binding",
+      "idle-Freezer identity capture"
+    ],
+    "no_inherited_green": true,
+    "hardware_claim_before_link": "none"
+  },
+  "receipt_requirements": [
+    "candidate product and ELF SHA-256",
+    "device core and m65 tool identities",
+    "raw transcript per row",
+    "start end and modulo frame delta for every timed row",
+    "actual and limit in every claim value string",
+    "current E000 and Chip-plane identity around the Freezer row",
+    "explicit F3 parked disposition"
+  ]
+}

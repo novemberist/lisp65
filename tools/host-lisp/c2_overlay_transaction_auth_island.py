@@ -69,18 +69,18 @@ def source_gate() -> dict[str, Any]:
         "island_feature_is_explicit": (
             "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND" in runtime
             and "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND" in makefile),
-        "transaction_api_has_one_named_noinline_home": (
+        "transaction_api_has_named_noinline_homes": (
             header.count("LISP65_C2_REOPEN_GAP0_FN") >= 2
-            and header.count("LISP65_C2_REOPEN_GAP1_FN") >= 3
+            and header.count("LISP65_C2_REOPEN_GAP2_FN") >= 3
             and runtime.count("LISP65_C2_REOPEN_GAP0_FN\n"
                               "vm_runtime_overlay_status "
                               "vm_runtime_overlay_transaction_begin") == 1
-            and runtime.count("LISP65_C2_REOPEN_GAP1_FN\n"
+            and runtime.count("LISP65_C2_REOPEN_GAP2_FN\n"
                               "vm_runtime_overlay_status "
                               "vm_runtime_overlay_transaction_end") == 1
             and "#define LISP65_C2_REOPEN_GAP0_FN "
                 "LISP65_RESIDENT_ISLAND_FN" in header
-            and "#define LISP65_C2_REOPEN_GAP1_FN "
+            and "#define LISP65_C2_REOPEN_GAP2_FN "
                 "LISP65_RESIDENT_ISLAND_FN" in header),
         "catalog_context_is_island_noinline": (
             "static LISP65_RESIDENT_ISLAND_FN uint8_t "
@@ -95,10 +95,11 @@ def source_gate() -> dict[str, Any]:
             "if (rtov_busy || rtov_repeat || RTOV_TRANSACTION_ACTIVE())" in runtime
             and "if (RTOV_TRANSACTION_ACTIVE()) return "
                 "VM_RUNTIME_OVERLAY_ERR_BUSY;" in runtime),
-        "batch_releases_shared_tuple": (
-            "rtov_repeat = 0;\n#ifdef "
-            "LISP65_RUNTIME_OVERLAY_TRANSACTION_AUTH_ISLAND\n"
-            "    rtov_batch_slot_id = 0;" in runtime),
+        "S1_batch_never_claims_shared_tuple": (
+            "E000-S1 retires the Island-resident same-payload loop" in runtime
+            and "status = vm_runtime_overlay_exec("
+                "slot, context, entry_result);" in runtime
+            and "rtov_repeat = repeat;" not in runtime),
         "product_entrypoints_are_single_copy": (
             product.count("LISP65_C2_TRANSACTION_AUTH_NOINLINE") == 2
             and product.count("__attribute__((noinline, used))") >= 2),

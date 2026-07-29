@@ -1,0 +1,62 @@
+{
+  "ELF_truth": {
+    "failure_edge": "0xe9bc JSR 0xe9e3 c2_append_run_rollback_plan",
+    "success_edge": "0xe9b6 loads c2_phase_owner and bypasses 0xe9bc"
+  },
+  "authority": {
+    "ELF": {
+      "bytes": 622512,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "b618b6eee3521bdfaa9ce1ae8a1a41511f9ebd5ff502502c344b630d96de4d94"
+    },
+    "driver": {
+      "bytes": 7949,
+      "path": "tools/host-lisp/c2_defstruct_link71_pre_rollback_hold.py",
+      "sha256": "278dca5b6a5ccadfe1c0c07d61b459ea4c444ed1a1dc4602584bb6f5da548176"
+    },
+    "product": {
+      "address": "0x00002001",
+      "bytes": 41566,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "969047cb8116bb77510a0b75454053b765f74aedc482de287f3837db9a8a972e"
+    },
+    "source_deployment": {
+      "bytes": 7372,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/hardware-session/deployment.json",
+      "sha256": "080714bffaa3e3a50979a99532aec0df237d7a2bfeb4b79390398a16bf419384"
+    },
+    "window": {
+      "address": "0x087fe000",
+      "bytes": 8192,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/final/c2-product-kernal-window.bin",
+      "sha256": "bff92b183ebc2491008bb96a80e33f18bcb74f1a130166222183b3e48606f2f5"
+    }
+  },
+  "capture_contract": {
+    "C2J": "64-byte Bank-5 journal before cleanup",
+    "phase_scratch": "complete 304-byte c2_append_state plus permanent trace",
+    "stability": "three byte-identical captures",
+    "zero_page": "vm_status, transaction state, owner, READY"
+  },
+  "claim_limit": "One nonpromotable Link-71 primary append-failure attribution.",
+  "format": "lisp65-c2.2-Link71-pre-rollback-hold-v1",
+  "patch": {
+    "after": "7880fe",
+    "artifact": {
+      "address": "0x0000e9bc",
+      "bytes": 3,
+      "path": "build/post-promotion/link71-defstruct-header-crc-domain/pre-rollback-hold-NONPROMOTABLE/pre-rollback-hold.bin",
+      "sha256": "ecfd175f590d113b784e9d50c335e3d78701dcdf59166ae6e0f7e347e6ae7046"
+    },
+    "before": "20e3e9",
+    "deployed_product_bytes_delta": 0,
+    "late_RAM_bytes_changed": 3,
+    "product_file_bytes_delta": 0,
+    "runtime_address": "0xe9bc",
+    "semantics": "SEI once, then BRA to itself at c2_append_begin's common failure edge, before c2_append_run_rollback_plan mutates the append context or installer provenance.",
+    "window_file_offset": 2492
+  },
+  "promotable": false,
+  "recorded_on": "2026-07-27",
+  "status": "ready-authorized-nonpromotable-primary-failure-capture"
+}

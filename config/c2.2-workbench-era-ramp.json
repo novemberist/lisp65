@@ -1,0 +1,234 @@
+{
+  "format": "lisp65-c2.2-workbench-era-ramp-v1",
+  "recorded_on": "2026-07-27",
+  "status": "owner-approved-library-era-open-host-first-probe-authorized",
+  "scope": {
+    "product_bytes": 0,
+    "product_links": 0,
+    "hardware_runs": 0,
+    "authorizes_implementation": false,
+    "authorizes_host_first_probe": true,
+    "purpose": "W1 capacity truth and W2 require/project-manifest-v1 design"
+  },
+  "authority": {
+    "sealed_v1_2": {
+      "product_set_sha256": "37998ce7b6698757fe3839d0af1467e95505fe10e6be6bc7f28a6991cb09941d",
+      "bank2_static_code_bytes": 34542,
+      "session_region0_bytes": 64926,
+      "session_region1_bytes": 1956,
+      "c2d_v6_bytes": 33840
+    },
+    "current_freight": {
+      "link": 67,
+      "product_sha256": "1b6fb1a524a71a63489848531b30e1d399b871ed5b863c93be7232f3362e44f3",
+      "bank2_static_code_bytes": 34990,
+      "images": 6,
+      "entries": 602,
+      "resolutions": 2299,
+      "roots": 283,
+      "session_region0_bytes": 64926,
+      "session_region1_bytes": 1956
+    }
+  },
+  "W1_capacity": {
+    "currencies_are_nonfungible": true,
+    "bank2_code_plane": {
+      "capacity_bytes": 65536,
+      "current_static_bytes": 34990,
+      "gross_headroom_bytes": 30546,
+      "persistent_growth": "upward from the static edge",
+      "transient_growth": "downward from 65536",
+      "booking_rule": "gross headroom is shared by both fronts; only a product-shaped exact-meet proof may book bytes"
+    },
+    "c2d_v6": {
+      "images": {
+        "used": 6,
+        "capacity": 64,
+        "headroom": 58
+      },
+      "entries": {
+        "used": 602,
+        "capacity": 2048,
+        "headroom": 1446
+      },
+      "resolutions": {
+        "used": 2299,
+        "capacity": 4096,
+        "headroom": 1797
+      },
+      "roots": {
+        "used": 283,
+        "capacity": 1536,
+        "headroom": 1253
+      },
+      "persistent_transient_meet": "persistent entries plus active transient entries must be at most 2048; equality is legal",
+      "append_scratch": {
+        "start": 33840,
+        "end_exclusive": 48384,
+        "bytes": 14544,
+        "equivalent_eight_byte_rows": 1818,
+        "hard_floor": "no C2D growth or journal write reaches 0xbd00"
+      }
+    },
+    "session_store": {
+      "slice_cap_bytes": 1792,
+      "pack_quantum_bytes": 256,
+      "region0": {
+        "capacity_bytes": 65536,
+        "used_bytes": 64926,
+        "headroom_bytes": 610
+      },
+      "region1": {
+        "capacity_bytes": 2032,
+        "used_bytes": 1956,
+        "headroom_bytes": 76,
+        "third_region": "forbidden"
+      },
+      "library_credit_bytes": 0,
+      "reason": "runtime overlay storage is implementation machinery, not library payload capacity; avoided debits are not product credits",
+      "new_slice_rule": "every new or enlarged carrier needs exact packing, catalog and per-slice proof; neither raw headroom number is a pre-authorization"
+    },
+    "resident_walls": {
+      "bank0_text_headroom_bytes": 90,
+      "e000_headroom_bytes": 151,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 69,
+      "library_budget_bytes": 0,
+      "rule": "the first library/require implementation starts with zero resident debit; any measured debit is a separate Class-C question"
+    },
+    "first_probe_envelope": {
+      "kind": "admission envelope, not reserved capacity",
+      "resident_delta_bytes": 0,
+      "new_session_slice_records": 0,
+      "bank2_code_bytes": "measured exact payload, bounded by the shared 30546-byte gross headroom",
+      "c2d_rows": "measured exact image/entry/resolution/root deltas under every independent hard cap",
+      "c2d_scratch_bytes": "measured exact export/journal demand under 14544 bytes",
+      "heap_and_namepool": "OPEN-measure-before-implementation; the seal exposes no honest free-byte claim for either",
+      "failure_policy": "reject before C2J ACTIVE or target mutation when any currency cannot close"
+    },
+    "parked_f3_example": {
+      "measured_single_carrier_bytes": 2552,
+      "slice_cap_bytes": 1792,
+      "disposition": "semantic split required in a later freight round; no wall negotiation"
+    }
+  },
+  "W2_require_manifest_v1": {
+    "surface": {
+      "require_form": "(require 'library-name)",
+      "success_value": "t",
+      "already_loaded_value": "t",
+      "undefined_symbol_autoload": "forbidden; diagnostics may only suggest an explicit require",
+      "unload": "out-of-scope",
+      "restart_repl": "C2.3-only composition switch; v1 requires explicit loads in each fresh generation"
+    },
+    "project_manifest": {
+      "name": "L65P-v1",
+      "representation": "one unevaluated Lisp data form",
+      "shape": [
+        "l65-project-v1",
+        ["name", "project-name-string"],
+        ["requires", "unique-library-symbols-in-declared-order"],
+        ["sources", "unique-normalized-relative-path-strings-in-load-order"],
+        ["default-target", "one member of sources"]
+      ],
+      "one_form_only": true,
+      "evaluation_during_parse": false,
+      "unknown_or_duplicate_fields": "format error",
+      "path_policy": "relative media paths only; absolute paths, device prefixes, empty components and parent traversal are rejected",
+      "source_order": "semantic and preserved exactly",
+      "traditional_load": "unchanged and fully supported without a project manifest"
+    },
+    "library_index": {
+      "authority": "one generated work-medium index, not copied require tables",
+      "key": "canonical library symbol name",
+      "row": [
+        "library name",
+        "library identity u32",
+        "artifact role and exact byte length",
+        "device CRC binding",
+        "host SHA-256 binding",
+        "direct dependency names",
+        "exported symbol names",
+        "exact C2 capacity deltas"
+      ],
+      "duplicates": "two rows with one name are an ambiguity error",
+      "resolution_lock": "load-project records the resolved name-to-identity rows before the first mutation; a future ship builder consumes the same source manifest plus this generated lock",
+      "private_derivation": "forbidden"
+    },
+    "require_transaction": {
+      "preflight": [
+        "resolve exactly one identity-bound index row",
+        "reject dependency cycles and missing dependencies",
+        "prove every independent W1 capacity currency with wide arithmetic",
+        "stage and authenticate the immutable library artifact",
+        "capture the complete dependency/identity plan before mutation"
+      ],
+      "load": [
+        "load dependencies in declared order",
+        "append through the existing C2-lite persistent transaction",
+        "copy and target-verify code in Bank 2",
+        "publish C2D and exports with READY/publish-last discipline",
+        "mark the exact library identity loaded for the current nonzero generation only after publication"
+      ],
+      "idempotence_key": "library identity plus current session generation",
+      "same_name_different_identity": "fail closed; never silently replace a loaded library",
+      "graph_atomicity": "each library append is atomic; dependencies already committed before a later failure remain loaded and valid",
+      "runtime_attic": "forbidden; Attic may be a verified reconstructible cold cache, never an execution source",
+      "error_precedence": "the innermost dependency or append status wins"
+    },
+    "load_project": {
+      "order": [
+        "strictly parse the sole L65P-v1 form",
+        "resolve and lock every require row",
+        "preflight aggregate capacities before the first append",
+        "run require entries in manifest order",
+        "load source files in manifest order"
+      ],
+      "partial_failure": "already committed libraries remain valid; the failing source is reported and later sources are not loaded",
+      "default_target": "write-target authority only; it does not cause an implicit write",
+      "ship_builder_relation": "v1 freezes the read-only composition surface; packaging/tree-shaking is later work and may not reinterpret the manifest"
+    },
+    "required_negative_fixtures": [
+      "wrong or unknown manifest version",
+      "second or trailing top-level form",
+      "unknown or duplicate field",
+      "duplicate require",
+      "unknown or ambiguous library name",
+      "dependency cycle",
+      "stale library identity",
+      "same name already loaded with another identity",
+      "absolute source path",
+      "parent-path traversal",
+      "duplicate source path",
+      "default target absent from sources",
+      "source-order mutation",
+      "Bank-2 exact-meet overflow",
+      "C2D image exhaustion",
+      "C2D entry exhaustion",
+      "C2D resolution exhaustion",
+      "C2D root exhaustion",
+      "C2D append-scratch collision with 0xbd00",
+      "runtime Attic execution edge",
+      "generation mismatch",
+      "publication before destination verification"
+    ]
+  },
+  "halt_3_decision": {
+    "decided_on": "2026-07-27",
+    "W1_nonfungible_budgets": "accepted",
+    "L65P_v1_index_and_resolution_lock": "accepted",
+    "host_first_require_probe": "authorized",
+    "library_era": "open",
+    "first_freight_order": [
+      "defstruct",
+      "random-on-ring-buffer"
+    ],
+    "random_note": "lagged-Fibonacci baseline with xorshift option now enabled by F2 bitops"
+  },
+  "halt_3_questions": [
+    "Accept the W1 nonfungible hard budgets and zero-resident first-probe rule?",
+    "Accept L65P-v1 as one unevaluated data form with name resolution through one identity-bound generated library index and a generated resolution lock?",
+    "Open the library era with a host-first require/index/preflight probe, while restart-repl, unload and ship packaging remain out of scope?"
+  ]
+}

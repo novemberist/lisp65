@@ -47,6 +47,24 @@ extern uint16_t gc_runs;    /* Statistik: Anzahl gc_collect-Laeufe */
 #ifdef LISP65_GC_SCAN_PROBE
 extern uint32_t gc_symbol_scan_visits;
 #endif
+#ifdef LISP65_GC_LANE_PROBE
+/* Host-only collector-lane accounting.  The product build never enables
+ * this: it exists to distinguish marking from sweep/freelist failures
+ * without changing the collector being exercised. */
+extern uint16_t gc_lane_last_marked;
+extern uint16_t gc_lane_last_reclaimed;
+extern uint16_t gc_lane_last_free_before;
+extern uint16_t gc_lane_last_free_after;
+extern uint16_t gc_lane_min_free_after;
+extern uint16_t gc_lane_last_alloc_high;
+extern uint16_t gc_lane_last_frozen;
+#endif
+#if !defined(__mos__) && defined(LISP65_EXT_HEAP_HOST_DMA_MODEL)
+extern uint32_t ext_host_dma_read_jobs;
+extern uint32_t ext_host_dma_write_jobs;
+extern uint32_t ext_host_dma_bytes;
+extern uint16_t ext_host_dma_faults;
+#endif
 extern uint8_t LISP65_C2_ZP mem_oom; /* 1 = alloc lief in OOM (REPL meldet + loescht) */
 #define GC_PUSH(x)  (gc_rootstack[gc_rootsp++] = (obj)(x))
 #define GC_SET(i,x) (gc_rootstack[(i)] = (obj)(x))   /* gepushten Slot aktualisieren */

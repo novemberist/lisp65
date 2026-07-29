@@ -207,11 +207,11 @@ RUNTIME_OVERLAY_SLOT_ASSIGNMENT_FIELDS = {"id", "name", "section"}
 ERROR_TEXT_PROFILE = "workbench"
 ERROR_TEXT_PROFILE_ID = 1
 ERROR_TEXT_SLOT = 36
-ERROR_TEXT_CODE_COUNT = 60
+ERROR_TEXT_CODE_COUNT = 63
 ERROR_TEXT_ACTIVE_CODES = (
     1, 2, 3, 4, 5, 6, 7, 8, 10, 14, 15, 17, 18, 20, 21, 22,
     27, 28, 29, 30, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 48,
-    49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+    49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 63,
 )
 ERROR_TEXT_RESIDENT_CODES = (46, 47)
 ERROR_TEXT_OMITTED_CODES = tuple(
@@ -2532,8 +2532,10 @@ def _write_test_artifacts(
         abi_sha256=contract_sha,
         elf=runtime_elf_path,
         image_path=runtime_image_path,
+        overflow_image_path=None,
         header_path=runtime_header_path,
         image=runtime_image,
+        overflow_image=b"",
         header=runtime_header,
         parsed=runtime_parsed,
         slices=runtime_slices,
@@ -2842,6 +2844,8 @@ def selftest() -> None:
             "sha256": legacy_storage["sha256"],
         }
         legacy_runtime["catalog"].pop("format_bank_tag")
+        for record in legacy_runtime["slices"]:
+            record.pop("record_crc16", None)
         legacy_image = (legacy_v4 / RUNTIME_OVERLAY_ARTIFACT).read_bytes()
         legacy_parsed = RuntimeOverlayBank.validate_image(
             legacy_image,

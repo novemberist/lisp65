@@ -2,10 +2,10 @@
   "format": "lisp65-v2-primitive-view-cross-parity-v1",
   "status": "passed",
   "registry": "config/v2-native-function-registry.json",
-  "registry_sha256": "adc85fbb7f84aa9cdf5efbf1b3da502aeb04226134caa871c1a49f7bc47d87d4",
-  "active_callprims": 61,
-  "public_designators": 39,
-  "public_active_callprims": 23,
+  "registry_sha256": "68260b81739971ec9c9a61862b95e94b8de3bee91598c7e2b63433c236ec0173",
+  "active_callprims": 63,
+  "public_designators": 40,
+  "public_active_callprims": 24,
   "opcode_designators": [
     {
       "name": "+",
@@ -158,7 +158,7 @@
       "reason": "bytecode-library-function-with-compiler-intrinsic-fast-path"
     }
   ],
-  "explicit_restrictions": 38,
+  "explicit_restrictions": 39,
   "unclassified": [],
   "missing_from_callprim": [],
   "missing_from_compile_repl": [],
@@ -896,6 +896,30 @@
       },
       "classification": "explicitly-view-restricted",
       "reason": "prebuilt-shelf-only-c2-session-emitter-carrier"
+    },
+    {
+      "name": "%c2d-byte",
+      "prim_id": 67,
+      "views": {
+        "callprim": true,
+        "apply": false,
+        "function-kind": false,
+        "compile-repl": true
+      },
+      "classification": "explicitly-view-restricted",
+      "reason": "private-read-only-published-c2d-byte-capability"
+    },
+    {
+      "name": "intern",
+      "prim_id": 68,
+      "views": {
+        "callprim": true,
+        "apply": true,
+        "function-kind": true,
+        "compile-repl": true
+      },
+      "classification": "public-all-views",
+      "reason": null
     }
   ],
   "gate_sources": {

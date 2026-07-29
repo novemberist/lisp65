@@ -17,12 +17,12 @@ sys.path.insert(0, str(ROOT / "tools" / "host-lisp"))
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
 from v2_native_function_views_generated import (  # noqa: E402
-    ACTIVE_CALLPRIMS, FUNCTION_DESIGNATOR_IDS,
+    ACTIVE_CALLPRIMS, COMPILE_REPL_CALLPRIMS, FUNCTION_DESIGNATOR_IDS,
 )
 
 
 V1_PRIMS = dict(C.PRIM_CALLS)
-V2_PRIMS = dict(ACTIVE_CALLPRIMS)
+V2_PRIMS = dict(COMPILE_REPL_CALLPRIMS)
 CASES = (
     ("nreverse", 23, 1, "(defun f (x) (nreverse x))"),
     ("rplaca", 24, 2, "(defun f (x y) (rplaca x y))"),
@@ -100,6 +100,7 @@ def _lcc_prims() -> dict[str, int]:
         _defun(text, name)
         for name in (
             "%lcc-prim", "%lcc-v2-prim2", "%lcc-v2-prim3", "%lcc-v2-prim4",
+            "%lcc-v2-prim5",
         )
     )
     pairs = re.findall(r"\(\(eq name '([^\s()]+)\)\s+([0-9]+)\)", body)

@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-c2-defstruct-library-contract-v1",
+  "recorded_on": "2026-07-27",
+  "status": "session-service-placement-authorized-product-probe-pending",
+  "surface": {
+    "form": "(defstruct name slot...)",
+    "constructor": "make-NAME with positional strict arity",
+    "predicate": "NAME-p over tagged-list head",
+    "readers": "NAME-SLOT",
+    "functional_updates": "NAME-with-SLOT",
+    "copier": "copy-NAME",
+    "representation": "(NAME slot-value...)",
+    "options": "none"
+  },
+  "setf": {
+    "required": true,
+    "rule": "each reader registers exactly one setter with the canonical places implementation",
+    "shadow_registry": false,
+    "publication": "pending registrations become visible only after successful commit",
+    "rollback": "an aborted library or definition publishes no pending Place rows; previously committed rows remain unchanged",
+    "duplicate": "same reader/same setter is idempotent; same reader/different setter is rejected"
+  },
+  "naming": {
+    "required_core": "intern",
+    "input": "canonical symbol-name strings",
+    "generated_names_are_interned": true,
+    "gensym_substitution": false
+  },
+  "placement": {
+    "library_code": "Bank-2 L65P freight",
+    "resident_budget": "validated minimal intern service stub only",
+    "new_session_records": 1,
+    "service_contract": "c2-session-service-contract-v1"
+  },
+  "required_gates": [
+    "two-slot and three-slot expansion",
+    "strict positional constructor arity",
+    "tag predicate positive and foreign-tag negative",
+    "reader values",
+    "functional update preserves source",
+    "copy is a distinct top-level list",
+    "setf reader mutation through the canonical places table",
+    "generated public-name collision and duplicate-slot rejection",
+    "real dialect-v2 P0 compile against the Link-68 require substrate",
+    "one L65P emitter and exact capacity currencies"
+  ],
+  "first_red": [
+    "missing callable intern substrate",
+    "missing canonical extensible setf-place registration",
+    "resident conversion body instead of the minimal service stub",
+    "more than one new Session record",
+    "any format widening"
+  ],
+  "claim_limit": "Host semantics and target-substrate preflight only. No target defstruct library, product link, hardware or acceptance is authorized."
+}

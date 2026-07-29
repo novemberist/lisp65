@@ -1,0 +1,117 @@
+{
+  "format": "lisp65-c2.2-link75-bundled-completion-session-v2",
+  "recorded_on": "2026-07-28",
+  "status": "owner-authorized-diagnostics-first-prepared-no-hardware",
+  "candidate": {
+    "link": 75,
+    "product_sha256": "b12377766c814aa3351578faeff87b3607ba376a9f924beb1612bbc4532b263b",
+    "elf_sha256": "b6b320f688387ba26af6bf58fa0a87a7576a131df9ee32a9b086243c8e2b7f3b",
+    "media_sha256": "e8aaff363306477e5ccd2d6df2af1b81a982c643b08a0ad679f2db0304867f45"
+  },
+  "product_phase": {
+    "purpose": "retry require/defstruct only after the symbol-read completion measurement has been classified",
+    "position": "after both nonpromotable diagnostic stages",
+    "deployment": "canonical Link-75 product and media",
+    "rows": [
+      {
+        "id": "boot-watch",
+        "phase": "pre-mount",
+        "form": "(list (+ 2 3) (function-kind (quote intern)) (function-kind (quote require)))",
+        "expect": "(5 primitive bytecode)"
+      },
+      {
+        "id": "intern-positive",
+        "phase": "pre-mount",
+        "form": "(intern \"abc\")",
+        "expect": "abc"
+      },
+      {
+        "id": "require-first",
+        "phase": "post-mount",
+        "form": "(require (quote defstruct))",
+        "expect": "t"
+      },
+      {
+        "id": "require-repeat",
+        "phase": "post-mount",
+        "form": "(require (quote defstruct))",
+        "expect": "t"
+      },
+      {
+        "id": "define-point",
+        "phase": "post-mount",
+        "form": "(defstruct point x y)",
+        "expect": "t",
+        "quiet_wait_seconds": 180
+      },
+      {
+        "id": "construct-point",
+        "phase": "post-mount",
+        "form": "(make-point 3 4)",
+        "expect": "(point 3 4)"
+      },
+      {
+        "id": "read-point-x",
+        "phase": "post-mount",
+        "form": "(point-x (make-point 3 4))",
+        "expect": "3"
+      },
+      {
+        "id": "read-point-y",
+        "phase": "post-mount",
+        "form": "(point-y (make-point 3 4))",
+        "expect": "4"
+      },
+      {
+        "id": "point-predicate",
+        "phase": "post-mount",
+        "form": "(point-p (make-point 3 4))",
+        "expect": "t"
+      },
+      {
+        "id": "functional-update",
+        "phase": "post-mount",
+        "form": "(point-with-y (make-point 3 4) 8)",
+        "expect": "(point 3 8)"
+      },
+      {
+        "id": "canonical-place-mutation",
+        "phase": "post-mount",
+        "form": "(progn (setq *point-probe* (make-point 3 4)) (setf (point-x *point-probe*) 9) *point-probe*)",
+        "expect": "(point 9 4)"
+      },
+      {
+        "id": "require-repeat-after-use",
+        "phase": "post-mount",
+        "form": "(require (quote defstruct))",
+        "expect": "t"
+      }
+    ]
+  },
+  "diagnostic_phase": {
+    "position": "before the require retry",
+    "appointment": "one physical device appointment with controlled redeploys between stages",
+    "promotable": false,
+    "stage0": {
+      "identity": "Link75-DIRMISS-detail-post-symname-hold-NONPROMOTABLE",
+      "form": "(intern-renderer-missing)",
+      "capture": "three time-separated reads of sym_name_scratch while held at the first instruction after symname returns",
+      "correct_scratch": "attribute renderer consumption; Stage 1 still runs for resolver transport",
+      "damaged_scratch": "attribute the reader interval; Stage 1 runs next"
+    },
+    "stage1": {
+      "identity": "Link75-symbol-read-completion-probe-NONPROMOTABLE",
+      "built_now": true,
+      "condition": "unconditional",
+      "action": "run the accepted single/paired/mixed DMA measurement plan before require"
+    }
+  },
+  "policy": {
+    "new_product_link": false,
+    "reason": "the complete product-bound source closure is byte-identical to Link 75; a Link 76 would contain no product change",
+    "first_red": true,
+    "product_before_diagnostics": false,
+    "hardware_runs_now": 0,
+    "standalone_diagnostic_appointment": false
+  }
+}

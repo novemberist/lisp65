@@ -5,6 +5,16 @@
  "vm_dir_max": 448,
  "vm_dir_align8_after_boot": true,
  "min_vm_dir_headroom": 8,
+ "allow_omitted_defuns": [
+  {
+   "name": "screen-write-string",
+   "reason": "optional native bulk capability; canonical Workbench uses the screen-bulk-p fallback"
+  },
+  {
+   "name": "%c1-compile-form",
+   "reason": "temporary C1 compiler-tier export is outside the dev-core disk-library substrate"
+  }
+ ],
  "sources": [
   "lib/stdlib-load-lib.lisp",
   "lib/ide-launch.lisp"

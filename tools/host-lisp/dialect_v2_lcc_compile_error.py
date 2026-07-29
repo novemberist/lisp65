@@ -70,6 +70,7 @@ LCC_SOURCES = ("lib/lcc.lisp", "lib/dialect-v2/lcc-profile.lisp")
 PROFILE_EXCLUDED_FOR_FOCUSED_PRELOAD = {
     "%lcc-do-p", "%lcc-expr-ops2", "%lcc-opform-p", "%lcc-prim",
     "%lcc-sf-p", "%lcc-v2-prim2", "%lcc-v2-prim3", "%lcc-v2-prim4",
+    "%lcc-v2-prim5",
 }
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 DEFINE_RE = re.compile(r"^#define\s+([A-Z0-9_]+)\s+([0-9]+)u$", re.MULTILINE)

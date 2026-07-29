@@ -1,0 +1,98 @@
+{
+  "format": "lisp65-c2.2-phase-f-halt2-review-v1",
+  "recorded_on": "2026-07-27",
+  "status": "class-C-halt-2-owner-approved",
+  "owner_decision": {
+    "approved_on": "2026-07-27",
+    "successor_link_count": 1,
+    "successor_link_freight": [
+      "F1-n-ary-published-value-direct-call",
+      "F2-bitops"
+    ],
+    "F3": "parked",
+    "F5": "while accepted as the one control-flow repair; catch/throw deferred",
+    "taxonomy_note": "the approval phrase non-local-exit primitive is interpreted through the reviewed F5 contract: while is local structured iteration, not non-local exit",
+    "hardware": "one F4 S1 session after the successor link closes"
+  },
+  "baseline": {
+    "release": "v1.2.0",
+    "seal": "c2-lite-r6-g6-hardware-acceptance-19aa835",
+    "product_set_prefix": "37998ce7"
+  },
+  "requested_disposition": {
+    "one_successor_link": [
+      "F1-n-ary-published-value-direct-call",
+      "F2-bitops"
+    ],
+    "park_without_product_bytes": [
+      "F3-gc-room-error-trio"
+    ],
+    "paper_decision_only": [
+      "F5-select-while-defer-catch-throw"
+    ],
+    "after_link": "execute the F4 S1 plan in one bundled hardware session",
+    "before_owner_approval": "no product link and no hardware run"
+  },
+  "F1": {
+    "status": "green-mandatory-freight",
+    "bank2_static_code_bytes": 34748,
+    "bank2_delta_from_release_bytes": 206,
+    "entries": 596,
+    "resolutions": 2283,
+    "roots": 283,
+    "fixtures": 18,
+    "mutations_rejected": 10,
+    "new_resident_state_bytes": 0,
+    "hardware_claim": "none"
+  },
+  "F2": {
+    "status": "green-include-in-one-link",
+    "bank2_static_code_bytes_including_F1": 34990,
+    "bank2_delta_from_F1_bytes": 242,
+    "bank2_delta_from_release_bytes": 448,
+    "entries": 602,
+    "resolutions": 2299,
+    "roots": 283,
+    "positive_cases": 28,
+    "negative_cases": 8,
+    "source_mutations_rejected": 16,
+    "walls": {
+      "bank0_text_headroom_bytes": 90,
+      "e000_headroom_bytes": 151,
+      "fixed_hot_block_headroom_bytes": 2,
+      "ordinary_bank0_bss_headroom_bytes": 137,
+      "resident_island_headroom_bytes": 69,
+      "session_family_headroom_bytes": 610
+    },
+    "hardware_claim": "none"
+  },
+  "F3": {
+    "status": "parked-first-red",
+    "cold_section": ".lisp65_rt_buffer_read",
+    "measured_bytes": 2552,
+    "hard_cap_bytes": 1792,
+    "over_cap_bytes": 760,
+    "followup_attempts": 0,
+    "product_bytes_active": false,
+    "reason": "the commissioned shared-carrier form exceeded its cold slice; the work plan forbids resident negotiation for F3"
+  },
+  "F4": {
+    "status": "green-prepared-not-run",
+    "rows": 12,
+    "claim_rows": 3,
+    "regression_rows": 6,
+    "mutations_rejected": 10,
+    "hardware_sessions": 1,
+    "F3_loaded": false
+  },
+  "F5": {
+    "status": "green-paper-probe",
+    "selected": "while",
+    "deferred": "catch/throw",
+    "taxonomy": "one control-flow repair; while is not non-local exit",
+    "mutations_rejected": 10,
+    "product_bytes": 0,
+    "hardware_runs": 0
+  },
+  "claim_limit": "Owner approval authorizes exactly one F1+F2 successor link and then one F4 S1 hardware session. F3 remains parked; F5 remains paper-only and authorizes no while implementation."
+}

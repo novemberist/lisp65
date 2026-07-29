@@ -30,6 +30,8 @@ FTP = ROOT / "tools/m65tools/mega65_ftp"
 REPL = ROOT / "scripts/hw-jtag-repl.sh"
 REMOTE_PRODUCT = "L65R6V11.D81"
 REMOTE_WORK = "L65R6W.D81"
+SESSION_ID = "G6-successor-v11-session-01"
+RECORDED_ON = "2026-07-27"
 CASES = [
     "offline-package-verification",
     "cold-boot-from-exact-R6-product-media",
@@ -158,9 +160,9 @@ def prepare() -> None:
     plan = {
         "format": "lisp65-c2-lite-G6-plan-v1",
         "version": 1,
-        "id": "G6-successor-v11-session-01",
+        "id": SESSION_ID,
         "status": "ready-first-red",
-        "recorded_on": "2026-07-27",
+        "recorded_on": RECORDED_ON,
         "authority": {
             "R6_manifest": bind(MANIFEST),
             "R6_packaging_receipt": bind(R6_RECEIPT),
@@ -286,6 +288,131 @@ def repl_evidence(root: Path, prefix: str) -> list[dict[str, Any]]:
     paths = sorted(root.glob(f"{prefix}*"))
     require(paths, f"REPL evidence prefix absent: {prefix}")
     return [bind(path) for path in paths if path.is_file()]
+
+
+def bind_remount_deadline_first_red(root: Path) -> Path:
+    """Bind an exact result rejected only by the coarse poll deadline."""
+    prefix = "work-remount-before-write"
+    screen = root / f"{prefix}.txt"
+    image = root / f"{prefix}.png"
+    runner = root / f"{prefix}.runner.log"
+    timing_path = root / f"{prefix}-timing.json"
+    require(
+        all(path.is_file() for path in (screen, image, runner, timing_path)),
+        "remount deadline first-red evidence is incomplete",
+    )
+    timing = load(timing_path, "remount timing first-red")
+    require(
+        timing.get("schema") == "lisp65-jtag-repl-timing-v1"
+        and timing.get("status") == "fail"
+        and timing.get("elapsed_seconds") == timing.get("budget_seconds") + 1,
+        "remount deadline first-red is not the one-second boundary case",
+    )
+    runner_text = runner.read_text(encoding="utf-8", errors="replace")
+    require(
+        "repl-screen-check: PASS expect='0'" in runner_text
+        and "PASS letztes REPL-Resultat: 0" in runner_text
+        and "ist nicht exakt: 0" in runner_text,
+        "remount deadline first-red log does not contain the contradictory "
+        "pass/fail witnesses",
+    )
+    run([
+        sys.executable, "tools/host-lisp/repl_screen_check.py",
+        "--screen", str(screen), "--image", str(image),
+        "--form-text", "(m65d-remount)", "--expect", "0",
+    ], "independent remount result replay",
+        output=root / f"{prefix}-independent-replay.log")
+    receipt = root / "harness-first-red-remount-deadline.json"
+    write(receipt, {
+        "format": "lisp65-G6-harness-first-red-v1",
+        "version": 1,
+        "id": "remount-exact-result-one-second-past-coarse-deadline",
+        "classification": "harness-only",
+        "product_result": {
+            "form": "(m65d-remount)",
+            "expected": "0",
+            "screen_check": "passed",
+            "product_retry": "forbidden",
+        },
+        "harness_result": {
+            "outer_exit": 8,
+            "budget_seconds": timing["budget_seconds"],
+            "elapsed_seconds": timing["elapsed_seconds"],
+            "cause": (
+                "secondary integer-second deadline check overrode an exact "
+                "screen result at the one-second instrumentation boundary"
+            ),
+            "resume": "next-product-line-after-remount",
+        },
+        "evidence": [
+            bind(screen), bind(image), bind(runner), bind(timing_path),
+            bind(root / f"{prefix}-independent-replay.log"),
+        ],
+        "result": "bound-harness-first-red-product-green",
+    })
+    return receipt
+
+
+def bind_late_remount_success(root: Path) -> Path:
+    """Bind a remount that completed after the harness stopped polling."""
+    prefix = "work-remount-after-cycle"
+    screen = root / f"{prefix}.txt"
+    image = root / f"{prefix}.png"
+    runner = root / f"{prefix}.runner.log"
+    timing_path = root / f"{prefix}-timing.json"
+    late_screen = root / f"{prefix}-late.txt"
+    late_image = root / f"{prefix}-late.png"
+    late_ansi = root / f"{prefix}-late.ansi.txt"
+    require(
+        all(path.is_file() for path in (
+            screen, image, runner, timing_path,
+            late_screen, late_image, late_ansi,
+        )),
+        "late remount first-red evidence is incomplete",
+    )
+    timing = load(timing_path, "late remount timing first-red")
+    require(
+        timing.get("schema") == "lisp65-jtag-repl-timing-v1"
+        and timing.get("status") == "fail",
+        "late remount did not originate in a bounded harness first-red",
+    )
+    runner_text = runner.read_text(encoding="utf-8", errors="replace")
+    require(
+        "trailing REPL prompt is not empty" in runner_text,
+        "late remount first-red was not an in-progress result",
+    )
+    replay = root / f"{prefix}-late-independent-replay.log"
+    run([
+        sys.executable, "tools/host-lisp/repl_screen_check.py",
+        "--screen", str(late_screen), "--image", str(late_image),
+        "--form-text", "(m65d-remount)", "--expect", "0",
+    ], "independent late remount result replay", output=replay)
+    receipt = root / "harness-first-red-remount-late-success.json"
+    write(receipt, {
+        "format": "lisp65-G6-harness-first-red-v1",
+        "version": 1,
+        "id": "remount-still-active-at-poll-boundary-then-succeeded",
+        "classification": "harness-only",
+        "product_result": {
+            "form": "(m65d-remount)",
+            "expected": "0",
+            "screen_check": "passed-on-read-only-late-capture",
+            "product_retry": "forbidden",
+        },
+        "harness_result": {
+            "outer_exit": 6,
+            "budget_seconds": timing["budget_seconds"],
+            "state_at_boundary": "submitted-form-still-active",
+            "late_state": "exact-result-and-empty-prompt",
+            "resume": "next-product-line-after-remount",
+        },
+        "evidence": [
+            bind(screen), bind(image), bind(runner), bind(timing_path),
+            bind(late_screen), bind(late_image), bind(late_ansi), bind(replay),
+        ],
+        "result": "bound-harness-first-red-product-green",
+    })
+    return receipt
 
 
 def boot() -> None:
@@ -548,6 +675,7 @@ def work_write() -> None:
         "work-media prepare phase is not ready",
     )
     harness_red = root / "harness-first-red-jtag-ram-view.bin"
+    remount_deadline_red = root / "harness-first-red-remount-deadline.json"
     if harness_red.is_file():
         # m65 --memsave observes the RAM under the mapped I/O page here, not
         # the live F011 register.  Preserve that harness first-red, then use
@@ -560,6 +688,16 @@ def work_write() -> None:
         label = repl_evidence(root, "work-label-before-write")
         remount = repl_evidence(root, "work-remount-before-write")
         poke = repl_evidence(root, "work-bufsel-force")
+    elif (
+        (root / "work-remount-before-write-timing.json").is_file()
+        and not list(root.glob("work-bufsel-force*"))
+    ):
+        remount_deadline_red = bind_remount_deadline_first_red(root)
+        label = repl_evidence(root, "work-label-before-write")
+        remount = repl_evidence(root, "work-remount-before-write")
+        poke = repl_form(
+            root, "work-bufsel-force", "(poke 214 137 128)", "128",
+        )
     else:
         label = disk_label_byte(root, "work-label-before-write", 215)
         remount = repl_form(
@@ -607,6 +745,10 @@ def work_write() -> None:
             "observation": "native-peek-of-live-I/O-register",
             "harness_first_red": (
                 bind(harness_red) if harness_red.is_file() else None
+            ),
+            "harness_observations": (
+                [bind(remount_deadline_red)]
+                if remount_deadline_red.is_file() else []
             ),
         },
         "evidence": (
@@ -677,8 +819,22 @@ def work_read() -> None:
         and not (root / "receipt.json").exists(),
         "work-media resume phase is not ready",
     )
-    label = disk_label_byte(root, "work-label-after-cycle", 215)
-    remount = repl_form(root, "work-remount-after-cycle", "(m65d-remount)", "0")
+    late_remount = root / "work-remount-after-cycle-late.txt"
+    if (
+        late_remount.is_file()
+        and not list(root.glob("work-read-after-cycle*"))
+    ):
+        first_red = bind_late_remount_success(root)
+        label = repl_evidence(root, "work-label-after-cycle")
+        remount = (
+            repl_evidence(root, "work-remount-after-cycle")
+            + [bind(first_red)]
+        )
+    else:
+        label = disk_label_byte(root, "work-label-after-cycle", 215)
+        remount = repl_form(
+            root, "work-remount-after-cycle", "(m65d-remount)", "0",
+        )
     load_file = repl_form(
         root, "work-read-after-cycle",
         '(load-file-to-buffer "g6r6" "g6b")', "t", wait=3,
@@ -793,7 +949,7 @@ def media_finalize(
     top = {
         "format": "lisp65-c2-lite-G6-hardware-receipt-v2",
         "version": 2,
-        "id": "G6-successor-v11-session-01",
+        "id": SESSION_ID,
         "status": "passed-five-of-five",
         "product_artifact_set_sha256": (
             manifest["product"]["artifact_set_sha256"]

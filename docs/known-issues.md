@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.2.0. Sealed
+This is the maintained user-facing issue register for lisp65 1.2.1. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -23,18 +23,67 @@ Freezer entry while a definition is open is not. The C2.2 cross-invariant
 matrix classifies that crossing as documented/C2.3-deferred, and no release
 receipt may relabel it as proven.
 
+## Active hardware-profile limitation: interrupt-generating cartridges
+
+Status: **unsupported while C2-lite owns the interrupt vectors**
+
+Do not use a cartridge that generates interrupts while lisp65 is running.
+Passive storage, RAM, and utility cartridges that do not assert `/IRQ` or
+`/NMI` are unaffected.
+
+lisp65 cannot turn off or acknowledge cartridge interrupts in a
+device-independent way. A single isolated interrupt within a raster-delimited
+episode is tolerated, but a held or repeatedly asserted cartridge causes an
+interrupt storm that deliberately stops the product on a red-bordered screen.
+Cold-restart without the interrupt-generating cartridge before continuing.
+
+## Active intermittent issue: post-GC out of memory
+
+Status: **observed once; not reproduced**
+
+One hardware run allocated 1,200 short-lived cons cells inside a `while` loop
+and ended with:
+
+```text
+*** vm: out of memory
+```
+
+The same follow-up workload completed without the error, and the host and
+modeled extended-heap lanes also completed. No fix is claimed. If an
+out-of-memory error appears despite a small live data set, preserve the exact
+form and preceding steps, restart lisp65, and include those details in a bug
+report. The permanent reproducer remains in the test suite.
+
+## Active display issue: shortened undefined-function names
+
+Status: **diagnosed; correction scheduled after 1.2.1**
+
+An undefined-function error can show only the end of the function name, or
+show it with leading spaces. For example, a call to `intern` may be reported
+with only `i` visible.
+
+The undefined-function error is real, but the displayed name detail can be
+wrong. Check the original form for the function you called; do not treat the
+shortened text as a different symbol. Ordinary recovery still returns to the
+REPL.
+
+## Not delivered in 1.2.1: `defstruct` and dynamic packages
+
+`defstruct` and the associated dynamic package-loading freight are not part of
+the v1.2.1 user surface. Their host-side designs and test artifacts are
+development material, not commands promised by this release.
+
 ## Informative performance positions
 
 These measurements are visible by design but carry no release limit:
 
-- one-argument published call: 68 frames;
-- GC envelope: 89 frames for one collection and 96 contract block reads;
+- one-argument published call: 0 frames in the fresh v1.2.1 G5 run;
+- GC envelope: 17 frames for one collection and 96 contract block reads;
 - cold boot: a 27.653-second upper bound from BASIC `RUN` to a captured screen
   during C2-lite stabilization. The prompt may have appeared earlier.
 
-They are not regressions against a claimed 1.2 ceiling. The only 1.2
-definition-call performance claims are the nullary first-call and warm-call
-ceilings below.
+The argument and GC values are measurements, not hard release limits. The
+nullary first-call and warm-call ceilings remain the claims below.
 
 ## Retired: 1.1 definition-to-first-call latency exception
 
@@ -56,9 +105,9 @@ The retirement conditions are all satisfied:
 - fresh G5 and G6 bound the same final product identity;
 - promotion sealed the exact product and package sets.
 
-Retirement scope is intentionally narrow. It proves the published nullary-call
-path and does not create a performance claim for calls with arguments, GC, or
-cold boot.
+Retirement scope remains intentionally narrow. v1.2.1 also measured the
+one-argument direct-call path at zero frames, but does not turn that informative
+value into a hard limit. No GC or cold-boot performance claim is created.
 
 Machine-readable authority:
 `config/v12-known-issues.json`.

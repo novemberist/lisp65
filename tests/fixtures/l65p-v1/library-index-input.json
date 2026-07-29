@@ -1,0 +1,41 @@
+{
+  "format": "lisp65-library-index-input-v1",
+  "libraries": [
+    {
+      "name": "probe-core",
+      "artifact": "tests/fixtures/l65p-v1/probe-core.l65",
+      "requires": [],
+      "exports": [
+        "probe-id"
+      ],
+      "c2_delta": {
+        "bank2_code_bytes": 96,
+        "images": 1,
+        "entries": 2,
+        "resolutions": 3,
+        "roots": 1,
+        "c2d_scratch_bytes": 16
+      },
+      "measurement": "fixture-measured"
+    },
+    {
+      "name": "probe-seq",
+      "artifact": "tests/fixtures/l65p-v1/probe-seq.l65",
+      "requires": [
+        "probe-core"
+      ],
+      "exports": [
+        "probe-pair"
+      ],
+      "c2_delta": {
+        "bank2_code_bytes": 192,
+        "images": 1,
+        "entries": 3,
+        "resolutions": 4,
+        "roots": 2,
+        "c2d_scratch_bytes": 24
+      },
+      "measurement": "fixture-measured"
+    }
+  ]
+}
