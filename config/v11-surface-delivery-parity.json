@@ -9,7 +9,7 @@
   "native_registry": "config/v2-native-function-registry.json",
   "artifact_closure": "config/v2-workbench-artifact-closure.json",
   "workbench_profile": "config/workbench.mk",
-  "resident_manifest": "build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.manifest.json",
+  "resident_manifest": "build/post-promotion/v124/time/host-first/candidate/stdlib-p0.manifest.json",
   "library_manifests": [
     "build/bytecode/dialect-v2/libs/ide.manifest.json",
     "build/bytecode/dialect-v2/libs/idex.manifest.json",
@@ -59,6 +59,110 @@
       }
     },
     {
+      "name": "fx",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx"]
+      }
+    },
+    {
+      "name": "fx*",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx*"]
+      }
+    },
+    {
+      "name": "fx+",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx+"]
+      }
+    },
+    {
+      "name": "fx-",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx-"]
+      }
+    },
+    {
+      "name": "fx->int",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx->int"]
+      }
+    },
+    {
+      "name": "fx->string",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx->string"]
+      }
+    },
+    {
+      "name": "fx/",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["fx/"]
+      }
+    },
+    {
+      "name": "int->fx",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-fx-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-fx.lisp",
+        "required_defuns": ["int->fx"]
+      }
+    },
+    {
       "name": "random",
       "kind": "function",
       "surface_extension": true,
@@ -95,6 +199,15 @@
       "implementation": {
         "path": "lib/dialect-v2/eval-runtime.lisp",
         "required_defuns": ["read-from-string"]
+      }
+    },
+    {
+      "name": "time",
+      "kind": "macro",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-time-contract.json"
       }
     }
   ]

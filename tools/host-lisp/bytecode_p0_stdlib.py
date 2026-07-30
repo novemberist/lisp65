@@ -1817,6 +1817,36 @@ def _validate_disk_lib_manifest_metadata(suite):
             raise StdlibCheckError("%s: %s must be a list of non-empty strings" % (name, key))
 
 
+def _validate_case_io(case, vm, path, lane):
+    expected = case.get("expect_io_min")
+    if expected is None:
+        return None
+    if not isinstance(expected, dict) or not expected:
+        raise StdlibCheckError(
+            "%s (%s): expect_io_min must be a non-empty object"
+            % (case["name"], path)
+        )
+    observed = {}
+    for key, minimum in expected.items():
+        if (
+            key not in vm.io_counters
+            or type(minimum) is not int
+            or minimum < 0
+        ):
+            raise StdlibCheckError(
+                "%s (%s): invalid I/O witness %s=%r"
+                % (case["name"], path, key, minimum)
+            )
+        actual = vm.io_counters[key]
+        if actual < minimum:
+            raise AssertionError(
+                "%s (%s %s): I/O witness %s expected >=%d got %d"
+                % (case["name"], path, lane, key, minimum, actual)
+            )
+        observed[key] = actual
+    return observed
+
+
 def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
     _validate_disk_lib_manifest_metadata(suite)
     (
@@ -1879,9 +1909,11 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
             total_steps += vm.steps
             if exc.status != expected_vm_error:
                 raise
-            observations.append({
-                "name": case["name"], "error": exc.status,
-            })
+            observation = {"name": case["name"], "error": exc.status}
+            io_witness = _validate_case_io(case, vm, path, "source")
+            if io_witness is not None:
+                observation["io_witness"] = io_witness
+            observations.append(observation)
             if verbose:
                 print("PASS %-28s steps=%d error=%s" %
                       (case["name"], vm.steps, exc.status))
@@ -1891,6 +1923,7 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
                 "%s (%s): expected VM error %r"
                 % (case["name"], path, expected_vm_error)
             )
+        io_witness = _validate_case_io(case, vm, path, "source")
         total_steps += vm.steps
         got = case_heap.obj_to_text(result)
         if got != case["expect"]:
@@ -1931,6 +1964,8 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
         observation = {
             "name": case["name"], "result": got, "object": got_obj.lower(),
         }
+        if io_witness is not None:
+            observation["io_witness"] = io_witness
         if "external_d81_oracle" in case:
             observation["external_d81_oracle"] = M65D_D81.verify_vm_image(
                 vm, case["external_d81_oracle"]
@@ -2632,6 +2667,7 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             total_steps += vm.steps
             if exc.status != expected_vm_error:
                 raise
+            _validate_case_io(case, vm, path, "artifact")
             if verbose:
                 print("EMBED PASS %-22s steps=%d error=%s" %
                       (case["name"], vm.steps, exc.status))
@@ -2641,6 +2677,7 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
                 "%s (%s embed): expected VM error %r"
                 % (case["name"], path, expected_vm_error)
             )
+        _validate_case_io(case, vm, path, "artifact")
         total_steps += vm.steps
         got = case_heap.obj_to_text(result)
         if got != case["expect"]:

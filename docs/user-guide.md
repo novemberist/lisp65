@@ -1,9 +1,9 @@
-# lisp65 1.2.3 User Guide
+# lisp65 1.2.4 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.2.3` release bundle
+- The extracted `lisp65-1.2.4` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -112,6 +112,58 @@ when a run must be repeatable:
 ```
 
 This generator is suitable for programs and games, not cryptography.
+
+### Fixed-point numbers (`fx`)
+
+lisp65 numbers are 15-bit integers. For positions, speeds and anything
+that moves by less than a whole unit per step, the `fx` functions treat an
+ordinary number as a **Q8.7 fixed-point value**: the low 7 bits are the
+fraction. Raw `128` means `1.0`, raw `192` means `1.5`.
+
+- Range: `-128.0` through `127.9921875`, step `0.0078125` (1/128).
+- An fx value **is** a normal number — store it in lists and variables,
+  and compare with plain `<`, `=`, `>`. No library needs loading.
+
+```lisp
+(int->fx 3)          ; 3.0        (raw 384)
+(fx 1 64)            ; 1.5        (1 whole + 64/128)
+(fx+ a b) (fx- a b)  ; add, subtract
+(fx* a b) (fx/ a b)  ; multiply, divide (round to nearest)
+(fx->int a)          ; truncate toward zero
+(fx->string a)       ; exact decimal text, e.g. "1.5"
+```
+
+Sub-pixel movement, the typical use:
+
+```lisp
+(setq x (int->fx 100))       ; start at pixel 100
+(setq v (fx 0 32))           ; 0.25 pixels per step
+(setq x (fx+ x v))           ; each step
+(fx->int x)                  ; whole pixel for drawing
+```
+
+Four steps accumulate to exactly one pixel. Multiplication and division
+round to the nearest 1/128, exact halves away from zero. Overflow and
+division by zero raise the normal arithmetic error — values never wrap or
+saturate silently. `fx->string` always prints at least one fractional
+digit, and every fx value has an exact, finite decimal form.
+
+One rule inherited from the hardware: `fx*` and `fx/` use the MEGA65 math
+unit, the same one ordinary `*` and `/` use. That is why they are fast;
+nothing about it is visible in normal use.
+
+### Measuring a form
+
+`(time form)` evaluates `form` exactly once, prints the elapsed number of
+raster frames, and returns the form's value unchanged:
+
+```lisp
+(time (random 100))            ; prints elapsed frames, returns the number
+```
+
+The release measured the frame counter at 51.966 Hz on the accepted hardware
+session. Durations of 16,384 frames or more fail with a duration-overflow error
+instead of wrapping silently.
 
 ## Editor keys
 

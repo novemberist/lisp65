@@ -1,0 +1,138 @@
+{
+  "format": "lisp65-c2.2-v1.2.4-phase-m-session-v1",
+  "recorded_on": "2026-07-30",
+  "status": "owner-commissioned-one-session-hardware-not-run",
+  "input_transport": {
+    "maximum_form_characters": 76,
+    "verified_input_required": true,
+    "no_unverified_form_retry": true
+  },
+  "rows": [
+    {
+      "id": "m1-helper",
+      "phase": "M1",
+      "form": "(defun %w(a v)(poke 215(+ 112 a)v))",
+      "expected": "%w"
+    },
+    {
+      "id": "m1-clear",
+      "phase": "M1",
+      "form": "(dotimes(i 8)(%w i 0))",
+      "expected": "nil"
+    },
+    {
+      "id": "m1-mul-input",
+      "phase": "M1",
+      "form": "(progn(%w 1 128)(%w 5 128))",
+      "expected": "128"
+    },
+    {
+      "id": "m1-mul-low",
+      "phase": "M1",
+      "form": "(list(peek 215 120)(peek 215 121)(peek 215 122)(peek 215 123))",
+      "expected": "(0 0 0 64)"
+    },
+    {
+      "id": "m1-mul-high",
+      "phase": "M1",
+      "form": "(list(peek 215 124)(peek 215 125)(peek 215 126)(peek 215 127))",
+      "expected": "(0 0 0 0)"
+    },
+    {
+      "id": "m1-div-clear",
+      "phase": "M1",
+      "form": "(dotimes(i 8)(%w i 0))",
+      "expected": "nil"
+    },
+    {
+      "id": "m1-div-input",
+      "phase": "M1",
+      "form": "(progn(%w 0 128)(%w 5 1))",
+      "expected": "1"
+    },
+    {
+      "id": "m1-div-quotient",
+      "phase": "M1",
+      "form": "(list(peek 215 108)(peek 215 109)(peek 215 110)(peek 215 111))",
+      "expected": "(0 0 0 0)"
+    },
+    {
+      "id": "m1-div-fraction",
+      "phase": "M1",
+      "form": "(list(peek 215 104)(peek 215 105)(peek 215 106)(peek 215 107))",
+      "expected": "(0 0 0 128)"
+    },
+    {
+      "id": "m3-multiply",
+      "phase": "M3",
+      "form": "(fx->string(fx*(fx 1 64)(fx -2 0)))",
+      "expected": "\"-3.0\""
+    },
+    {
+      "id": "m3-divide",
+      "phase": "M3",
+      "form": "(fx->string(fx/(fx 1 0)(fx 3 0)))",
+      "expected": "\"0.3359375\""
+    },
+    {
+      "id": "m3-half-away",
+      "phase": "M3",
+      "form": "(fx->string(fx/(fx 0 1)(fx 2 0)))",
+      "expected": "\"0.0078125\""
+    },
+    {
+      "id": "m5-require-place",
+      "phase": "M5",
+      "form": "(require(quote place))",
+      "expected": "t"
+    }
+  ],
+  "l10": {
+    "source_physical": "0x08200200",
+    "destination_cpu": "0x0000c356",
+    "bytes": 1156,
+    "expected_crc16": "0xe856",
+    "capture_delays_ms": [
+      0,
+      700,
+      2400
+    ],
+    "instrument": "Link-35 fixed hold-before-wipe cycle-2 identity",
+    "promotable": false
+  },
+  "time_calibration": {
+    "counter": "0x0000ff83..0x0000ff84",
+    "host_interval_ms": 4000,
+    "nominal_hz": 50,
+    "accepted_hz": [
+      48,
+      52
+    ]
+  },
+  "peek_map": {
+    "trace": {
+      "address": "0x0000c1f4",
+      "bytes": 2
+    },
+    "c2d_header": {
+      "address": "0x00050000",
+      "bytes": 48
+    },
+    "place_row": {
+      "address": "0x000500f0",
+      "bytes": 32
+    }
+  },
+  "policy": {
+    "cold_reset_and_asserted_basic_before_first_transfer": true,
+    "ftp_no_progress_timeout_seconds": 120,
+    "dependency_scoped_first_red": true,
+    "terminal": [
+      "red-fail-closed-frame",
+      "crash",
+      "undefined-machine-state"
+    ],
+    "product_links": 0,
+    "physical_device_sessions": 1
+  }
+}

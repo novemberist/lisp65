@@ -166,17 +166,27 @@ def configure_candidate() -> None:
 
 
 def feature_gates() -> dict[str, Any]:
-    random_result = RANDOM.main()
+    public_build = (
+        os.environ.get("LISP65_PUBLIC_CURRENT_SOURCE_BUILD") == "1"
+    )
+    random_result = RANDOM.main(public_build=public_build)
     require(random_result == 0, "random host-first gate red")
     while_output = run(
         [sys.executable, str(WHILE_GATE)],
         "while four-view gate",
     )
-    random_receipt = load(RANDOM_RECEIPT)
+    random_receipt_path = (
+        RANDOM.PUBLIC_BUILD_RECEIPT if public_build else RANDOM_RECEIPT
+    )
+    random_receipt = load(random_receipt_path)
     while_receipt = load(WHILE_RECEIPT)
     require(
         random_receipt["status"]
-            == "passed-random-base-host-first-and-capacity-projection"
+            == (
+                "passed-random-base-current-source-public-build"
+                if public_build
+                else "passed-random-base-host-first-and-capacity-projection"
+            )
         and random_receipt["artifacts"]["delta"] == {
             "bank2_code_bytes": 489,
             "directory_bytes": 77,
@@ -204,7 +214,7 @@ def feature_gates() -> dict[str, Any]:
     )
     return {
         "random": {
-            "receipt": bind(RANDOM_RECEIPT),
+            "receipt": bind(random_receipt_path),
             "candidate_manifest": bind(RANDOM_MANIFEST),
             "delta": random_receipt["artifacts"]["delta"],
         },

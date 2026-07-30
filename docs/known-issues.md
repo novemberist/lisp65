@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.2.3. Sealed
+This is the maintained user-facing issue register for lisp65 1.2.4. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -68,22 +68,22 @@ command once. If it happens again, preserve the requested library name and the
 preceding session steps in a bug report. A standing read-only diagnostic is
 retained for a second sighting.
 
-## Not delivered in 1.2.3: `defstruct` and dynamic packages
+## Not delivered in 1.2.4: `defstruct` and dynamic packages
 
 `defstruct` and the associated dynamic package-loading freight are not part of
-the v1.2.3 user surface. Their host-side designs and test artifacts are
+the v1.2.4 user surface. Their host-side designs and test artifacts are
 development material, not commands promised by this release.
 
-## Not delivered in 1.2.3: `gc`, `room` and `error`
+## Not delivered in 1.2.4: `gc`, `room` and `error`
 
 The three diagnostic commands `(gc)`, `(room)` and `(error)` are not part of
-the v1.2.3 user surface. They were designed and specified, then held back on
+the v1.2.4 user surface. They were designed and specified, then held back on
 capacity: their cold read carrier measures 1,724 bytes against a session
 deficit of 399, and re-fusing correctness-critical phases for a diagnostic
 instrument was judged disproportionate. Nothing else in the product depends on
 them; a user simply does not have them.
 
-## Not delivered in 1.2.3: `restart-repl`
+## Not delivered in 1.2.4: `restart-repl`
 
 `restart-repl` is outside the contracted product surface for this era. A user
 who wants a clean image restarts the machine.

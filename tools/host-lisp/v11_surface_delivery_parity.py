@@ -95,8 +95,15 @@ def verify_authority(claim: dict[str, Any]) -> None:
         if not isinstance(feature, dict):
             raise ParityError(f"owner feature authority does not define {name}")
     elif authority.get("kind") == "owner-public-surface-contract":
-        feature = value.get("public_surface", {}).get(name)
-        if not isinstance(feature, dict):
+        public_surface = value.get("public_surface", {})
+        feature = public_surface.get(name)
+        if (
+            feature is None
+            and isinstance(public_surface.get("syntax"), str)
+            and public_surface["syntax"].startswith(f"({name} ")
+        ):
+            feature = public_surface
+        if not isinstance(feature, (dict, str)):
             raise ParityError(f"owner public-surface authority does not define {name}")
     else:
         raise ParityError(f"claim {name} has unknown authority kind")

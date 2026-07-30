@@ -40,6 +40,12 @@ NM = ROOT / "tools/llvm-mos/bin/llvm-nm"
 OBJDUMP = ROOT / "tools/llvm-mos/bin/llvm-objdump"
 
 FORMAT = "lisp65-v1.2.1-dirmiss-renderer-attribution-v1"
+# The attribution receipt is historical evidence.  Its source inputs must be
+# read from the commits that produced the recorded hashes, rather than from a
+# later tree in which the convicted stores and the release-plan wording have
+# legitimately changed.
+HISTORICAL_SOURCE_COMMIT = "466e5ea5140de24642fea2d9094751481473d49d"
+HISTORICAL_PLAN_COMMIT = "f411f35fc8494f9b96879e3925282fb74e865233"
 EXPECTED_SCRATCH = 0xC1F6
 EXPECTED_SYMNAME = 0x92F9
 EXPECTED_EDGE = 0xC46F
@@ -65,6 +71,26 @@ def bind(path: Path) -> dict[str, Any]:
         "path": path.relative_to(ROOT).as_posix(),
         "bytes": path.stat().st_size,
         "sha256": sha256(path),
+    }
+
+
+def historical_bytes(commit: str, path: Path) -> bytes:
+    relative = path.relative_to(ROOT).as_posix()
+    result = subprocess.run(
+        ["git", "show", f"{commit}:{relative}"],
+        cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    require(
+        result.returncode == 0,
+        f"historical input absent: {commit}:{relative}: "
+        + result.stderr.decode("utf-8", errors="replace").strip())
+    return result.stdout
+
+
+def bind_historical(path: Path, data: bytes) -> dict[str, Any]:
+    return {
+        "path": path.relative_to(ROOT).as_posix(),
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
     }
 
 
@@ -234,7 +260,11 @@ def mutation_checks(
 def expected_receipt() -> dict[str, Any]:
     hardware = json.loads(HARDWARE.read_text(encoding="utf-8"))
     require(isinstance(hardware, dict), "hardware receipt must be an object")
-    source_text = SOURCE.read_text(encoding="utf-8")
+    source_data = historical_bytes(HISTORICAL_SOURCE_COMMIT, SOURCE)
+    symbol_source_data = historical_bytes(
+        HISTORICAL_SOURCE_COMMIT, SYMBOL_SOURCE)
+    plan_data = historical_bytes(HISTORICAL_PLAN_COMMIT, PLAN)
+    source_text = source_data.decode("utf-8")
     nm_text = command([str(NM), "-n", str(ELF)])
     disassembly = command(
         [str(OBJDUMP), "-d", "--no-show-raw-insn", str(ELF)])
@@ -266,10 +296,11 @@ def expected_receipt() -> dict[str, Any]:
         "candidate": "v1.2.1-acceptance-sealed-not-promoted",
         "inputs": {
             "elf": bind(ELF),
-            "renderer_source": bind(SOURCE),
-            "symbol_source": bind(SYMBOL_SOURCE),
+            "renderer_source": bind_historical(SOURCE, source_data),
+            "symbol_source": bind_historical(
+                SYMBOL_SOURCE, symbol_source_data),
             "hardware_post_symname": bind(HARDWARE),
-            "release_plan": bind(PLAN),
+            "release_plan": bind_historical(PLAN, plan_data),
         },
         "linked_symbols": {
             "sym_name_scratch": f"0x{scratch_address:04x}",

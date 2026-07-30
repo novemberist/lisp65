@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-c2-time-base-composition-v1",
+  "recorded_on": "2026-07-30",
+  "status": "owner-commissioned-host-first",
+  "scope": "v1.2.4 cold (time form) freight over the product-owned raster counter",
+  "public_surface": {
+    "syntax": "(time form)",
+    "kind": "compiled BCODE macro",
+    "evaluation": "form is evaluated exactly once",
+    "result": "the value of form is returned unchanged",
+    "output": "the elapsed frame count is printed through the existing print surface"
+  },
+  "clock": {
+    "owner": "product raster IRQ",
+    "low_byte": "$FF83",
+    "high_byte": "$FF84",
+    "read_order": "high-low-high; retry until both high reads agree",
+    "arithmetic": "unsigned 16-bit modulo subtraction expressed as separate high and low bytes",
+    "calibration_hz": 51.9661580529,
+    "admission_band_hz": [
+      48,
+      52
+    ],
+    "nominal_milliseconds_per_frame": 20
+  },
+  "duration": {
+    "maximum_reportable_frames": 16383,
+    "overflow_from_frames": 16384,
+    "overflow_edge": "%time-error-duration-overflow",
+    "overflow_policy": "named fail-closed error; no silent wrap"
+  },
+  "placement": {
+    "code": "Bank-2 base composition after fx",
+    "admission_budget_bytes": 512,
+    "resident_code_bytes": 0,
+    "resident_state_bytes": 0,
+    "new_resident_gc_roots": 0,
+    "static_plane_root_records": 0,
+    "runtime_overlay_records": 0,
+    "native_primitives": 0,
+    "require_dependency": false
+  },
+  "proof": {
+    "required_cases": [
+      "ordinary delta",
+      "low-byte borrow",
+      "16-bit counter wrap",
+      "exact 16383-frame admission",
+      "16384-frame rejection",
+      "single evaluation",
+      "nil result preservation"
+    ],
+    "execution_lanes": [
+      "source-compiled P0 VM",
+      "emitted-artifact P0 VM"
+    ],
+    "mutation_families": [
+      "wrong counter byte",
+      "non-atomic read",
+      "missing retry",
+      "wrong borrow",
+      "overflow admitted",
+      "form evaluated twice",
+      "result not preserved",
+      "resident or native dependency",
+      "suite built but not executed"
+    ]
+  },
+  "claim_limit": "Host semantics and one non-promotable WPLTO capacity card until the successor product link."
+}

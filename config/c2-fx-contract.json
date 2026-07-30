@@ -1,0 +1,93 @@
+{
+  "format": "lisp65-c2-fx-base-composition-v1",
+  "recorded_on": "2026-07-30",
+  "scope": "v1.2.4 host-first Q8.7 fixed-point freight over the MEGA65 math unit",
+  "representation": {
+    "storage": "ordinary signed 15-bit fixnum; no new tag or boxed type",
+    "scale": 128,
+    "format_name": "signed Q8.7",
+    "raw_domain": [
+      -16384,
+      16383
+    ],
+    "real_domain": "-128.0 through 127.9921875",
+    "quantum": "1/128",
+    "constructor_fraction": "the optional second fx argument is an exact signed count of 1/128 units, not a decimal literal"
+  },
+  "public_surface": {
+    "fx": "(fx whole &optional raw-fraction)",
+    "int->fx": "(int->fx integer)",
+    "fx->int": "(fx->int value), truncating toward zero",
+    "fx+": "(fx+ left right)",
+    "fx-": "(fx- left right)",
+    "fx*": "(fx* left right)",
+    "fx/": "(fx/ left right)",
+    "fx->string": "(fx->string value), exact finite decimal with at least one fractional digit"
+  },
+  "arithmetic": {
+    "addition_and_subtraction": "exact or existing arithmetic error before an out-of-domain raw result is produced",
+    "multiply": "unsigned magnitudes are multiplied as 32-bit operands; divide the 64-bit product by 128 and round the discarded seven bits",
+    "divide": "the unsigned magnitude of the dividend is shifted left seven bits before hardware division; quotient fraction bits decide rounding",
+    "rounding": "nearest, ties away from zero",
+    "integer_conversion": "fx->int truncates toward zero",
+    "division_by_zero": "existing arithmetic error path",
+    "overflow": "existing arithmetic error path; no saturation, wraparound, native status or new resident string"
+  },
+  "math_unit": {
+    "inputs": {
+      "left_u32_le": "$D770-$D773",
+      "right_u32_le": "$D774-$D777"
+    },
+    "multiply": {
+      "busy": "$D70F bit 6",
+      "product_u64_le": "$D778-$D77F"
+    },
+    "divide": {
+      "busy": "$D70F bit 7",
+      "quotient_u32_le": "$D76C-$D76F",
+      "fraction_u32_le": "$D768-$D76B",
+      "rounding_probe": "$D76B bit 7"
+    },
+    "access": "existing strict-byte peek/poke primitives; no new native seam",
+    "transaction_rule": "compute every input byte before the first poke; from that poke through the last result peek, execute only poke, peek, bit tests and control flow, because ordinary Lisp multiply/divide share the same unit",
+    "concurrency": "the synchronous top-level compiled VM owns one transaction; no callback, nested evaluator, IRQ math consumer or scheduler hook may enter it",
+    "target_claim": "documented layout only until the Phase-M probe confirms high product bytes and the division fraction-bit row"
+  },
+  "placement": {
+    "code": "Bank-2 base composition after random",
+    "resident_code_bytes": 0,
+    "resident_state_bytes": 0,
+    "new_resident_gc_roots": 0,
+    "static_plane_root_records": 0,
+    "runtime_overlay_records": 0,
+    "require_dependency": false,
+    "legacy_stdlib_fixed": "superseded; it is neither extended nor included"
+  },
+  "proof": {
+    "host_reference": "independent signed integer Q8.7 oracle",
+    "execution_lanes": [
+      "source-compiled P0 VM with modeled math registers",
+      "emitted-artifact P0 VM with modeled math registers"
+    ],
+    "required_edges": [
+      "positive and negative half ties",
+      "minimum raw value",
+      "maximum raw value",
+      "positive overflow at the asymmetric edge",
+      "division by zero",
+      "exact decimal rendering"
+    ],
+    "execution_witness": "math input writes and refreshes must be positive in every arithmetic lane",
+    "mutation_families": [
+      "wrong scale",
+      "truncation instead of half-away rounding",
+      "wrong product byte",
+      "wrong division fraction byte",
+      "arithmetic inserted inside the math-unit transaction",
+      "legacy software source reintroduced",
+      "resident or require dependency introduced",
+      "suite built but not executed"
+    ]
+  },
+  "claim_limit": "Host semantics, host-modeled register transport and one non-promotable WPLTO capacity card only. No on-metal fx or fraction-layout claim before Phase M."
+}

@@ -1,0 +1,52 @@
+{
+  "extends": "p0-stdlib-fx-base.json",
+  "sources": [
+    "lib/stdlib-time.lisp"
+  ],
+  "functions": [
+    "%time-read",
+    "%time-delta",
+    "time"
+  ],
+  "tailcall_self": [
+    "%time-read"
+  ],
+  "cases": [
+    {
+      "name": "time-delta-simple",
+      "expr": "(%time-delta (cons 1 2) (cons 1 9))",
+      "expect": "7"
+    },
+    {
+      "name": "time-delta-low-borrow",
+      "expr": "(%time-delta (cons 0 250) (cons 1 5))",
+      "expect": "11"
+    },
+    {
+      "name": "time-delta-counter-wrap",
+      "expr": "(%time-delta (cons 255 250) (cons 0 5))",
+      "expect": "11"
+    },
+    {
+      "name": "time-delta-exact-maximum",
+      "expr": "(%time-delta (cons 0 0) (cons 63 255))",
+      "expect": "16383"
+    },
+    {
+      "name": "time-delta-overflow",
+      "expr": "(%time-delta (cons 0 0) (cons 64 0))",
+      "expect_vm_error": "DirMiss"
+    },
+    {
+      "name": "time-kind",
+      "expr": "(function-kind 'time)",
+      "expect": "macro"
+    },
+    {
+      "name": "time-expander-head",
+      "expr": "(car (time '(+ 1 2)))",
+      "expect": "let*"
+    }
+  ],
+  "description": "v1.2.4 cold Bank-2 time macro over the product-owned atomic raster frame counter."
+}

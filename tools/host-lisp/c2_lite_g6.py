@@ -380,6 +380,90 @@ def repl_evidence(root: Path, prefix: str) -> list[dict[str, Any]]:
     return [bind(path) for path in paths if path.is_file()]
 
 
+def bind_repl_startup_first_red(
+    root: Path, prefix: str, form: str,
+) -> Path | None:
+    """Archive a form rejected only because the product prompt appeared late."""
+    receipt = root / f"{prefix}-first-red-receipt.json"
+    if receipt.is_file():
+        return receipt
+    before = root / f"{prefix}-input-attempt-1.txt"
+    after = root / f"{prefix}-check-failure-clear.txt"
+    runner = root / f"{prefix}.runner.log"
+    if not all(path.is_file() for path in (before, after, runner)):
+        return None
+    before_text = before.read_text(encoding="utf-8", errors="replace").lower()
+    after_text = after.read_text(encoding="utf-8", errors="replace").lower()
+    runner_text = runner.read_text(encoding="utf-8", errors="replace")
+    require(
+        "basic 65" in before_text
+        and "lisp65>" not in before_text
+        and "lisp65>" in after_text
+        and form.lower() not in after_text
+        and "active REPL prompt is not visible" in runner_text
+        and "repl-screen-check: PASS active-input" in runner_text,
+        f"{prefix} startup first-red is not the proved late-prompt case",
+    )
+    sources = sorted(
+        path for path in root.glob(f"{prefix}*")
+        if path.is_file() and path != receipt
+    )
+    require(sources, f"{prefix} startup first-red evidence is empty")
+    archived = []
+    for source in sources:
+        suffix = source.name.removeprefix(prefix)
+        target = root / f"{prefix}-first-red{suffix}"
+        require(not target.exists(), f"startup first-red archive exists: {target}")
+        source.rename(target)
+        archived.append(target)
+    write(receipt, {
+        "format": "lisp65-G6-harness-first-red-v1",
+        "version": 1,
+        "id": "cold-product-prompt-appeared-after-input-precheck",
+        "classification": "harness-only",
+        "product_result": {
+            "form": form,
+            "execution": "not-submitted",
+            "state_after_cleanup": "empty-live-product-REPL-prompt",
+            "product_retry": "permitted-on-the-proved-empty-prompt",
+        },
+        "harness_result": {
+            "cause": (
+                "the fixed 30-second post-mount delay ended during the "
+                "BASIC-to-product boot transition"
+            ),
+            "resume": "same-case-at-the-clean-product-prompt",
+        },
+        "evidence": [bind(path) for path in archived],
+        "result": "bound-harness-first-red-product-not-run",
+    })
+    return receipt
+
+
+def await_product_repl(
+    root: Path, prefix: str, *, polls: int = 90,
+) -> list[dict[str, Any]]:
+    """Prove a live empty product prompt before the harness types a form."""
+    png = root / f"{prefix}-ready.png"
+    ansi = root / f"{prefix}-ready.ansi.txt"
+    text = root / f"{prefix}-ready.txt"
+    for _ in range(polls):
+        screen = run([
+            "timeout", "20s", str(M65), "-l", DEVICE,
+            f"--screenshot={png}",
+        ], f"await product REPL for {prefix}", output=ansi, timeout=25)
+        screen_text = re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", screen)
+        text.write_text(screen_text, encoding="utf-8")
+        try:
+            repl_screen_check.check_fail_closed_frame(png)
+        except repl_screen_check.CheckError as error:
+            raise G6Error(error.message) from error
+        if "lisp65>" in screen_text:
+            return [bind(path) for path in (png, ansi, text)]
+        time.sleep(1)
+    raise G6Error(f"product REPL did not appear before {prefix}")
+
+
 def bind_remount_deadline_first_red(
     root: Path, prefix: str = "work-remount-before-write",
 ) -> Path:
@@ -522,6 +606,7 @@ def boot() -> None:
             and (root / "fresh-state.txt").is_file(),
             "G6 cold-boot evidence is not a resumable harness-first-red",
         )
+        bind_repl_startup_first_red(root, "cold-repl", "(+ 2 3)")
     else:
         root.mkdir(parents=True)
         fresh_session_entry(root)
@@ -544,6 +629,7 @@ def boot() -> None:
         memsave(0x0FFD3632, 4, root / "core-registers.bin", "core identity")
         repl_form(root, "cold-repl", "(+ 2 3)", "5")
     if not (root / "cold-repl.txt").is_file():
+        await_product_repl(root, "cold-repl")
         repl_form(root, "cold-repl", "(+ 2 3)", "5")
     require(product_readback.read_bytes() == product.read_bytes(),
             "uploaded R6 product media differs")
@@ -585,6 +671,11 @@ def boot() -> None:
                 ],
             },
         },
+        "harness_first_red": (
+            bind(root / "cold-repl-first-red-receipt.json")
+            if (root / "cold-repl-first-red-receipt.json").is_file()
+            else None
+        ),
         "machine": {
             "device": DEVICE,
             "core_registers": bind(root / "core-registers.bin"),
@@ -627,55 +718,70 @@ def restage() -> None:
     )
     manifest, by_role = manifest_state()
     root = OUT / "case-03-restage"
-    require(not root.exists(), "G6 restage case already exists")
-    root.mkdir(parents=True)
-
-    # Reset before establishing the destructive precondition.  Bank 2 is also
-    # part of the pre-product BASIC boot carrier, so poisoning it before a
-    # remount tests the harness rather than C2-lite restaging.  The two Attic
-    # roles below are mandatory always-restage targets, persist independently
-    # of the BASIC carrier, and are proved byte-for-byte after product boot.
-    run([
-        "timeout", "20s", str(M65), "-l", DEVICE, "-F",
-        f"--screenshot={root / 'harness-reset.png'}",
-    ], "reset before destructive restage", output=root / "harness-reset.log",
-        timeout=25)
-    # The reset command returns while Hypervisor is still scanning the SD
-    # card.  Attic reads issued during that interval can stall the debug
-    # transport, so the destructive precondition begins only after the
-    # platform has reached its stable BASIC-side helper context.
-    time.sleep(10)
-    run([
-        "timeout", "20s", str(M65), "-l", DEVICE,
-        f"--screenshot={root / 'precondition-ready.png'}",
-    ], "capture stable precondition context",
-        output=root / "precondition-ready.log", timeout=25)
-
+    product = artifact(by_role, "product-d81")
     poison_session = root / "poison-attic-session-prefix.bin"
     poison_shelf = root / "poison-attic-shelf-prefix.bin"
-    poison_session.write_bytes(
-        bytes((0x44 + index * 13) & 0xFF for index in range(256))
-    )
-    poison_shelf.write_bytes(
-        bytes((0x55 + index * 17) & 0xFF for index in range(256))
-    )
-    upload(
-        0x08000000, poison_session,
-        root / "poison-attic-session-readback.bin",
-        "Attic session poison",
-    )
-    upload(
-        0x08100000, poison_shelf,
-        root / "poison-attic-shelf-readback.bin",
-        "Attic shelf poison",
-    )
-    product = artifact(by_role, "product-d81")
-    ftp(
-        [f"mount {REMOTE_PRODUCT}", "exit"],
-        "cold remount exact R6 product for restage",
-        root / "mount.log",
-    )
-    time.sleep(30)
+    if root.exists():
+        require(
+            not (root / "receipt.json").exists()
+            and all(path.is_file() for path in (
+                poison_session,
+                poison_shelf,
+                root / "poison-attic-session-readback.bin",
+                root / "poison-attic-shelf-readback.bin",
+                root / "mount.log",
+            )),
+            "G6 restage evidence is not a resumable harness-first-red",
+        )
+        bind_repl_startup_first_red(root, "restage-repl", "(+ 3 4)")
+    else:
+        root.mkdir(parents=True)
+
+        # Reset before establishing the destructive precondition.  Bank 2 is
+        # also part of the pre-product BASIC boot carrier, so poisoning it
+        # before a remount tests the harness rather than C2-lite restaging.
+        # The two Attic roles below are mandatory always-restage targets,
+        # persist independently of the BASIC carrier, and are proved
+        # byte-for-byte after product boot.
+        run([
+            "timeout", "20s", str(M65), "-l", DEVICE, "-F",
+            f"--screenshot={root / 'harness-reset.png'}",
+        ], "reset before destructive restage",
+            output=root / "harness-reset.log", timeout=25)
+        # The reset command returns while Hypervisor is still scanning the SD
+        # card.  Attic reads issued during that interval can stall the debug
+        # transport, so the destructive precondition begins only after the
+        # platform has reached its stable BASIC-side helper context.
+        time.sleep(10)
+        run([
+            "timeout", "20s", str(M65), "-l", DEVICE,
+            f"--screenshot={root / 'precondition-ready.png'}",
+        ], "capture stable precondition context",
+            output=root / "precondition-ready.log", timeout=25)
+
+        poison_session.write_bytes(
+            bytes((0x44 + index * 13) & 0xFF for index in range(256))
+        )
+        poison_shelf.write_bytes(
+            bytes((0x55 + index * 17) & 0xFF for index in range(256))
+        )
+        upload(
+            0x08000000, poison_session,
+            root / "poison-attic-session-readback.bin",
+            "Attic session poison",
+        )
+        upload(
+            0x08100000, poison_shelf,
+            root / "poison-attic-shelf-readback.bin",
+            "Attic shelf poison",
+        )
+        ftp(
+            [f"mount {REMOTE_PRODUCT}", "exit"],
+            "cold remount exact R6 product for restage",
+            root / "mount.log",
+        )
+        time.sleep(30)
+    await_product_repl(root, "restage-repl")
     repl = repl_form(root, "restage-repl", "(+ 3 4)", "7")
     targets = target_readbacks(by_role, root / "targets")
     receipt = {
@@ -722,6 +828,11 @@ def restage() -> None:
             "result": "7",
             "evidence": repl,
         },
+        "harness_first_red": (
+            bind(root / "restage-repl-first-red-receipt.json")
+            if (root / "restage-repl-first-red-receipt.json").is_file()
+            else None
+        ),
         "product_artifact_set_sha256": (
             manifest["product"]["artifact_set_sha256"]
         ),
@@ -947,6 +1058,7 @@ def work_resume() -> None:
             "result": "bound-harness-first-red-exact-media-remounted",
         })
         time.sleep(30)
+    await_product_repl(root, "postcycle-repl")
     cold = repl_form(root, "postcycle-repl", "(+ 4 5)", "9")
     memsave(0x0FFD3632, 4, root / "postcycle-core-registers.bin",
             "post-cycle core identity")

@@ -70,6 +70,8 @@ def validate(source: str, authority: dict[str, Any]) -> dict[str, Any]:
 
 def selftest(source: str, authority: dict[str, Any]) -> int:
     result = validate(source, authority)
+    major, minor, patch = (int(part) for part in result["release"].split("."))
+    next_release = f"{major}.{minor}.{patch + 1}"
     mutations: list[tuple[str, str, dict[str, Any]]] = [
         (
             "stale-version",
@@ -97,7 +99,7 @@ def selftest(source: str, authority: dict[str, Any]) -> int:
         (
             "release-bump-without-banner",
             source,
-            {**authority, "release": "1.2.4"},
+            {**authority, "release": next_release},
         ),
     ]
     for label, mutant_source, mutant_authority in mutations:

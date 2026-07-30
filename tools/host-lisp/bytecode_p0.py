@@ -849,9 +849,37 @@ class P0VM:
             "disk_poke": 0,
             "fasl_stage_put": 0,
             "fasl_stage_get": 0,
+            "math_input_write": 0,
+            "math_refresh": 0,
         }
         self.disk_read_trace = []
         self.disk_write_trace = []
+
+    def _math_u32(self, address):
+        return sum(
+            self.memory.get(address + offset, 0) << (8 * offset)
+            for offset in range(4)
+        )
+
+    def _math_store(self, address, value, width):
+        for offset in range(width):
+            self.memory[address + offset] = (value >> (8 * offset)) & 0xFF
+
+    def _math_refresh(self):
+        """Model the documented MEGA65 multiplier/divider register surface."""
+        left = self._math_u32(0xD770)
+        right = self._math_u32(0xD774)
+        self._math_store(0xD778, left * right, 8)
+        if right == 0:
+            quotient = 0
+            fraction = 0
+        else:
+            quotient = left // right
+            fraction = ((left % right) << 32) // right
+        self._math_store(0xD76C, quotient, 4)
+        self._math_store(0xD768, fraction, 4)
+        self.memory[0xD70F] = self.memory.get(0xD70F, 0) & 0x3F
+        self.io_counters["math_refresh"] += 1
 
     def fasl_stage_put(self, index, value):
         if index < 0 or index >= len(self.fasl_stage):
@@ -1872,7 +1900,11 @@ class P0VM:
             values = [fixval(arg) for arg in args]
             if any(value < 0 or value > 255 for value in values):
                 raise VMError("TypeError", "poke arguments must be in 0..255")
-            self.memory[(values[0] << 8) | values[1]] = values[2]
+            address = (values[0] << 8) | values[1]
+            self.memory[address] = values[2]
+            if 0xD770 <= address <= 0xD777:
+                self.io_counters["math_input_write"] += 1
+                self._math_refresh()
             return args[2]
         if prim_id == 63:
             if argc < 1 or not is_fix(args[0]):

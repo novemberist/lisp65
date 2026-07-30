@@ -77,7 +77,10 @@ The released surface includes:
   `symbolp`, `numberp`, `stringp`, `null`, `not`;
 - symbols and functions: `symbol-name`, `boundp`, `function-kind`, `eval`,
   `funcall`, `apply`, `set`, `symbol-value`;
+- fixed-point arithmetic: `fx`, `int->fx`, `fx->int`, `fx+`, `fx-`, `fx*`,
+  `fx/`, `fx->string`;
 - random numbers: `random`, `random-seed`;
+- timing: `time`;
 - strings: `string-length`, `string-ref`, `search`;
 - reader, output, and system work: `read-from-string`, `write`, `write-char`,
   `terpri`, `load-lib`, `load-libs`, `edit`, and the documented
@@ -90,6 +93,20 @@ or position returns `nil`.
 fixnum argument. `(random-seed seed)` makes a run reproducible; otherwise the
 first call seeds from read-only MEGA65 timer state and human input timing. The
 generator is suitable for games and simulations, not cryptography.
+
+The fixed-point functions use signed Q8.7 values stored as ordinary fixnums:
+one raw unit is 1/128 and the representable range is -128.0 through
+127.9921875. `(fx whole raw-fraction)` constructs a value, where the optional
+second argument is an exact signed count of 1/128 units. `int->fx` converts an
+integer, `fx->int` truncates toward zero, `fx+` and `fx-` are exact within the
+range, and `fx*`/`fx/` round to nearest with ties away from zero.
+`fx->string` returns the exact finite decimal representation. Overflow and
+division by zero use the ordinary arithmetic error path.
+
+`(time form)` evaluates `form` exactly once, prints its elapsed raster-frame
+count, and returns the form's value unchanged. The counter is read atomically
+and calibrated at approximately 50 Hz; a duration of 16,384 frames or more
+fails explicitly instead of silently wrapping.
 
 `filter` and `read-from-string` were added in 1.1. `read-from-string` reads the
 first object from a String; malformed input uses the ordinary reader error

@@ -26,6 +26,15 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.2-v1-random-base-host-first-receipt.json"
 )
+POST_TIME_RECEIPT = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
+    "c2.2-v1-random-base-post-time-revalidation-receipt.json"
+)
+FINAL_COMPOSITION_RECEIPT = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
+    "c2.2-v1-random-base-final-composition-revalidation-receipt.json"
+)
+PUBLIC_BUILD_RECEIPT = BUILD / "public-build-current-source-receipt.json"
 RANDOM_NAMES = [
     "%random-add14",
     "%random-seed-step",
@@ -275,32 +284,48 @@ def artifact_gate() -> dict[str, Any]:
     bank2 = profile["bank2_static_code"]
     random_delta = profile["random_base_delta"]
     while_delta = profile["while_delta"]
+    fx_delta = profile["fx_base_delta"]
+    time_delta = profile.get("time_base_delta")
+    time_code = 0 if time_delta is None else int(
+        time_delta["stdlib_code_bytes"])
+    time_entries = 0 if time_delta is None else int(
+        time_delta["new_entries"])
+    time_resolutions = 0 if time_delta is None else int(
+        time_delta["new_resolutions"])
     geometry = {
         "bank2_static_code_bytes": (
             int(bank2["bytes"])
             - int(random_delta["stdlib_code_bytes"])
             - int(while_delta["lcc_code_bytes"])
+            - int(fx_delta["stdlib_code_bytes"])
+            - time_code
         ),
         "entries": (
             int(profile["entries"])
             - int(random_delta["new_entries"])
             - int(while_delta["new_entries"])
+            - int(fx_delta["new_entries"])
+            - time_entries
         ),
         "resolutions": (
             int(profile["resolutions"])
             - int(random_delta["new_resolutions"])
             - int(while_delta["new_resolutions"])
+            - int(fx_delta["new_resolutions"])
+            - time_resolutions
         ),
         "roots": int(profile["roots"]),
     }
     require(
         profile["format"] == "lisp65-c2-l-full-product-profile-v1"
-        and bank2["bytes"] == 41485
+        and fx_delta["resident_bytes"] == 0
+        and fx_delta["new_roots"] == 0
+        and fx_delta["new_direct_entry_refs"] == 0
         and geometry["bank2_static_code_bytes"] == 40746
         and geometry["entries"] == 682
         and geometry["resolutions"] == 2711
         and geometry["roots"] == 340,
-        "tracked Link-76-relative capacity authority drift",
+        "tracked Link-76-relative capacity reconstruction drift",
     )
     projected = {
         "bank2_static_code_bytes": geometry["bank2_static_code_bytes"] + code_delta,
@@ -343,7 +368,7 @@ def artifact_gate() -> dict[str, Any]:
     }
 
 
-def main() -> int:
+def main(*, public_build: bool = False) -> int:
     try:
         contract = load(CONTRACT)
         source = SOURCE.read_text(encoding="utf-8")
@@ -379,7 +404,50 @@ def main() -> int:
                 "hardware entropy-quality or on-metal random claim."
             ),
         }
-        atomic_json(RECEIPT, receipt)
+        profile = load(PROFILE)
+        target = (
+            PUBLIC_BUILD_RECEIPT
+            if public_build
+            else FINAL_COMPOSITION_RECEIPT
+            if profile.get("product_build_id") == "0x15da63c2"
+            else POST_TIME_RECEIPT
+            if profile.get("time_base_delta") is not None
+            else RECEIPT
+        )
+        if public_build:
+            receipt["status"] = (
+                "passed-random-base-current-source-public-build"
+            )
+            receipt["composition"] = {
+                "successors": ["fx", "time"],
+                "release_banner": "WORKBENCH 1.2.4",
+                "product_build_id": "0x15da63c2",
+                "private_evidence_inputs": 0,
+            }
+            receipt["claim_limit"] = (
+                "Current public source/artifact semantics and capacity only; "
+                "historical proof receipts and hardware claims are not inputs."
+            )
+        elif target == FINAL_COMPOSITION_RECEIPT:
+            receipt["status"] = (
+                "passed-random-base-in-final-v1.2.4-composition"
+            )
+            receipt["composition"] = {
+                "successors": ["fx", "time"],
+                "release_banner": "WORKBENCH 1.2.4",
+                "product_build_id": "0x15da63c2",
+                "original_receipt": bind(RECEIPT),
+                "post_time_receipt": bind(POST_TIME_RECEIPT),
+            }
+        if not public_build and target == POST_TIME_RECEIPT:
+            receipt["status"] = (
+                "passed-random-base-revalidated-in-fx-time-composition"
+            )
+            receipt["composition"] = {
+                "successors": ["fx", "time"],
+                "original_receipt": bind(RECEIPT),
+            }
+        atomic_json(target, receipt)
         delta = artifacts["delta"]
         projected = artifacts["projected_post_Link76"]
         print(

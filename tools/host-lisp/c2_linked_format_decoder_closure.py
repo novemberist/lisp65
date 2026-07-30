@@ -20,8 +20,9 @@ from elf_truth import ElfTruth  # noqa: E402
 CONTRACT = ROOT / "config/c2-linked-format-decoder-closure.json"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 DEFAULT_RECEIPT = ROOT / (
-    "build/c2.2/v1.2.3-candidate-product-link80/receipts/"
+    "build/c2.2/v1.2.4-candidate-product-link81/receipts/"
     "linked-format-decoder-closure.json")
+CURRENT_CANDIDATE_ROOT = "build/c2.2/v1.2.4-candidate-product-link81"
 
 
 class ClosureError(RuntimeError):
@@ -128,6 +129,23 @@ def validate_model(model: dict[str, Any], contract: dict[str, Any]) -> None:
         + ",".join(model["missing_strict_source_markers"]))
 
 
+def validate_contract(contract: dict[str, Any]) -> None:
+    require(
+        contract.get("format")
+            == "lisp65-c2-linked-format-decoder-closure-v1"
+        and contract.get("version") == 1,
+        "linked format decoder contract envelope drift")
+    require(
+        contract.get("candidate_manifest")
+            == f"{CURRENT_CANDIDATE_ROOT}/canonical-product-manifest.json"
+        and contract.get("c2i_glob")
+            == (
+                f"{CURRENT_CANDIDATE_ROOT}/static-plane/"
+                "narrow-static/product/*.c2i.bin"
+            ),
+        "linked format decoder candidate authority is not Link 81")
+
+
 def synthetic_model(contract: dict[str, Any]) -> dict[str, Any]:
     suffixes = contract["phase_suffixes"]
     verifiers = contract["runtime_verifiers"]
@@ -147,6 +165,7 @@ def synthetic_model(contract: dict[str, Any]) -> dict[str, Any]:
 
 
 def selftest(contract: dict[str, Any]) -> None:
+    validate_contract(contract)
     baseline = synthetic_model(contract)
     validate_model(baseline, contract)
     mutations: tuple[
@@ -175,12 +194,28 @@ def selftest(contract: dict[str, Any]) -> None:
         except ClosureError:
             continue
         raise ClosureError(f"selftest mutation survived: {label}")
+    contract_mutations = (
+        ("stale-manifest-link", "candidate_manifest",
+         "build/c2.2/v1.2.3-candidate-product-link80/"
+         "canonical-product-manifest.json"),
+        ("stale-c2i-link", "c2i_glob",
+         "build/c2.2/v1.2.3-candidate-product-link80/"
+         "static-plane/narrow-static/product/*.c2i.bin"),
+    )
+    for label, field, value in contract_mutations:
+        candidate = deepcopy(contract)
+        candidate[field] = value
+        try:
+            validate_contract(candidate)
+        except ClosureError:
+            continue
+        raise ClosureError(f"selftest mutation survived: {label}")
     require(
-        len(mutations) == contract["mutation_count"],
+        len(mutations) + len(contract_mutations) == contract["mutation_count"],
         "contract mutation count drift")
     print(
         "c2-linked-format-decoder-closure: SELFTEST PASS "
-        f"mutations={len(mutations)}")
+        f"mutations={len(mutations) + len(contract_mutations)}")
 
 
 def collect(contract: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -344,11 +379,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         contract = load(CONTRACT, "linked format decoder contract")
-        require(
-            contract.get("format")
-            == "lisp65-c2-linked-format-decoder-closure-v1"
-            and contract.get("version") == 1,
-            "linked format decoder contract envelope drift")
+        validate_contract(contract)
         if args.selftest:
             selftest(contract)
         else:
