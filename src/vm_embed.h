@@ -8,10 +8,11 @@
 #include "l65m_validate.h"
 #include "vm_registry.h"
 
-/* --- Artefakt (vom Build erzeugt: `embed_gen.{h,c}`). Diese Symbole MUSS Codex' Emitter liefern.
- *     Die Code-Objekte liegen konkateniert im Blob (hot, im PRG); `bank/off` = ihr Ziel im erw. RAM. --- */
-extern const uint8_t  lisp65_stdlib_blob[];     /* konkatenierte Code-Objekte             */
-extern const uint16_t lisp65_stdlib_blob_len;   /* Blob-Laenge in Bytes                    */
+/* --- Artefact (produced by the build: `embed_gen.{h,c}`). The emitter MUST provide these symbols.
+ *     The code objects sit concatenated in the blob (hot, in the PRG); `bank/off` = their target in
+ *     extended RAM. --- */
+extern const uint8_t  lisp65_stdlib_blob[];     /* concatenated code objects              */
+extern const uint16_t lisp65_stdlib_blob_len;   /* blob length in bytes                    */
 extern const uint8_t  lisp65_stdlib_bank;       /* Ziel-Bank im erw. RAM (z.B. 5)          */
 extern const uint16_t lisp65_stdlib_off;        /* Ziel-Offset im erw. RAM (z.B. 0)        */
 extern const vm_embed_entry lisp65_embed[];     /* je Entry: {name, bank, flags, off, len} */

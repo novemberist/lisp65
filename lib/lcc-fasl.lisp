@@ -1,34 +1,39 @@
-; lisp65 — Geräte-FASL-Emitter (B2-Streaming, docs/device-fasl-design.md, Lane K 2026-07-06).
-; Emittiert das GEPINNTE Disk-Lib-Containerformat [u16 blob][u16 md][Code-Blob][L65M v1]
-; DIREKT in das Bank-4-Datei-Fenster (%fasl-stage/-get; host-testbar via Sim) — der Heap
-; hält nur Zähler-Boxen + das EINE gerade kompilierte Objekt (gerätetauglich: 48+384 Zellen).
-; Abhängigkeit: lib/lcc.lisp. Prims: %fasl-stage/-stage-get (+ am Gerät %fasl-src/
-; %fasl-read-form/%fasl-save; C-Nähte in eval.c/io.c unter LISP65_FASL).
+; lisp65 -- device FASL emitter (B2 streaming, docs/device-fasl-design.md,
+; Lane K, 2026-07-06). Emits the PINNED disk-library container format
+; [u16 blob][u16 md][code blob][L65M v1] DIRECTLY into the Bank-4 file window
+; (%fasl-stage/-get, host-testable through the simulator). The heap retains
+; only counter boxes plus the ONE object currently being compiled, making it
+; device-safe at 48+384 cells. Depends on lib/lcc.lisp. Primitives:
+; %fasl-stage/-stage-get, plus %fasl-src/%fasl-read-form/%fasl-save on device;
+; C seams live in eval.c/io.c under LISP65_FASL.
 ;
-; Fenster-Layout (Offsets im Datei-Fenster; FIXNUM-WAND: obj-Encoding = 15-bit signed,
-; alle Lisp-sichtbaren Offsets MÜSSEN < 16384 bleiben — v2-Hebel: Area-Prim):
-;   [0     ..  8192)  Quelle (%fasl-src staged + Stream-Reader; C-Deckel 0x2000)
-;   [8192  .. 14336)  Fasl-Ausgabe (Prefix+Blob+Trailer; 6 KB)
-;   [14336 .. 14848)  Entry-Staging   (8 B/Objekt  -> 64 Objekte)
-;   [14848 .. 15488)  Node-Staging    (10 B/Node   -> 64 Nodes)
-;   [15488 .. 15744)  Patch-Staging   (4 B/Patch   -> 64 Patches)
-;   [15744 .. 16384)  String-Staging  (640 B Namen)
-; Überläufe brechen LAUT ab (Aufruf einer undefinierten %fasl-error-*-Fn).
+; Window layout (offsets in the file window; FIXNUM WALL: object encoding is
+; signed 15-bit, so every Lisp-visible offset MUST remain below 16384; the v2
+; lever is an area primitive):
+;   [0     ..  8192)  source (%fasl-src staged plus stream reader; C cap 0x2000)
+;   [8192  .. 14336)  FASL output (prefix+blob+trailer; 6 KiB)
+;   [14336 .. 14848)  entry staging   (8 B/object  -> 64 objects)
+;   [14848 .. 15488)  node staging    (10 B/node  -> 64 nodes)
+;   [15488 .. 15744)  patch staging   (4 B/patch  -> 64 patches)
+;   [15744 .. 16384)  string staging  (640 B of names)
+; Overflows fail LOUDLY by calling an undefined %fasl-error-* function.
 ;
-; v1-Fläche: defuns inkl. Closure-Helfer (BENANNT "<fn>-h<j>" als SYMBOL-Patch — sitzungs-
-; unabhängig, dir_find-Loader-Pfad existiert); Littab-Kinds FIX/NIL/T/SYMBOL; ALLE Slots
-; gepatcht (Blob-Littab = Nullen, Loader materialisiert via md_lit_node).
+; v1 surface: defuns including closure helpers (NAMED "<fn>-h<j>" through a
+; SYMBOL patch, session-independent with a dir_find loader path); literal-table
+; kinds FIX/NIL/T/SYMBOL; ALL slots patched (blob literal table contains zeros,
+; loader materializes through md_lit_node).
 
-; ---- Grundhelfer (autark) ----
+; ---- Self-contained basic helpers ----
 (defun %fasl-get (b) (car b))
 (defun %fasl-set (b v) (rplaca b v))
 (defun %fasl-len2 (l n) (if l (%fasl-len2 (cdr l) (+ n 1)) n))
 (defun %fasl-len (l) (%fasl-len2 l 0))
 (defun %fasl-app2 (a b) (if a (cons (car a) (%fasl-app2 (cdr a) b)) b))
 
-; ---- Zustand fs = (ocur ne nn np slen . base) — Zähler-Boxen + Output-BASE (immutabel).
-; base=8192: Disk-Source-Diagnose (Quelle @ [0..8192), Ausgabe dahinter). base=0: compile-string
-; (Quelle ist der Buffer-STRING, [0..) frei -> Ausgabe ab 0 -> save via io_disk_save_named). ----
+; ---- State fs = (ocur ne nn np slen . base): counter boxes plus immutable
+; output BASE. base=8192 diagnoses disk source (source at [0..8192), output
+; after it). base=0 serves compile-string (source is the buffer STRING, [0..)
+; is free, output starts at 0 and is saved through io_disk_save_named). ----
 (defun %fs-ocur (fs) (car fs))
 (defun %fs-ne   (fs) (car (cdr fs)))
 (defun %fs-nn   (fs) (car (cdr (cdr fs))))
@@ -40,7 +45,7 @@
     (cons (cons 0 nil) (cons (cons 0 nil) (cons (cons 0 nil)
       (cons (cons 0 nil) (cons base nil)))))))
 
-; ---- Byte-Schreiber: sequenziell (Ausgabe) + wahlfrei (Staging/Prefix) ----
+; ---- Byte writer: sequential output plus random-access staging/prefix ----
 (defun %fasl-w8 (off v) (if (%fasl-stage off v) nil (%fasl-error-window-overflow)))
 (defun %fasl-w16 (off v)
   (let ((lo (mod v 256)))
@@ -58,7 +63,7 @@
 (defun %fasl-blist (fs l) (if l (progn (%fasl-b fs (car l)) (%fasl-blist fs (cdr l))) nil))
 (defun %fasl-zeros (fs n) (if (> n 0) (progn (%fasl-b fs 0) (%fasl-zeros fs (- n 1))) nil))
 
-; ---- String-Staging: Name (Code-Liste) + NUL; liefert name_off ----
+; ---- String staging: name (code list) plus NUL; returns name_off ----
 (defun %fasl-strw (fs cs off)
   (if cs (progn (%fasl-w8 (+ 15744 off) (car cs)) (%fasl-strw fs (cdr cs) (+ off 1))) off))
 (defun %fasl-straddn (fs cs)
@@ -69,7 +74,7 @@
       (%fasl-set (%fs-slen fs) (+ end 1))
       off)))
 
-; ---- Node-/Patch-Staging (finale Record-Layouts: Node 10 B, Patch 4 B) ----
+; ---- Node/patch staging (final record layouts: node 10 B, patch 4 B) ----
 (defun %fasl-node (fs kind value nameoff)
   (let ((idx (%fasl-get (%fs-nn fs))))
     (if (> idx 63) (%fasl-error-nodes-overflow) nil)
@@ -86,9 +91,10 @@
       (%fasl-w16 a boff) (%fasl-w16 (+ a 2) node))
     (%fasl-set (%fs-np fs) (+ idx 1))))
 
-; ---- Entry-Staging (8 B: nameoff u16, bank 0, FLAGS u8, off u16, len u16) ----
-; Disk-Lib-v1 ist blobrelativ; der Runtime-Loader bindet die Zielbank beim Commit.
-; flags bit0 = MACRO (Codex' Loader-Erweiterung cbe4a8f: registriert T_MACRO(BCODE)).
+; ---- Entry staging (8 B: nameoff u16, bank 0, FLAGS u8, off u16, len u16) ----
+; Disk-Lib-v1 is blob-relative; the runtime loader binds the target bank at
+; commit. flags bit 0 = MACRO (Codex loader extension cbe4a8f registers
+; T_MACRO(BCODE)).
 (defun %fasl-entadd (fs nameoff off len flags)
   (let ((idx (%fasl-get (%fs-ne fs))))
     (if (> idx 63) (%fasl-error-entries-overflow) nil)
@@ -97,12 +103,12 @@
       (%fasl-w16 (+ a 4) off) (%fasl-w16 (+ a 6) len))
     (%fasl-set (%fs-ne fs) (+ idx 1))))
 
-; ---- Helfer-Namen "<main>-h<j>" (charset-fest via string->list) ----
+; ---- Helper names "<main>-h<j>" (charset-stable through string->list) ----
 (defun %fasl-hname (mainchars j)
   (if (> j 9) (%fasl-error-too-many-helpers) nil)
   (%fasl-app2 mainchars (%fasl-app2 (string->list "-h") (cons (+ 48 j) nil))))
 
-; ---- Literal -> Node (FIX 1, NIL 2, T 3, SYMBOL 4; -1 emittiert als 0xFFFF = kein Name) ----
+; ---- Literal -> node (FIX 1, NIL 2, T 3, SYMBOL 4; -1 emits 0xFFFF = no name) ----
 (defun %fasl-litnode (fs lit mainchars)
   (cond ((if (%lcc-consp lit) (eq (car lit) '%lcc-helper) nil)
          (%fasl-node fs 4 0 (%fasl-straddn fs (%fasl-hname mainchars (car (cdr lit))))))
@@ -112,7 +118,7 @@
         ((symbolp lit) (%fasl-node fs 4 0 (%fasl-straddn fs (string->list (symbol-name lit)))))
         (t (%fasl-error-unsupported-literal))))
 
-; ---- Ein kompiliertes Objekt SOFORT in den Blob streamen + Metadaten stagen ----
+; ---- Stream one compiled object into the blob IMMEDIATELY and stage metadata ----
 (defun %fasl-patchlits (fs lits mainchars boff i)
   (if lits
       (progn (%fasl-patchadd fs (+ boff (+ 7 (* 2 i))) (%fasl-litnode fs (car lits) mainchars))
@@ -133,7 +139,7 @@
     (%fasl-zeros fs (* 2 nlit))                        ; Littab = Nullen (alles gepatcht)
     (%fasl-blist fs (car (cdr (cdr (cdr (cdr res))))))))
 
-; ---- Eine defun-Form: Objekte = (h0 h1 ... main) ----
+; ---- One defun form: objects = (h0 h1 ... main) ----
 (defun %fasl-form2 (fs objs mainchars j mflags)   ; mflags nur fuers MAIN (Helfer = Fns)
   (if (cdr objs)
       (progn (%fasl-obj fs (car objs) (%fasl-hname mainchars j) mainchars 0)
@@ -143,8 +149,9 @@
   (cond ((if (%lcc-consp form) (eq (car form) 'defun) nil)
          (%fasl-form2 fs (lcc-compile-obj form)
                       (string->list (symbol-name (car (cdr form)))) 0 0))
-        ; defmacro (FASL v2 via Codex' Macro-Flag): Expander als Lambda kompilieren,
-        ; Main-Entry mit flags=1 -> Loader registriert T_MACRO(BCODE).
+        ; defmacro (FASL v2 through Codex's macro flag): compile the expander
+        ; as a lambda; main entry with flags=1 makes the loader register
+        ; T_MACRO(BCODE).
         ((if (%lcc-consp form) (eq (car form) 'defmacro) nil)
          (%fasl-form2 fs (lcc-compile-obj (cons 'lambda (cdr (cdr form))))
                       (string->list (symbol-name (car (cdr form)))) 0 1))
@@ -152,11 +159,13 @@
 (defun %fasl-forms (fs forms)
   (if forms (progn (%fasl-form fs (car forms)) (%fasl-forms fs (cdr forms))) nil))
 
-; ---- Abschluss: Trailer (Header + Staging-Kopien) + Prefix-Backpatch; liefert Dateilänge ----
+; ---- Finish: trailer (header plus staging copies) and prefix backpatch;
+; returns file length ----
 (defun %fasl-copy (fs from n)
   (if (> n 0) (progn (%fasl-b fs (%fasl-stage-get from)) (%fasl-copy fs (+ from 1) (- n 1))) nil))
-; GERÄTE-REALITÄT: 255-B-Objektgrenze (vm_dir_add lehnt größere STILL ab — HW-Fund B3:
-; %fasl-finish war 386 B und fehlte im Boot-Directory) -> Kaskaden-Split wie in lcc.lisp.
+; DEVICE REALITY: 255-byte object limit. vm_dir_add silently rejects larger
+; objects (hardware finding B3: %fasl-finish was 386 B and absent from the boot
+; directory), so use a cascade split as in lcc.lisp.
 (defun %fasl-hdr1 (fs bl ml)   ; Magic "L65M" roh (charset-fest), ver, hdrsize, flags, base, Längen
   (%fasl-b fs 76) (%fasl-b fs 54) (%fasl-b fs 53) (%fasl-b fs 77)
   (%fasl-b fs 1) (%fasl-b fs 38) (%fasl-u16 fs 0)
@@ -193,8 +202,9 @@
               (%fasl-w16 base bl) (%fasl-w16 (+ base 2) ml)  ; Prefix-Backpatch @ base/base+2
               (+ 4 (+ bl ml)))))))))
 
-; ---- Einstiege ----
-; Host-Gate/Programmatisch: Formen-Liste -> Fasl im Fenster @16384; liefert Dateilänge.
+; ---- Entry points ----
+; Host gate/programmatic path: form list -> FASL in the window at 16384;
+; returns file length.
 (defun fasl-emit-scratch (forms)
   (let ((fs (%fasl-fs 8192)))
     (%fasl-forms fs forms)
@@ -218,7 +228,8 @@
   (if (= mode 0)
       (%c1-compile-form first)
       (%c1-compile-source first)))
-; Gerät: Quelle von Disk lesen (Form für Form, OHNE Auswertung), Fasl in Slot dst schreiben.
+; Device: read source from disk one form at a time WITHOUT evaluation and
+; write the FASL to destination slot dst.
 (defun %fasl-stream-forms (fs)
   (let ((f (%fasl-read-form)))
     (if (eq f '%fasl-eof) nil
@@ -276,10 +287,12 @@
         (%fasl-stream-forms fs)
         (%fasl-save dst 8192 (%fasl-finish fs)))
       nil))
-; WORKBENCH-SLOW-PATH (2026-07-08): Quelle ist der IDE-Buffer-STRING (kein Disk-Source, kein
-; disk_dir_find). %cs-read-open setzt den Reader ueber den Arena-String; %fasl-stream-forms liest
-; Form fuer Form OHNE Eval und gibt sie an den Emitter. GC-sicher unter Arena: der Reader-Cursor
-; IST der Quell-String (== gerooteter compile-string-Arg), nur ein Byte-Index laeuft.
+; WORKBENCH SLOW PATH (2026-07-08): source is the IDE buffer STRING, not a disk
+; source, so no disk_dir_find. %cs-read-open positions the reader over the
+; arena string; %fasl-stream-forms reads one form at a time WITHOUT evaluation
+; and passes it to the emitter. GC-safe under the arena: the reader cursor IS
+; the source string (the rooted compile-string argument); only a byte index
+; advances.
 (defun compile-string (source dst)
   (progn
     (set-symbol-value (quote %compile-error) nil)

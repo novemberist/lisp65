@@ -27,9 +27,12 @@ TRANSPORT = SESSION / "media-transport-hardware-receipt.json"
 G5_RECEIPT = SESSION / "g5-hardware-receipt.json"
 HARNESS_FIRST_RED = SESSION / "harness-first-red.json"
 RESTAGE_ROUTE = SESSION / "restage-route-observation.json"
+RUNNER_CORE = ROOT / "scripts/c2-v121-g5-hw.sh"
+RUNNER_RELEASE = RUNNER_CORE
 FORMAT = "lisp65-c2-lite-v1.2.1-G5-hardware-session-v1"
 TRANSPORT_FORMAT = "lisp65-c2-lite-v1.2.1-media-transport-hardware-receipt-v1"
 REMOTE_MEDIA = "L65V121.D81"
+EXPECTED_BANNER = "WORKBENCH - DIALECT V2"
 
 
 class G5Error(RuntimeError):
@@ -131,6 +134,8 @@ def prepare() -> dict[str, Any]:
         "status": "prepared-hardware-not-run",
         "runbook": binding(RUNBOOK),
         "preflight": binding(PREFLIGHT),
+        "hardware_runner_core": binding(RUNNER_CORE),
+        "hardware_runner_release": binding(RUNNER_RELEASE),
         "artifact_set_sha256": runbook["artifact_set_sha256"],
         "product_build_id": runbook["product_build_id"],
         "profile_build_id": runbook["profile_build_id"],
@@ -192,6 +197,8 @@ def transport() -> dict[str, Any]:
         "boot_screen": EVIDENCE / "cold-boot.txt",
         "device_core_id": SESSION / "device-core-id.bin",
         "upload_mount_log": SESSION / "media-upload-mount.log",
+        "fresh_state_screen": SESSION / "preflight/fresh-start.png",
+        "fresh_state_text": SESSION / "preflight/fresh-start.txt",
     }
     require(
         observed["uploaded_product_d81"].read_bytes()
@@ -217,8 +224,16 @@ def transport() -> dict[str, Any]:
     )
     boot = observed["boot_screen"].read_text(encoding="utf-8", errors="strict")
     require(
-        "WORKBENCH - DIALECT V2" in boot and "lisp65>" in boot,
+        EXPECTED_BANNER in boot and "lisp65>" in boot,
         "cold media route did not reach the product REPL",
+    )
+    fresh_state = observed["fresh_state_text"].read_text(
+        encoding="utf-8", errors="strict")
+    require(
+        "BASIC 65" in fresh_state
+        and "READY." in fresh_state
+        and "lisp65>" not in fresh_state,
+        "hardware session did not begin from asserted fresh BASIC state",
     )
     value = {
         "format": TRANSPORT_FORMAT,
@@ -234,6 +249,10 @@ def transport() -> dict[str, Any]:
         "transport": {
             "remote_media": deployment["remote_media"],
             "mount_route": "mega65_ftp-put-readback-mount",
+            "entry_precondition": (
+                "cold reset plus asserted BASIC 65 READY state before the "
+                "first FTP byte; FTP log-progress guard active"
+            ),
             "stage_proof": (
                 "target-byteidentity for immutable Bank-2, Bank-3 and Session "
                 "Region-1; post-boot C2D is bound as live runtime state"

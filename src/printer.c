@@ -41,8 +41,8 @@ void emit(char c) {
 #endif
 }
 
-/* Vor einer neuen Eingabezeile: wenn der Schirm fast voll ist, loeschen statt den KERNAL
- * scrollen zu lassen (der crasht). Nur auf dem Geraet; Host scrollt normal. */
+/* Before a new input line: if the screen is almost full, clear it instead of letting the
+ * KERNAL scroll (that crashes). Device only; the host scrolls normally. */
 void screen_scroll_guard(void) {
 #ifdef LISP65_SCREEN_DRIVER
     /* eigener Treiber scrollt crashfrei selbst — Guard obsolet (Loeschen entfaellt) */

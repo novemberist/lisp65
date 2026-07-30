@@ -16,8 +16,10 @@ import bytecode_p0_stdlib as S
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SUITE = ROOT / "build/bytecode/dialect-v2/suites/p0-stdlib-einsuite-core-workbench-subset.json"
 DEFAULT_SOURCE = ROOT / "build/bytecode/dialect-v2/sources/lib/repl-banner.lisp"
+RELEASE_AUTHORITY = ROOT / "config/v12-known-issues.json"
 RUN_STREAM = "&AC'BC(CC)DC*EC+FC(DJ&EK%FK3AS3BS3CS3DS3ES3FW;AU<BS<CS<DS<ES;FUAAWABSACWEDSEESAFWIAWIBSMBSICWIDSIESIFSQAWQBSQCWQDSUDSQESUESQFWYAWYBSYCW]DS]ESYFW%GY"
-SUBTITLE = "WORKBENCH - DIALECT V2"
+SUBTITLE_PREFIX = "WORKBENCH "
+SUBTITLE_CENTER_COLUMN = 55
 SCREEN_BASE = 0x0800
 SCREEN_COLUMNS = 80
 SEPARATOR_ROW = 6
@@ -28,6 +30,18 @@ SEPARATOR_CODE = 64
 
 class BannerError(RuntimeError):
     pass
+
+
+def subtitle() -> str:
+    authority = json.loads(RELEASE_AUTHORITY.read_text())
+    release = authority.get("release")
+    if not isinstance(release, str) or not release:
+        raise BannerError("release authority has no non-empty .release")
+    return SUBTITLE_PREFIX + release
+
+
+def subtitle_start(text: str) -> int:
+    return SUBTITLE_CENTER_COLUMN - len(text) // 2
 
 
 class ObservingVM(B.P0VM):
@@ -64,6 +78,7 @@ class ObservingVM(B.P0VM):
 
 
 def expected_screen_writes() -> list[tuple[int, int, int, int]]:
+    text = subtitle()
     writes: list[tuple[int, int, int, int]] = []
     for offset in range(0, len(RUN_STREAM), 3):
         x = ord(RUN_STREAM[offset]) - 36
@@ -80,7 +95,8 @@ def expected_screen_writes() -> list[tuple[int, int, int, int]]:
         attr = 135 if kind < 2 else 129
         writes.extend((x + cell, y, code, attr) for cell in range(length))
     writes.extend(
-        (44 + index, 7, ord(char), 15) for index, char in enumerate(SUBTITLE)
+        (subtitle_start(text) + index, 7, ord(char), 15)
+        for index, char in enumerate(text)
     )
     return writes
 
@@ -116,7 +132,7 @@ def validate_observation(
         raise BannerError(
             f"screen-write mismatch: expected {len(expected_writes)}, got {len(screen_writes)}"
         )
-    if screen_put_calls != 235 or screen_span_calls != 0:
+    if screen_put_calls != len(expected_writes) or screen_span_calls != 0:
         raise BannerError(
             f"screen call shape drift: put={screen_put_calls}, span={screen_span_calls}"
         )
@@ -127,6 +143,7 @@ def validate_observation(
 
 
 def observe(suite_path: Path) -> tuple[dict, ObservingVM]:
+    text = subtitle()
     suite = S._read_suite(str(suite_path))
     (
         heap,
@@ -169,12 +186,16 @@ def observe(suite_path: Path) -> tuple[dict, ObservingVM]:
         "suite_sha256": hashlib.sha256(suite_path.read_bytes()).hexdigest(),
         "source": DEFAULT_SOURCE.relative_to(ROOT).as_posix(),
         "source_sha256": hashlib.sha256(DEFAULT_SOURCE.read_bytes()).hexdigest(),
+        "release_authority": RELEASE_AUTHORITY.relative_to(ROOT).as_posix(),
+        "release_authority_sha256": hashlib.sha256(RELEASE_AUTHORITY.read_bytes()).hexdigest(),
+        "subtitle": text,
+        "subtitle_start_column": subtitle_start(text),
         "screen_writes": len(vm.screen_writes),
         "screen_put_char_calls": vm.screen_put_calls,
         "screen_write_string_calls": vm.screen_span_calls,
-        "lambda_and_block_writes": len(vm.screen_writes) - SEPARATOR_LENGTH - len(SUBTITLE),
+        "lambda_and_block_writes": len(vm.screen_writes) - SEPARATOR_LENGTH - len(text),
         "separator_writes": SEPARATOR_LENGTH,
-        "subtitle_writes": len(SUBTITLE),
+        "subtitle_writes": len(text),
         "cursor_linefeeds": len(vm.output_codes),
         "first_prompt_row": 9,
         "separator_screen_base": f"0x{expected_pokes()[0][0]:04x}",
@@ -189,14 +210,15 @@ def observe(suite_path: Path) -> tuple[dict, ObservingVM]:
 def selftest() -> None:
     writes = expected_screen_writes()
     pokes = expected_pokes()
-    valid = (B.NIL, writes, 235, 0, [10] * 9, pokes)
+    call_count = len(writes)
+    valid = (B.NIL, writes, call_count, 0, [10] * 9, pokes)
     validate_observation(*valid)
     mutations = [
-        (B.NIL, [(writes[0][0] + 1,) + writes[0][1:]] + writes[1:], 235, 0, [10] * 9, pokes),
-        (B.NIL, writes, 234, 0, [10] * 9, pokes),
-        (B.NIL, writes, 235, 0, [10] * 8, pokes),
-        (B.NIL, writes, 235, 0, [10] * 9, pokes[:-1] + [(pokes[-1][0], 63)]),
-        (1, writes, 235, 0, [10] * 9, pokes),
+        (B.NIL, [(writes[0][0] + 1,) + writes[0][1:]] + writes[1:], call_count, 0, [10] * 9, pokes),
+        (B.NIL, writes, call_count - 1, 0, [10] * 9, pokes),
+        (B.NIL, writes, call_count, 0, [10] * 8, pokes),
+        (B.NIL, writes, call_count, 0, [10] * 9, pokes[:-1] + [(pokes[-1][0], 63)]),
+        (1, writes, call_count, 0, [10] * 9, pokes),
     ]
     for index, mutation in enumerate(mutations, 1):
         try:

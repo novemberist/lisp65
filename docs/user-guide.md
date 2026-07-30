@@ -1,9 +1,9 @@
-# lisp65 1.2.2 User Guide
+# lisp65 1.2.3 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.2.2` release bundle
+- The extracted `lisp65-1.2.3` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -88,6 +88,30 @@ Example:
 (load-lib "answer")
 (answer)                           ; => 42
 ```
+
+## Iteration and random numbers
+
+`while` evaluates its body while its test remains non-`nil`:
+
+```lisp
+(setq n 0)
+(while (< n 10)
+  (setq n (+ n 1)))
+```
+
+A tight loop is fastest when its compiled body stays within one streamed code
+window. A backward jump across a window boundary reloads that window once per
+iteration.
+
+`random` returns an unbiased fixnum below a positive bound. Use `random-seed`
+when a run must be repeatable:
+
+```lisp
+(random-seed 123)
+(random 6)                         ; => 0 through 5
+```
+
+This generator is suitable for programs and games, not cryptography.
 
 ## Editor keys
 
@@ -192,6 +216,10 @@ further writes. The release does not claim atomicity inside that window.
 - One post-GC out-of-memory event in a 1,200-allocation `while` workload was
   not reproduced by the follow-up run. Preserve the exact form and preceding
   steps if a small-live-set OOM recurs.
+- One late-session `(require 'place)` returned `nil`; two cold-start retries
+  returned `t`. If `require` unexpectedly returns `nil`, cold-restart and
+  retry once, then preserve the requested library name and preceding steps if
+  the symptom recurs.
 - M65D/editor saves support 1–8,192 bytes. Evaluator `load` has a separate
   38,400-byte staging ceiling; memory may constrain practical input earlier.
 - The compiler builds Workbench L65M modules, not standalone runtimes or

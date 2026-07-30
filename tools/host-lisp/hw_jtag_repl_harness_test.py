@@ -25,6 +25,7 @@ import json
 import os
 from pathlib import Path
 import signal
+import base64
 import sys
 import time
 
@@ -54,7 +55,10 @@ state = load_state(state_path)
 
 screenshot = next((arg.split("=", 1)[1] for arg in args if arg.startswith("--screenshot=")), None)
 if screenshot is not None:
-    Path(screenshot).write_bytes(b"fake screenshot\n")
+    Path(screenshot).write_bytes(base64.b64decode(
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk"
+        b"YAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+    ))
     state["events"].append({"kind": "capture", "active": state["active"]})
     save_state(state_path, state)
     capture_count = sum(

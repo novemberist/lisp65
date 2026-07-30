@@ -145,11 +145,12 @@
 (defun ide-current-line (buffer)
   (ide-line-at buffer (ide-point-line (ide-buffer-point buffer))))
 
-;; TAIL-REKURSIV (2026-07-06): die alten Fassungen consten NACH dem Selbstaufruf
-;; (kein TCO) -> O(index) VM-Frames. Beim RETURN-Spam wuchs die Einfuege-Tiefe mit
-;; der Zeilennummer, riss bei ~Zeile 23 (Host) / ~13 (Geraet) das GC_ROOTS-Budget
-;; und kaskadierte in "vm: type error". Jetzt: EIN Tail-Lauf sammelt den Praefix
-;; umgedreht ein, ein zweiter Tail-Lauf const ihn zurueck -> Tiefe O(1).
+;; TAIL-RECURSIVE (2026-07-06): the old versions consed AFTER the recursive call
+;; (no TCO), producing O(index) VM frames. During RETURN spam, insertion depth
+;; grew with the line number, exhausted the GC_ROOTS budget at about line 23
+;; on the host / 13 on the device, and cascaded into "vm: type error". Now one
+;; tail pass collects the prefix in reverse and a second conses it back: O(1)
+;; depth.
 (defun %ide-lines-split-at (lines index acc)
   (if (if (> index 0) lines nil)
       (%ide-lines-split-at (cdr lines) (- index 1) (cons (car lines) acc))
@@ -182,9 +183,10 @@
           nil)
       lines))
 
-;; TAIL (2026-07-06, RETURN-Spam-Befund): die alte Fassung conste NACH dem
-;; Selbstaufruf -> O(count) Frames JE RENDER (Sichtfenster waechst mit dem Buffer
-;; bis 24) — zusammen mit der Aufrufkette riss das GC_ROOTS. Muster: Akku + rev-onto.
+;; TAIL (2026-07-06, RETURN-spam finding): the old version consed AFTER the
+;; recursive call, producing O(count) frames per render (the viewport grows
+;; with the buffer up to 24). Together with the call chain this exhausted
+;; GC_ROOTS. Pattern: accumulator plus rev-onto.
 (defun %ide-take-into (lines count acc)
   (if (if (> count 0) lines nil)
       (%ide-take-into (cdr lines) (- count 1) (cons (car lines) acc))
@@ -197,12 +199,12 @@
   (%ide-take-lines (%ide-drop-lines (ide-buffer-lines buffer) start)
                    (- end start)))
 
-;; COMPUTE-LINES-ONCE (2026-07-07): Render-Variante, die die schon
-;; materialisierte Zeilenliste als Parameter nimmt, statt sie erneut aus dem
-;; Buffer-Cache zu rekonstruieren (ide-buffer-lines = ~80 Allokationen bei
-;; getipptem Buffer). ide-render berechnet die Liste EINMAL am flachen Top und
-;; faedelt sie hier durch -> nur noch eine Rekonstruktion pro Render.
-;; Der spaetere Scroll-Muell war ein separater Color-RAM-Fenster-Bug; siehe
+;; COMPUTE-LINES-ONCE (2026-07-07): render variant that accepts the already
+;; materialized line list instead of reconstructing it from the buffer cache
+;; again (ide-buffer-lines is about 80 allocations for a typed buffer).
+;; ide-render computes the list ONCE at its flat top and threads it through
+;; here, leaving only one reconstruction per render.
+;; The later scrolling corruption was a separate Color-RAM window bug; see
 ;; docs/ide-scroll-diagnostics-plan.md.
 (defun ide-region-lines-from (lines start end)
   (%ide-take-lines (%ide-drop-lines lines start)
@@ -227,9 +229,10 @@
           nil)
       chars))
 
-;; KANONISCHES ""-Objekt: Littab-Konstanten einer Funktion sind ueber Aufrufe hinweg
-;; EQ-stabil -> alle Leerzeilen-Produzenten teilen DIESES Objekt, und der Dirty-Scan
-;; des Renders (nacktes eq) erkennt Leer==Leer ohne string-length-Kosten.
+;; CANONICAL "" object: a function's literal-table constants remain EQ-stable
+;; across calls, so all empty-line producers share THIS object and the
+;; renderer's dirty scan (a bare eq) recognizes empty==empty without paying
+;; for string-length.
 (defun %ide-empty-str () "")
 
 (defun ide-string-prefix (text count)

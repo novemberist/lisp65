@@ -1,11 +1,11 @@
-/* lisp65 — Objektmodell (zentraler Vertrag, Lane K)
- * obj ist eine 16-Bit-getaggte Referenz:
- *   NIL    = 0
- *   Fixnum = (n << 1) | 1     (15-Bit-signed Immediate)
- *   Zeiger = gerade, != 0     (Zellindex << 1; Zelltyp steht in der Zelle)
+/* lisp65 — object model (the central contract, lane K)
+ * obj is a 16-bit tagged reference:
+ *   NIL     = 0
+ *   fixnum  = (n << 1) | 1     (15-bit signed immediate)
+ *   pointer = even, != 0       (cell index << 1; the cell type lives in the cell)
  *
- * ACHTUNG: Dies ist ein Interface-Header. Änderungen rippeln in alle Module —
- * vor Änderung in docs/collaboration.md ankündigen (Interface-Vertrag).
+ * CAUTION: this is an interface header. Changes ripple into every module —
+ * announce them in docs/collaboration.md before changing (interface contract).
  */
 #ifndef LISP65_OBJ_H
 #define LISP65_OBJ_H
@@ -18,13 +18,13 @@ typedef int16_t obj;
 #define MKFIX(n)   ((obj)(uint16_t)((((uint16_t)(int16_t)(n)) << 1) | 1u))
 #define IS_FIX(o)  ((o) & 1)
 #define FIXVAL(o)  ((int16_t)((o) >> 1))
-/* Heap-Zell-Zeiger: gerade, != 0, Index < 0x4000. Gerade Werte mit Index >= 0x4000 sind
- * getaggte IMMEDIATES (kein Heap, kein GC) — aktuell BCODE (kompilierte Fn: traegt den
- * Code-Directory-Index direkt im obj; spart je Funktion eine permanente Heap-Zelle, bei
- * 121 Stdlib-Funktionen ~1/3 des Boot-Heap-Verbrauchs). */
-/* Encoding-Trick: Heap-Index < 0x4000 <=> obj POSITIV; Immediates (BCODE ab Basis 0x6000)
- * <=> obj NEGATIV (als int16). IS_PTR ist damit ein Vorzeichen+Paritaets-Test — BILLIGER
- * als die alte Maske+NIL-Pruefung (NIL=0 faellt durch >0 automatisch raus). */
+/* Heap cell pointer: even, != 0, index < 0x4000. Even values with index >= 0x4000 are
+ * tagged IMMEDIATES (no heap, no GC) — currently BCODE (a compiled fn: it carries the
+ * code directory index in the obj itself; this saves one permanent heap cell per function,
+ * about a third of the boot heap consumption across 121 stdlib functions). */
+/* Encoding trick: heap index < 0x4000 <=> obj POSITIVE; immediates (BCODE from base 0x6000)
+ * <=> obj NEGATIVE (as int16). IS_PTR is therefore a sign plus parity test — CHEAPER than
+ * the old mask plus NIL check (NIL=0 drops out of > 0 automatically). */
 #define IS_PTR(o)  ((o) > 0 && ((o) & 1) == 0)
 
 /* Immediate-Raum (negativ+gerade), aufgeteilt nach Roh-uint16 des obj:
@@ -65,11 +65,11 @@ typedef struct {
 } Cell;
 
 #ifndef HEAP_CELLS
-/* Mark-Sweep-Heap (Zelle 0 = NIL reserviert); -D überschreibbar.
- * Default 1536 für Host/c64/Smokes. Der mega65-Deploy baut mit -DHEAP_CELLS=1200, weil
- * Bank 0 (~44 KB) für REPL+Prelude+Strings+load-Puffer eng ist und ~1,7 KB Soft-Stack
- * bleiben müssen (sonst Crash beim Prelude-Laden). Echtes Wachstum kommt mit dem flachen
- * 8-MB-Modell (§4.3, post-MVP). */
+/* Mark-sweep heap (cell 0 = NIL, reserved); overridable with -D.
+ * Default 1536 for host/c64/smokes. The mega65 deploy builds with -DHEAP_CELLS=1200 because
+ * bank 0 (~44 KB) is tight for REPL + prelude + strings + load buffer and about 1.7 KB of
+ * soft stack must remain (otherwise it crashes while loading the prelude). Real growth comes
+ * with the flat 8 MB model (§4.3, post-MVP). */
 #define HEAP_CELLS 1536
 #endif
 extern Cell heap[HEAP_CELLS];      /* Hot-Bereich: Bank-0-Pool (Zelle 0..HEAP_CELLS-1) */
@@ -84,9 +84,9 @@ extern Cell heap[HEAP_CELLS];      /* Hot-Bereich: Bank-0-Pool (Zelle 0..HEAP_CE
  * symbol.c greift direkt via CELL()/heap[] zu (unangetastet). */
 #ifdef LISP65_EXT_HEAP
   #ifndef EXT_CELLS
-  /* Mark-Bits sind bei EXT eine Bitmap (kompakt), daher sind grosse Werte tragbar. Obergrenze:
-   * die erweiterten Zellen liegen flach ab $40000 (Bank 4, 64 KB) = max ~8192 Zellen a 8 Byte.
-   * Ueber -DEXT_CELLS fuer den Deploy-Build feinjustierbar. */
+  /* For EXT the mark bits are a bitmap (compact), so large values are affordable. Upper bound:
+   * the extended cells sit flat from $40000 (bank 4, 64 KB) = at most ~8192 cells of 8 bytes.
+   * Fine-tunable for the deploy build via -DEXT_CELLS. */
   #define EXT_CELLS 4096
   #endif
 #else

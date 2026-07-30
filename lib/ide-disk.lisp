@@ -1,26 +1,27 @@
-;; lisp65 IDE — Disk-/Compile-Anbindung der Buffer.
+;; lisp65 IDE -- disk/compiler integration for buffers.
 ;;
-;; Oeffentliche schmale Workbench-API:
-;;   (dir)                                -> Liste sichtbarer Dateinamen
-;;   (load-file-to-buffer "src" ["buf"])   -> Disk-Quelle in Buffer laden
-;;   (save-buffer-to "src" ["buf"])        -> Buffer-Text als Source speichern
-;;   (eval-buffer "buf")                   -> Buffer transient in die laufende Session
+;; Narrow public Workbench API:
+;;   (dir)                                -> list visible file names
+;;   (load-file-to-buffer "src" ["buf"])  -> load disk source into a buffer
+;;   (save-buffer-to "src" ["buf"])       -> save buffer text as source
+;;   (eval-buffer "buf")                  -> evaluate buffer transiently in the live session
 ;;   (compile-buffer-to-lib "fasl" ["b"])  -> Buffer -> L65M/FASL-Slot
-;;   (compile-file-to-lib "src" "fasl")    -> Disk-Quelle -> L65M/FASL-Slot
-;; Terminologie: docs/ide-api-terminology.md. "compile" ohne "to-lib"/"to-fasl"
-;; ist fuer transiente Compile-APIs reserviert.
+;;   (compile-file-to-lib "src" "fasl")   -> disk source -> L65M/FASL slot
+;; Terminology: docs/ide-api-terminology.md. "compile" without "to-lib" or
+;; "to-fasl" is reserved for transient compilation APIs.
 ;;
-;; Alte Namen bleiben im Quelltext als Aliase fuer breite/dev Suites:
-;; (ide-open "name"), (ide-save ["name"]). Das Workbench-Disklib-Artefakt
-;; entfernt sie zugunsten der aktuellen API-Namen, um Budget fuer die IDE-UX
-;; zu behalten.
-;; Schreiben laedt den separaten M65D-COW-Kern bei Bedarf und verwendet fuer neue
-;; wie bestehende Source-Dateien denselben transaktionalen Pfad. Lesen nutzt den
-;; Regel-B-Dir-Walk (Eintrags-Helfer aus stdlib-load.lisp) sowie
+;; Old names remain as source aliases for broad/development suites:
+;; (ide-open "name"), (ide-save ["name"]). The Workbench disk-library artifact
+;; removes them in favor of the current API names to preserve the IDE UX
+;; budget.
+;; Writing loads the separate M65D COW core on demand and uses the same
+;; transactional path for new and existing source files. Reading uses the
+;; Rule-B directory walk (entry helpers from stdlib-load.lisp) plus
 ;; %disk-read-sector/%disk-byte.
-;; Kettenende IMMER via (> next-track 0) pruefen — Fixnum 0 ist truthy (lisp65-Wahrheitswert)!
+;; ALWAYS test chain termination with (> next-track 0): fixnum 0 is truthy in
+;; lisp65.
 
-;; ---- Buffer-Zeilen -> EIN Quelltext-String (Zeilen mit \n verbunden) ----
+;; ---- Buffer lines -> ONE source string (lines joined with \n) ----
 (defun %ide-join-codes-into (lines acc)
   (if lines
       (%ide-join-codes-into
@@ -48,8 +49,9 @@
 (defun %ide-buffer-source (buffer)
   (%ide-join (ide-buffer-lines buffer)))
 
-;; ---- Dir-Suche: Datei -> (track . sector) des Kettenstarts (oder nil) ----
-;; Wie %load-scan-directory (stdlib-load.lisp), liefert aber Start statt zu evaluieren.
+;; ---- Directory search: file -> chain-start (track . sector), or nil ----
+;; Like %load-scan-directory (stdlib-load.lisp), but returns the start instead
+;; of evaluating it.
 (defun %ide-disk-scan-entries (codes entry)
   (if (= entry 8)
       nil
@@ -74,9 +76,9 @@
           nil)
       nil))
 
-;; ---- Kette lesen: SAVE-Slots sind vorallokiert und rechts mit Spaces gepaddet.
-;; Wir bestimmen deshalb erst die effektive Laenge ohne Cons-Zellen, dann lesen
-;; wir nur diese Bytes in die Zeilenliste.
+;; ---- Read chain: SAVE slots are preallocated and padded with spaces on the right.
+;; First determine the effective length without cons cells, then read only
+;; those bytes into the line list.
 (defun %ide-disk-effective-sector (i limit count last)
   (if (> i limit)
       (cons count last)
@@ -114,10 +116,10 @@
           -1)
       -1))
 
-;; Sektoren direkt in Zeilen umsetzen. Der alte Pfad hielt erst die komplette
-;; Datei als Byte-Cons-Liste und danach zusaetzlich die Zeilen im Heap. Diese
-;; Fassung haelt nur die aktuelle Zeile; nreverse vermeidet eine zweite
-;; Zeichenliste beim Materialisieren des Arena-Strings.
+;; Convert sectors directly into lines. The old path first kept the complete
+;; file as a byte cons list and then additionally kept the lines in the heap.
+;; This version retains only the current line; nreverse avoids a second
+;; character list while materializing the arena string.
 (defun %ide-disk-sector-into (i limit remaining cur acc)
   (if (or (= remaining 0) (> i limit))
       (cons remaining (cons cur acc))
@@ -154,7 +156,8 @@
               nil)
           nil)))
 
-;; Save-Padding abstreifen: Spaces/Zeilenenden am DATEIENDE = KOPF der reversed Liste.
+;; Strip save padding: spaces and line endings at FILE END are at the HEAD of
+;; the reversed list.
 (defun %ide-disk-trim-rev (rcodes)
   (if rcodes
       ((lambda (c)
@@ -165,7 +168,7 @@
        (car rcodes))
       nil))
 
-;; ---- Datei lesen: Disk -> Zeilen/String ----
+;; ---- Read file: disk -> lines/string ----
 (defun %ide-disk-read-lines (name)
   ((lambda (start)
      (if start
@@ -182,7 +185,7 @@
      (if lines (%ide-join lines) nil))
    (%ide-disk-read-lines name)))
 
-;; ---- COW-Persistenz: M65D wird erst beim ersten Save geladen ----
+;; ---- COW persistence: load M65D only on the first save ----
 (defun %ide-m65d-message (status)
   (if (if (> status 0) (< status 13) nil)
       (nth
@@ -220,7 +223,7 @@
         (set-symbol-value (quote ide-error) "persistence unavailable")
         nil)))
 
-;; ---- Directory: Disk -> Dateinamenliste ----
+;; ---- Directory: disk -> file-name list ----
 (defun %ide-dir-code (raw)
   (if (> raw 127) (- raw 128) raw))
 
@@ -329,7 +332,7 @@
            nil)))
    (%ide-selected-buffer buffer-name)))
 
-;; ---- Public API: Buffer/Datei -> FASL/L65M-Slot ----
+;; ---- Public API: buffer/file -> FASL/L65M slot ----
 (defun compile-buffer-to-lib (dst &rest buffer-name)
   ((lambda (buf)
      (if buf
@@ -358,7 +361,7 @@
        (%ide-disk-read-string src))
       (progn (set-symbol-value (quote ide-error) "not source") nil)))
 
-;; ---- Public API: Buffer -> transiente laufende Session ----
+;; ---- Public API: buffer -> transient live session ----
 (defun eval-buffer (buffer-name)
   (if (eq buffer-name 0)
       ((lambda (form)
@@ -577,7 +580,7 @@
       (%ide-mini-file-submit state action file)))
    (if (> (string-length input) 0) input default)))
 
-;; ---- Historische IDE-Namen ----
+;; ---- Historical IDE names ----
 (defun ide-save (&rest name)
   ((lambda (buf)
      (if buf

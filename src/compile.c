@@ -1,24 +1,24 @@
-/* lisp65 — geraeteseitiger Bytecode-Compiler (Lane K)
+/* lisp65 — device-side bytecode compiler (lane K)
  *
- * Uebersetzt REPL-Eingaben on-device zu Bytecode (Ziel: EIN Ausfuehrungsmodell via vm_run +
- * schneller Nutzercode; Treewalk raus am Ende). Portiert die P0-Codegen aus
- * tools/host-lisp/bytecode_p0_compiler.py; byte-exakt verifiziert (scripts/compile-smoke-main.c).
+ * Translates REPL input to bytecode on the device (goal: ONE execution model via vm_run plus
+ * fast user code; the tree walker goes away at the end). Ported from the P0 codegen in
+ * tools/host-lisp/bytecode_p0_compiler.py; verified byte-exact (scripts/compile-smoke-main.c).
  *
- * STAND (Meilensteine):
- *   M1: Literale + binaere/unaere Arithmetik/Vergleich/cons/car/cdr/not.
- *   M2: littab + PUSHLIT (grosse Fixnums, quote) + Calls (CALL/CALLPRIM).
- *   M3: progn/if/when/unless/and + let (LOKALE Variablen, Scopes) + setq (lokal); rel8-Branch-Patching.
- *   M-lambda: `lambda`/`function` -> Helper-Code-Objekte. Der Compiler emittiert eine FAMILIE von
- *       Funktionen (bc_unit.fn[0]=Main, fn[1..]=Helper); jeder Lambda-Rumpf ist ein eigenes CodeObject,
- *       im aeusseren per PUSHLIT<Helper-Symbol> referenziert. Params -> PUSHARG0..N. KEINE Capture
- *       (P0: freie Variablen im Rumpf -> unsupported). Laufzeit-Registrierung der Helper = M6.
- *   M6-Globals: globale Wertzellen via CALLPRIM 19/20 (symbol-value/set-symbol-value).
- *   OFFEN: case, Vergleichsketten (>2), immediate lambda, &rest; M4 quasiquote;
- *          M5 Makro-Expansion (via vm_run); M6 REPL-Integration; M7 Treewalk raus.
- * err=1 fuer noch-nicht-Unterstuetztes -- nie stiller Fehlcode.
+ * STATUS (milestones):
+ *   M1: literals + binary/unary arithmetic/comparison/cons/car/cdr/not.
+ *   M2: littab + PUSHLIT (large fixnums, quote) + calls (CALL/CALLPRIM).
+ *   M3: progn/if/when/unless/and + let (LOCAL variables, scopes) + setq (local); rel8 branch patching.
+ *   M-lambda: `lambda`/`function` -> helper code objects. The compiler emits a FAMILY of functions
+ *       (bc_unit.fn[0]=main, fn[1..]=helpers); every lambda body is its own CodeObject, referenced
+ *       from the outer one by PUSHLIT<helper symbol>. Parameters -> PUSHARG0..N. NO capture
+ *       (P0: free variables in the body -> unsupported). Runtime registration of the helpers is M6.
+ *   M6 globals: global value cells via CALLPRIM 19/20 (symbol-value/set-symbol-value).
+ *   OPEN: case, comparison chains (>2), immediate lambda, &rest; M4 quasiquote;
+ *         M5 macro expansion (via vm_run); M6 REPL integration; M7 remove the tree walker.
+ * err=1 for the not-yet-supported -- never silently wrong code.
  */
 #include "compile.h"
-#include "vm.h"        /* OP_* Opcodes (ABI-Wahrheit) */
+#include "vm.h"        /* OP_* opcodes (the ABI truth) */
 #include "symbol.h"    /* intern */
 #include "v2_native_function_dispatch.h"
 
@@ -431,7 +431,7 @@ static void compile_case_clauses(uint8_t tmp, obj clauses) {
     compile_case_clauses(tmp, cell_b(clauses));
     patch_here(jmp);
 }
-/* case: Schluessel EINMAL in einen Temp-Slot, dann eql-Kette (== lower_case, aber ohne Rebuild). */
+/* case: evaluate the key ONCE into a temp slot, then an eql chain (== lower_case, but without a rebuild). */
 static void compile_case(obj args) {
     uint8_t tmp, saved = cc_scopen;
     if (list_len(args) < 1) { cu->err = 1; return; }
@@ -441,7 +441,7 @@ static void compile_case(obj args) {
     cc_scopen = saved;
 }
 
-/* Eindeutiger Helper-Name "__L<n>" (interniert, damit CALL/Registrierung ihn finden; kein stdio). */
+/* Unique helper name "__L<n>" (interned, so CALL and registration can find it; no stdio). */
 static obj gen_helper_name(void) {
     char buf[8], tmp[6]; uint16_t n = cu->gensym++; uint8_t i = 0, j = 0;
     buf[i++] = '_'; buf[i++] = 'L';
@@ -452,9 +452,10 @@ static obj gen_helper_name(void) {
     return intern(buf);
 }
 
-/* Params (inkl. &rest) als Slots 0.. im AKTUELLEN Scope (cc/cc_scopen) binden; setzt cc_nparams/
- * cc_nextslot + cc->nargs/nlocals/flags. Gemeinsam von compile_lambda_helper + bc_compile_defun
- * (kein Duplikat -> weniger .text). Voraussetzung: cc_scopen/cc_scopebase sind vom Aufrufer gesetzt. */
+/* Bind the parameters (including &rest) as slots 0.. in the CURRENT scope (cc/cc_scopen); sets
+ * cc_nparams/cc_nextslot and cc->nargs/nlocals/flags. Shared by compile_lambda_helper and
+ * bc_compile_defun (no duplicate -> less .text). Precondition: the caller has set
+ * cc_scopen/cc_scopebase. */
 static void cc_bind_params(obj params) {
 #ifdef LISP65_DIALECT_V2
     obj p = params, restname = NIL;
@@ -766,9 +767,9 @@ static void compile_expr(obj form) {
         return;
     }
 
-    /* Nicht-Symbol-Atome (String-Literale u. ae.) sind LITERALE, keine Variablen — sonst
-     * wuerde "abc" als Global-Read (CALLPRIM 19) kompiliert -> TYPEERROR zur Laufzeit.
-     * (Befund der Aequivalenz-Suite 2026-07-05: Treewalk ok, Compiler !error.) */
+    /* Non-symbol atoms (string literals and the like) are LITERALS, not variables — otherwise
+     * "abc" would compile to a global read (CALLPRIM 19) -> TYPEERROR at runtime.
+     * (Equivalence-suite finding 2026-07-05: tree walker ok, compiler !error.) */
     if (IS_PTR(form) && cell_type(form) != T_SYM) { push_value(form); return; }
 
     {   /* blankes Atom: lokal -> laden; freie Var (ein- ODER mehrstufig) -> Upvalue (resolve_uv); sonst global. */

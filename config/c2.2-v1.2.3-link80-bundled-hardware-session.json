@@ -1,0 +1,267 @@
+{
+  "format": "lisp65-c2.2-v1.2.3-link80-bundled-hardware-session-v1",
+  "recorded_on": "2026-07-30",
+  "status": "owner-commissioned-host-preparation-hardware-not-run",
+  "candidate": {
+    "release": "v1.2.3",
+    "link": 80,
+    "product_sha256": "5130971b4cb66fe226fec9b37b8cc974056b3541c1824431d78ec0c2074bb659",
+    "elf_sha256": "687134067263173763a6777859d3e2404cb44ba2fb483f30ddab87df7e5afede",
+    "manifest": "build/c2.2/v1.2.3-candidate-product-link80/canonical-product-manifest.json",
+    "phase_b_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-phase-b-link80-receipt.json"
+  },
+  "input_transport": {
+    "maximum_form_characters": 76,
+    "verified_input_required": true,
+    "no_unverified_form_retry": true
+  },
+  "product_rows": [
+    {
+      "id": "boot-repl",
+      "group": "regression",
+      "kind": "exact",
+      "form": "(+ 1 2)",
+      "expected_result": "3",
+      "dependencies": []
+    },
+    {
+      "id": "while-smoke",
+      "group": "while",
+      "kind": "exact",
+      "form": "(let((i 0))(progn(while(< i 6)(setq i(+ i 1)))i))",
+      "expected_result": "6",
+      "dependencies": [
+        "boot-repl"
+      ]
+    },
+    {
+      "id": "random-state-width",
+      "group": "random",
+      "kind": "exact",
+      "form": "(progn(random-seed 1)(length(symbol-value(quote %random-state))))",
+      "expected_result": "55",
+      "dependencies": [
+        "boot-repl"
+      ]
+    },
+    {
+      "id": "random-rejection-path",
+      "group": "random",
+      "kind": "exact",
+      "form": "(progn(random-seed 7286)(random 1000))",
+      "expected_result": "179",
+      "dependencies": [
+        "random-state-width"
+      ]
+    },
+    {
+      "id": "random-helper",
+      "group": "random",
+      "kind": "exact",
+      "form": "(defun %r()(list(random 1000)(random 1000)))",
+      "expected_result": "%r",
+      "dependencies": [
+        "random-state-width"
+      ]
+    },
+    {
+      "id": "random-seed-store",
+      "group": "random",
+      "kind": "exact",
+      "form": "(progn(random-seed 1234)(set-symbol-value(quote %a)(%r))t)",
+      "expected_result": "t",
+      "dependencies": [
+        "random-helper"
+      ]
+    },
+    {
+      "id": "random-seed-reproducible",
+      "group": "random",
+      "kind": "exact",
+      "form": "(progn(random-seed 1234)(equal(symbol-value(quote %a))(%r)))",
+      "expected_result": "t",
+      "dependencies": [
+        "random-seed-store"
+      ]
+    },
+    {
+      "id": "random-range",
+      "group": "random",
+      "kind": "exact",
+      "form": "(progn(random-seed 42)(< (random 1000)1000))",
+      "expected_result": "t",
+      "dependencies": [
+        "random-state-width"
+      ]
+    },
+    {
+      "id": "frame-helper",
+      "group": "require-fastpath",
+      "kind": "exact",
+      "form": "(defun %f()(list(peek 255 132)(peek 255 131)(peek 255 132)))",
+      "expected_result": "%f",
+      "dependencies": [
+        "boot-repl"
+      ]
+    },
+    {
+      "id": "require-frame-helper",
+      "group": "require-fastpath",
+      "kind": "exact",
+      "form": "(defun %q()(let((a(%f)))(list a(require(quote place))(%f))))",
+      "expected_result": "%q",
+      "dependencies": [
+        "frame-helper"
+      ]
+    },
+    {
+      "id": "require-first",
+      "group": "require-fastpath",
+      "kind": "frame-tuple",
+      "form": "(%q)",
+      "expected_middle": "t",
+      "dependencies": [
+        "require-frame-helper"
+      ]
+    },
+    {
+      "id": "require-repeat",
+      "group": "require-fastpath",
+      "kind": "frame-tuple",
+      "form": "(%q)",
+      "expected_middle": "t",
+      "dependencies": [
+        "require-first"
+      ]
+    },
+    {
+      "id": "irq-mask-low",
+      "group": "interrupt-ownership",
+      "kind": "exact",
+      "form": "(list(logand(peek 214 225)192)(logand(peek 214 151)15))",
+      "expected_result": "(0 0)",
+      "dependencies": [
+        "boot-repl"
+      ]
+    },
+    {
+      "id": "irq-mask-high",
+      "group": "interrupt-ownership",
+      "kind": "exact",
+      "form": "(logand(peek 215 19)15)",
+      "expected_result": "0",
+      "dependencies": [
+        "boot-repl"
+      ]
+    },
+    {
+      "id": "math-helper",
+      "group": "fx-premise",
+      "kind": "exact",
+      "form": "(defun %m(a v)(poke 215(+ 112 a)v))",
+      "expected_result": "%m",
+      "dependencies": [
+        "boot-repl"
+      ]
+    },
+    {
+      "id": "math-clear",
+      "group": "fx-premise",
+      "kind": "exact",
+      "form": "(dotimes(i 8)(%m i 0))",
+      "expected_result": "nil",
+      "dependencies": [
+        "math-helper"
+      ]
+    },
+    {
+      "id": "math-product-low",
+      "group": "fx-premise",
+      "kind": "informational",
+      "form": "(progn(%m 0 192)(%m 4 160)(list(peek 215 120)(peek 215 121)))",
+      "expected_shape": "two-byte-list",
+      "dependencies": [
+        "math-clear"
+      ]
+    },
+    {
+      "id": "math-product-high",
+      "group": "fx-premise",
+      "kind": "informational",
+      "form": "(list(peek 215 122)(peek 215 123))",
+      "expected_shape": "two-byte-list",
+      "dependencies": [
+        "math-product-low"
+      ]
+    },
+    {
+      "id": "math-clear-after",
+      "group": "fx-premise",
+      "kind": "exact",
+      "form": "(dotimes(i 8)(%m i 0))",
+      "expected_result": "nil",
+      "dependencies": [
+        "math-product-high"
+      ]
+    },
+    {
+      "id": "while-run-stop",
+      "group": "run-stop",
+      "kind": "physical-run-stop",
+      "form": "(while t)",
+      "expected_status": "*** stopped (run/stop)",
+      "dependencies": [
+        "while-smoke"
+      ]
+    },
+    {
+      "id": "post-run-stop-repl",
+      "group": "regression",
+      "kind": "exact",
+      "form": "(+ 1 2)",
+      "expected_result": "3",
+      "dependencies": [
+        "while-run-stop"
+      ]
+    }
+  ],
+  "gc_diagnostic": {
+    "setup": {
+      "id": "gc-helper",
+      "form": "(defun %g(i)(car(cons i nil)))",
+      "expected_result": "%g"
+    },
+    "workload": {
+      "id": "gc-two-number-discriminator",
+      "form": "(let((i 0))(progn(while(%g(< i 600))(%g i)(setq i(+ i 1)))i))",
+      "expected_result_if_not_reproduced": "600",
+      "allocations": 1200,
+      "captures": 3
+    },
+    "promotable": false
+  },
+  "dirmiss_diagnostic": {
+    "id": "dirmiss-post-symname",
+    "form": "(intern-renderer-missing)",
+    "expected_scratch_name": "intern-renderer-missing",
+    "captures": 3,
+    "promotable": false
+  },
+  "dependency_policy": {
+    "feature_rows_precede_gc": true,
+    "row_local_red_stops_only_dependents": true,
+    "independent_rows_continue_while_machine_is_live_and_defined": true,
+    "terminal_for_session": [
+      "red-fail-closed-frame",
+      "crash",
+      "undefined-machine-state"
+    ],
+    "operator_actions": [
+      "one physical RUN/STOP press"
+    ],
+    "no_per_row_approval": true,
+    "controlled_deployments": 3,
+    "physical_device_sessions": 1
+  },
+  "claim_limit": "Host-side session contract only. No Link-80 hardware, GC, math-unit or DIRMISS claim exists until the bundled session is completed."
+}

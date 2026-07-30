@@ -14,8 +14,8 @@
 #endif
 #endif
 
-/* Installiert Primitive in die Funktions-Zellen ihrer Symbole + Konstanten (t).
- * Muss vor dem ersten eval() aufgerufen werden. */
+/* Installs the primitives into the function cells of their symbols, plus the constants (t).
+ * Must be called before the first eval(). */
 void eval_init(void);
 
 /* Canonical t object published by eval_init. Product paths compare against
@@ -33,11 +33,11 @@ int8_t eval_v2_native_function_view(obj sym, uint8_t *kind, uint8_t *value);
 /* Wertet eine Form im globalen Environment aus (Lisp-2). */
 obj eval(obj e);
 
-/* Loader-Hook: liest alle Top-Level-Formen aus dem NUL-terminierten Quelltext und
- * wertet jede im globalen Environment aus. So wird das Prelude (eingebettet ODER von
- * Datei geladen) in den laufenden Kern eingespeist. */
+/* Loader hook: reads every toplevel form from the NUL-terminated source text and evaluates
+ * each in the global environment. This is how the prelude (embedded OR loaded from a file)
+ * is fed into the running core. */
 void load_source(const char *src);
-/* Wie load_source, aber Form fuer Form aus einem Fetch-Stream (Disk-Load: Datei im EXT-RAM). */
+/* Like load_source, but form by form from a fetch stream (disk load: the file lives in EXT RAM). */
 void load_source_stream(char (*fetch)(void));
 
 #ifdef LISP65_V2_WORKBENCH_SERVICES

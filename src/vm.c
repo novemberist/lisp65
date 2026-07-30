@@ -27,9 +27,9 @@
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
 #define LISP_REAL_MEM 1
 #endif
-/* Die VM-Screen-Primitive sind bewusst separat vom nativen Screen-Ausgabetreiber
- * gegatet: Core braucht scr_init/scr_putc fuer eine HW-sichere REPL, aber nicht
- * die rendernden Bytecode-Primitive. */
+/* The VM screen primitives are deliberately gated separately from the native screen
+ * output driver: the core needs scr_init/scr_putc for a hardware-safe REPL, but not
+ * the rendering bytecode primitives. */
 #ifdef LISP65_VM_SCREEN_PRIMS
 #include "screen.h"
 #endif
@@ -79,51 +79,52 @@ static uint8_t vm_diag_valid = 0;
 #endif
 
 #ifndef VM_CODEBUF
-#define VM_CODEBUF 128   /* hot-Puffer fuer das aktuell ausgefuehrte Code-Objekt; groesstes
-                          * Stdlib-Objekt = 114 B -> Fast-Path ohne Windowing; groessere
-                          * Objekte laufen korrekt ueber das Fenster (getestet ab 16 B). */
+#define VM_CODEBUF 128   /* hot buffer for the code object currently executing; the largest
+                          * stdlib object is 114 B -> fast path without windowing; larger
+                          * objects run correctly through the window (tested from 16 B up). */
 #endif
-/* EIN hot-Puffer. Geschachtelte vm_run-Laeufe (CALL/CALLPRIM-Bruecke) ueberschreiben ihn;
- * der Aufrufer laedt Header+littab nach der Rueckkehr per Bulk-DMA neu (Reload-on-return).
- * (Ein frueherer Tiefen-Paritaets-Doppelpuffer sparte diese Reloads, war aber fuer eine auf
- * HW widerlegte DMA-Hypothese motiviert; im engen Bank-0-Budget sind die 128 B mehr wert als
- * die eingesparten seichten Header-Reloads. Reload-DMA ist HW-bewiesen unkritisch.) */
+/* ONE hot buffer. Nested vm_run runs (the CALL/CALLPRIM bridge) overwrite it; after the
+ * return the caller reloads header+littab by bulk DMA (reload-on-return).
+ * (An earlier depth-parity double buffer saved those reloads, but it was motivated by a DMA
+ * hypothesis that hardware refuted; in the tight bank-0 budget the 128 B are worth more than
+ * the saved shallow header reloads. Reload DMA is proven uncritical on hardware.) */
 static uint8_t vm_codebuf[VM_CODEBUF];
-/* BESITZER-TAG (2026-07-03): welches Codeobjekt liegt im Puffer? Nach einem Call laedt
- * der Aufrufer NUR neu, wenn ein anderes Objekt den Puffer benutzt hat. Leaf-Calls zu
- * C-Prims (screen-*, car, ...) beruehren ihn nie -> Reload entfaellt komplett. Gemessen
- * am Geraet: 2405 Code-DMAs je Editor-Taste (~1 s) — der Grossteil davon unnoetig. */
+/* OWNER TAG (2026-07-03): which code object is in the buffer? After a call the caller
+ * reloads ONLY if another object used the buffer. Leaf calls into C prims (screen-*, car,
+ * ...) never touch it -> the reload disappears entirely. Measured on the device:
+ * 2405 code DMAs per editor keystroke (~1 s) — most of them unnecessary. */
 static uint8_t  vm_buf_bank = 0xFF;
 static uint16_t vm_buf_off  = 0xFFFF;
 
 #if defined(VM_STEP_LIMIT) || defined(LISP65_DMA_PROF)
-/* Minimal-Capture beim Watchdog/Fehler (Diagnose ohne das schwere LISP65_VM_DIAGNOSTICS-
- * Modul): pc/op = klemmende Stelle, bank/off = Code-Objekt (Funktion via Manifest). */
-volatile uint16_t vm_dbg_pc = 0, vm_dbg_off = 0;   /* volatile: LTO strippt Nur-Schreiber */
+/* Minimal capture on watchdog/error (diagnosis without the heavy LISP65_VM_DIAGNOSTICS
+ * module): pc/op = the stuck location, bank/off = code object (function via the manifest). */
+volatile uint16_t vm_dbg_pc = 0, vm_dbg_off = 0;   /* volatile: LTO strips write-only objects */
 volatile uint8_t  vm_dbg_op = 0, vm_dbg_bank = 0;
 #endif
 
-/* Code-Directory: Symbol -> Code-Ort (bank/offset/len im erw. RAM). */
+/* Code directory: symbol -> code location (bank/offset/len in extended RAM). */
 #ifndef VM_DIR_MAX
 #define VM_DIR_MAX 128
 #endif
 #if defined(LISP65_VM_DIAGNOSTICS) && !defined(LISP65_C2_PRODUCT_CUT)
-static obj      dir_sym[VM_DIR_MAX];   /* nur Diagnose (vm_pending_fn); Aufloesung: s. dir_find */
+static obj      dir_sym[VM_DIR_MAX];   /* diagnosis only (vm_pending_fn); resolution: see dir_find */
 #endif
 #ifndef LISP65_C2_PRODUCT_CUT
-/* Bank-0-Footprint komprimiert (2026-07-04, Hebel-C-Spike): das Code-Blob liegt komplett in
- * EINER EXT-Bank (~20 KB < 64 KB) -> Bank als Einzelwert statt Array (-238 B). Und jedes
- * Code-Objekt ist <= 255 B (real max 234) -> dir_len als uint8_t (-238 B). Netto ~476 B .bss
- * gespart OHNE Hot-Path-DMA/Cache (die riskante EXT-Verlagerung entfaellt). Guards in
- * vm_dir_add fangen einen mehrbankigen ODER >255-B-Blob laut ab (statt stiller Trunkierung). */
+/* Bank-0 footprint compressed (2026-07-04, lever-C spike): the code blob lives entirely in
+ * ONE EXT bank (~20 KB < 64 KB) -> the bank becomes a single value instead of an array (-238 B).
+ * And every code object is <= 255 B (real max 234) -> dir_len as uint8_t (-238 B). Net saving
+ * ~476 B of .bss WITHOUT hot-path DMA or cache (the risky EXT relocation is unnecessary).
+ * Guards in vm_dir_add reject a multi-bank OR >255-byte blob loudly (instead of truncating
+ * silently). */
 static uint8_t  dir_bank0 = 0;
-/* dir_off SPARSE (2026-07-04, LOAD-Budget): das Blob ist kontinuierlich (off[i] = sum(len[0..i-1]),
- * manifest-verifiziert), also nur JEDES 8. Offset speichern + <=7 dir_len-Summen/Call
- * rekonstruieren (Bank-0-Arithmetik, KEIN DMA/Cache) -> ~-430 B .bss. Guard in vm_dir_add
- * faengt einen nicht-kontinuierlichen Blob laut ab (statt stiller Fehl-Adressierung). */
+/* dir_off SPARSE (2026-07-04, LOAD budget): the blob is contiguous (off[i] = sum(len[0..i-1]),
+ * manifest-verified), so store only EVERY 8th offset and reconstruct with <=7 dir_len sums per
+ * call (bank-0 arithmetic, NO DMA or cache) -> about -430 B of .bss. A guard in vm_dir_add
+ * rejects a non-contiguous blob loudly (instead of mis-addressing silently). */
 static uint16_t dir_off_base[(VM_DIR_MAX + 7) / 8];
 static uint8_t  dir_len[VM_DIR_MAX];
-static uint16_t dir_n = 0;   /* uint16: VM_DIR_MAX darf ueber 255 (229 Objekte seit IDE-Dirty-Lines) */
+static uint16_t dir_n = 0;   /* uint16: VM_DIR_MAX may exceed 255 (229 objects since IDE dirty lines) */
 
 /* dir_off[di] rekonstruieren: 8er-Block-Basis + Summe der dir_len bis di. */
 static uint16_t dir_off_get(uint16_t di) {
@@ -157,27 +158,27 @@ int  vm_dir_add(obj sym, uint8_t bank, uint16_t off, uint16_t len) {
     if ((dir_n & 7u) == 0) dir_off_base[dir_n >> 3] = off;   /* Block-Start: Offset speichern */
     else if (off != dir_off_get(dir_n)) {
 #if defined(LISP65_DISK_LIBS) || defined(LISP65_COMPILE_REPL)
-        /* Basis-Versatz (neue Code-Quelle: Disk-Lib hinter Trailer, Compiled-Fn-Region, ...): statt
-         * hart zu scheitern auf die naechste 8er-Grenze padden -> der Eintrag wird Block-Start, seine
-         * Basis wird GESPEICHERT, die sparse dir_off-Rekonstruktion bleibt exakt. Padded nur beim
-         * tatsaechlichen Quellen-Wechsel (nicht pro Eintrag); ersetzt das manuelle vm_dir_align8 der
-         * Aufrufer als Wurzel-Fix (docs/bank0-full-suite-strategy.md §5-K1). Innerhalb einer Quelle
-         * bleibt Kontinuitaet Pflicht (append-only-Writes garantieren sie). Gegatet: im Default-Profil
-         * (nur Stdlib-Blob, keine zweite Quelle) bleibt der harte Guard budgetneutral. */
+        /* Base offset (a new code source: disk library behind the trailer, compiled-fn region, ...):
+         * instead of failing hard, pad to the next multiple of 8 -> the entry becomes a block start,
+         * its base is STORED, and the sparse dir_off reconstruction stays exact. Padding happens only
+         * on an actual source change (not per entry); it replaces the callers' manual vm_dir_align8 as
+         * the root fix (docs/bank0-full-suite-strategy.md §5-K1). Within one source contiguity remains
+         * mandatory (append-only writes guarantee it). Gated: in the default profile (stdlib blob only,
+         * no second source) the hard guard stays budget-neutral. */
         vm_dir_align8();
         if (dir_n >= VM_DIR_MAX) return -1;
         dir_off_base[dir_n >> 3] = off;
 #else
-        return -1;           /* Kontinuitaets-Guard: Blob muss contig sein (keine zweite Code-Quelle) */
+        return -1;           /* contiguity guard: the blob must be contiguous (no second code source) */
 #endif
     }
     dir_len[dir_n] = (uint8_t)len;
     return (int)dir_n++;
 }
-/* Fuer Disk-Bytecode-Libs (docs/disk-bytecode-libs-design.md): dir_n auf die naechste 8er-Block-
- * Grenze padden (Dummy-len-0-Eintraege, nie ueber ein Symbol erreichbar) -> eine geladene Lib
- * beginnt als EIGENER Block, damit die sparse dir_off-Rekonstruktion stimmt (die Lib-Basis ist
- * NICHT das Stdlib-Kontinuum; ihre Block-Basis wird vom ersten Lib-Eintrag gesetzt). */
+/* For disk bytecode libraries (docs/disk-bytecode-libs-design.md): pad dir_n to the next 8-entry
+ * block boundary (dummy len-0 entries, never reachable through a symbol) -> a loaded library starts
+ * as its OWN block, so the sparse dir_off reconstruction stays correct (the library base is NOT
+ * part of the stdlib continuum; its block base is set by the first library entry). */
 void
 #ifdef LISP65_LCC_INSTALL
 __attribute__((noinline))
@@ -350,8 +351,8 @@ obj vm_dirmiss_detail(obj detail) {
     return detail;
 }
 
-/* Bridge VM -> Tree-Walker (K3): setzt eval.c für CALL-Fehltreffer (Symbol nicht kompiliert).
- * NULL = keine Bridge (Fehltreffer -> VM_DIRMISS). */
+/* Bridge VM -> tree walker (K3): set by eval.c for CALL misses (symbol not compiled).
+ * NULL = no bridge (a miss becomes VM_DIRMISS). */
 #ifndef LISP65_V2_CARRIER_CUT
 obj (*vm_treewalk_call)(obj sym, const obj *args, uint8_t n) = 0;
 
@@ -434,16 +435,16 @@ static obj vm_op_closure(obj sym, uint8_t nuv, uint16_t stack_base) {
 }
 #endif
 
-/* VM-natives apply (M7): fn (Symbol oder BCODE-Immediate) -> Directory-Index -> vm_run_dir. In der
- * compile-repl-Welt sind ALLE Funktionen Bytecode (keine Closures), also braucht es keinen Treewalk.
- * arglist (cons-Liste) -> argv[] OHNE Allokation, damit die Liste bis vm_run gueltig bleibt (gleiche
- * Invariante wie der alte funcall-Pfad: kein alloc zwischen Listenaufbau und Lauf).
- * Fallback auf den Treewalk-Hook, SOLANGE er existiert (M6: Closures/Primitive-per-Symbol); ohne ihn
- * (M7) sauberer VM_TYPEERROR fuer nicht-aufrufbare fn -- NIE VM_BADOPCODE (Codex-Minimalvertrag).
- * Unter LISP65_COMPILE_REPL oder der neutralen Runtime-Capability
- * LISP65_VM_NATIVE_APPLY kompiliert; das Workbench-Default bleibt unveraendert. */
+/* VM-native apply (M7): fn (a symbol or a BCODE immediate) -> directory index -> vm_run_dir. In the
+ * compile-repl world ALL functions are bytecode (no closures), so no tree walk is needed.
+ * arglist (a cons list) -> argv[] WITHOUT allocating, so the list stays valid until vm_run (same
+ * invariant as the old funcall path: no alloc between building the list and running).
+ * Falls back to the tree-walk hook AS LONG AS it exists (M6: closures / per-symbol primitives);
+ * without it (M7) a clean VM_TYPEERROR for a non-callable fn -- NEVER VM_BADOPCODE (the minimal
+ * contract agreed with Codex). Compiled under LISP65_COMPILE_REPL or the neutral runtime capability
+ * LISP65_VM_NATIVE_APPLY; the workbench default is unchanged. */
 #if defined(LISP65_COMPILE_REPL) || defined(LISP65_VM_NATIVE_APPLY)
-static obj vm_fixbinop(uint8_t op, obj a, obj b);        /* Definitionen weiter unten */
+static obj vm_fixbinop(uint8_t op, obj a, obj b);        /* definitions further below */
 static obj vm_callprim(uint8_t pid, obj *a, uint8_t n);
 #ifndef VM_APPLY_MAXARGS
 #ifdef LISP65_VM_NATIVE_APPLY
@@ -653,9 +654,9 @@ static int vm_apply_primitive(obj sym, obj *argv, uint8_t na, obj *out) {
     return 0;
 }
 
-/* Gemeinsamer array-basierter Native-Call-Pfad. vm_native_apply ist nur der
- * Listenadapter; CALLPRIM apply/funcall koennen bereits flache Argumente ohne
- * temporaere Cons-Liste direkt uebergeben. */
+/* Shared array-based native call path. vm_native_apply is only the list adapter;
+ * CALLPRIM apply/funcall can already pass flat arguments directly, without a
+ * temporary cons list. */
 #ifdef LISP65_V2_CARRIER_CUT
 static obj vm_native_call(obj fn, obj *argv, uint8_t na) {
     obj result = NIL;
@@ -1567,12 +1568,12 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #endif
     base = gc_rootsp;
     vb = base;
-    HB(1); LA(4);   /* D: vm_run-Entry */
+    HB(1); LA(4);   /* D: vm_run entry */
 
-    /* Objekt laden + Header/Fenster einrichten (auch fuer TAILCALL).
-     * Layout im Puffer: [Header+littab | Payload-Fenster]. Der Payload streamt inkrementell:
-     * nur min(len, VM_CODEBUF) Bytes werden initial geladen; groessere Objekte laden ihr Payload
-     * fensterweise per Bulk-DMA nach (WIN_ENSURE), waehrend Header+littab resident bleiben. */
+    /* Load the object and set up header/window (also for TAILCALL).
+     * Buffer layout: [header+littab | payload window]. The payload streams incrementally: only
+     * min(len, VM_CODEBUF) bytes are loaded initially; larger objects reload their payload window
+     * by window via bulk DMA (WIN_ENSURE), while header+littab stay resident. */
 #define OBJ_SETUP() do { \
         uint16_t l0_ = (len < VM_CODEBUF) ? len : VM_CODEBUF; \
         if (!vm_object_load(bank, off, 0, l0_, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
@@ -1598,15 +1599,15 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         LA(3); /* C: OBJ_SETUP fertig */ \
     } while (0)
 
-    /* Nach einem geschachtelten Aufruf (CALL/CALLPRIM ueberschrieb Puffer UND die
-     * vmr_*-Globals!): Header+littab nachladen, ALLE Header-Ableitungen reparsen und das
-     * Payload-Fenster am Resume-pc erzwingen. pcur_ MUSS der Aufrufer VOR dem Nested-Call
-     * gesichert haben (die Fenster-Globals gehoeren nach der Rueckkehr dem Callee).
-     * Trigger unveraendert Owner-Tag; Match = Callee war dieselbe Fn im selben Fenster,
-     * dann stimmen auch die Globals (deterministische Header-Ableitung). */
+    /* After a nested call (CALL/CALLPRIM overwrote the buffer AND the vmr_* globals!):
+     * reload header+littab, re-parse ALL header derivations and force the payload window at the
+     * resume pc. The caller MUST have saved pcur_ BEFORE the nested call (after the return the
+     * window globals belong to the callee).
+     * The trigger is still the owner tag; a match means the callee was the same fn in the same
+     * window, in which case the globals are correct too (header derivation is deterministic). */
 #define BUF_ENSURE_MINE(pcur_) do { \
         if (vm_buf_bank != bank || vm_buf_off != off) { \
-            /* fremde Fn resident: Header laden + ALLE Ableitungen reparsen */ \
+            /* a foreign fn is resident: load the header and re-parse ALL derivations */ \
             if (!vm_object_load(bank, off, 0, (uint16_t)CO_OFF_LITTAB, cbuf)) { vm_status = VM_BADOPCODE; goto done; } \
             nargs   = cbuf[CO_OFF_NARGS]; \
             nlocals = cbuf[CO_OFF_NLOCS]; \
@@ -1846,8 +1847,9 @@ relative_branch: {
             PUSH((IS_PTR(u) && cell_type(u) == T_CONS) ? cell_a(u) : NIL);
             break;
         }
-        case OP_CLOSURE: {   /* Closure bauen (schwere Schleife+alloc -> vm_op_closure, spart Switch-Bloat).
-                              * littab[li] = Helfer (Symbol ODER BCODE-Immediate: lcc-Self-Hosting, kein __L-Leck). */
+        case OP_CLOSURE: {   /* Build a closure (heavy loop + alloc -> vm_op_closure, avoids switch bloat).
+                              * littab[li] = the helper (a symbol OR a BCODE immediate: lcc self-hosting,
+                              * no __L leak). */
             uint8_t li = RD8(), nuv = RD8();
             obj detail = vm_op_closure(LIT(li), nuv, vb);
             if (vm_status != VM_OK) { r = detail; goto done; }
@@ -1867,8 +1869,8 @@ relative_branch: {
 
 done:
 #ifdef LISP65_DMA_PROF
-    /* Diagnose-Naht: Fehlerort auch OHNE das schwere Diagnostics-Modul festhalten
-     * (Bank/Offset + Fenster-PC + Opcode -> Funktion via Manifest/Disasm). */
+    /* Diagnostic seam: record the error location even WITHOUT the heavy diagnostics module
+     * (bank/offset + window pc + opcode -> function via the manifest/disassembly). */
     if (vm_status != VM_OK && vm_status != VM_HALT && vm_dbg_pc == 0) {
         vm_dbg_pc = (uint16_t)(win + (uint16_t)(ip - code));
         vm_dbg_op = op; vm_dbg_bank = bank; vm_dbg_off = off;

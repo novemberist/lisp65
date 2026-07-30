@@ -1,17 +1,17 @@
-/* lisp65 — Datei-Eingabe-Naht (Lane K)
- * Plattform-Backend für `load`: öffnet eine Quelldatei und liefert ihren Inhalt als
- * NUL-terminierten String. Hält load_source plattformunabhängig.
+/* lisp65 — file input seam (lane K)
+ * Platform backend for `load`: opens a source file and returns its content as a
+ * NUL-terminated string. Keeps load_source platform-independent.
  */
 #ifndef LISP65_IO_H
 #define LISP65_IO_H
 
-/* Liest die ganze Datei <name> in einen internen NUL-terminierten Puffer und gibt ihn
- * zurück, oder NULL bei Fehler (Open/Read). Die Puffergröße IO_BUF_MAX begrenzt die
- * Dateigröße. NICHT reentrant (ein statischer Puffer) -> kein verschachteltes load. */
+/* Reads the whole file <name> into an internal NUL-terminated buffer and returns it,
+ * or NULL on error (open/read). The buffer size IO_BUF_MAX bounds the file size.
+ * NOT reentrant (one static buffer) -> no nested load. */
 const char *io_load_file(const char *name);
 
-/* Regel-B-Disk-Primitive (nur MEGA65_F011_LOAD; s. docs/load-rule-b-design.md). Bytecode-Lisp
- * treibt die 1581-Logik ueber diese; io.c haelt nur F011-Read + einen Bank-0-Puffer. */
+/* Rule-B disk primitives (MEGA65_F011_LOAD only; see docs/load-rule-b-design.md). Bytecode Lisp
+ * drives the 1581 logic through these; io.c holds only the F011 read plus one bank-0 buffer. */
 unsigned char io_disk_read_sector(unsigned char track, unsigned char sector);
 unsigned char io_disk_byte(unsigned char i);
 /* D68B..D68F remains a private token of the guarded write capability. */
@@ -23,12 +23,12 @@ unsigned char io_disk_load_chain(unsigned char track, unsigned char sector);
 #ifdef LISP65_C2_PRODUCT_CUT
 unsigned int io_disk_stage_chain(unsigned char track, unsigned char sector);
 #endif
-/* Boot-Ladeanzeige (S5): Reader-Fortschritt durch die Disk-Quelle in Promille (0..1000). */
+/* Boot progress (S5): the reader's progress through the disk source, in per mille (0..1000). */
 unsigned int io_disk_load_permille(void);
-/* Eine bereits nach DISK_EXT_FILE gestagete Quelle (len Bytes) kompilieren (Test/Boot ohne F011-Read). */
+/* Compile a source already staged into DISK_EXT_FILE (len bytes) (test/boot without an F011 read). */
 unsigned char io_disk_load_staged(unsigned int len);
-/* S5-Boot: 1581-Directory (ab Track 40) nach `name` durchsuchen + laden+kompilieren (C-Dir-Lookup).
- * 1=gefunden+geladen, 0=nicht gefunden. */
+/* S5 boot: search the 1581 directory (from track 40) for `name`, then load and compile it
+ * (the C-side directory lookup). 1=found and loaded, 0=not found. */
 unsigned char io_disk_load_named(const char *name);
 
 #ifdef LISP65_DISK_LIBS
@@ -40,9 +40,9 @@ unsigned char io_disk_load_lib(unsigned char track, unsigned char sector);
 /* Load a verified L65M container from the reset-persistent 1.1 Attic shelf. */
 unsigned char io_attic_load_lib(obj name);
 #endif
-/* Lib-Registrierung ab bereits gestageter Datei (Test-Naht: xemu ohne F011). */
+/* Library registration from an already staged file (test seam: xemu has no F011). */
 unsigned char io_disk_lib_staged(unsigned int n);
-l65m_status io_disk_lib_status(void);       /* letzter stabile L65M-Status */
+l65m_status io_disk_lib_status(void);       /* the last stable L65M status */
 #ifdef LISP65_C1_COMPILER_TIER
 /* Private C1 lifetime binding. No new resident record: the temporary compiler
  * consumes the exact preflight plan of the most recent shelf load. */
@@ -65,21 +65,22 @@ unsigned char io_disk_write_sector(unsigned char track, unsigned char sector);
 void io_disk_transaction_capture_mount_token(void);
 unsigned char io_disk_transaction_classify_status(unsigned char status);
 unsigned char io_disk_write_sector_guarded(unsigned char track, unsigned char sector);
-/* SAVE-Datei-Ebene (MVP Overwrite-in-place): Quelltext byteweise in den EXT-Datei-Puffer
- * stagen (0 = Deckel), dann als BESTEHENDE Datei `name` schreiben (Kette/Endmarke bleiben,
- * Rest = Leerzeichen-Padding; jeder Sektor RMW + Verify). 1 = komplett verifiziert auf Disk. */
+/* SAVE file level (MVP overwrite-in-place): stage the source text byte by byte into the EXT file
+ * buffer (0 = cap), then write it to the EXISTING file `name` (chain and end marker stay, the
+ * remainder is space padding; every sector RMW + verify). 1 = fully verified on disk. */
 unsigned char io_disk_stage_put(unsigned int i, unsigned char v);
 unsigned char io_disk_save_named(const char *name, unsigned int len);
 #ifdef LISP65_FASL
-/* FASL-B2 (docs/device-fasl-design.md): Datei-Fenster-Bereich [base..base+len) des
- * EXT-Puffers als BESTEHENDE Datei schreiben (Overwrite-in-place wie save). FASL-only;
- * Workbench (compile-string) nutzt io_disk_save_named (base=0) via %save-staged. */
+/* FASL-B2 (docs/device-fasl-design.md): write the file-window range [base..base+len) of the
+ * EXT buffer to the EXISTING file (overwrite-in-place, as save does). FASL only; the workbench
+ * (compile-string) uses io_disk_save_named (base=0) via %save-staged. */
 unsigned char io_disk_save_range(const char *name, unsigned int base, unsigned int len);
-/* Quelle `name` in den Datei-Puffer stagen (Deckel 0x2000 — der Rest des Fixnum-Fensters gehoert der
- * Fasl-Ausgabe, s. lib/lcc-fasl.lisp) + Stream-Reader initialisieren. Bytes oder 0. */
+/* Stage the source `name` into the file buffer (cap 0x2000 — the rest of the fixnum window belongs
+ * to the FASL output, see lib/lcc-fasl.lisp) and initialise the stream reader. Bytes or 0. */
 unsigned int  io_fasl_open_source(const char *name);
-/* Dir-Lookup-Export (B3-Selftest laedt die Fasl C-seitig: find + io_disk_load_lib —
- * die Lisp-load-lib-Kette passt (noch) nicht ins Symbol-Budget des fasl-Profils). */
+/* Directory lookup export (the B3 selftest loads the FASL from the C side: find +
+ * io_disk_load_lib — the Lisp load-lib chain does not (yet) fit the FASL profile's
+ * symbol budget). */
 unsigned char io_fasl_find(const char *name, unsigned char *t, unsigned char *s);
 #endif
 #endif

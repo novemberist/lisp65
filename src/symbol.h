@@ -23,13 +23,13 @@ void    set_sym_value(obj s, obj v);
 uint8_t sym_boundp(obj s);          /* 1, wenn die Wert-Zelle gesetzt wurde */
 obj  sym_function(obj s);
 void set_sym_function(obj s, obj v);
-uint8_t sym_function_ptrp(obj s);    /* 1, wenn die Funktionszelle ein Heap-Objekt ist */
+uint8_t sym_function_ptrp(obj s);    /* 1 if the function cell holds a heap object */
 
-/* GC-Roots: alle internierten Symbole sind permanent. Gensyms sind GC-bare Heap-Zellen
- * (nicht hier registriert) und werden vom GC normal eingesammelt. */
+/* GC roots: every interned symbol is permanent. Gensyms are plain GC-managed heap cells
+ * (not registered here) and are collected normally. */
 uint16_t sym_count(void);
 uint16_t sym_pool_used(void);
-uint16_t sym_max(void);          /* Symbol-Cap (MAX_SYM) fuer Budget-Anzeige */
+uint16_t sym_max(void);          /* symbol cap (MAX_SYM), for the budget display */
 uint16_t sym_pool_capacity(void);
 obj      sym_nth(uint16_t i);
 

@@ -1,4 +1,4 @@
-/* lisp65 — Speicher/Allocator + GC (Lane K) */
+/* lisp65 — memory/allocator + GC (lane K) */
 #ifndef LISP65_MEM_H
 #define LISP65_MEM_H
 
@@ -32,17 +32,17 @@ uint16_t mem_free_cells(void);      /* read-only: aktuelle Freelist-Laenge      
 void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len); /* Scratch -> Bank 0, bulk */
 #endif
 
-/* ---- GC: Mark-Sweep mit präzisem Shadow-Root-Stack ----
- * Jede Funktion, die einen lebenden obj ueber eine Allokation hinweg haelt, MUSS ihn
- * pushen (GC laeuft nur in alloc). cons() schuetzt seine beiden Argumente bereits. */
+/* ---- GC: mark-sweep with a precise shadow root stack ----
+ * Every function that holds a live obj across an allocation MUST push it
+ * (GC runs only inside alloc). cons() already protects both of its arguments. */
 #ifndef GC_ROOTS
-/* 512 reicht reichlich (realer Peak <100) und gibt dem engen mega65-Bank-0 spuerbar
- * mehr Soft-Stack-Raum bis $D000. -D ueberschreibbar. */
+/* 512 is ample (the real peak is <100) and gives the tight mega65 bank 0 noticeably
+ * more soft-stack room up to $D000. Overridable with -D. */
 #define GC_ROOTS 512
 #endif
 extern obj      gc_rootstack[GC_ROOTS];
 extern uint16_t gc_rootsp;
-extern uint16_t gc_badobj;   /* Diagnose: von gc_mark verworfene korrupte objs */
+extern uint16_t gc_badobj;   /* diagnosis: corrupt objs rejected by gc_mark */
 extern uint16_t gc_runs;    /* Statistik: Anzahl gc_collect-Laeufe */
 #ifdef LISP65_GC_SCAN_PROBE
 extern uint32_t gc_symbol_scan_visits;
@@ -111,12 +111,12 @@ extern uint8_t LISP65_C2_ZP mem_oom; /* 1 = alloc lief in OOM (REPL meldet + loe
 #define GC_CAN_RESERVE(n) \
     (gc_rootsp <= GC_ROOTS && (uint16_t)(n) <= (uint16_t)(GC_ROOTS - gc_rootsp))
 
-/* Soft-Stack-Guard (F1, docs/vollprofil-stack-heap-collision.md): die C-Rekursion (vm_run-
- * Verschachtelung, compile_expr, read_expr) waechst auf dem mega65 von $D000 nach UNTEN Richtung
- * heap[]-Top. lisp_stack_low() meldet 1, sobald der aktuelle Frame den heap-Deckel + Marge erreicht
- * -> der Aufrufer bricht mit VM_STACKOVER/err ab (EHRLICHER Fehler statt stiller heap-Korruption).
- * Nur unter -DLISP65_STACK_GUARD aktiv (Default-Produkt byte-identisch). Host: heap ist ein Global
- * fern vom nativen Stack -> immer 0 (kein Fehlalarm). */
+/* Soft-stack guard (F1, docs/vollprofil-stack-heap-collision.md): the C recursion (nested vm_run,
+ * compile_expr, read_expr) grows on the mega65 DOWNWARD from $D000 towards the top of heap[].
+ * lisp_stack_low() returns 1 as soon as the current frame reaches the heap cap plus margin
+ * -> the caller aborts with VM_STACKOVER/err (an HONEST error instead of silent heap corruption).
+ * Active only under -DLISP65_STACK_GUARD (the default product stays byte-identical). Host: the heap
+ * is a global far from the native stack -> always 0 (no false alarm). */
 #ifdef LISP65_STACK_GUARD
 uint8_t lisp_stack_low(void);
 #endif
@@ -138,12 +138,12 @@ obj      str_from_charlist(obj list);                          /* Fixnum-Liste -
 uint16_t str_len(obj s);                                       /* Laenge (= FIXVAL(cell_a)) */
 uint8_t  str_byte(obj s, uint16_t i);                          /* Byte i aus der Arena */
 uint16_t str_copy_out(obj s, char *dst, uint16_t max);         /* Bytes -> C-Puffer (min(len,max)) */
-void     str_arena_freeze(void);                               /* Boot-Praefix einfrieren */
-uint16_t str_arena_used(void);                                 /* Diagnose: belegte Arena-Bytes */
-uint16_t str_arena_capacity(void);                             /* Build-Cap, read-only */
-/* Streaming-Builder (kein Festpuffer): open -> putc* -> close; zwischen open/close NICHT allozieren. */
+void     str_arena_freeze(void);                               /* freeze the boot prefix */
+uint16_t str_arena_used(void);                                 /* diagnosis: arena bytes in use */
+uint16_t str_arena_capacity(void);                             /* build cap, read-only */
+/* Streaming builder (no fixed buffer): open -> putc* -> close; do NOT allocate between open and close. */
 obj      str_open(void);
-uint8_t  str_putc(obj s, uint8_t c);                           /* 0 = Arena voll (mem_oom gesetzt) */
+uint8_t  str_putc(obj s, uint8_t c);                           /* 0 = arena full (mem_oom set) */
 obj      str_close(obj s);
 
 #ifdef LISP65_FIRST_CLASS_BUFFER

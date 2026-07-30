@@ -1,21 +1,27 @@
-; Auto-Load-Naht fuer die IDE -- RESIDENT im Kern (NICHT in der ladbaren ide-Lib!).
-; (edit) ist der residente Einstiegspunkt: er laedt die ide-Lib bei Bedarf und ruft dann Codex'
-; Launcher (ide) auf, der einen Scratch-Buffer anlegt + die Command-Loop startet.
+; IDE autoload seam -- RESIDENT in the core (NOT in the loadable ide library).
+; (edit) is the resident entry point: it loads the ide library on demand and
+; then calls Codex's launcher (ide), which creates a scratch buffer and starts
+; the command loop.
 ;
-; WARUM RESIDENT: Codex' (ide) liegt in ide-ui.lisp -> nach dem Auslagern in der ide-Lib. Ein
-; Einstieg IN der Lib kann sie nicht selbst laden (Henne-Ei). (edit) muss also im Kern bleiben.
+; WHY RESIDENT: Codex's (ide) lives in ide-ui.lisp and therefore in the
+; extracted ide library. An entry point IN the library cannot load itself.
+; (edit) must remain in the core.
 ;
-; SPAETE BINDUNG: der Bytecode-Compiler wirft KEINEN Fehler bei unbekannten Funktionsaufrufen
-; (nur "unbound variable" fuer Variablen) -> Symbol-CALL, zur Laufzeit per dir_find aufgeloest.
-; Also darf (edit) das ide-Lib-(ide) referenzieren, obwohl es erst nach (load-lib "ide") existiert.
-; Idempotenz: function-kind gibt nil bei ungebundenem Symbol -> ide-run noch nicht geladen.
+; LATE BINDING: the bytecode compiler does NOT reject calls to unknown
+; functions (only unbound variables), so it emits a symbolic CALL resolved at
+; runtime through dir_find. Thus (edit) may reference the ide library's (ide)
+; even though it exists only after (load-lib "ide"). Idempotence:
+; function-kind returns nil for an unbound symbol, meaning ide-run is not
+; loaded yet.
 ;
-; So bleibt die residente Baseline schlank; der Editor kommt on-demand als Bytecode von Disk
-; (voller Speed). Vgl. docs/library-modularization-strategy.md + docs/editor-architecture.md.
+; This keeps the resident baseline lean; the editor arrives on demand as
+; bytecode from disk at full speed. See docs/library-modularization-strategy.md
+; and docs/editor-architecture.md.
 ;
-; HANDOFF (Codex): diese Datei gehoert ins KERN-Profil (p0-stdlib-core-subset). Der Kern braucht
-; damit auch die Screen/Key-Bridges (fuer die Command-Loop) UND load-lib/function-kind (Disk).
-; ide-buffer/ide-ui wandern dagegen in die ide-Lib.
+; HANDOFF (Codex): this file belongs in the CORE profile
+; (p0-stdlib-core-subset). The core therefore also needs the screen/key
+; bridges for the command loop AND load-lib/function-kind for disk loading.
+; ide-buffer and ide-ui belong in the ide library instead.
 
 (defun ide-loaded-p ()
   (if (function-kind 'ide-run) 't nil))

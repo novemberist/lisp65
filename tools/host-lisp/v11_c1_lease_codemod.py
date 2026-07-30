@@ -80,10 +80,13 @@ def transform_eval(source: str) -> str:
 
 def transform_load_lib(source: str) -> str:
     start = source.find("(defun load-lib (name)\n")
-    end_marker = "\n\n; load-libs:"
+    end_marker = "\n(defun %load-libs-seq (names)\n"
     end = source.find(end_marker, start)
     if start < 0 or end < 0:
         raise LeaseCodemodError("foreign library retirement: function anchor missing")
+    comment_start = source.rfind("\n\n;", start, end)
+    if comment_start >= start:
+        end = comment_start
     original = source[start:end]
     if original.count("(defun load-lib (name)") != 1:
         raise LeaseCodemodError("foreign library retirement: ambiguous function")

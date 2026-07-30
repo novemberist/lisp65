@@ -665,6 +665,8 @@ include mk/runtime-core-v2-proof.mk
 .PHONY: bytecode-p0-private-inline-check workbench-private-inline-composition-probe gc-symbol-scan-timing-check ide-capacity-selftest ide-capacity-check m65d-blank-d81-oracle-selftest bytecode-p0-m65d-lib-check bytecode-p0-m65d-lib-artifacts bytecode-p0-buffer-lib-check bytecode-p0-buffer-lib-artifacts
 .PHONY: v11-repl-banner-vm-check
 .PHONY: c2-elf-truth-migration-selftest c2-elf-truth-migration-check \
+	c2-linked-format-decoder-closure-selftest \
+	c2-linked-format-decoder-closure-check \
 	post-v1.2-housekeeping-selftest post-v1.2-housekeeping-check
 all: $(M65PRG)
 
@@ -673,6 +675,12 @@ c2-elf-truth-migration-selftest:
 
 c2-elf-truth-migration-check:
 	python3 tools/host-lisp/c2_elf_truth_migration_gate.py
+
+c2-linked-format-decoder-closure-selftest:
+	python3 tools/host-lisp/c2_linked_format_decoder_closure.py --selftest
+
+c2-linked-format-decoder-closure-check: c2-linked-format-decoder-closure-selftest
+	python3 tools/host-lisp/c2_linked_format_decoder_closure.py
 
 post-v1.2-housekeeping-selftest:
 	python3 tools/host-lisp/post_12_housekeeping.py --selftest

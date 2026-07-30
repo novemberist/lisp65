@@ -3,16 +3,17 @@
 This index is the curated entry point for the live lisp65 documentation.
 Documents not linked from the first three sections are implementation records,
 machine-bound contracts, proposals, or historical material; they are not user
-instructions for release 1.2.2.
+instructions for release 1.2.3.
 
 ## Users
 
 - [User Guide](user-guide.md) — verify, boot, edit, save, and recover
 - [Dialect V2 Language Reference](language-reference.md) — released syntax and surface
-- [Release Notes 1.2.2](releases/1.2.2.md) — current diagnostic correction and evidence boundary
+- [Release Notes 1.2.3](releases/1.2.3.md) — current language, library, and evidence boundary
 - [Known Issues and Retired Exceptions](known-issues.md) — maintained product limitations
 - [Generated IDE Keymap](generated/ide-keymap.md) — authoritative 1.2 editor bindings
 - [Public Sync Log](public-sync-log.md) — curated-snapshot cadence and contribution credit
+- [Release Notes 1.2.2](releases/1.2.2.md) — historical diagnostic correction
 - [Release Notes 1.2.1](releases/1.2.1.md) — historical feature release
 - [Release Notes 1.2.0](releases/1.2.0.md) — historical C2-lite foundation release
 - [Release Notes 1.1.0](releases/1.1.0.md) — historical feature release

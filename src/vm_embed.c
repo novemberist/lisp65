@@ -28,13 +28,13 @@ _Static_assert(VM_RTOV_REQUIRED_SLOT_COUNT <= LISP65_RUNTIME_OVERLAY_HARD_MAX_SL
 #include "vm_registry_impl.inc"
 #endif
 
-/* --- Bank-5-Code-Append-Allokator (GEMEINSAM: Disk-Libs + Compiled-Fn-Region; S0 in
- * docs/bank0-full-suite-strategy.md). Beide Quellen appenden hinter dem Stdlib-Blob (DATEI-Ende
- * inkl. L65M-Trailer!) bis zum Namepool-Deckel @ 0x8000. Frueher hatte io.c einen eigenen
- * disk_lib_hw-Zeiger und die Region einen zweiten -> sie haetten sich gegenseitig ueberschrieben.
- * persist=0: nur Platz am aktuellen Ende ausgeben (transientes Ausdrucks-Main), Zeiger bleibt.
- * Rueckgabe: Offset in der Code-Bank, 0xFFFF = Region voll. Gegatet: nur Profile mit einer zweiten
- * Code-Quelle brauchen ihn (Default = budgetneutral). */
+/* --- Bank-5 code append allocator (SHARED: disk libraries + the compiled-fn region; S0 in
+ * docs/bank0-full-suite-strategy.md). Both sources append behind the stdlib blob (the FILE end,
+ * including the L65M trailer!) up to the name-pool cap @ 0x8000. Earlier io.c had its own
+ * disk_lib_hw pointer and the region had a second one -> they would have overwritten each other.
+ * persist=0: hand out space at the current end only (a transient expression main), the pointer
+ * stays. Returns an offset in the code bank; 0xFFFF = the region is full. Gated: only profiles with
+ * a second code source need it (default = budget-neutral). */
 #if defined(LISP65_DISK_LIBS) || defined(LISP65_COMPILE_REPL) || defined(LISP65_LCC_INSTALL)
 /* Regions-Deckel = Start des Bank-5-Namepools. Historisch hart 0x8000; seit dem Trailer-
  * Umzug (SYMPOOL_EXT_OFF=0xa000, b3f99b4) endet das Stdlib-IMAGE (~0x92df im Full-Profil)
@@ -116,14 +116,14 @@ uint16_t vm_ext_code_alloc(uint16_t len, uint8_t persist) {
     if (persist) ext_code_hw = (uint16_t)(at + len);
     return at;
 }
-/* Transiente Ausdrucks-Mains: ABWAERTS-Stapel vom Regions-Deckel (M4-Fund #2: lagen sie im
- * Aufwaerts-Kontinuum, riss jede Wrapper-Luecke die sparse dir_off-Rekonstruktion -> align8
- * verbrannte ~8 Dir-Slots je (lcc-run '(defun ...)) und das Directory war nach 2 Formen voll).
- * Kein Dir-Eintrag, keine Luecke, echte Freigabe nach dem Lauf, verschachtelbar (eval in
- * kompiliertem Code). Persistente Allocs pruefen die Kreuzung (oben). */
+/* Transient expression mains: a DOWNWARD stack from the region cap (M4 finding #2: when they lay
+ * in the upward continuum, every wrapper gap broke the sparse dir_off reconstruction -> align8
+ * burned about 8 directory slots per (lcc-run '(defun ...)) and the directory was full after two
+ * forms). No directory entry, no gap, real release after the run, and nestable (eval inside
+ * compiled code). Persistent allocations check for the crossing (above). */
 uint16_t vm_ext_code_alloc_transient(uint16_t len) {
     uint16_t top = ext_code_tsp ? ext_code_tsp : VM_EXT_CODE_LIMIT, at;
-    if (!ext_code_init) vm_ext_code_alloc(0, 0);             /* Watermark lazy initialisieren */
+    if (!ext_code_init) vm_ext_code_alloc(0, 0);             /* initialise the watermark lazily */
     if (len > top || (at = (uint16_t)(top - len)) < ext_code_hw) return 0xFFFF;
     ext_code_tsp = at;
     return at;
@@ -167,7 +167,7 @@ void vm_directory_only_test_reclaim_boot_metadata(void) {
 #endif
 #endif /* LISP65_DISK_LIBS || LISP65_COMPILE_REPL */
 
-/* BOOTFN unabhaengig vom Metadata-Modus definieren (vm_load_embedded_stdlib nutzt es immer). */
+/* Define BOOTFN independently of the metadata mode (vm_load_embedded_stdlib always uses it). */
 #ifdef LISP65_STDLIB_BOOT_OVERLAY_CODE
 #define BOOTFN __attribute__((section(".lisp65_boot"), noinline, used))
 #else
@@ -182,10 +182,10 @@ void vm_directory_only_test_reclaim_boot_metadata(void) {
 #define LITKEEPFN BOOTFN
 #endif
 
-/* Heap-Literale (String/Liste/Cons) PERMANENT verankern: an die Wertzelle des Halte-Symbols
- * %lit-keep (symval = echter GC-Root). GC_PUSH war FALSCH-permanent: der Rootstack wird von
- * apply/repl zurückgesetzt — bei on-demand-Lib-Loads (im eval-Frame!) verloren die Literale
- * SOFORT ihre Wurzel -> GC recycelte sie -> "vm: type error" in (ide) (B4-Handtest-Fund). */
+/* Anchor heap literals (string/list/cons) PERMANENTLY: to the value cell of the holding symbol
+ * %lit-keep (symval = a real GC root). GC_PUSH was WRONGLY permanent: apply/repl reset the root
+ * stack — on on-demand library loads (inside the eval frame!) the literals lost their root
+ * IMMEDIATELY -> the GC recycled them -> "vm: type error" in (ide) (B4 hand-test finding). */
 #ifndef LISP65_PROFILED_BOOT_FASTPATH
 static LITKEEPFN void vm_lit_keep(obj o) {
 #ifdef LISP65_RUNTIME_OVERLAY
@@ -263,20 +263,20 @@ static void vm_resolve_littab_symbols(void) {
         const lisp65_bc_literal_patch *p = &lisp65_bytecode_stdlib_literal_patches[k];
         obj o = vm_lit_node(p->node);
         unsigned char w[2];
-        /* Nicht-Symbol-Heap-Literale (String/Liste/Cons) sind nur vom erw. RAM referenziert (GC-blind)
-         * -> permanent rooten. Symbole sind interniert, Immediates brauchen nichts. */
-        vm_lit_keep(o);   /* permanent via Halte-Symbol (NICHT Rootstack!) */
+        /* Non-symbol heap literals (string/list/cons) are referenced only from extended RAM
+         * (GC-blind) -> root them permanently. Symbols are interned; immediates need nothing. */
+        vm_lit_keep(o);   /* permanent, via the holding symbol (NOT the root stack!) */
         w[0] = (unsigned char)(uint16_t)o; w[1] = (unsigned char)((uint16_t)o >> 8);
         vm_ext_write(w, 2, lisp65_stdlib_bank, (uint16_t)(lisp65_stdlib_off + p->blob_offset));
     }
 }
 #else
-static void vm_resolve_littab_symbols(void) { /* keine Metadaten (Mock-Test): No-op */ }
+static void vm_resolve_littab_symbols(void) { /* no metadata (mock test): a no-op */ }
 #endif
 
-/* md_lit_node ist normal BOOTFN (nur der Boot materialisiert Stdlib-Literale). Mit Disk-Libs
- * (Stufe 2) ruft es AUCH der residente Runtime-Lib-Loader nach dem Boot -> dann darf es NICHT im
- * recycelten Boot-Overlay liegen (s. docs/disk-bytecode-libs-design.md, Knackpunkt BOOTFN). */
+/* md_lit_node is normally BOOTFN (only the boot materialises stdlib literals). With disk libraries
+ * (stage 2) the resident runtime library loader ALSO calls it after the boot -> then it must NOT
+ * live in the recycled boot overlay (see docs/disk-bytecode-libs-design.md, the BOOTFN crux). */
 #if defined(LISP65_DISK_LIBS) && !defined(LISP65_RUNTIME_OVERLAY)
 #define MDLITFN
 #define MDHELPFN
@@ -286,23 +286,24 @@ static void vm_resolve_littab_symbols(void) { /* keine Metadaten (Mock-Test): No
 #endif
 
 #ifdef LISP65_STDLIB_EXT_METADATA
-/* BOOT-ONLY-CODE ins Boot-Overlay (2026-07-02): der komplette Trailer-Loader laeuft genau
- * einmal (vor der REPL, Stack noch flach) — im Overlay hinter .noinit kostet er nach dem
- * Boot KEIN Bank-0-Budget (der Bereich gehoert dann dem Soft-Stack). Setzt das gehaertete
- * Overlay-Linkerscript voraus (scripts/lisp65-mega65-boot-overlay.ld); das PRG-File-Ende
- * bleibt unter der $C000-etherload-Grenze (Footprint-Gate). noinline: LTO darf Overlay-
- * Code NICHT in residente Aufrufer ziehen. */
+/* BOOT-ONLY CODE into the boot overlay (2026-07-02): the complete trailer loader runs exactly
+ * once (before the REPL, while the stack is still shallow) — in the overlay behind .noinit it
+ * costs NO bank-0 budget after the boot (the area then belongs to the soft stack). This requires
+ * the hardened overlay linker script (scripts/lisp65-mega65-boot-overlay.ld); the PRG file end
+ * stays below the $C000 etherload boundary (footprint gate). noinline: LTO must NOT pull overlay
+ * code into resident callers. */
 #ifndef LISP65_PROFILED_BOOT_FASTPATH
-/* --- L65M-Trailer-Loader (Option a): Boot-Metadaten direkt aus dem erw. RAM lesen. ---
- * Der `.ext.bin`-Preload legt hinter das Code-Blob einen pointerfreien little-endian-Trailer
- * (Vertrag: tools/host-lisp/bytecode_p0_stdlib.py, _build_ext_metadata): Header 38 B
- * (Magic "L65M", Version 1, Zaehler + Sektions-Offsets relativ zum Trailer-Start), dann
+/* --- L65M trailer loader (option a): read the boot metadata straight from extended RAM. ---
+ * The `.ext.bin` preload places a pointer-free little-endian trailer behind the code blob
+ * (contract: tools/host-lisp/bytecode_p0_stdlib.py, _build_ext_metadata): a 38-byte header
+ * (magic "L65M", version 1, counters and section offsets relative to the trailer start), then
  * entries (8 B: name_off u16, bank u8, 0, off u16, len u16), literal_index (u16),
  * literal_nodes (10 B: kind u8, 0, value i16, first u16, count u16, name_off u16),
- * literal_patches (4 B: blob_offset u16, node u16), strings (NUL-terminiert; 0xFFFF = kein Name).
- * Damit traegt das PRG weder Embed-Tabelle noch littab-Metadaten -> kein Boot-Overlay,
- * kein $C000-File-Problem, Heap-Budget frei. Alles kalter Boot-Pfad: viele kleine DMA-Reads ok. */
-#include "stdlib-p0.h"   /* LISP65_BC_LIT_*-Kind-Codes (ungegated im generierten Header) */
+ * literal_patches (4 B: blob_offset u16, node u16), strings (NUL-terminated; 0xFFFF = no name).
+ * The PRG therefore carries neither an embed table nor littab metadata -> no boot overlay, no
+ * $C000 file problem, and the heap budget stays free. All of it is the cold boot path, so many
+ * small DMA reads are fine. */
+#include "stdlib-p0.h"   /* LISP65_BC_LIT_* kind codes (ungated in the generated header) */
 
 #define MD_NAME_MAX LISP65_SYMBOL_NAME_BUFFER
 
@@ -433,7 +434,7 @@ static BOOTFN void vm_load_ext_metadata(void) {
         uint8_t pb[4]; obj o; unsigned char w[2];
         md_read((uint16_t)(patches_off + k * 4u), pb, 4);
         o = md_lit_node(md_u16(pb + 2));
-        vm_lit_keep(o);   /* permanent via Halte-Symbol (NICHT Rootstack!) */
+        vm_lit_keep(o);   /* permanent, via the holding symbol (NOT the root stack!) */
         w[0] = (unsigned char)(uint16_t)o; w[1] = (unsigned char)((uint16_t)o >> 8);
         vm_ext_write(w, 2, lisp65_stdlib_bank, (uint16_t)(lisp65_stdlib_off + md_u16(pb)));
     }
@@ -449,14 +450,14 @@ static BOOTFN void vm_load_ext_metadata(void) {
 #endif
 
 #ifdef LISP65_DISK_LIBS
-/* --- Runtime-Lib-Loader (Stufe 2; docs/disk-bytecode-libs-design.md) ---
- * Registriert eine bereits nach Bank 5 (lisp65_stdlib_bank) gestagete Bytecode-Lib: Blob @ code_base,
- * L65M-Trailer @ md_at (beide within-bank-Offsets). RESIDENT (nicht BOOTFN!): laeuft nach dem Boot,
- * wenn das Boot-Overlay bereits Soft-Stack ist. Spiegelt vm_load_ext_metadata, ABER:
- *  - relokiert je Eintrag/Patch um code_base (Lib-Metadaten tragen BLOB-RELATIVE 0-Offsets),
- *  - richtet dir_n vorher auf die 8er-Block-Grenze aus (vm_dir_align8) -> Lib = eigener Block,
- *  - forciert Bank = lisp65_stdlib_bank (Lib liegt kontinuierlich hinter dem Stdlib-Blob).
- * Ohne Runtime-Overlay nutzt der direkte Host-/Referenzpfad weiterhin md_lit_node/md_read/md_name.
+/* --- Runtime library loader (stage 2; docs/disk-bytecode-libs-design.md) ---
+ * Registers a bytecode library already staged into bank 5 (lisp65_stdlib_bank): blob @ code_base,
+ * L65M trailer @ md_at (both within-bank offsets). RESIDENT (not BOOTFN!): it runs after the boot,
+ * when the boot overlay has already become soft stack. It mirrors vm_load_ext_metadata, BUT:
+ *  - relocates each entry/patch by code_base (library metadata carries BLOB-RELATIVE 0 offsets),
+ *  - aligns dir_n to the 8-entry block boundary first (vm_dir_align8) -> the library is its own block,
+ *  - forces bank = lisp65_stdlib_bank (the library sits contiguously behind the stdlib blob).
+ * Without a runtime overlay the direct host/reference path still uses md_lit_node/md_read/md_name.
  * Das Produkt delegiert denselben Commit an die l65c-Slices; die Boot-Helfer bleiben BOOTFN. */
 #if !defined(__mos__) || defined(LISP65_RUNTIME_OVERLAY)
 #ifdef LISP65_RUNTIME_OVERLAY
@@ -635,7 +636,7 @@ l65m_status vm_load_lib_ext(const l65m_source *source, const l65m_plan *plan) {
         uint8_t pb[4]; obj o; unsigned char w[2];
         md_read((uint16_t)(plan->patches_off + k * 4u), pb, 4);
         o = md_lit_node(md_u16(pb + 2));
-        vm_lit_keep(o);   /* permanent via Halte-Symbol (NICHT Rootstack!) */
+        vm_lit_keep(o);   /* permanent, via the holding symbol (NOT the root stack!) */
         w[0] = (unsigned char)(uint16_t)o; w[1] = (unsigned char)((uint16_t)o >> 8);
         vm_ext_write(w, 2, lisp65_stdlib_bank, (uint16_t)(plan->code_base + md_u16(pb)));
     }
@@ -700,15 +701,15 @@ BOOTFN void vm_load_embedded_stdlib(void) {
 }
 #endif
 
-/* --- Plattform-DMA (mega65). NUR im Geraete-Build (LISP65_EMBED_DMA); Host-Tests liefern eigene
- *     vm_code_load/vm_ext_write. Identisches F018-DMA-Muster wie die HW-bewiesenen Streaming-Tests. --- */
+/* --- Platform DMA (mega65). Device build ONLY (LISP65_EMBED_DMA); host tests provide their own
+ *     vm_code_load/vm_ext_write. The same F018 DMA pattern as the hardware-proven streaming tests. --- */
 #ifdef LISP65_EMBED_DMA
-/* NICHT static + used: garantierter Assembler-Symbolname fuer den registerfreien Trigger
- * unten (die Inline-Asm-Referenz ist fuer LTO unsichtbar). */
+/* NOT static, plus used: guarantees an assembler symbol name for the register-free trigger
+ * below (the inline-asm reference is invisible to LTO). */
 __attribute__((used)) unsigned char vm_dma_list[12];
 #ifdef LISP65_DMA_PROF
-/* Diagnose-Naht (2026-07-03): DMA-Jobs nach Klasse zaehlen — die Geraete-Waehrung des
- * Perf-Befunds (Call-Return-Reloads). Nur mit -DLISP65_DMA_PROF im Binary. */
+/* Diagnostic seam (2026-07-03): count DMA jobs by class — the device currency of the performance
+ * finding (call-return reloads). Only in the binary with -DLISP65_DMA_PROF. */
 uint16_t dma_code = 0, dma_wr = 0, dma_sym = 0;
 #define DMA_COUNT(v) ((v)++)
 #else

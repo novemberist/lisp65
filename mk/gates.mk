@@ -1,11 +1,13 @@
 # Stable gate entry points and provider-neutral CI wrappers.
 
 .PHONY: workspace-capacity-selftest workspace-capacity-check doctor doctor-selftest source-syntax-check ci-selftest document-index-selftest document-index-check c2-product-profile-parity-selftest c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-selftest c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-lite-public-clean-build-selftest c2-lite-public-clean-build-qualify c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-crc-codegen-selftest c2-historical-gate-inheritance-selftest c2-historical-gate-inheritance-check c2-address-identity-contract-selftest c2-address-identity-contract-check c2-kernal-residency-audit-selftest c2-kernal-residency-audit-check c2-kernal-unmap-contract-check c2-kernal-unmap-contract-receipt-check c2-nested-append-v5-selftest c2-nested-append-v5-check upstream-verification-selftest upstream-verification-check proof-hooks-install evidence-archive-assets-selftest evidence-archive-assets-check evidence-archive-assets-remote-check evidence-archive-index-size-gate evidence-archive-history-size-gate history-transport-bootstrap history-transport-rewrite-check remote-source-binding-selftest remote-source-binding-receipt-check promotion-register-check promotion-preflight-check r4-product-candidate-check r5-global-g5-input-check r5-global-g5-seal-selftest r6-ship-selftest r6-g6-selftest r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check workbench-product-reproducibility-selftest workbench-product-reproducibility-check workbench-product-reproducibility-preflight media-guard-bank-attribution-check post-capture-planning-capacity-check chain-walker-inventory-check dialect-contract-selftest dialect-contract-check bytecode-abi-ledger-selftest bytecode-abi-ledger-check code-object-arity-contract-selftest code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check r3-product-block-build r3-current-product-block-check r3-g3-g6-contract-check r3-g3-g6-environment-check r3-product-block-check r3-product-reproducibility-check r3-g3-static-preflight-check r3-stager-probe-check workbench-ux-harness-selftest semantic-contracts-selftest semantic-contracts-lint semantic-contracts-g0 semantic-contracts-g1 semantic-contracts-g2 bytecode-p0-omission-contract-check ci-check-source ci-check-host check-source check-host check-product check-reference reference-diagnostics check-emulator check-hardware-dry-run check-hardware
-.PHONY: c2-bound-artifact-source-parity-selftest
+.PHONY: c2-bound-artifact-source-parity-selftest c2-bound-artifact-source-parity-required-check
 .PHONY: c2-bound-artifact-source-parity-check
 .PHONY: c2-interrupt-ownership-selftest
 .PHONY: c2-interrupt-ownership-check
 .PHONY: c2-random-base-check
+.PHONY: c2-repl-banner-version-selftest
+.PHONY: c2-repl-banner-version-check
 .PHONY: c2-while-source-check
 .PHONY: c2-while-check
 .NOTPARALLEL: check-source check-host check-product check-hardware-dry-run check-hardware check mvp-ship
@@ -76,6 +78,14 @@ c2-bound-artifact-source-parity-selftest:
 c2-bound-artifact-source-parity-check: c2-bound-artifact-source-parity-selftest
 	python3 tools/host-lisp/c2_bound_artifact_source_parity.py
 
+# Acceptance-chain form: absence of the bound product is a hard failure here.
+# Wired as a prerequisite of r4-product-candidate-check, where the bound
+# authority must be current -- deliberately NOT inside workbench-product,
+# because a link cycle repairs a stale binding by building first and
+# rebinding after (a mid-build hook would be a chicken-and-egg block).
+c2-bound-artifact-source-parity-required-check: c2-bound-artifact-source-parity-selftest
+	python3 tools/host-lisp/c2_bound_artifact_source_parity.py --require-artifact
+
 c2-interrupt-ownership-selftest:
 	python3 tools/host-lisp/c2_interrupt_ownership_gate.py --selftest
 
@@ -85,6 +95,12 @@ c2-interrupt-ownership-check: c2-interrupt-ownership-selftest
 
 c2-random-base-check:
 	python3 tools/host-lisp/c2_random_base_gate.py
+
+c2-repl-banner-version-selftest:
+	python3 tools/host-lisp/c2_repl_banner_version_gate.py --selftest
+
+c2-repl-banner-version-check: c2-repl-banner-version-selftest
+	python3 tools/host-lisp/c2_repl_banner_version_gate.py
 
 c2-while-source-check:
 	python3 tools/host-lisp/c2_while_gate.py --source-only
@@ -232,7 +248,7 @@ chain-walker-inventory-check:
 	python3 tools/host-lisp/chain_walker_inventory.py \
 		--out build/bytecode/dialect-v2/wave1-chain-walker-inventory-receipt.json
 
-r4-product-candidate-check:
+r4-product-candidate-check: c2-bound-artifact-source-parity-required-check
 	python3 tools/host-lisp/promotion_archive.py product-candidate-check
 
 r5-global-g5-input-check:
@@ -343,6 +359,7 @@ check-source: comment-language-check post-v1.2-housekeeping-check
 check-source: c2-bound-artifact-source-parity-check
 check-source: c2-interrupt-ownership-check
 check-source: c2-random-base-check
+check-source: c2-repl-banner-version-check
 check-source: c2-while-source-check
 
 check-source: workspace-capacity-check doctor-selftest source-syntax-check ci-selftest document-index-check c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-l-full-static-plane-check c2-historical-gate-inheritance-check c2-address-identity-contract-check c2-kernal-unmap-contract-check c2-nested-append-v5-selftest c2-overlay-transaction-auth-check promotion-register-check block-bank-delta-policy-check block-capacity-delta-policy-check dialect-contract-check bytecode-abi-ledger-check code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check dialect-v2-prelude-control-check dialect-v2-eval-apply-funcall-check dialect-v2-lists-check dialect-v2-lists-p0-selftest dialect-v2-lists-lcc-selftest dialect-v2-lists-type-errors-check dialect-v2-strings-check dialect-v2-strings-p0-selftest dialect-v2-strings-lcc-selftest dialect-v2-system-runtime-check dialect-v2-lcc-surface-selftest dialect-v2-prelude-evidence-check dialect-v2-ide-evidence-check dialect-v2-capacity-ledger-selftest r2-known-open-check directory-only-l65m-v2-probe-check l65m-v2-product-check r3-current-product-block-check r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check v2-prim-lowering-check v2-carrier-state-selftest v2-workbench-symbol-diff-check v2-workbench-deresidentization-audit-check v2-workbench-deresidentization-prototype-check v2-runtime-core-service-inventory-selftest v2-capability-carrier-internal-g5-check v2-capability-carrier-contract-check workbench-service-call-inventory-selftest v11-surface-delivery-parity-check v11-source-stream-lifetime-selftest v11-function-metadata-check workbench-product-contract-check workbench-ux-harness-selftest runtime-known-open-check semantic-contracts-selftest semantic-contracts-g0 bytecode-p0-omission-contract-check bank0-lifetime-selftest bank0-island-inventory-selftest resident-island-selftest vm-ext-code-reclaim-smoke asm-c-constant-contract-check mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-disk-lib-budget-selftest ide-capacity-selftest persistence-contract-check runtime-export-contract-check runtime-core-audit-selftest workbench-overlay-stage-selftest runtime-overlay-bank-selftest hw-ship-memory-readback-selftest xmega65-safety-check bytecode-p0-program-check bytecode-p0-bundle-check workbench-ship-verifier-selftest

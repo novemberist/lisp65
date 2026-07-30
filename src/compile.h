@@ -12,32 +12,32 @@ typedef struct {
     obj      name;                                  /* NIL = Toplevel-Main; sonst Helper-Symbol (lambda) */
     uint8_t *code; uint16_t codecap; uint16_t codelen;
     obj     *lit;  uint8_t  litcap;  uint8_t  nlit;
-    uint8_t  nargs; uint8_t  nlocals; uint8_t  flags;   /* CO_FLAG_* aus vm.h */
-    /* M-closures: eingefangene freie Variablen. nupvals>0 => diese Fn ist eine Closure; upval_slot[i]
-     * = Slot der i-ten Upvalue im ERZEUGENDEN (aeusseren) Scope (fuer den Creation-Site-Push). */
+    uint8_t  nargs; uint8_t  nlocals; uint8_t  flags;   /* CO_FLAG_* from vm.h */
+    /* M closures: captured free variables. nupvals>0 => this fn is a closure; upval_slot[i]
+     * = slot of the i-th upvalue in the CREATING (outer) scope (for the creation-site push). */
     uint8_t  nupvals; uint8_t upval_slot[BC_MAXUPVAL];
 } bc_func;
 
-/* Eine Uebersetzungseinheit: fn[0] = Main-Toplevel-Form, fn[1..] = lambda-Helper.
- * Der Aufrufer stellt fn[] samt code/lit-Puffern je Funktion; bc_compile_top fuellt sie + setzt nfn.
- * err=1 => Form (noch) nicht unterstuetzt ODER Puffer/Funktions-Slot voll. */
+/* One translation unit: fn[0] = the main toplevel form, fn[1..] = lambda helpers.
+ * The caller provides fn[] plus per-function code/lit buffers; bc_compile_top fills them and sets nfn.
+ * err=1 => the form is not (yet) supported OR a buffer / function slot is full. */
 typedef struct {
     bc_func *fn; uint8_t fncap; uint8_t nfn;
-    uint16_t gensym;                                /* Helper-Namenszaehler */
+    uint16_t gensym;                                /* helper name counter */
     uint8_t  err;
 } bc_unit;
 
-/* Kompiliert EINE Toplevel-Form (Ausdruck + OP_RET in fn[0]) + evtl. Lambda-Helper in fn[1..]. */
+/* Compiles ONE toplevel form (expression + OP_RET into fn[0]) plus any lambda helpers into fn[1..]. */
 void bc_compile_top(bc_unit *u, obj form);
 
-/* Kompiliert einen defun-Rumpf DIREKT als benannte Funktion in fn[0] (Params ab Slot 0), ohne den
- * Lambda-Lift-Umweg -> spart je defun ein CodeObject/Dir-Eintrag/"__L"-Symbol. Innere lambdas -> fn[1..].
- * Der Aufrufer registriert fn[0] unter dem defun-Namen; fn[1..] als Helfer. */
+/* Compiles a defun body DIRECTLY as a named function in fn[0] (parameters from slot 0), without the
+ * lambda-lift detour -> saves one CodeObject / directory entry / "__L" symbol per defun. Inner lambdas
+ * go to fn[1..]. The caller registers fn[0] under the defun name and fn[1..] as helpers. */
 void bc_compile_defun(bc_unit *u, obj params, obj body);
 
-/* 1, wenn der Compiler das Symbol als Kontroll-Special-Form selbst lowert (if/when/and/let/...).
- * Genutzt vom REPL-Swap: eine Prelude-(defmacro X ...) fuer so ein X ist redundant (Compiler macht
- * die Form selbst) -> ignorieren; nur ECHTE User-Makros brauchen die M5-Expansion. */
+/* 1 if the compiler lowers the symbol itself as a control special form (if/when/and/let/...).
+ * Used by the REPL swap: a prelude (defmacro X ...) for such an X is redundant (the compiler handles
+ * the form) -> ignore it; only REAL user macros need the M5 expansion. */
 int bc_is_special_form(obj sym);
 
 /* Assembliert eine kompilierte Funktion zu einem CodeObject-Blob (Header + littab + Bytecode),

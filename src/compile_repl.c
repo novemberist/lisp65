@@ -47,14 +47,14 @@ static uint16_t region_put(const uint8_t *blob, uint16_t len, uint8_t persist) {
 void crepl_reset(void) { crepl_off = 0; }
 #endif
 
-/* Arbeits-Puffer fuer EINE Form (Main + Helfer). Bewusst schlank fuer das Bank-0-Budget des
- * compile-repl-Profils; Ueberlauf meldet der Compiler sauber (err=1 -> "cannot compile"), nie stiller
- * Fehlcode. Grosse Funktionen ggf. in kleinere zerlegen. */
+/* Working buffers for ONE form (main plus helpers). Deliberately lean for the bank-0 budget of the
+ * compile-repl profile; on overflow the compiler reports cleanly (err=1 -> "cannot compile"), never
+ * silently wrong code. Split large functions into smaller ones if needed. */
 #ifndef CREPL_NF
-#define CREPL_NF       8                       /* max Funktionen je Form (Main + bis N-1 lambda-Helfer) */
+#define CREPL_NF       8                       /* max functions per form (main + up to N-1 lambda helpers) */
 #endif
 #ifndef CREPL_CODESZ
-#define CREPL_CODESZ   160                     /* max Bytecode je Funktion (Prelude-Fns << 160) */
+#define CREPL_CODESZ   160                     /* max bytecode per function (prelude fns are well under 160) */
 #endif
 #ifndef CREPL_LITSZ
 #define CREPL_LITSZ    13                      /* max Literale je Funktion */
@@ -78,26 +78,26 @@ static obj crtf_run(uint16_t fslot) {
 
     form = FORM;
 
-    /* (defmacro X ...) : lowert der Compiler X selbst (when/and/let/...) -> die Prelude-Makro-Definition
-     * ist redundant, ignorieren (no-op). Ein ECHTES User-Makro braucht die M5-Expansion (compile->run->
-     * expand); bis dahin sauberer Fehler statt still falschem Code. So laesst sich load_source (Boot-Prelude:
-     * 11 defmacros, alle bekannte Formen) auf compile_run_top_form umstellen, ohne M5 (Design §4a). */
+    /* (defmacro X ...): if the compiler lowers X itself (when/and/let/...), the prelude macro definition
+     * is redundant -> ignore it (no-op). A REAL user macro needs the M5 expansion (compile->run->expand);
+     * until then a clean error instead of silently wrong code. This is what lets load_source (the boot
+     * prelude: 11 defmacros, all known forms) move to compile_run_top_form without M5 (design §4a). */
     if (IS_PTR(form) && cell_type(form) == T_CONS && cell_a(form) == intern("defmacro")) {
         obj rest = cell_b(form);
         obj mname = (IS_PTR(rest) && cell_type(rest) == T_CONS) ? cell_a(rest) : NIL;
-        /* Ignorieren, wenn (a) der Compiler die Form selbst lowert (when/and/let/...) ODER (b) sie
-         * compile_run_top_form selbst behandelt (defun/defparameter/defvar). Beides macht die
-         * Prelude-Makro-Definition redundant. Nur ein ECHTES User-Makro faellt durch -> M5. */
+        /* Ignore it if (a) the compiler lowers the form itself (when/and/let/...) OR (b)
+         * compile_run_top_form handles it itself (defun/defparameter/defvar). Either way the
+         * prelude macro definition is redundant. Only a REAL user macro falls through -> M5. */
         if (mname != NIL && (bc_is_special_form(mname) ||
                              mname == intern("defun") ||
                              mname == intern("defparameter") ||
                              mname == intern("defvar"))) return mname;
-        vm_status = VM_TYPEERROR; return NIL;                          /* echtes Makro -> M5 (noch nicht) */
+        vm_status = VM_TYPEERROR; return NIL;                          /* a real macro -> M5 (not yet) */
     }
 
-    /* v1 behaelt die historische Approximation (beide Formen wie setq). v2 bindet
-     * die Formen korrekt: defparameter setzt immer; defvar wertet init nur fuer
-     * ein ungebundenes Symbol aus und laesst (defvar name) ungebunden. */
+    /* v1 keeps the historical approximation (both forms behave like setq). v2 binds the
+     * forms correctly: defparameter always assigns; defvar evaluates init only for an
+     * unbound symbol and leaves (defvar name) unbound. */
     if (IS_PTR(form) && cell_type(form) == T_CONS &&
         (cell_a(form) == intern("defparameter") || cell_a(form) == intern("defvar"))) {
         obj rest = cell_b(form);
@@ -135,10 +135,10 @@ static obj crtf_run(uint16_t fslot) {
         }
     }
 
-    /* (defun name params . body): Rumpf DIREKT als benannte Fn kompilieren (bc_compile_defun), NICHT mehr
-     * ueber (lambda ..) liften -> spart je defun ein CodeObject/Dir-Eintrag/"__L"-Symbol (Objekt-Effizienz;
-     * S5). Kein Form-Rebuild noetig (kein Lowering) -> params/body bleiben als Teil der gerooteten FORM gueltig
-     * (bc_compile_defun alloziert nicht -> kein GC dazwischen). */
+    /* (defun name params . body): compile the body DIRECTLY as a named fn (bc_compile_defun), no longer
+     * lifted through (lambda ..) -> saves one CodeObject / directory entry / "__L" symbol per defun
+     * (object efficiency; S5). No form rebuild is needed (no lowering) -> params/body stay valid as part
+     * of the rooted FORM (bc_compile_defun does not allocate -> no GC in between). */
     if (IS_PTR(form) && cell_type(form) == T_CONS && cell_a(form) == intern("defun")) {
         obj rest = cell_b(form);
         if (!(IS_PTR(rest) && cell_type(rest) == T_CONS) ||
@@ -195,11 +195,12 @@ obj compile_run_top_form(obj form) {
 }
 
 #ifdef LISP65_COMPILE_REPL
-/* M7 (Load-Vereinheitlichung, Design §4a): load_source/load_source_stream GERAETE-NATIV -- jede Top-Level-Form
- * geht durch compile_run_top_form (derselbe compile-and-run wie der REPL-Swap). Ersetzen die Treewalk-Versionen
- * aus eval.c (die unter LISP65_COMPILE_REPL dort raus sind -> kein Doppelsymbol). Prelude-Boot host-bewiesen
- * (prelude-load-run: alle 54 Prelude-Formen laden sauber, danach laufen die Funktionen). So verliert der Boot-
- * Pfad seine letzte eval()-Referenz -> mit Funktions-Stripping (--gc-sections) faellt der Treewalk (M7). */
+/* M7 (load unification, design §4a): load_source/load_source_stream go DEVICE-NATIVE -- every toplevel
+ * form passes through compile_run_top_form (the same compile-and-run as the REPL swap). These replace the
+ * tree-walker versions from eval.c (which are compiled out there under LISP65_COMPILE_REPL -> no duplicate
+ * symbol). The prelude boot is host-proven (prelude-load-run: all 54 prelude forms load cleanly and the
+ * functions then run). This is how the boot path loses its last eval() reference -> with function
+ * stripping (--gc-sections) the tree walker drops out (M7). */
 void load_source(const char *src) {
     const char *p = src;
     for (;;) {
@@ -213,10 +214,10 @@ void load_source(const char *src) {
         }
     }
 }
-/* Boot-Ladeanzeige (S5, Source-on-Disk): wird nach JEDER kompilierten Top-Level-Form gerufen.
- * Default 0 (kein Overhead). Der Boot setzt ihn auf eine Render-Funktion, die den Disk-Fortschritt
- * (io_disk_load_permille) als Balken/Prozent zeigt -- Stdlib-Kompilieren beim Boot dauert, der Nutzer
- * braucht Feedback (Nutzer-Anforderung 2026-07-05). */
+/* Boot progress display (S5, source-on-disk): called after EVERY compiled toplevel form.
+ * Default 0 (no overhead). The boot sets it to a render function that shows the disk progress
+ * (io_disk_load_permille) as a bar or percentage -- compiling the stdlib at boot takes time and the
+ * user needs feedback (user requirement 2026-07-05). */
 void (*crepl_progress)(void) = 0;
 void load_source_stream(char (*fetch)(void)) {
     reader_from_fetch(fetch);
@@ -231,8 +232,9 @@ void load_source_stream(char (*fetch)(void)) {
     }
 }
 
-/* Minimal-Boot ohne Treewalk (eval.c weggelassen): mem_init + vm_init. Kein defprim (Primitive =
- * CALLPRIM in der VM), kein Treewalk-Hook (vm_native_apply uebernimmt). Ersetzt eval_init() im Profil. */
+/* Minimal boot without the tree walker (eval.c omitted): mem_init + vm_init. No defprim (the
+ * primitives are CALLPRIM inside the VM), no tree-walk hook (vm_native_apply takes over).
+ * Replaces eval_init() in this profile. */
 void crepl_boot_init(void) {
     mem_init();
     vm_init();

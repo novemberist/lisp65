@@ -1,32 +1,39 @@
-; lisp65 — lcc: der selbst-gehostete Bytecode-Compiler (Self-Hosting, Lane K; Start 2026-07-05).
-; Plan: docs/self-hosting-plan.md. Ziel-ABI: docs/bytecode-abi.md (P0, GEPINNT); Byte-Orakel:
-; scripts/lcc-oracle.py (byte-exakt gegen bytecode_p0_compiler.py, make-check-Gate).
+; lisp65 -- lcc: the self-hosted bytecode compiler (self-hosting, Lane K;
+; started 2026-07-05). Plan: docs/self-hosting-plan.md. Target ABI:
+; docs/bytecode-abi.md (P0, PINNED). Byte oracle: scripts/lcc-oracle.py,
+; byte-exact against bytecode_p0_compiler.py and enforced by the make check.
 ;
-; STAND P3 (Closures) auf P2: lambda-als-Wert wird als HELPER-Fn kompiliert; freie Variablen
-; werden transitiv über die EBENEN-Liste aufgelöst (resolve_uv-Analog: äußeres Local via=0,
-; äußere Upvalue via=1), die Creation-Site pusht die Upvalue-Werte + OP_CLOSURE(63); Zugriff
-; im Rumpf via OP_UPVAL(64), setq freier Variablen via OP_SETUPVAL(65). Helper-Referenzen
-; stehen als MARKER-Literale (%lcc-helper <idx>) in der littab — der Lauf-Harness ersetzt sie
-; beim Registrieren durch MK_BCODE(di) (OP_CLOSURE/funcall nehmen BCODE-Immediates direkt).
-; Capture-frei -> PUSHLIT <marker> (Fast-Path wie C). Immediate-Lambda ((lambda ..) args)
-; wird wie let gelowert (Referenz-Verhalten).
-; VORHER (P2): Ausdrücke (P0) + BINDUNGEN (let/let*/lokales setq, Slot-Vergabe monoton — kein
-; Slot-Reuse nach Scope-Ende, wie die Referenz) + AUFRUFE (CALLPRIM-Tabelle, generisches CALL
-; mit Callee-Symbol-Literal, funcall/apply via PRIMS) + Params (PUSHARG0-2/PUSHARGN) +
-; GLOBALS wie der C-Compiler (Read → CALLPRIM 19, setq → CALLPRIM 20; der Python-Referenz-
-; Compiler kennt keine Globals → im Byte-Orakel ausgespart, Semantik prüft P2 auf der VM).
+; P3 closure state on top of P2: a lambda used as a value is compiled as a
+; HELPER function. Free variables resolve transitively through the LEVELS list
+; (resolve_uv analogue: outer local via=0, outer upvalue via=1). The creation
+; site pushes the upvalue values plus OP_CLOSURE(63); the body reads through
+; OP_UPVAL(64), and setq of a free variable uses OP_SETUPVAL(65). Helper
+; references are MARKER literals (%lcc-helper <idx>) in the literal table; the
+; run harness replaces them with MK_BCODE(di) during registration
+; (OP_CLOSURE/funcall accept BCODE immediates directly). No captures means
+; PUSHLIT <marker>, the same fast path as C. An immediate lambda
+; ((lambda ..) args) lowers like let, matching the reference behavior.
+; PREVIOUSLY (P2): P0 expressions plus BINDINGS (let/let*/local setq with
+; monotonically allocated slots and no slot reuse after scope end, like the
+; reference); CALLS (CALLPRIM table, generic CALL with a callee-symbol literal,
+; funcall/apply through PRIMS); parameters (PUSHARG0-2/PUSHARGN); and GLOBALS
+; like the C compiler (read -> CALLPRIM 19, setq -> CALLPRIM 20). The Python
+; reference compiler has no globals, so the byte oracle excludes them and VM
+; semantics verifies P2.
 ;
-; Repräsentationen:
-;   st   = (bytes-rev . laenge)                Emissions-Zustand, O(1)-Append
-;   cs   = (st lits-rev maxslot fnsbox)        Compiler-Zustand; fnsbox = mutierbare Helper-Liste
-;   lvls  = ((name slot kind) ...)              Umgebung EINER Ebene; kind = a (Param) | l (Local)
-;   lvls = ((lvls . uvbox) ...)                 Ebenen, jüngste zuerst; uvbox = (uvs-rev . n),
-;                                              uv = (name src via)  [via: 0=Local, 1=Upvalue]
-; Branch-Patching: die frisch emittierte acc-Zelle IST das Offset-Byte -> (rplaca zelle d).
+; Representations:
+;   st   = (bytes-rev . length)                 emission state, O(1) append
+;   cs   = (st lits-rev maxslot fnsbox)         compiler state; mutable helper list in fnsbox
+;   lvls = ((name slot kind) ...)               one level; kind = a (parameter) | l (local)
+;   lvls = ((lvls . uvbox) ...)                 levels, youngest first; uvbox = (uvs-rev . n),
+;                                               uv = (name src via), via 0=local, 1=upvalue
+; Branch patching: the newly emitted acc cell IS the offset byte, so use
+; (rplaca cell d).
 
-; ---- Opcodes (ABI-Wahrheit src/vm.h; Byte-Orakel prüft) ----
-; GERAETE-GRENZE (vom P5-Fixpunkt-Test erzwungen): Code-Objekte <= 255 B (dir_len uint8)
-; -> grosse cond-Dispatches sind in Haelften gesplittet (t-Klausel = Tail-Call in Teil 2).
+; ---- Opcodes (ABI truth in src/vm.h; checked by the byte oracle) ----
+; DEVICE LIMIT (enforced by the P5 fixed-point test): code objects <=255 B
+; (dir_len uint8), so large cond dispatches are split in half; the t clause is
+; a tail call into part 2.
 (defun %lcc-op (name)
   (cond ((eq name 'pushi8) 1) ((eq name 'add) 2) ((eq name 'ret) 5) ((eq name 'pushlit) 6)
         ((eq name 'sub) 14) ((eq name 'mul) 15) ((eq name 'div) 16) ((eq name 'mod) 17)
@@ -35,8 +42,9 @@
         ((eq name 'not) 42) ((eq name 'pushnil) 43) ((eq name 'pusht) 44)
         (t (%lcc-op2 name nil))))
 
-; Der zweite Dispatcher traegt zwei explizit getrennte Tails, damit beide Codeobjekte
-; unter dem 255-B-Limit bleiben, ohne einen weiteren Stdlib-/Symbol-Eintrag zu verbrauchen.
+; The second dispatcher carries two explicitly separate tails so both code
+; objects remain under 255 B without consuming another standard-library or
+; symbol entry.
 (defun %lcc-op2 (name prim)
   (if prim
       (cond ((eq name 'symbol-value) 19) ((eq name 'set-symbol-value) 20)
@@ -50,7 +58,7 @@
             ((eq name 'setupval) 65)
             (t nil))))
 
-; CALLPRIM-Tabelle (== PRIMS in src/compile.c; ABI §4a, IDs gepinnt)
+; CALLPRIM table (identical to PRIMS in src/compile.c; ABI section 4a, IDs pinned)
 (defun %lcc-prim (name)
   (cond ((eq name 'stringp) 0) ((eq name 'string->list) 1) ((eq name 'list->string) 2)
         ((eq name 'string-length) 3) ((eq name 'string-ref) 4)
@@ -63,7 +71,7 @@
         ((eq name '%disk-load-file) 17) ((eq name '%disk-load-lib) 18)
         (t (%lcc-op2 name t))))
 
-; ---- Selbsttragende Helfer (length/reverse/consp/null sind KEINE Treewalk-Prims!) ----
+; ---- Self-contained helpers (length/reverse/consp/null are NOT Treewalk primitives) ----
 (defun %lcc-len (l) (if l (+ 1 (%lcc-len (cdr l))) 0))
 (defun %lcc-rev-into (l acc) (if l (%lcc-rev-into (cdr l) (cons (car l) acc)) acc))
 (defun %lcc-rev (l) (%lcc-rev-into l nil))
@@ -78,7 +86,7 @@
               nil)
           nil)))
 
-; ---- cs-Accessoren/Konstruktor ----
+; ---- cs accessors/constructor ----
 (defun %lcc-cs (st lits maxslot fns) (cons st (cons lits (cons maxslot (cons fns nil)))))
 (defun %lcc-st (cs) (car cs))
 (defun %lcc-lits (cs) (car (cdr cs)))
@@ -92,7 +100,7 @@
 (defun %lcc-emit-op (cs name) (%lcc-emit cs (%lcc-op name)))
 (defun %lcc-emit2 (cs name b) (%lcc-emit (%lcc-emit-op cs name) b))
 
-; ---- Literal-Tabelle (Dedup STRUKTURELL wie die Referenz) ----
+; ---- Literal table (STRUCTURAL deduplication like the reference) ----
 (defun %lcc-lit-find (lits-rev o n)
   (if lits-rev
       (if (%lcc-equal (car lits-rev) o)
@@ -100,7 +108,7 @@
           (%lcc-lit-find (cdr lits-rev) o (- n 1)))
       nil))
 
-; littab-Slot vergeben/wiederfinden OHNE Emission: -> (cs . index)
+; Allocate/find a literal-table slot WITHOUT emission: -> (cs . index)
 (defun %lcc-lit-slot (cs o)
   ((lambda (n)
      ((lambda (hit)
@@ -123,15 +131,16 @@
              (%lcc-push-lit cs o)))
         (t (%lcc-push-lit cs o))))
 
-; ---- Umgebung EINER Ebene: ((name slot kind) ...) ----
+; ---- One-level environment: ((name slot kind) ...) ----
 (defun %lcc-env-find (e name)
   (if e
       (if (eq (car (car e)) name) (car e) (%lcc-env-find (cdr e) name))
       nil))
 
-; ---- Ebenen (P3): lvls = ((lvls . uvbox) ...), jüngste zuerst; uvbox = (uvs-rev . n),
-; uv = (name src via kind). Mutation der uvbox via rplaca/rplacd (Sammlung wächst beim
-; Auflösen mitten in der Rumpf-Kompilierung — das C-Analog ist cc_lvl[]). ----
+; ---- Levels (P3): lvls = ((lvls . uvbox) ...), youngest first;
+; uvbox = (uvs-rev . n), uv = (name src via kind). Mutate uvbox with
+; rplaca/rplacd because the collection grows while resolving in the middle of
+; body compilation; the C analogue is cc_lvl[]. ----
 (defun %lcc-top-env (lvls) (car (car lvls)))
 (defun %lcc-uvbox (lvl) (cdr lvl))
 (defun %lcc-with-top-env (lvls e) (cons (cons e (%lcc-uvbox (car lvls))) (cdr lvls)))
@@ -149,9 +158,10 @@
        n))
    (cdr box)))
 
-; resolve_uv-Analog (transitiv): name als Upvalue der OBERSTEN Ebene auflösen -> Index oder nil.
-; Dedup in der uvbox; äußeres Local (Ebene darunter) -> via=0 (+kind fuer die Creation-Site);
-; tiefer -> rekursiv als Upvalue der äußeren Ebene -> via=1.
+; Transitive resolve_uv analogue: resolve name as an upvalue of the TOP level,
+; returning an index or nil. Deduplicate in uvbox. An outer local in the level
+; below uses via=0 plus kind for the creation site; deeper references resolve
+; recursively as an upvalue of the outer level and use via=1.
 (defun %lcc-resolve-uv (name lvls)
   (if (cdr lvls)
       ((lambda (box)
@@ -169,8 +179,8 @@
        (%lcc-uvbox (car lvls)))
       nil))
 
-; Slot-Zugriff nach Art (emit_arg-Analog): Param slot<3 -> PUSHARG0+slot, sonst PUSHARGN;
-; Local -> LOADL.
+; Slot access by kind (emit_arg analogue): parameter slot<3 uses PUSHARG0+slot,
+; otherwise PUSHARGN; locals use LOADL.
 (defun %lcc-emit-slot (cs slot kind)
   (if (eq kind 'a)
       (if (< slot 3)
@@ -178,8 +188,9 @@
           (%lcc-emit2 cs 'pushargn slot))
       (%lcc-emit2 cs 'loadl slot)))
 
-; Variablen-Zugriff: lokale Ebene -> Slot; freie Var -> Upvalue (transitiv, OP_UPVAL);
-; sonst GLOBAL-Read (PUSHLIT sym + CALLPRIM 19 1; wie src/compile.c).
+; Variable access: local level -> slot; free variable -> transitive upvalue
+; through OP_UPVAL; otherwise global read through PUSHLIT sym plus
+; CALLPRIM 19 1, as in src/compile.c.
 (defun %lcc-var (cs lvls name)
   ((lambda (e)
      (if e
@@ -191,9 +202,10 @@
           (%lcc-resolve-uv name lvls))))
    (%lcc-env-find (%lcc-top-env lvls) name)))
 
-; ---- Lowering: and/or/cond/when/unless -> if/let/progn-Formen (== Referenz-Compiler ==
-; == unsere prelude-macros!). or/cond-Einzelklausel binden den Testwert per gensym-Temp
-; (die Referenz vergibt dafuer einen echten Slot). list/gensym sind Treewalk-Prims. ----
+; ---- Lowering: and/or/cond/when/unless -> if/let/progn forms, identical to
+; both the reference compiler and our prelude macros. Single-clause or/cond
+; binds the test value in a gensym temporary; the reference allocates a real
+; slot for it. list/gensym are Treewalk primitives. ----
 (defun %lcc-lower-and (args)
   (if args
       (if (cdr args)
@@ -228,7 +240,7 @@
        (car cls) (cdr cls))
       nil))
 
-; ---- Sequenz/progn ----
+; ---- Sequence/progn ----
 (defun %lcc-seq (cs lvls body)
   (if body
       (if (cdr body)
@@ -236,7 +248,7 @@
           (%lcc-expr cs lvls (car body)))
       (%lcc-push-value cs nil)))
 
-; ---- if (rel8-Patching) ----
+; ---- if (rel8 patching) ----
 (defun %lcc-rel8 (d)
   (if (< d -128)
       (%lcc-error-do-body-too-big)
@@ -257,12 +269,13 @@
       (car (%lcc-st cs2)) (cdr (%lcc-st cs2))))
    (%lcc-emit (%lcc-emit-op (%lcc-expr cs lvls (car args)) 'jfalserel) 0)))
 
-; ---- do/do*/dotimes/dolist NATIV (C-Phase Fix (b), d097468): echte Schleife via
-; Rückwärts-JMPREL = KONSTANTER Stack. Die Makro-Templates (funcall-Rekursion) fraßen
-; ~15 VM-Slots je Iteration, und Blob-Makros existieren am Gerät (noch) nicht.
-; JMPREL ist int8: Test+Result+Körper+Steps über ~120 B brechen LAUT ab.
-; do = parallele Binds/Steps (Werte erst alle pushen, dann rückwärts STOREL);
-; do* = sequentiell. dotimes/dolist = Zucker (Count/Liste via gensym-Temp EINMAL evaluiert). ----
+; ---- NATIVE do/do*/dotimes/dolist (C-phase fix (b), d097468): a real loop
+; through backward JMPREL gives a CONSTANT stack. The macro templates used
+; funcall recursion and consumed about 15 VM slots per iteration, while blob
+; macros do not yet exist on the device. JMPREL is int8; test+result+body+steps
+; over about 120 B fail LOUDLY. do uses parallel binds/steps (push all values,
+; then STOREL in reverse); do* is sequential. dotimes/dolist are sugar whose
+; count/list gensym temporary is evaluated ONCE. ----
 (defun %lcc-expr-do (cs lvls op args)   ; Dispatch-Stufe (255-B-Gate: sf2 war 263 B)
   (cond ((eq op 'do)   (%lcc-do cs lvls args nil))
         ((eq op 'do*)  (%lcc-do cs lvls args t))
@@ -351,9 +364,9 @@
                       (if (cdr (cdr spec)) (cons (car (cdr (cdr spec))) nil) nil))
                 (cons (cons 'let (cons (list (list (car spec) (list 'car xs))) body)) nil)))))
 
-; ---- let/let*: Inits + STOREL auf fortlaufende Slots (monoton, kein Reuse) ----
-; star=nil: Inits im AUSSEN-lvls (paralleles let); star=t: im wachsenden lvls (let*).
-; Rückgabe (cs . lvls-mit-Bindungen).
+; ---- let/let*: initializers plus STOREL into consecutive slots (monotonic,
+; no reuse). star=nil compiles initializers in the OUTER levels (parallel let);
+; star=t uses the growing levels (let*). Returns (cs . levels-with-bindings).
 (defun %lcc-let-binds (cs lvls0 lvls bs star)
   (if bs
       ((lambda (name init)
@@ -377,8 +390,9 @@
      (%lcc-seq (car r) (cdr r) (cdr args)))
    (%lcc-let-binds cs lvls lvls (car args) star)))
 
-; ---- setq: lokal/Param -> expr + STOREL + LOADL (Wert nachladen, wie die Referenz);
-; ungebunden -> GLOBAL (PUSHLIT sym, expr, CALLPRIM 20 2; wie src/compile.c). ----
+; ---- setq: local/parameter -> expr + STOREL + LOADL (reload the value, like
+; the reference); unbound -> GLOBAL through PUSHLIT sym, expr, CALLPRIM 20 2,
+; as in src/compile.c. ----
 (defun %lcc-setq (cs lvls args)
   ((lambda (e)
      (if e
@@ -397,7 +411,7 @@
           (%lcc-resolve-uv (car args) lvls))))
    (%lcc-env-find (%lcc-top-env lvls) (car args))))
 
-; ---- Aufrufe: erst Args, dann CALLPRIM pid n bzw. CALL <callee-lit> n ----
+; ---- Calls: arguments first, then CALLPRIM pid n or CALL <callee-lit> n ----
 (defun %lcc-args (cs lvls args n)
   (if args
       (%lcc-args (%lcc-expr cs lvls (car args)) lvls (cdr args) (+ n 1))
@@ -414,10 +428,11 @@
       (%lcc-prim op)))
    (%lcc-args cs lvls args 0)))
 
-; ---- P3: lambda als WERT -> Helper-Fn kompilieren + Creation-Site emittieren ----
-; Helper landet in der fns-Box (Sammel-Reihenfolge = Abschluss-Reihenfolge: innerste zuerst
-; -> der Lauf-Harness kann in dieser Reihenfolge assemblieren, Marker zeigen stets rueckwaerts).
-; Referenz-Semantik: Rumpf non-tail + RET (compile_lambda_helper nutzt compile_sequence).
+; ---- P3: lambda as a VALUE -> compile helper function and emit creation site ----
+; The helper enters the fns box in completion order, innermost first, so the
+; run harness can assemble in that order and markers always point backward.
+; Reference semantics: non-tail body plus RET; compile_lambda_helper uses
+; compile_sequence.
 (defun %lcc-emit-uv-values (cs uvs)
   (if uvs
       ((lambda (uv)
@@ -433,13 +448,15 @@
   ((lambda (params body)
      ((lambda (nargs uvbox)
         ((lambda (cs2)
-           ; Helper-fn abschliessen + in die Box (idx = Zaehler VOR dem Anhaengen)
+           ; Finish helper function and append it to the box; idx is the
+           ; counter BEFORE appending.
            ((lambda (fnobj box)
               ((lambda (idx)
                  (progn
                    (rplaca box (cons fnobj (car box)))
                    (rplacd box (+ idx 1))
-                   ; Creation-Site im AEUSSEREN cs: Upvalue-Werte pushen + CLOSURE/PUSHLIT
+                   ; Creation site in the OUTER cs: push upvalue values plus
+                   ; CLOSURE/PUSHLIT.
                    ((lambda (marker uvs n)
                       (if (> n 0)
                           ((lambda (cs3)
@@ -458,29 +475,32 @@
                                        'ret)
                          nargs)
             (%lcc-fns cs)))
-         ; frisches inneres cs: eigener st/lits/maxslot, GETEILTE fns-Box
+         ; Fresh inner cs: private st/lits/maxslot, SHARED fns box.
          (%lcc-cs (cons nil 0) nil nargs (%lcc-fns cs))))
       (%lcc-len params) (cons nil 0)))
    (car (cdr form)) (cdr (cdr form))))
 
-; Immediate-Lambda ((lambda (p..) body) a..) == (let ((p a)..) body) (Referenz-Lowering).
+; Immediate lambda ((lambda (p..) body) a..) equals
+; (let ((p a)..) body), matching reference lowering.
 (defun %lcc-imm-binds (ps as acc)
   (if ps
       (%lcc-imm-binds (cdr ps) (if as (cdr as) nil)
                       (cons (cons (car ps) (cons (if as (car as) nil) nil)) acc))
       (%lcc-rev acc)))
 
-; ---- P4: Makro-Expansion + quasiquote-Lowering ----
-; lcc laeuft AUF einem Lisp-System (Harness: Treewalk) -> Makros werden expandiert, indem
-; der TRAEGER gefragt wird: (function-kind op)='macro + (macroexpand-1 form). Am Geraet (P6)
-; ersetzt funcall-auf-kompilierten-BCODE-Expander dieselbe Naht (docs/self-hosting-plan.md).
+; ---- P4: macro expansion plus quasiquote lowering ----
+; lcc runs ON a Lisp system (Treewalk in the harness), so macros expand by
+; asking the HOST: (function-kind op)='macro plus (macroexpand-1 form).
+; On the device (P6), funcall of a compiled BCODE expander replaces the same
+; seam; see docs/self-hosting-plan.md.
 (defun %lcc-macro-p (op)
   (if (symbolp op) (eq (function-kind op) 'macro) nil))
 
-; quasiquote -> cons/append-Formen. NESTED (CL-Semantik, d = Tiefe): inneres ` erhöht,
-; , senkt; nur bei d=1 wird ausgewertet, sonst wird die Syntax als Daten REBUILT
-; (Spiegel des Treewalk-qq in eval.c — Drift-Wache via Makro-Korpus). Für d=1-Eingaben
-; ohne nested-` ist die Ausgabe BYTE-IDENTISCH zur alten einstufigen Fassung (Byte-Orakel).
+; quasiquote -> cons/append forms. NESTED CL semantics use d as depth: inner `
+; increments it and , decrements it; evaluation occurs only at d=1, otherwise
+; syntax is REBUILT as data. This mirrors Treewalk qq in eval.c, with a macro
+; corpus as drift guard. For d=1 input without nested `, output is
+; BYTE-IDENTICAL to the old single-level version, as checked by the byte oracle.
 (defun %lcc-qq-d (x d)
   (cond ((if (%lcc-consp x) (eq (car x) 'unquote) nil)
          (if (= d 1)
@@ -500,7 +520,7 @@
         (t (list 'quote x))))
 (defun %lcc-lower-qq (x) (%lcc-qq-d x 1))
 
-; ---- Ausdrucks-Dispatch ----
+; ---- Expression dispatch ----
 (defun %lcc-expr (cs lvls form)
   (cond ((numberp form) (%lcc-push-value cs form))
         ((eq form nil) (%lcc-push-value cs nil))
@@ -510,7 +530,8 @@
          (%lcc-expr-form cs lvls (car form) (cdr form) form))
         (t (%lcc-push-lit cs form))))   ; String-Literal u. ae.
 
-; Dispatch-Kaskade (Objektgroessen-Splits, je <=255 B): form -> sf1 -> sf2 -> ops -> ops2
+; Dispatch cascade split by object size, each <=255 B:
+; form -> sf1 -> sf2 -> ops -> ops2
 (defun %lcc-expr-form (cs lvls op args form)
   (cond ((%lcc-consp op)
          (if (eq (car op) 'lambda)
@@ -541,22 +562,26 @@
              (%lcc-push-lit cs (car args))))
         (t (%lcc-expr-ops cs lvls op args form))))
 
-; Teil 2 des expr-Dispatches (Objektgroessen-Split): Opcode-Formen, Makros, generischer Call.
-; Exakt-2-Args-Prädikat für den Opcode-Fastpath der VARIADISCHEN Ops.
+; Part 2 of expression dispatch (object-size split): opcode forms, macros, and
+; generic calls. Exact-two-argument predicate for the opcode fast path of
+; VARIADIC operations.
 (defun %lcc-2args-p (args)
   (if (%lcc-consp args)
       (if (%lcc-consp (cdr args)) (eq (cdr (cdr args)) nil) nil)
       nil))
 
-; Variadische Ops: Opcode-Name NUR als Fastpath-Kandidat (Arity-Guard in %lcc-expr-ops).
+; Variadic operations: opcode name ONLY as a fast-path candidate, with the
+; arity guard in %lcc-expr-ops.
 (defun %lcc-vop (op)
   (cond ((eq op '+) 'add) ((eq op '-) 'sub) ((eq op '*) 'mul) ((eq op '/) 'div)
         ((eq op '<) 'less) ((eq op '>) 'greater) ((eq op '=) 'eq) (t nil)))
 
-; Opcode-Fastpath NUR bei exakt 2 Args — variadisch/unär geht als GENERISCHER Call an die
-; variadische Bridge (Ein-Suite) bzw. das C-Prim (Träger-Brücke): EINE Semantik, kein
-; stilles Arg-Verwerfen mehr ((- 9 2 3) war 7 statt 4 — Fund des M3-HW-Selftests).
-; eq/eql bleiben ungeguardet: exakt-2 ist dort auch die Prim-Semantik (Extra-Args ignoriert).
+; Opcode fast path ONLY with exactly two arguments. Variadic and unary cases
+; use a GENERIC call to the variadic bridge (Ein suite) or the C primitive
+; (host bridge): ONE semantic path, with no more silent argument dropping.
+; (- 9 2 3) once returned 7 instead of 4, found by the M3 hardware self-test.
+; eq/eql remain unguarded because exact-two is also their primitive semantics
+; (extra arguments are ignored).
 (defun %lcc-expr-ops (cs lvls op args form)
   ((lambda (vop)
      (cond ((if vop (%lcc-2args-p args) nil) (%lcc-binary cs lvls args vop))
@@ -584,12 +609,14 @@
 (defun %lcc-unary (cs lvls args opname)
   (%lcc-emit-op (%lcc-expr cs lvls (car args)) opname))
 
-; ---- Tail-Kompilierung (NUR defun-Kontext; Referenz: defun_tail=True) ----
-; Regeln (empirisch gegen den Referenz-Compiler abgelesen, 2026-07-05):
-;  - generischer CALL in Tail-Position -> TAILCALL(62) OHNE folgendes RET (auch Fremdaufrufe)
-;  - CALLPRIM/Opcode-Formen in Tail-Position -> normal + RET
-;  - if in Tail-Position: KEIN JMPREL — jeder Zweig terminiert selbst (RET/TAILCALL)
-;  - progn/let/let*: nur die LETZTE Form ist Tail-Position
+; ---- Tail compilation (ONLY in defun context; reference: defun_tail=True) ----
+; Rules observed empirically against the reference compiler on 2026-07-05:
+;  - generic CALL in tail position -> TAILCALL(62) WITHOUT a following RET,
+;    including calls to other functions
+;  - CALLPRIM/opcode forms in tail position -> normal form plus RET
+;  - if in tail position: NO JMPREL; each branch terminates itself with
+;    RET or TAILCALL
+;  - in progn/let/let*, only the LAST form is in tail position
 (defun %lcc-sf-p (op)
   (cond ((eq op 'quote) t) ((eq op 'progn) t) ((eq op 'if) t) ((eq op 'let) t)
         ((eq op 'let*) t) ((eq op 'setq) t) ((eq op 'function) t) ((eq op 'lambda) t) ((eq op 'quasiquote) t)
@@ -603,7 +630,7 @@
         ((eq op 'mod) t) ((eq op 'remainder) t) ((eq op 'cons) t) ((eq op 'car) t)
         ((eq op 'cdr) t) ((eq op 'consp) t) ((eq op 'not) t) ((eq op 'null) t) (t nil)))
 
-; op faellt unter die generische CALL-Regel (kein Special/Opcode/Prim)?
+; Does op use the generic CALL rule (not special form, opcode, or primitive)?
 (defun %lcc-callform-p (op)
   (if (%lcc-sf-p op) nil (if (%lcc-opform-p op) nil (if (%lcc-prim op) nil t))))
 
@@ -626,7 +653,8 @@
      (%lcc-tail-seq (car r) (cdr r) (cdr args)))
    (%lcc-let-binds cs lvls lvls (car args) star)))
 
-; tail-if: Zweige terminieren selbst -> nur EIN Patch (JFALSEREL zum else-Beginn).
+; tail-if: branches terminate themselves, so only ONE patch is needed
+; (JFALSEREL to the start of else).
 (defun %lcc-tail-if (cs lvls args)
   ((lambda (cs2)
      ((lambda (hole1 len1)
@@ -655,7 +683,7 @@
        (car form) (cdr form))
       (%lcc-emit-op (%lcc-expr cs lvls form) 'ret)))
 
-; Teil 2 des tail-Dispatches (Objektgroessen-Split): Lowerings, Makros, Tailcall/RET.
+; Part 2 of tail dispatch (object-size split): lowerings, macros, tailcall/RET.
 (defun %lcc-tail2 (cs lvls op args form)
   (cond ((eq op 'and)   (%lcc-tail cs lvls (%lcc-lower-and args)))
         ((eq op 'or)    (%lcc-tail cs lvls (%lcc-lower-or args)))
@@ -663,22 +691,24 @@
         ((eq op 'when)  (%lcc-tail cs lvls (%lcc-lower-when args)))
         ((eq op 'unless) (%lcc-tail cs lvls (%lcc-lower-unless args)))
         ((eq op 'quasiquote) (%lcc-tail cs lvls (%lcc-lower-qq (car args))))
-        ; do-Familie VOR macro-p: das native Lowering (konstanter Stack) gewinnt gegen
-        ; etwaige Alt-Makros gleichen Namens (stdlib-control-Templates, funcall-Rekursion).
+        ; do family BEFORE macro-p: native lowering with a constant stack wins
+        ; over any legacy macro of the same name (stdlib control templates
+        ; using funcall recursion).
         ((%lcc-do-p op) (%lcc-emit-op (%lcc-expr-do cs lvls op args) 'ret))
         ((%lcc-macro-p op) (%lcc-tail cs lvls (macroexpand-1 form)))
         ((%lcc-callform-p op) (%lcc-tailcall cs lvls op args))
         (t (%lcc-emit-op (%lcc-expr cs lvls form) 'ret))))
 
-; ---- Params -> lvls ((name slot a) ...), Slots 0.. ----
+; ---- Parameters -> levels ((name slot a) ...), slots 0.. ----
 (defun %lcc-params-env (ps slot acc)
   (if ps
       (%lcc-params-env (cdr ps) (+ slot 1)
                        (cons (cons (car ps) (cons slot (cons 'a nil))) acc))
       acc))
 
-; ---- Öffentliche Naht: (lambda (params) body...) -> CodeObject-Bausteine ----
-; Rückgabe: (nargs nlocals flags littab bytes) — littab/bytes in Vergabe-/Emissions-Reihenfolge.
+; ---- Public seam: (lambda (params) body...) -> CodeObject components ----
+; Returns (nargs nlocals flags littab bytes), with literal table and bytes in
+; allocation/emission order.
 (defun %lcc-finish (cs nargs)
   (cons nargs
         (cons (- (%lcc-max cs) nargs)
@@ -686,7 +716,7 @@
                     (cons (%lcc-rev (%lcc-lits cs))
                           (cons (%lcc-rev (car (%lcc-st cs))) nil))))))
 
-; (defun name (params) body...) -> Tail-Modus (TAILCALL/selbst-terminierende Zweige)
+; (defun name (params) body...) -> tail mode with TAILCALL/self-terminating branches
 (defun %lcc-compile-defun (params body fns)
   ((lambda (nargs)
      (%lcc-finish (%lcc-tail-seq (%lcc-cs (cons nil 0) nil nargs fns)
@@ -695,8 +725,9 @@
                   nargs))
    (%lcc-len params)))
 
-; Ausgabe: LISTE der Fns in Assemblier-Reihenfolge — Helper (innerste zuerst), MAIN ZULETZT.
-; Helper-Referenzen in littabs sind Marker (%lcc-helper <idx>), idx = Position in dieser Liste.
+; Output: LIST of functions in assembly order: helpers innermost first, MAIN
+; LAST. Helper references in literal tables are markers
+; (%lcc-helper <idx>), where idx is the position in this list.
 (defun lcc-compile-obj (form)
   ((lambda (fns)
      ((lambda (main)
@@ -717,19 +748,21 @@
       (%lcc-len params)))
    (car (cdr form)) (cdr (cdr form))))
 
-; Komfort-Nähte für Ausdrücke (P0-kompatibel): (lambda () expr)
+; Convenience seams for expressions, P0-compatible: (lambda () expr)
 (defun lcc-compile (form)
   (car (cdr (cdr (cdr (cdr (lcc-compile-obj (cons 'lambda (cons nil (cons form nil))))))))))
 
 (defun lcc-lits (form)
   (car (cdr (cdr (cdr (lcc-compile-obj (cons 'lambda (cons nil (cons form nil)))))))))
 
-; ---- P6: lcc-first-REPL-Kern (docs/lcc-device-design.md) ----
-; (lcc-run form): defmacro -> Expander als Lambda KOMPILIEREN, anonym installieren und via
-; %set-macro (C-Naht, Konvergenz-M2) als BCODE-Makro ans Symbol — KEIN eval_env mehr im
-; defmacro-Pfad; defun -> kompilieren + unter dem Namen installieren (lcc-install = die
-; C-Naht); Ausdruck -> als (lambda () form) kompilieren, anonym installieren, funcall
-; (BCODE-Wert; eval->vm-Brücke führt aus).
+; ---- P6: lcc-first REPL core (docs/lcc-device-design.md) ----
+; (lcc-run form): defmacro compiles the expander as a lambda, installs it
+; anonymously, then attaches it to the symbol as a BCODE macro through
+; %set-macro (C seam, convergence M2); eval_env no longer appears in the
+; defmacro path. defun compiles and installs under its name through the
+; lcc-install C seam. An expression compiles as (lambda () form), installs
+; anonymously, and runs through funcall; the eval-to-VM bridge executes the
+; BCODE value.
 (defun %lcc-wrap (form) (cons 'lambda (cons nil (cons form nil))))
 
 ; 1.1-C1 shelf export.  The returned CodeObject list is ordinary detached heap
@@ -748,6 +781,7 @@
                      (lcc-install (lcc-compile-obj (cons 'lambda (cdr (cdr form)))) nil)))
         ((if (%lcc-consp form) (eq (car form) 'defun) nil)
          (lcc-install (lcc-compile-obj form) (car (cdr form))))
-        ; Ausdruck: name=t = TRANSIENTES Main (lcc-install laesst es sofort laufen und gibt
-        ; den WERT zurueck — kein funcall, kein Region-/Directory-Leck je Eingabe; M4-Fund).
+        ; Expression: name=t denotes a TRANSIENT main. lcc-install runs it
+        ; immediately and returns the VALUE, with no funcall and no
+        ; region/directory leak per input (M4 finding).
         (t (lcc-install (lcc-compile-obj (%lcc-wrap form)) t))))

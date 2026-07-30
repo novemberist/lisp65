@@ -36,12 +36,12 @@ lisp65_error_code reader_lisp_error_code(void);
  * gueltiges NIL, EOF und Fehler. */
 obj read_expr(const char **p);
 
-/* Disk-Stream-Naht (Regel-B-LOAD): Datei liegt im EXT-RAM, ein Fetch-Callback liefert Rohzeichen
- * (0 = EOF) ueber ein winziges Bank-0-Fenster -> KEIN grosser Parse-Puffer in Bank 0, beliebige
- * Dateigroesse. Der Reader ist KALT (nur Parse-Zeit) => Fn-Call/Zeichen ohne Perf-Belang; globale
- * Quelle => NICHT reentrant (wie das alte load). reader_from_fetch setzt die Quelle,
- * read_expr_stream liest EINE Form daraus, reader_skip_peek ueberspringt WS/Kommentar fuer den
- * EOF-Check der Lade-Schleife (s. load_source_stream). */
+/* Disk stream seam (rule-B LOAD): the file lives in EXT RAM and a fetch callback delivers raw
+ * characters (0 = EOF) through a tiny bank-0 window -> NO large parse buffer in bank 0, any file
+ * size. The reader is COLD (parse time only), so a function call per character costs nothing that
+ * matters; the source is global, so it is NOT reentrant (like the old load). reader_from_fetch sets
+ * the source, read_expr_stream reads ONE form from it, and reader_skip_peek skips whitespace and
+ * comments for the load loop's EOF check (see load_source_stream). */
 void reader_from_fetch(char (*fetch)(void));
 obj  read_expr_stream(void);
 char reader_skip_peek(void);

@@ -10,7 +10,11 @@ import re
 
 def check(text: str) -> None:
     required = (
-        'section(".lisp65_c2_kernal_window.c2_resident")',
+        (
+            "#define VM_LOGICAL_PC_HELPER \\\n"
+            '    __attribute__((noinline, section(".lisp65_c2_kernal_window.c2_resident")))'
+        ),
+        "static VM_LOGICAL_PC_HELPER uint8_t\nvm_logical_relative_target(",
         "vm_logical_relative_target(uint16_t next, uint16_t payload_length,",
         "#define JUMP_REL(delta_)",
         "uint16_t target__",
@@ -42,8 +46,14 @@ def selftest(text: str) -> int:
             1,
         ),
         text.replace(
-            'section(".lisp65_c2_kernal_window.c2_resident")',
-            'section(".text")',
+            (
+                "#define VM_LOGICAL_PC_HELPER \\\n"
+                '    __attribute__((noinline, section(".lisp65_c2_kernal_window.c2_resident")))'
+            ),
+            (
+                "#define VM_LOGICAL_PC_HELPER \\\n"
+                '    __attribute__((noinline, section(".text")))'
+            ),
             1,
         ),
     )

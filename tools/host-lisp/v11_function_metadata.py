@@ -109,6 +109,21 @@ def public_definitions(contract: dict[str, Any]) -> dict[str, dict[str, Any]]:
             "visibility": "public",
             "public_authority": "first-class-buffer-contract",
         }
+    addition = contract["public_authorities"]["phase_v_addition"]
+    phase_v_contract = load(ROOT / addition["contract"])
+    phase_v_surface = phase_v_contract.get(addition["surface_key"])
+    require(isinstance(phase_v_surface, dict),
+            "Phase-V public authority has no named surface")
+    for name in addition["names"]:
+        require(isinstance(phase_v_surface.get(name), dict),
+                f"Phase-V public authority does not name {name}")
+        require(name not in result, f"Phase-V name already has a public authority: {name}")
+        result[name] = {
+            "name": name,
+            "kind": addition["kind"],
+            "visibility": "public",
+            "public_authority": "phase-v-random-contract",
+        }
     return result
 
 
@@ -271,10 +286,13 @@ def validate(index: dict[str, Any]) -> None:
 def collect() -> tuple[dict[str, Any], dict[str, Any]]:
     index, stats = build_index()
     validate(index)
-    require(stats["records"] == 136 and stats["exact_arity"] == 101
-            and stats["unresolved_arity"] == 35,
+    require(stats["records"] == 139 and stats["exact_arity"] == 103
+            and stats["unresolved_arity"] == 36,
             "current public metadata coverage drift")
     index_bytes = canonical(index)
+    phase_v_contract = (
+        ROOT / load(CONTRACT)["public_authorities"]["phase_v_addition"]["contract"]
+    )
     receipt = {
         "format": "lisp65-v11-function-metadata-contract-receipt-v1",
         "version": 1,
@@ -285,6 +303,7 @@ def collect() -> tuple[dict[str, Any], dict[str, Any]]:
             "contract": binding(CONTRACT),
             "dialect_surface": binding(SURFACE),
             "buffer_contract": binding(BUFFER_CONTRACT),
+            "phase_v_contract": binding(phase_v_contract),
             "native_registry": binding(NATIVE_REGISTRY),
             "bytecode_authorities": stats["bytecode_authorities"],
         },

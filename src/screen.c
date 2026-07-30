@@ -39,13 +39,13 @@ static uint8_t *scr_base;
 #define SCRNPTRH (*(volatile uint8_t *)0xD061)
 #endif
 
-/* Das CPU-sichtbare Farb-RAM-Fenster bei $D800 ist nur 1 KB gross ($D800-$DBFF). Ein Farb-Store
- * mit einem Offset >= 1024 laeuft daher NICHT in Farb-RAM, sondern in $DC00-$DFFF = CIA/VIC-I/O
- * (z.B. $DD00 = CIA2 VIC-Bank-Select). Auf einem 80x25-Schirm betrifft das die Zeilen >= 13. Ein
- * solcher Fehl-Store kippt die VIC-Bank -> falsche Anzeige-Region (der frueher gejagte "Scroll-
- * Muell", per HW-A/B 2026-07-08 als Root Cause bewiesen). Farb-Stores deshalb strikt auf dieses
- * Fenster begrenzen. Volle Farbe fuer die unteren Zeilen ist ein Follow-up ueber den 28-Bit-
- * Farbpfad ($FF80000, wie der EDMA-Scroll), nicht ueber das $D800-Fenster. */
+/* The CPU-visible colour RAM window at $D800 is only 1 KB in size ($D800-$DBFF). A colour store
+ * at an offset >= 1024 therefore does NOT land in colour RAM but in $DC00-$DFFF = CIA/VIC I/O
+ * (e.g. $DD00 = CIA2 VIC bank select). On an 80x25 screen that affects rows >= 13. Such a stray
+ * store flips the VIC bank -> the wrong display region (the long-hunted "scroll garbage", proven
+ * as the root cause by hardware A/B on 2026-07-08). Colour stores are therefore strictly bounded
+ * to this window. Full colour for the lower rows is a follow-up through the 28-bit colour path
+ * ($FF80000, as the EDMA scroll uses), not through the $D800 window. */
 #define CRAM_WINDOW 1024u
 
 static uint8_t cols_, rows_;
@@ -178,11 +178,11 @@ void scr_put_at(uint8_t x, uint8_t y, char c, int16_t attr) {
 #endif
 }
 
-/* Schneller Zeilen-Schreiber (2026-07-03): Basis-Zeiger EINMAL, dann lineare Stores.
- * scr_put_at je Zeichen kostete ~1500 Zyklen (Software-Mul y*cols_ + Checks) — bei
- * gepaddeten 80-Zeichen-Zeilen ~5 ms je Bulk-Write, gemessen in xemu ($D7FA-Frames).
- * chars: ASCII-Quelle oder NULL (nur padden); attr wie scr_put_at (Bit7=RVS, Bit6 hier
- * ohne Bedeutung — der Aufrufer uebergibt pad_to als explizite Grenze). */
+/* Fast span writer (2026-07-03): compute the base pointer ONCE, then do linear stores.
+ * scr_put_at per character cost about 1500 cycles (software multiply y*cols_ plus checks) —
+ * roughly 5 ms per bulk write on padded 80-character rows, measured in xemu ($D7FA frames).
+ * chars: an ASCII source or NULL (pad only); attr as in scr_put_at (bit 7 = RVS, bit 6 has no
+ * meaning here — the caller passes pad_to as an explicit bound). */
 void scr_write_span(uint8_t x, uint8_t y, const char *chars, uint8_t nchars,
                     uint8_t pad_to, int16_t attr) {
     uint8_t *p; uint8_t i, n, rvs;

@@ -2,8 +2,8 @@
 #ifndef LISP65_REPL_H
 #define LISP65_REPL_H
 
-/* Read-Eval-Print-Loop: liest zeilenweise von stdin (Gerät: KERNAL-Tastatur),
- * wertet je eine Form aus und druckt das Ergebnis. Endet bei EOF. */
+/* Read-eval-print loop: reads line by line from stdin (on the device: the KERNAL keyboard),
+ * evaluates one form at a time and prints the result. Ends at EOF. */
 void repl(void);
 
 #endif /* LISP65_REPL_H */

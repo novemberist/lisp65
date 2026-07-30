@@ -1,28 +1,33 @@
-; lisp65 — setf-MVP: Places als BCODE-Makros (C-Phase Schritt 5, Lane K 2026-07-06;
-; docs/modularization-review-lane-k.md + ansi-cl-inventory §Places). Reine Lisp-Lib —
-; NULL Bank-0-Kosten; Kandidat für die "place"-Pilot-Lib (PLACE auf D81).
+; lisp65 -- setf MVP: places as BCODE macros (C-phase step 5, Lane K,
+; 2026-07-06; docs/modularization-review-lane-k.md plus ansi-cl-inventory
+; section Places). Pure Lisp library with ZERO Bank-0 cost; candidate for the
+; "place" pilot library (PLACE on D81).
 ;
-; v1-Fläche (feste Expander plus EINE kanonische Erweiterungstabelle):
+; v1 surface (fixed expanders plus ONE canonical extension table):
 ;   (setf sym v) (setf (car p) v) (setf (cdr p) v) (setf (getf sym k) v)
 ;   (incf place [n]) (decf place [n]) (push v place) (pop place)
-; EHRLICHE v1-Grenzen (dokumentiert, CL-naiv):
-;   - Subformen der Place werden ggf. MEHRFACH ausgewertet (kein once-only ausser wo gensym
-;     steht) — für Symbole/car/cdr-auf-Variablen der Alltagsfälle korrekt.
-;   - (setf (getf ...)) verlangt ein SYMBOL als plist-Träger (schreibt via setq zurück).
-;   - Unbekannte Place-Formen expandieren zu einem Aufruf der undefinierten
-;     %places-error-unsupported-place -> LAUTER Abort mit Namen in der Fehlermeldung.
+; HONEST v1 boundaries (documented, CL-naive):
+;   - Place subforms may be evaluated MULTIPLE times; there is no once-only
+;     protection except where a gensym appears. This is correct for symbols
+;     and ordinary car/cdr-on-variable cases.
+;   - (setf (getf ...)) requires a SYMBOL as the plist carrier and writes back
+;     through setq.
+;   - Unknown place forms expand into a call to the undefined
+;     %places-error-unsupported-place, producing a LOUD abort with the name in
+;     the error message.
 ;
-; Bibliotheks-Erweiterungen werden publish-last registriert.  Die sichtbare
-; Tabelle (*setf-place-registry*) ändert sich erst bei %setf-register-commit;
-; ein abgebrochener Installationslauf lässt höchstens unsichtbare Pending-
-; Daten zurück, die der nächste begin verwirft.  Damit kann ein fehlgeschlagenes
-; require/Append niemals einen Place einer nicht publizierten Bibliothek zeigen.
-; Identische Doppelregistrierung ist idempotent, widersprüchliche ist fail-closed.
+; Library extensions are registered publish-last. The visible table
+; (*setf-place-registry*) changes only at %setf-register-commit. An aborted
+; installation leaves at most invisible pending data, which the next begin
+; discards. Thus a failed require/append can never expose a place from an
+; unpublished library. Identical duplicate registration is idempotent;
+; conflicting registration fails closed.
 
 (defun %places-consp (x)
   (if x (if (numberp x) nil (if (symbolp x) nil (if (stringp x) nil t))) nil))
 
-; plist-Update-Kern für (setf (getf ...)): liefert NEUE plist mit k->v (vorn ersetzt/ergänzt).
+; plist update core for (setf (getf ...)): returns a NEW plist with k->v,
+; replacing or adding it at the front.
 (defun %putf (pl k v)
   (if pl
       (if (eq (car pl) k)
@@ -118,8 +123,8 @@
                  g))
           (t (%setf-expand-registered place vform g)))))
 
-; Expander-Kern: baut die Zuweisungs-Form für eine Place. Wert-Form wird als GENSYM-let
-; gebunden, damit setf den WERT zurückgibt und val nur EINMAL ausgewertet wird.
+; Expander core: builds the assignment form for a place. The value form is
+; bound in a GENSYM let so setf returns the VALUE and evaluates val only ONCE.
 (defun %setf-expand (place vform)
   (if (symbolp place)
       (list 'setq place vform)
@@ -129,13 +134,14 @@
 
 (defmacro setf (place vform) (%setf-expand place vform))
 
-; incf/decf: optionales Delta via &rest (lcc kann &rest in defun/defmacro-Expandern).
+; incf/decf: optional delta through &rest; lcc supports &rest in
+; defun/defmacro expanders.
 (defmacro incf (place &rest r)
   (%setf-expand place (list '+ place (if r (car r) 1))))
 (defmacro decf (place &rest r)
   (%setf-expand place (list '- place (if r (car r) 1))))
 
-; push/pop auf Places (Alltagsfälle: Variable; car/cdr-Places gehen mit).
+; push/pop on places; ordinary variable cases and car/cdr places are supported.
 (defmacro push (v place)
   (%setf-expand place (list 'cons v place)))
 (defmacro pop (place)

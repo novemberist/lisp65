@@ -44,10 +44,11 @@
             (%load-from-entry base)
             (%load-scan-entries codes (1+ entry))))))
 
-; fuel begrenzt die Sektorkette (Schutz gegen zyklische/korrupte Verzeichnisse -> kein Hang).
-; WICHTIG: Kettenende per (> next-track 0) pruefen, NICHT per Truthiness: nur NIL ist falsch,
-; die Fixnum 0 (MKFIX(0)=1) ist truthy -> (if next-track ...) wuerde am Kettenende (track 0)
-; endlos weiterrekursieren (TCO'd) und Muell-Sektoren lesen (= der Hang bei fehlender Datei).
+; fuel bounds the sector chain, preventing hangs on cyclic or corrupt
+; directories. IMPORTANT: detect chain end with (> next-track 0), NOT by
+; truthiness. Only NIL is false; fixnum 0 (MKFIX(0)=1) is truthy, so
+; (if next-track ...) would recurse forever with TCO at chain end (track 0)
+; and read garbage sectors, causing the missing-file hang.
 (defun %disk-directory-link-valid-p (track sector next-track next-sector)
   (if (= next-track 0)
       t

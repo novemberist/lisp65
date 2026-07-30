@@ -95,23 +95,23 @@ lisp65_error_code vm_status_error_code(uint8_t status);
  * diagnostic latch or second status store is part of this contract. */
 obj vm_dirmiss_detail(obj detail);
 
-/* Plattform-Naht: laedt len Bytes vom Code-Ort (bank:off im erw. RAM) nach dst (hot).
- * MUSS vom Build bereitgestellt werden (Host: memcpy; mega65: Bulk-DMA). */
+/* Platform seam: loads len bytes from the code location (bank:off in extended RAM) into dst (hot).
+ * MUST be provided by the build (host: memcpy; mega65: bulk DMA). */
 void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst);
 
-void vm_init(void);   /* internt t; einmal vor vm_run */
+void vm_init(void);   /* interns t; call once before vm_run */
 #if defined(LISP65_DIALECT_FAMILY_HARNESS) && defined(LISP65_DIALECT_V2)
 /* Treewalk-only semantic oracle bridge for direct internal codec forms.
  * The symbols remain deliberately absent from function-designator dispatch. */
 obj vm_family_internal_primitive(uint8_t pid, obj *args, uint8_t nargs);
 #endif
 
-/* Code-Directory (docs/bytecode-abi.md §5): Symbol -> Code-Ort. CALL/TAILCALL lösen den Callee
- * (littab[idx] = Symbol) hierüber auf. */
+/* Code directory (docs/bytecode-abi.md §5): symbol -> code location. CALL/TAILCALL resolve the
+ * callee (littab[idx] = symbol) through it. */
 #ifndef VM_MAXARGS
-/* 8 -> 12 (2026-07-02): lib/ide-buffer.lisp baut den 9-Feld-Buffer via (list ...9 Args) —
- * mit 8 warf die ECHTE VM VM_BADOPCODE, waehrend das Host-Oracle es durchliess (Drift!).
- * Kosten: +4 Rootstack-Slots je VM-Frame (Frame-Check nutzt VM_MAXARGS als Reserve). */
+/* 8 -> 12 (2026-07-02): lib/ide-buffer.lisp builds the nine-field buffer via (list ...9 args) —
+ * with 8 the REAL VM raised VM_BADOPCODE while the host oracle let it through (drift!).
+ * Cost: +4 root-stack slots per VM frame (the frame check uses VM_MAXARGS as its reserve). */
 #define VM_MAXARGS 12
 #endif
 void vm_dir_reset(void);

@@ -1,26 +1,25 @@
-/* lisp65 — Äquivalenz-Suite: Treewalk vs. Geräte-Compiler (Anti-Drift-Regel 2, Lane K).
+/* lisp65 — equivalence suite: tree walker vs. device compiler (anti-drift rule 2, lane K).
  *
- * Lässt DIESELBEN Top-Level-Formen wahlweise durch den TREEWALK (eval) oder den
- * GERÄTE-COMPILER (compile_run_top_form + vm_run) laufen und druckt je Form genau EINE
- * Zeile "src => wert". Der Treiber (scripts/equivalence-check.sh) ruft beide Modi in
- * GETRENNTEN PROZESSEN auf (saubere Welten: keine symfn-/Heap-Interferenz zwischen den
- * Engines) und diff't die Ausgaben: Übereinstimmung = keine semantische Drift.
- * Es braucht KEIN Orakel — nur Agreement; Fehler beider Engines werden auf "!error"
- * normalisiert (auch Fehler-Übereinstimmung zählt als Äquivalenz).
+ * Runs the SAME toplevel forms either through the TREE WALKER (eval) or through the DEVICE
+ * COMPILER (compile_run_top_form + vm_run) and prints exactly ONE line "src => value" per form.
+ * The driver (scripts/equivalence-check.sh) invokes both modes in SEPARATE PROCESSES (clean
+ * worlds: no symfn or heap interference between the engines) and diffs the output: agreement
+ * means no semantic drift. NO oracle is needed — only agreement; errors from either engine are
+ * normalised to "!error" (agreeing on an error also counts as equivalence).
  *
- * DRITTE ENGINE "lcc" (Self-Hosting P2/2b): der Treewalk fuehrt lib/lcc.lisp aus, das die
- * Form zu Bytecode kompiliert; der Harness assembliert (bc_assemble), registriert defuns im
- * VM-Directory und laesst Ausdruecke auf vm_run laufen -> lcc-kompilierter Code wird END-TO-END
- * semantisch gegen die anderen Engines gedifft. littab-Objekte werden DAUERHAFT gerootet
- * (der Blob referenziert Heap-Zellen; ungerootet fraesse der GC sie -- M6-Lektion).
+ * THIRD ENGINE "lcc" (self-hosting P2/2b): the tree walker executes lib/lcc.lisp, which compiles
+ * the form to bytecode; the harness assembles it (bc_assemble), registers defuns in the VM
+ * directory and runs expressions on vm_run -> lcc-compiled code is diffed END-TO-END semantically
+ * against the other engines. littab objects are rooted PERMANENTLY (the blob references heap
+ * cells; unrooted, the GC would eat them -- the M6 lesson).
  *
- * Aufruf: equivalence-check tree|vm|lcc <formen.lisp> [--preload <datei.lisp>]
- * Korpus-Vertrag: EINE Form pro Zeile (einzeilige Ausgabe-Paarung), druckbare Ergebnisse
- * (Zahl/Symbol/Liste), selbsttragend (definiert seine Mini-Lib selbst — der nackte
- * Treewalk hat KEINE Blob-Stdlib). Bekannte, BEWUSSTE Nicht-Schnittmengen (cond/case/
- * and/or ohne Prelude-Makros im Treewalk; "/" fehlt im Treewalk; Vergleichsketten >2 und
- * defmacro fehlen im Compiler; quasiquote nur Treewalk) stehen NICHT im Agreement-Korpus
- * — siehe tests/equivalence/forms.lisp Kopfkommentar. */
+ * Usage: equivalence-check tree|vm|lcc <forms.lisp> [--preload <file.lisp>]
+ * Corpus contract: ONE form per line (line-wise output pairing), printable results
+ * (number/symbol/list), self-supporting (it defines its own mini library — the bare tree walker
+ * has NO blob stdlib). Known, DELIBERATE non-intersections (cond/case/and/or without prelude
+ * macros in the tree walker; "/" missing in the tree walker; comparison chains >2 and defmacro
+ * missing in the compiler; quasiquote only in the tree walker) are NOT in the agreement corpus
+ * — see the header comment of tests/equivalence/forms.lisp. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -266,8 +265,8 @@ int main(int argc, char **argv) {
         if (!f) { fprintf(stderr, "kann %s nicht lesen\n", argv[4]); return 2; }
         len = fread(pre, 1, sizeof(pre) - 1, f);
         fclose(f); pre[len] = '\0';
-        /* Manuell laden: load_source waere unter LISP65_COMPILE_REPL immer die
-         * Compiler-Route und wuerde damit den Treewalk-Orakelpfad entwerten. */
+        /* Load manually: under LISP65_COMPILE_REPL load_source would always take the compiler
+         * route and would therefore devalue the tree-walker oracle path. */
         p = pre;
         for (;;) {
             obj preload_form;

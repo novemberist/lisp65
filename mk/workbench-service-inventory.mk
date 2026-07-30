@@ -53,7 +53,7 @@ v2-workbench-artifacts: v2-workbench-codemod
 v11-surface-delivery-parity-selftest:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_surface_delivery_parity.py --selftest
 
-v11-surface-delivery-parity-check: v11-surface-delivery-parity-selftest v2-workbench-artifacts
+v11-surface-delivery-parity-check: v11-surface-delivery-parity-selftest v2-workbench-artifacts c2-random-base-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/v11_surface_delivery_parity.py
 
 v11-repl-banner-visual-selftest:

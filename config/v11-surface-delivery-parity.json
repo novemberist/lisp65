@@ -9,7 +9,7 @@
   "native_registry": "config/v2-native-function-registry.json",
   "artifact_closure": "config/v2-workbench-artifact-closure.json",
   "workbench_profile": "config/workbench.mk",
-  "resident_manifest": "build/bytecode/dialect-v2/workbench/stdlib-p0.manifest.json",
+  "resident_manifest": "build/post-promotion/phase-v/random-base/gate/candidate/stdlib-p0.manifest.json",
   "library_manifests": [
     "build/bytecode/dialect-v2/libs/ide.manifest.json",
     "build/bytecode/dialect-v2/libs/idex.manifest.json",
@@ -56,6 +56,32 @@
           "%v2-reverse-into",
           "filter"
         ]
+      }
+    },
+    {
+      "name": "random",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-random-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-random.lisp",
+        "required_defuns": ["random"]
+      }
+    },
+    {
+      "name": "random-seed",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-random-contract.json"
+      },
+      "implementation": {
+        "path": "lib/stdlib-random.lisp",
+        "required_defuns": ["random-seed"]
       }
     },
     {

@@ -72,6 +72,7 @@ V1_MACRO_SOURCES = (
     "lib/stdlib-control.lisp",
     "lib/stdlib-places.lisp",
 )
+COMPILER_OWNED_MACRO_SURFACES = {"while"}
 V2_PRELUDE = "lib/dialect-v2/prelude-control.lisp"
 V2_LIST_SOURCES = (
     "lib/dialect-v2/lists-core.lisp",
@@ -355,6 +356,10 @@ def _inventory_sets(contract: dict[str, Any]) -> dict[str, dict[str, set[str]]]:
             "directory": candidate_directory,
         },
     }
+    if FAMILY == "prelude-control":
+        for profile in PROFILES:
+            for role in ("loaded", "boot", "directory"):
+                result[profile][role] -= COMPILER_OWNED_MACRO_SURFACES
     projection = snapshot["projection"]
     actual = {
         "loaded_symbol_delta": len(candidate_loaded) - len(baseline_loaded),
@@ -397,7 +402,9 @@ def _validate_prelude_sources(
                 if name in v1_defs:
                     raise EvidenceError(f"v1 macro definition is ambiguous: {name}")
                 v1_defs[name] = (kind, source)
-    expected_v1_macros = set(snapshot["retained_macros"]) | {
+    expected_v1_macros = (
+        set(snapshot["retained_macros"]) - COMPILER_OWNED_MACRO_SURFACES
+    ) | {
         item["name"] for item in snapshot["macro_migrations"]
     }
     if any(
@@ -459,6 +466,11 @@ def _validate_prelude_sources(
     baseline_provenance.update(
         {name: [f"source:{source}"] for name, (_kind, source) in v1_defs.items()}
     )
+    baseline_provenance.update({
+        name: ["native-special-form:src/compile.c"]
+        for name in COMPILER_OWNED_MACRO_SURFACES
+        if name in inventories["dialect-v1"]["loaded"]
+    })
     candidate_provenance: dict[str, list[str]] = {}
     for name in inventories["dialect-v2"]["loaded"]:
         if name in groups:

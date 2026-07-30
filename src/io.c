@@ -26,47 +26,47 @@
 static char io_buf[IO_BUF_MAX] __attribute__((unused));
 
 #if defined(__MEGA65__)
-/* MEGA65-NATIV: C64-Stil-KERNAL-Datei-I/O (OPEN $FFC0) crasht hier (C65-MAP/Bank). Der
- * native Weg ist das hyppo-Hypervisor-DOS (Trap via STA $D640 + NOP; A=Subfunktion;
- * Ergebnis in A/X/Y/Carry; Erfolg=Carry SET). Siehe docs/mega65-file-io-research.md.
+/* MEGA65 NATIVE: C64-style KERNAL file I/O (OPEN $FFC0) crashes here (C65 MAP/bank). The
+ * native route is the hyppo hypervisor DOS (trap via STA $D640 + NOP; A=subfunction;
+ * result in A/X/Y/carry; success = carry SET). See docs/mega65-file-io-research.md.
  *
- * STAND 2026-06-30: in xemu (Kaltboot von echter SD) END-zu-END bestätigt — selectdrive(0),
- * cdrootdir, setname, findfirst, openfile, readfile liefern alle carry SET; 23-Byte-Testdatei
- * korrekt gelesen (Beweis-Log native-load-proof). ZWEI ABI-Funde:
- *   1) Der setname-Name-Puffer muss PAGE-ALIGNED sein: hyppo liest den Namen ab der
- *      Page-Basis (Low-Byte des X/Y-Pointers wird verworfen). Nicht-ausgerichteter Name ->
- *      leerer Name -> findfirst $88 file_not_found. Darum unten namebuf @ aligned(256).
- *   2) selectdrive(0)/cdrootdir MÜSSEN carry SET liefern (Disk-Liste vom Boot befüllt).
- * Per Default AUS, weil real-HW-Start via etherload selectdrive bisher carry CLEAR gab
- * (dos_disk_count==0 im Inject-Kontext); das ist ein START-/Deploy-Kontext-Problem, KEINE
- * Unmöglichkeit. Mit -DMEGA65_HYPPO_LOAD einschalten, sobald der Geräte-Startpfad bestätigt
- * ist. hyppo matcht Namen case-sensitiv -> Name NICHT hochcasen. */
-/* BEVORZUGTER PFAD (MEGA65_F011_LOAD): liest die EINGELEGTE Disk ueber den F011-
- * Floppy-Controller — KEIN ROM/KERNAL/hyppo, KEIN rohes SD/FAT. Der Controller liest das
- * gemountete D81-Image selbst (Mount + SD-Fragmentierung sind SEINE Sache) und erzwingt so
- * die Disk-Grenze: Lisp/User sieht nur die eingelegte Disk, nie die rohe SD. Produkt-korrekt
- * (bleibt gueltig, wenn das ROM fuer RAM ausgeblendet wird).
+ * STATUS 2026-06-30: confirmed END to END in xemu (cold boot from a real SD) — selectdrive(0),
+ * cdrootdir, setname, findfirst, openfile, readfile all return carry SET; a 23-byte test file
+ * read correctly (proof log native-load-proof). TWO ABI findings:
+ *   1) The setname name buffer must be PAGE ALIGNED: hyppo reads the name from the page base
+ *      (the low byte of the X/Y pointer is discarded). An unaligned name ->
+ *      empty name -> findfirst $88 file_not_found. Hence namebuf @ aligned(256) below.
+ *   2) selectdrive(0)/cdrootdir MUST return carry SET (the disk list is filled at boot).
+ * Off by default, because a real-hardware start via etherload has so far given carry CLEAR on
+ * selectdrive (dos_disk_count==0 in the inject context); that is a START/deploy context problem,
+ * NOT an impossibility. Enable with -DMEGA65_HYPPO_LOAD once the device start path is confirmed.
+ * hyppo matches names case-sensitively -> do NOT upcase the name. */
+/* PREFERRED PATH (MEGA65_F011_LOAD): reads the INSERTED disk through the F011 floppy
+ * controller — NO ROM/KERNAL/hyppo, NO raw SD/FAT. The controller reads the mounted D81 image
+ * itself (mounting and SD fragmentation are ITS business) and thereby enforces the disk
+ * boundary: Lisp and the user see only the inserted disk, never the raw SD. Product-correct
+ * (stays valid when the ROM is banked out in favour of RAM).
  *
- * HW-BEWIESEN 2026-07-04, Kontext gehaertet 2026-07-13 (docs/mega65-file-io-research.md):
- *  - Leseweg: I/O neu freischalten, $D689=0 (F011), F011-Read-Kmd, $D680=$81, $DE00 lesen,
- *    danach $D680=$82. Der fruehere rohe $D680=2-Zwischenschritt erbte SD-Slot/BUFSEL-Zustand
- *    und ist verboten. NICHT via $D087 / Flat-$FFD6C00. Jeder Vorgang besitzt seinen Kontext.
- *  - Geometrie (per Kalibrier-Disk vermessen): CBM-1581 logisch (Track L 1..80, Sektor S
- *    0..39, je 256 B) -> f011_track=L-1; b=S>>1; half=S&1; seite=(b>=10)?1:0;
- *    f011_sektor=(b%10)+1. (=> block = f011_track*20 + seite*10 + (sektor-1), Standard-D81.)
- * Kein residenter Sektorpuffer / keine FAT-Kette mehr (vs. altem SD-direkt-Weg: -1348 B BSS).
- * Offline in xemu NICHT testbar (virtueller Mount-Pool) -> HW-Validierung via etherload -m. */
+ * HARDWARE-PROVEN 2026-07-04, context hardened 2026-07-13 (docs/mega65-file-io-research.md):
+ *  - Read path: re-enable I/O, $D689=0 (F011), F011 read command, $D680=$81, read $DE00,
+ *    then $D680=$82. The earlier raw $D680=2 intermediate step inherited SD slot/BUFSEL state
+ *    and is forbidden. NOT via $D087 / flat $FFD6C00. Every operation owns its context.
+ *  - Geometry (measured with a calibration disk): CBM-1581 logical (track L 1..80, sector S
+ *    0..39, 256 B each) -> f011_track=L-1; b=S>>1; half=S&1; side=(b>=10)?1:0;
+ *    f011_sector=(b%10)+1. (=> block = f011_track*20 + side*10 + (sector-1), standard D81.)
+ * No resident sector buffer and no FAT chain any more (vs. the old SD-direct route: -1348 B BSS).
+ * NOT testable offline in xemu (virtual mount pool) -> hardware validation via etherload -m. */
 #ifdef MEGA65_F011_LOAD
 static void m65_io_enable(void) {
     __asm__ volatile("lda #$47\n\t sta $d02f\n\t lda #$53\n\t sta $d02f\n\t" ::: "a");
 }
 #include "f011_context.h"
-/* F011-Read EINES CBM-Logiksektors (T 1..80, S 0..39). Die 256-B-Logikhaelfte liegt danach im
- * $DE00-Fenster ab dem ZURUeCKGEGEBENEN Offset (0 oder 256) — KEINE Kopie (Regel-B-Redesign:
- * die Primitive/der Chain-Leser kopieren direkt aus $DE00, spart Stack-Scratch). */
+/* F011 read of ONE CBM logical sector (T 1..80, S 0..39). Afterwards the 256-byte logical half
+ * sits in the $DE00 window at the RETURNED offset (0 or 256) — NO copy (rule-B redesign: the
+ * primitives and the chain reader copy straight out of $DE00, saving stack scratch). */
 static unsigned int f011_read_at(unsigned char T, unsigned char S) {
-    unsigned char b    = (unsigned char)(S >> 1);              /* 0..19  512-B-Block im Track */
-    unsigned char half = (unsigned char)(S & 1);              /* 0=untere, 1=obere 256 B */
+    unsigned char b    = (unsigned char)(S >> 1);              /* 0..19  512-byte block in the track */
+    unsigned char half = (unsigned char)(S & 1);              /* 0=lower, 1=upper 256 B */
     unsigned char side = (unsigned char)(b >= 10 ? 1 : 0);
     unsigned char fsec = (unsigned char)((b >= 10 ? b - 10 : b) + 1);   /* 1..10 */
     unsigned int  g;
@@ -83,14 +83,14 @@ static unsigned int f011_read_at(unsigned char T, unsigned char S) {
     return (unsigned int)half << 8;
 }
 
-/* ==== Regel-B-Disk-Primitive (Bytecode-Lisp treibt die 1581-Logik; s. docs/load-rule-b-design.md
- * + docs/bytecode-abi.md §4a fuer die frozen IDs). EIN Bank-0-Puffer DBUF: Dir-Scan-Ziel UND
- * Datei-Parse-Puffer (sequenziell). ==== */
-/* Step 2 (EXT-Streaming): KEIN grosser Bank-0-Puffer mehr. Dir-Sektor (256 B) + Datei liegen im
- * EXT-RAM (ext_disk_put/get, Bank oberhalb des Zell-Heaps). Die Datei wird ueber load_source_stream
- * in den Reader gestreamt -> beliebige Dateigroesse. Alles KALT (Ladezeit) -> DMA/Byte ok. */
-#define DISK_EXT_DIR   0u        /* Dir-Sektor: EXT-Offset 0..255 */
-#define DISK_EXT_FILE  LISP65_EXT_DISK_FILE_OFFSET /* Datei nach dem 256-B-Directory-Sektor */
+/* ==== Rule-B disk primitives (bytecode Lisp drives the 1581 logic; see docs/load-rule-b-design.md
+ * plus docs/bytecode-abi.md §4a for the frozen IDs). ONE bank-0 buffer DBUF: directory scan target
+ * AND file parse buffer (used sequentially). ==== */
+/* Step 2 (EXT streaming): NO large bank-0 buffer any more. The directory sector (256 B) and the
+ * file live in EXT RAM (ext_disk_put/get, a bank above the cell heap). The file is streamed into
+ * the reader via load_source_stream -> any file size. All COLD (load time) -> DMA per byte is fine. */
+#define DISK_EXT_DIR   0u        /* directory sector: EXT offset 0..255 */
+#define DISK_EXT_FILE  LISP65_EXT_DISK_FILE_OFFSET /* file after the 256-byte directory sector */
 #define DISK_FILE_MAX  DISK_EXT_FILE_MAX
 #define DISK_CHAIN_FUEL ((unsigned int)(DISK_FILE_MAX / 254u + 2u))
 
@@ -234,8 +234,8 @@ static unsigned char f011_write_at_guarded(unsigned char T, unsigned char S) {
     lisp65_f011_unmap_buffer();
     return f011_issue_write_guarded(T, S);
 }
-/* Tokengebundener Write. Verify per echtem Readback; jeder Eintritt in einen
- * weiteren F011-Schritt wird erneut vom Mount-Token bewacht. */
+/* Token-bound write. Verified by a real readback; every entry into a further
+ * F011 step is guarded by the mount token again. */
 unsigned char io_disk_write_sector_guarded(unsigned char track, unsigned char sector) {
     unsigned int off;
     unsigned char status = f011_write_at_guarded(track, sector);
@@ -286,11 +286,11 @@ static unsigned int disk_chain_capacity(unsigned char t, unsigned char s) {
 }
 
 /* SAVE (MVP Overwrite-in-place, docs/two-product-workflow.md Prio 1): schreibt len Bytes aus dem
- * EXT-Datei-Puffer in die BESTEHENDE Kette der Datei `name`. Die Kette wird NIE veraendert —
- * Links + Endmarke bleiben (Slot-Kapazitaet = die Dateigroesse bei Anlage, schrumpft nie);
- * ungenutzter Rest wird mit Leerzeichen gefuellt, das der Regel-B-(load) als Whitespace
- * ueberliest. Jeder Sektor geht durch den HW-kalibrierten io_disk_write_sector (RMW + Verify).
- * 0 = nicht gefunden / passt nicht in den Slot / Verify-Fehlschlag. */
+ * EXT file buffer into the EXISTING chain of the file `name`. The chain is NEVER changed —
+ * links and end marker stay (slot capacity = the file size at creation time, it never shrinks);
+ * the unused remainder is filled with spaces, which rule-B (load) skips as whitespace.
+ * Every sector goes through the hardware-calibrated io_disk_write_sector (RMW + verify).
+ * 0 = not found / does not fit into the slot / verify failure. */
 static unsigned char io_disk_save_impl(const char *name, unsigned int base, unsigned int len) {
     unsigned char t, s, nt, ns;
     unsigned int fuel = DISK_CHAIN_FUEL;
@@ -314,9 +314,9 @@ unsigned char io_disk_save_named(const char *name, unsigned int len) {
     return io_disk_save_impl(name, 0, len);
 }
 #ifdef LISP65_FASL
-/* FASL-B2: Fasl-Ausgabe liegt HINTER der Quelle im Datei-Fenster -> base-Variante (binärsicher,
- * gleiche RMW+Verify-Kette wie save). NUR FASL-Diagnoseprofil; der Workbench-Slow-Path
- * (compile-string) legt die Ausgabe bei base=0 und nutzt %save-staged -> io_disk_save_named. */
+/* FASL-B2: the FASL output sits BEHIND the source in the file window -> base variant (binary
+ * safe, same RMW+verify chain as save). FASL diagnostic profile ONLY; the workbench slow path
+ * (compile-string) places its output at base=0 and uses %save-staged -> io_disk_save_named. */
 unsigned char io_disk_save_range(const char *name, unsigned int base, unsigned int len) {
     if (base >= DISK_FILE_MAX || len > DISK_FILE_MAX - base) return 0;
     return io_disk_save_impl(name, base, len);
@@ -409,8 +409,9 @@ unsigned int io_disk_load_permille(void) {
     return disk_file_len ? (unsigned int)((unsigned long)disk_file_pos * 1000ul / disk_file_len) : 1000u;
 }
 
-/* Test-/Boot-Naht (S5): eine bereits in DISK_EXT_FILE gestagete Quelle (len Bytes) kompilieren --
- * ohne F011-Read (xemu-Proof stagt per Monitor; das Geraet nutzt io_disk_load_chain mit echtem Disk). */
+/* Test/boot seam (S5): compile a source already staged in DISK_EXT_FILE (len bytes) --
+ * without an F011 read (the xemu proof stages via the monitor; the device uses io_disk_load_chain
+ * against a real disk). */
 unsigned char io_disk_load_staged(unsigned int len) {
     if (!len) return 0;
     disk_file_len = len; disk_file_pos = 0;
@@ -419,9 +420,9 @@ unsigned char io_disk_load_staged(unsigned int len) {
 }
 
 #if defined(MEGA65_F011_WRITE) && defined(LISP65_FASL)
-/* FASL-B2: Quelle stagen (Deckel 0x2000 — Rest des Fixnum-Fensters = Fasl-Ausgabe + Staging,
- * s. lib/lcc-fasl.lisp) und den Stream-Reader auf den Anfang setzen; compile-file liest
- * dann via %fasl-read-form Form fuer Form OHNE Auswertung. Bytes oder 0. */
+/* FASL-B2: stage the source (cap 0x2000 — the rest of the fixnum window is FASL output plus
+ * staging, see lib/lcc-fasl.lisp) and point the stream reader at the beginning; compile-file then
+ * reads form by form via %fasl-read-form WITHOUT evaluating. Returns bytes or 0. */
 unsigned int io_fasl_open_source(const char *name) {
     unsigned char t, s;
     unsigned int n;
@@ -444,12 +445,13 @@ static unsigned char disk_fold(unsigned char c) {
     if (c >= 97 && c <= 122) c = (unsigned char)(c - 32);
     return c;
 }
-/* S5-Boot-Dir-Lookup (C-Port von stdlib-load.lisp fuer den Boot, da die Stdlib noch nicht geladen ist):
- * die 1581-Directory ab Track 40 nach `name` durchsuchen (32-B-Eintraege, Name @+5..+20 gefaltet,
- * Start-(track,sektor) @+3/+4), gefunden -> io_disk_load_chain (laedt + kompiliert). fuel begrenzt die
- * Sektorkette (Kettenende per next-track==0, NICHT Truthiness). 1=gefunden+geladen, 0=nicht gefunden. */
-/* 1581-Dir-Walk (Track 40): findet den Eintrag zu `name` (gefaltet, wie beim Load) und liefert
- * Start-Track/-Sektor der Datei. Aus io_disk_load_named extrahiert — geteilt mit dem SAVE-Pfad. */
+/* S5 boot directory lookup (a C port of stdlib-load.lisp for the boot, since the stdlib is not
+ * loaded yet): search the 1581 directory from track 40 for `name` (32-byte entries, name @+5..+20
+ * case-folded, start (track,sector) @+3/+4); on a hit -> io_disk_load_chain (loads + compiles).
+ * fuel bounds the sector chain (end of chain by next-track==0, NOT by truthiness).
+ * 1=found and loaded, 0=not found. */
+/* 1581 directory walk (track 40): finds the entry for `name` (case-folded, as on load) and returns
+ * the file's start track/sector. Extracted from io_disk_load_named — shared with the SAVE path. */
 static unsigned char disk_dir_find(const char *name, unsigned char *st, unsigned char *ss) {
     unsigned char track = 40, sector = 0, fuel = 64;
     while (fuel--) {
@@ -485,12 +487,12 @@ unsigned char io_disk_load_named(const char *name) {
 }
 
 #ifdef LISP65_DISK_LIBS
-/* %disk-load-lib: der komplette Container bleibt bis zum Ruecklauf im EXT-Scratch. Preflight
- * liest Blob+Trailer dort ohne Mutation; danach wird nur das Blob nach Bank 5 gestagt. Der Commit
- * liest denselben Trailer aus Scratch, registriert und patcht das gestagte Blob. */
-/* Lib-Registrierung ab BEREITS GESTAGETER Datei (n Bytes im EXT-Fenster): Prefix parsen,
- * Preflight, Bank-5-Stage, Trailer registrieren. Geteilt von io_disk_load_lib und der
- * Test-Naht %lib-staged (xemu kann kein F011 — der Monitor stagt die Lib direkt in Bank 4). */
+/* %disk-load-lib: the complete container stays in EXT scratch until the return. Preflight reads
+ * blob and trailer there without mutating; only afterwards is the blob staged into bank 5. The
+ * commit reads the same trailer from scratch, registers it and patches the staged blob. */
+/* Library registration from an ALREADY STAGED file (n bytes in the EXT window): parse the prefix,
+ * preflight, stage into bank 5, register the trailer. Shared by io_disk_load_lib and the test seam
+ * %lib-staged (xemu has no F011 — the monitor stages the library straight into bank 4). */
 /* C1 reuses this already-resident preflight record as its transaction
  * checkpoint.  source.ctx is normally unused by both readers; while the
  * temporary compiler is active it carries the pre-existing export symbol.
@@ -726,16 +728,16 @@ const char *io_load_file(const char *name) {
     return n ? io_buf : 0;
 }
 #else
-/* Default: sauberer Fehler statt Absturz, bis hyppo-Pfad bestätigt. io_buf NICHT
- * referenzieren — die (void)-Referenz hielt 512 B toten .bss im MVP am Leben
- * (LTO kann unreferenzierte Statics eliminieren, referenzierte nicht). */
+/* Default: a clean error instead of a crash, until the hyppo path is confirmed. Do NOT
+ * reference io_buf — the (void) reference kept 512 B of dead .bss alive in the MVP
+ * (LTO can eliminate unreferenced statics, but not referenced ones). */
 const char *io_load_file(const char *name) { (void)name; return 0; }
 #endif
 
 #elif defined(__C64__) || defined(__CBM__)
 #include <cbm.h>
-/* Gerät: sequentielle Datei über KERNAL lesen. <name> -> "NAME,S,R", Gerät 8, LFN 2.
- * CBM-Dateinamen sind GROSS -> a-z hochcasen. */
+/* Device: read a sequential file through the KERNAL. <name> -> "NAME,S,R", device 8, LFN 2.
+ * CBM file names are UPPERCASE -> upcase a-z. */
 const char *io_load_file(const char *name) {
     char petname[24];
     unsigned char i = 0, st;

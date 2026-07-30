@@ -1,16 +1,18 @@
-; lisp65 — cond/and/or/case als PRELUDE-MAKROS für den Treewalk (Dialekt-Route (c), 2026-07-05).
-; Schließt die Werkbank-REPL-Löcher mit NULL Bank-0-Kosten: die Definitionen leben als Quelle
-; auf der DISK ("macros") und werden per (load "macros") in T_MACRO-Objekte evaluiert (Heap =
-; EXT, symfn = GC-Root). Alternative zur .text-Route LISP65_EVAL_CONTROL_SF (694 B) — beide
-; Routen sind ÄQUIVALENZ-VERIFIZIERT gegen das Compiler-Lowering (scripts/equivalence-check.sh
-; fährt diesen File als tree-Preload gegen dieselben Formen).
-; Semantik-Kontrakt (= Compiler): (and)->t, (or)->nil, letztes Glied/Klausel-Body in Tail-
-; Position der Expansion, (cond (x))->x einmal ausgewertet (gensym-let gegen Doppel-Eval),
-; case vergleicht per eql, Listen-Keys expandieren zu or/eql-Ketten, t-Klausel = Default.
-; Expansions-Helfer nutzen nur Treewalk-Prims (list/cons/gensym); Makros expandieren rekursiv
-; (and/or/cond in der eigenen Expansion). Helper-Namen sind bewusst lokal praefigiert: diese
-; Datei wird in ein laufendes Produkt geladen und darf keine bestehenden Stdlib-%case-Helfer
-; ueberschreiben.
+; lisp65 -- cond/and/or/case as PRELUDE MACROS for Treewalk (dialect route (c),
+; 2026-07-05). Closes the Workbench REPL gaps at ZERO Bank-0 cost: definitions
+; live as source on DISK ("macros") and (load "macros") evaluates them into
+; T_MACRO objects (heap = EXT, symfn = GC root). Alternative to the 694-byte
+; .text route LISP65_EVAL_CONTROL_SF; both routes are EQUIVALENCE-VERIFIED
+; against compiler lowering. scripts/equivalence-check.sh loads this file as
+; the Treewalk prelude for the same forms.
+; Semantic contract, identical to the compiler: (and)->t, (or)->nil; the last
+; member/clause body remains in tail position in the expansion;
+; (cond (x))->x evaluates x once through a gensym let; case compares with eql,
+; list keys expand into or/eql chains, and a t clause is the default.
+; Expansion helpers use only Treewalk primitives (list/cons/gensym); macros
+; expand recursively, including and/or/cond inside their own expansions.
+; Helper names deliberately carry a local prefix because this file is loaded
+; into a running product and must not overwrite existing stdlib %case helpers.
 
 (defmacro and (&rest fs)
   (if fs
@@ -43,7 +45,7 @@
        (car cls) (cdr cls))
       nil))
 
-; case-Expansions-Helfer: Klauselliste -> if-eql-Kette ueber die einmal gebundene tmp-Variable.
+; case expansion helper: clause list -> if/eql chain over the once-bound tmp variable.
 (defun %prelude-macros-case-key-tests (tmp keys)
   (if keys
       (if (cdr keys)

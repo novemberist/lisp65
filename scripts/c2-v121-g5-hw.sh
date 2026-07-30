@@ -14,6 +14,8 @@ G2_CONTRACT=${G2_CONTRACT:-}
 TOOLS=${TOOLS:-tools/m65tools}
 DEVICE=${DEVICE:-/dev/ttyUSB1}
 TIMEOUT=${TIMEOUT:-40}
+FTP_STALL_LIMIT=${FTP_STALL_LIMIT:-120}
+EXPECTED_BANNER=${EXPECTED_BANNER:-WORKBENCH - DIALECT V2}
 M65=$TOOLS/m65
 FTP=$TOOLS/mega65_ftp
 
@@ -65,6 +67,77 @@ Path(sys.argv[2]).write_text(
 PY
 }
 
+fail_if_red() {
+  python3 - "$1" <<'PY'
+from pathlib import Path
+import sys
+sys.path.insert(0, "tools/host-lisp")
+import repl_screen_check
+try:
+    repl_screen_check.check_fail_closed_frame(Path(sys.argv[1]))
+except repl_screen_check.CheckError as error:
+    print(error.message)
+    raise SystemExit(error.code)
+PY
+}
+
+fresh_start_gate() {
+  fs_dir=$1
+  fs_poll=0
+  while [ "$fs_poll" -lt 30 ]; do
+    capture_screen "$fs_dir" fresh-start
+    fail_if_red "$fs_dir/fresh-start.png"
+    if grep -Fq 'BASIC 65' "$fs_dir/fresh-start.txt" &&
+       grep -Fq 'READY.' "$fs_dir/fresh-start.txt" &&
+       ! grep -Fq 'lisp65>' "$fs_dir/fresh-start.txt"; then
+      return 0
+    fi
+    sleep 1
+    fs_poll=$((fs_poll + 1))
+  done
+  echo "G5 FIRST RED: fresh BASIC startup state not proven after cold reset" >&2
+  return 1
+}
+
+ftp_with_progress_guard() {
+  fg_media=$1
+  fg_remote=$2
+  fg_readback=$3
+  fg_log=$4
+  rm -f "$fg_readback"
+  : > "$fg_log"
+  stdbuf -oL -eL "$FTP" -F -l "$DEVICE" -s 2000000 -y \
+    -c "put $fg_media $fg_remote" \
+    -c "get $fg_remote $fg_readback" \
+    -c "mount $fg_remote" -c exit > "$fg_log" 2>&1 &
+  fg_pid=$!
+  trap 'kill "$fg_pid" 2>/dev/null || true' HUP INT TERM EXIT
+  fg_last_size=-1
+  fg_last_progress=$(date +%s)
+  while kill -0 "$fg_pid" 2>/dev/null; do
+    sleep 2
+    fg_size=$(wc -c < "$fg_log")
+    fg_now=$(date +%s)
+    if [ "$fg_size" -ne "$fg_last_size" ]; then
+      fg_last_size=$fg_size
+      fg_last_progress=$fg_now
+    elif [ $((fg_now - fg_last_progress)) -ge "$FTP_STALL_LIMIT" ]; then
+      kill "$fg_pid" 2>/dev/null || true
+      wait "$fg_pid" 2>/dev/null || true
+      trap - HUP INT TERM EXIT
+      echo "G5 FIRST RED: FTP log did not advance for ${FTP_STALL_LIMIT}s" >&2
+      return 124
+    fi
+  done
+  if wait "$fg_pid"; then
+    fg_status=0
+  else
+    fg_status=$?
+  fi
+  trap - HUP INT TERM EXIT
+  return "$fg_status"
+}
+
 wait_for_repl() {
   wr_dir=$1
   wr_prefix=$2
@@ -73,7 +146,7 @@ wait_for_repl() {
   while [ "$wr_poll" -lt "$wr_limit" ]; do
     capture_screen "$wr_dir" "$wr_prefix"
     if grep -Fq 'lisp65>' "$wr_dir/$wr_prefix.txt"; then
-      grep -Fq 'WORKBENCH - DIALECT V2' "$wr_dir/$wr_prefix.txt"
+      grep -Fq "$EXPECTED_BANNER" "$wr_dir/$wr_prefix.txt"
       return 0
     fi
     sleep 1
@@ -206,10 +279,12 @@ case "$ACTION" in
     }
     media=$(jq -r '.product_d81.path' "$DEPLOYMENT")
     remote=$(jq -r '.remote_media' "$DEPLOYMENT")
-    timeout --kill-after=3s 360s "$FTP" -F -l "$DEVICE" -s 2000000 -y \
-      -c "put $media $remote" \
-      -c "get $remote $SESSION/uploaded-media-readback.d81" \
-      -c "mount $remote" -c exit > "$SESSION/media-upload-mount.log"
+    run_m65 -F
+    sleep 3
+    fresh_start_gate "$SESSION/preflight"
+    ftp_with_progress_guard "$media" "$remote" \
+      "$SESSION/uploaded-media-readback.d81" \
+      "$SESSION/media-upload-mount.log"
     cmp "$media" "$SESSION/uploaded-media-readback.d81"
     readback 0x0ffd3632 4 "$SESSION/device-core-id.bin"
     wait_for_repl "$EVIDENCE" cold-boot 120

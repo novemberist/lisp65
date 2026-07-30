@@ -1,8 +1,8 @@
 {
   "format": "lisp65-v12-known-issues-register-v1",
   "version": 1,
-  "release": "1.2.2",
-  "recorded_on": "2026-07-29",
+  "release": "1.2.3",
+  "recorded_on": "2026-07-30",
   "active": [
     {
       "id": "c2.2-freezer-during-active-definition",
@@ -43,10 +43,26 @@
       "claim_limit": "The observation is retained as intermittent and unreproduced. No GC fix or GC latency ceiling is claimed."
     },
     {
+      "id": "intermittent-require-nil",
+      "status": "observed-once-not-reproduced-after-cold-start",
+      "user_rule": "If require unexpectedly returns nil, cold-restart lisp65 and retry the command once. Preserve the requested library name and preceding session steps if it recurs.",
+      "observed": {
+        "form": "(require 'place)",
+        "session": "late in one long hardware session",
+        "result": "nil"
+      },
+      "followup": "After an asserted cold start, two attempts returned t; the second attempt left the published C2D header and place row byte-identical.",
+      "authority": {
+        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-require-device-discriminator-retry-hardware-receipt.json",
+        "sha256": "281c5d987958e2f632fa71acb35b9bf6706143bcd9261ef66319ef06dbfc71a3"
+      },
+      "claim_limit": "The original nil remains an intermittent observation. The follow-up proves cold-start success and repeat idempotence only; it does not claim a cause, a fix, or device-side reads of fastpath markers 17 through 20."
+    },
+    {
       "id": "defstruct-dynamic-library-freight",
       "status": "not-delivered-parked",
-      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.2 user surface.",
-      "claim_limit": "Host-side designs and fixtures create no v1.2.2 delivery claim."
+      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.3 user surface.",
+      "claim_limit": "Host-side designs and fixtures create no v1.2.3 delivery claim."
     }
   ],
   "informative": [
@@ -109,10 +125,10 @@
     }
   ],
   "release_authority": {
-    "product_artifact_set_sha256": "359809d4a6b3bde95b9624f375ae38c32446ea54024a58691e07eb4673bcf7de",
-    "package_set_sha256": "129cbf443beb4433bcf87388c2131a8f084df3b2e812b21fb5893f008932d651",
-    "G5_receipt_sha256": "b30d0b40b60e34cf56133bd56d34e9b9f6d4acb232eaf175b93c67d822dc5e4f",
-    "G6_receipt_sha256": "0b38280dc46bc5e4984432733fe48794d17722b45e9dd3933d7c9f92350234d6",
-    "acceptance_archive_sha256": "e317bc0525e27c8eb604e70e1018bc8276677959e9b1e455a4687032568e13bc"
+    "product_artifact_set_sha256": "e71cc4f46068a1c5ebebf050a76fb14717c03a27e954d0bbaacd95a70970e315",
+    "package_set_sha256": "5691dd8011042713b953d0d132f0b3d42b13b7e7e5550d8e200186c97574643e",
+    "G5_receipt_sha256": "ab70022f5a27fad094527a6d39266a4b2eaa689ae38e61630b8bedc7ebb3e6f7",
+    "G6_receipt_sha256": "1f929dc13b2ff0ecdd66f643c0ae7f03159fc79a23e318c4190963aa8848e7e1",
+    "acceptance_archive_sha256": "13505421f196cb6f531953743351ddc4f09f9301711d75014d056917cf95a8e4"
   }
 }

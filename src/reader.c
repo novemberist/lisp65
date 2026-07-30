@@ -1,6 +1,6 @@
-/* lisp65 - Reader: Text -> Objektgraph (Lane K)
- * Zwei globale, nicht reentrante Backends: NUL-String oder Fetch-Stream mit Lookahead.
- * Fehler sind ueber reader_status eindeutig von NIL und EOF getrennt.
+/* lisp65 - reader: text -> object graph (lane K)
+ * Two global, non-reentrant backends: a NUL string or a fetch stream with lookahead.
+ * Errors are cleanly separated from NIL and EOF through reader_status.
  */
 #include "reader.h"
 #include "interrupt.h"

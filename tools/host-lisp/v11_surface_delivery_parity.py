@@ -94,6 +94,10 @@ def verify_authority(claim: dict[str, Any]) -> None:
         feature = value.get("features", {}).get(name)
         if not isinstance(feature, dict):
             raise ParityError(f"owner feature authority does not define {name}")
+    elif authority.get("kind") == "owner-public-surface-contract":
+        feature = value.get("public_surface", {}).get(name)
+        if not isinstance(feature, dict):
+            raise ParityError(f"owner public-surface authority does not define {name}")
     else:
         raise ParityError(f"claim {name} has unknown authority kind")
 
@@ -183,15 +187,22 @@ def verify_values(
     for claim in claims:
         name = claim["name"]
         kind = claim.get("kind")
+        extension = claim.get("surface_extension", False)
+        if not isinstance(extension, bool):
+            raise ParityError(f"claim {name} has invalid surface_extension")
         matches = [
             row for row in definitions
             if isinstance(row, dict) and row.get("name") == name
             and row.get("kind") == kind and row.get("visibility") == "public"
         ]
-        if len(matches) != 1:
-            raise ParityError(f"surface does not publish exactly one {kind} {name}")
-        if public_names.count(name) != 1:
-            raise ParityError(f"dialect contract does not publish exactly one {name}")
+        if extension:
+            if matches or name in public_names:
+                raise ParityError(f"surface extension {name} acquired a second public truth")
+        else:
+            if len(matches) != 1:
+                raise ParityError(f"surface does not publish exactly one {kind} {name}")
+            if public_names.count(name) != 1:
+                raise ParityError(f"dialect contract does not publish exactly one {name}")
         manifest_matches = [
             row for row in entries
             if isinstance(row, dict) and row.get("name") == name and row.get("kind") == kind
@@ -250,6 +261,7 @@ def selftest() -> None:
     claims = [
         {"name": "eval", "kind": "function"},
         {"name": "filter", "kind": "function"},
+        {"name": "random", "kind": "function", "surface_extension": True},
     ]
     contract = {
         "format": "lisp65-v11-surface-delivery-parity-v1", "version": 1,
@@ -270,6 +282,7 @@ def selftest() -> None:
     dialect = {"public_names": ["eval", "filter", "screen-write-string"]}
     manifest = {"entries": [
         {"name": "eval", "kind": "function"}, {"name": "filter", "kind": "function"},
+        {"name": "random", "kind": "function"},
         {"name": "screen-bulk-p", "kind": "function"},
     ]}
     registry = {"entries": [
@@ -278,14 +291,17 @@ def selftest() -> None:
     closure = {"implemented_bindings": {"native-service": []}}
     workbench_profile = "WORKBENCH_DEFINES := -DLISP65_VM_SCREEN_PRIMS\n"
     reference = (
-        "The released surface includes:\n\n- symbols: `eval`, `filter`.\n\n"
+        "The released surface includes:\n\n- symbols: `eval`, `filter`, `random`.\n\n"
         "The complete native visibility follows.\n"
     )
     verify_values(
         contract, surface, dialect, manifest, [], reference, registry, closure,
         workbench_profile, authorities=False,
     )
-    for label in ("surface", "dialect", "manifest", "reference", "registry", "profile", "reverse"):
+    for label in (
+        "surface", "dialect", "manifest", "reference", "registry", "profile",
+        "reverse", "extension-flag", "extension-second-truth",
+    ):
         c, s, d, m, n = map(copy.deepcopy, (contract, surface, dialect, manifest, registry))
         r = reference
         p = workbench_profile
@@ -295,7 +311,13 @@ def selftest() -> None:
         elif label == "reference": r = r.replace(", `filter`", "")
         elif label == "registry": n["entries"].pop()
         elif label == "profile": p += "WORKBENCH_DEFINES += -DLISP65_SCREEN_WRITE_STRING\n"
-        else: r = r.replace("`eval`", "`ghost-function`")
+        elif label == "reverse": r = r.replace("`eval`", "`ghost-function`")
+        elif label == "extension-flag": c["claims"][2]["surface_extension"] = False
+        else:
+            s["definitions"].append(
+                {"name": "random", "kind": "function", "visibility": "public"}
+            )
+            d["public_names"].append("random")
         try:
             verify_values(c, s, d, m, [], r, n, closure, p, authorities=False)
         except ParityError:
@@ -311,7 +333,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.selftest:
             selftest()
-            print("v11-surface-delivery-parity: SELFTEST PASS mutations=7")
+            print("v11-surface-delivery-parity: SELFTEST PASS mutations=9")
             return 0
         contract = load(args.contract, "parity contract")
         names = verify_values(

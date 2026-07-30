@@ -12,8 +12,9 @@
             (%load-lib-from-entry base)
             (%load-lib-scan-entries codes (1+ entry))))))
 
-; fuel + (> next-track 0)-Terminator wie bei (load): nur NIL ist falsch, die Fixnum 0 ist truthy;
-; (if next-track ...) wuerde am Kettenende endlos rekursieren (= Hang bei fehlender Lib). S. stdlib-load.
+; fuel plus a (> next-track 0) terminator, as in load. Only NIL is false and
+; fixnum 0 is truthy, so (if next-track ...) would recurse forever at chain
+; end, causing the missing-library hang. See stdlib-load.
 (defun %load-lib-scan-directory (codes track sector fuel)
   (if (> fuel 0)
       (if (%disk-read-sector track sector)
@@ -64,12 +65,13 @@
                     nil))))
       nil))
 
-; load-libs: mehrere (unabhaengige) Libs mit EINEM Aufruf laden -- als einzelne Argumente ODER
-; als eine Liste als einziges Argument:
-;   (load-libs "strings" "math")      ; variadisch
-;   (load-libs '("strings" "math"))   ; Liste
-; Laedt JEDE Lib (auch wenn eine fehlt); Rueckgabe t nur, wenn ALLE geladen wurden, sonst nil.
-; (let bindet beide Zweige -> head UND tail werden ausgewertet -> alle Libs werden geladen.)
+; load-libs loads multiple independent libraries with ONE call, either as
+; separate arguments or as one list argument:
+;   (load-libs "strings" "math")      ; variadic
+;   (load-libs '("strings" "math"))   ; list
+; It attempts EVERY library even if one is missing, returning t only when ALL
+; were loaded and nil otherwise. let binds both branches, so both head and
+; tail are evaluated and every library is attempted.
 (defun %load-libs-seq (names)
   (if names
       (let ((head (load-lib (car names)))

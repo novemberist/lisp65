@@ -15,6 +15,8 @@ import sys
 import time
 from typing import Any
 
+import repl_screen_check
+
 
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "config/c2-lite-acceptance-chain.json"
@@ -32,6 +34,7 @@ REMOTE_PRODUCT = "L65R6V11.D81"
 REMOTE_WORK = "L65R6W.D81"
 SESSION_ID = "G6-successor-v11-session-01"
 RECORDED_ON = "2026-07-27"
+FTP_STALL_LIMIT = 120
 CASES = [
     "offline-package-verification",
     "cold-boot-from-exact-R6-product-media",
@@ -276,6 +279,86 @@ def ftp(
     )
 
 
+def fresh_session_entry(root: Path) -> list[dict[str, Any]]:
+    """Prove the cold BASIC-side helper state before the first FTP byte."""
+    run(
+        ["timeout", "20s", str(M65), "-l", DEVICE, "-F"],
+        "cold reset before G6 media transport",
+        output=root / "fresh-reset.log", timeout=25,
+    )
+    time.sleep(3)
+    screen = run(
+        [
+            "timeout", "20s", str(M65), "-l", DEVICE,
+            f"--screenshot={root / 'fresh-state.png'}",
+        ],
+        "capture fresh G6 BASIC state",
+        output=root / "fresh-state.ansi.txt", timeout=25,
+    )
+    screen_text = re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", screen)
+    (root / "fresh-state.txt").write_text(screen_text, encoding="utf-8")
+    try:
+        repl_screen_check.check_fail_closed_frame(root / "fresh-state.png")
+    except repl_screen_check.CheckError as error:
+        raise G6Error(error.message) from error
+    require(
+        "BASIC 65" in screen_text
+        and "READY." in screen_text
+        and "lisp65>" not in screen_text,
+        "G6 media transport did not begin from asserted fresh BASIC state",
+    )
+    return [
+        bind(root / "fresh-reset.log"),
+        bind(root / "fresh-state.png"),
+        bind(root / "fresh-state.ansi.txt"),
+        bind(root / "fresh-state.txt"),
+    ]
+
+
+def ftp_with_progress_guard(
+    commands: list[str], label: str, output: Path,
+    *, timeout_without_progress: int = FTP_STALL_LIMIT,
+) -> None:
+    """Run the first session FTP with a log-movement deadline."""
+    argv = ["stdbuf", "-oL", "-eL", str(FTP), "-F", "-l", DEVICE, "-y"]
+    for command in commands:
+        argv += ["-c", command]
+    if not commands or commands[-1] != "exit":
+        argv += ["-c", "exit"]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", encoding="utf-8") as log:
+        process = subprocess.Popen(
+            argv, cwd=ROOT, text=True, stdout=log,
+            stderr=subprocess.STDOUT,
+        )
+        last_size = -1
+        last_progress = time.monotonic()
+        while process.poll() is None:
+            time.sleep(2)
+            size = output.stat().st_size
+            now = time.monotonic()
+            if size != last_size:
+                last_size = size
+                last_progress = now
+            elif now - last_progress >= timeout_without_progress:
+                process.terminate()
+                try:
+                    process.wait(timeout=3)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                raise G6Error(
+                    f"{label} made no log progress for "
+                    f"{timeout_without_progress}s"
+                )
+        returncode = process.wait()
+    require(
+        returncode == 0,
+        f"{label} failed ({returncode}): "
+        f"{output.read_text(encoding='utf-8', errors='replace')[-1000:]}",
+    )
+
+
 def repl_form(
     root: Path, prefix: str, form: str, expected: str, wait: int = 2,
 ) -> list[dict[str, Any]]:
@@ -435,19 +518,20 @@ def boot() -> None:
         require(
             not (root / "receipt.json").exists()
             and product_readback.is_file() and work_readback.is_file()
-            and (root / "core-registers.bin").is_file(),
+            and (root / "core-registers.bin").is_file()
+            and (root / "fresh-state.txt").is_file(),
             "G6 cold-boot evidence is not a resumable harness-first-red",
         )
     else:
         root.mkdir(parents=True)
-        ftp([
+        fresh_session_entry(root)
+        ftp_with_progress_guard([
             f"put {product} {REMOTE_PRODUCT}",
             f"get {REMOTE_PRODUCT} {product_readback}",
             f"put {work} {REMOTE_WORK}",
             f"get {REMOTE_WORK} {work_readback}",
             "exit",
-        ], "upload exact R6 media", root / "upload.log",
-            timeout_seconds=240)
+        ], "upload exact R6 media", root / "upload.log")
         require(product_readback.read_bytes() == product.read_bytes(),
                 "uploaded R6 product media differs")
         require(work_readback.read_bytes() == work.read_bytes(),
@@ -487,6 +571,19 @@ def boot() -> None:
             "work_upload_readback": bind(work_readback),
             "upload_log": bind(root / "upload.log"),
             "mount_log": bind(root / "mount.log"),
+            "entry_precondition": {
+                "claim": (
+                    "cold reset plus asserted BASIC 65 READY state before "
+                    "the first FTP byte; FTP log-progress guard active"
+                ),
+                "ftp_stall_limit_seconds": FTP_STALL_LIMIT,
+                "evidence": [
+                    bind(root / "fresh-reset.log"),
+                    bind(root / "fresh-state.png"),
+                    bind(root / "fresh-state.ansi.txt"),
+                    bind(root / "fresh-state.txt"),
+                ],
+            },
         },
         "machine": {
             "device": DEVICE,

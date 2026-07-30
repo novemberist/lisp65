@@ -55,7 +55,7 @@ v11-wave2-common-repin-collect: workbench-overlay-stack-guard v2-workbench-libra
 v11-wave2-common-repin-check: workbench-overlay-stack-guard v2-workbench-library-composition-check
 	python3 tools/host-lisp/v11_wave2_common_repin.py check
 
-v11-function-metadata-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-host-artifacts
+v11-function-metadata-selftest: v2-workbench-artifacts bytecode-p0-buffer-lib-artifacts v11-c1-compiler-tier-host-artifacts c2-random-base-check
 	python3 tools/host-lisp/v11_function_metadata.py selftest
 
 v11-function-metadata-check: v11-function-metadata-selftest
@@ -844,15 +844,16 @@ c2-v122-g5-freezer-authority-check:
 	python3 tools/host-lisp/c2_v122_g5_freezer_authority_gate.py
 
 workbench-product: equivalence-completion-canary-check c2-asm-leaf-abi-selftest c2-interrupt-ownership-check c2-phase-v-gc-ext-dma-check c2-v122-g5-freezer-authority-check
-	@if test -f build/c2.2/v1.2.2-candidate-product/canonical-product-manifest.json; then \
-		python3 tools/host-lisp/c2_v122_candidate_product.py check; \
+	@if test -f build/c2.2/v1.2.3-candidate-product-link80/canonical-product-manifest.json; then \
+		python3 tools/host-lisp/c2_v123_candidate_product.py check; \
 	else \
-		python3 tools/host-lisp/c2_v122_candidate_product.py build; \
+		python3 tools/host-lisp/c2_v123_candidate_product.py build; \
 	fi
-	@if test -f build/c2.2/v1.2.2-candidate-media/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v122_candidate_media.py check; \
+	$(MAKE) --no-print-directory c2-linked-format-decoder-closure-check
+	@if test -f build/c2.2/v1.2.3-candidate-media/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_v123_candidate_media.py check; \
 	else \
-		python3 tools/host-lisp/c2_v122_candidate_media.py build; \
+		python3 tools/host-lisp/c2_v123_candidate_media.py build; \
 	fi
 	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 

@@ -1,11 +1,11 @@
-/* lisp65 — interaktive REPL (Lane K)
- * Phase 2: Zeilen lesen, ALLE Formen der (Multi-)Zeile auswerten und drucken.
- *  - mehrere Formen pro Zeile
- *  - ; Zeilenkommentare (im Reader)
- *  - RUN/STOP bricht Auswertung ab; CLR/HOME loescht Screen + Neustart der Eingabe
- *  - Fehler -> Meldung, REPL erholt sich (setjmp/lisp_abort)
+/* lisp65 — interactive REPL (lane K)
+ * Phase 2: read lines, evaluate ALL forms on the (multi-form) line and print them.
+ *  - several forms per line
+ *  - ; line comments (in the reader)
+ *  - RUN/STOP aborts evaluation; CLR/HOME clears the screen and restarts the input
+ *  - errors -> a message, and the REPL recovers (setjmp/lisp_abort)
  *
- * Eingabe: Gerät = rohe Tasten (KERNAL GETIN) + Echo + Block-Cursor; Host = getchar.
+ * Input: device = raw keys (KERNAL GETIN) + echo + block cursor; host = getchar.
  */
 #include <stdio.h>
 #include <setjmp.h>
@@ -49,15 +49,15 @@
 #define BUF_MAX REPL_BUF_MAX
 
 #ifdef DEVICE_KB
-/* Eingabe-History (1 Eintrag = letzte abgeschickte Zeile). Abruf: CRSR-hoch (0x91) oder
- * Ctrl+P (0x10). Ctrl+Pfeil ist ueber KERNAL-GETIN nicht zuverlaessig unterscheidbar;
- * CRSR-hoch ist bei uns frei (keine Bildschirm-Navigation im REPL). EIN Eintrag, gedeckelt
- * auf HIST_MAX (Bank-0-Budget: volle BUF_MAX-Groesse riss das Stack-Gate); laengere Zeilen
- * lassen den letzten Eintrag stehen. Mehr History ist IDE-Territorium (Lane L, ide-buffer).
+/* Input history (1 entry = the last submitted line). Recall: cursor-up (0x91) or Ctrl+P (0x10).
+ * Ctrl+arrow cannot be told apart reliably through KERNAL GETIN; cursor-up is free here (the REPL
+ * has no on-screen navigation). ONE entry, capped at HIST_MAX (bank-0 budget: the full BUF_MAX size
+ * broke the stack gate); longer lines leave the existing entry in place. More history is IDE
+ * territory (lane L, ide-buffer).
  *
- * LISP65_REPL_HISTORY_IN_BUF ist der Workbench-Sparpfad: kein separater History-Puffer,
- * sondern die letzte abgeschickte Zeile bleibt im statischen REPL-Buffer liegen. Das ist nur
- * am leeren Prompt abrufbar; begonnene/abgebrochene Zeilenedits gehoeren in die IDE. */
+ * LISP65_REPL_HISTORY_IN_BUF is the workbench economy path: no separate history buffer — the last
+ * submitted line simply stays in the static REPL buffer. It is recallable only at an empty prompt;
+ * started or abandoned line edits belong in the IDE. */
 #ifndef HIST_MAX
 #define HIST_MAX 120
 #endif
@@ -66,8 +66,8 @@ static unsigned char hist_len = 0;
 static char hist[HIST_MAX];
 #endif
 
-/* Ausgabe-Primitive der Eingabezeile. Mit -DLISP65_SCREEN_DRIVER laufen sie ueber den
- * eigenen Treiber (ASCII direkt, kein Quote-Modus, kein PETSCII-Umweg); sonst KERNAL. */
+/* Output primitives for the input line. With -DLISP65_SCREEN_DRIVER they go through our own
+ * driver (ASCII directly, no quote mode, no PETSCII detour); otherwise through the KERNAL. */
 #ifdef LISP65_SCREEN_DRIVER
 static void kb_cursor_on(void)  { scr_cursor(1); }
 static void LISP65_C2_FIXED_BANK0_CODE("kb_cursor_off")
@@ -143,10 +143,10 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
             continue;
         }
 #endif
-        /* Unbehandelte Steuercodes IGNORIEREN (Cursor-Tasten, INST, Farben, ...): weder echoen
-         * noch speichern. Sonst landen sie im Puffer, waehrend der Schirm etwas anderes zeigt
-         * (BASIC-Gewohnheit "Cursor zurueck + uebertippen" desynct Puffer<->Bildschirm und
-         * erzeugt Geister-Formen). Editieren geht per DEL; Zeilen-Editor = IDE-Territorium. */
+        /* IGNORE unhandled control codes (cursor keys, INST, colours, ...): neither echo nor store
+         * them. Otherwise they land in the buffer while the screen shows something else (the BASIC
+         * habit of "cursor back and overtype" desyncs buffer against screen and produces ghost
+         * forms). Editing works with DEL; a line editor is IDE territory. */
         if (c < 0x20 || (c >= 0x80 && c < 0xA0)) continue;
         if (n < max - 1) {
 #ifdef LISP65_SCREEN_DRIVER
@@ -240,28 +240,28 @@ void repl(void) {
         st = read_line(buf, &n, BUF_MAX);
         if (st == 1) emit('\n');
         if (st == 0) return;                              /* EOF */
-        if (st == 2) continue;                            /* CLR -> Neustart */
+        if (st == 2) continue;                            /* CLR -> restart */
 #ifdef DEVICE_KB
-        /* History fuellen: VOR der Auswertung (auch fehlerhafte Zeilen sind so per CRSR-hoch
-         * korrigierbar). Leere/ueberlange Zeilen ueberschreiben den Eintrag nicht. */
+        /* Fill the history BEFORE evaluating (so even a faulty line can be corrected with
+         * cursor-up). Empty or over-long lines do not overwrite the entry. */
 #if HIST_MAX > 0 && !defined(LISP65_REPL_HISTORY_IN_BUF)
         if (n > 0 && n <= HIST_MAX) { int k; for (k = 0; k < n; k++) hist[k] = buf[k]; hist_len = (unsigned char)n; }
 #endif
-        /* Wrap-Kompensation: lange Eingabezeilen (Prompt+Echo) brechen um, ohne dass emit()
-         * es sieht. Konservativ mit 40 Spalten rechnen (im 80er-Modus zaehlt das doppelt ->
-         * frueheres Loeschen, nie Scroll). */
+        /* Wrap compensation: long input lines (prompt + echo) wrap without emit() seeing it.
+         * Compute conservatively with 40 columns (in 80-column mode that counts double ->
+         * clearing earlier, never scrolling). */
         screen_row = (uint8_t)(screen_row + (unsigned)(n + 8) / 40);
 #endif
 
-        /* Erst NACH der Eingabe loeschen (falls Schirm voll): so bleibt die vorige Ausgabe
-         * sichtbar, waehrend der Nutzer den naechsten Befehl tippt. Geloescht wird direkt vor
-         * der neuen Ausgabe. (KERNAL-Scroll crasht -> wir loeschen statt zu scrollen.) */
+        /* Clear only AFTER the input (if the screen is full): this keeps the previous output
+         * visible while the user types the next command. The clear happens right before the new
+         * output. (A KERNAL scroll crashes -> we clear instead of scrolling.) */
         screen_scroll_guard();
 
-        /* Eine Zeile = eine Eingabe (mehrere Formen pro Zeile erlaubt). KEINE
-         * Mehrzeilen-Fortsetzung: sie braucht einen kleinen Paren-/String-/Kommentar-
-         * Scanner im nativen REPL-Pfad. Das kommt zurueck, sobald wir wieder PRG-Ende-
-         * Luft haben; bis dahin ist Workbench auf laengere Single-Line-Forms gepinnt. */
+        /* One line = one input (several forms per line are allowed). NO multi-line continuation:
+         * that needs a small paren/string/comment scanner in the native REPL path. It comes back
+         * as soon as we have PRG-end headroom again; until then the workbench is pinned to longer
+         * single-line forms. */
         buf[n] = '\0';
         {
             const char *p = buf;                          /* alle Formen auswerten */

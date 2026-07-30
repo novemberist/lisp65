@@ -34,6 +34,7 @@ import history_transport_rewrite as TRANSPORT  # noqa: E402
 DEFAULT_CONTRACT = ROOT / "config" / "dialect-migration-contract.json"
 DEFAULT_SELECTION = ROOT / "config" / "dialect-profile-selection.json"
 PROMOTION_REGISTER = ROOT / "config" / "promotion-register.json"
+ARCHIVE_ASSET_INVENTORY = ROOT / "config" / "evidence-archive-assets.json"
 FORMAT = "lisp65-dialect-migration-contract-v1"
 SELECTION_FORMAT = "lisp65-dialect-profile-selection-v1"
 FAMILY_ORDER = ["prelude-control", "lists", "strings", "system-runtime", "ide"]
@@ -282,12 +283,42 @@ def _bound_sha(path_value: Any, sha_value: Any, label: str) -> Path:
     return path
 
 
-def _sealed_snapshot_contains(path_text: str, expected: str) -> bool:
-    """Resolve historical evidence only through an intact registered archive."""
+def _archive_asset_shas() -> set[str]:
+    """The declared authority for archive identity when no local copy exists.
+
+    config/promotion-archive-policy.json declares the local materialization an
+    "ignored-cache-verified-before-use" whose authority is this inventory.  An
+    archive that is absent locally *and* absent from the inventory is a broken
+    citation for good; that stays a hard failure.
+    """
+    inventory = load_json(ARCHIVE_ASSET_INVENTORY, "evidence archive asset inventory")
+    archives = inventory.get("archives")
+    if not isinstance(archives, list):
+        raise MigrationError("evidence archive asset inventory lacks archives")
+    shas: set[str] = set()
+    for index, row in enumerate(archives):
+        if not isinstance(row, dict) or not isinstance(row.get("sha256"), str):
+            raise MigrationError(f"archive asset inventory row {index} is malformed")
+        shas.add(row["sha256"])
+    return shas
+
+
+def _sealed_snapshot_contains(path_text: str, expected: str) -> tuple[bool, list[str]]:
+    """Resolve historical evidence through the registered archives.
+
+    Returns (found, unmaterialized).  A *present* archive is verified exactly as
+    before: a byte mismatch is tampering and fails hard.  An *absent* archive is
+    the ignorable cache the transport policy describes -- its identity is checked
+    against the asset inventory and its id is reported, so a caller that finds
+    nothing can name what would have to be materialized instead of failing with
+    an unexplained red.
+    """
     register = load_json(PROMOTION_REGISTER, "promotion register")
     promotions = register.get("promotions")
     if not isinstance(promotions, list):
         raise MigrationError("promotion register lacks promotions")
+    inventory = _archive_asset_shas()
+    unmaterialized: list[str] = []
     member_name = f"payload/{path_text}"
     for index, raw in enumerate(promotions):
         if not isinstance(raw, dict):
@@ -300,11 +331,17 @@ def _sealed_snapshot_contains(path_text: str, expected: str) -> bool:
         bound_archive_sha = _sha_value(
             archive_sha, f"promotion register item {index}.archive_sha256"
         )
-        if (
-            archive is None or archive.is_symlink() or not archive.is_file()
-            or _sha(archive) != bound_archive_sha
-        ):
-            raise MigrationError(f"promotion register archive drift: {raw.get('id', index)}")
+        archive_id = str(raw.get("id", index))
+        if archive is None or archive.is_symlink() or not archive.is_file():
+            if bound_archive_sha not in inventory:
+                raise MigrationError(
+                    "promotion register archive is neither materialized nor in the "
+                    f"asset inventory: {archive_id}"
+                )
+            unmaterialized.append(archive_id)
+            continue
+        if _sha(archive) != bound_archive_sha:
+            raise MigrationError(f"promotion register archive drift: {archive_id}")
         try:
             with tarfile.open(archive, mode="r:gz") as bundle:
                 try:
@@ -321,9 +358,42 @@ def _sealed_snapshot_contains(path_text: str, expected: str) -> bool:
                         f"promotion archive evidence is unreadable: {member_name}"
                     )
                 if hashlib.sha256(stream.read()).hexdigest() == expected:
-                    return True
+                    return True, unmaterialized
         except (OSError, tarfile.TarError) as exc:
             raise MigrationError(f"cannot read promotion archive {archive}: {exc}") from exc
+    return False, unmaterialized
+
+
+def _git_history_contains(path_text: str, expected: str) -> bool:
+    """Whether some commit in this repository held `path_text` with exactly `expected`.
+
+    A sealed archive is a snapshot of the tree at a promotion's source commit, so
+    for evidence that is *git-tracked* the repository history proves the same
+    thing the archive does -- and proves it without a downloadable asset.  The
+    search is deliberately narrow: the same path, an exact sha256, and no
+    acceptance of a matching blob that lived at some other path.
+    """
+    try:
+        revisions = subprocess.run(
+            ["git", "rev-list", "--all", "--", path_text],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=True,
+            text=True,
+        ).stdout.split()
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    for commit in revisions:
+        blob = subprocess.run(
+            ["git", "show", f"{commit}:{path_text}"],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if blob.returncode == 0 and hashlib.sha256(blob.stdout).hexdigest() == expected:
+            return True
     return False
 
 
@@ -333,8 +403,21 @@ def _historical_evidence_sha(path_value: Any, sha_value: Any, label: str) -> Non
     expected = _sha_value(sha_value, f"{label}.sha256")
     if path is not None and path.is_file() and _sha(path) == expected:
         return
-    if path_text is not None and expected is not None and _sealed_snapshot_contains(path_text, expected):
+    if path_text is None or expected is None:
+        raise MigrationError(f"{label} SHA binding drift in live tree and sealed snapshots")
+    if _git_history_contains(path_text, expected):
         return
+    found, unmaterialized = _sealed_snapshot_contains(path_text, expected)
+    if found:
+        return
+    if unmaterialized:
+        raise MigrationError(
+            f"{label} SHA binding is unresolved: absent from the live tree, from this "
+            f"repository's history of that path, and from every materialized archive; "
+            f"{len(unmaterialized)} registered archive(s) are not materialized locally "
+            f"(materialize them from the release named in "
+            f"config/evidence-archive-assets.json, e.g. {unmaterialized[0]})"
+        )
     raise MigrationError(f"{label} SHA binding drift in live tree and sealed snapshots")
 
 
@@ -3355,6 +3438,81 @@ def selftest() -> None:
             ),
         )
 
+    _archive_cache_selftest()
+
+
+def _archive_cache_selftest() -> None:
+    """Teeth for the archive-cache resolution (housekeeping block, 2026-07-30).
+
+    The transport policy calls the local archive materialization an ignorable
+    cache; two consumers used to require it to be present.  These four cases
+    prove that treating it as a cache did not remove any teeth.
+    """
+    global PROMOTION_REGISTER, ARCHIVE_ASSET_INVENTORY
+    saved_register, saved_inventory = PROMOTION_REGISTER, ARCHIVE_ASSET_INVENTORY
+    absent_sha = "1" * 64
+    with tempfile.TemporaryDirectory() as raw:
+        tmp = Path(raw)
+
+        def write(name: str, payload: dict[str, Any]) -> Path:
+            target = tmp / name
+            target.write_text(json.dumps(payload), encoding="utf-8")
+            return target
+
+        register = write("register.json", {"promotions": [{
+            "id": "absent-archive",
+            "archive": "tests/bytecode/dialect-v2/evidence/promotions/does-not-exist.tar.gz",
+            "archive_sha256": absent_sha,
+        }]})
+
+        # 1. Absent locally AND absent from the inventory: the citation is broken
+        #    for good, so this must stay a hard failure.
+        PROMOTION_REGISTER = register
+        ARCHIVE_ASSET_INVENTORY = write("empty-inventory.json", {"archives": []})
+        _expect_failure(
+            "absent archive missing from the asset inventory",
+            lambda: _sealed_snapshot_contains("some/evidence.json", "0" * 64),
+        )
+
+        # 2. Absent locally but covered by the inventory: the cache is ignorable,
+        #    and the id is reported so the caller can name what to materialize.
+        ARCHIVE_ASSET_INVENTORY = write(
+            "inventory.json", {"archives": [{"sha256": absent_sha}]}
+        )
+        found, unmaterialized = _sealed_snapshot_contains("some/evidence.json", "0" * 64)
+        if found or unmaterialized != ["absent-archive"]:
+            raise MigrationError(
+                "archive cache selftest: an inventory-covered absent archive must be "
+                "reported as unmaterialized, not resolved"
+            )
+
+        # 3. A present archive whose bytes do not match its bound SHA is tampering,
+        #    not a cache miss.  Any tracked file serves as the present artifact --
+        #    the assertion is about the SHA check, which runs before the tar is read.
+        PROMOTION_REGISTER = write("drifted.json", {"promotions": [{
+            "id": "drifted-archive",
+            "archive": "config/promotion-register.json",
+            "archive_sha256": absent_sha,
+        }]})
+        _expect_failure(
+            "present archive with drifted bytes",
+            lambda: _sealed_snapshot_contains("some/evidence.json", "0" * 64),
+        )
+
+    PROMOTION_REGISTER, ARCHIVE_ASSET_INVENTORY = saved_register, saved_inventory
+
+    # 4. The Git-history fallback must accept only an exact sha256 at that path.
+    tracked = "config/promotion-register.json"
+    if not _git_history_contains(tracked, _sha(ROOT / tracked)):
+        raise MigrationError(
+            "archive cache selftest: the Git fallback must find the committed bytes "
+            f"of {tracked}"
+        )
+    if _git_history_contains(tracked, "2" * 64):
+        raise MigrationError(
+            "archive cache selftest: the Git fallback accepted a SHA that was never "
+            "committed at that path"
+        )
 
 
 def main(argv: list[str]) -> int:
@@ -3380,7 +3538,7 @@ def main(argv: list[str]) -> int:
             return 0
         if args.selftest:
             selftest()
-            print("dialect-migration-contract: SELFTEST PASS mutations=40")
+            print("dialect-migration-contract: SELFTEST PASS mutations=42 archive-cache-invariants=3")
             return 0
         result = validate(
             load_json(contract_path, "migration contract"),

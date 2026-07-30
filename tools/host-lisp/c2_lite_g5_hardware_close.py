@@ -40,6 +40,8 @@ DEFAULT_BANK3_AUTHORITY = (
     ROOT / "build/c2.2/canonical-product/final/runtime-overlays-session-final.bin"
 )
 FORMAT = "lisp65-c2-lite-G5-hardware-receipt-v1"
+EXPECTED_BANNER = "WORKBENCH - DIALECT V2"
+BANNER_CLAIM = "WORKBENCH-DIALECT-V2"
 EXPECTED_CASES = [
     "media/cold-boot-stage-banner",
     "runtime/published-nullary-cold",
@@ -236,7 +238,7 @@ def collect(
     boot_text = evidence / "definition_setup-input-attempt-1.txt"
     boot = text(boot_text, "boot screen")
     require(
-        "WORKBENCH - DIALECT V2" in boot and "lisp65>" in boot,
+        EXPECTED_BANNER in boot and "lisp65>" in boot,
         "cold boot did not reach banner and REPL",
     )
 
@@ -376,7 +378,7 @@ def collect(
     )
     restage_screen = text(restage / "post-media-restage.txt", "restage screen")
     require(
-        "WORKBENCH - DIALECT V2" in restage_screen and "lisp65>" in restage_screen,
+        EXPECTED_BANNER in restage_screen and "lisp65>" in restage_screen,
         "destructive restage did not return to the product",
     )
     require(
@@ -395,7 +397,7 @@ def collect(
             "status": "passed",
             "claim": "required",
             "value_string": (
-                "banner=WORKBENCH-DIALECT-V2 repl=usable "
+                f"banner={BANNER_CLAIM} repl=usable "
                 "limit=banner-and-usable-REPL"
             ),
             "evidence": [bind(boot_text)],

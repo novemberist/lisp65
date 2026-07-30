@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.2.2. Sealed
+This is the maintained user-facing issue register for lisp65 1.2.3. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -54,11 +54,49 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Not delivered in 1.2.2: `defstruct` and dynamic packages
+## Active intermittent issue: `require` can return `nil`
+
+Status: **observed once; not reproduced after a cold start**
+
+Late in one long hardware session, `(require 'place)` returned `nil` instead
+of `t`. A cold restart cleared the symptom: two subsequent loads returned `t`,
+and the second left the already-loaded library state byte-for-byte unchanged.
+No cause or fix is claimed.
+
+If `require` unexpectedly returns `nil`, cold-restart lisp65 and retry the
+command once. If it happens again, preserve the requested library name and the
+preceding session steps in a bug report. A standing read-only diagnostic is
+retained for a second sighting.
+
+## Not delivered in 1.2.3: `defstruct` and dynamic packages
 
 `defstruct` and the associated dynamic package-loading freight are not part of
-the v1.2.2 user surface. Their host-side designs and test artifacts are
+the v1.2.3 user surface. Their host-side designs and test artifacts are
 development material, not commands promised by this release.
+
+## Not delivered in 1.2.3: `gc`, `room` and `error`
+
+The three diagnostic commands `(gc)`, `(room)` and `(error)` are not part of
+the v1.2.3 user surface. They were designed and specified, then held back on
+capacity: their cold read carrier measures 1,724 bytes against a session
+deficit of 399, and re-fusing correctness-critical phases for a diagnostic
+instrument was judged disproportionate. Nothing else in the product depends on
+them; a user simply does not have them.
+
+## Not delivered in 1.2.3: `restart-repl`
+
+`restart-repl` is outside the contracted product surface for this era. A user
+who wants a clean image restarts the machine.
+
+## Active limitation: a fail-closed stop reports nothing
+
+When the fail-closed guard trips, the system stops safely but prints no
+diagnosis — the user sees the stop without being told what caused it. This is a
+limitation of the *reporting*, not of the protection: the guard itself is doing
+its job, and the stop is deliberate rather than a crash. A capture body that
+would report the cause needs three bytes of fixed-block space that are not
+available; the resident geometry is closed. If you meet such a stop, the
+reproducer and the surrounding session are what the maintainers need.
 
 ## Informative performance positions
 

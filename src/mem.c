@@ -1,9 +1,9 @@
-/* lisp65 — Speicher/Allocator + GC (Lane K)
- * Mark-Sweep über einen festen Zellen-Pool mit Freelist und präzisem Shadow-Root-Stack.
- * GC läuft ausschließlich in alloc(), wenn die Freelist leer ist. Roots:
- *   (1) gc_rootstack (von eval/reader gepushte lebende obj),
- *   (2) alle internierten Symbole + ihre Wert-/Funktions-Zellen (permanent).
- * Mit -DGC_STRESS wird vor jeder Allokation ein GC erzwungen (Root-Lücken-Test).
+/* lisp65 — memory/allocator + GC (lane K)
+ * Mark-sweep over a fixed cell pool with a freelist and a precise shadow root stack.
+ * GC runs only inside alloc(), when the freelist is empty. Roots:
+ *   (1) gc_rootstack (live obj pushed by eval/reader),
+ *   (2) every interned symbol plus its value/function cells (permanent).
+ * With -DGC_STRESS a GC is forced before every allocation (root-gap test).
  */
 #include "mem.h"
 #include "symbol.h"
@@ -205,16 +205,16 @@ void    ext_set_type(uint16_t i,uint8_t t){ ext_sim[(uint32_t)EXT_OFF(i)]=t; }
 void    ext_set_a(uint16_t i,obj v){ uint32_t o=(uint32_t)EXT_OFF(i)+2; ext_sim[o]=(uint8_t)(uint16_t)v; ext_sim[o+1]=(uint8_t)((uint16_t)v>>8); }
 void    ext_set_b(uint16_t i,obj v){ uint32_t o=(uint32_t)EXT_OFF(i)+4; ext_sim[o]=(uint8_t)(uint16_t)v; ext_sim[o+1]=(uint8_t)((uint16_t)v>>8); }
 #endif
-/* Host: Disk-Scratch-Simulation (io.c-Disk ist geraet-only; hier nur fuer eventuelle Host-Tests). */
-static uint8_t ext_disk_sim[256u + DISK_EXT_FILE_MAX];   /* Dir-Sektor + Datei-Fenster */
+/* Host: disk scratch simulation (the io.c disk is device-only; this exists only for possible host tests). */
+static uint8_t ext_disk_sim[256u + DISK_EXT_FILE_MAX];   /* directory sector + file window */
 void    ext_disk_put(uint16_t off, uint8_t v){ if (off < sizeof(ext_disk_sim)) ext_disk_sim[off] = v; }
 uint8_t ext_disk_get(uint16_t off){ return off < sizeof(ext_disk_sim) ? ext_disk_sim[off] : 0; }
 void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len){
     uint16_t i; for (i = 0; i < len; i++) dst[i] = ext_disk_get((uint16_t)(off + i));
 }
 #else
-/* NICHT static + used: garantierter Assembler-Symbolname fuer den registerfreien Trigger
- * (identische Haertung wie vm_dma_list in vm_embed.c). */
+/* Deliberately non-static + used: guarantees an assembler symbol name for the
+ * register-free trigger (the same hardening as vm_dma_list in vm_embed.c). */
 __attribute__((used)) unsigned char ext_dl[12];
 static uint16_t ext_stg;
 static uint8_t  ext_stg1;
@@ -270,42 +270,42 @@ void    ext_disk_stage(uint16_t scratch_off, uint8_t dbank, uint16_t doff, uint1
 
 static obj     freelist = NIL;
 #ifdef LISP65_EXT_HEAP
-/* Hoechster je vergebener Zellindex: der Sweep muss nur bis hier neu einfaedeln — die
- * NIE benutzte EXT-Region behaelt ihre jungfraeuliche mem_init-Kette (Zelle i -> i+1).
- * Ohne das kostete JEDER GC ~EXT_CELLS DMA-Writes (4096!), auch bei rein heisser Last —
- * auf HW der Grossteil der Tipp-Traegheit (51 GCs je 200 Editor-Zeichen). */
+/* Highest cell index ever handed out: the sweep only has to re-thread up to here — the
+ * never-used EXT region keeps its pristine mem_init chain (cell i -> i+1).
+ * Without this EVERY GC cost ~EXT_CELLS DMA writes (4096!), even under purely hot load —
+ * on hardware the bulk of the typing lag (51 GCs per 200 editor characters). */
 static uint16_t alloc_high = 0;
-/* FROZEN-BOOT-REGION (2026-07-02): alles bis gc_frozen ist permanent (Boot-Littabs/Stdlib-
- * Bindungen — in sich geschlossen, zeigen nie auf Runtime-Zellen). Der GC ueberspringt die
- * Region komplett: kein Marking-DMA ueber die ~300 Boot-Permanents bei JEDEM Lauf (das
- * waren ~2000 DMAs/GC), kein Sweep dort. Gesetzt einmalig nach dem Stdlib-Boot. */
+/* FROZEN BOOT REGION (2026-07-02): everything up to gc_frozen is permanent (boot littabs /
+ * stdlib bindings — self-contained, they never point at runtime cells). The GC skips the
+ * region entirely: no marking DMA across the ~300 boot permanents on EVERY run (that was
+ * ~2000 DMAs per GC), and no sweep there. Set once after the stdlib boot. */
 static uint16_t gc_frozen = 0;
-/* Markierungs-Fenster im EXT-Bereich (2026-07-03): der Fixpoint scannte je Pass ALLE
- * EXT-Zellen (bei 3072: ~80 ms JE GC, xemu-$D7FA-Messung — mal 2-3 GCs je Editor-Taste
- * war DAS die "eine Sekunde"). Jetzt merkt sich gc_mark1 min/max markierter EXT-Indizes;
- * nach dem Boot-Freeze ist das Fenster fast immer leer/winzig. */
+/* Marking window in the EXT region (2026-07-03): the fixpoint used to scan ALL EXT cells
+ * per pass (at 3072: ~80 ms PER GC, measured via xemu $D7FA — times 2-3 GCs per editor
+ * keystroke, THAT was the "one second"). gc_mark1 now remembers the min/max marked EXT
+ * index; after the boot freeze the window is almost always empty or tiny. */
 static uint16_t ext_mark_lo, ext_mark_hi;
-static uint16_t allocs_since_gc = 0;   /* Hysterese der Nursery-Politik (s. alloc) */
+static uint16_t allocs_since_gc = 0;   /* hysteresis of the nursery policy (see alloc) */
 WORKBENCH_FREEZEFN void gc_freeze_boot(void) {
     uint16_t i;
     gc_frozen = alloc_high;
 #ifdef LISP65_STRING_ARENA
-    str_arena_freeze();   /* Boot-Literal-String-Bytes als permanentes Arena-Praefix */
+    str_arena_freeze();   /* boot literal string bytes as a permanent arena prefix */
 #endif
-    /* Hot-Zellen (bisher absichtlich NICHT in der Freelist) jetzt an die Spitze:
-     * Laufzeit-Allokationen laufen ab hier hot; Rest-EXT bleibt als Ueberlauf dahinter. */
+    /* Hot cells (deliberately NOT in the freelist until now) move to the front: runtime
+     * allocations run hot from here on; the remaining EXT stays behind as overflow. */
     for (i = HEAP_CELLS - 1; i >= 1; i--) {
         heap[i].a = freelist;
         freelist = (obj)(i << 1);
     }
 }
 #endif
-/* Mark-Bits. Erweiterter Heap: Bitmap (1 Bit/Zelle), damit grosse MAX_CELLS in Bank 0 passen.
- * Default (kein EXT): ein Byte/Zelle (byte-identisch zum bisherigen Verhalten). Mit
- * -DLISP65_MARK_BITMAP auch ohne EXT erzwingbar (Test).
- * WICHTIG: Bit-Lookup-Tabelle statt variabler Shift `1u<<(i&7)` — den generiert der 6502-Backend
- * als Shift-Schleife mit einem Codegen-Fehler, der reproduzierbar den GC/load-source-Pfad crashte
- * (Tabelle laeuft stabil). Siehe docs/mega65-extram-access.md. */
+/* Mark bits. Extended heap: bitmap (1 bit per cell) so a large MAX_CELLS fits in bank 0.
+ * Default (no EXT): one byte per cell (byte-identical to the previous behaviour). With
+ * -DLISP65_MARK_BITMAP it can be forced without EXT as well (test).
+ * IMPORTANT: a bit lookup table instead of the variable shift `1u<<(i&7)` — the 6502 backend
+ * generates that as a shift loop with a codegen defect that reproducibly crashed the
+ * GC/load-source path (the table runs stably). See docs/mega65-extram-access.md. */
 #if defined(LISP65_EXT_HEAP) || defined(LISP65_MARK_BITMAP)
 static uint8_t marks[(MAX_CELLS + 7) / 8];
 static const uint8_t markbit[8] = {1,2,4,8,16,32,64,128};
@@ -428,7 +428,7 @@ void gc_mark(obj o) {
     }
 }
 
-/* Ein einzelnes obj markieren (OHNE Nachfolger). 1 = neu markiert. Flach, kein Stack. */
+/* Mark a single obj (WITHOUT successors). 1 = newly marked. Flat, no stack. */
 static uint8_t gc_mark_children_hot(uint16_t i);
 #ifdef LISP65_EXT_HEAP
 static uint8_t gc_mark_children_ext(uint16_t i);
@@ -441,12 +441,12 @@ static uint8_t gc_mark1(obj o) {
 #endif
     if (!IS_PTR(o)) return 0;
     i = (uint16_t)o >> 1;
-    if (i >= MAX_CELLS) { gc_badobj++; return 0; }   /* korruptes obj: verwerfen */
+    if (i >= MAX_CELLS) { gc_badobj++; return 0; }   /* corrupt obj: discard */
 #ifdef LISP65_EXT_HEAP
-    if (i >= HEAP_CELLS && i <= gc_frozen) return 0; /* Boot-Permanent (EXT): nie traversieren */
+    if (i >= HEAP_CELLS && i <= gc_frozen) return 0; /* boot permanent (EXT): never traverse */
 #endif
 #ifdef LISP65_EXT_HEAP
-    if (i >= HEAP_CELLS) {                           /* Markierungs-Fenster pflegen */
+    if (i >= HEAP_CELLS) {                           /* maintain the marking window */
         if (i < ext_mark_lo) ext_mark_lo = i;
         if (i > ext_mark_hi) ext_mark_hi = i;
     }
@@ -459,13 +459,13 @@ static uint8_t gc_mark1(obj o) {
     return 1;
 }
 
-/* cdr-Spine ab obj b BIS ZUM ENDE markieren — STACKLOS (nur eine Schleife). Ohne das
- * schob der Fixpoint verstreut liegende Listen nur EINEN cdr-Hop je Voll-Pass -> O(Laenge)
- * Paesse ueber das EXT-Fenster (per DMA der "1-Sekunde-Haenger" beim Editor-Tippen;
- * 2026-07-03 gemessen: 2-6 GC/Taste, jede mit vielen Paessen). Jetzt folgt EIN Besuch die
- * ganze cdr-Kette; car-Teilbaeume werden 1 Hop angemarkt und vom naechsten Fixpoint-Pass
- * erfasst -> Konvergenz in ~2-3 Paessen statt O(Tiefe). Transparente Accessoren: eine
- * Kette, die hot->ext wechselt, laeuft korrekt weiter (dann per DMA).
+/* Mark the cdr spine from obj b TO THE END — STACKLESS (a single loop). Without this the
+ * fixpoint advanced scattered lists by only ONE cdr hop per full pass -> O(length) passes
+ * over the EXT window (via DMA, the "one-second hang" while typing in the editor;
+ * measured 2026-07-03: 2-6 GCs per keystroke, each with many passes). Now ONE visit follows
+ * the whole cdr chain; car subtrees are marked one hop deep and picked up by the next
+ * fixpoint pass -> convergence in ~2-3 passes instead of O(depth). Transparent accessors: a
+ * chain that crosses hot->ext keeps working correctly (via DMA from there on).
  * Rueckgabe: 1 = mindestens eine neue Markierung. */
 static uint8_t gc_mark_spine(obj b) {
     uint8_t ch = 0;
@@ -599,12 +599,12 @@ void gc_collect(void) {
         gc_mark1(sym_function(sym));
 #endif
     }
-    LA(19);   /* S: symbole markiert */
+    LA(19);   /* S: symbols marked */
 
-    /* Fixpunkt in EINER Richtung (absteigend). Die frueher noetige alternierende Richtung
-     * ist mit dem cdr-Spine-Follow (gc_mark_spine) obsolet: eine Kette wird jetzt in EINEM
-     * Besuch komplett markiert, egal wie sie im Speicher liegt -> Konvergenz in ~2-3 Paessen
-     * unabhaengig von der Scan-Richtung. Das spart die zweite Schleifen-Kopie (.text). */
+    /* Fixpoint in ONE direction (descending). The alternating direction that used to be
+     * necessary is obsolete with the cdr spine follow (gc_mark_spine): a chain is now marked
+     * completely in ONE visit, wherever it sits in memory -> convergence in ~2-3 passes
+     * regardless of scan direction. That saves the second copy of the loop (.text). */
     do {
         changed = 0;
         GC_ATTR_PHASE(GC_ATTR_TRACE);
@@ -636,8 +636,8 @@ void gc_collect(void) {
 #endif
 
 #ifdef LISP65_STRING_ARENA
-    /* Arena-Kompaktierung: lebende (markierte) T_STR-Bytes low->high umkopieren, tote
-     * fallen weg. Marks noch gueltig (MARK_CLEAR erst beim naechsten GC). Vor dem Sweep. */
+    /* Arena compaction: copy live (marked) T_STR bytes low->high, dead ones fall away.
+     * Marks are still valid (MARK_CLEAR only happens at the next GC). Before the sweep. */
     GC_ATTR_PHASE(GC_ATTR_ARENA);
     str_arena_compact();
 #endif
@@ -645,16 +645,16 @@ void gc_collect(void) {
     GC_ATTR_PHASE(GC_ATTR_SWEEP);
     freelist = NIL;
 #ifdef LISP65_EXT_HEAP
-    /* Absteigend NUR bis zur Watermark: die Region darueber wurde nie vergeben und haengt
-     * mit ihrer intakten mem_init-Kette (i -> i+1 -> ... -> NIL) hinten an. Spart
-     * ~EXT_CELLS DMA-Writes je GC, solange der Ueberlauf unbenutzt ist. */
+    /* Descending ONLY down to the watermark: the region above it was never handed out and
+     * hangs on at the end with its intact mem_init chain (i -> i+1 -> ... -> NIL). Saves
+     * ~EXT_CELLS DMA writes per GC as long as the overflow stays unused. */
     {
         uint16_t lo = (gc_frozen > (uint16_t)(HEAP_CELLS - 1)) ? gc_frozen : (uint16_t)(HEAP_CELLS - 1);
-        /* Pristine-Kette nur anhaengen, wenn je alloziert wurde (alloc_high>0) UND
-         * mem_init die Kette geschrieben hat — sonst (Lazy-Init ohne mem_init, z. B.
-         * Minimal-Harnesse) entstuende ein Freelist-Zyklus ueber Zelle alloc_high+1. */
+        /* Only append the pristine chain if something was ever allocated (alloc_high>0) AND
+         * mem_init actually wrote the chain — otherwise (lazy init without mem_init, e.g.
+         * minimal harnesses) a freelist cycle through cell alloc_high+1 would appear. */
         if (alloc_high > 0 && alloc_high + 1 < MAX_CELLS) freelist = (obj)((uint16_t)(alloc_high + 1) << 1);
-        for (i = alloc_high; i > lo; i--) {          /* Runtime-EXT (Frozen-Region nie) */
+        for (i = alloc_high; i > lo; i--) {          /* runtime EXT (never the frozen region) */
 #ifdef LISP65_GC_WORK_ATTRIBUTION_PROBE
             gc_attr_sweep_ext_visits++;
 #endif
@@ -733,16 +733,17 @@ __attribute__((noinline)) static obj alloc_oom(void) {
 
 #ifdef LISP65_STACK_GUARD
 #ifndef LISP65_STACK_MARGIN
-#define LISP65_STACK_MARGIN 24u   /* Schmales Polster ueber heap[]-Top: nur der Ruecklauf des aktuellen
-                                   * Frames muss noch passen. Groesser frisst die (in engen Profilen
-                                   * ohnehin knappe) Reserve und feuert schon auf der Baseline. */
+#define LISP65_STACK_MARGIN 24u   /* Narrow cushion above the heap[] top: only the unwind of the
+                                   * current frame still has to fit. A larger value eats the
+                                   * reserve (already tight in narrow profiles) and fires on the
+                                   * baseline. */
 #endif
 uint8_t lisp_stack_low(void) {
 #ifdef __mos__
-    /* llvm-mos haelt den SOFT-STACK-Pointer in __rc0/__rc1 (ZP $02/$03); er waechst von $D000 nach
-     * unten Richtung residentem BSS-/Overlay-Floor. (&local geht NICHT — address-taken Locals landen
-     * in ZP-Pseudo-Registern, nicht auf dem Soft-Stack.) __heap_start ist die Linkergrenze, die auch
-     * die Workbench-Reserve-Audits verwenden. */
+    /* llvm-mos keeps the SOFT STACK pointer in __rc0/__rc1 (ZP $02/$03); it grows downward from
+     * $D000 towards the resident BSS/overlay floor. (&local does NOT work — address-taken locals
+     * end up in ZP pseudo-registers, not on the soft stack.) __heap_start is the linker boundary
+     * that the workbench reserve audits use as well. */
     extern uint8_t __heap_start[];
     uint16_t sp = *(volatile uint16_t *)0x0002u;
     return sp <= (uint16_t)((uintptr_t)__heap_start + LISP65_STACK_MARGIN);
@@ -759,17 +760,17 @@ obj alloc(uint8_t type) {
     perf_allocs++;
 #endif
 #ifdef GC_DISABLE
-    if (freelist == NIL) return NIL;       /* Diagnose: GC aus, reiner Bump bis leer */
+    if (freelist == NIL) return NIL;       /* diagnostics: GC off, pure bump until empty */
 #else
 #ifdef GC_STRESS
     gc_collect();
 #endif
 #ifdef LISP65_EXT_HEAP
-    /* NURSERY-POLITIK (2026-07-02): ist der Hot-Bereich leergelaufen (Freelist-Spitze
-     * zeigt ins EXT), lieber ernten als ins DMA-Land wandern — sonst laeuft der Editor-
-     * Churn durch alle 4096 EXT-Zellen (gemessen: 290 EXT-Conses/Taste = Wandzeit).
-     * Hysterese HEAP_CELLS/2: passt das lebende Set nicht in Hot, bleibt der GC-Abstand
-     * trotzdem >= halbe Hot-Groesse (kein Thrash, Ueberlauf ins EXT dann gewollt). */
+    /* NURSERY POLICY (2026-07-02): once the hot region has run dry (the freelist head points
+     * into EXT), collect rather than wander into DMA land — otherwise editor churn runs through
+     * all 4096 EXT cells (measured: 290 EXT conses per keystroke = wall time).
+     * Hysteresis HEAP_CELLS/2: if the live set does not fit in hot, the GC distance still stays
+     * >= half the hot size (no thrashing; spilling into EXT is then intended). */
     if (gc_frozen && freelist != NIL
         && ((uint16_t)freelist >> 1) >= HEAP_CELLS
 #ifdef LISP65_NURSERY_HYSTERESIS
@@ -863,12 +864,13 @@ obj list_rplacd(obj cell, obj value) {
 #error "LISP65_STRING_ARENA on MEGA65 requires LISP65_EXT_HEAP so the hardened F018 DMA helper is available"
 #endif
 
-/* --- Byte-Backing-Accessoren: die EINZIGE Naht, die der Device-Port (EXT/DMA) ersetzt.
- * Host: zwei Arrays. MEGA65: Bank 4 (echtes Fast-RAM), zwei Fenster in der Luecke
- * $42000-$46BFF zwischen EXT-Zellen und Disk-Scratch. HW-BEFUND 2026-07-08: die urspruengliche
- * Wahl Bank 6 ($60000) ist NICHT bestueckt (MEGA65-Fast-RAM = 384 KB = Banks 0-5) -> jeder
- * Arena-Byte-Read lieferte 0, alle Lisp-String-Ops brachen (load-lib scannte nach Namen (0 0 0)).
- * Bank 4 wird bereits vom EXT-Zell-Heap benutzt und ist damit als RAM verifiziert. --- */
+/* --- Byte backing accessors: the ONLY seam the device port (EXT/DMA) replaces.
+ * Host: two arrays. MEGA65: bank 4 (real fast RAM), two windows in the gap
+ * $42000-$46BFF between the EXT cells and the disk scratch. HARDWARE FINDING 2026-07-08: the
+ * original choice of bank 6 ($60000) is NOT populated (MEGA65 fast RAM = 384 KB = banks 0-5)
+ * -> every arena byte read returned 0 and all Lisp string operations broke (load-lib scanned
+ * for names and saw (0 0 0)). Bank 4 is already used by the EXT cell heap and is therefore
+ * verified as RAM. --- */
 #ifndef __mos__
 static uint8_t  str_buf_a[STR_ARENA_SIZE];
 static uint8_t  str_buf_b[STR_ARENA_SIZE];
@@ -896,9 +898,9 @@ static void    str_swap_buffers(void) { uint8_t *t = str_cur; str_cur = str_alt;
 #define STR_ARENA_CUR_OFF 0x2000u /* hinter den EXT-Zellen ($40000-$41FFF bei EXT_CELLS=1024) */
 #endif
 #ifndef STR_ARENA_ALT_OFF
-#define STR_ARENA_ALT_OFF (STR_ARENA_CUR_OFF + STR_ARENA_SIZE)  /* Offset $4600; Ende $6BFF, Disk-Scratch ab $6C00 */
+#define STR_ARENA_ALT_OFF (STR_ARENA_CUR_OFF + STR_ARENA_SIZE)  /* offset $4600; ends at $6BFF, disk scratch from $6C00 */
 #endif
-/* Wenn Arena und EXT-Zellen in derselben Bank liegen, muss der Zell-Heap vor dem Arena-Fenster enden. */
+/* If the arena and the EXT cells share a bank, the cell heap must end before the arena window. */
 #if STR_ARENA_BANK == EXT_BANK && (EXT_CELLS * 8u) > STR_ARENA_CUR_OFF
 #error "String-Arena-Fenster kollidieren mit EXT_CELLS (EXT_CELLS*8 > STR_ARENA_CUR_OFF)"
 #endif
@@ -995,26 +997,26 @@ static void str_arena_compact(void) {
     str_top = ntop;
 }
 
-/* STREAMING-BUILDER (kein Festpuffer -> keine stille Truncation, kein BSS-Risiko).
- * Muster: str_open() -> str_putc()* -> str_close(). Der Aufrufer alloziert zwischen open
- * und close NICHT selbst; str_putc darf aber bei Arena-Voll GC/Compaction ausloesen (der
- * offene String ist dabei via str_building gerootet-markiert und wird ans Arena-Ende
- * relociert, bleibt also anhaengbar). Erst wenn auch nach Compaction kein Platz ist -> mem_oom. */
+/* STREAMING BUILDER (no fixed buffer -> no silent truncation, no BSS risk).
+ * Pattern: str_open() -> str_putc()* -> str_close(). The caller must not allocate itself
+ * between open and close; str_putc may however trigger GC/compaction when the arena is full
+ * (the open string is root-marked via str_building and is relocated to the end of the arena,
+ * so it stays appendable). Only if there is still no room after compaction -> mem_oom. */
 obj str_open(void) {
-    obj o = alloc(T_STR);                        /* kann Heap-GC ausloesen; str_building noch alt/NIL */
+    obj o = alloc(T_STR);                        /* may trigger a heap GC; str_building is still old/NIL */
     if (o == NIL) return NIL;
     cell_set_a(o, MKFIX(0));
-    cell_set_b(o, MKFIX(0));                     /* wohlgeformter Leerstring (0 Bytes) fuer evtl. Compaction */
-    if (str_top > STR_MAX_BYTES) {               /* Startoffset waere nicht als Fixnum darstellbar */
-        GC_PUSH(o); gc_collect(); GC_POPN(1);    /* toten Muell weg; o (0 Bytes) unbewegt-egal */
-        if (str_top > STR_MAX_BYTES) { mem_oom = 1; return NIL; }   /* ehrlicher OOM statt Wrap */
+    cell_set_b(o, MKFIX(0));                     /* well-formed empty string (0 bytes) in case compaction runs */
+    if (str_top > STR_MAX_BYTES) {               /* the start offset would not be representable as a fixnum */
+        GC_PUSH(o); gc_collect(); GC_POPN(1);    /* drop dead garbage; o (0 bytes) is unaffected either way */
+        if (str_top > STR_MAX_BYTES) { mem_oom = 1; return NIL; }   /* an honest OOM instead of a wrap */
     }
-    cell_set_b(o, MKFIX((int16_t)str_top));      /* Start = Arena-Top NACH dem alloc/GC (<= 16383) */
+    cell_set_b(o, MKFIX((int16_t)str_top));      /* start = arena top AFTER the alloc/GC (<= 16383) */
     str_building = o;
     return o;
 }
 uint8_t str_putc(obj s, uint8_t c) {
-    /* Laengen-Limit: a (Laenge) muss positiver Fixnum bleiben (<= 16383). Compaction hilft hier nicht. */
+    /* Length limit: a (the length) must stay a positive fixnum (<= 16383). Compaction does not help here. */
     if ((uint16_t)(str_top - (uint16_t)FIXVAL(cell_b(s))) >= STR_MAX_BYTES) { mem_oom = 1; return 0; }
     if (str_top >= STR_ARENA_SIZE) {
         GC_PUSH(s); gc_collect(); GC_POPN(1);    /* toten Arena-Muell kompaktieren; s wandert ans Ende */

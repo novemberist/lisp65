@@ -7,6 +7,7 @@ import ast
 import json
 from pathlib import Path
 import sys
+from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -143,10 +144,62 @@ def collect() -> dict[str, object]:
             "ElfTruth owns section, symbol, size and relocation identity"
         ),
         "private_elf_views_in_named_consumers": 0,
+        "ungoverned_column_parsers": ungoverned_column_parsers(contract),
         "claim_limit": (
             "Host-gate truth-source migration only; no product, linker, "
             "hardware, promotion or release claim."
         ),
+    }
+
+
+# One-off investigation probes are outside the migration rule -- they are not
+# reachable from the build and several are named in immutable receipts, so they
+# are neither rewritten nor moved.  But "private=0" reads like a statement about
+# the whole tree, and it was not one.  The pinned inventory lives in the contract
+# so the ungoverned population is visible and cannot grow silently: a new tool
+# that parses ELF columns by hand either joins the governed consumers or moves
+# the pin, deliberately.
+GOVERNED_SOURCES = {
+    "c2_elf_truth_migration_gate.py",
+    "elf_truth.py",
+}
+COLUMN_TOOL_TOKENS = (
+    'llvm-nm"', "llvm-nm'",
+    'llvm-readelf"', "llvm-readelf'",
+    'llvm-size"', "llvm-size'",
+)
+
+
+def ungoverned_column_parsers(contract: dict[str, Any]) -> dict[str, Any]:
+    """Probes outside the migration rule that still parse ELF columns by hand."""
+    pin = contract.get("ungoverned_column_parsers_2026_07_30")
+    require(isinstance(pin, dict), "ungoverned column-parser pin is missing")
+    pinned = pin.get("files")
+    require(
+        isinstance(pinned, list) and all(isinstance(row, str) for row in pinned)
+        and pin.get("count") == len(pinned),
+        "ungoverned column-parser pin is malformed",
+    )
+    tools = Path(__file__).resolve().parent
+    found = set()
+    for path in sorted(tools.glob("*.py")):
+        if path.name in GOVERNED_SOURCES:
+            continue
+        source = path.read_text(encoding="utf-8")
+        if any(token in source for token in COLUMN_TOOL_TOKENS) \
+                and "ElfTruth" not in source:
+            found.add(path.name)
+    added = sorted(found - set(pinned))
+    require(
+        not added,
+        "new tool parses ELF columns by hand instead of using shared ElfTruth: "
+        f"{added}",
+    )
+    return {
+        "scope_note": pin["scope"],
+        "pinned": len(pinned),
+        "present": len(found),
+        "retired_since_pin": sorted(set(pinned) - found),
     }
 
 
@@ -164,17 +217,34 @@ def selftest() -> None:
             rejected += 1
     require(rejected == 4, f"private-view mutations accepted: {4 - rejected}")
 
+    # A new ungoverned column parser must be rejected, not absorbed.
+    contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    shrunk = json.loads(json.dumps(contract))
+    pin = shrunk["ungoverned_column_parsers_2026_07_30"]
+    pin["files"] = pin["files"][1:]
+    pin["count"] = len(pin["files"])
+    try:
+        ungoverned_column_parsers(shrunk)
+    except MigrationError:
+        pass
+    else:
+        raise MigrationError(
+            "a column parser missing from the pin was accepted silently")
+
 
 def main() -> int:
     if len(sys.argv) == 2 and sys.argv[1] == "--selftest":
         selftest()
-        print("c2-elf-truth-migration: SELFTEST PASS mutations=4")
+        print("c2-elf-truth-migration: SELFTEST PASS mutations=5")
         return 0
     require(len(sys.argv) == 1, "usage: c2_elf_truth_migration_gate.py [--selftest]")
     result = collect()
+    ungoverned = result["ungoverned_column_parsers"]
     print(
         "c2-elf-truth-migration: PASS "
-        f"consumers={len(result['consumers'])} private=0")
+        f"consumers={len(result['consumers'])} private-in-governed=0 "
+        f"ungoverned-probes-pinned={ungoverned['pinned']} "
+        f"present={ungoverned['present']}")
     return 0
 
 

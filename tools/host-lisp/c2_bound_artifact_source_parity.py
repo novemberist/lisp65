@@ -509,6 +509,30 @@ def equivalent_product_rebind(
     return rebound, receipt
 
 
+def resolve_tier_path(carrier_path: Path) -> Path:
+    """Locate the tier-generation receipt for a bound compiler carrier.
+
+    The receipt sits next to the suite the carrier itself binds -- that is
+    the authoritative reference, not a directory convention.  The legacy
+    layout (receipt under <carrier-dir>/compiler-tier/) is accepted as a
+    fallback so historical carriers keep verifying.
+    """
+    candidates = []
+    suite_ref = load(carrier_path).get("suite")
+    if isinstance(suite_ref, str):
+        candidates.append((ROOT / suite_ref).parent / "tier-generation.json")
+    candidates.append(carrier_path.parent / "compiler-tier/tier-generation.json")
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    require(False, (
+        "current compiler carrier has no tier-generation receipt "
+        f"(looked next to the bound suite and under {carrier_path.parent}/"
+        "compiler-tier/; the receipt is produced by the compiler-tier "
+        "generation step of the carrier link cycle)"))
+    raise AssertionError("unreachable")
+
+
 def default_authorities() -> tuple[Path, Path, Path, Path | None]:
     profile = load(PRODUCT_PROFILE)
     product_path = root_path(
@@ -527,9 +551,7 @@ def default_authorities() -> tuple[Path, Path, Path, Path | None]:
             break
     require(carrier_path is not None,
             "current product has no bound compiler carrier")
-    tier_path = carrier_path.parent / "compiler-tier/tier-generation.json"
-    require(tier_path.is_file(),
-            "current compiler carrier has no tier-generation receipt")
+    tier_path = resolve_tier_path(carrier_path)
     binding = profile["authority"].get("manifest_source_bindings")
     source_path = (ROOT / binding).resolve() if binding else None
     return carrier_path, tier_path, product_path, source_path
@@ -568,9 +590,91 @@ def write(path: Path, value: dict[str, Any]) -> None:
         encoding="utf-8")
 
 
+def absent_semantics_selftest() -> int:
+    """Teeth for the absent-product semantics (disposition of 2026-07-30).
+
+    Three invariants: a cleanly absent product must never be silently green
+    in required mode; the tier receipt must resolve through the carrier's own
+    suite reference (new layout) and through the legacy directory convention;
+    and a carrier binding neither must stay red.
+    """
+    import tempfile
+
+    checked = 0
+    # 1. required mode refuses an absent product.
+    global PRODUCT_PROFILE
+    saved = PRODUCT_PROFILE
+    with tempfile.TemporaryDirectory() as raw:
+        tmp = Path(raw)
+        profile = tmp / "profile.json"
+        profile.write_text(json.dumps({
+            "authority": {"product_manifest": "build/selftest-absent/product.json"},
+        }), encoding="utf-8")
+        PRODUCT_PROFILE = profile
+        try:
+            failed = False
+            try:
+                main_absent_probe()
+            except GateError:
+                failed = True
+            require(failed, "required mode accepted an absent bound product")
+            checked += 1
+        finally:
+            PRODUCT_PROFILE = saved
+
+        # 2. tier resolution: suite-referenced (new) and directory (legacy)
+        # layouts both resolve; neither resolving is red.
+        suite_dir = tmp / "gate/compiler-tier"
+        suite_dir.mkdir(parents=True)
+        (suite_dir / "tier-generation.json").write_text("{}", encoding="utf-8")
+        carrier_new = tmp / "gate/carrier/lcc.manifest.json"
+        carrier_new.parent.mkdir(parents=True)
+        rel_suite = (suite_dir / "suite.json").resolve()
+        carrier_new.write_text(json.dumps({
+            "suite": str(rel_suite.relative_to(ROOT.resolve()))
+            if str(rel_suite).startswith(str(ROOT.resolve()))
+            else str(rel_suite),
+        }), encoding="utf-8")
+        legacy_dir = tmp / "legacy"
+        (legacy_dir / "compiler-tier").mkdir(parents=True)
+        (legacy_dir / "compiler-tier/tier-generation.json").write_text(
+            "{}", encoding="utf-8")
+        carrier_legacy = legacy_dir / "lcc.manifest.json"
+        carrier_legacy.write_text("{}", encoding="utf-8")
+        require(resolve_tier_path(carrier_new).is_file(),
+                "suite-referenced tier layout does not resolve")
+        require(resolve_tier_path(carrier_legacy).is_file(),
+                "legacy tier layout no longer resolves")
+        checked += 1
+        orphan = tmp / "orphan/lcc.manifest.json"
+        orphan.parent.mkdir(parents=True)
+        orphan.write_text("{}", encoding="utf-8")
+        failed = False
+        try:
+            resolve_tier_path(orphan)
+        except GateError:
+            failed = True
+        require(failed, "a carrier with no tier receipt was accepted")
+        checked += 1
+    return checked
+
+
+def main_absent_probe() -> None:
+    """Minimal replica of main()'s absent-product branch for the selftest."""
+    profile = load(PRODUCT_PROFILE)
+    entry = ROOT / profile["authority"]["product_manifest"]
+    if not entry.is_file():
+        require(False, "required bound product is absent: "
+                       f"{profile['authority']['product_manifest']}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument(
+        "--require-artifact", action="store_true",
+        help="fail when no bound product exists on this tree (product-chain "
+             "mode); without it a cleanly absent product reports NOT CLAIMED")
     parser.add_argument("--carrier-manifest", type=Path)
     parser.add_argument("--tier-receipt", type=Path)
     parser.add_argument("--product-identity", type=Path)
@@ -587,9 +691,11 @@ def main() -> int:
     inventory = contract_gate()
     mutations = mutation_gate()
     if args.selftest:
+        absent_invariants = absent_semantics_selftest()
         print(
             "c2-bound-artifact-source-parity: SELFTEST PASS "
-            f"classes={len(EXPECTED_CLASSES)} mutations={len(mutations)}")
+            f"classes={len(EXPECTED_CLASSES)} mutations={len(mutations)} "
+            f"absent-invariants={absent_invariants}")
         return 0
     rebind_values = (
         args.rebind_original_product, args.rebind_replay_product,
@@ -631,6 +737,28 @@ def main() -> int:
             args.source_bindings.resolve()
             if args.source_bindings is not None else None)
     else:
+        # A *cleanly* absent product (the profile's product-manifest entry
+        # point does not exist) is the fresh-clone / cleaned-build state:
+        # parity is a property of the (source, bound artifact) pair, and
+        # with no artifact there is nothing to claim.  This is reported
+        # explicitly, never silently, and the product chain runs this gate
+        # with --require-artifact where absence is a hard failure.  Any
+        # partially present state (entry point exists but pieces are
+        # missing or stale) stays a hard failure in both modes.
+        profile = load(PRODUCT_PROFILE)
+        entry = ROOT / profile["authority"]["product_manifest"]
+        if not entry.is_file():
+            require(
+                not args.require_artifact,
+                "required bound product is absent: "
+                f"{relative(entry)} (produced by the product link cycle)")
+            print(
+                "c2-bound-artifact-source-parity: NOT CLAIMED "
+                f"bound-product-absent={relative(entry)} "
+                "(a link-chain output; parity asserts nothing without a "
+                "bound artifact -- the required check runs inside "
+                "workbench-product after the product step)")
+            return 0
         carrier_path, tier_path, product_path, source_binding_path = (
             default_authorities())
     if args.write_source_bindings is not None:

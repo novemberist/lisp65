@@ -7,9 +7,9 @@
 #include "c2_kernal_layout.h"
 
 
-/* Index/nsym sind uint16 -> bis zu 65534 Symbole moeglich (Limit = MAX_SYM/NAMEPOOL).
- * Default klein gehalten, damit die c64-Smoke-Builds nicht im BSS ueberlaufen; der
- * mega65-/Voll-Lib-Build hebt per -DMAX_SYM / -DNAMEPOOL an (siehe docs/kernel-abi.md). */
+/* Index and nsym are uint16 -> up to 65534 symbols are possible (the limit is MAX_SYM/NAMEPOOL).
+ * Kept small by default so the c64 smoke builds do not overflow .bss; the mega65 / full-library
+ * build raises it with -DMAX_SYM / -DNAMEPOOL (see docs/kernel-abi.md). */
 #ifndef MAX_SYM
 #define MAX_SYM   384
 #endif
@@ -17,32 +17,33 @@
 #define NAMEPOOL  3072
 #endif
 #if MAX_SYM > 0x1000
-#error "MAX_SYM kollidiert mit dem SYMI-Immediate-Fenster (obj.h: Basis 0x7000, 4096 Indizes)"
+#error "MAX_SYM collides with the SYMI immediate window (obj.h: base 0x7000, 4096 indices)"
 #endif
-/* nameoff ist jetzt ein VOLLER 16-Bit-Offset (Laenge liegt separat in namelen[]) -> NAMEPOOL
- * bis 65535 moeglich. Reale Grenze: die EXT-Layout-Pruefung in vm_embed.c (Bank-5-Fit) und das
- * SYMI-Fenster (MAX_SYM<=4096). Wachstum ist Bank-0-frei (Namepool liegt in EXT via SYMPOOL_EXT). */
+/* nameoff is now a FULL 16-bit offset (the length lives separately in namelen[]) -> NAMEPOOL up to
+ * 65535 is possible. The real limits are the EXT layout check in vm_embed.c (bank-5 fit) and the
+ * SYMI window (MAX_SYM<=4096). Growth is bank-0-free (the name pool lives in EXT via SYMPOOL_EXT). */
 #if NAMEPOOL > 65535
-#error "NAMEPOOL > 65535: nameoff-Offset ist 16 Bit (uint16_t)"
+#error "NAMEPOOL > 65535: the nameoff offset is 16 bits (uint16_t)"
 #endif
-/* Stufe 2b: internierte Symbole sind SYMI-IMMEDIATES (obj.h) — keine Heap-Zelle, kein
- * symobj[]-Array mehr; stattdessen traegt nameoff[] den Namens-Offset je Index (gleiche
- * .bss-Groesse wie das alte symobj[], aber ~174 Boot-Heap-Zellen frei). gensyms bleiben
- * T_SYM-Zellen (a=Index, b=Namens-Offset) — die Accessoren unten nehmen beide Formen. */
-/* nameoff[i]: Bits 0-11 = Pool-Offset (NAMEPOOL<=4096), Bits 12-15 = Namenslaenge (Cap 15).
- * Der Laengen-Nibble ist der DMA-FREIE Vorfilter fuer intern: die lineare Suche machte
- * sonst je Kandidat einen 34-Byte-DMA-Read aus dem EXT-Sympool — bei ~300 Symbolen war
- * JEDER Reader-Token ~1/3 Sekunde HW-Zeit (Geraetemessung 2026-07-02). */
-/* Split (2026-07-04): Laenge (Vorfilter) getrennt vom Offset. namelen[i] = volle Laenge 0..33,
- * bleibt Bank 0 (DMA-freier Vorfilter -> Boot-O(nsym^2) bleibt schnell). nameoff[i] = reiner
- * Offset (jetzt volle 16 Bit): mit -DLISP65_NAMEOFF_EXT nach EXT (Naht nameoff_get/set: Geraet=DMA,
- * Default/Host=Bank-0-Array). Netto -1 B/Symbol Bank-0 (nameoff 2 B -> namelen 1 B); zugleich
- * loest der 16-Bit-Offset perspektivisch die 4096-Namepool-Wand. docs/symbol-table-ext-design.md. */
-/* 4-BIT-VORFILTER (2026-07-06): min(len,15) statt voller Laenge — halbiert das Bank-0-Array
- * (MAX_SYM/2 statt MAX_SYM Bytes; bei 560 Symbolen -280 B). Filterguete praktisch identisch:
- * Namen <15 Zeichen (fast alle) filtern exakt; laengere teilen sich den 15er-Eimer und kosten
- * schlimmstenfalls einen zusaetzlichen 34-B-DMA-Vergleich (selten). Konstante Shifts (>>4,<<4)
- * — der Miscompile-Bug betraf nur VARIABLE Shifts (markbit-Saga, mem.c). */
+/* Stage 2b: interned symbols are SYMI IMMEDIATES (obj.h) — no heap cell and no symobj[] array any
+ * more; instead nameoff[] carries the name offset per index (the same .bss size as the old symobj[],
+ * but about 174 boot heap cells freed). Gensyms remain T_SYM cells (a=index, b=name offset) — the
+ * accessors below take both forms. */
+/* nameoff[i]: bits 0-11 = pool offset (NAMEPOOL<=4096), bits 12-15 = name length (cap 15).
+ * The length nibble is the DMA-FREE prefilter for intern: otherwise the linear search did a
+ * 34-byte DMA read from the EXT symbol pool per candidate — at about 300 symbols EVERY reader
+ * token cost roughly a third of a second of device time (device measurement 2026-07-02). */
+/* Split (2026-07-04): the length (prefilter) is separated from the offset. namelen[i] = the full
+ * length 0..33, staying in bank 0 (a DMA-free prefilter -> the boot's O(nsym^2) stays fast).
+ * nameoff[i] = the pure offset (now a full 16 bits): with -DLISP65_NAMEOFF_EXT it moves to EXT
+ * (seam nameoff_get/set: device=DMA, default/host=bank-0 array). Net -1 byte of bank 0 per symbol
+ * (nameoff 2 B -> namelen 1 B); at the same time the 16-bit offset eventually removes the 4096-byte
+ * name-pool wall. docs/symbol-table-ext-design.md. */
+/* 4-BIT PREFILTER (2026-07-06): min(len,15) instead of the full length — halves the bank-0 array
+ * (MAX_SYM/2 instead of MAX_SYM bytes; -280 B at 560 symbols). The filter quality is practically
+ * identical: names under 15 characters (almost all of them) filter exactly; longer ones share the
+ * 15 bucket and at worst cost one extra 34-byte DMA comparison (rare). The shifts are constant
+ * (>>4, <<4) — the miscompile bug affected only VARIABLE shifts (the markbit saga, mem.c). */
 static uint8_t      namelen4[(MAX_SYM + 1) / 2];
 #define NLEN4_CAP(l)  ((uint8_t)((l) < 15 ? (l) : 15))
 static uint8_t nlen4_get(uint16_t i) {
@@ -75,11 +76,10 @@ static obj          symval[MAX_SYM];    /* Wert-Zelle (Lisp-2), Default NIL    *
 static obj  symval_get(uint16_t i)        { return symval[i]; }
 static void symval_set(uint16_t i, obj v) { symval[i] = v; }
 #endif
-/* Funktions-Zelle (Lisp-2). Standard: Bank-0-Array, weil dir_find bei jedem CALL liest.
- * Workbench-Skalierung (2026-07-08): mit -DLISP65_SYMFN_EXT liegt die Tabelle in EXT.
- * Das ist ein bewusstes MVP-Budget-Ventil: CALL-Aufloesung kostet dann DMA, aber die volle
- * Workbench passt wieder. Eine Pointer-Bitmap verhindert, dass der GC die vielen
- * BCODE-Immediate-Zellen per DMA liest. */
+/* Function cell (Lisp-2). Default: a bank-0 array, because dir_find reads it on every CALL.
+ * Workbench scaling (2026-07-08): with -DLISP65_SYMFN_EXT the table lives in EXT. That is a
+ * deliberate MVP budget valve: CALL resolution then costs DMA, but the full workbench fits again.
+ * A pointer bitmap keeps the GC from reading the many BCODE immediate cells over DMA. */
 #ifdef LISP65_SYMFN_EXT
 obj  symfn_ext_get(uint16_t i);
 void symfn_ext_set(uint16_t i, obj v);
@@ -98,14 +98,14 @@ static const uint8_t bndbit[8] = {1,2,4,8,16,32,64,128};
 static uint16_t     nsym = 0;
 static uint16_t     npool = 0;
 
-/* Namens-Pool hinter einer Zugriffs-Naht: intern kopiert den Namen, damit Aufrufer (z. B. der
- * Reader aus einem fluechtigen Token-Puffer) keinen stabilen Speicher liefern muss. Der Pool ist
- * KALT (nur intern/symname, nach dem eq-Dispatch-Umbau NICHT im heissen eval-Pfad). Standard:
- * Bank-0-Array. Mit -DLISP65_SYMPOOL_EXT liegt er im erw. RAM (Bank 0 spart NAMEPOOL Bytes);
- * die Naht (sympool_read/write) macht dann DMA. Der Offset-basierte Code ist immer aktiv ->
- * host-testbar unabhaengig von der physischen Lage. */
+/* Name pool behind an access seam: intern copies the name, so callers (for instance the reader
+ * working from a transient token buffer) need not provide stable storage. The pool is COLD (only
+ * intern/symname; since the eq-dispatch rework it is NOT in the hot eval path). Default: a bank-0
+ * array. With -DLISP65_SYMPOOL_EXT it lives in extended RAM (bank 0 saves NAMEPOOL bytes) and the
+ * seam (sympool_read/write) then does DMA. The offset-based code is always active -> host-testable
+ * regardless of the physical location. */
 #ifdef LISP65_SYMPOOL_EXT
-/* Geraet/erw. RAM: Naht MUSS vom Build bereitgestellt werden (DMA); Host-Test simuliert. */
+/* Device / extended RAM: the seam MUST be provided by the build (DMA); the host test simulates it. */
 void sympool_read(uint16_t off, char *dst, uint16_t len);
 void sympool_write(uint16_t off, const char *src, uint16_t len);
 #else
@@ -178,29 +178,28 @@ obj intern(const char *name) {
     return new_symbol(name);
 }
 
-/* symtab-Index aus beiden Symbolformen (SYMI-Immediate | gensym-T_SYM-Zelle). */
-/* gensym-Zellen koennen mit LISP65_EXT_HEAP im erweiterten RAM liegen -> Accessoren
- * (cell_a/cell_b) statt direktem CELL()/heap[] (kalter Pfad, Inline-Zwang unnoetig). */
+/* The symtab index from either symbol form (SYMI immediate | gensym T_SYM cell). */
+/* With LISP65_EXT_HEAP gensym cells can live in extended RAM -> use the accessors
+ * (cell_a/cell_b) instead of CELL()/heap[] directly (cold path, no need to force inlining). */
 static uint16_t sidx(obj s) { return IS_SYMI(s) ? SYMI_IDX(s) : (uint16_t)cell_a(s); }
 
-/* gensym: frisches UNINTERNIERTES Symbol als eigene Heap-Zelle -> der GC raeumt es ab,
- * sobald die Makro-Expansion es nicht mehr referenziert (KEIN permanenter Tabellen-Leak,
- * KEIN Aliasing). Die Zelle teilt sich einen EINZIGEN gueltigen symtab-Index (das
- * reservierte "#:g"-Symbol) -> die heissen Accessoren brauchen KEINEN Sonderfall/Guard
- * (der 0xFF-Guard hatte den 45gs02 zum Absturz gebracht). Identitaet = die Zelle selbst
- * (eq); globale Wert-/Funktionszellen werden fuer Gensyms nie genutzt (nur Env-Bindung). */
+/* gensym: a fresh UNINTERNED symbol as its own heap cell -> the GC reclaims it as soon as the
+ * macro expansion stops referencing it (NO permanent table leak, NO aliasing). The cell shares a
+ * SINGLE valid symtab index (the reserved "#:g" symbol) -> the hot accessors need NO special case
+ * or guard (the 0xFF guard had crashed the 45gs02). Identity is the cell itself (eq); global value
+ * and function cells are never used for gensyms (only environment bindings). */
 obj gensym(void) {
     static obj tag = NIL;
     obj o;
     if (tag == NIL) tag = intern("#:g");
     o = alloc(T_SYM);
-    cell_set_a(o, (obj)SYMI_IDX(tag));            /* gueltiger, geteilter Index */
-    cell_set_b(o, (obj)NOFF(SYMI_IDX(tag)));      /* geteilter Name ("#:g") fuer symname/print */
+    cell_set_a(o, (obj)SYMI_IDX(tag));            /* a valid, shared index */
+    cell_set_b(o, (obj)NOFF(SYMI_IDX(tag)));      /* shared name ("#:g") for symname/print */
     return o;
 }
 
-/* Namen in einen kleinen Bank-0-Scratch holen (KALT: nur printer + VM-Diagnose). Nicht
- * reentrant (static buf) — die Nutzer rufen sequenziell + kopieren sofort. */
+/* Fetch a name into a small bank-0 scratch buffer (COLD: printer and VM diagnostics only).
+ * Not reentrant (a static buffer) — callers invoke it sequentially and copy immediately. */
 const char *symname(obj o) {
     uint16_t off = IS_SYMI(o) ? NOFF(SYMI_IDX(o)) : (uint16_t)cell_b(o);
     sympool_read(off, sym_name_scratch, LISP65_SYMBOL_NAME_BUFFER);

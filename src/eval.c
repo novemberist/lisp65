@@ -1,11 +1,11 @@
-/* lisp65 — Evaluator (Lane K), Lisp-2, GC-sicher
- * Phase 1: lexikalisches Environment + Closures, Spezialformen
- * quote/quasiquote/if/lambda/setq/progn/defmacro/function, Makro-Hook, Primitive.
+/* lisp65 — evaluator (lane K), Lisp-2, GC-safe
+ * Phase 1: lexical environment + closures, special forms
+ * quote/quasiquote/if/lambda/setq/progn/defmacro/function, macro hook, primitives.
  *
- * GC-Disziplin: GC laeuft nur in alloc(). Jede Funktion, die einen lebenden obj ueber
- * eine Allokation haelt, pusht ihn auf den Shadow-Root-Stack. Muster: base merken,
- * frei pushen, vor jedem return gc_rootsp=base zuruecksetzen. cons() schuetzt seine
- * eigenen Argumente bereits.
+ * GC discipline: GC runs only inside alloc(). Every function that holds a live obj
+ * across an allocation pushes it onto the shadow root stack. Pattern: remember base,
+ * push freely, reset gc_rootsp=base before every return. cons() already protects its
+ * own arguments.
  */
 #include "eval.h"
 #include "mem.h"
@@ -48,16 +48,16 @@
 #include "v2_native_function_dispatch.h"
 #endif
 
-/* VM-Fehlerstatus in einen Lisp-Abbruch uebersetzen (REPL faengt via Toplevel; ohne aktives
- * Toplevel ist lisp_abort ein No-op und der Aufrufer sieht den Fehlerwert). */
-static __attribute__((noinline)) void vm_check_status(obj detail) {   /* mehrfach gerufen: Inline-Kopien kosten .text */
+/* Translate a VM error status into a Lisp abort (the REPL catches it via toplevel; with no
+ * active toplevel lisp_abort is a no-op and the caller sees the error value). */
+static __attribute__((noinline)) void vm_check_status(obj detail) {   /* called from several places: inline copies would cost .text */
     switch (vm_status) {
     case VM_OK:
     case VM_HALT:      return;
     default: {
-        /* Status VOR dem Abort loeschen: vm_run startet nicht mehr auf klebrigem
-         * Fehler (s. vm.c-Eintritt) -- ohne das Aufraeumen hier waere die REPL nach
-         * dem ersten Fehler tot. Die Message zeigt auf statische Puffer (safe). */
+        /* Clear the status BEFORE the abort: vm_run no longer starts on a sticky
+         * error (see the vm.c entry) -- without this cleanup the REPL would be dead
+         * after the first error. The message points into static buffers (safe). */
 #ifndef LISP65_NUMERIC_ERRORS
         const char *m = vm_status_message();
 #else
@@ -209,11 +209,11 @@ enum { P_ADD, P_SUB, P_MUL, P_MOD, P_CONS, P_CAR, P_CDR, P_CONSP, P_EQ, P_EQL,
 #endif
        P_SYMNAME, P_FNKIND, P_NUM2STR,
        P_NREVERSE, P_RPLACA, P_RPLACD, P_SCRWRITE, P_NCALL,
-       /* SAVE-Kern-Naht (nur unter MEGA65_F011_WRITE registriert; Namen = kuenftige
-        * CALLPRIM-Kandidaten fuer den Maschinenraum — Anti-Drift: EIN Name, EINE Semantik). */
+       /* SAVE core seam (registered only under MEGA65_F011_WRITE; the names are future
+        * CALLPRIM candidates for the machine room — anti-drift: ONE name, ONE semantics). */
        P_DSKRD, P_DSKBYTE, P_DSKPOKE, P_DSKWR,
-       /* eval-Naht (nur unter LISP65_EVAL_PRIMS registriert; im Maschinenraum kuenftig
-        * dieselben Namen auf compile_run_top_form — Anti-Drift). */
+       /* eval seam (registered only under LISP65_EVAL_PRIMS; in the machine room the same
+        * names will map onto compile_run_top_form — anti-drift). */
        P_EVAL, P_EVALSTR, P_SAVE, P_DIV, P_MEXP1, P_LCCINST, P_SETMACRO,
        /* FASL-B2 (docs/device-fasl-design.md; nur unter LISP65_FASL registriert) */
        P_FSTAGE, P_FSTGET, P_FREADF, P_FSRC, P_FSAVE, P_FLIBST,
@@ -275,13 +275,13 @@ static unsigned hilo(obj hi, obj lo) {
 #endif
 
 #ifdef LISP65_EVAL_PRIMS
-/* eval-Naht (Prio 2, docs/two-product-workflow.md): (eval-string str) streamt die Zeichen
- * DIREKT aus der T_STR-Zeichenliste in den Pull-Reader (kein Puffer, kein .bss) und wertet
- * Form fuer Form aus — Werkzeug fuer Defun-at-point-Eval der IDE. GC-Sicherheit: der Rest-
- * Cursor liegt waehrend der evals in einem gepushten Root-Slot (GC_SET nach jedem Zeichen).
- * NICHT reentrant mit Disk-Load-Streaming (ein Reader-Fetch-Zustand — wie load selbst). */
+/* eval seam (prio 2, docs/two-product-workflow.md): (eval-string str) streams the characters
+ * DIRECTLY out of the T_STR character list into the pull reader (no buffer, no .bss) and
+ * evaluates form by form — the IDE's tool for defun-at-point eval. GC safety: the remaining
+ * cursor sits in a pushed root slot during the evals (GC_SET after every character).
+ * NOT reentrant with disk load streaming (one reader fetch state — same as load itself). */
 #ifdef LISP65_STRING_ARENA
-/* Arena: String-Objekt + Index-Cursor (Bytes liegen in der Arena, keine cdr-Kette). */
+/* Arena: string object + index cursor (the bytes live in the arena, no cdr chain). */
 static obj      es_str;
 static uint16_t es_idx;
 static char es_fetch(void) {
@@ -310,12 +310,12 @@ static char es_fetch(void) {
 #endif
 
 #ifdef LISP65_COMPILE_STRING
-/* Reader-Fetch ueber einen Quelltext-STRING (compile-string: "Buffer ist Quelle"). Muster wie
- * es_fetch (eval-string), aber der String wird NICHT ausgewertet: read_expr_stream liest Form fuer
- * Form, der Aufrufer gibt sie an den FASL-Emitter. Kein Disk, kein NUL-terminierter C-Puffer.
- * GC-Sicherheit: cs_str IST der Quell-String selbst (Objekt-ID) und bleibt via den lebendigen
- * `source`-Parameter der Lisp-Funktion gerootet; Arena-Compaction aktualisiert cell_b, cs_idx ist
- * ein reiner Byte-Index. Deshalb NUR unter LISP65_STRING_ARENA (der char-list-Cursor-Fallback waere
+/* Reader fetch over a source-text STRING (compile-string: "the buffer is the source"). Same
+ * pattern as es_fetch (eval-string), but the string is NOT evaluated: read_expr_stream reads form
+ * by form and the caller hands them to the FASL emitter. No disk, no NUL-terminated C buffer.
+ * GC safety: cs_str IS the source string itself (object identity) and stays rooted through the
+ * live `source` parameter of the Lisp function; arena compaction updates cell_b, and cs_idx is a
+ * pure byte index. Hence ONLY under LISP65_STRING_ARENA (the char-list cursor fallback would
  * nicht GC-sicher: er wandert durch ungerootete CDRs). */
 #ifndef LISP65_STRING_ARENA
 #error "LISP65_COMPILE_STRING requires LISP65_STRING_ARENA (GC-safe string reader; char-list cursor is not)"
@@ -723,8 +723,8 @@ static obj apply_prim(int16_t id, obj args) {
         return reader_status == READER_OK ? form : intern("%fasl-eof");
     }
 #ifdef LISP65_COMPILE_STRING
-    case P_CSOPEN: {   /* (%cs-read-open source-string) -> t: Reader ueber den Quelltext-STRING
-                        * setzen (Buffer ist Quelle; kein Disk, kein disk_dir_find). Arena-only. */
+    case P_CSOPEN: {   /* (%cs-read-open source-string) -> t: point the reader at the source-text
+                        * STRING (buffer is source; no disk, no disk_dir_find). Arena only. */
         obj s = car(args);
         if (!(IS_PTR(s) && cell_type(s) == T_STR)) {
             lisp_abort_static(LISP65_ERR_COMPILE_STRING_TYPE, "compile-string: not a string"); return NIL;
@@ -735,9 +735,9 @@ static obj apply_prim(int16_t id, obj args) {
     }
 #endif
 #ifdef MEGA65_F011_WRITE
-    case P_SVSTG: {    /* (%save-staged "name" len) -> t | nil: die bereits bei base=0 gestagete
-                        * Ausgabe [0..len) als BESTEHENDE Datei schreiben — via io_disk_save_named
-                        * (mit `save` GETEILT, kein base-Arg -> keine io_disk_save_range-Variante). */
+    case P_SVSTG: {    /* (%save-staged "name" len) -> t | nil: write the output already staged at
+                        * base=0, range [0..len), to an EXISTING file — via io_disk_save_named
+                        * (SHARED with `save`, no base arg -> no io_disk_save_range variant). */
         obj s = car(args); char name[48]; uint8_t i = 0;
         if (!(IS_PTR(s) && cell_type(s) == T_STR)) {
             lisp_abort_static(LISP65_ERR_SAVE_STAGED_TYPE, "save-staged: not a string"); return NIL;
@@ -749,8 +749,8 @@ static obj apply_prim(int16_t id, obj args) {
 #endif  /* FASL || COMPILE_STRING */
 #ifdef LISP65_FASL
 #ifdef MEGA65_F011_WRITE
-    case P_FSRC: {     /* (%fasl-src "name") -> Quell-Bytes | 0 — DISK-SOURCE (zieht disk_dir_find);
-                        * NUR unter LISP65_FASL (Diagnose/Historie), NICHT im Workbench-Produkt. */
+    case P_FSRC: {     /* (%fasl-src "name") -> source bytes | 0 — DISK SOURCE (pulls disk_dir_find);
+                        * ONLY under LISP65_FASL (diagnostics/history), NOT in the workbench product. */
         obj s = car(args); char name[48]; uint8_t i = 0;
         if (!(IS_PTR(s) && cell_type(s) == T_STR)) {
             lisp_abort_static(LISP65_ERR_FASL_TYPE, "fasl: not a string"); return NIL;
@@ -878,7 +878,7 @@ static obj apply_prim(int16_t id, obj args) {
         if (!(IS_PTR(nm) && cell_type(nm) == T_STR) || !(IS_PTR(ct) && cell_type(ct) == T_STR)) {
             lisp_abort_static(LISP65_ERR_SAVE_ARGS_TYPE, "save: args must be strings"); return NIL; }
         STR_NAME_COPY(nm, name, 19, ni);
-        /* Quelle in den EXT-Datei-Puffer stagen (kein alloc -> kein GC waehrenddessen). */
+        /* Stage the source into the EXT file buffer (no alloc -> no GC while doing so). */
 #ifdef LISP65_STRING_ARENA
         { uint16_t L = str_len(ct); for (n = 0; n < L; n++)
             if (!io_disk_stage_put(n, str_byte(ct, n))) {
@@ -1036,9 +1036,9 @@ static obj apply_prim(int16_t id, obj args) {
         return NIL; }
 #ifdef LISP65_SCREEN_WRITE_STRING
     case P_SCRWRITE: {                              /* (screen-write-string x y str [attr]) */
-        /* BULK: EIN Prim-Call je Zeile statt ein put-char-Roundtrip je Zeichen (Redisplay-
-         * Hebel (a), collaboration.md). C-Schleife direkt ueber die Zeichenliste, kein
-         * statischer Bank-0-Puffer; attr wie put-char (Bit 7 = Reverse-Video). */
+        /* BULK: ONE prim call per line instead of one put-char round trip per character
+         * (redisplay lever (a), collaboration.md). A C loop straight over the character list,
+         * no static bank-0 buffer; attr as in put-char (bit 7 = reverse video). */
         obj str = caddr(args), a4 = car(cdr(cdr(cdr(args))));
         char wbuf[80];
         int16_t attr = IS_FIX(a4) ? FIXVAL(a4) : (int16_t)-1;
@@ -1063,13 +1063,13 @@ static obj apply_prim(int16_t id, obj args) {
     case P_READKEY: case P_POLLKEY: {               /* (read-key)|(poll-key) -> (key code mods)|nil */
         int c;
         uint8_t modifiers = 0u;
-        /* lisp_poll IM Warte-Loop: RUN/STOP wird fast immer beim Warten gedrueckt — dort
-         * laufen keine VM-Schritte, der VM-Poll feuert nie (HW-Befund 2026-07-02). */
-        /* lisp_poll IM Warte-Loop (RUN/STOP; Achtung: lisp_polls STKEY-Adresse stimmt fuer
-         * den MEGA65-KERNAL noch NICHT — offener K-Punkt, s. collaboration.md). */
+        /* lisp_poll INSIDE the wait loop: RUN/STOP is almost always pressed while waiting —
+         * no VM steps run there, so the VM poll never fires (hardware finding 2026-07-02).
+         * Caveat: lisp_poll's STKEY address is NOT yet correct for the MEGA65 KERNAL —
+         * open K item, see collaboration.md. */
         if (id == P_READKEY) {
 #ifdef LISP65_READKEY_DIAG
-            *(volatile unsigned char *)0xD020 = 6;   /* BLAU: warte */
+            *(volatile unsigned char *)0xD020 = 6;   /* BLUE: waiting */
 #endif
 #ifdef LISP65_C2_KERNAL_UNMAP
             {
@@ -1529,9 +1529,10 @@ static obj qq2(obj s, obj v) {
     return t;
 }
 
-/* NESTED quasiquote (CL-Semantik, d = Tiefe): inneres ` erhoeht, , senkt; NUR bei d==1 wird
- * ausgewertet, sonst wird die Syntax mit d-1-verarbeitetem Inhalt REBUILT. Host-Referenz —
- * im Strip-Produkt ist der Block tot (lcc spiegelt die Semantik in %lcc-lower-qq). */
+/* NESTED quasiquote (CL semantics, d = depth): an inner ` raises it, , lowers it; evaluation
+ * happens ONLY at d==1, otherwise the syntax is REBUILT with its content processed at d-1.
+ * Host reference — in the stripped product this block is dead (lcc mirrors the semantics in
+ * %lcc-lower-qq). */
 static obj qq_list(obj x, obj env, uint8_t d) {
     uint16_t base;
     obj head, r1, r2, res;
@@ -1600,8 +1601,8 @@ static obj eval_list(obj args, obj env) {
     return r;
 }
 
-/* Wertet alle Body-Formen außer der letzten aus (nicht-Tail) und gibt die letzte
- * Form zur Tail-Auswertung durch den Aufrufer zurück. Self-rooting. */
+/* Evaluates every body form except the last one (non-tail) and returns the last
+ * form for tail evaluation by the caller. Self-rooting. */
 static obj tail_prep(obj body, obj env) {
     uint16_t base = gc_rootsp;
     if (body == NIL) return NIL;
@@ -1611,17 +1612,17 @@ static obj tail_prep(obj body, obj env) {
     return car(body);
 }
 
-/* eval mit TCO: Tail-Positionen (if-Zweig, letzter progn-/Body-Ausdruck,
- * Closure-Tail-Calls, Makro-Expansion) ersetzen e/env und loopen, statt in C zu
- * rekurrieren -> Tail-Rekursion laeuft in konstanter C-Stack-Tiefe. */
+/* eval with TCO: tail positions (an if branch, the last progn/body expression,
+ * closure tail calls, macro expansion) replace e/env and loop instead of recursing
+ * in C -> tail recursion runs at constant C stack depth. */
 static obj eval_env(obj e, obj env) {
     uint16_t base = gc_rootsp;
-    /* Rekursions-Guard: jede eval-Ebene haelt Root-Slots; GC_PUSH ist (aus Kostengruenden)
-     * ungeprueft -> ohne Guard trampelte tiefe NICHT-Tail-Rekursion ((fact 10)) hinter den
-     * Rootstack (HW 2026-07-02: Screen-Muell, kaputte Ergebnisse, Haenger). 16er-Marge
-     * deckt die Slots einer Ebene inkl. apply/env_extend. */
+    /* Recursion guard: every eval level holds root slots; GC_PUSH is unchecked (for cost
+     * reasons) -> without the guard, deep NON-tail recursion ((fact 10)) trampled past the
+     * root stack (hardware 2026-07-02: screen garbage, broken results, hangs). The margin of
+     * 16 covers one level's slots including apply/env_extend. */
     if (base >= GC_ROOTS - 16) { lisp_abort_static(LISP65_ERR_RECURSION_TOO_DEEP, "recursion too deep"); return NIL; }
-    GC_PUSH(e); GC_PUSH(env);                      /* base=e, base+1=env, ueber den Loop aktuell */
+    GC_PUSH(e); GC_PUSH(env);                      /* base=e, base+1=env, kept current across the loop */
     for (;;) {
         HB(0); LA(8);   /* H: eval-Loop */
         { static unsigned char pc; if (((unsigned char)(++pc) & 0x3F) == 0) lisp_poll(); }  /* RUN/STOP */
@@ -1756,10 +1757,10 @@ static obj eval_env(obj e, obj env) {
                 }
                 if (op == sf_dotimes || op == sf_dolist) {
                     /* (dotimes (var count [result]) body...) | (dolist (var listform [result]) body...)
-                     * FLACHE C-Schleife: EINE Binding-Zelle, je Runde nur cell_set_b — kein Alloc,
-                     * kein Rootstack-/VM-Frame-Wachstum (Motiv: 3x Nicht-Tail-Bug am 2026-07-02).
-                     * Gepinnt (collaboration.md): Result in Tail-Position mit var=count bzw. nil;
-                     * Closures aus dem Body teilen die EINE Binding-Zelle (CL-dotimes-Verhalten). */
+                     * FLAT C loop: ONE binding cell, only cell_set_b per round — no alloc, no
+                     * root-stack or VM-frame growth (motive: three non-tail bugs on 2026-07-02).
+                     * Pinned (collaboration.md): result in tail position with var=count resp. nil;
+                     * closures from the body share the ONE binding cell (CL dotimes behaviour). */
                     obj spec = car(args), body = cdr(args);
                     obj var = car(spec), newenv, binding, seq;
                     uint16_t b2 = gc_rootsp;
@@ -1908,8 +1909,8 @@ void load_source(const char *src) {
         }
     }
 }
-/* Wie load_source, aber aus einem Fetch-Stream (Disk-Load: Datei im EXT-RAM). Die 1581-Logik
- * (Bytecode-Lisp) setzt via io.c die Quelle; hier nur die Form-fuer-Form-Auswertung. */
+/* Like load_source, but from a fetch stream (disk load: the file lives in EXT RAM). The 1581
+ * logic (bytecode Lisp) sets the source through io.c; here only the form-by-form evaluation. */
 void load_source_stream(char (*fetch)(void)) {
     reader_from_fetch(fetch);
     for (;;) {

@@ -1,0 +1,86 @@
+{
+  "format": "lisp65-c2-linked-format-decoder-closure-v1",
+  "version": 1,
+  "claim": "The final C2-lite ELF contains one strict decoder chain for L65S-v4, C2I-v2 and C2D-v6, and one strict L65R-v4 runtime-overlay decoder. Retired format decoders are structurally excluded by the selected compile-time profile and the linked section/symbol inventory.",
+  "candidate_manifest": "build/c2.2/v1.2.3-candidate-product-link80/canonical-product-manifest.json",
+  "c2i_glob": "build/c2.2/v1.2.3-candidate-product-link80/static-plane/narrow-static/product/*.c2i.bin",
+  "c2i_count": 6,
+  "current_versions": {
+    "L65S": 4,
+    "C2I": 2,
+    "C2D": 6,
+    "L65R": 4
+  },
+  "runtime_overlay_profile_define": "LISP65_RUNTIME_OVERLAY_FORMAT_V4",
+  "forbidden_runtime_overlay_profile_defines": [
+    "LISP65_RUNTIME_OVERLAY_FORMAT_V2",
+    "LISP65_RUNTIME_OVERLAY_FORMAT_V3"
+  ],
+  "required_product_profile_defines": [
+    "LISP65_C2_NESTED_APPEND_V5",
+    "LISP65_RUNTIME_OVERLAY_FORMAT_V4"
+  ],
+  "phase_suffixes": [
+    "00",
+    "00b",
+    "01",
+    "02a",
+    "02b",
+    "03",
+    "03b",
+    "04",
+    "05a",
+    "05b",
+    "06a",
+    "06b",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11a",
+    "11b",
+    "12",
+    "13"
+  ],
+  "runtime_verifiers": {
+    "vm_runtime_overlay_catalog_verifier": ".lisp65_rt_rtov_catalog",
+    "vm_runtime_overlay_record_verifier": ".lisp65_rt_rtov_record"
+  },
+  "forbidden_linked_section_prefixes": [
+    ".lisp65_rt_l65m_",
+    ".lisp65_rt_l65s_"
+  ],
+  "forbidden_linked_symbol_prefixes": [
+    "l65m_",
+    "l65s_"
+  ],
+  "forbidden_linked_symbols": [
+    "vm_l65m_batch_repeat"
+  ],
+  "strict_source_markers": {
+    "generated_decoder": [
+      "h[4] != 6u",
+      "h[4] != 4u",
+      "h[4] != 2u"
+    ],
+    "runtime_overlay_decoder": [
+      "#error \"the C2 product profile permits exactly one L65R decoder\"",
+      "#error \"the C2 product profile requires the strict L65R-v4 decoder\"",
+      "#error \"C2 runtime overlay accepts one compile-time L65R version only\""
+    ]
+  },
+  "retired_formats_structurally_excluded": [
+    "L65S-v3",
+    "C2I-v1",
+    "C2D-v1",
+    "C2D-v2",
+    "C2D-v3",
+    "C2D-v4",
+    "C2D-v5",
+    "L65R-v1",
+    "L65R-v2",
+    "L65R-v3"
+  ],
+  "mutation_count": 8,
+  "claim_limit": "Linked-product format closure only. This gate makes no hardware, promotion, release, capacity or runtime-behaviour claim."
+}

@@ -14,9 +14,9 @@
 (defun ide-state-row-offset (state)
   (car (cdr (cdr state))))
 
-;; Optionale Komfort-Lib-Naht. IDEX definiert genau diesen Hook spaeter neu;
-;; symbolische CALL-Aufloesung sieht dann ohne Runtime-/ABI-Sonderfall die
-;; aktuelle Funktionszelle. Der Core bleibt bei fehlendem IDEX benutzbar.
+;; Optional convenience-library seam. IDEX later redefines exactly this hook;
+;; symbolic CALL resolution then sees the current function cell without a
+;; special runtime or ABI case. The core remains usable without IDEX.
 (defun %ide-x (kind state a b)
   (cond ((and (eq kind 'apply) (eq a 1118))
          (%ide-state-with-buffer state (ide-kill-line (ide-state-buffer state))))
@@ -136,15 +136,16 @@
    ;; the invariant also keeps the compiled object below its 255-byte cap.
    (symbol-value (quote ide-step))))
 
-;; SCROLLING (2026-07-07, Nutzerauftrag): row-offset so clampen, dass der Cursor
-;; im Body (rows-1 Zeilen) sichtbar ist. Laeuft VOR jedem Render; ein Versatz
-;; aendert alle sichtbaren Zeilen -> der Dirty-Vergleich erzwingt den Voll-Redraw,
-;; der Fast-Path bleibt fuer Nicht-Scroll-Tasten unberuehrt.
+;; SCROLLING (2026-07-07, user request): clamp row-offset so the cursor remains
+;; visible in the body (rows-1 lines). Runs BEFORE every render; an offset
+;; change affects all visible lines, so the dirty comparison forces a full
+;; redraw while the fast path remains unchanged for non-scroll keys.
 (defun %ide-state-with-row-offset (state off)
-  ;; ACHTUNG: Offset-Wechsel MUSS den Render-Cache invalidieren (render-lines nil):
-  ;; bleibt der Cursor beim Scrollen in derselben Schirmzeile (oberster/unterster
-  ;; Rand), naehme der Fast-Path sonst seinen Kurzweg und liesse alle uebrigen
-  ;; Zeilen mit dem ALTEN, verschobenen Inhalt stehen (Nutzerbefund "Muell-Schirm").
+  ;; CAUTION: changing the offset MUST invalidate the render cache
+  ;; (render-lines nil). When the cursor stays on the same screen row while
+  ;; scrolling at the top or bottom edge, the fast path would otherwise take
+  ;; its shortcut and leave every other line showing OLD shifted content
+  ;; (user report: corrupted screen).
   (cons (car state)
         (cons (car (cdr state))
               (cons off
@@ -152,10 +153,11 @@
                           (cdr (cdr (cdr (cdr state)))))))))
 
 (defun %ide-scrolled (state rows)
-  ;; SCROLLING WIEDER AKTIV (2026-07-08): Der frueher hier vermutete "Zeichenmuell bei
-  ;; row-offset>0" war NICHT der Full-Redraw/Stack-Gap, sondern der Farb-RAM-1KB-Fenster-
-  ;; Escape im C-Treiber (Farb-Store fuer Zeilen >=13 traf CIA2 $DD00 = VIC-Bank). Gefixt in
-  ;; src/screen.c (CRAM_WINDOW). row-offset so clampen, dass der Cursor im Body (rows-1) bleibt.
+  ;; SCROLLING RE-ENABLED (2026-07-08): the previously suspected "garbage at
+  ;; row-offset>0" was NOT the full-redraw/stack gap. It was a 1 KiB Color-RAM
+  ;; window escape in the C driver: color stores for rows >=13 hit CIA2 $DD00,
+  ;; the VIC bank register. Fixed in src/screen.c (CRAM_WINDOW). Clamp row-offset
+  ;; so the cursor remains in the body (rows-1).
   (let* ((line (car (ide-buffer-point (ide-state-buffer state))))
          (off (ide-state-row-offset state))
          (body (- rows 1)))
@@ -227,22 +229,23 @@
 ;; lib/ide-keymap-generated.lisp. The same source also generates the tests and
 ;; user-facing table, so a documented binding cannot drift from this dispatcher.
 
-;; Auto-Umbruch beim Tippen (2026-07-03): Strings sind Zeichenlisten -> jeder
-;; self-insert baut die Zeile neu (O(Spalte)). Am Zeilenende waechst das ohne
-;; Grenze -> nach ~40-50 Zeichen ist eine Taste ~1 s (Nutzerbefund: "je mehr
-;; getippt, desto langsamer"). Fill-Column 79 deckelt n hart: erreicht der Cursor
-;; die vorletzte Spalte, splittet der naechste self-insert die Zeile zuerst
-;; (klassischer Rand-Umbruch) und tippt auf der neuen Zeile weiter -> O(1)-Deckel.
-;; (Zeilenmitte einer bereits vollen Zeile ist der seltene Ausnahmefall.)
+;; Automatic wrapping while typing (2026-07-03): strings are character lists,
+;; so each self-insert rebuilds the line (O(column)). At line end this grew
+;; without bound; after about 40-50 characters one key took about one second
+;; (user report: "the more I type, the slower it gets"). Fill column 79 places
+;; a hard bound on n: when the cursor reaches the penultimate column, the next
+;; self-insert first splits the line (classic margin wrapping) and continues
+;; on the new line, giving an O(1) ceiling. The middle of an already-full line
+;; is the rare exception.
 (defun %ide-fill-column () 79)
 
-;; Dirty-Hint fuers Delta-Render (global %ide-hint): (spalte . pad) oder nil =
-;; naechster Render malt die VOLLE Zeile. Der Render KONSUMIERT den Hint; bei
-;; Render-Koaleszenz (%ide-drain-pending: mehrere Steps je Render!) verschmelzen
-;; die Steps ihre Hints: minimale Spalte, Loesch-Pads summieren -- sonst malt der
-;; eine Render nur das Suffix des LETZTEN Zeichens und die Zellen der frueheren
-;; Burst-Zeichen behalten alten Schirm-Inhalt (Nutzerbefund: Geister-Leerzeichen +
-;; Cursor-Abdruecke beim Schnelltippen).
+;; Dirty hint for delta rendering (global %ide-hint): (column . pad), or nil
+;; means the next render paints the FULL line. Rendering CONSUMES the hint.
+;; With render coalescing (%ide-drain-pending: multiple steps per render), the
+;; steps merge their hints: minimum column and summed erase padding. Otherwise
+;; the one render paints only the suffix of the LAST character and cells from
+;; earlier burst characters retain old screen content (user report: ghost
+;; spaces and cursor imprints during fast typing).
 (defun %ide-hint-merge (col pad)
   (set-symbol-value
    (quote ide-render)
@@ -270,7 +273,8 @@
 (defun %ide-newline-command (state)
   (if (string= (ide-buffer-name (ide-state-buffer state)) "*directory*")
       (%ide-find-file-named state (ide-current-line (ide-state-buffer state)))
-      ;; Auto-Einrückung (ide-syntax.lisp): spalten + neue Zeile auf Klammertiefe.
+      ;; Automatic indentation (ide-syntax.lisp): split and indent the new line
+      ;; to the parenthesis depth.
       (%ide-state-with-buffer state (ide-split-line-indented (ide-state-buffer state)))))
 
 (defun %ide-delete-forward-command (state)
@@ -639,9 +643,9 @@
        (cons (ide-visible-line (car lines) columns) acc))
       (reverse acc)))
 
-;; COMPUTE-LINES-ONCE (2026-07-07): wie ide-visible-frame-lines, aber
-;; mit der schon materialisierten Zeilenliste (ide-render berechnet sie einmal am
-;; flachen Top). Vermeidet die zweite ide-buffer-lines-Rekonstruktion im Render.
+;; COMPUTE-LINES-ONCE (2026-07-07): like ide-visible-frame-lines, but accepts
+;; the already materialized line list (ide-render computes it once at its flat
+;; top). Avoids the second ide-buffer-lines reconstruction during rendering.
 (defun ide-visible-frame-lines-from (state lines columns rows)
   (if (> rows 0)
       (let* ((body-rows (- rows 1))
@@ -697,8 +701,9 @@
         (%ide-pad-eol (+ col 1) columns y attr))
       nil))
 
-;; Plain-Renderer (Statuszeile u. ä. — bewusst OHNE Syntax-Scan; Dynamik-Budget!).
-;; CODE-Zeilen gehen über %ide-render-code-line-at (ide-syntax.lisp) = Bulk + Overpaint.
+;; Plain renderer for the status line and similar content, deliberately
+;; WITHOUT syntax scanning to preserve the dynamic budget. CODE lines go
+;; through %ide-render-code-line-at (ide-syntax.lisp): bulk plus overpaint.
 (defun ide-render-line-at (text y columns attr)
   (if (screen-bulk-p)
       (screen-write-string 0 y text (+ attr 64))
@@ -706,7 +711,8 @@
         (%ide-render-codes-at (string->list text) 0 y attr)
         (%ide-pad-eol (string-length text) columns y attr))))
 
-;; hlmax = erste NICHT-Code-Zeile (Statuszeile): darunter Syntax-Overpaint, ab dort plain.
+;; hlmax is the first non-code line (the status line): syntax overpaint below
+;; it, plain rendering from there onward.
 (defun %ide-render-dirty-lines-at (lines dirty y columns attr hlmax)
   (if lines
       (let* ((dirty-here (and dirty (= y (car dirty)))))
@@ -725,14 +731,16 @@
            hlmax)))
       nil))
 
-;; Zelle i der Zeilenliste (fuer destruktives rplaca im Render-Cache).
+;; Cell i of the line list, used for destructive rplaca in the render cache.
 (defun %ide-nth-cell (lines i)
   (if (> i 0) (%ide-nth-cell (cdr lines) (- i 1)) lines))
 
-;; Statuszeilen-Cache (Delta-Render): der Text haengt nur an (name modified message line)
-;; -- der Budget-String ist im State vorberechnet. Cache global (Muster Render-Cache):
-;; %ide-stcache = ((name modified message . line) . text). Cache-Treffer => Text ist EQ zum
-;; zuletzt gemalten -> der Fast-Path unten ueberspringt das Statuszeilen-Malen komplett.
+;; Status-line cache (delta rendering): the text depends only on
+;; (name modified message line); the budget string is precomputed in the
+;; state. The cache is global, following the render-cache pattern:
+;; %ide-stcache = ((name modified message . line) . text). A cache hit means
+;; the text is EQ to the last painted value, so the fast path below skips
+;; painting the status line entirely.
 (defun %ide-status-cached (state width)
   (let* ((buffer (car state))
          (cache (if (boundp (quote ide-status-line)) (symbol-value (quote ide-status-line)) nil))
@@ -757,13 +765,14 @@
              text))
          (ide-status-line state width)))))
 
-;; FAST-PATH je Taste (DESTRUKTIV im Render-Cache, nur 2 rplaca):
-;;  - Statuszeile: nur bei Textwechsel malen (Cache-EQ-Test).
-;;  - Cursor-Zeile: mit Dirty-Hint nur das Suffix ab Editier-Spalte (Delta-Render,
-;;    ide-syntax.lisp) -- ohne Hint (Move etc.) wie bisher die ganze Zeile.
-;; COMPUTE-LINES-ONCE (2026-07-07): `lines` = die im Render EINMAL
-;; materialisierte Zeilenliste (statt zwei ide-buffer-lines-Rekonstruktionen im
-;; Fast-Path: hier + in ide-render-cursor-from).
+;; FAST PATH per key (DESTRUCTIVE in the render cache, only two rplaca calls):
+;;  - Status line: paint only when its text changes (cache EQ test).
+;;  - Cursor line: with a dirty hint, paint only the suffix from the edit
+;;    column (delta rendering in ide-syntax.lisp); without a hint (movement,
+;;    etc.), paint the whole line as before.
+;; COMPUTE-LINES-ONCE (2026-07-07): `lines` is the line list materialized ONCE
+;; during rendering, instead of two ide-buffer-lines reconstructions in the
+;; fast path: here and in ide-render-cursor-from.
 (defun %ide-render-fast-same-row (state lines old-lines cursor-row columns rows)
   (let* ((row-offset (ide-state-row-offset state))
          (line-index (+ row-offset cursor-row))
@@ -788,8 +797,8 @@
       (ide-render-cursor-from state lines columns rows 129)
       (%ide-state-with-render-cache state old-lines cursor-row columns rows))))
 
-;; COMPUTE-LINES-ONCE (2026-07-07): nimmt die schon materialisierte
-;; Zeilenliste statt (ide-buffer-lines buffer) erneut zu rekonstruieren.
+;; COMPUTE-LINES-ONCE (2026-07-07): accepts the already materialized line list
+;; instead of reconstructing (ide-buffer-lines buffer) again.
 (defun ide-render-cursor-from (state lines columns rows attr)
   (if (eq (car (cdr state)) 1005)
       ((lambda (x)
@@ -813,20 +822,21 @@
               (screen-put-char x y code attr))
             nil))))
 
-;; STACK-HYGIENE (2026-07-07): der Full-Redraw haengt tief in der IDE-
-;; Aufrufkette. Die fruehere Scroll-Root-Cause war zwar Color-RAM, nicht Stack;
-;; flache let*-Slots bleiben hier trotzdem Pflicht, weil zusaetzliche
-;; Immediate-Lambda-Frames realen Stack-/GC-Druck erzeugen.
+;; STACK HYGIENE (2026-07-07): full redraw sits deep in the IDE call chain.
+;; Although the earlier scrolling root cause was Color RAM rather than the
+;; stack, flat let* slots remain mandatory here because extra immediate-lambda
+;; frames create real stack and GC pressure.
 (defun ide-render (state)
   (let* ((size (screen-size))
          (columns (car size))
          (rows (car (cdr size)))
          (state (%ide-scrolled state rows))
-         ;; COMPUTE-LINES-ONCE (2026-07-07): die getippte Buffer-Zeilen-
-         ;; liste EINMAL pro Render materialisieren (ide-buffer-lines = ~80 Allok.)
-         ;; und flach durch die Render-Helfer faedeln — statt sie in Frame-/Cursor-
-         ;; Render je erneut zu rekonstruieren. Haelt den Full-Redraw allok-arm
-         ;; und vermeidet unnoetigen Stack-/GC-Druck.
+         ;; COMPUTE-LINES-ONCE (2026-07-07): materialize the typed buffer's
+         ;; line list ONCE per render (ide-buffer-lines is about 80
+         ;; allocations) and thread it flatly through the render helpers
+         ;; instead of reconstructing it separately for frame and cursor
+         ;; rendering. Keeps full redraw allocation-light and avoids needless
+         ;; stack and GC pressure.
          (buffer-lines (ide-buffer-lines (ide-state-buffer state)))
          (old-lines (ide-state-render-lines-for-size state columns rows))
          (cursor-row (ide-cursor-row state rows))
@@ -847,9 +857,10 @@
             (ide-render-cursor-from state buffer-lines columns rows 129)
             (%ide-state-with-render-cache state lines cursor-row columns rows))))))
 
-;; Render-Koaleszenz gegen das "Nachziehen" beim Schnelltippen: solange weitere
-;; Tasten in der Queue warten (poll-key), nur ide-step (~600 Steps) statt
-;; step+render (~2400 Steps); gerendert wird EINMAL, wenn die Queue leer ist.
+;; Render coalescing prevents lagging behind during fast typing: while more
+;; keys wait in the queue (poll-key), run only ide-step (about 600 steps)
+;; instead of step+render (about 2,400 steps). Render ONCE when the queue is
+;; empty.
 (defun %ide-drain-pending (state)
   (if (eq (ide-state-message state) 1015)
       state
@@ -874,15 +885,19 @@
       (read-key)))
    (%ide-persist-state state)))
 
-;; ---- Buffer-Persistenz + MEHRERE benannte Buffer (Nutzer-Befund/-Wunsch HW 2026-07-05) ----
-;; Alle offenen Buffer leben zwischen (ide)-Aufrufen in der Wertzelle des
-;; bestehenden Funktionssymbols ide-buffers
-;; — eine Alist ((name . buffer) …), der zuletzt aktive vorn. symval-Zellen sind GC-Roots ->
-;; überlebt REPL-Arbeit und GC; Zeilen/Name/Cursor-Position bleiben je Buffer erhalten.
-;; API: (ide) = zuletzt aktiver Buffer (bzw. frischer "scratch"); (ide "name") = zu Buffer
-;; "name" wechseln, bei Bedarf anlegen; (ide-buffers) = Namen, jüngster zuerst.
-;; Global-Zugriff NATIV via CALLPRIM 19/20 (symbol-value/set-symbol-value) — der alte
-;; eval-Umweg (v2a-Ära) brach im Dev-Core (kein eval-Prim, Budget). C-x C-c
+;; ---- Buffer persistence plus MULTIPLE named buffers (hardware user finding/request,
+;; 2026-07-05) ----
+;; All open buffers live between (ide) calls in the value cell of the existing
+;; function symbol ide-buffers: an alist ((name . buffer) ...), most recently
+;; active first. symval cells are GC roots, so buffers survive REPL work and
+;; GC; lines, name, and cursor position remain intact for each buffer.
+;; API: (ide) selects the most recently active buffer (or a fresh "scratch");
+;; (ide "name") switches to buffer "name", creating it if needed; (ide-buffers)
+;; returns names, most recent first.
+;; Global access is NATIVE through CALLPRIM 19/20
+;; (symbol-value/set-symbol-value). The old eval detour from the v2a era broke
+;; in the development core because there was no eval primitive and no budget.
+;; C-x C-c
 ;; persists through this same path, preserving the historical B4 guarantee.
 (defun %ide-buffers-alist ()
   (symbol-value (quote ide-buffers)))
@@ -894,8 +909,9 @@
           (%ide-buffers-find name (cdr alist)))
       nil))
 
-;; Alist ohne den Eintrag `name` (nicht-tail; Bufferzahl ist klein).
-;; TAIL (2026-07-06): Akku-Muster statt cons-nach-Selbstaufruf (GC_ROOTS-Budget).
+;; Alist without the `name` entry (not tail-recursive; the buffer count is small).
+;; TAIL (2026-07-06): accumulator pattern instead of cons after recursion, to
+;; preserve the GC_ROOTS budget.
 (defun %ide-buffers-remove-into (name alist acc)
   (if alist
       (%ide-buffers-remove-into
@@ -907,7 +923,7 @@
 (defun %ide-buffers-remove (name alist)
   (%ide-rev-onto (%ide-buffers-remove-into name alist nil) nil))
 
-;; Buffer unter seinem Namen einsortieren (vorn = zuletzt aktiv) und global sichern.
+;; Insert a buffer under its name (front = most recently active) and save it globally.
 (defun %ide-store-buffer (buf)
   ((lambda (buf)
      ((lambda (name alist)
@@ -927,8 +943,9 @@
     (%ide-store-buffer (ide-state-buffer state))
     state))
 
-;; name=nil -> zuletzt aktiver (Alist-Kopf) bzw. frischer "scratch";
-;; name=String -> vorhandenen holen oder neuen leeren Buffer dieses Namens anlegen.
+;; name=nil selects the most recently active buffer (alist head), or a fresh
+;; "scratch"; a string name selects the existing buffer or creates a new empty
+;; buffer with that name.
 (defun %ide-resume-buffer (name)
   (if name
       ((lambda (found) (if found found (ide-make-buffer name (list ""))))
@@ -937,8 +954,9 @@
          (if alist (cdr (car alist)) (ide-make-buffer "scratch" (list ""))))
        (%ide-buffers-alist))))
 
-;; Eigener Walker statt (mapcar (function car) …): car ist ein OPCODE, kein CALLPRIM —
-;; Opcode-Funktions-Designatoren sind (bewusst) nicht apply-bar -> TYPEERROR.
+;; Dedicated walker instead of (mapcar (function car) ...): car is an OPCODE,
+;; not CALLPRIM. Opcode function designators deliberately cannot be applied,
+;; so mapcar would produce TYPEERROR.
 (defun %ide-buffers-names (alist)
   (%ide-buffers-names-into alist nil))
 

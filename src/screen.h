@@ -4,11 +4,11 @@
  * llvm-mos-PRG (HW-bewiesen, docs/mvp-hw-findings.md), sein CLR ist zustandsfragil, und
  * die REPL musste deshalb mit einem Loesch-statt-Scroll-Guard leben. Dieser Treiber
  * schreibt direkt ins Screen-RAM, scrollt selbst (CPU-Kopie, bei 40 MHz unkritisch) und
- * liest die Geometrie beim Init aus den VIC-IV-Registern. Eingabe bleibt KERNAL-GETIN
- * (bewaehrt); NUR der Ausgabepfad wandert hierher.
+ * reads the geometry from the VIC-IV registers at init time. Input stays KERNAL GETIN
+ * (proven); ONLY the output path moves here.
  *
- * Gegatet -DLISP65_SCREEN_DRIVER: ohne das Flag bleibt alles beim alten CHROUT-Pfad.
- * Host-Builds: Puffer-Simulation (scr_host_dump fuer Tests). */
+ * Gated by -DLISP65_SCREEN_DRIVER: without the flag everything stays on the old CHROUT path.
+ * Host builds: buffer simulation (scr_host_dump for tests). */
 #ifndef LISP65_SCREEN_H
 #define LISP65_SCREEN_H
 

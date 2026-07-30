@@ -4,6 +4,22 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.2.3 — prepared 2026-07-30
+
+- Bound the native `while` form and base-composition `random`/`random-seed`
+  implementation into the reproducible public product snapshot.
+- Bound the generation-aware fast path for repeated `require` calls.
+- Carried the Ethernet, Auto-IEC, and audio-DMA interrupt-ownership hardening
+  into the public product.
+- Updated the REPL banner to display `WORKBENCH 1.2.3`.
+- Rebound the permanent public clean-build gate to the fresh v1.2.3 19-role
+  product identity.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-B publication
+authorization.
+
 ## v1.2.2 — prepared 2026-07-29
 
 - Fixed undefined-function diagnostics so they report the complete symbol
