@@ -844,16 +844,16 @@ c2-v122-g5-freezer-authority-check:
 	python3 tools/host-lisp/c2_v122_g5_freezer_authority_gate.py
 
 workbench-product: equivalence-completion-canary-check c2-asm-leaf-abi-selftest c2-interrupt-ownership-check c2-phase-v-gc-ext-dma-check c2-v122-g5-freezer-authority-check
-	@if test -f build/c2.2/v1.2.4-candidate-product-link81/canonical-product-manifest.json; then \
-		python3 tools/host-lisp/c2_v124_candidate_product.py check; \
+	@if test -f build/c2.2/v1.2.5-candidate-product-link82/canonical-product-manifest.json; then \
+		python3 tools/host-lisp/c2_v125_candidate_product.py check; \
 	else \
-		python3 tools/host-lisp/c2_v124_candidate_product.py build; \
+		python3 tools/host-lisp/c2_v125_candidate_product.py build; \
 	fi
 	$(MAKE) --no-print-directory c2-linked-format-decoder-closure-check
-	@if test -f build/c2.2/v1.2.4-candidate-media/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v124_candidate_media.py check; \
+	@if test -f build/c2.2/v1.2.5-candidate-media/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_v125_candidate_media.py check; \
 	else \
-		python3 tools/host-lisp/c2_v124_candidate_media.py build; \
+		python3 tools/host-lisp/c2_v125_candidate_media.py build; \
 	fi
 	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 

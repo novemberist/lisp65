@@ -34,7 +34,9 @@ class BannerError(RuntimeError):
 
 def subtitle() -> str:
     authority = json.loads(RELEASE_AUTHORITY.read_text())
-    release = authority.get("release")
+    release = authority.get(
+        "product_banner_release", authority.get("release"),
+    )
     if not isinstance(release, str) or not release:
         raise BannerError("release authority has no non-empty .release")
     return SUBTITLE_PREFIX + release

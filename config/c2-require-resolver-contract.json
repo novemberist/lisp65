@@ -1,7 +1,7 @@
 {
   "format": "lisp65-c2-require-resolver-contract-v1",
   "recorded_on": "2026-07-27",
-  "status": "class-C-product-shaped-WPLTO-probe-authorized",
+  "status": "option-A-prior-append-contract-fix-commissioned",
   "scope": {
     "product_links": 0,
     "hardware_runs": 0,
@@ -74,9 +74,9 @@
       "canonical L65S-v4 combined CRC32 at C2D row bytes 28..31"
     ],
     "static_prefix": "the six immutable product images are not library identities",
-    "same_name_different_identity": "fail closed through index lock plus exact active-index universe equality",
+    "same_name_different_identity": "a persistent row whose combined identity matches an L65I row is a library row and must satisfy that row exactly; ordinary persistent rows whose identities do not occur in L65I are valid Session definitions and are not library identities",
     "index_lock": "records CRC16 plus index identity, stored only as generation-lifetime Lisp orchestration state",
-    "active_universe": "Bank-2 Lisp first proves the six immutable C2D image rows and derives their contiguous Bank-2 end, then walks every persistent C2D image row, rejects duplicate or foreign combined identities, proves contiguous Bank-2 code coordinates from that derived static end, and derives idempotence from the same rows; no shadow loaded list or private static-size constant is materialized"
+    "active_universe": "Bank-2 Lisp first proves the six immutable C2D image rows and derives their contiguous Bank-2 end, then walks every persistent C2D image row and proves its source kind, source ordinal, generation, nonzero code size and contiguous Bank-2 code coordinates. A row whose combined identity occurs in L65I additionally must match the indexed code size and exact identity and must not duplicate an earlier indexed identity. A row with no L65I identity match is a legitimate ordinary Session definition and contributes only its authenticated geometry. Idempotence is derived from indexed identities in the same rows; no shadow loaded list, class field or private static-size constant is materialized."
   },
   "idempotence_fastpath": {
     "position": "before L65I parsing",
@@ -147,7 +147,7 @@
     ],
     "preflight": "Bank-2 Lisp derives persistent and transient fronts from authenticated C2D rows and closes the aggregate dependency plan in every currency before the first append",
     "wide_arithmetic": "u16 low/high pairs in Lisp, including the explicit 65536 upper edge represented as (0 . 256)",
-    "persistent_bank2_edge": "derive the canonical static-plane end from C2D slots 0..5, require each persistent image row to begin at the preceding edge and to carry the exact L65I-measured code length, then advance by that length",
+    "persistent_bank2_edge": "derive the canonical static-plane end from C2D slots 0..5, require each persistent image row to begin at the preceding edge and carry a nonzero authenticated C2D code length, then advance by that length. Only rows whose combined identity occurs in L65I must additionally equal the L65I-measured code length and package identity.",
     "transient_bank2_edge": "walk source-kind-2 image rows from slot 63 downward and require each code base plus length to equal the preceding high edge",
     "stage_recheck": "the existing append transaction repeats authoritative bounds before mutation"
   },
@@ -179,7 +179,8 @@
     "binary L65I header, row and aggregate CRC validation",
     "dependency order and generation-scoped idempotence",
     "parser-free idempotence path reduces both repeat VM steps and Prim-67 reads by at least 90 percent, stays within 512 Bank-2 bytes and adds zero resident bytes",
-    "foreign persistent identity, wrong generation, wrong index lock, stale cache and different library all fall through to the full parser/resolver path",
+    "wrong generation, wrong index lock, stale cache and a different requested library all fall through to the full parser/resolver path; a non-index persistent identity is accepted there as an ordinary Session definition, while an indexed duplicate or malformed indexed row still fails closed",
+    "a permanent host execution lane and an acceptance-session row prove require after two ordinary persistent Session appends through the real emitter/append/C2D path",
     "one-entry idempotence cache is proved non-authoritative and no loaded-library registry exists",
     "ELF/source no-writer proof closes reuse of immutable C2D header/static/layout proofs between serialized top-level operations",
     "same-name/different-identity and stale-index rejection",
@@ -213,5 +214,17 @@
     "approved_consolidation": "consume the existing resident vm_byte_args(a,n,2) validator once; retain only address construction, published-plane bound, one-byte read and typed result in case 67",
     "success_criterion": "total resident .text growth against Link 67 is at most 58 bytes, preserving at least 32 bytes of the measured 90-byte text headroom",
     "automatic_fallback": "selected: the one-validator C form measured +168 resident text bytes and missed the 58-byte ceiling; vm_c2d_byte is therefore the eighth non-LTO assembler leaf under the ELF-derived ABI gate, with no further C-form iteration"
+  },
+  "prior_append_option_A": {
+    "commission": "40d54bce",
+    "first_red_receipt": "tests/bytecode/dialect-v2/evidence/post-release/post-v124-require-prior-append-h1-receipt-20260730.json",
+    "mechanism": "%require-active-prefix treated every persistent source-kind-1 C2D row as a package row and rejected ordinary Session definitions whose identities were absent from L65I before media staging",
+    "fix": "validate authenticated geometry for every persistent row; apply package identity, indexed size and duplicate semantics only to rows whose combined identity occurs in L65I",
+    "format_change": false,
+    "narrowed_mutation": "a foreign non-index persistent identity no longer fails merely for being absent from L65I; malformed geometry, indexed duplicates and malformed indexed rows remain fail closed",
+    "class_closer": [
+      "permanent host lane: two ordinary persistent appends followed by require on valid package media",
+      "acceptance-session row with the same state order on the linked product"
+    ]
   }
 }

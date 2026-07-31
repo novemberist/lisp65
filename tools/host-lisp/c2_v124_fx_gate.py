@@ -37,6 +37,7 @@ FINAL_COMPOSITION_RECEIPT = ROOT / (
     "c2.2-v1.2.4-fx-final-composition-revalidation-receipt.json"
 )
 PUBLIC_BUILD_RECEIPT = BUILD / "public-build-current-source-receipt.json"
+CURRENT_COMPOSITION_RECEIPT = BUILD / "v1.2.5-current-composition.json"
 FX_NAMES = [
     "%fx-error",
     "%fx-add2",
@@ -450,6 +451,12 @@ def artifact_gate() -> dict[str, Any]:
     profile_entries = int(profile["entries"])
     profile_resolutions = int(profile["resolutions"])
     profile_direct_refs = int(profile["direct_entry_refs"])
+    option_a = profile.get("require_prior_append_option_A_delta")
+    if option_a is not None:
+        profile_code -= int(option_a["stdlib_code_bytes"])
+        profile_entries -= int(option_a["new_entries"])
+        profile_resolutions -= int(option_a["new_resolutions"])
+        profile_direct_refs -= int(option_a["new_direct_entry_refs"])
     bound_time = profile.get("time_base_delta")
     if bound_time is not None:
         require(
@@ -596,9 +603,13 @@ def main(*, public_build: bool = False) -> int:
             ),
         }
         profile = load(PROFILE)
+        current_successor = (
+            profile.get("require_prior_append_option_A_delta") is not None)
         receipt = (
             PUBLIC_BUILD_RECEIPT
             if public_build
+            else CURRENT_COMPOSITION_RECEIPT
+            if current_successor
             else FINAL_COMPOSITION_RECEIPT
             if profile.get("product_build_id") == "0x15da63c2"
             else POST_TIME_RECEIPT
@@ -619,6 +630,14 @@ def main(*, public_build: bool = False) -> int:
                 "Current public source/artifact semantics and capacity only; "
                 "historical proof receipts and hardware claims are not inputs."
             )
+        elif current_successor:
+            value["status"] = (
+                "passed-fx-host-reference-in-current-successor-composition")
+            value["composition"] = {
+                "successors": ["time", "require-option-A"],
+                "product_build_id": profile["product_build_id"],
+                "final_v1.2.4_authority": bind(FINAL_COMPOSITION_RECEIPT),
+            }
         elif receipt == FINAL_COMPOSITION_RECEIPT:
             value["status"] = (
                 "passed-fx-host-reference-in-final-v1.2.4-composition"

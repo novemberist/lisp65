@@ -7,6 +7,7 @@ import binascii
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import struct
@@ -48,7 +49,11 @@ SOURCE_BANK2 = 2
 CAPACITY = (65536, 64, 2048, 4096, 1536, 14544)
 BASELINE = (34990, 6, 602, 2299, 283, 0)
 LIBRARIES = (
-    ("room", ROOT / "build/bytecode/dialect-v2/libs/room.manifest.json", ()),
+    (
+        "testlib",
+        ROOT / "build/bytecode/dialect-v2/libs/testlib.manifest.json",
+        (),
+    ),
     ("buffer", ROOT / "build/bytecode/dialect-v2/libs/buffer.manifest.json", (0,)),
 )
 
@@ -259,9 +264,9 @@ def resolve(rows: list[dict[str, Any]], name: str, generation: int,
     require(len(matches) == 1, "resolve-name")
     current = [identity for gen, identity in loaded if gen == generation]
     index_identities = {row["combined_crc32"] for row in rows}
-    require(len(current) == len(set(current))
-            and all(identity in index_identities for identity in current),
-            "resolve-active-universe")
+    indexed = [identity for identity in current if identity in index_identities]
+    require(len(indexed) == len(set(indexed)),
+            "resolve-active-index-universe")
     order: list[int] = []
     seen: set[int] = set()
 
@@ -455,7 +460,10 @@ def source_gate() -> dict[str, Any]:
         "(defun require (library)",
         "(%c2d-byte (car address) (cdr address))",
         "(defun %require-static-prefix",
+        "(defun %require-persistent-row-size",
         "(defun %require-active-prefix",
+        "(%require-persistent-row-p base row size))\n"
+        "                        t)",
         "(defun %require-transient-fronts-at",
         "(defun %require-capacities-p",
         "(defun %require-fast-loaded-p (library)",
@@ -532,6 +540,7 @@ def source_gate() -> dict[str, Any]:
         "native_policy_decisions": 0,
         "bank2_decisions": [
             "active persistent identity universe",
+            "ordinary persistent row geometry before package classification",
             "canonical static Bank-2 edge from C2D slots 0..5",
             "persistent Bank-2 low edge",
             "transient C2D and Bank-2 high edges",
@@ -555,7 +564,10 @@ def source_mutations() -> dict[str, str]:
         for token in (
             "(%c2d-byte (car address) (cdr address))",
             "(defun %require-static-prefix",
+            "(defun %require-persistent-row-size",
             "(defun %require-active-prefix",
+            "(%require-persistent-row-p base row size))\n"
+            "                        t)",
             "(defun %require-transient-fronts-at",
             "(defun %require-capacities-p",
             "(defun %require-fast-loaded-p (library)",
@@ -616,6 +628,14 @@ def source_mutations() -> dict[str, str]:
         "active-prefix-removed": (lisp.replace(
             "(defun %require-active-prefix", "(defun %missing-active-prefix", 1),
             runtime, vm),
+        "persistent-row-size-removed": (lisp.replace(
+            "(defun %require-persistent-row-size",
+            "(defun %missing-persistent-row-size", 1), runtime, vm),
+        "ordinary-persistent-row-rejected": (lisp.replace(
+            "                        t)\n"
+            "                    (let ((next",
+            "                        nil)\n"
+            "                    (let ((next", 1), runtime, vm),
         "transient-fronts-removed": (lisp.replace(
             "(defun %require-transient-fronts-at",
             "(defun %missing-transient-fronts-at", 1), runtime, vm),
@@ -713,25 +733,56 @@ def source_mutations() -> dict[str, str]:
 
 def main() -> int:
     try:
+        public_build = (
+            os.environ.get("LISP65_PUBLIC_CURRENT_SOURCE_BUILD") == "1"
+        )
         contract = load(CONTRACT)
         require(contract["status"]
-                == "class-C-product-shaped-WPLTO-probe-authorized",
-                "resolver probe is not authorized")
-        host = load(HOST_RECEIPT)
-        require(host["status"] == "passed-host-first-require-index-L65P-v1"
+                == "option-A-prior-append-contract-fix-commissioned",
+                "resolver Option-A fix is not authorized")
+        if public_build:
+            host = None
+            host_summary = {
+                "mode": "public-current-source-without-private-history",
+                "private_evidence_inputs": 0,
+                "cutpoints": "not-claimed-by-public-build",
+                "mutations": "not-claimed-by-public-build",
+                "fresh_replay": "not-run-private-host-first-probe",
+                "binding": (
+                    "The public build executes the current resolver source, "
+                    "index, exact-meet and mutation lanes below. Historical "
+                    "rollback acceptance is not a compilation input."
+                ),
+            }
+        else:
+            host = load(HOST_RECEIPT)
+            require(
+                host["status"] == "passed-host-first-require-index-L65P-v1"
                 and host["negative"]["mutation_count"] >= 38
                 and host["rollback"]["cutpoint_count"] == 12,
-                "host-first prerequisite drift")
-        host_replay = subprocess.run(
-            [sys.executable, str(HOST_PROBE.relative_to(ROOT))],
-            cwd=ROOT, text=True, stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT, check=False)
-        require(
-            host_replay.returncode == 0
-            and "cutpoints=12" in host_replay.stdout
-            and "mutations=38" in host_replay.stdout,
-            f"fresh host orchestration replay red:\n{host_replay.stdout}")
-        host = load(HOST_RECEIPT)
+                "host-first prerequisite drift",
+            )
+            host_replay = subprocess.run(
+                [sys.executable, str(HOST_PROBE.relative_to(ROOT))],
+                cwd=ROOT, text=True, stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT, check=False)
+            require(
+                host_replay.returncode == 0
+                and "cutpoints=12" in host_replay.stdout
+                and "mutations=38" in host_replay.stdout,
+                f"fresh host orchestration replay red:\n{host_replay.stdout}")
+            host = load(HOST_RECEIPT)
+            host_summary = {
+                "mode": "private-proof-authority",
+                "private_evidence_inputs": 1,
+                "cutpoints": host["rollback"]["cutpoint_count"],
+                "mutations": host["negative"]["mutation_count"],
+                "fresh_replay":
+                    host_replay.stdout.strip().splitlines()[-1],
+                "binding":
+                    "same dependency/rollback/preflight semantics are "
+                    "implemented by the gated Bank-2 Lisp functions",
+            }
         target_compile = subprocess.run(
             [
                 sys.executable,
@@ -781,20 +832,28 @@ def main() -> int:
         require(final_locators == locators, "D81 locator drift after final index")
         visible = D81.visible_files(final_d81.read_bytes())
         require(visible[b"L65INDEX"] == index
-                and visible[b"ROOM"] == artifact_data["room"]
+                and visible[b"TESTLIB"] == artifact_data["testlib"]
                 and visible[b"BUFFER"] == artifact_data["buffer"],
                 "D81 visible file truth drift")
         require(resolve(decoded, "buffer", 7, [], CAPACITY) == [0, 1],
                 "dependency order")
-        room_id = decoded[0]["combined_crc32"]
+        testlib_id = decoded[0]["combined_crc32"]
         buffer_id = decoded[1]["combined_crc32"]
-        require(resolve(decoded, "buffer", 7, [(7, room_id)], CAPACITY) == [1],
+        require(resolve(
+            decoded, "buffer", 7, [(7, testlib_id)], CAPACITY) == [1],
                 "partial idempotence")
         require(resolve(
-            decoded, "buffer", 7, [(7, room_id), (7, buffer_id)], CAPACITY) == [],
+            decoded, "buffer", 7,
+            [(7, testlib_id), (7, buffer_id)], CAPACITY) == [],
             "complete idempotence")
-        expect("foreign-loaded-identity", lambda: resolve(
-            decoded, "buffer", 7, [(7, 0xDEADBEEF)], CAPACITY), {})
+        require(resolve(
+            decoded, "buffer", 7, [(7, 0xDEADBEEF)], CAPACITY) == [0, 1],
+            "ordinary non-index persistent identity was rejected")
+        duplicate_rejected: dict[str, str] = {}
+        expect("duplicate-indexed-identity", lambda: resolve(
+            decoded, "buffer", 7,
+            [(7, testlib_id), (7, testlib_id)], CAPACITY),
+            duplicate_rejected)
         capacity_mutations: dict[str, str] = {}
         totals = [sum(row[key] for row in decoded) for key in
                   ("bank2", "images", "entries", "resolutions", "roots", "scratch")]
@@ -819,14 +878,7 @@ def main() -> int:
             "promotable": False,
             "product_links": 0,
             "hardware_runs": 0,
-            "host_first_prerequisite": {
-                "cutpoints": host["rollback"]["cutpoint_count"],
-                "mutations": host["negative"]["mutation_count"],
-                "fresh_replay": host_replay.stdout.strip().splitlines()[-1],
-                "binding":
-                    "same dependency/rollback/preflight semantics are "
-                    "implemented by the gated Bank-2 Lisp functions",
-            },
+            "host_first_prerequisite": host_summary,
             "target_bank2_compile": {
                 "status": "passed",
                 "summary": target_compile.stdout.strip().splitlines()[-3:],
@@ -837,8 +889,11 @@ def main() -> int:
             "binary_index": {
                 "format": "L65I-v1",
                 "rows": rows,
-                "dependency_order": ["room", "buffer"],
+                "dependency_order": ["testlib", "buffer"],
                 "generation_idempotence": "passed-empty-partial-complete",
+                "ordinary_persistent_non_index_identity":
+                    "accepted-and-excluded-from-library-idempotence",
+                "duplicate_indexed_identity_rejected": duplicate_rejected,
                 "capacity_exact_meets": 6,
                 "capacity_one_byte_overflows": capacity_mutations,
                 "mutations_rejected": binary_rejected,
@@ -853,9 +908,7 @@ def main() -> int:
             },
             "authority": {
                 "contract": bind(CONTRACT),
-                "note": bind(NOTE),
                 "ramp": bind(RAMP),
-                "host_receipt": bind(HOST_RECEIPT),
                 "lisp": bind(LISP),
                 "runtime": bind(RUNTIME),
                 "vm": bind(VM),
@@ -867,6 +920,10 @@ def main() -> int:
                 "Source, real-artifact L65I and host semantics only; WPLTO, "
                 "product link, hardware and defstruct are not claimed.",
         }
+        if not public_build:
+            value["authority"]["note"] = bind(NOTE)
+        if host is not None:
+            value["authority"]["host_receipt"] = bind(HOST_RECEIPT)
         RECEIPT.parent.mkdir(parents=True, exist_ok=True)
         RECEIPT.write_text(
             json.dumps(value, indent=2, sort_keys=True) + "\n",

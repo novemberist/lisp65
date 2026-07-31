@@ -148,11 +148,12 @@ def fix_gates() -> dict[str, Any]:
         RESOLVER.encode_index(rows), artifacts)
     require(
         source["status"].startswith("passed-")
-        # The require idempotence fastpath adds four permanent source
-        # directions to the original 30 header/reader mutations.  This
-        # inherited gate must count the current suite rather than silently
-        # excluding the new parser-order and identity checks.
-        and len(source_mutations) == 34
+        # The require idempotence fastpath added four permanent source
+        # directions to the original 30 header/reader mutations.  Option A
+        # adds the persistent-row size proof and the non-index acceptance
+        # direction.  This inherited gate must count the current suite rather
+        # than silently excluding either contract correction.
+        and len(source_mutations) == 36
         and {
             "header-record-crc-low-omitted",
             "header-record-crc-high-omitted",
@@ -161,6 +162,8 @@ def fix_gates() -> dict[str, Any]:
             "row-width-omitted",
             "dependency-width-omitted",
             "row-count-omitted",
+            "persistent-row-size-removed",
+            "ordinary-persistent-row-rejected",
             "leaf-length-high-Z-nonzero",
         }.issubset(source_mutations)
         and len(media_mutations) == 32

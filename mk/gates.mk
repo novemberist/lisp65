@@ -11,6 +11,7 @@
 .PHONY: c2-while-source-check
 .PHONY: c2-while-check
 .PHONY: c2-v124-time-check
+.PHONY: c2-require-prior-append-option-a-check
 .NOTPARALLEL: check-source check-host check-product check-hardware-dry-run check-hardware check mvp-ship
 
 DOCTOR_GATE ?= G2
@@ -118,6 +119,9 @@ c2-v124-fx-check:
 
 c2-v124-time-check:
 	python3 tools/host-lisp/c2_v124_time_gate.py
+
+c2-require-prior-append-option-a-check:
+	python3 tools/host-lisp/c2_require_prior_append_option_a_gate.py
 
 c2-final-island-identity-check:
 	python3 tools/host-lisp/c2_final_island_identity_gate.py check-source
@@ -374,6 +378,7 @@ check-source: c2-repl-banner-version-check
 check-source: c2-while-source-check
 check-source: c2-v124-fx-check
 check-source: c2-v124-time-check
+check-source: c2-require-prior-append-option-a-check
 
 check-source: workspace-capacity-check doctor-selftest source-syntax-check ci-selftest document-index-check c2-product-profile-parity-check c2-lite-v6-roots-fronts-product-profile-check c2-lite-media-acceptance-selftest c2-final-island-identity-check c2-append-final-hybrid-check c2-vm-badopcode-detail-check c2-install-phase-discriminator-check c2-phase06a-cutpoint-check c2-append-suffix-read-domain-check c2-l-full-keymap-end-to-end-check c2-l-full-static-plane-check c2-historical-gate-inheritance-check c2-address-identity-contract-check c2-kernal-unmap-contract-check c2-nested-append-v5-selftest c2-overlay-transaction-auth-check promotion-register-check block-bank-delta-policy-check block-capacity-delta-policy-check dialect-contract-check bytecode-abi-ledger-check code-object-arity-contract-check dialect-migration-selftest dialect-migration-contract-check dialect-v2-prelude-control-check dialect-v2-eval-apply-funcall-check dialect-v2-lists-check dialect-v2-lists-p0-selftest dialect-v2-lists-lcc-selftest dialect-v2-lists-type-errors-check dialect-v2-strings-check dialect-v2-strings-p0-selftest dialect-v2-strings-lcc-selftest dialect-v2-system-runtime-check dialect-v2-lcc-surface-selftest dialect-v2-prelude-evidence-check dialect-v2-ide-evidence-check dialect-v2-capacity-ledger-selftest r2-known-open-check directory-only-l65m-v2-probe-check l65m-v2-product-check r3-current-product-block-check r6-g6-registered-seal-check r7-manifest-prerequisites-tracked-check r7-release-check v2-prim-lowering-check v2-carrier-state-selftest v2-workbench-symbol-diff-check v2-workbench-deresidentization-audit-check v2-workbench-deresidentization-prototype-check v2-runtime-core-service-inventory-selftest v2-capability-carrier-internal-g5-check v2-capability-carrier-contract-check workbench-service-call-inventory-selftest v11-surface-delivery-parity-check v11-source-stream-lifetime-selftest v11-function-metadata-check workbench-product-contract-check workbench-ux-harness-selftest runtime-known-open-check semantic-contracts-selftest semantic-contracts-g0 bytecode-p0-omission-contract-check bank0-lifetime-selftest bank0-island-inventory-selftest resident-island-selftest vm-ext-code-reclaim-smoke asm-c-constant-contract-check mega65-math-override-check error-text-table-selftest error-code-contract-selftest error-overlay-smoke workbench-disk-lib-budget-selftest ide-capacity-selftest persistence-contract-check runtime-export-contract-check runtime-core-audit-selftest workbench-overlay-stage-selftest runtime-overlay-bank-selftest hw-ship-memory-readback-selftest xmega65-safety-check bytecode-p0-program-check bytecode-p0-bundle-check workbench-ship-verifier-selftest
 

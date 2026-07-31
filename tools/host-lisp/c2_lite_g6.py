@@ -590,6 +590,104 @@ def bind_late_remount_success(root: Path) -> Path:
     return receipt
 
 
+def capture_late_remount_result(
+    root: Path, prefix: str = "work-remount-after-cycle",
+) -> None:
+    """Capture a remount result after the bounded REPL poll stopped."""
+    late_image = root / f"{prefix}-late.png"
+    late_ansi = root / f"{prefix}-late.ansi.txt"
+    late_screen = root / f"{prefix}-late.txt"
+    late_log = root / f"{prefix}-late.capture.log"
+    require(
+        not any(path.exists() for path in (
+            late_image, late_ansi, late_screen, late_log,
+        )),
+        "late remount capture already exists",
+    )
+    time.sleep(2)
+    completed = subprocess.run([
+        "timeout", "20s", str(M65), "-l", DEVICE,
+        f"--screenshot={late_image}",
+    ], cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        timeout=25, check=False)
+    late_ansi.write_text(completed.stdout, encoding="utf-8")
+    late_log.write_text(completed.stderr, encoding="utf-8")
+    require(
+        completed.returncode == 0,
+        "capture late remount result failed "
+        f"({completed.returncode}): {completed.stderr[-1000:]}",
+    )
+    late_screen.write_text(
+        re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", completed.stdout),
+        encoding="utf-8",
+    )
+
+
+def bind_work_media_pause_first_red(root: Path) -> Path:
+    """Bind a work-media check run before its required Freezer pause."""
+    prefix = "work-label-before-write"
+    screen = root / f"{prefix}.txt"
+    image = root / f"{prefix}.png"
+    runner = root / f"{prefix}.runner.log"
+    timing_path = root / f"{prefix}-timing.json"
+    prepare = root / "prepare-phase.json"
+    require(
+        all(path.is_file() for path in (
+            screen, image, runner, timing_path, prepare,
+        )),
+        "work-media pause first-red evidence is incomplete",
+    )
+    timing = load(timing_path, "work-media pause timing")
+    prepare_value = load(prepare, "work-media prepare phase")
+    runner_text = runner.read_text(encoding="utf-8", errors="replace")
+    require(
+        timing.get("schema") == "lisp65-jtag-repl-timing-v1"
+        and timing.get("status") == "fail"
+        and "latest result is not exactly '215': 211" in runner_text
+        and prepare_value.get("next_operator_action")
+        == f"open Freezer; mount {REMOTE_WORK}; return with F3",
+        "work-media pause first-red is not the exact skipped-operator case",
+    )
+    replay = root / f"{prefix}-product-label-independent-replay.log"
+    run([
+        sys.executable, "tools/host-lisp/repl_screen_check.py",
+        "--screen", str(screen), "--image", str(image),
+        "--form-text",
+        "(progn (%disk-read-sector 40 0) (%disk-byte 7))",
+        "--expect", "211",
+    ], "independent pre-pause product-label replay", output=replay)
+    receipt = root / "harness-first-red-work-media-pause.json"
+    write(receipt, {
+        "format": "lisp65-G6-harness-first-red-v1",
+        "version": 1,
+        "id": "work-write-started-before-required-freezer-media-switch",
+        "classification": "harness-only",
+        "product_result": {
+            "observed_label_byte": 211,
+            "observed_medium": "L65SYS",
+            "expected_label_byte_after_operator_action": 215,
+            "write_attempted": False,
+            "product_retry": "not-applicable-no-write-path-entered",
+        },
+        "harness_result": {
+            "cause": (
+                "work-prepare and work-write were chained without the "
+                "required operator Freezer pause between them"
+            ),
+            "resume": (
+                "after mounting L65WORK and returning with F3, re-read the "
+                "label under a new evidence prefix, then enter the write path"
+            ),
+        },
+        "evidence": [
+            bind(prepare), bind(screen), bind(image), bind(runner),
+            bind(timing_path), bind(replay),
+        ],
+        "result": "bound-harness-first-red-product-unchanged",
+    })
+    return receipt
+
+
 def boot() -> None:
     require(PLAN.is_file(), "run prepare first")
     manifest, by_role = manifest_state()
@@ -894,6 +992,8 @@ def work_write() -> None:
     )
     harness_red = root / "harness-first-red-jtag-ram-view.bin"
     remount_deadline_red = root / "harness-first-red-remount-deadline.json"
+    work_media_pause_red = root / "harness-first-red-work-media-pause.json"
+    harness_observations: list[dict[str, Any]] = []
     if harness_red.is_file():
         # m65 --memsave observes the RAM under the mapped I/O page here, not
         # the live F011 register.  Preserve that harness first-red, then use
@@ -906,21 +1006,43 @@ def work_write() -> None:
         label = repl_evidence(root, "work-label-before-write")
         remount = repl_evidence(root, "work-remount-before-write")
         poke = repl_evidence(root, "work-bufsel-force")
-    elif (
-        (root / "work-remount-before-write-timing.json").is_file()
-        and not list(root.glob("work-bufsel-force*"))
-    ):
-        remount_deadline_red = bind_remount_deadline_first_red(root)
-        label = repl_evidence(root, "work-label-before-write")
-        remount = repl_evidence(root, "work-remount-before-write")
-        poke = repl_form(
-            root, "work-bufsel-force", "(poke 214 137 128)", "128",
-        )
     else:
-        label = disk_label_byte(root, "work-label-before-write", 215)
-        remount = repl_form(
-            root, "work-remount-before-write", "(m65d-remount)", "0",
-        )
+        if (
+            work_media_pause_red.is_file()
+            or (
+                (root / "work-label-before-write-timing.json").is_file()
+                and not list(root.glob("work-remount-before-write*"))
+            )
+        ):
+            if not work_media_pause_red.is_file():
+                bind_work_media_pause_first_red(root)
+            harness_observations.append(bind(work_media_pause_red))
+            resumed_timing = root / "work-label-after-required-F3-timing.json"
+            if resumed_timing.is_file():
+                require(
+                    load(resumed_timing, "resumed work-label timing")
+                    .get("status") == "pass",
+                    "resumed work-label check is not green",
+                )
+                label = repl_evidence(root, "work-label-after-required-F3")
+            else:
+                label = disk_label_byte(
+                    root, "work-label-after-required-F3", 215,
+                )
+        else:
+            label = disk_label_byte(root, "work-label-before-write", 215)
+
+        if (
+            (root / "work-remount-before-write-timing.json").is_file()
+            and not list(root.glob("work-bufsel-force*"))
+        ):
+            remount_deadline_red = bind_remount_deadline_first_red(root)
+            harness_observations.append(bind(remount_deadline_red))
+            remount = repl_evidence(root, "work-remount-before-write")
+        else:
+            remount = repl_form(
+                root, "work-remount-before-write", "(m65d-remount)", "0",
+            )
         poke = repl_form(
             root, "work-bufsel-force", "(poke 214 137 128)", "128",
         )
@@ -965,8 +1087,7 @@ def work_write() -> None:
                 bind(harness_red) if harness_red.is_file() else None
             ),
             "harness_observations": (
-                [bind(remount_deadline_red)]
-                if remount_deadline_red.is_file() else []
+                harness_observations
             ),
         },
         "evidence": (
@@ -1125,9 +1246,22 @@ def work_read() -> None:
         (root / "work-remount-after-cycle-timing.json").is_file()
         and not list(root.glob("work-read-after-cycle*"))
     ):
-        first_red = bind_remount_deadline_first_red(
-            root, "work-remount-after-cycle",
+        timing = load(
+            root / "work-remount-after-cycle-timing.json",
+            "work remount after-cycle timing",
         )
+        if (
+            timing.get("status") == "fail"
+            and "trailing REPL prompt is not empty" in (
+                root / "work-remount-after-cycle.runner.log"
+            ).read_text(encoding="utf-8", errors="replace")
+        ):
+            capture_late_remount_result(root)
+            first_red = bind_late_remount_success(root)
+        else:
+            first_red = bind_remount_deadline_first_red(
+                root, "work-remount-after-cycle",
+            )
         label = repl_evidence(root, "work-label-after-cycle")
         remount = (
             repl_evidence(root, "work-remount-after-cycle")

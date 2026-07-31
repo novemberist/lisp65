@@ -1,8 +1,9 @@
 {
   "format": "lisp65-v12-known-issues-register-v1",
   "version": 1,
-  "release": "1.2.4",
-  "recorded_on": "2026-07-30",
+  "release": "1.2.5",
+  "product_banner_release": "1.2.4",
+  "recorded_on": "2026-07-31",
   "active": [
     {
       "id": "c2.2-freezer-during-active-definition",
@@ -43,26 +44,10 @@
       "claim_limit": "The observation is retained as intermittent and unreproduced. No GC fix or GC latency ceiling is claimed."
     },
     {
-      "id": "intermittent-require-nil",
-      "status": "observed-once-not-reproduced-after-cold-start",
-      "user_rule": "If require unexpectedly returns nil, cold-restart lisp65 and retry the command once. Preserve the requested library name and preceding session steps if it recurs.",
-      "observed": {
-        "form": "(require 'place)",
-        "session": "late in one long hardware session",
-        "result": "nil"
-      },
-      "followup": "After an asserted cold start, two attempts returned t; the second attempt left the published C2D header and place row byte-identical.",
-      "authority": {
-        "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.3-link80-require-device-discriminator-retry-hardware-receipt.json",
-        "sha256": "281c5d987958e2f632fa71acb35b9bf6706143bcd9261ef66319ef06dbfc71a3"
-      },
-      "claim_limit": "The original nil remains an intermittent observation. The follow-up proves cold-start success and repeat idempotence only; it does not claim a cause, a fix, or device-side reads of fastpath markers 17 through 20."
-    },
-    {
       "id": "defstruct-dynamic-library-freight",
       "status": "not-delivered-parked",
-      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.4 user surface.",
-      "claim_limit": "Host-side designs and fixtures create no v1.2.4 delivery claim."
+      "user_rule": "defstruct and the associated dynamic package-loading freight are not part of the v1.2.5 user surface.",
+      "claim_limit": "Host-side designs and fixtures create no v1.2.5 delivery claim."
     }
   ],
   "informative": [
@@ -89,6 +74,22 @@
     }
   ],
   "retired": [
+    {
+      "id": "require-after-persistent-append",
+      "status": "fixed-by-v1.2.5-option-A",
+      "historical_versions": [
+        "1.2.3",
+        "1.2.4"
+      ],
+      "historical_result": "After an ordinary persistent append, require deterministically returned nil before package media was consulted.",
+      "fix": "Every persistent row remains geometry-checked; package size and combined-identity checks apply only to L65INDEX matches. Geometrically valid non-index rows are ordinary Session definitions.",
+      "authority": {
+        "host_gate_sha256": "62b5d8905bc2095b2dc69b532c33b9f9d40615590e3497dfe3b493aa7e72fa6b",
+        "hardware_receipt_sha256": "9df23279a0dce68b5699cde049be74bb0679f84461a9ab403394b3a5c0590459",
+        "product_artifact_set_sha256": "fa9cf0c2e97118af5f3ed52934e50387ff0d0a895499abc497987a2daaa1f56a"
+      },
+      "claim_limit": "Retires only the deterministic require ordering defect. defstruct and parked dynamic-package freight remain undelivered."
+    },
     {
       "id": "v11-c1-definition-first-call",
       "status": "retired-by-promoted-v1.2-product",
@@ -125,10 +126,10 @@
     }
   ],
   "release_authority": {
-    "product_artifact_set_sha256": "f686c8a78d7e65927740049e0b33c51f879613f21593b46be8342840c18093f8",
-    "package_set_sha256": "1fa8ef2494eeeff40e4456f80e007aa46cb30f1e876856aaed9ea225469c8eb6",
-    "G5_receipt_sha256": "f7f1d58d3a2fe319ceda75450efb20906f447997af724c28fb2effda31f2ccbc",
-    "G6_receipt_sha256": "67ce1fbe43194d12e7911f10636e46096368f8992400f4fab0176ea9288cb8ff",
-    "acceptance_archive_sha256": "0bb25e9a2be09c7d8f443287dd88b3e0fadba45f6b777db4e6828621ec19ca0c"
+    "product_artifact_set_sha256": "fa9cf0c2e97118af5f3ed52934e50387ff0d0a895499abc497987a2daaa1f56a",
+    "package_set_sha256": "3dc8dc557624bf23405eb6ef681b726831818bc01b730c5ded0e9620364e5f34",
+    "G5_receipt_sha256": "20102aed31ac7494ee11504f48346543ace8a40c7f84eb63bdeef1881d28e314",
+    "G6_receipt_sha256": "84b9d04a05297570409406f757d50e5838fb72346d015a3ce097bb66411b3740",
+    "acceptance_archive_sha256": "4eb73b906199465689be8def832b4f7cc100b3186fa90789d9d7e9bf859f2b17"
   }
 }

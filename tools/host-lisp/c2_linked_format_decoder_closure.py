@@ -20,9 +20,9 @@ from elf_truth import ElfTruth  # noqa: E402
 CONTRACT = ROOT / "config/c2-linked-format-decoder-closure.json"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 DEFAULT_RECEIPT = ROOT / (
-    "build/c2.2/v1.2.4-candidate-product-link81/receipts/"
+    "build/c2.2/v1.2.5-candidate-product-link82/receipts/"
     "linked-format-decoder-closure.json")
-CURRENT_CANDIDATE_ROOT = "build/c2.2/v1.2.4-candidate-product-link81"
+CURRENT_CANDIDATE_ROOT = "build/c2.2/v1.2.5-candidate-product-link82"
 
 
 class ClosureError(RuntimeError):

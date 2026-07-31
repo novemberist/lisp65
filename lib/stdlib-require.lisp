@@ -509,25 +509,27 @@
               nil)))
       code-low))
 
-(defun %require-persistent-row-shape-p
+(defun %require-persistent-row-size
   (base slot generation code-low)
   (if (= (%require-row-byte base 0) 1)
       (if (%require-row-zeroes-p base '(1 3 20 23 24 25 26 27))
           (if (= (%require-row-byte base 2) (- slot 6))
               (if (%require-u16= (%require-row-u16 base 4) generation)
-                  (%require-u16=
-                    (%require-row-u16 base 18) code-low)
+                  (if (%require-u16=
+                        (%require-row-u16 base 18) code-low)
+                      (let ((size (%require-row-u16 base 21)))
+                        (if (%require-u16-zero-p size) nil size))
+                      nil)
                   nil)
               nil)
           nil)
       nil))
 
 (defun %require-persistent-row-p
-  (base slot generation code-low row)
-  (if (%require-persistent-row-shape-p base slot generation code-low)
-      (if (%require-u16=
-            (%require-row-u16 base 21) (nth 5 row))
-          (%require-image-identity-p base (car (cdr row)) 28)
+  (base row size)
+  (if (%require-u16= size (nth 5 row))
+      (if (%require-image-identity-p base (car (cdr row)) 28)
+          t
           nil)
       nil))
 
@@ -535,18 +537,22 @@
   (slot end rows generation code-low)
   (if (< slot end)
       (let ((base (%require-address (cons 48 0) slot 32)))
-        (let ((row (%require-index-row-for-image rows base)))
-          (if (if row
-                  (if (%require-image-duplicate-before-p slot 6)
-                      nil
-                      (%require-persistent-row-p
-                        base slot generation code-low row))
-                  nil)
-              (let ((next
-                      (%require-u16-add-wide code-low (nth 5 row))))
-                (if next
-                    (%require-active-prefix
-                      (1+ slot) end rows generation next)
+        (let ((size
+                (%require-persistent-row-size
+                  base slot generation code-low)))
+          (if size
+              (let ((row (%require-index-row-for-image rows base)))
+                (if (if row
+                        (if (%require-image-duplicate-before-p slot 6)
+                            nil
+                            (%require-persistent-row-p base row size))
+                        t)
+                    (let ((next
+                            (%require-u16-add-wide code-low size)))
+                      (if next
+                          (%require-active-prefix
+                            (1+ slot) end rows generation next)
+                          nil))
                     nil))
               nil)))
       code-low))

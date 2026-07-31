@@ -34,6 +34,7 @@ FINAL_COMPOSITION_RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.2-v1-random-base-final-composition-revalidation-receipt.json"
 )
+CURRENT_COMPOSITION_RECEIPT = BUILD / "v1.2.5-current-composition.json"
 PUBLIC_BUILD_RECEIPT = BUILD / "public-build-current-source-receipt.json"
 RANDOM_NAMES = [
     "%random-add14",
@@ -286,6 +287,7 @@ def artifact_gate() -> dict[str, Any]:
     while_delta = profile["while_delta"]
     fx_delta = profile["fx_base_delta"]
     time_delta = profile.get("time_base_delta")
+    option_a = profile.get("require_prior_append_option_A_delta")
     time_code = 0 if time_delta is None else int(
         time_delta["stdlib_code_bytes"])
     time_entries = 0 if time_delta is None else int(
@@ -299,6 +301,8 @@ def artifact_gate() -> dict[str, Any]:
             - int(while_delta["lcc_code_bytes"])
             - int(fx_delta["stdlib_code_bytes"])
             - time_code
+            - (0 if option_a is None
+               else int(option_a["stdlib_code_bytes"]))
         ),
         "entries": (
             int(profile["entries"])
@@ -306,6 +310,7 @@ def artifact_gate() -> dict[str, Any]:
             - int(while_delta["new_entries"])
             - int(fx_delta["new_entries"])
             - time_entries
+            - (0 if option_a is None else int(option_a["new_entries"]))
         ),
         "resolutions": (
             int(profile["resolutions"])
@@ -313,6 +318,8 @@ def artifact_gate() -> dict[str, Any]:
             - int(while_delta["new_resolutions"])
             - int(fx_delta["new_resolutions"])
             - time_resolutions
+            - (0 if option_a is None
+               else int(option_a["new_resolutions"]))
         ),
         "roots": int(profile["roots"]),
     }
@@ -405,9 +412,13 @@ def main(*, public_build: bool = False) -> int:
             ),
         }
         profile = load(PROFILE)
+        current_successor = (
+            profile.get("require_prior_append_option_A_delta") is not None)
         target = (
             PUBLIC_BUILD_RECEIPT
             if public_build
+            else CURRENT_COMPOSITION_RECEIPT
+            if current_successor
             else FINAL_COMPOSITION_RECEIPT
             if profile.get("product_build_id") == "0x15da63c2"
             else POST_TIME_RECEIPT
@@ -428,6 +439,14 @@ def main(*, public_build: bool = False) -> int:
                 "Current public source/artifact semantics and capacity only; "
                 "historical proof receipts and hardware claims are not inputs."
             )
+        elif current_successor:
+            receipt["status"] = (
+                "passed-random-base-in-current-successor-composition")
+            receipt["composition"] = {
+                "successors": ["fx", "time", "require-option-A"],
+                "product_build_id": profile["product_build_id"],
+                "final_v1.2.4_authority": bind(FINAL_COMPOSITION_RECEIPT),
+            }
         elif target == FINAL_COMPOSITION_RECEIPT:
             receipt["status"] = (
                 "passed-random-base-in-final-v1.2.4-composition"

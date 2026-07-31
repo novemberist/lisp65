@@ -1,9 +1,9 @@
-# lisp65 1.2.4 User Guide
+# lisp65 1.2.5 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.2.4` release bundle
+- The extracted `lisp65-1.2.5` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 

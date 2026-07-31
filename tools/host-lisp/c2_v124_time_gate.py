@@ -33,6 +33,7 @@ FINAL_COMPOSITION_RECEIPT = ROOT / (
     "c2.2-v1.2.4-time-final-composition-revalidation-receipt.json"
 )
 PUBLIC_BUILD_RECEIPT = BUILD / "public-build-current-source-receipt.json"
+CURRENT_COMPOSITION_RECEIPT = BUILD / "v1.2.5-current-composition.json"
 TIME_NAMES = ["%time-read", "%time-delta", "time"]
 
 
@@ -319,9 +320,12 @@ def artifact_gate() -> dict[str, Any]:
         "time independent-oracle execution witness drift",
     )
     profile = load(PROFILE)
+    option_a = profile.get("require_prior_append_option_A_delta")
+    option_code = (
+        0 if option_a is None else int(option_a["stdlib_code_bytes"]))
     bound_time = profile.get("time_base_delta")
     if bound_time is None:
-        baseline_code = int(profile["bank2_static_code"]["bytes"])
+        baseline_code = int(profile["bank2_static_code"]["bytes"]) - option_code
     else:
         require(
             bound_time == {
@@ -340,6 +344,7 @@ def artifact_gate() -> dict[str, Any]:
         baseline_code = (
             int(profile["bank2_static_code"]["bytes"])
             - int(bound_time["stdlib_code_bytes"])
+            - option_code
         )
     require(
         profile.get("fx_base_delta") is not None and baseline_code == 42936,
@@ -430,11 +435,16 @@ def main(*, public_build: bool = False) -> int:
                 "admission only; no successor product or release claim."
             ),
         }
+        profile = load(PROFILE)
+        current_successor = (
+            profile.get("require_prior_append_option_A_delta") is not None)
         receipt = (
             PUBLIC_BUILD_RECEIPT
             if public_build
+            else CURRENT_COMPOSITION_RECEIPT
+            if current_successor
             else FINAL_COMPOSITION_RECEIPT
-            if load(PROFILE).get("product_build_id") == "0x15da63c2"
+            if profile.get("product_build_id") == "0x15da63c2"
             else RECEIPT
         )
         if public_build:
@@ -450,6 +460,14 @@ def main(*, public_build: bool = False) -> int:
                 "Current public source/artifact semantics and capacity only; "
                 "historical proof receipts and hardware claims are not inputs."
             )
+        elif current_successor:
+            value["status"] = (
+                "passed-time-host-reference-in-current-successor-composition")
+            value["composition"] = {
+                "successor": "require-option-A",
+                "product_build_id": profile["product_build_id"],
+                "final_v1.2.4_authority": bind(FINAL_COMPOSITION_RECEIPT),
+            }
         elif receipt == FINAL_COMPOSITION_RECEIPT:
             value["status"] = (
                 "passed-time-host-reference-in-final-v1.2.4-composition"

@@ -1,0 +1,51 @@
+{
+  "format": "lisp65-c2-require-prior-append-acceptance-v1",
+  "recorded_on": "2026-07-31",
+  "status": "required-in-next-v1.2.5-acceptance-session",
+  "purpose": "Permanent product execution row for the deterministic v1.2.4 require order bug: two ordinary persistent Session definitions must not invalidate later package resolution.",
+  "media_precondition": {
+    "required_visible_files": [
+      "l65index",
+      "place"
+    ],
+    "bind_before_session": true,
+    "wrong_medium_is_harness_red_not_product_red": true
+  },
+  "rows": [
+    {
+      "id": "ordinary-append-0",
+      "form": "(defun %ra(x)x)",
+      "expected": "%ra"
+    },
+    {
+      "id": "ordinary-append-1",
+      "form": "(defun %rb(x)(+ x 1))",
+      "expected": "%rb"
+    },
+    {
+      "id": "require-after-two-ordinary-appends",
+      "form": "(require(quote place))",
+      "expected": "t"
+    },
+    {
+      "id": "require-after-two-ordinary-appends-repeat",
+      "form": "(require(quote place))",
+      "expected": "t"
+    }
+  ],
+  "required_readback": {
+    "persistent_helper_slots": [
+      6,
+      7
+    ],
+    "package_slot": 8,
+    "c2j": "CLEAR",
+    "second_require": "C2D and code byte-identical; no second package load"
+  },
+  "policy": {
+    "cold_reset_and_asserted_basic_before_first_transfer": true,
+    "ftp_no_progress_timeout_seconds": 120,
+    "dependency_scoped_first_red": true,
+    "hardware_claim_required_before_release": "v1.2.5"
+  }
+}

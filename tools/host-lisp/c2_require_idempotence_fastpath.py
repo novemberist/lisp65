@@ -16,8 +16,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
-import statistics
 import subprocess
 import sys
 from typing import Any, Callable
@@ -31,6 +31,7 @@ import bytecode_p0 as B  # noqa: E402
 import c2_link75_real_require_resolver_host as R  # noqa: E402
 import c2_phase_m_require_latency as M  # noqa: E402
 import c2_lite_v6_product_probe as V6  # noqa: E402
+import c2_require_prior_append_option_a_gate as OPTION_A  # noqa: E402
 
 
 SUITE = ROOT / "tests/bytecode/libs/p0-stdlib-require-resolver.json"
@@ -38,11 +39,6 @@ LISP = ROOT / "lib/stdlib-require.lisp"
 BUILD = ROOT / "build/post-promotion/phase-m/require-fastpath"
 PREFIX = BUILD / "stdlib-p0"
 MANIFEST = BUILD / "stdlib-p0.manifest.json"
-BASE_MANIFEST = (
-    ROOT
-    / "build/post-promotion/link75-bound-compiler-carrier/static-plane/"
-    "narrow-static/stdlib-p0.manifest.json"
-)
 BASE_RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.2-phase-m1-require-latency-measurement-receipt.json"
@@ -52,6 +48,9 @@ RECEIPT = ROOT / (
     "c2.2-require-idempotence-fastpath-receipt.json"
 )
 FORMAT = "lisp65-c2.2-require-idempotence-fastpath-v1"
+BASELINE_CODE_BYTES = 13835
+CURRENT_MEDIA: Path | None = None
+CURRENT_MEDIA_BINDING: dict[str, Any] | None = None
 
 
 class FastpathError(RuntimeError):
@@ -98,11 +97,11 @@ def compile_candidate() -> dict[str, Any]:
         check=False,
     )
     require(run.returncode == 0, "candidate compile red:\n" + run.stdout)
-    old, new = load(BASE_MANIFEST), load(MANIFEST)
-    delta = int(new["code_bytes"]) - int(old["code_bytes"])
+    new = load(MANIFEST)
+    delta = int(new["code_bytes"]) - BASELINE_CODE_BYTES
     require(0 <= delta <= 512, f"Bank-2 delta outside 0..512: {delta}")
     return {
-        "baseline_code_bytes": int(old["code_bytes"]),
+        "baseline_code_bytes": BASELINE_CODE_BYTES,
         "candidate_code_bytes": int(new["code_bytes"]),
         "bank2_delta_bytes": delta,
         "bank2_ceiling_bytes": 512,
@@ -111,16 +110,33 @@ def compile_candidate() -> dict[str, Any]:
     }
 
 
+def prepare_environment() -> dict[str, Any]:
+    global CURRENT_MEDIA, CURRENT_MEDIA_BINDING
+    source = OPTION_A.run_source_gate()
+    fixtures = OPTION_A.prepare_source_fixtures()
+    geometry = OPTION_A.current_geometry()
+    medium, binding = OPTION_A.build_library_media(geometry["build_id"])
+    CURRENT_MEDIA = medium
+    CURRENT_MEDIA_BINDING = binding
+    return {
+        "resolver": source,
+        "fixtures": fixtures,
+        "media": binding,
+        "geometry": geometry,
+    }
+
+
 def environment() -> tuple[
     R.BoundStdlib, R.LivePlane, M.MeasuredResolverVM
 ]:
+    require(CURRENT_MEDIA is not None, "source-built media not prepared")
     R.STDLIB = MANIFEST
     bound = R.BoundStdlib()
-    media = M.MEDIA.read_bytes()
+    media = CURRENT_MEDIA.read_bytes()
     locators, payloads = R.media_locators(media)
     require(payloads["l65index"][:4] == b"L65I",
             "successor media index identity drift")
-    plane = R.LivePlane()
+    plane = OPTION_A.CurrentLivePlane()
     vm = M.MeasuredResolverVM(bound, plane, media, locators)
     return bound, plane, vm
 
@@ -158,12 +174,6 @@ def median_exact(samples: list[dict[str, Any]], lane: str) -> dict[str, Any]:
         "disk_sector_reads": rows[0]["disk_sector_reads"],
         "c2d_and_code_changed": rows[0]["c2d_and_code_changed"],
         "phase_instructions": rows[0]["phase_instructions"],
-        "outer_instrumented_host_seconds_median": round(
-            statistics.median(
-                row["outer_instrumented_host_seconds"] for row in rows
-            ),
-            6,
-        ),
     }
 
 
@@ -203,7 +213,12 @@ def mutation_gate() -> dict[str, Any]:
     ) -> str:
         at = V6.C2D_IMAGES_OFFSET + 6 * V6.C2D_IMAGE_BYTES + 28
         plane.data[at] ^= 1
-        return "nil"
+        # Option A deliberately narrows the old "foreign identity always
+        # fails" rule.  Once an identity no longer occurs in L65I, the slow
+        # world proof treats that geometrically valid row as an ordinary
+        # Session definition.  The cache must still miss and run the full
+        # parser/resolver; the already loaded requested package remains true.
+        return "t"
 
     def wrong_generation(
         _bound: R.BoundStdlib, plane: R.LivePlane
@@ -317,49 +332,90 @@ def source_gate() -> dict[str, Any]:
 
 def main() -> int:
     try:
+        public_build = (
+            os.environ.get("LISP65_PUBLIC_CURRENT_SOURCE_BUILD") == "1"
+        )
         geometry = compile_candidate()
-        baseline = load(BASE_RECEIPT)["host_measurement"][
-            "idempotent_repeat"
-        ]
+        source_fixture = prepare_environment()
         samples = [run_pair() for _ in range(5)]
         first = median_exact(samples, "first")
         repeat = median_exact(samples, "idempotent_repeat")
-        step_reduction = 1.0 - (
-            repeat["vm_instructions"] / baseline["vm_instructions"]
-        )
-        read_reduction = 1.0 - (
-            repeat["prim67_reads"] / baseline["prim67_reads"]
-        )
-        require(step_reduction >= 0.90,
-                f"VM-step reduction below 90%: {step_reduction:.6f}")
-        require(read_reduction >= 0.90,
-                f"Prim-67 reduction below 90%: {read_reduction:.6f}")
+        if public_build:
+            baseline = None
+            step_reduction = None
+            read_reduction = None
+        else:
+            baseline = load(BASE_RECEIPT)["host_measurement"][
+                "idempotent_repeat"
+            ]
+            step_reduction = 1.0 - (
+                repeat["vm_instructions"] / baseline["vm_instructions"]
+            )
+            read_reduction = 1.0 - (
+                repeat["prim67_reads"] / baseline["prim67_reads"]
+            )
+            require(step_reduction >= 0.90,
+                    f"VM-step reduction below 90%: {step_reduction:.6f}")
+            require(read_reduction >= 0.90,
+                    f"Prim-67 reduction below 90%: {read_reduction:.6f}")
         fallbacks = mutation_gate()
         source = source_gate()
         value = {
             "format": FORMAT,
             "recorded_on": "2026-07-28",
-            "status": "passed-parser-free-idempotence-fastpath",
+            "status": (
+                "passed-public-current-source-fastpath-semantics"
+                if public_build
+                else "passed-parser-free-idempotence-fastpath"
+            ),
             "promotable": False,
             "product_links": 0,
             "hardware_runs": 0,
             "sample_count": len(samples),
             "geometry": geometry,
-            "baseline_repeat": {
-                "vm_instructions": baseline["vm_instructions"],
-                "prim67_reads": baseline["prim67_reads"],
-            },
+            "baseline_repeat": (
+                {
+                    "mode":
+                        "not-a-public-current-source-build-input",
+                    "private_evidence_inputs": 0,
+                }
+                if baseline is None
+                else {
+                    "vm_instructions": baseline["vm_instructions"],
+                    "prim67_reads": baseline["prim67_reads"],
+                }
+            ),
             "candidate": {
                 "first_require": first,
                 "idempotent_repeat": repeat,
-                "repeat_reduction": {
-                    "vm_steps_percent": round(100 * step_reduction, 4),
-                    "prim67_reads_percent": round(100 * read_reduction, 4),
-                    "required_minimum_percent": 90,
-                },
+                "repeat_reduction": (
+                    {
+                        "mode": "not-claimed-by-public-build",
+                        "private_evidence_inputs": 0,
+                    }
+                    if step_reduction is None or read_reduction is None
+                    else {
+                        "vm_steps_percent": round(
+                            100 * step_reduction, 4
+                        ),
+                        "prim67_reads_percent": round(
+                            100 * read_reduction, 4
+                        ),
+                        "required_minimum_percent": 90,
+                    }
+                ),
             },
             "fallback_mutations": fallbacks,
+            "option_A_mutation_narrowing": {
+                "foreign-identity": (
+                    "still invalidates the cache and executes the full "
+                    "parser/resolver, but a geometrically valid non-index row "
+                    "is now an ordinary Session definition and the requested "
+                    "loaded package returns t"
+                )
+            },
             "source_gate": source,
+            "source_reproducible_fixture": source_fixture,
             "proof_boundary": {
                 "fast_checks": [
                     "same library symbol as one-entry resolution cache",
@@ -383,30 +439,51 @@ def main() -> int:
             },
             "authority": {
                 "candidate_manifest": bind(MANIFEST),
-                "baseline_manifest": bind(BASE_MANIFEST),
-                "baseline_measurement": bind(BASE_RECEIPT),
+                "baseline_code_calibration": (
+                    {
+                        "bytes": BASELINE_CODE_BYTES,
+                        "scope":
+                            "stable source-layout calibration; no private "
+                            "historical receipt is a public build input",
+                        "private_evidence_inputs": 0,
+                    }
+                    if public_build
+                    else {
+                        "bytes": BASELINE_CODE_BYTES,
+                        "authority": bind(BASE_RECEIPT),
+                        "scope":
+                            "accepted pre-fastpath Bank-2 resolver "
+                            "measurement",
+                    }
+                ),
                 "lisp": bind(LISP),
                 "suite": bind(SUITE),
                 "driver": bind(Path(__file__).resolve()),
             },
             "claim_limit": (
                 "Host VM steps and Prim-67 reads are exact for the compiled "
-                "candidate against the Link-75 C2D/D81 model. No target timing, "
+                "candidate against the source-built current profile/D81 "
+                "model. No target timing, "
                 "DMA, IRQ, physical GC, product link or hardware claim is made."
             ),
         }
+        if not public_build:
+            value["authority"]["baseline_measurement"] = bind(BASE_RECEIPT)
         RECEIPT.parent.mkdir(parents=True, exist_ok=True)
         RECEIPT.write_text(
             json.dumps(value, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
+        reduction_text = (
+            "public-current-source"
+            if step_reduction is None or read_reduction is None
+            else f"{100*step_reduction:.2f}%/{100*read_reduction:.2f}%"
+        )
         print(
             "c2-require-idempotence-fastpath: PASS "
             f"bank2=+{geometry['bank2_delta_bytes']} resident=+0 "
             f"repeat={repeat['vm_instructions']}/{repeat['prim67_reads']} "
-            f"reduction={100*step_reduction:.2f}%/"
-            f"{100*read_reduction:.2f}% "
-            f"fallbacks={len(fallbacks)}"
+            f"reduction={reduction_text} fallbacks={len(fallbacks)}"
         )
         return 0
     except (

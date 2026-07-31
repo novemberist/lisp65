@@ -968,6 +968,9 @@ def check() -> dict[str, Any]:
         and value["status"] == "passed-complete-C2-lite-two-media-product"
         and value["artifact_count"] == contract["artifact_count"] == 19,
         "canonical media manifest envelope drift")
+    require(
+        value["canonical_product"] == bind(PRODUCT_MANIFEST),
+        "canonical media product-manifest binding drift")
     for row in value["artifacts"]:
         path = ROOT / row["path"]
         require(

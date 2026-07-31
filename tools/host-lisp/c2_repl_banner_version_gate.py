@@ -40,11 +40,16 @@ def validate(source: str, authority: dict[str, Any]) -> dict[str, Any]:
         authority.get("format") == "lisp65-v12-known-issues-register-v1",
         "release authority format drift",
     )
-    release = authority.get("release")
+    package_release = authority.get("release")
+    release = authority.get("product_banner_release", package_release)
     require(
-        isinstance(release, str)
+        isinstance(package_release, str)
+        and re.fullmatch(
+            r"[0-9]+\.[0-9]+\.[0-9]+", package_release
+        ) is not None
+        and isinstance(release, str)
         and re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", release) is not None,
-        "release authority has no canonical semantic version",
+        "release authority has no canonical package/banner versions",
     )
     matches = list(SUBTITLE_PATTERN.finditer(source))
     require(len(matches) == 1, "expected exactly one canonical banner subtitle body")
@@ -61,6 +66,7 @@ def validate(source: str, authority: dict[str, Any]) -> dict[str, Any]:
     )
     return {
         "release": release,
+        "package_release": package_release,
         "subtitle": expected_text,
         "length": expected_length,
         "start_column": expected_start,
@@ -97,9 +103,9 @@ def selftest(source: str, authority: dict[str, Any]) -> int:
             authority,
         ),
         (
-            "release-bump-without-banner",
+            "banner-authority-bump-without-banner",
             source,
-            {**authority, "release": next_release},
+            {**authority, "product_banner_release": next_release},
         ),
     ]
     for label, mutant_source, mutant_authority in mutations:

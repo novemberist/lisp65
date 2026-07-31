@@ -4,6 +4,36 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.2.5 — prepared 2026-07-31
+
+- Corrected `require` so ordinary persistent definitions created earlier in
+  the same session no longer make package resolution return `nil`.
+- Added a permanent source gate and release-terminal hardware row for
+  `require` after two ordinary persistent appends.
+- Rebound the permanent public clean-build gate to the Link-82 19-role
+  product identity.
+- Kept the accepted product banner at `WORKBENCH 1.2.4`; v1.2.5 is a package
+  correction over those product bytes.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-#2 publication
+authorization.
+
+## v1.2.4 — published 2026-07-30
+
+- Added signed Q8.7 fixed-point arithmetic (`fx` and its conversion and
+  arithmetic helpers) to the base composition.
+- Added `(time form)` with value preservation and measured raster-frame
+  reporting.
+- Rebound the permanent public clean-build gate to the Link-81 19-role
+  product identity.
+- External contributions included in this sync: **none**.
+
+Public commit `65426c454df405dddb6c4d4a7457039b40938bae`, annotated tag
+`v1.2.4`, and the corresponding GitHub release were published and
+readback-verified.
+
 ## v1.2.3 — prepared 2026-07-30
 
 - Bound the native `while` form and base-composition `random`/`random-seed`

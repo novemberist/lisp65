@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.2.4. Sealed
+This is the maintained user-facing issue register for lisp65 1.2.5. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -54,36 +54,22 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Active intermittent issue: `require` can return `nil`
-
-Status: **observed once; not reproduced after a cold start**
-
-Late in one long hardware session, `(require 'place)` returned `nil` instead
-of `t`. A cold restart cleared the symptom: two subsequent loads returned `t`,
-and the second left the already-loaded library state byte-for-byte unchanged.
-No cause or fix is claimed.
-
-If `require` unexpectedly returns `nil`, cold-restart lisp65 and retry the
-command once. If it happens again, preserve the requested library name and the
-preceding session steps in a bug report. A standing read-only diagnostic is
-retained for a second sighting.
-
-## Not delivered in 1.2.4: `defstruct` and dynamic packages
+## Not delivered in 1.2.5: `defstruct` and dynamic packages
 
 `defstruct` and the associated dynamic package-loading freight are not part of
-the v1.2.4 user surface. Their host-side designs and test artifacts are
+the v1.2.5 user surface. Their host-side designs and test artifacts are
 development material, not commands promised by this release.
 
-## Not delivered in 1.2.4: `gc`, `room` and `error`
+## Not delivered in 1.2.5: `gc`, `room` and `error`
 
 The three diagnostic commands `(gc)`, `(room)` and `(error)` are not part of
-the v1.2.4 user surface. They were designed and specified, then held back on
+the v1.2.5 user surface. They were designed and specified, then held back on
 capacity: their cold read carrier measures 1,724 bytes against a session
 deficit of 399, and re-fusing correctness-critical phases for a diagnostic
 instrument was judged disproportionate. Nothing else in the product depends on
 them; a user simply does not have them.
 
-## Not delivered in 1.2.4: `restart-repl`
+## Not delivered in 1.2.5: `restart-repl`
 
 `restart-repl` is outside the contracted product surface for this era. A user
 who wants a clean image restarts the machine.
@@ -140,6 +126,21 @@ The retirement conditions are all satisfied:
 Retirement scope remains intentionally narrow. v1.2.1 also measured the
 one-argument direct-call path at zero frames, but does not turn that informative
 value into a hard limit. No GC or cold-boot performance claim is created.
+
+## Retired in 1.2.5: order-dependent `require`
+
+Status: **fixed and hardware-proven**
+
+In v1.2.3 and v1.2.4, calling `require` after an ordinary persistent
+definition deterministically returned `nil`. The resolver incorrectly treated
+every valid Session row as though it had to appear in the package index.
+
+v1.2.5 checks the geometry of every persistent row but applies package
+identity checks only to rows that actually match the package index. The
+release-terminal hardware case defines two functions, then loads the package
+twice; both calls return `t`, the package row is published after the ordinary
+rows, the second call is byte-identical and C2J remains CLEAR. The former
+“cold-restart and run `require` first” workaround is withdrawn.
 
 Machine-readable authority:
 `config/v12-known-issues.json`.
