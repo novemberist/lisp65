@@ -33,6 +33,9 @@
 #ifdef LISP65_VM_SCREEN_PRIMS
 #include "screen.h"
 #endif
+#ifdef LISP65_SHIP_RUNTIME_IO
+#include "ship_runtime_io.h"
+#endif
 
 #if defined(LISP65_VM_SCREEN_PRIMS) && (defined(__MEGA65__) || defined(__C64__) || defined(__CBM__))
 #define LISP65_VM_REAL_KEYBOARD 1
@@ -1290,6 +1293,13 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (n != 0) { vm_status = VM_ARITY; return NIL; }
         return vm_workbench_compile_error(pid);
 #endif
+#if defined(LISP65_SHIP_RUNTIME_IO) && !defined(LISP65_V2_WORKBENCH_SERVICES)
+    case 45: /* write-char: standalone Runtime physical output */
+        if (n != 1) { vm_status = VM_ARITY; return NIL; }
+        if (!IS_FIX(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
+        lisp65_ship_io_putc((uint8_t)FIXVAL(a[0]));
+        return a[0];
+#endif
 #ifdef LISP65_DIALECT_V2
     case 57: /* boundp -- public native designator closure */
         if (n != 1) { vm_status = VM_ARITY; return NIL; }
@@ -1312,7 +1322,14 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         if (n == 1 && !IS_FIX(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         mode = n == 0 ? 0 : FIXVAL(a[0]);
         if (mode != 0 && mode != 1) { vm_status = VM_TYPEERROR; return NIL; }
-#if defined(LISP65_VM_SCREEN_PRIMS) && defined(LISP65_VM_REAL_KEYBOARD)
+#ifdef LISP65_SHIP_RUNTIME_IO
+        {
+            int c = lisp65_ship_io_getin((uint8_t)mode);
+            if (c == LISP65_SHIP_KEY_RUN_STOP)
+                lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+            return c == 0 ? NIL : vm_key_event(c, 0u);
+        }
+#elif defined(LISP65_VM_SCREEN_PRIMS) && defined(LISP65_VM_REAL_KEYBOARD)
         if (mode) {
 #ifdef LISP65_C2_KERNAL_UNMAP
             lisp65_key_event event;
@@ -1342,6 +1359,12 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         uint16_t address;
         if (!vm_byte_args(a, n, (uint8_t)(pid - 59u))) return NIL;
         address = ((uint16_t)FIXVAL(a[0]) << 8) | (uint16_t)FIXVAL(a[1]);
+#ifdef LISP65_SHIP_RUNTIME_IO
+        if (pid == 61) {
+            uint8_t value;
+            if (lisp65_ship_io_peek(address, &value)) return MKFIX(value);
+        }
+#endif
 #ifdef LISP_REAL_MEM
         if (pid == 61) return MKFIX(*(volatile unsigned char *)(uintptr_t)address);
         *(volatile unsigned char *)(uintptr_t)address = (unsigned char)FIXVAL(a[2]);

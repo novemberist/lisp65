@@ -20,9 +20,9 @@ from elf_truth import ElfTruth  # noqa: E402
 CONTRACT = ROOT / "config/c2-linked-format-decoder-closure.json"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 DEFAULT_RECEIPT = ROOT / (
-    "build/c2.2/v1.2.5-candidate-product-link82/receipts/"
+    "build/c2.3/v1.3.0-candidate-product-link88-r1/receipts/"
     "linked-format-decoder-closure.json")
-CURRENT_CANDIDATE_ROOT = "build/c2.2/v1.2.5-candidate-product-link82"
+CURRENT_CANDIDATE_ROOT = "build/c2.3/v1.3.0-candidate-product-link88-r1"
 
 
 class ClosureError(RuntimeError):
@@ -143,7 +143,7 @@ def validate_contract(contract: dict[str, Any]) -> None:
                 f"{CURRENT_CANDIDATE_ROOT}/static-plane/"
                 "narrow-static/product/*.c2i.bin"
             ),
-        "linked format decoder candidate authority is not Link 81")
+        "linked format decoder candidate authority is not Link 88")
 
 
 def synthetic_model(contract: dict[str, Any]) -> dict[str, Any]:

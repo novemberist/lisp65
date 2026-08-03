@@ -210,12 +210,20 @@ def verify_values(
                 raise ParityError(f"surface does not publish exactly one {kind} {name}")
             if public_names.count(name) != 1:
                 raise ParityError(f"dialect contract does not publish exactly one {name}")
-        manifest_matches = [
-            row for row in entries
-            if isinstance(row, dict) and row.get("name") == name and row.get("kind") == kind
-        ]
-        if len(manifest_matches) != 1:
-            raise ParityError(f"resident manifest does not deliver exactly one {name}")
+        if kind == "primitive":
+            registry_matches = [
+                row for row in registry_entries
+                if isinstance(row, dict) and row.get("name") == name
+            ]
+            if len(registry_matches) != 1:
+                raise ParityError(f"native registry does not deliver exactly one {name}")
+        else:
+            manifest_matches = [
+                row for row in entries
+                if isinstance(row, dict) and row.get("name") == name and row.get("kind") == kind
+            ]
+            if len(manifest_matches) != 1:
+                raise ParityError(f"resident manifest does not deliver exactly one {name}")
         if name not in reference_names:
             raise ParityError(f"language reference does not document {name}")
         if authorities:

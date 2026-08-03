@@ -1819,32 +1819,94 @@ def _validate_disk_lib_manifest_metadata(suite):
 
 def _validate_case_io(case, vm, path, lane):
     expected = case.get("expect_io_min")
-    if expected is None:
-        return None
-    if not isinstance(expected, dict) or not expected:
-        raise StdlibCheckError(
-            "%s (%s): expect_io_min must be a non-empty object"
-            % (case["name"], path)
-        )
     observed = {}
-    for key, minimum in expected.items():
+    if expected is not None:
+        if not isinstance(expected, dict) or not expected:
+            raise StdlibCheckError(
+                "%s (%s): expect_io_min must be a non-empty object"
+                % (case["name"], path)
+            )
+        for key, minimum in expected.items():
+            if (
+                key not in vm.io_counters
+                or type(minimum) is not int
+                or minimum < 0
+            ):
+                raise StdlibCheckError(
+                    "%s (%s): invalid I/O witness %s=%r"
+                    % (case["name"], path, key, minimum)
+                )
+            actual = vm.io_counters[key]
+            if actual < minimum:
+                raise AssertionError(
+                    "%s (%s %s): I/O witness %s expected >=%d got %d"
+                    % (case["name"], path, lane, key, minimum, actual)
+                )
+            observed[key] = actual
+    if "expect_output_codes" in case:
+        output = case["expect_output_codes"]
         if (
-            key not in vm.io_counters
-            or type(minimum) is not int
-            or minimum < 0
+            not isinstance(output, list)
+            or not all(type(value) is int and 0 <= value <= 255 for value in output)
         ):
             raise StdlibCheckError(
-                "%s (%s): invalid I/O witness %s=%r"
-                % (case["name"], path, key, minimum)
+                "%s (%s): expect_output_codes must be byte list"
+                % (case["name"], path)
             )
-        actual = vm.io_counters[key]
-        if actual < minimum:
+        if vm.output_chars != output:
             raise AssertionError(
-                "%s (%s %s): I/O witness %s expected >=%d got %d"
-                % (case["name"], path, lane, key, minimum, actual)
+                "%s (%s %s): output expected %r got %r"
+                % (case["name"], path, lane, output, vm.output_chars)
             )
-        observed[key] = actual
-    return observed
+        observed["output_codes"] = list(vm.output_chars)
+    if "expect_key_events_remaining" in case:
+        remaining = case["expect_key_events_remaining"]
+        if type(remaining) is not int or remaining < 0:
+            raise StdlibCheckError(
+                "%s (%s): invalid expect_key_events_remaining"
+                % (case["name"], path)
+            )
+        if len(vm.key_events) != remaining:
+            raise AssertionError(
+                "%s (%s %s): key events remaining expected %d got %d"
+                % (case["name"], path, lane, remaining, len(vm.key_events))
+            )
+        observed["key_events_remaining"] = len(vm.key_events)
+    if "expect_screen_rows" in case:
+        rows = case["expect_screen_rows"]
+        if (
+            not isinstance(rows, dict)
+            or not rows
+            or not all(
+                isinstance(raw_row, str)
+                and raw_row.isdigit()
+                and isinstance(text, str)
+                and len(text) <= vm.screen_columns
+                for raw_row, text in rows.items()
+            )
+        ):
+            raise StdlibCheckError(
+                "%s (%s): expect_screen_rows must map row numbers to text"
+                % (case["name"], path)
+            )
+        screen_rows = {}
+        for raw_row, text in rows.items():
+            row = int(raw_row)
+            if row < 0 or row >= vm.screen_rows:
+                raise StdlibCheckError(
+                    "%s (%s): screen row outside fixture: %d"
+                    % (case["name"], path, row)
+                )
+            start = row * vm.screen_columns
+            got = bytes(vm.screen_cells[start:start + len(text)]).decode("latin-1")
+            if got != text:
+                raise AssertionError(
+                    "%s (%s %s): screen row %d expected %r got %r"
+                    % (case["name"], path, lane, row, text, got)
+                )
+            screen_rows[raw_row] = got
+        observed["screen_rows"] = screen_rows
+    return observed or None
 
 
 def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
@@ -1899,6 +1961,8 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
             disk_mount_token_change_after_guard_before_write_ops=case.get(
                 "disk_mount_token_change_after_guard_before_write_ops"
             ),
+            key_events=case.get("key_events"),
+            memory_read_sequences=case.get("memory_read_sequences"),
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
         )
@@ -2657,6 +2721,8 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             disk_mount_token_change_after_guard_before_write_ops=case.get(
                 "disk_mount_token_change_after_guard_before_write_ops"
             ),
+            key_events=case.get("key_events"),
+            memory_read_sequences=case.get("memory_read_sequences"),
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
         )

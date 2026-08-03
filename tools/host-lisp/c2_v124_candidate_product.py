@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import c2_v123_candidate_product as LINK80  # noqa: E402
 import c2_random_base_gate as RANDOM  # noqa: E402
-import c2_v124_fx_gate as FX  # noqa: E402
+import c2_q_gate as FX  # noqa: E402
 import c2_v124_time_gate as TIME  # noqa: E402
 
 

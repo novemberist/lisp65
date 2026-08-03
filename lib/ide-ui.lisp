@@ -661,6 +661,47 @@
                                         columns))))
       nil))
 
+(defun %ide-render-visible-body-into (lines count columns acc)
+  (if (and lines (> count 0))
+      (%ide-render-visible-body-into
+       (cdr lines)
+       (- count 1)
+       columns
+       (cons (ide-visible-line (car lines) columns) acc))
+      acc))
+
+(defun %ide-render-blank-body-into (count acc)
+  (if (> count 0)
+      (%ide-render-blank-body-into
+       (- count 1) (cons (%ide-empty-str) acc))
+      acc))
+
+(defun %ide-last-cell (lines)
+  (if (cdr lines) (%ide-last-cell (cdr lines)) lines))
+
+(defun %ide-render-frame-lines-from (state lines columns rows)
+  (if (> rows 0)
+      (let* ((body-rows (- rows 1))
+             (row-offset (ide-state-row-offset state))
+             (body-reversed (%ide-render-visible-body-into
+                             (%ide-drop-lines lines row-offset)
+                             body-rows
+                             columns
+                             nil))
+             (padded-reversed (%ide-render-blank-body-into
+                               (- body-rows (length body-reversed))
+                               body-reversed))
+             (body (nreverse padded-reversed))
+             (status (list (%ide-empty-str))))
+        (if body
+            (progn
+              ;; Both lists were allocated by this call and are therefore
+              ;; exclusively owned by the render cache.
+              (rplacd (%ide-last-cell body) status)
+              body)
+            status))
+      nil))
+
 (defun ide-cursor-row (state rows)
   (if (eq (car (cdr state)) 1005)
       nil
@@ -694,6 +735,21 @@
         (%ide-render-codes-at (cdr codes) (+ x 1) y attr))
       nil))
 
+(defun %ide-render-string-codes-at (text x y attr len)
+  (if (< x len)
+      (progn
+        (screen-put-char x y (string-ref text x) attr)
+        (%ide-render-string-codes-at text (+ x 1) y attr len))
+      nil))
+
+(defun %ide-render-string-part-at (text source x y attr len)
+  (if (< source len)
+      (progn
+        (screen-put-char x y (string-ref text source) attr)
+        (%ide-render-string-part-at
+         text (+ source 1) (+ x 1) y attr len))
+      nil))
+
 (defun %ide-pad-eol (col columns y attr)
   (if (< col columns)
       (progn
@@ -708,7 +764,7 @@
   (if (screen-bulk-p)
       (screen-write-string 0 y text (+ attr 64))
       (progn
-        (%ide-render-codes-at (string->list text) 0 y attr)
+        (%ide-render-string-codes-at text 0 y attr (string-length text))
         (%ide-pad-eol (string-length text) columns y attr))))
 
 ;; hlmax is the first non-code line (the status line): syntax overpaint below
@@ -735,35 +791,102 @@
 (defun %ide-nth-cell (lines i)
   (if (> i 0) (%ide-nth-cell (cdr lines) (- i 1)) lines))
 
-;; Status-line cache (delta rendering): the text depends only on
-;; (name modified message line); the budget string is precomputed in the
-;; state. The cache is global, following the render-cache pattern:
-;; %ide-stcache = ((name modified message . line) . text). A cache hit means
-;; the text is EQ to the last painted value, so the fast path below skips
-;; painting the status line entirely.
-(defun %ide-status-cached (state width)
+;; Status-line cache (delta rendering): cache only the four-value identity,
+;; then paint stable string components directly.  The old implementation
+;; repeatedly concatenated those components into a temporary string (about
+;; 140 heap cells on every vertical move).
+(defun %ide-status-current-p (state)
   (let* ((buffer (car state))
          (cache (if (boundp (quote ide-status-line)) (symbol-value (quote ide-status-line)) nil))
          (name (car buffer))
          (line (car (car (cdr (cdr (cdr buffer))))))
          (mod (car (cdr (cdr (cdr (cdr (cdr buffer)))))))
          (msg (car (cdr state))))
-    (if (if cache
-            (if (eq name (car (car cache)))
-                (if (eq mod (car (cdr (car cache))))
-                    (if (eq msg (car (cdr (cdr (car cache)))))
-                        (= line (cdr (cdr (cdr (car cache)))))
-                        nil)
+    (if cache
+        (if (eq name (car cache))
+            (if (eq mod (car (cdr cache)))
+                (if (eq msg (car (cdr (cdr cache))))
+                    (= line (car (cdr (cdr (cdr cache)))))
                     nil)
                 nil)
             nil)
-        (cdr cache)
-        ((lambda (text)
-           (progn
-             (set-symbol-value (quote ide-status-line)
-                               (cons (cons name (cons mod (cons msg line))) text))
-             text))
-         (ide-status-line state width)))))
+        nil)))
+
+;; Compatibility query for the existing IDE surface.  The renderer no longer
+;; consumes a materialized status string per key, but callers of this private
+;; diagnostic helper still receive the same text.
+(defun %ide-status-cached (state width)
+  (ide-status-line state width))
+
+(defun %ide-render-status-part (text x y)
+  (progn
+    (%ide-render-string-part-at text 0 x y 7 (string-length text))
+    (+ x (string-length text))))
+
+(defun %ide-render-status-prefix (name modified y)
+  (let* ((display-name (if (stringp name) name "*buffer*"))
+         (x1 (%ide-render-status-part "-- " 0 y))
+         (x2 (%ide-render-status-part display-name x1 y)))
+    (if modified (%ide-render-status-part " *" x2 y) x2)))
+
+(defun %ide-render-status-finish (budget x width y)
+  (let* ((x1 (%ide-render-status-part " -- " x y))
+         (x2 (%ide-render-status-part budget x1 y)))
+    (%ide-pad-eol x2 width y 7)))
+
+(defun %ide-render-status-line-direct
+    (name modified point budget width y)
+  (let* ((x1 (%ide-render-status-prefix name modified y))
+         (x2 (%ide-render-status-part " L" x1 y))
+         (x3 (%ide-render-status-part
+              (number->string (+ (car point) 1)) x2 y)))
+    (%ide-render-status-finish budget x3 width y)))
+
+(defun %ide-render-status-msg-direct
+    (name modified message point budget width y)
+  (let* ((x1 (%ide-render-status-prefix name modified y))
+         (x2 (%ide-render-status-part " " x1 y))
+         (x3 (%ide-render-status-part message x2 y))
+         (x4 (%ide-render-status-part " L" x3 y))
+         (x5 (%ide-render-status-part
+              (number->string (+ (car point) 1)) x4 y)))
+    (%ide-render-status-finish budget x5 width y)))
+
+(defun %ide-render-status-mini-direct
+    (name modified budget width y)
+  (let* ((x1 (%ide-render-status-prefix name modified y))
+         (x2 (%ide-render-status-part " M-x " x1 y))
+         (x3 (%ide-render-status-part (%ide-mini-status-line) x2 y)))
+    (%ide-render-status-finish budget x3 width y)))
+
+(defun %ide-render-status-direct (state width y)
+  (let* ((buffer (car state))
+         (message (car (cdr state)))
+         (budget (car (cdr (cdr (cdr (cdr (cdr (cdr (cdr state)))))))))
+         (name (car buffer))
+         (point (car (cdr (cdr (cdr buffer)))))
+         (modified (car (cdr (cdr (cdr (cdr (cdr buffer))))))))
+    (if (eq message 1005)
+        (%ide-render-status-mini-direct
+         name modified budget width y)
+        (if message
+            (%ide-render-status-msg-direct
+             name modified message point budget width y)
+            (%ide-render-status-line-direct
+             name modified point budget width y)))))
+
+(defun %ide-render-status-cached (state width y)
+  (if (%ide-status-current-p state)
+      nil
+      (let* ((buffer (car state))
+             (name (car buffer))
+             (line (car (car (cdr (cdr (cdr buffer))))))
+             (mod (car (cdr (cdr (cdr (cdr (cdr buffer)))))))
+             (msg (car (cdr state))))
+        (progn
+          (set-symbol-value (quote ide-status-line)
+                            (list name mod msg line))
+          (%ide-render-status-direct state width y)))))
 
 ;; FAST PATH per key (DESTRUCTIVE in the render cache, only two rplaca calls):
 ;;  - Status line: paint only when its text changes (cache EQ test).
@@ -780,21 +903,95 @@
                    (%ide-line-at lines line-index)
                    columns))
          (status-row (- rows 1))
-         (old-status (%ide-line-at old-lines status-row))
-         (status (%ide-status-cached state columns))
          (hint (if (boundp (quote ide-render)) (symbol-value (quote ide-render)) nil)))
     (progn
       (rplaca (%ide-nth-cell old-lines cursor-row) visible)
-      (if (eq status old-status)
-          nil
-          (progn
-            (rplaca (%ide-nth-cell old-lines status-row) status)
-            (ide-render-line-at status status-row columns 7)))
+      (%ide-render-status-cached state columns status-row)
       (if hint
           (%ide-render-code-suffix-at visible cursor-row (car hint) (cdr hint))
           (%ide-render-code-line-at visible cursor-row columns 7))
       (set-symbol-value (quote ide-render) nil)
       (ide-render-cursor-from state lines columns rows 129)
+      (%ide-state-with-render-cache state old-lines cursor-row columns rows))))
+
+;; The ordinary append-at-EOL cache stores the typed line in reverse order.
+;; Draw it right-to-left directly: screen cells are random-access, so neither a
+;; forward list nor a temporary string is needed.  This is the v1.2.6 hot-path
+;; boundary—typing may update the cache, but redisplay must not materialize it.
+(defun %ide-render-reverse-codes-at (codes x y from attr)
+  (if (and codes (>= x from))
+      (progn
+        (screen-put-char x y (car codes) attr)
+        (%ide-render-reverse-codes-at (cdr codes) (- x 1) y from attr))
+      nil))
+
+(defun %ide-render-cached-line-at (cache y columns)
+  (let* ((len (car (cdr (cdr cache))))
+         (last (- (%ide-min len columns) 1)))
+    (progn
+      (%ide-render-reverse-codes-at (car (cdr cache)) last y 0 1)
+      (%ide-pad-eol len columns y 1))))
+
+(defun %ide-render-cached-suffix-at (cache y from pad columns)
+  (let* ((len (car (cdr (cdr cache))))
+         (last (- (%ide-min len columns) 1)))
+    (progn
+      (%ide-render-reverse-codes-at (car (cdr cache)) last y from 1)
+      (%ide-pad-eol len (%ide-min columns (+ len (+ pad 1))) y 1))))
+
+(defun %ide-cached-code-at (cache column)
+  (let* ((len (car (cdr (cdr cache)))))
+    (if (< column len)
+        (car (%ide-nth-cell (car (cdr cache))
+                            (- len (+ column 1))))
+        95)))
+
+(defun %ide-render-fast-cached-row
+    (state cache old-lines cursor-row columns rows)
+  (let* ((status-row (- rows 1))
+         (hint (if (boundp (quote ide-render))
+                   (symbol-value (quote ide-render))
+                   nil))
+         (column (cdr (ide-buffer-point (ide-state-buffer state)))))
+    (progn
+      (%ide-render-status-cached state columns status-row)
+      (if hint
+          (%ide-render-cached-suffix-at
+           cache cursor-row (car hint) (cdr hint) columns)
+          (%ide-render-cached-line-at cache cursor-row columns))
+      (set-symbol-value (quote ide-render) nil)
+      (if (< column columns)
+          (screen-put-char column
+                           cursor-row
+                           (%ide-cached-code-at cache column)
+                           129)
+          nil)
+      ;; The old line string deliberately remains stale.  Repeated same-row
+      ;; cached renders do not read it; the next full redraw compares it
+      ;; against a freshly materialized line and therefore repaints it.
+      (%ide-state-with-render-cache state old-lines cursor-row columns rows))))
+
+(defun %ide-render-cached-next-row
+    (state buffer cache old-lines cursor-row previous-cursor-row columns rows)
+  (let* ((line-index (car (ide-buffer-point buffer)))
+         (previous (ide-visible-line
+                    (%ide-line-at (car (cdr (cdr buffer)))
+                                  (- line-index 1))
+                    columns))
+         (column (cdr (ide-buffer-point buffer))))
+    (progn
+      (rplaca (%ide-nth-cell old-lines previous-cursor-row) previous)
+      (%ide-render-code-line-at
+       previous previous-cursor-row columns 7)
+      (%ide-render-cached-line-at cache cursor-row columns)
+      (%ide-render-status-cached state columns (- rows 1))
+      (set-symbol-value (quote ide-render) nil)
+      (if (< column columns)
+          (screen-put-char column
+                           cursor-row
+                           (%ide-cached-code-at cache column)
+                           129)
+          nil)
       (%ide-state-with-render-cache state old-lines cursor-row columns rows))))
 
 ;; COMPUTE-LINES-ONCE (2026-07-07): accepts the already materialized line list
@@ -822,6 +1019,63 @@
               (screen-put-char x y code attr))
             nil))))
 
+(defun %ide-render-materialized-fast
+    (state buffer old-lines cursor-row columns rows)
+  (%ide-render-fast-same-row
+   state
+   (ide-buffer-lines buffer)
+   old-lines
+   cursor-row
+   columns
+   rows))
+
+(defun %ide-render-fast-dispatch
+    (state buffer cache old-lines cursor-row columns rows)
+  (if (and cache
+           (= (car cache)
+              (+ (ide-state-row-offset state) cursor-row)))
+      (%ide-render-fast-cached-row
+       state cache old-lines cursor-row columns rows)
+      (%ide-render-materialized-fast
+       state buffer old-lines cursor-row columns rows)))
+
+(defun %ide-render-changed-lines-at
+    (old-lines lines y cursor-row previous-cursor-row columns hlmax)
+  (if (and lines (< y hlmax))
+      (let* ((dirty (or (and cursor-row (= y cursor-row))
+                        (and previous-cursor-row
+                             (= y previous-cursor-row))
+                        (if old-lines
+                            (not (eq (car old-lines) (car lines)))
+                            't))))
+        (progn
+          (if dirty
+              (%ide-render-code-line-at (car lines) y columns 7)
+              nil)
+          (%ide-render-changed-lines-at
+           (if old-lines (cdr old-lines) nil)
+           (cdr lines)
+           (+ y 1)
+           cursor-row
+           previous-cursor-row
+           columns
+           hlmax)))
+      nil))
+
+(defun %ide-render-materialized-full
+    (state buffer old-lines cursor-row previous-cursor-row columns rows)
+  (let* ((buffer-lines (ide-buffer-lines buffer))
+         (lines (%ide-render-frame-lines-from
+                 state buffer-lines columns rows)))
+    (progn
+      (set-symbol-value (quote ide-render) nil)
+      (%ide-render-changed-lines-at
+       old-lines lines 0 cursor-row previous-cursor-row columns (- rows 1))
+      (%ide-render-status-cached state columns (- rows 1))
+      (ide-render-cursor-from state buffer-lines columns rows 129)
+      (%ide-state-with-render-cache
+       state lines cursor-row columns rows))))
+
 ;; STACK HYGIENE (2026-07-07): full redraw sits deep in the IDE call chain.
 ;; Although the earlier scrolling root cause was Color RAM rather than the
 ;; stack, flat let* slots remain mandatory here because extra immediate-lambda
@@ -831,13 +1085,8 @@
          (columns (car size))
          (rows (car (cdr size)))
          (state (%ide-scrolled state rows))
-         ;; COMPUTE-LINES-ONCE (2026-07-07): materialize the typed buffer's
-         ;; line list ONCE per render (ide-buffer-lines is about 80
-         ;; allocations) and thread it flatly through the render helpers
-         ;; instead of reconstructing it separately for frame and cursor
-         ;; rendering. Keeps full redraw allocation-light and avoids needless
-         ;; stack and GC pressure.
-         (buffer-lines (ide-buffer-lines (ide-state-buffer state)))
+         (buffer (ide-state-buffer state))
+         (cache (ide-buffer-locals buffer))
          (old-lines (ide-state-render-lines-for-size state columns rows))
          (cursor-row (ide-cursor-row state rows))
          (previous-cursor-row (ide-state-render-cursor-row state)))
@@ -845,17 +1094,32 @@
              cursor-row
              previous-cursor-row
              (= cursor-row previous-cursor-row))
-        (%ide-render-fast-same-row state buffer-lines old-lines cursor-row columns rows)
-        (let* ((lines (ide-visible-frame-lines-from state buffer-lines columns rows))
-               (dirty (ide-dirty-line-indices old-lines
-                                               lines
-                                               cursor-row
-                                               previous-cursor-row)))
-          (progn
-            (set-symbol-value (quote ide-render) nil)
-            (%ide-render-dirty-lines-at lines dirty 0 columns 7 (- rows 1))
-            (ide-render-cursor-from state buffer-lines columns rows 129)
-            (%ide-state-with-render-cache state lines cursor-row columns rows))))))
+        (%ide-render-fast-dispatch
+         state buffer cache old-lines cursor-row columns rows)
+        (if (and old-lines
+                 cache
+                 cursor-row
+                 previous-cursor-row
+                 (= cursor-row (+ previous-cursor-row 1))
+                 (= (car cache)
+                    (+ (ide-state-row-offset state) cursor-row)))
+            (%ide-render-cached-next-row
+             state
+             buffer
+             cache
+             old-lines
+             cursor-row
+             previous-cursor-row
+             columns
+             rows)
+            (%ide-render-materialized-full
+             state
+             buffer
+             old-lines
+             cursor-row
+             previous-cursor-row
+             columns
+             rows)))))
 
 ;; Render coalescing prevents lagging behind during fast typing: while more
 ;; keys wait in the queue (poll-key), run only ide-step (about 600 steps)

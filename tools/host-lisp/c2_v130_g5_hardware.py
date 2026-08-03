@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+"""Prepare, bind and close the fresh v1.3.0 nine-case G5 run."""
+
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools/host-lisp"))
+import c2_v121_g5_hardware as G5  # noqa: E402
+
+
+G5.BASE = ROOT / "build/c2.3/v1.3.0-acceptance/r5"
+G5.RUNBOOK = G5.BASE / "g5-runbook.json"
+G5.PREFLIGHT = G5.BASE / "r5-preflight-receipt.json"
+G5.SESSION = G5.BASE / "hardware-session-01"
+G5.EVIDENCE = G5.SESSION / "g5"
+G5.DEPLOYMENT = G5.SESSION / "deployment.json"
+G5.TRANSPORT = G5.SESSION / "media-transport-hardware-receipt.json"
+G5.G5_RECEIPT = G5.SESSION / "g5-hardware-receipt.json"
+G5.HARNESS_FIRST_RED = G5.SESSION / "harness-first-red.json"
+G5.RESTAGE_ROUTE = G5.SESSION / "restage-route-observation.json"
+G5.RUNNER_RELEASE = ROOT / "scripts/c2-v130-g5-hw.sh"
+G5.FORMAT = "lisp65-c2-lite-v1.3.0-G5-hardware-session-v1"
+G5.TRANSPORT_FORMAT = (
+    "lisp65-c2-lite-v1.3.0-media-transport-hardware-receipt-v1")
+G5.REMOTE_MEDIA = "L65V130.D81"
+G5.EXPECTED_BANNER = "WORKBENCH 1.3.0"
+G5.C2D_PRODUCT_NAME = "09-c2d-v6-reset-domain.bin"
+G5.CLOSE.EXPECTED_BANNER = G5.EXPECTED_BANNER
+G5.CLOSE.BANNER_CLAIM = "WORKBENCH-1.3.0"
+
+
+if __name__ == "__main__":
+    raise SystemExit(G5.main())

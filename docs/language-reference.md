@@ -1,7 +1,7 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 1.2.1**. The product version is 1.2.1;
-the language remains Dialect V2.
+This living reference describes **lisp65 1.3.0**. The language remains
+Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
 intentionally not ANSI Common Lisp.
@@ -41,10 +41,21 @@ The reader supports lists, dotted pairs, symbols, fixnums, strings, quote
 
 Core definition and control forms include `defun`, `defmacro`, `lambda`,
 `quote`, `function`, `if`, `cond`, `let`, `let*`, `setq`, `progn`, `and`,
-`or`, `when`, `unless`, `dotimes`, and `dolist`. The historical `do` form and
-the public `remainder` name are not part of Dialect V2.
+`or`, `when`, `unless`, `case`, `dotimes`, `dolist`, and `while`. Function
+parameters may include `&rest`, and `setq` updates local bindings as well as
+global values. These forms are lowered by the compiler; they are language
+syntax rather than function bindings, so their absence from a generated
+function-name list does not mean that the language lacks them. The historical
+`do` form and the public `remainder` name are not part of Dialect V2.
 
-The 1.2.1 release adds:
+Characters are fixnum character codes. There is no separate character type
+and no `#\` character-literal syntax; the reader's supported `#` syntax is
+function quote, `#'`. Obtain codes from `string-ref` or write them as ordinary
+numbers. Compare them with `=`, use ordinary arithmetic when useful, and use
+`char-upcase` or `char-downcase` for case conversion; both take and return a
+fixnum code.
+
+Dialect V2 includes:
 
 ```lisp
 (while test form*)
@@ -77,17 +88,30 @@ The released surface includes:
   `symbolp`, `numberp`, `stringp`, `null`, `not`;
 - symbols and functions: `symbol-name`, `boundp`, `function-kind`, `eval`,
   `funcall`, `apply`, `set`, `symbol-value`;
-- fixed-point arithmetic: `fx`, `int->fx`, `fx->int`, `fx+`, `fx-`, `fx*`,
-  `fx/`, `fx->string`;
+- fixed-point arithmetic: `q`, `int->q`, `q->int`, `q+`, `q-`, `q*`,
+  `q/`, `q->string`;
 - random numbers: `random`, `random-seed`;
-- timing: `time`;
-- strings: `string-length`, `string-ref`, `search`;
+- input: `read-line` (a Bank-2 last-row editor), plus low-level `key-event`
+  for polling or raw events;
+- timing: `time`, `wait`;
+- strings and character codes: `string-length`, `string-ref`, `search`,
+  `string-trim`, `string-upcase`, `string-downcase`, `char-upcase`,
+  `char-downcase`, `string=`, `string<`, `string-equal`, `string-prefix-p`,
+  `string-suffix-p`, `string-append`, `substring`;
 - reader, output, and system work: `read-from-string`, `write`, `write-char`,
   `terpri`, `load-lib`, `load-libs`, `edit`, and the documented
   IDE/M65D library commands.
 
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
+
+The higher-order sequence functions `every`, `some`, `filter`, `mapcar`, and
+`reduce` traverse cons lists, not packed strings. Dialect V2 does not expose
+the former `string->list` and `list->string` conversion names. For
+character-wise work, use an index loop with `dotimes`, `string-length`, and
+`string-ref`. Use `search`, `substring`, `string-prefix-p`,
+`string-suffix-p`, `string-equal`, and the case-conversion functions directly
+for string work.
 
 `random` returns an unbiased value from zero through one less than its positive
 fixnum argument. `(random-seed seed)` makes a run reproducible; otherwise the
@@ -96,17 +120,27 @@ generator is suitable for games and simulations, not cryptography.
 
 The fixed-point functions use signed Q8.7 values stored as ordinary fixnums:
 one raw unit is 1/128 and the representable range is -128.0 through
-127.9921875. `(fx whole raw-fraction)` constructs a value, where the optional
-second argument is an exact signed count of 1/128 units. `int->fx` converts an
-integer, `fx->int` truncates toward zero, `fx+` and `fx-` are exact within the
-range, and `fx*`/`fx/` round to nearest with ties away from zero.
-`fx->string` returns the exact finite decimal representation. Overflow and
+127.9921875. `(q whole raw-fraction)` constructs a value, where the optional
+second argument is an exact signed count of 1/128 units. `int->q` converts an
+integer, `q->int` truncates toward zero, `q+` and `q-` are exact within the
+range, and `q*`/`q/` round to nearest with ties away from zero.
+`q->string` returns the exact finite decimal representation. Overflow and
 division by zero use the ordinary arithmetic error path.
 
 `(time form)` evaluates `form` exactly once, prints its elapsed raster-frame
 count, and returns the form's value unchanged. The counter is read atomically
 and calibrated at approximately 50 Hz; a duration of 16,384 frames or more
 fails explicitly instead of silently wrapping.
+
+`(read-line)` blocks for one editable line, echoes accepted printable input,
+uses DEL to erase, terminates on RETURN, and returns a packed string. Lines are
+bounded to 250 characters; further printable input is ignored until DEL or
+RETURN. `(key-event 0)` polls and `(key-event 1)` blocks, returning
+`(key code modifiers)` when an event is available. RUN/STOP remains the global
+abort and is never returned as ordinary input.
+
+`(wait frames)` blocks for zero through 16,383 raster frames and returns
+`nil`. It uses the same atomic counter as `time`; RUN/STOP can abort the wait.
 
 `filter` and `read-from-string` were added in 1.1. `read-from-string` reads the
 first object from a String; malformed input uses the ordinary reader error

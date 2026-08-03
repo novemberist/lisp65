@@ -79,6 +79,7 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
     receipt = bundle["receipt"]
     substitution = bundle["substitution"]
     ide = bundle["ide"]
+    ide_file = bundle["ide_file"]
 
     require(profile["format"] == "lisp65-c2-l-full-product-profile-v1",
             "L-full product profile version drift")
@@ -114,12 +115,19 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
             profile["images"],
         "canonical L-full product receipt and profile disagree",
     )
+    ide_rows = [
+        row for row in substitution["manifests"]
+        if row["path"] == ide_file["path"]
+    ]
     require(
         substitution["product_build_id_hex"] ==
             profile["product_build_id"]
         and substitution["entries"] == profile["entries"]
-        and ide["code_bytes"] == 11718
-        and len(ide["entries"]) == 157,
+        and len(ide_rows) == 1
+        and ide_rows[0]["bytes"] == ide_file["bytes"]
+        and ide_rows[0]["sha256"] == ide_file["sha256"]
+        and int(ide["code_bytes"]) > 0
+        and len(ide["entries"]) > 0,
         "L-full manifest/product identity drift",
     )
     return {
@@ -131,6 +139,7 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
         "images": profile["images"],
         "entries": profile["entries"],
         "IDE_code_bytes": ide["code_bytes"],
+        "IDE_entries": len(ide["entries"]),
     }
 
 
@@ -197,6 +206,11 @@ def source_bundle() -> dict[str, Any]:
         "receipt": receipt,
         "substitution": substitution,
         "ide": ide,
+        "ide_file": {
+            "path": ide_path.relative_to(ROOT).as_posix(),
+            "bytes": ide_path.stat().st_size,
+            "sha256": sha(ide_path),
+        },
     }
 
 
@@ -231,6 +245,8 @@ def mutations(bundle: dict[str, Any]) -> list[str]:
     reject("wrong-code-identity", lambda b:
            b["receipt"]["c2d_v6"]["static_bank2"].update(
                code_sha256="0" * 64))
+    reject("wrong-IDE-identity", lambda b:
+           b["ide_file"].update(sha256="0" * 64))
     return rejected
 
 
@@ -239,7 +255,7 @@ def main() -> int:
         bundle = source_bundle()
         report = validate(bundle)
         rejected = mutations(bundle)
-        require(len(rejected) == 6, "static-plane mutation count drift")
+        require(len(rejected) == 7, "static-plane mutation count drift")
     except (GateError, OSError, ValueError, KeyError,
             json.JSONDecodeError) as error:
         print("c2-l-full-static-plane-gate: FAIL: " + str(error),

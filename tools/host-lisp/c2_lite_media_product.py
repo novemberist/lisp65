@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import hashlib
 import json
 import os
@@ -59,6 +60,12 @@ R3_LEGACY_PRODUCT_ENTRY = 0x2026
 R3_NORMAL_F018B_LIMIT = 0x00100000
 R3_ATTIC_BASE = 0x08000000
 R3_PHYSICAL_ADDRESS_LIMIT = 0x10000000
+C2D_ROLE = "c2d-v6-code-plane"
+C2D_RESET_NAME = "c2d-v6-reset-domain.bin"
+C2D_PREFIX_BYTES = 33840
+C2D_RESET_DOMAIN_BYTES = 50816
+C2D_BOOT_SCRATCH = (34048, 37333)
+C2J_RANGE = (50752, 50816)
 
 
 class MediaError(RuntimeError):
@@ -132,6 +139,149 @@ def artifact_map() -> tuple[dict[str, Path], list[dict[str, Any]]]:
     return by_role, rows
 
 
+def reset_domain_path() -> Path:
+    return BUILD / C2D_RESET_NAME
+
+
+def reset_domain_parameters(contract: dict[str, Any]) -> dict[str, Any]:
+    model = contract.get("bank5_reset_domain")
+    require(isinstance(model, dict), "Bank-5 reset-domain contract absent")
+    require(
+        model.get("artifact_role") == C2D_ROLE
+        and model.get("destination") == "0x00050000"
+        and model.get("canonical_prefix_bytes") == C2D_PREFIX_BYTES
+        and model.get("region_bytes") == C2D_RESET_DOMAIN_BYTES
+        and model.get("zero_suffix")
+            == [C2D_PREFIX_BYTES, C2D_RESET_DOMAIN_BYTES]
+        and model.get("c2j") == list(C2J_RANGE)
+        and model.get("boot_scratch") == list(C2D_BOOT_SCRATCH)
+        and model.get("write_order") == [
+            "write-and-readback-complete-reset-domain",
+            "write-and-readback-authenticated-boot-scratch",
+            "chain-to-product",
+        ]
+        and "no READY shortcut" in str(model.get("ready_rule")),
+        "Bank-5 reset-domain geometry/order drift",
+    )
+    entries = contract.get("media_entries")
+    require(isinstance(entries, list), "media entry inventory absent")
+    role2 = [row for row in entries if row.get("role_id") == 2]
+    role3 = [row for row in entries if row.get("role_id") == 3]
+    require(
+        len(role2) == len(role3) == 1
+        and role2[0].get("artifact_role") == C2D_ROLE
+        and role2[0].get("staging_transform")
+            == "canonical-prefix-plus-zero-reset-suffix"
+        and role2[0].get("destination") == "0x00050000"
+        and role3[0].get("destination") == "0x00058500"
+        and entries.index(role2[0]) < entries.index(role3[0]),
+        "complete reset-domain must precede Boot scratch",
+    )
+    return model
+
+
+def complete_reset_domain(prefix: bytes, contract: dict[str, Any]) -> bytes:
+    reset_domain_parameters(contract)
+    require(
+        len(prefix) == C2D_PREFIX_BYTES,
+        "canonical C2D prefix size drift",
+    )
+    return prefix + bytes(C2D_RESET_DOMAIN_BYTES - len(prefix))
+
+
+def reset_domain_valid(
+        candidate: bytes, prefix: bytes, contract: dict[str, Any]) -> bool:
+    try:
+        reset_domain_parameters(contract)
+    except (MediaError, KeyError, TypeError, ValueError):
+        return False
+    return (
+        len(prefix) == C2D_PREFIX_BYTES
+        and len(candidate) == C2D_RESET_DOMAIN_BYTES
+        and candidate[:C2D_PREFIX_BYTES] == prefix
+        and candidate[C2D_PREFIX_BYTES:] == bytes(
+            C2D_RESET_DOMAIN_BYTES - C2D_PREFIX_BYTES)
+        and candidate[C2J_RANGE[0]:C2J_RANGE[1]] == bytes(
+            C2J_RANGE[1] - C2J_RANGE[0])
+    )
+
+
+def reset_domain_mutation_gate(contract: dict[str, Any]) -> dict[str, Any]:
+    prefix = bytes((index * 37 + 11) & 0xFF
+                   for index in range(C2D_PREFIX_BYTES))
+    correct = complete_reset_domain(prefix, contract)
+    mutations: dict[str, tuple[bytes, bytes, dict[str, Any]]] = {}
+
+    mutations["prefix-only-restage"] = (prefix, prefix, contract)
+    stale_suffix = bytearray(correct)
+    stale_suffix[C2D_PREFIX_BYTES] = 0x10
+    mutations["stale-inactive-suffix"] = (
+        bytes(stale_suffix), prefix, contract)
+    stale_c2j = bytearray(correct)
+    stale_c2j[C2J_RANGE[0]:C2J_RANGE[1]] = bytes([0x10]) * (
+        C2J_RANGE[1] - C2J_RANGE[0])
+    mutations["omitted-C2J-zeroing"] = (bytes(stale_c2j), prefix, contract)
+    prefix_drift = bytearray(correct)
+    prefix_drift[17] ^= 0x80
+    mutations["canonical-prefix-drift"] = (
+        bytes(prefix_drift), prefix, contract)
+    wrong_order = deepcopy(contract)
+    wrong_order["bank5_reset_domain"]["write_order"][:2] = reversed(
+        wrong_order["bank5_reset_domain"]["write_order"][:2])
+    mutations["Boot-scratch-before-reset-domain"] = (
+        correct, prefix, wrong_order)
+    missing_transform = deepcopy(contract)
+    del missing_transform["media_entries"][1]["staging_transform"]
+    mutations["role2-prefix-without-transform"] = (
+        correct, prefix, missing_transform)
+
+    escaped = [
+        name for name, (candidate, source, model) in mutations.items()
+        if reset_domain_valid(candidate, source, model)
+    ]
+    require(
+        reset_domain_valid(correct, prefix, contract) and not escaped,
+        f"Bank-5 reset-domain mutations escaped: {escaped}",
+    )
+    return {
+        "status": "passed-full-Bank5-reset-domain-and-C2J-zeroing",
+        "executions": 1 + len(mutations),
+        "mutations_rejected": len(mutations),
+        "cases": sorted(mutations),
+        "canonical_prefix_bytes": C2D_PREFIX_BYTES,
+        "reset_domain_bytes": C2D_RESET_DOMAIN_BYTES,
+        "zero_suffix_bytes": C2D_RESET_DOMAIN_BYTES - C2D_PREFIX_BYTES,
+        "c2j_zero_bytes": C2J_RANGE[1] - C2J_RANGE[0],
+        "write_order": ["reset-domain", "Boot-scratch", "product"],
+        "ready_shortcut": False,
+    }
+
+
+def stage_artifact_map(
+        contract: dict[str, Any], artifacts: dict[str, Path], *,
+        write: bool) -> tuple[dict[str, Path], dict[str, Any]]:
+    prefix_path = artifacts[C2D_ROLE]
+    prefix = prefix_path.read_bytes()
+    expected = complete_reset_domain(prefix, contract)
+    output = reset_domain_path()
+    if write:
+        output.write_bytes(expected)
+    require(
+        output.is_file() and not output.is_symlink()
+        and output.read_bytes() == expected
+        and reset_domain_valid(output.read_bytes(), prefix, contract),
+        "generated Bank-5 reset-domain artifact drift",
+    )
+    result = dict(artifacts)
+    result[C2D_ROLE] = output
+    gate = reset_domain_mutation_gate(contract)
+    gate.update({
+        "canonical_prefix": bind(prefix_path),
+        "staged_reset_domain": bind(output),
+    })
+    return result, gate
+
+
 def media_rows(contract: dict[str, Any],
                artifacts: dict[str, Path]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -162,6 +312,17 @@ def media_rows(contract: dict[str, Any],
         and sum(row["flags"] == STAGE for row in rows) == 8
         and [row["role_id"] for row in rows if row["flags"] == PRG] == [9],
         "C2-lite descriptor role/flag order drift")
+    role2 = rows[1]
+    role3 = rows[2]
+    require(
+        role2["artifact_role"] == C2D_ROLE
+        and role2["destination"] == 0x00050000
+        and role2["bytes"] == C2D_RESET_DOMAIN_BYTES
+        and role2["path"] == reset_domain_path()
+        and role3["destination"] == 0x00058500
+        and role3["role_id"] == 3,
+        "Bank-5 full reset-domain descriptor/order drift",
+    )
     return rows
 
 
@@ -661,8 +822,14 @@ def compile_stager(
     rom_mutations = (
         source.replace("    r3_rom_write_enable();\n", "", 1),
         source.replace(
-            "    io_enable();\n    r3_rom_write_enable();\n",
-            "    r3_rom_write_enable();\n    io_enable();\n", 1),
+            "    io_enable();\n"
+            "#ifdef LISP65_C2_LITE_MEDIA_STAGER\n"
+            "    r3_rom_write_enable();\n"
+            "#endif\n",
+            "#ifdef LISP65_C2_LITE_MEDIA_STAGER\n"
+            "    r3_rom_write_enable();\n"
+            "#endif\n"
+            "    io_enable();\n", 1),
         rom_source.replace("lda #$02", "lda #$03", 1),
         rom_source.replace("sta $d641", "sta $d640", 1),
         rom_source.replace("\tnop\n", "", 1),
@@ -849,7 +1016,9 @@ def build() -> dict[str, Any]:
         and contract["artifact_count"] == 19,
         "C2-lite media contract drift")
     artifacts, product_rows = artifact_map()
-    rows = media_rows(contract, artifacts)
+    staged_artifacts, reset_domain = stage_artifact_map(
+        contract, artifacts, write=True)
+    rows = media_rows(contract, staged_artifacts)
     profile_id = int(sha(artifacts["resolved-profile"])[:8], 16)
     descriptor, build_id = make_descriptor(rows, profile_id)
     DESCRIPTOR.write_bytes(descriptor)
@@ -897,13 +1066,21 @@ def build() -> dict[str, Any]:
         bind(WORK_D81, "work-d81", WORK_D81.name),
         bind(MOUNT, "product-mount-descriptor", MOUNT.name),
     ]
-    all_rows = [
-        {
-            **row,
-            "name": Path(str(row["path"])).name,
-        }
-        for row in product_rows
-    ] + media_rows_out
+    # The canonical product manifest owns the immutable C2D prefix.  The
+    # media product, however, must ship the *staged* reset-domain artifact as
+    # its role-2 member so promotion archives and manual deployments cannot
+    # accidentally recover the historical prefix-only payload.
+    all_rows = []
+    for row in product_rows:
+        bound = (
+            bind(reset_domain_path(), C2D_ROLE)
+            if row["role"] == C2D_ROLE else dict(row)
+        )
+        all_rows.append({
+            **bound,
+            "name": Path(str(bound["path"])).name,
+        })
+    all_rows += media_rows_out
     require(
         len(all_rows) == 19
         and {row["role"] for row in all_rows}
@@ -924,6 +1101,7 @@ def build() -> dict[str, Any]:
             "records": parsed,
             "mutations": mutations,
             "stage_transport_domains": transport_domains,
+            "bank5_reset_domain": reset_domain,
         },
         "stager": {
             "binding": bind(STAGER),
@@ -978,7 +1156,13 @@ def check() -> dict[str, Any]:
             and sha(path) == row["sha256"],
             f"canonical media artifact drift: {row['role']}")
     artifacts, _ = artifact_map()
-    rows = media_rows(contract, artifacts)
+    staged_artifacts, reset_domain = stage_artifact_map(
+        contract, artifacts, write=False)
+    require(
+        value["descriptor"]["bank5_reset_domain"] == reset_domain,
+        "bound Bank-5 reset-domain proof drift",
+    )
+    rows = media_rows(contract, staged_artifacts)
     descriptor = DESCRIPTOR.read_bytes()
     build_id = int(value["product_build_id"], 16)
     parse_descriptor(descriptor, build_id, rows)
@@ -998,8 +1182,17 @@ def check() -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("build", "check"))
+    parser.add_argument(
+        "action", choices=("build", "check", "reset-domain-selftest"))
     args = parser.parse_args()
+    if args.action == "reset-domain-selftest":
+        value = reset_domain_mutation_gate(load(CONTRACT))
+        print(
+            "c2-reset-domain-completeness: PASS "
+            f"executions={value['executions']} "
+            f"mutations={value['mutations_rejected']} "
+            f"bytes={value['reset_domain_bytes']} c2j=64zero")
+        return 0
     value = build() if args.action == "build" else check()
     if args.action == "build":
         check()

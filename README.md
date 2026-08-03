@@ -7,7 +7,7 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 1.2.5**, using **Dialect V2**.
+The current release is **lisp65 1.3.0**, using **Dialect V2**.
 
 ## Highlights
 
@@ -17,7 +17,9 @@ The current release is **lisp65 1.2.5**, using **Dialect V2**.
 - On-demand IDE, IDEX, M65D, and first-class Buffer libraries
 - C2-lite Chip-RAM execution with verified, publish-last cold staging
 - Native `while` and an unbiased, seedable `random`
-- Q8.7 fixed-point arithmetic and `(time form)` in the base composition
+- Q8.7 fixed-point arithmetic, `(time form)`, `wait`, and `read-line`
+- A reproducible Ship Builder for standalone bootable application D81s
+- A lower-allocation editor renderer measured at about 3× the former speed
 - Published nullary and fixed-argument calls on the direct-call path
 - Copy-on-write saves and persistent compilation with read-back verification
 - Byte-identical rollback and a usable REPL after RUN/STOP
@@ -26,13 +28,13 @@ The current release is **lisp65 1.2.5**, using **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.2.5.tar.gz` from the
-[v1.2.5 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.2.5).
+Download `lisp65-1.3.0.tar.gz` from the
+[v1.3.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.3.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.2.5.tar.gz
-cd lisp65-1.2.5
+tar -xzf lisp65-1.3.0.tar.gz
+cd lisp65-1.3.0
 python3 verify.py
 ```
 
@@ -40,7 +42,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.2.5 release notes](docs/releases/1.2.5.md) for the complete change
+See the [1.3.0 release notes](docs/releases/1.3.0.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -74,7 +76,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.2.5.
+identity. There is no on-device disk formatter in 1.3.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -82,7 +84,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.2.5 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.3.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -93,7 +95,7 @@ unattended operation, or large applications.
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
 | Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
-| No standalone application builder | The compiler creates L65M modules for the current Workbench; it does not produce a self-contained runtime or bootable application disk. | A ship-builder remains later work. |
+| Standalone scope | The Ship Builder packages L65P-v1 projects; it does not capture arbitrary live Workbench session state. | Start from one of the four supplied Ship projects and declare the entry and library closure. |
 | Editor safety and discoverability | Buffers have fixed capacities. There is no undo/redo, interactive completion, integrated help, or full structural editing. | These remain measured post-1.2 work; no release date is promised. |
 | File sizes are bounded | M65D and editor saves support 1–8,192 bytes. Evaluator `load` has a separate 38,400-byte staging ceiling; memory may become the practical limit earlier. | Larger files require a future storage/runtime design. |
 | Xemu-only use has limited fidelity | Xemu is useful for logic and boot choreography, but F011 writes, SD buffer mapping, Freezer behavior, reset semantics, and timing remain hardware claims. | Emulator-valid tests remain a prefilter, never a hardware substitute. |
@@ -112,10 +114,10 @@ acceptance.
 
 ## Verification status
 
-Release 1.2.5 binds product artifact set
-`fa9cf0c2e97118af5f3ed52934e50387ff0d0a895499abc497987a2daaa1f56a`
+Release 1.3.0 binds product artifact set
+`072ca89affc35bdf0e20cab382e8bd4a9df64babf535e23f6b2e268962daed1f`
 and package set
-`3dc8dc557624bf23405eb6ef681b726831818bc01b730c5ded0e9620364e5f34`:
+`3e0db21adb825cfa44c60bd005f2644a3717f4fcc5b02ae87e1139d3188a3397`:
 
 - G5: 9/9 fresh hardware cases passed
 - G6: 5/5 fresh package, boot, restage, work-media, and product-media cases
@@ -124,7 +126,7 @@ and package set
   packed, and mutation-tested
 
 Exact hashes and claim limits are recorded in the
-[1.2.5 release notes](docs/releases/1.2.5.md). The maintained limitations and
+[1.3.0 release notes](docs/releases/1.3.0.md). The maintained limitations and
 retired 1.1 latency exception are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
@@ -157,7 +159,7 @@ make workbench-product
 ```
 
 The target uses the single C2 emitter, one WPLTO closure, and the canonical
-media packer. Its final gate requires all 19 roles to reproduce the sealed 1.2.5
+media packer. Its final gate requires all 19 roles to reproduce the sealed 1.3.0
 artifact-set identity. The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -166,7 +168,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
-- [Release Notes for 1.2.5](docs/releases/1.2.5.md)
+- [Release Notes for 1.3.0](docs/releases/1.3.0.md)
 - [Known Issues and Retired Exceptions](docs/known-issues.md)
 - [Contributing](CONTRIBUTING.md)
 - [Development Guide](docs/development.md)

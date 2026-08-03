@@ -1,0 +1,60 @@
+{
+  "format": "lisp65-c2-v126-editor-allocation-contract-v1",
+  "nursery_cells": 192,
+  "routes": {
+    "serial": {
+      "plain": {
+        "maximum_mean_allocations": 191,
+        "maximum_single_key_allocations": 193
+      },
+      "wrap": {
+        "maximum_mean_allocations": 191,
+        "maximum_single_key_allocations": 193
+      }
+    },
+    "coalesced_10": {
+      "plain": {
+        "maximum_mean_allocations": 191,
+        "maximum_single_key_allocations": 193
+      },
+      "wrap": {
+        "maximum_mean_allocations": 191,
+        "maximum_single_key_allocations": 193
+      }
+    },
+    "scroll": {
+      "scroll": {
+        "maximum_mean_allocations": 191,
+        "maximum_single_key_allocations": 193
+      }
+    }
+  },
+  "maximum_collections_on_any_single_key_for_any_incoming_phase": 1,
+  "coalescing": {
+    "maximum_typed_queue_batch": 10,
+    "preserve_input_order": true,
+    "render_only_after_the_observed_queue_is_empty": true,
+    "exit_marker_stops_drain_before_the_next_key": true,
+    "physical_run_stop_is_out_of_band_and_never_coalesced": true
+  },
+  "workloads": {
+    "typing_keys": 80,
+    "wrap_key_index_after_warmup": 78,
+    "scroll_keys": [
+      17,
+      17,
+      17,
+      145,
+      17
+    ],
+    "scroll_buffer_lines": 30,
+    "scroll_initial_line": 22,
+    "scroll_initial_column": 5
+  },
+  "execution_witness": {
+    "minimum_routes": 3,
+    "minimum_keys": 165,
+    "incoming_nursery_phases_per_key": 192,
+    "minimum_mutations": 6
+  }
+}

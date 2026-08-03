@@ -1,0 +1,5 @@
+(load-lib "ide")
+(set(quote ide-buffers)(list(cons "scratch"(list "scratch" nil(list "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc")(cons 0 34)nil t 1105 nil nil))))
+(defun %ib(n)(%ide-buffers-find n(symbol-value(quote ide-buffers))))
+(defun %ib(n a)(if a(if(string= n(caar a))(cdar a)(%ib n(cdr a)))nil))
+(progn(setq b(%ib "scratch"(symbol-value(quote ide-buffers))))(set(quote ide-buffers)(cons(cons "measure3"(list "measure3" nil(list "")(cons 0 0)nil nil 1105 nil nil))(symbol-value(quote ide-buffers))))t)

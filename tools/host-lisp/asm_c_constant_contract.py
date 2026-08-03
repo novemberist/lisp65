@@ -22,6 +22,7 @@ NUMERIC_IMMEDIATE = re.compile(r"^\s*([a-z][a-z0-9]*)\s+(#(?:\$[0-9a-f]+|[0-9]+)
 NUMERIC_JUMP = re.compile(r"^\s*(?:jmp|jsr)\s+(?:\$[0-9a-f]+|[0-9]+)(?:\s*;.*)?$", re.I)
 CLASSIFIED_NON_MIRROR_KINDS = (
     "probe-only",
+    "shelf-evidence",
     "elf-gated-product-leaf",
     "product-map-or-facade",
     "stager-component",

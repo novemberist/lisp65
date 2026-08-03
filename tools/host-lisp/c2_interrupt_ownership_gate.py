@@ -29,6 +29,7 @@ from elf_truth import ElfTruth
 ROOT = Path(__file__).resolve().parents[2]
 TOOLCHAIN = ROOT / "tools/llvm-mos/bin"
 SOURCE = ROOT / "src/c2_kernal_runtime.c"
+RASTER_ARM = ROOT / "src/mega65_raster_timebase.h"
 WINDOW = ROOT / "src/c2_kernal_window.s"
 POLICY = ROOT / "config/c2-interrupt-ownership-policy.json"
 KNOWN = ROOT / "config/v12-known-issues.json"
@@ -100,6 +101,7 @@ def _between(text: str, start: str, end: str) -> str:
 
 
 def source_gate(source: str) -> dict[str, Any]:
+    raster_arm = RASTER_ARM.read_text(encoding="utf-8")
     require(
         '#define C2K_BOOT_ONLY __attribute__((noinline, '
         'section(".text.c2_kernal_boot_only")))' in source
@@ -122,7 +124,7 @@ def source_gate(source: str) -> dict[str, Any]:
         "|| (AUTOIEC_IRQ & 0x0fu) != 0u",
         "|| (AUDIODMA_IRQ & 0x0fu) != 0u)",
         "c2k_copy(C2_KERNAL_WINDOW_STAGE_PHYSICAL,",
-        "VIC_D01A = 0x01u;",
+        "lisp65_raster_timebase_arm();",
         '__asm__ volatile("cli"',
     ]
     positions: list[int] = []
@@ -130,6 +132,14 @@ def source_gate(source: str) -> dict[str, Any]:
         require(body.count(token) == 1, f"ownership token drift: {token}")
         positions.append(body.index(token))
     require(positions == sorted(positions), "ownership ordering drift")
+    require(
+        raster_arm.count("*(volatile uint8_t *)0xd012 = 0xffu;") == 1
+        and raster_arm.count("*(volatile uint8_t *)0xd011 &= 0x7fu;") == 1
+        and raster_arm.count("*(volatile uint8_t *)0xd019 = 0xffu;") == 1
+        and raster_arm.count(
+            "*(volatile uint8_t *)0xd01a = LISP65_RASTER_IRQ_ENABLE_MASK;") == 1,
+        "shared raster enable implementation drift",
+    )
 
     for row in FAMILIES.values():
         define = (
@@ -161,6 +171,7 @@ def source_gate(source: str) -> dict[str, Any]:
         },
         "readback_before_window_publish": True,
         "raster_enable_and_CLI_last": True,
+        "raster_enable_authority": binding(RASTER_ARM),
         "handler_changed": False,
         "boot_only_crc": {
             "symbol": BOOT_ONLY_CRC,
@@ -458,6 +469,7 @@ def audit(*, elf: Path | None = None) -> dict[str, Any]:
         "format": "lisp65-c2-interrupt-ownership-gate-v1",
         "status": "passed-strict-internal-interrupt-ownership",
         "source": binding(SOURCE),
+        "shared_raster_arm": binding(RASTER_ARM),
         "window_handler": {
             **binding(WINDOW),
             "unchanged_by_policy": True,

@@ -1,0 +1,48 @@
+{
+  "format": "lisp65-c2-ship-boot-inheritance-v3",
+  "recorded_on": "2026-08-03",
+  "status": "owner-commissioned-permanent-gate",
+  "scope": "standalone Ship Runtime composition-owned frame clock and input boot prerequisites",
+  "target": {
+    "entry_interrupt_state": "SEI from the verified cold-stager trampoline",
+    "logical_clock": "$FF83 low / $FF84 high in every composition",
+    "workbench_backing": "product-owned E000 raster counter",
+    "ship_backing": "private Runtime BSS counter advanced by a chained raster IRQ owner",
+    "shared_arm_sequence": "src/mega65_raster_timebase.h",
+    "irq_chain": "Ship counts and acknowledges its raster source, then chains the inherited KERNAL vector so GETIN service remains owned",
+    "independent_progress_oracle": "full 9-bit $D011/$D012 high-to-low transition, never $D012 alone or the counter under test",
+    "raster_lines": 312,
+    "raster_start_phases": 312,
+    "synchronization_wraps": 1,
+    "required_progress_deltas": 3,
+    "required_delta_per_wrap": 1,
+    "enable_readback": "$D01A bit 0 and $0314/$0315 handler identity before CLI",
+    "publication_order": "RUNTIME_LOADED follows successful arm and repeated-progress verification",
+    "failure_state": "RUNTIME_IO_ERROR=$E5",
+    "input_acceptance": "physical interactive Ship sample; no synthetic target claim"
+  },
+  "host": {
+    "oracle_owner": "host witness supplies complete 9-bit raster samples and a separate IRQ pulse; Ship recognizes the boundary",
+    "complete_raster_sequence_lines": 312,
+    "phase_matrix_passes": 312,
+    "low_byte_oracle_phase_matrix_passes": 0,
+    "negative_executions": [
+      "one incidental wrap then silence must fail",
+      "fully stagnant reference must fail"
+    ],
+    "positive_execution": "one synchronization wrap plus three unit deltas",
+    "initial_clock_armed": false,
+    "initial_clock_verified": false,
+    "initial_input_armed": false,
+    "synthetic_clock_requires_arm": true,
+    "synthetic_input_requires_arm": true,
+    "execution_witnesses": 3
+  },
+  "gate_rule": "a gate must not model the code assumption or a simplified register assumption as its oracle; clock gates execute the real 312-line 9-bit sequence, bind an independent IRQ pulse, and require repeated progress",
+  "out_of_scope": [
+    "$91 RUN/STOP address correction",
+    "new input semantics",
+    "Workbench IRQ ownership policy"
+  ],
+  "release_gate": "one physical Ada+RETURN interaction after Link 88"
+}

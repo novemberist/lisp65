@@ -19,6 +19,7 @@ timeout_kill_after_sec="${TIMEOUT_KILL_AFTER_SEC:-2}"
 dry_run=0
 readback=1
 verified_input=0
+allow_editor_status_tail=0
 expect=""
 expect_poll_sec=0
 forms_tmp=""
@@ -48,6 +49,8 @@ usage: $0 [options] [form ...]
   --input-retry-wait <sec>
                       wait around verified-input retries (default: $input_retry_wait_sec)
   --verified-input  verify active input before sending RETURN (max 3 attempts)
+  --allow-editor-status-tail
+                    accept only a strict stale IDE status row below the REPL
   --no-readback      skip screenshot/text capture
   --dry-run          print commands, do not touch hardware
   -h|--help          this help
@@ -107,6 +110,7 @@ while [ "$#" -gt 0 ]; do
     --timeout-kill-after) shift; [ "$#" -gt 0 ] || usage; timeout_kill_after_sec="$1" ;;
     --input-retry-wait) shift; [ "$#" -gt 0 ] || usage; input_retry_wait_sec="$1" ;;
     --verified-input) verified_input=1 ;;
+    --allow-editor-status-tail) allow_editor_status_tail=1 ;;
     --no-readback) readback=0 ;;
     --dry-run) dry_run=1 ;;
     -h|--help) usage ;;
@@ -144,6 +148,15 @@ m65="$tools_dir/m65"
 if [ "$dry_run" != "1" ]; then
   [ -x "$m65" ] || { echo "Fehler: $m65 nicht ausfuehrbar/gefunden" >&2; exit 3; }
 fi
+
+screen_check() {
+  if [ "$allow_editor_status_tail" = "1" ]; then
+    python3 tools/host-lisp/repl_screen_check.py \
+      --allow-editor-status-tail "$@"
+  else
+    python3 tools/host-lisp/repl_screen_check.py "$@"
+  fi
+}
 
 run_m65() {
   timeout --kill-after="${timeout_kill_after_sec}s" "${timeout_sec}s" "$m65" "$@"
@@ -221,7 +234,7 @@ clear_active_input() {
     fi
     [ "$empty_capture_status" -eq 0 ] || return "$empty_capture_status"
     empty_check_status=0
-    if python3 tools/host-lisp/repl_screen_check.py \
+    if screen_check \
         --screen "$captured_text" --form-text "" --active-input; then
       :
     else
@@ -288,7 +301,7 @@ send_form_verified() {
     fi
 
     input_status=0
-    if python3 tools/host-lisp/repl_screen_check.py \
+    if screen_check \
         --screen "$captured_text" --form-text "$form" --active-input; then
       send_return
       return $?
@@ -342,7 +355,7 @@ if [ "$expect_poll_sec" -gt 0 ]; then
     while :; do
       capture_screen "$prefix"
       capture_ready=1
-      if python3 tools/host-lisp/repl_screen_check.py \
+      if screen_check \
           --screen "$captured_text" --image "$captured_shot" \
           --forms "$forms_tmp" \
           --expect "$expect" >/dev/null 2>&1; then
@@ -372,7 +385,7 @@ check_status=0
 if [ -n "$expect" ]; then
   if [ "$dry_run" = "1" ]; then
     echo "DRY-RUN: python3 tools/host-lisp/repl_screen_check.py --screen $text --forms $forms_tmp --expect '$expect'"
-  elif python3 tools/host-lisp/repl_screen_check.py \
+  elif screen_check \
       --screen "$text" --image "$shot" \
       --forms "$forms_tmp" --expect "$expect"; then
     echo "PASS letztes REPL-Resultat: $expect"

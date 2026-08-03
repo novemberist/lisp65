@@ -4,6 +4,23 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.3.0 — prepared 2026-08-03
+
+- Added the reproducible Ship Builder and four standalone sample projects,
+  including physical-keyboard `read-line` input on a bootable application D81.
+- Added public `read-line`, `key-event`, and `wait` surfaces and renamed the
+  pre-advertisement Q8.7 `fx` family to the domain-specific `q` family.
+- Shipped the lower-allocation editor renderer and its permanent per-key gate.
+- Staged the complete Bank-5 reset domain, including a cleared C2J journal,
+  and made standalone runtimes establish and prove their own frame clock.
+- Updated the visible banner to `WORKBENCH 1.3.0` and rebound the permanent
+  public clean-build gate to the Link-88 19-role product identity.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-#2 publication
+authorization.
+
 ## v1.2.5 — prepared 2026-07-31
 
 - Corrected `require` so ordinary persistent definitions created earlier in

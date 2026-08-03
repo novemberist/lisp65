@@ -1,0 +1,100 @@
+{
+  "format": "lisp65-c2-ship-input-wait-base-composition-v1",
+  "recorded_on": "2026-08-01",
+  "status": "owner-commissioned-host-first",
+  "scope": "v1.3 public line input and frame pacing for Workbench and standalone Ship Runtime",
+  "public_surface": {
+    "key-event": "(key-event [mode]) returns nil or (key code modifiers); mode 0 polls and mode 1 blocks",
+    "read-line": "(read-line) edits and echoes one bounded line, then returns a packed string",
+    "wait": "(wait frames) blocks for a bounded raster-frame duration and returns nil"
+  },
+  "input": {
+    "event_surface": "(key-event 0|1) returns nil or (key code modifiers)",
+    "line_surface": "(read-line) returns a packed string",
+    "blocking_mode": 1,
+    "return_code": 13,
+    "delete_codes": [20, 127],
+    "printable_codes": [32, 126],
+    "maximum_characters": 250,
+    "limit_policy": "ignore further printable input while retaining DEL, RETURN and RUN/STOP",
+    "echo": "Bank-2 Lisp owns a one-row tail viewport on the final screen row; accepted printable bytes appear once, DEL erases one accepted byte, and RETURN emits one native newline",
+    "screen_viewport": {
+      "owner": "Bank-2 Lisp only",
+      "row": "last row from screen-size",
+      "columns": "full reported screen width",
+      "long_line_policy": "show the newest screen-width characters without changing the 250-character logical limit",
+      "native_cursor_dependency": false
+    },
+    "run_stop": "RUN/STOP is never coalesced or returned; the existing input abort boundary always wins"
+  },
+  "allocation": {
+    "nursery_cells": 192,
+    "maximum_cells_per_input_key": 4,
+    "maximum_collections_on_one_key_for_any_incoming_phase": 1,
+    "return_uses_owned_nreverse": true,
+    "priced_key_classes": ["printable", "delete", "ignored-control", "return", "run-stop"]
+  },
+  "wait": {
+    "surface": "(wait frames)",
+    "clock_owner": "product raster IRQ",
+    "low_byte": "$FF83",
+    "high_byte": "$FF84",
+    "atomic_reader": "%time-read",
+    "maximum_frames": 16383,
+    "overflow_from_frames": 16384,
+    "result": "nil",
+    "run_stop": "the standing VM lisp_poll cadence aborts every wait loop"
+  },
+  "placement": {
+    "code": "Bank-2 base composition after time",
+    "admission_budget_bytes": 1024,
+    "resident_code_bytes": 0,
+    "resident_state_bytes": 0,
+    "new_resident_gc_roots": 0,
+    "static_plane_root_records": 0,
+    "runtime_overlay_records": 0,
+    "native_primitives": 0,
+    "require_dependency": false,
+    "screen_driver_support": "read-line consumes only the already-public screen-size and screen-put-char primitives; DEL has no scr_putc/scr_backspace edge",
+    "screen_driver_geometry_rule": "the pre-freight C screen driver is byte-for-byte source-restored in both product build paths; the archived 105-byte non-LTO leaf remains unlinked shelf evidence",
+    "ship_runtime_profile_note": "standalone images bind the already public key-event/write-char/peek primitives to their physical Runtime drivers; that Runtime-only code is measured separately from Workbench resident geometry"
+  },
+  "proof": {
+    "execution_lanes": [
+      "source-compiled P0 VM with queued key events and sequenced frame reads",
+      "emitted-artifact P0 VM with the same independent screen fixtures",
+      "standalone Ship Runtime host execution",
+      "quiet on-device interactive Ship sample"
+    ],
+    "required_cases": [
+      "empty line",
+      "echoed line",
+      "DEL edit",
+      "ignored control",
+      "250-character exact limit",
+      "RUN/STOP abort",
+      "zero wait",
+      "ordinary wait",
+      "counter wrap",
+      "exact 16383-frame admission",
+      "16384-frame rejection"
+    ],
+    "mutation_families": [
+      "nonblocking read-line",
+      "wrong RETURN or DEL code",
+      "wrong last-row or width ownership",
+      "wrong screen cell for printable echo",
+      "wrong destructive blank on DEL",
+      "native cursor or C DEL dependency reintroduced",
+      "length limit drift",
+      "copying reverse at RETURN instead of consuming the owned chain",
+      "RUN/STOP consumed",
+      "wrong frame byte or non-atomic reader",
+      "overflow admitted",
+      "resident or native dependency",
+      "per-key allocation ceiling exceeded",
+      "suite built but not executed"
+    ]
+  },
+  "claim_limit": "Host source/artifact semantics and capacity until the joint WPLTO card and quiet hardware session."
+}

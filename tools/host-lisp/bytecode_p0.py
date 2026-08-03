@@ -761,6 +761,8 @@ class P0VM:
         disk_mount_token_change_before_read_ops=None,
         disk_mount_token_change_before_write_ops=None,
         disk_mount_token_change_after_guard_before_write_ops=None,
+        key_events=None,
+        memory_read_sequences=None,
         abi_profile="dialect-v1",
         abi_ledger=None,
     ):
@@ -820,6 +822,38 @@ class P0VM:
         self.fasl_stage = [0] * 16384
         self.compile_source_forms = []
         self.compile_source_index = 0
+        self.key_events = []
+        for event in key_events or ():
+            if type(event) is int:
+                event = {"code": event, "modifiers": []}
+            if not isinstance(event, dict) or set(event) != {"code", "modifiers"}:
+                raise ValueError("key events must be integers or code/modifiers objects")
+            code = event["code"]
+            modifiers = event["modifiers"]
+            if (
+                type(code) is not int or not 0 <= code <= 255
+                or not isinstance(modifiers, list)
+                or not all(isinstance(item, str) and item for item in modifiers)
+            ):
+                raise ValueError("invalid key event")
+            self.key_events.append((code, tuple(modifiers)))
+        self.output_chars = []
+        # Deterministic host model of the public random-access screen surface.
+        # It intentionally does not model the native output cursor: Bank-2
+        # consumers such as read-line and the IDE own their coordinates.
+        self.screen_columns = 80
+        self.screen_rows = 25
+        self.screen_cells = [32] * (self.screen_columns * self.screen_rows)
+        self.memory_read_sequences = {}
+        for raw_address, values in dict(memory_read_sequences or {}).items():
+            address = int(raw_address, 0) if isinstance(raw_address, str) else raw_address
+            if (
+                type(address) is not int or not 0 <= address <= 0xFFFF
+                or not isinstance(values, list)
+                or not all(type(value) is int and 0 <= value <= 255 for value in values)
+            ):
+                raise ValueError("invalid memory read sequence")
+            self.memory_read_sequences[address] = list(values)
         self.io_counters = {}
         self.disk_read_trace = []
         self.disk_write_trace = []
@@ -851,6 +885,10 @@ class P0VM:
             "fasl_stage_get": 0,
             "math_input_write": 0,
             "math_refresh": 0,
+            "key_event": 0,
+            "write_char": 0,
+            "screen_put_char": 0,
+            "memory_read_sequence": 0,
         }
         self.disk_read_trace = []
         self.disk_write_trace = []
@@ -1482,12 +1520,19 @@ class P0VM:
         if name == "write-char":
             if len(args) != 1 or not is_fix(args[0]):
                 raise VMError("TypeError", "write-char expects one fixnum")
+            value = fixval(args[0])
+            if value < 0 or value > 255:
+                raise VMError("TypeError", "write-char expects a byte fixnum")
+            self.output_chars.append(value)
+            self.io_counters["write_char"] += 1
             return args[0]
         if name == "screen-bulk-p":
             if len(args) != 0:
                 raise VMError("TypeError", "screen-bulk-p expects no arguments")
             return self.heap.t_obj
         if name == "terpri":
+            self.output_chars.append(10)
+            self.io_counters["write_char"] += 1
             return NIL
         if name in ("write-string", "prin1", "princ", "print", "write", "write-line"):
             if len(args) != 1:
@@ -1543,7 +1588,20 @@ class P0VM:
             mode = 0 if not args else fixval(args[0]) if is_fix(args[0]) else -1
             if mode not in (0, 1):
                 raise VMError("TypeError", "key-event mode must be 0 or 1")
-            return NIL
+            if not self.key_events:
+                if mode == 0:
+                    return NIL
+                raise VMError("InputExhausted", "blocking key-event fixture exhausted")
+            code, modifiers = self.key_events.pop(0)
+            self.io_counters["key_event"] += 1
+            if code == 3:
+                raise VMError("Stopped", "RUN/STOP")
+            modifier_list = self._list_from_objs(
+                [self.heap.intern(item) for item in modifiers]
+            )
+            return self._list_from_objs(
+                [self.heap.intern("key"), mkfix(code), modifier_list]
+            )
         if name == "symbol-value":
             if len(args) != 1 or not self.heap.symbolp(args[0]):
                 raise VMError("TypeError", "symbol-value expects one symbol")
@@ -1643,12 +1701,17 @@ class P0VM:
         if prim_id == 10:
             if argc != 0:
                 raise VMError("TypeError", "screen-clear expects no arguments")
+            self.screen_cells[:] = [32] * len(self.screen_cells)
             return NIL
         if prim_id == 11:
             if argc not in (3, 4) or not all(is_fix(arg) for arg in args[:3]):
                 raise VMError("TypeError", "screen-put-char expects x y code [attr]")
             if argc == 4 and not is_fix(args[3]):
                 raise VMError("TypeError", "screen-put-char attr must be a fixnum")
+            x, y, code = (fixval(arg) for arg in args[:3])
+            if 0 <= x < self.screen_columns and 0 <= y < self.screen_rows:
+                self.screen_cells[y * self.screen_columns + x] = code & 0xFF
+            self.io_counters["screen_put_char"] += 1
             return NIL
         if prim_id == 12:
             if (
@@ -1659,6 +1722,11 @@ class P0VM:
                 raise VMError("TypeError", "screen-write-string expects x y string [attr]")
             if argc == 4 and not is_fix(args[3]):
                 raise VMError("TypeError", "screen-write-string attr must be a fixnum")
+            x, y = fixval(args[0]), fixval(args[1])
+            for offset, character in enumerate(self.heap.string_to_text(args[2])):
+                column = x + offset
+                if 0 <= column < self.screen_columns and 0 <= y < self.screen_rows:
+                    self.screen_cells[y * self.screen_columns + column] = ord(character)
             return NIL
         if prim_id == 13:
             if argc != 0:
@@ -1882,7 +1950,20 @@ class P0VM:
             mode = 0 if argc == 0 else fixval(args[0]) if is_fix(args[0]) else -1
             if mode not in (0, 1):
                 raise VMError("TypeError", "key-event mode must be 0 or 1")
-            return NIL
+            if not self.key_events:
+                if mode == 0:
+                    return NIL
+                raise VMError("InputExhausted", "blocking key-event fixture exhausted")
+            code, modifiers = self.key_events.pop(0)
+            self.io_counters["key_event"] += 1
+            if code == 3:
+                raise VMError("Stopped", "RUN/STOP")
+            modifier_list = self._list_from_objs(
+                [self.heap.intern(item) for item in modifiers]
+            )
+            return self._list_from_objs(
+                [self.heap.intern("key"), mkfix(code), modifier_list]
+            )
         if prim_id == 61:
             if argc != 2:
                 raise VMError("ArityError", "peek expects exactly 2 arguments")
@@ -1891,7 +1972,12 @@ class P0VM:
             values = [fixval(arg) for arg in args]
             if any(value < 0 or value > 255 for value in values):
                 raise VMError("TypeError", "peek arguments must be in 0..255")
-            return mkfix(self.memory.get((values[0] << 8) | values[1], 0))
+            address = (values[0] << 8) | values[1]
+            sequence = self.memory_read_sequences.get(address)
+            if sequence:
+                self.io_counters["memory_read_sequence"] += 1
+                return mkfix(sequence.pop(0))
+            return mkfix(self.memory.get(address, 0))
         if prim_id == 62:
             if argc != 3:
                 raise VMError("ArityError", "poke expects exactly 3 arguments")

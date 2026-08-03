@@ -1,0 +1,155 @@
+{
+  "format": "lisp65-c2.2-v1.2.6-editor-hardware-session-v1",
+  "recorded_on": "2026-07-31",
+  "status": "owner-commissioned-one-session-hardware-not-run",
+  "candidate": {
+    "release": "v1.2.6",
+    "link": 83,
+    "expected_banner": "WORKBENCH 1.2.6",
+    "manifest": "build/c2.2/v1.2.6-candidate-media/candidate-manifest.json",
+    "remote_media": "V126EDIT.D81",
+    "required_visible_files": [
+      "autoboot.c65",
+      "boot.bin",
+      "boot.id",
+      "bootstage.bin",
+      "c2d.bin",
+      "code.bin",
+      "ide",
+      "idex",
+      "lisp65.prg",
+      "m65d",
+      "profile",
+      "region1.bin",
+      "session.bin",
+      "shelf.bin",
+      "window.bin"
+    ]
+  },
+  "preload_addresses": {
+    "c2d-v6-code-plane": "0x00050000",
+    "c2-two-record-boot-stage": "0x00058500",
+    "c2-session-family-region-0": "0x08000000",
+    "c2-product-shelf": "0x08100000",
+    "c2-boot-family": "0x08200000",
+    "c2-session-family-region-1": "0x08300000",
+    "c2-kernal-window": "0x087fe000"
+  },
+  "direct_entry": {
+    "entry": "0x00002023",
+    "etherload_ip": "fe80::500c:34ff:fe76:a540%enp35s0",
+    "trigger_load_address": "0x00000400",
+    "trigger_payload_bytes": 2,
+    "product_loaded_by": "m65 USB with full byteidentity readback",
+    "control_transferred_by": "etherload tiny trigger PRG plus --jump 2023"
+  },
+  "canonical_entry": {
+    "path": "mounted product D81 AUTOBOOT.C65",
+    "startup_wait_seconds": 90,
+    "prohibits": [
+      "concurrent m65 product load",
+      "BASIC auto-RUN injection",
+      "etherload direct jump"
+    ],
+    "precedent": "fresh G6 cold-boot exact-product-media"
+  },
+  "D1": {
+    "plain_burst_character": "a",
+    "plain_burst_keys": 40,
+    "plain_fill_keys": 38,
+    "plain_measured_character": "b",
+    "wrap_measured_character": "c",
+    "scroll_prep_returns": 48,
+    "expected_scratch_lines": 2,
+    "expected_scratch_first_line_characters": 79,
+    "expected_scratch_second_line_characters": 1,
+    "expected_scroll_lines": 50,
+    "maximum_average_frames_per_key": 88,
+    "maximum_single_key_frames": 177,
+    "expected_dropped_characters": 0,
+    "expected_dropped_returns": 0,
+    "transport_chunk_keys": 10
+  },
+  "D2": {
+    "wrap_setup_forms": [
+      {
+        "form": "(defun %vr(n a)(if(= n 0)a(%vr(- n 1)(cons 97 a))))",
+        "expected": "%vr"
+      },
+      {
+        "form": "(progn(setq x(ide-make-buffer\"w\"(list(list->string(%vr 79 nil)))))t)",
+        "expected": "t"
+      },
+      {
+        "form": "(progn(setq x(ide-make-state(ide-set-point x 0 79)))t)",
+        "expected": "t"
+      }
+    ],
+    "wrap_form": "(time(progn(ide-render(ide-step x(list(quote key)97 nil)))t))",
+    "scroll_setup_forms": [
+      {
+        "form": "(defun %vl(n a)(if(= n 0)a(%vl(- n 1)(cons\"\"a))))",
+        "expected": "%vl"
+      },
+      {
+        "form": "(progn(setq x(ide-make-buffer\"s\"(%vl 49 nil)))t)",
+        "expected": "t"
+      },
+      {
+        "form": "(progn(setq x(ide-make-state(ide-set-point x 48 0)))t)",
+        "expected": "t"
+      }
+    ],
+    "scroll_form": "(time(progn(ide-render(ide-step x(list(quote key)13 nil)))t))",
+    "maximum_frames_per_spot_check": 177
+  },
+  "D3": {
+    "smoke_rows": [
+      {
+        "id": "fx-multiply",
+        "form": "(fx->string(fx*(fx 1 64)(fx -2 0)))",
+        "expected": "\"-3.0\""
+      },
+      {
+        "id": "fx-divide",
+        "form": "(fx->string(fx/(fx 1 0)(fx 3 0)))",
+        "expected": "\"0.3359375\""
+      },
+      {
+        "id": "fx-half-away",
+        "form": "(fx->string(fx/(fx 0 1)(fx 2 0)))",
+        "expected": "\"0.0078125\""
+      },
+      {
+        "id": "time",
+        "form": "(time(+ 1 2))",
+        "expected": "3"
+      }
+    ],
+    "readback": {
+      "frame_counter": ["0x0000ff83", 2],
+      "trace": ["ELF:lisp65_c2_phase_scratch+302", 2],
+      "c2d_header": ["0x00050000", 48],
+      "c2j": ["0x0005c640", 64],
+      "phase_owner": ["ELF:c2_phase_owner", 1],
+      "gc_runs": ["ELF:gc_runs", 2],
+      "mem_oom": ["ELF:mem_oom", 1],
+      "gc_badobj": ["ELF:gc_badobj", 2]
+    }
+  },
+  "policy": {
+    "physical_device_sessions": 1,
+    "product_links": 1,
+    "cold_reset_and_asserted_basic_before_first_transfer": true,
+    "ftp_no_progress_timeout_seconds": 120,
+    "package_medium_bound": true,
+    "dependency_scoped_first_red": true,
+    "terminal": [
+      "red-fail-closed-frame",
+      "crash",
+      "undefined-machine-state"
+    ],
+    "input_abort": "RUN/STOP terminates each live editor evaluation after its buffer state has been persisted",
+    "claim_limit": "One non-promotable Link-83 editor measurement session. It proves only the named typing, wrap, scroll, smoke and quiescent rows; R4/R5/R6/G5/G6 and release remain separate."
+  }
+}

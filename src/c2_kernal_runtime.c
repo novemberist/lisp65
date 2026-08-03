@@ -9,6 +9,7 @@
  * 16-bit CPU map. */
 #include <stdint.h>
 #include "c2_kernal_runtime.h"
+#include "mega65_raster_timebase.h"
 
 #ifdef LISP65_C2_KERNAL_UNMAP
 #include "c2-kernal-window.generated.h"
@@ -128,10 +129,7 @@ C2K_SECTION uint8_t c2_kernal_take_ownership(void) {
 
     C2K_MAP_GENERATION = 1u;
     C2K_STATE = C2K_STATE_PRODUCT;
-    VIC_D012 = 0xffu;
-    VIC_D011 &= 0x7fu;
-    VIC_D019 = 0xffu;
-    VIC_D01A = 0x01u;
+    lisp65_raster_timebase_arm();
     __asm__ volatile("cli" ::: "memory");
     return 1u;
 }

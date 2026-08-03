@@ -4,10 +4,12 @@
 
 #define R3_CHAIN_CODE_ADDR 0x1800u
 #define R3_CHAIN_JOB_ADDR 0x1840u
+#ifndef R3_PRODUCT_ENTRY
 #ifdef LISP65_C2_LITE_MEDIA_STAGER
 #define R3_PRODUCT_ENTRY 0x2023u
 #else
 #define R3_PRODUCT_ENTRY 0x2026u
+#endif
 #endif
 #define R3_PRODUCT_LOAD 0x2001u
 

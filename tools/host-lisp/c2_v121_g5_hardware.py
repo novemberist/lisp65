@@ -33,6 +33,7 @@ FORMAT = "lisp65-c2-lite-v1.2.1-G5-hardware-session-v1"
 TRANSPORT_FORMAT = "lisp65-c2-lite-v1.2.1-media-transport-hardware-receipt-v1"
 REMOTE_MEDIA = "L65V121.D81"
 EXPECTED_BANNER = "WORKBENCH - DIALECT V2"
+C2D_PRODUCT_NAME = "09-initial.c2d-v6.bin"
 
 
 class G5Error(RuntimeError):
@@ -108,7 +109,7 @@ def prepare() -> dict[str, Any]:
     bank2 = BASE / "product/01-bank2-static-code.bin"
     bank3 = BASE / "product/06-runtime-overlays-session-final.bin"
     region1 = BASE / "product/07-runtime-overlays-session-final-region1.bin"
-    c2d = BASE / "product/09-initial.c2d-v6.bin"
+    c2d = BASE / "product" / C2D_PRODUCT_NAME
     elf = BASE / "product/14-lisp65-c2-substitution-linked.prg.elf"
     role_rows = preflight["materialized_artifacts"]
     by_role = {row["role"]: row for row in role_rows}

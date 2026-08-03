@@ -1,7 +1,7 @@
 {
-  "format": "lisp65-c2-fx-base-composition-v1",
+  "format": "lisp65-c2-q-base-composition-v1",
   "recorded_on": "2026-07-30",
-  "scope": "v1.2.4 host-first Q8.7 fixed-point freight over the MEGA65 math unit",
+  "scope": "v1.3 public Q8.7 fixed-point freight over the MEGA65 math unit; the sealed v1.2.4/v1.2.5 fx history is unchanged",
   "representation": {
     "storage": "ordinary signed 15-bit fixnum; no new tag or boxed type",
     "scale": 128,
@@ -12,24 +12,29 @@
     ],
     "real_domain": "-128.0 through 127.9921875",
     "quantum": "1/128",
-    "constructor_fraction": "the optional second fx argument is an exact signed count of 1/128 units, not a decimal literal"
+    "constructor_fraction": "the optional second q argument is an exact signed count of 1/128 units, not a decimal literal"
   },
   "public_surface": {
-    "fx": "(fx whole &optional raw-fraction)",
-    "int->fx": "(int->fx integer)",
-    "fx->int": "(fx->int value), truncating toward zero",
-    "fx+": "(fx+ left right)",
-    "fx-": "(fx- left right)",
-    "fx*": "(fx* left right)",
-    "fx/": "(fx/ left right)",
-    "fx->string": "(fx->string value), exact finite decimal with at least one fractional digit"
+    "q": "(q whole &optional raw-fraction)",
+    "int->q": "(int->q integer)",
+    "q->int": "(q->int value), truncating toward zero",
+    "q+": "(q+ left right)",
+    "q-": "(q- left right)",
+    "q*": "(q* left right)",
+    "q/": "(q/ left right)",
+    "q->string": "(q->string value), exact finite decimal with at least one fractional digit"
+  },
+  "public_surface_policy": {
+    "first_advertised_release": "v1.3.0",
+    "legacy_fx_aliases": "forbidden",
+    "reason": "Q-format is the domain term and does not collide with Scheme integer-fx or sound-effects naming"
   },
   "arithmetic": {
     "addition_and_subtraction": "exact or existing arithmetic error before an out-of-domain raw result is produced",
     "multiply": "unsigned magnitudes are multiplied as 32-bit operands; divide the 64-bit product by 128 and round the discarded seven bits",
     "divide": "the unsigned magnitude of the dividend is shifted left seven bits before hardware division; quotient fraction bits decide rounding",
     "rounding": "nearest, ties away from zero",
-    "integer_conversion": "fx->int truncates toward zero",
+    "integer_conversion": "q->int truncates toward zero",
     "division_by_zero": "existing arithmetic error path",
     "overflow": "existing arithmetic error path; no saturation, wraparound, native status or new resident string"
   },
@@ -89,5 +94,5 @@
       "suite built but not executed"
     ]
   },
-  "claim_limit": "Host semantics, host-modeled register transport and one non-promotable WPLTO capacity card only. No on-metal fx or fraction-layout claim before Phase M."
+  "claim_limit": "Host semantics, host-modeled register transport and one non-promotable WPLTO capacity card only. No on-metal q or fraction-layout claim before Phase M."
 }

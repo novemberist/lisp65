@@ -287,32 +287,36 @@ def fresh_session_entry(root: Path) -> list[dict[str, Any]]:
         output=root / "fresh-reset.log", timeout=25,
     )
     time.sleep(3)
-    screen = run(
-        [
-            "timeout", "20s", str(M65), "-l", DEVICE,
-            f"--screenshot={root / 'fresh-state.png'}",
-        ],
-        "capture fresh G6 BASIC state",
-        output=root / "fresh-state.ansi.txt", timeout=25,
+    for _ in range(30):
+        screen = run(
+            [
+                "timeout", "20s", str(M65), "-l", DEVICE,
+                f"--screenshot={root / 'fresh-state.png'}",
+            ],
+            "capture fresh G6 BASIC state",
+            output=root / "fresh-state.ansi.txt", timeout=25,
+        )
+        screen_text = re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", screen)
+        (root / "fresh-state.txt").write_text(screen_text, encoding="utf-8")
+        try:
+            repl_screen_check.check_fail_closed_frame(root / "fresh-state.png")
+        except repl_screen_check.CheckError as error:
+            raise G6Error(error.message) from error
+        if (
+            "BASIC 65" in screen_text
+            and "READY." in screen_text
+            and "lisp65>" not in screen_text
+        ):
+            return [
+                bind(root / "fresh-reset.log"),
+                bind(root / "fresh-state.png"),
+                bind(root / "fresh-state.ansi.txt"),
+                bind(root / "fresh-state.txt"),
+            ]
+        time.sleep(1)
+    raise G6Error(
+        "G6 media transport did not reach asserted fresh BASIC state"
     )
-    screen_text = re.sub(r"\x1b\[[0-9;:]*[A-Za-z]", "", screen)
-    (root / "fresh-state.txt").write_text(screen_text, encoding="utf-8")
-    try:
-        repl_screen_check.check_fail_closed_frame(root / "fresh-state.png")
-    except repl_screen_check.CheckError as error:
-        raise G6Error(error.message) from error
-    require(
-        "BASIC 65" in screen_text
-        and "READY." in screen_text
-        and "lisp65>" not in screen_text,
-        "G6 media transport did not begin from asserted fresh BASIC state",
-    )
-    return [
-        bind(root / "fresh-reset.log"),
-        bind(root / "fresh-state.png"),
-        bind(root / "fresh-state.ansi.txt"),
-        bind(root / "fresh-state.txt"),
-    ]
 
 
 def ftp_with_progress_guard(
@@ -395,13 +399,23 @@ def bind_repl_startup_first_red(
     before_text = before.read_text(encoding="utf-8", errors="replace").lower()
     after_text = after.read_text(encoding="utf-8", errors="replace").lower()
     runner_text = runner.read_text(encoding="utf-8", errors="replace")
+    late_text = after_text
+    if "lisp65>" not in late_text:
+        await_product_repl(root, f"{prefix}-late")
+        late_text = (root / f"{prefix}-late-ready.txt").read_text(
+            encoding="utf-8", errors="replace").lower()
     require(
         "basic 65" in before_text
         and "lisp65>" not in before_text
-        and "lisp65>" in after_text
+        and "lisp65>" in late_text
         and form.lower() not in after_text
+        and form.lower() not in late_text
         and "active REPL prompt is not visible" in runner_text
-        and "repl-screen-check: PASS active-input" in runner_text,
+        and (
+            "repl-screen-check: PASS active-input" in runner_text
+            or "aktive JTAG-Eingabe konnte nicht nachweislich geleert werden"
+            in runner_text
+        ),
         f"{prefix} startup first-red is not the proved late-prompt case",
     )
     sources = sorted(

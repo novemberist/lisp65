@@ -5,6 +5,9 @@
 #include "interrupt.h"
 #include "mem.h"
 #include "preload_integrity.h"
+#ifdef LISP65_SHIP_RUNTIME_IO
+#include "ship_runtime_io.h"
+#endif
 #include "symbol.h"
 #include "vm.h"
 #include "vm_embed.h"
@@ -61,7 +64,8 @@ enum {
     RUNTIME_BOOT_ERROR = 0xe1,
     RUNTIME_ENTRY_ERROR = 0xe2,
     RUNTIME_VM_ERROR = 0xe3,
-    RUNTIME_PRELOAD_ERROR = 0xe4
+    RUNTIME_PRELOAD_ERROR = 0xe4,
+    RUNTIME_IO_ERROR = 0xe5
 };
 
 volatile uint8_t lisp65_runtime_state = 0;
@@ -131,6 +135,12 @@ int main(void) {
 #ifdef LISP65_EXT_HEAP
     gc_freeze_boot();
 #endif
+#ifdef LISP65_SHIP_RUNTIME_IO
+    if (!lisp65_ship_io_init()) {
+        lisp65_runtime_state = RUNTIME_IO_ERROR;
+        return 5;
+    }
+#endif
     lisp65_runtime_state = RUNTIME_LOADED;
 
     entry = intern(LISP65_RUNTIME_ENTRY);
@@ -149,5 +159,11 @@ int main(void) {
         return 3;
     }
     lisp65_runtime_state = RUNTIME_COMPLETE;
+#ifdef LISP65_SHIP_RUNTIME
+    /* A standalone image has no Workbench or BASIC continuation contract.
+     * Preserve the completed application state for its display and for the
+     * hardware completion witness instead of falling through the CRT. */
+    for (;;) { }
+#endif
     return 0;
 }

@@ -192,7 +192,7 @@ def write_profile() -> int:
             "headroom_bytes": 65536 - EXPECTED_STATIC,
         },
         "time_base_delta": {
-            "baseline": "v1.2.4 fx candidate",
+            "baseline": "v1.3 q candidate",
             "stdlib_code_bytes": 282,
             "new_entries": 3,
             "new_resolutions": 12,

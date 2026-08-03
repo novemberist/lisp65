@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from pathlib import Path
+import re
 import tempfile
 
 from PIL import Image
@@ -17,6 +18,9 @@ SCREEN_MALFORMED = 6
 FAIL_CLOSED_FRAME = 7
 PROMPT = "lisp65> "
 SCREEN_WIDTH = 80
+EDITOR_STATUS_TAIL = re.compile(
+    r"-- [A-Za-z0-9._-]+ \* L[0-9]+ -- [0-9]+/[0-9]+"
+)
 
 
 @dataclass(frozen=True)
@@ -93,7 +97,28 @@ def _reconstruct_echo(lines: list[str], form_start: int, expected_form: str) -> 
     return "".join(parts), echo_rows
 
 
-def check_latest_result(screen_path: Path, expected_form: str, expect: str | None) -> None:
+def _reject_unless_editor_status_tail(
+    trailing: list[str], *, allow_editor_status_tail: bool,
+    context: str,
+) -> None:
+    if not trailing:
+        return
+    if (
+        allow_editor_status_tail
+        and all(EDITOR_STATUS_TAIL.fullmatch(line) for line in trailing)
+    ):
+        return
+    raise CheckError(
+        SCREEN_MALFORMED,
+        f"non-empty screen content follows the {context}: "
+        + " | ".join(trailing),
+    )
+
+
+def check_latest_result(
+    screen_path: Path, expected_form: str, expect: str | None,
+    *, allow_editor_status_tail: bool = False,
+) -> None:
     try:
         raw_screen = screen_path.read_text(errors="replace")
     except OSError as error:
@@ -107,12 +132,11 @@ def check_latest_result(screen_path: Path, expected_form: str, expect: str | Non
     if lines[result_end].strip() != PROMPT.rstrip():
         raise CheckError(SCREEN_MALFORMED, "trailing REPL prompt is not empty")
     trailing = [line.strip() for line in lines[result_end + 1 :] if line.strip()]
-    if trailing:
-        raise CheckError(
-            SCREEN_MALFORMED,
-            "non-empty screen content follows the trailing REPL prompt: "
-            + " | ".join(trailing),
-        )
+    _reject_unless_editor_status_tail(
+        trailing,
+        allow_editor_status_tail=allow_editor_status_tail,
+        context="trailing REPL prompt",
+    )
     prompt_line = lines[form_start].lstrip()
     if not prompt_line.startswith(PROMPT):
         raise CheckError(SCREEN_MALFORMED, "penultimate prompt has no submitted form")
@@ -150,7 +174,10 @@ def check_latest_result(screen_path: Path, expected_form: str, expect: str | Non
         )
 
 
-def check_active_input(screen_path: Path, expected_form: str) -> None:
+def check_active_input(
+    screen_path: Path, expected_form: str,
+    *, allow_editor_status_tail: bool = False,
+) -> None:
     try:
         raw_screen = screen_path.read_text(errors="replace")
     except OSError as error:
@@ -177,12 +204,11 @@ def check_active_input(screen_path: Path, expected_form: str) -> None:
             raise CheckError(ECHO_MISMATCH, "full-width active form echo has no empty wrap row")
         echo_rows += 1
     trailing = [line.strip() for line in lines[form_start + echo_rows :] if line.strip()]
-    if trailing:
-        raise CheckError(
-            SCREEN_MALFORMED,
-            "non-empty screen content follows the active REPL input: "
-            + " | ".join(trailing),
-        )
+    _reject_unless_editor_status_tail(
+        trailing,
+        allow_editor_status_tail=allow_editor_status_tail,
+        context="active REPL input",
+    )
 
 
 def _frame(lines: list[str]) -> str:
@@ -392,9 +418,69 @@ def selftest() -> None:
                 actual_code = error.code
             if actual_code != expected_code:
                 raise AssertionError(f"{name}: expected rc={expected_code}, got rc={actual_code}")
+
+        editor_tail = "-- scratch * L1 -- 626/752"
+        result_tail = tmp / "result-editor-status-tail.txt"
+        result_tail.write_text(_frame([
+            "lisp65> (+ 20 22)", "42", "lisp65>", editor_tail,
+        ]))
+        active_tail = tmp / "active-editor-status-tail.txt"
+        active_tail.write_text(_frame([
+            "lisp65> (+ 20 22)", editor_tail,
+        ]))
+
+        for path, checker in (
+            (
+                result_tail,
+                lambda allow: check_latest_result(
+                    result_tail,
+                    "(+ 20 22)",
+                    "42",
+                    allow_editor_status_tail=allow,
+                ),
+            ),
+            (
+                active_tail,
+                lambda allow: check_active_input(
+                    active_tail,
+                    "(+ 20 22)",
+                    allow_editor_status_tail=allow,
+                ),
+            ),
+        ):
+            try:
+                checker(False)
+            except CheckError as error:
+                if error.code != SCREEN_MALFORMED:
+                    raise AssertionError(
+                        f"{path.name}: wrong strict status {error.code}"
+                    ) from error
+            else:
+                raise AssertionError(f"{path.name}: strict mode accepted tail")
+            checker(True)
+
+        malformed_tail = tmp / "malformed-editor-status-tail.txt"
+        malformed_tail.write_text(_frame([
+            "lisp65> (+ 20 22)", "42", "lisp65>",
+            "-- scratch * L1 -- 626/752 EXTRA",
+        ]))
+        try:
+            check_latest_result(
+                malformed_tail,
+                "(+ 20 22)",
+                "42",
+                allow_editor_status_tail=True,
+            )
+        except CheckError as error:
+            if error.code != SCREEN_MALFORMED:
+                raise AssertionError(
+                    "malformed editor tail returned wrong status"
+                ) from error
+        else:
+            raise AssertionError("malformed editor tail survived")
     print(
         "repl-screen-check selftest: PASS "
-        f"({len(cases) + len(active_cases) + 2} cases)"
+        f"({len(cases) + len(active_cases) + 7} cases)"
     )
 
 
@@ -408,6 +494,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expect")
     parser.add_argument("--echo-only", action="store_true")
     parser.add_argument("--active-input", action="store_true")
+    parser.add_argument("--allow-editor-status-tail", action="store_true")
     args = parser.parse_args()
     if not args.selftest:
         if args.screen is None:
@@ -431,9 +518,18 @@ def main() -> int:
             check_fail_closed_frame(args.image)
         expected_form = args.form_text if args.form_text is not None else _last_form(args.forms)
         if args.active_input:
-            check_active_input(args.screen, expected_form)
+            check_active_input(
+                args.screen,
+                expected_form,
+                allow_editor_status_tail=args.allow_editor_status_tail,
+            )
         else:
-            check_latest_result(args.screen, expected_form, None if args.echo_only else args.expect)
+            check_latest_result(
+                args.screen,
+                expected_form,
+                None if args.echo_only else args.expect,
+                allow_editor_status_tail=args.allow_editor_status_tail,
+            )
     except CheckError as error:
         print(f"repl-screen-check: {error.message}")
         return error.code

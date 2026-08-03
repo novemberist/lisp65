@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-c2.3-ship-builder-v1-hardware-session-v1",
+  "status": "owner-commissioned-link85-full-reset-closing-session",
+  "candidate_link": 85,
+  "expected_hardware_sessions": 1,
+  "admission": {
+    "requires": "full Bank-5 reset-domain gate, Link 85 and bound media",
+    "current_blocker": null,
+    "hardware_authorized_now": true
+  },
+  "policy": {
+    "cold_reset_before_every_identity": true,
+    "assert_fresh_basic_before_transfer": true,
+    "ftp_progress_guard_seconds": 120,
+    "persistent_forms_are_quiet": true,
+    "screenshot_polling_around_persistent_forms": false,
+    "unexpected_red_or_undefined_state": "session-terminal",
+    "no_per_row_approval": true
+  },
+  "D1": [
+    {
+      "id": "ship-interactive",
+      "image": "build/ship-builder/v13/final-fleet-bank2/interactive.d81",
+      "elf": "build/ship-builder/v13/final-fleet-bank2/interactive.runtime.elf",
+      "remote": "S13INPUT.D81",
+      "input": "Ada<RETURN>",
+      "transport_text": "Ada~M",
+      "expected_screen_text": "Hello, Ada!",
+      "expected_result": "0x002a",
+      "quiet_seconds": 30
+    }
+  ],
+  "D3": {
+    "candidate_media": "build/c2.3/v1.3.0-candidate-media-link85-r1/candidate-manifest.json",
+    "deployment": "candidate-media-autoboot-full-reset-domain",
+    "remote_media": "S13WORK.D81",
+    "remote_library_media": "S13LIB.D81",
+    "editor_form": "(edit)",
+    "character": "a",
+    "keys": 30,
+    "transport_mode": "one-key-per-invocation",
+    "transport_inter_key_seconds": 1,
+    "quiet_seconds": 60,
+    "query_form": "(string-length(ide-line-at(%ide-buffers-find\"scratch\"(symbol-value(quote ide-buffers)))0))",
+    "expected": "30"
+  },
+  "D4": [
+    {
+      "id": "standing-require-place",
+      "form": "(require (quote place))",
+      "expected": "t",
+      "quiet_seconds": 45,
+      "persistent": true
+    },
+    {
+      "id": "standing-q",
+      "form": "(q->string(q*(q 1 64)(q -2 0)))",
+      "expected": "\"-3.0\"",
+      "quiet_seconds": 5,
+      "persistent": false
+    },
+    {
+      "id": "standing-time",
+      "form": "(time(+ 1 2))",
+      "expected": "3",
+      "quiet_seconds": 5,
+      "persistent": false
+    }
+  ]
+}

@@ -30,7 +30,7 @@
       (%banner-run runs run))))
 
 (defun %banner-subtitle ()
-  (let ((text "WORKBENCH 1.2.4"))
+  (let ((text "WORKBENCH 1.3.0"))
     (dotimes (index 15 nil)
       (screen-put-char (+ 48 index) 7 (string-ref text index) 15))))
 

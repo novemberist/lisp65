@@ -31,6 +31,7 @@ BUILD_COMMANDS = (
 MEDIA_MANIFEST_RELATIVE = Path(
     "build/c2.2/canonical-media/candidate-manifest.json")
 MEDIA_MANIFEST_FORMAT = "lisp65-c2-lite-canonical-media-product-v1"
+TOOLCHAIN_MATERIALIZATION = "symlink"
 AXES = (
     {
         "id": "fresh-clone-seed-23-pago-pago-2002",
@@ -217,7 +218,18 @@ def build_one(parent: Path, commit: str,
     require(
         not toolchain.exists() and not toolchain.is_symlink(),
         f"fresh clone unexpectedly contains toolchain path: {toolchain}")
-    toolchain.symlink_to(ROOT / "tools/llvm-mos", target_is_directory=True)
+    require(
+        TOOLCHAIN_MATERIALIZATION in ("symlink", "copy-tree"),
+        f"unknown toolchain materialization: {TOOLCHAIN_MATERIALIZATION}")
+    if TOOLCHAIN_MATERIALIZATION == "symlink":
+        toolchain.symlink_to(ROOT / "tools/llvm-mos", target_is_directory=True)
+    else:
+        # Some source gates bind resolved in-checkout tool identities.  A real
+        # tree preserves those semantics even when the fresh checkout lives on
+        # a different filesystem from the repository toolchain.
+        shutil.copytree(
+            ROOT / "tools/llvm-mos", toolchain,
+            copy_function=shutil.copy2, symlinks=True)
 
     environment = os.environ.copy()
     environment.update({

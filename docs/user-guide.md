@@ -1,9 +1,9 @@
-# lisp65 1.2.5 User Guide
+# lisp65 1.3.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.2.5` release bundle
+- The extracted `lisp65-1.3.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -89,6 +89,29 @@ Example:
 (answer)                           ; => 42
 ```
 
+## Build a standalone disk
+
+The Ship Builder turns an L65P-v1 project into a bootable D81 whose entry has
+fixed arity zero. From the source bundle, this command exercises the public
+Ship form through its host front end:
+
+```sh
+python3 tools/host-lisp/ship_builder.py build \
+  --form '(ship "interactive" :entry '\''main)' \
+  --project examples/ship/interactive/project.l65p \
+  --out interactive.d81
+```
+
+The destination must not already exist. A successful image contains the cold
+stager, evaluator-free Runtime Core, the project's tree-shaken library closure,
+the resolution lock, the project manifest, and its redistribution notice. A
+failure leaves no partial destination image. Mount the resulting D81 as a boot
+disk and cold-start the MEGA65; it does not require the Workbench disk.
+
+The four supplied examples cover a minimal entry, `random` with Q8.7 math, a
+long-running computation, and interactive `read-line` input. Start from one of
+their `project.l65p` files when creating a new project.
+
 ## Iteration and random numbers
 
 `while` evaluates its body while its test remains non-`nil`:
@@ -113,42 +136,42 @@ when a run must be repeatable:
 
 This generator is suitable for programs and games, not cryptography.
 
-### Fixed-point numbers (`fx`)
+### Fixed-point numbers (`q`)
 
 lisp65 numbers are 15-bit integers. For positions, speeds and anything
-that moves by less than a whole unit per step, the `fx` functions treat an
+that moves by less than a whole unit per step, the `q` functions treat an
 ordinary number as a **Q8.7 fixed-point value**: the low 7 bits are the
 fraction. Raw `128` means `1.0`, raw `192` means `1.5`.
 
 - Range: `-128.0` through `127.9921875`, step `0.0078125` (1/128).
-- An fx value **is** a normal number — store it in lists and variables,
+- A Q8.7 value **is** a normal number — store it in lists and variables,
   and compare with plain `<`, `=`, `>`. No library needs loading.
 
 ```lisp
-(int->fx 3)          ; 3.0        (raw 384)
-(fx 1 64)            ; 1.5        (1 whole + 64/128)
-(fx+ a b) (fx- a b)  ; add, subtract
-(fx* a b) (fx/ a b)  ; multiply, divide (round to nearest)
-(fx->int a)          ; truncate toward zero
-(fx->string a)       ; exact decimal text, e.g. "1.5"
+(int->q 3)          ; 3.0        (raw 384)
+(q 1 64)            ; 1.5        (1 whole + 64/128)
+(q+ a b) (q- a b)  ; add, subtract
+(q* a b) (q/ a b)  ; multiply, divide (round to nearest)
+(q->int a)          ; truncate toward zero
+(q->string a)       ; exact decimal text, e.g. "1.5"
 ```
 
 Sub-pixel movement, the typical use:
 
 ```lisp
-(setq x (int->fx 100))       ; start at pixel 100
-(setq v (fx 0 32))           ; 0.25 pixels per step
-(setq x (fx+ x v))           ; each step
-(fx->int x)                  ; whole pixel for drawing
+(setq x (int->q 100))       ; start at pixel 100
+(setq v (q 0 32))           ; 0.25 pixels per step
+(setq x (q+ x v))           ; each step
+(q->int x)                  ; whole pixel for drawing
 ```
 
 Four steps accumulate to exactly one pixel. Multiplication and division
 round to the nearest 1/128, exact halves away from zero. Overflow and
 division by zero raise the normal arithmetic error — values never wrap or
-saturate silently. `fx->string` always prints at least one fractional
-digit, and every fx value has an exact, finite decimal form.
+saturate silently. `q->string` always prints at least one fractional
+digit, and every q value has an exact, finite decimal form.
 
-One rule inherited from the hardware: `fx*` and `fx/` use the MEGA65 math
+One rule inherited from the hardware: `q*` and `q/` use the MEGA65 math
 unit, the same one ordinary `*` and `/` use. That is why they are fast;
 nothing about it is visible in normal use.
 
@@ -164,6 +187,78 @@ raster frames, and returns the form's value unchanged:
 The release measured the frame counter at 51.966 Hz on the accepted hardware
 session. Durations of 16,384 frames or more fail with a duration-overflow error
 instead of wrapping silently.
+
+### Keyboard input and pacing
+
+`read-line` is the normal text-input interface for Workbench code and shipped
+programs. It echoes printable input, supports DEL, stops on RETURN, and returns
+a string:
+
+```lisp
+(setq name (read-line))
+```
+
+To read a number, parse the returned text and validate the object explicitly:
+
+```lisp
+(setq input (read-line))
+(setq value (read-from-string input))
+(if (numberp value)
+    (write value)
+    (write "Please enter a number"))
+```
+
+Ordinary non-numeric input such as `hello` reads as a symbol and is rejected
+by `numberp`. Syntactically broken input takes the normal reader-error path.
+`read-from-string` is not limited to numbers: it reads any Lisp form, so a
+list-shaped command can be accepted without a separate command parser.
+
+The line editor is implemented entirely in Lisp and owns the final screen row
+while it is active. Lines longer than the screen width keep their newest
+characters visible there; the returned string still retains the full line.
+
+The maximum line length is 250 characters. Extra printable keys are ignored
+until DEL or RETURN; RUN/STOP always aborts instead of becoming input.
+
+For event-driven code, `(key-event 0)` polls and `(key-event 1)` waits. An
+event has the form `(key code modifiers)`. `read-line` is preferred unless the
+program needs individual key presses.
+
+`wait` delays by raster frames using the same clock as `time`:
+
+```lisp
+(wait 26)                 ; about half a second on the accepted hardware
+```
+
+The admitted range is 0 through 16,383 frames, and RUN/STOP can interrupt a
+wait. This is suitable for simple animation pacing without a tick callback.
+
+### Language forms, characters, and string traversal
+
+The compiler supports `let`, `let*`, local `setq`, ordinary parameters and
+`&rest`, `while`, `dotimes`, `dolist`, `when`, `unless`, `cond`, `case`,
+`lambda` and closures, `defun`, and `defmacro`. These are compiler-lowered
+language forms, not ordinary functions; generated function lists therefore do
+not contain all of their names.
+
+Characters are numeric fixnum codes. There is no separate character type and
+no `#\` literal syntax (`#'` function quote is the reader's supported `#`
+form). Obtain a code with `string-ref` or use a number, compare it with `=`,
+and convert case with `char-upcase` or `char-downcase`.
+
+`every`, `some`, `filter`, `mapcar`, and `reduce` walk lists rather than
+strings. Dialect V2 does not expose the former `string->list` and
+`list->string` conversion names. For character-by-character work, iterate by
+index instead:
+
+```lisp
+(dotimes (i (string-length text))
+  (write-char (char-upcase (string-ref text i))))
+```
+
+Use direct operations such as `search`, `substring`, `string-prefix-p`,
+`string-suffix-p`, `string-equal`, `string-trim`, `string-upcase`, and
+`string-downcase` for packed strings.
 
 ## Editor keys
 
@@ -268,19 +363,19 @@ further writes. The release does not claim atomicity inside that window.
 - One post-GC out-of-memory event in a 1,200-allocation `while` workload was
   not reproduced by the follow-up run. Preserve the exact form and preceding
   steps if a small-live-set OOM recurs.
-- One late-session `(require 'place)` returned `nil`; two cold-start retries
-  returned `t`. If `require` unexpectedly returns `nil`, cold-restart and
-  retry once, then preserve the requested library name and preceding steps if
-  the symptom recurs.
 - M65D/editor saves support 1–8,192 bytes. Evaluator `load` has a separate
   38,400-byte staging ceiling; memory may constrain practical input earlier.
-- The compiler builds Workbench L65M modules, not standalone runtimes or
-  bootable application disks.
+- The Ship Builder creates bootable application disks from L65P-v1 projects,
+  but does not turn arbitrary live Workbench session state into an image.
 - Function metadata proves exact arity for 101 entries; 34 native or macro
   entries are explicitly unresolved, so complete integrated help is not
   claimed.
 - The editor has fixed-capacity buffers and no undo/redo, interactive symbol
   completion, integrated help, or full structural editing.
+- A deterministic editor stall has been observed around the first collection
+  after roughly 56 typed keys. RUN/STOP recovered in the observed case. The
+  faster renderer is retained because the same path exists in the older
+  renderer; preserve the preceding session if the stall recurs.
 - The screen scrolls character RAM but not color RAM. Text moving through the
   former banner rows may inherit the banner colors. This is display-only;
   `screen-clear` is not a workaround because it leaves color attributes intact.

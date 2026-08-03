@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.2.5. Sealed
+This is the maintained user-facing issue register for lisp65 1.3.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -54,25 +54,51 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Not delivered in 1.2.5: `defstruct` and dynamic packages
+## Not delivered in 1.3.0: `defstruct` and dynamic packages
 
 `defstruct` and the associated dynamic package-loading freight are not part of
-the v1.2.5 user surface. Their host-side designs and test artifacts are
+the v1.3.0 user surface. In a quiet hardware run, `(require 'defstruct)`
+returned `t`, but `(defstruct point x y)` then ran for 180 seconds and entered
+the red fail-closed stop without monitor traffic. The fault is reproducible;
+no workaround or fix is claimed. The host-side designs and test artifacts are
 development material, not commands promised by this release.
 
-## Not delivered in 1.2.5: `gc`, `room` and `error`
+## Not delivered in 1.3.0: `gc`, `room` and `error`
 
 The three diagnostic commands `(gc)`, `(room)` and `(error)` are not part of
-the v1.2.5 user surface. They were designed and specified, then held back on
+the v1.3.0 user surface. They were designed and specified, then held back on
 capacity: their cold read carrier measures 1,724 bytes against a session
 deficit of 399, and re-fusing correctness-critical phases for a diagnostic
 instrument was judged disproportionate. Nothing else in the product depends on
 them; a user simply does not have them.
 
-## Not delivered in 1.2.5: `restart-repl`
+## Not delivered in 1.3.0: `restart-repl`
 
 `restart-repl` is outside the contracted product surface for this era. A user
 who wants a clean image restarts the machine.
+
+## Active editor issue: possible stall near the first collection
+
+Status: **deterministic in the development reproducer; mechanism parked**
+
+One hardware sequence accepted 55 typed keys and then stopped processing at
+key 56, close to the first collection in the lean editor allocation profile.
+RUN/STOP recovered the observed session. Host replay, sanitizers, and a binary
+comparison found no editor-code regression relative to the older renderer;
+the faster renderer remains in 1.3.0 because it reduces the measured average
+from about 78 to 24 raster frames per key.
+
+If typing stops responding, press RUN/STOP once. If the REPL does not recover,
+cold-restart. Preserve the preceding forms and approximate number of typed
+characters for a report. No cause or complete fix is claimed.
+
+## Active Ship limitation: RUN/STOP source not independently verified
+
+Standalone Ship runtimes poll the historical KERNAL STKEY byte at `$91` for
+RUN/STOP. Its meaning under the tested MEGA65 KERNAL has not yet been verified
+independently. This does not affect ordinary physical keyboard input or the
+hardware-proven `read-line` sample, but Ship programs must not rely on a
+release claim for RUN/STOP until that seam is measured.
 
 ## Active limitation: a fail-closed stop reports nothing
 

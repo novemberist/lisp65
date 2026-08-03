@@ -285,7 +285,7 @@ def artifact_gate() -> dict[str, Any]:
     bank2 = profile["bank2_static_code"]
     random_delta = profile["random_base_delta"]
     while_delta = profile["while_delta"]
-    fx_delta = profile["fx_base_delta"]
+    fx_delta = profile["q_base_delta"]
     time_delta = profile.get("time_base_delta")
     option_a = profile.get("require_prior_append_option_A_delta")
     time_code = 0 if time_delta is None else int(
@@ -294,34 +294,15 @@ def artifact_gate() -> dict[str, Any]:
         time_delta["new_entries"])
     time_resolutions = 0 if time_delta is None else int(
         time_delta["new_resolutions"])
+    # Admission is a historical Link-76 question.  Do not reconstruct that
+    # baseline by subtracting every known successor from today's product:
+    # unrelated future Bank-2 freight would then invalidate an already
+    # measured random delta.
     geometry = {
-        "bank2_static_code_bytes": (
-            int(bank2["bytes"])
-            - int(random_delta["stdlib_code_bytes"])
-            - int(while_delta["lcc_code_bytes"])
-            - int(fx_delta["stdlib_code_bytes"])
-            - time_code
-            - (0 if option_a is None
-               else int(option_a["stdlib_code_bytes"]))
-        ),
-        "entries": (
-            int(profile["entries"])
-            - int(random_delta["new_entries"])
-            - int(while_delta["new_entries"])
-            - int(fx_delta["new_entries"])
-            - time_entries
-            - (0 if option_a is None else int(option_a["new_entries"]))
-        ),
-        "resolutions": (
-            int(profile["resolutions"])
-            - int(random_delta["new_resolutions"])
-            - int(while_delta["new_resolutions"])
-            - int(fx_delta["new_resolutions"])
-            - time_resolutions
-            - (0 if option_a is None
-               else int(option_a["new_resolutions"]))
-        ),
-        "roots": int(profile["roots"]),
+        "bank2_static_code_bytes": 40746,
+        "entries": 682,
+        "resolutions": 2711,
+        "roots": 340,
     }
     require(
         profile["format"] == "lisp65-c2-l-full-product-profile-v1"
@@ -349,6 +330,22 @@ def artifact_gate() -> dict[str, Any]:
     require(all(value >= 0 for key, value in projected.items()
                 if key.endswith("headroom") or key.endswith("headroom_bytes")),
             "random projected static-plane capacity red")
+    current = {
+        "bank2_static_code_bytes": int(bank2["bytes"]),
+        "bank2_headroom_bytes": int(bank2["headroom_bytes"]),
+        "entries": int(profile["entries"]),
+        "entry_headroom": 2048 - int(profile["entries"]),
+        "resolutions": int(profile["resolutions"]),
+        "resolution_headroom": 4096 - int(profile["resolutions"]),
+        "roots": int(profile["roots"]),
+        "root_headroom": 1536 - int(profile["roots"]),
+    }
+    require(
+        int(bank2["headroom_bytes"]) == 65536 - int(bank2["bytes"])
+        and all(value >= 0 for key, value in current.items()
+                if "headroom" in key),
+        "random current-composition capacity red",
+    )
     return {
         "baseline": {
             "code_bytes": int(old["code_bytes"]),
@@ -370,6 +367,7 @@ def artifact_gate() -> dict[str, Any]:
             "resident_bytes": 0,
         },
         "projected_post_Link76": projected,
+        "current_composition": current,
         "candidate_stdout": candidate["stdout"],
         "candidate_observation": candidate["observation"],
     }

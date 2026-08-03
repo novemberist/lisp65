@@ -1,0 +1,114 @@
+{
+  "extends": "p0-stdlib-time-base.json",
+  "sources": [
+    "lib/stdlib-read-line.lisp",
+    "lib/stdlib-wait.lisp"
+  ],
+  "functions": [
+    "%read-line-clear-from",
+    "%read-line-render-reverse",
+    "%read-line-finish",
+    "%read-line-loop",
+    "read-line",
+    "%wait-until",
+    "wait"
+  ],
+  "tailcall_self": [
+    "%read-line-clear-from",
+    "%read-line-render-reverse",
+    "%read-line-loop",
+    "%wait-until"
+  ],
+  "cases": [
+    {
+      "name": "read-line-empty",
+      "expr": "(read-line)",
+      "expect": "\"\"",
+      "key_events": [13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "        "},
+      "expect_io_min": {"key_event": 1, "write_char": 1, "screen_put_char": 80}
+    },
+    {
+      "name": "read-line-echo",
+      "expr": "(read-line)",
+      "expect": "\"abc\"",
+      "key_events": [97, 98, 99, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "abc     "},
+      "expect_io_min": {"key_event": 4, "write_char": 1, "screen_put_char": 83}
+    },
+    {
+      "name": "read-line-del-edit",
+      "expr": "(read-line)",
+      "expect": "\"ac\"",
+      "key_events": [97, 98, 20, 99, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "ac      "},
+      "expect_io_min": {"key_event": 5, "write_char": 1, "screen_put_char": 84}
+    },
+    {
+      "name": "read-line-ignore-control",
+      "expr": "(read-line)",
+      "expect": "\"a\"",
+      "key_events": [17, 97, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "a       "},
+      "expect_io_min": {"screen_put_char": 81}
+    },
+    {
+      "name": "read-line-run-stop",
+      "expr": "(read-line)",
+      "expect_vm_error": "Stopped",
+      "key_events": [3],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [],
+      "expect_screen_rows": {"24": "        "},
+      "expect_io_min": {"screen_put_char": 80}
+    },
+    {
+      "name": "wait-zero",
+      "expr": "(wait 0)",
+      "expect": "nil",
+      "memory_read_sequences": {"0xff83": [10, 10]},
+      "expect_io_min": {"memory_read_sequence": 2}
+    },
+    {
+      "name": "wait-three",
+      "expr": "(wait 3)",
+      "expect": "nil",
+      "memory_read_sequences": {"0xff83": [10, 10, 11, 12, 13]},
+      "expect_io_min": {"memory_read_sequence": 5}
+    },
+    {
+      "name": "wait-counter-wrap",
+      "expr": "(wait 3)",
+      "expect": "nil",
+      "memory_read_sequences": {
+        "0xff83": [254, 254, 255, 0, 1],
+        "0xff84": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+      },
+      "expect_io_min": {"memory_read_sequence": 5}
+    },
+    {
+      "name": "wait-exact-maximum-admitted",
+      "expr": "(wait 16383)",
+      "expect": "nil",
+      "memory_read_sequences": {
+        "0xff83": [0, 255],
+        "0xff84": [0, 0, 63, 63]
+      },
+      "max_steps": 10000
+    },
+    {
+      "name": "wait-overflow-rejected",
+      "expr": "(wait 16384)",
+      "expect_vm_error": "DirMiss"
+    }
+  ],
+  "description": "Ship-v1.3 public read-line and wait freight over key-event, a Bank-2-owned last-row screen viewport, and the atomic raster counter."
+}

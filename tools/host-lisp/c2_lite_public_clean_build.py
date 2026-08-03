@@ -19,7 +19,7 @@ from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[2]
 AUTHORITY = ROOT / "config/c2-lite-public-build-authority.json"
-MANIFEST = ROOT / (
+DEFAULT_MANIFEST_REL = Path(
     "build/c2.2/v1.2.5-candidate-media/candidate-manifest.json")
 BUILD_COMMAND = ("make", "--no-print-directory", "workbench-product")
 AXES = (
@@ -90,6 +90,9 @@ def authority(root: Path = ROOT) -> dict[str, Any]:
             == "fresh-source-single-emitter-plus-one-WPLTO"
         and value.get("private_evidence_is_build_input") is False
         and value.get("entry_point") == "make workbench-product"
+        and isinstance(value.get("candidate_manifest_path"), str)
+        and value["candidate_manifest_path"].endswith(
+            "/candidate-manifest.json")
         and value.get("artifact_count") == 19
         and isinstance(identity, dict)
         and set(identity) == {"field", "sha256", "meaning"}
@@ -167,9 +170,9 @@ def artifact_projection(
 
 def check_root(root: Path) -> dict[str, Any]:
     auth = authority(root)
-    manifest_path = root / (
-        "build/c2.2/v1.2.5-candidate-media/candidate-manifest.json")
-    manifest = load(manifest_path, "v1.2.5 public media manifest")
+    manifest_path = root / auth.get(
+        "candidate_manifest_path", DEFAULT_MANIFEST_REL.as_posix())
+    manifest = load(manifest_path, "public media manifest")
     rows = artifact_projection(root, manifest, auth["sealed_roles"])
     require(
         manifest.get("artifact_set_sha256")

@@ -63,9 +63,8 @@
 ;; backspace left one white block per key (user finding 2026-07-06). At the
 ;; boundary, the driver clips x.
 (defun %ide-render-code-suffix-at (text y from pad)
-  ((lambda (codes len)
+  ((lambda (len)
      (progn
-       (%ide-render-codes-at (%ide-nth-cell codes from) from y 1)
+       (%ide-render-string-codes-at text from y 1 len)
        (%ide-pad-eol len (+ len (+ pad 1)) y 1)))
-   (string->list text)
    (string-length text)))

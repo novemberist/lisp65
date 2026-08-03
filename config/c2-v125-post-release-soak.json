@@ -1,0 +1,133 @@
+{
+  "format": "lisp65-c2.2-v1.2.5-corrected-post-release-soak-v1",
+  "version": 1,
+  "status": "commissioned-measurement-only",
+  "schedule": {
+    "batches": 31,
+    "cycles_per_batch": 60,
+    "minimum_cycles": 1800,
+    "minimum_session_seconds": 1800,
+    "start_interval_seconds": 60
+  },
+  "setup": [
+    {
+      "id": "cycle-counter",
+      "form": "(setq *sc* 0)",
+      "expected": "0"
+    },
+    {
+      "id": "mismatch-counter",
+      "form": "(setq *sm* 0)",
+      "expected": "0"
+    },
+    {
+      "id": "cycle-helper",
+      "form": "(defun %s(n)(let((i 0))(progn(while(< i n)(if(= 4(length(eval(quote(list 1 2 3 4)))))nil(setq *sm*(+ *sm* 1)))(setq *sc*(+ *sc* 1))(setq i(+ i 1)))t)))",
+      "expected": "%s"
+    },
+    {
+      "id": "status-helper",
+      "form": "(defun %sr()(list *sc* *sm*(peek 185 240)(peek 185 241)(peek 0 143)(peek 0 63)(peek 0 64)))",
+      "expected": "%sr"
+    },
+    {
+      "id": "require-baseline",
+      "form": "(require(quote place))",
+      "expected": "t"
+    }
+  ],
+  "batch": {
+    "work_form": "(%s 60)",
+    "work_expected": "t",
+    "require_form": "(require(quote place))",
+    "require_expected": "t",
+    "status_form": "(%sr)"
+  },
+  "persistent_definitions": [
+    {
+      "batch": 5,
+      "form": "(defun %s0()0)",
+      "expected": "%s0",
+      "call": "(%s0)",
+      "call_expected": "0"
+    },
+    {
+      "batch": 10,
+      "form": "(defun %s1()1)",
+      "expected": "%s1",
+      "call": "(%s1)",
+      "call_expected": "1"
+    },
+    {
+      "batch": 15,
+      "form": "(defun %s2()2)",
+      "expected": "%s2",
+      "call": "(%s2)",
+      "call_expected": "2"
+    },
+    {
+      "batch": 20,
+      "form": "(defun %s3()3)",
+      "expected": "%s3",
+      "call": "(%s3)",
+      "call_expected": "3"
+    },
+    {
+      "batch": 25,
+      "form": "(defun %s4()4)",
+      "expected": "%s4",
+      "call": "(%s4)",
+      "call_expected": "4"
+    },
+    {
+      "batch": 30,
+      "form": "(defun %s5()5)",
+      "expected": "%s5",
+      "call": "(%s5)",
+      "call_expected": "5"
+    }
+  ],
+  "candidate": {
+    "release": "v1.2.5",
+    "link": 82,
+    "product_build_id": "0x270030c3",
+    "expected_banner": "WORKBENCH 1.2.4",
+    "deployment": {
+      "path": "build/c2.2/v1.2.5-require-prior-append-hardware/deployment.json",
+      "bytes": 5865,
+      "sha256": "b393963d6f0248120877b5be5a0fc99d9a52f35a2efa0db294feee8239bc6416"
+    },
+    "hardware_receipt": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-v1.2.5-require-prior-append-hardware-receipt.json",
+      "sha256": "9df23279a0dce68b5699cde049be74bb0679f84461a9ab403394b3a5c0590459"
+    },
+    "package_visible_files": [
+      "defstruct",
+      "l65index",
+      "place"
+    ],
+    "remote_media": "L65V125P.D81",
+    "initial_images": 6,
+    "place_slot_after_helpers": 8
+  },
+  "addresses": {
+    "phase_owner": 137,
+    "mem_oom": 143,
+    "gc_badobj": 63,
+    "gc_runs": 47600,
+    "trace": 49652,
+    "c2d": 327680,
+    "c2d_bytes": 50752,
+    "c2j": 378432,
+    "c2j_bytes": 64
+  },
+  "quiescent_invariants": {
+    "phase_owner": 0,
+    "c2j": "all-zero",
+    "transient_handle_watermark_u16": 4096,
+    "semantic_mismatches": 0,
+    "mem_oom": 0,
+    "gc_badobj_delta": 0
+  },
+  "claim_limit": "One non-promotable corrected post-release soak against exact v1.2.5 product and package identities. No product bytes, link, publish-path change, C2-full claim or acceptance claim."
+}

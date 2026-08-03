@@ -32,6 +32,7 @@ tool development and self-tests.
 | `bytecode_p0_drift_check.py` | opcode/primitive identity parity across archived ABI, Python, and C |
 | `code_object_arity_contract.py` | strict-arity layout and executor/validator parity |
 | `v2_native_function_registry.py` | generates and checks primitive views from one registry |
+| `ship_builder.py` | builds, executes, reopens, and reproducibly verifies standalone Ship-v1 D81 images |
 | `workbench_ship.py` | builds and verifies the historical workbench ship format |
 | `overlay_package.py` | builds and verifies profile-bound overlay packages |
 | `r6_g6_seal.py` / `r6_g6_seal_offline.py` | seals final G6 hardware acceptance |

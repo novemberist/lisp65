@@ -1,0 +1,38 @@
+{
+  "format": "lisp65-c2.3-v1.3-link86-queue-cpu-witness-v1",
+  "status": "owner-authorized-non-promotable-diagnostic-identity",
+  "candidate_link": 86,
+  "form": "(ship \"interactive\" :entry 'main)",
+  "project": "examples/ship/interactive/project.l65p",
+  "reference_image": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.d81",
+  "reference_image_sha256": "c9194a714f16e43181ab43b3b1fa1c138e1a74def3311e6d86dc35ffc8cf6c16",
+  "reference_runtime_elf": "build/ship-builder/v13/link86-final-5a7c0d18/interactive.runtime.elf",
+  "reference_runtime_elf_sha256": "6a256512378142ece82ca6405cbf01a60f7c01f2312a84b9eb4f37969d26a0b4",
+  "output": "build/ship-builder/v13/link86-queue-cpu-witness/interactive.d81",
+  "remote": "QCPUWIT.D81",
+  "runtime_state_symbol": "lisp65_runtime_state",
+  "waiting_value": 2,
+  "physical_key": "A",
+  "witness_symbols": [
+    "lisp65_ship_queue_diag_samples",
+    "lisp65_ship_queue_diag_last_state",
+    "lisp65_ship_queue_diag_last_code",
+    "lisp65_ship_queue_diag_latched",
+    "lisp65_ship_queue_diag_latched_state",
+    "lisp65_ship_queue_diag_latched_code"
+  ],
+  "interpretation": {
+    "queue_present": "latched=1 and latched_state bit 7 set: CPU saw the physical key in the hardware queue before GETIN; consumer path owns the failure",
+    "queue_empty": "samples>0 and latched=0 after the physical key: queue also empty in CPU I/O view; production/configuration below owns the failure",
+    "invalid": "samples=0, pre-key latch nonzero, or inconsistent latch/state: harness First Red; no product claim"
+  },
+  "limits": {
+    "promotable": false,
+    "product_candidate_bytes_changed": 0,
+    "product_links": 0,
+    "diagnostic_identities": 1,
+    "physical_key_contacts": 1,
+    "virtual_keys": 0,
+    "post_key_screen_captures": 0
+  }
+}

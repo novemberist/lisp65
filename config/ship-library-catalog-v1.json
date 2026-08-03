@@ -1,0 +1,32 @@
+{
+  "format": "lisp65-ship-library-catalog-v1",
+  "version": 1,
+  "libraries": [
+    {
+      "name": "core",
+      "requires": [],
+      "suite": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+      "sources": [
+        "lib/prelude-m1.lisp",
+        "lib/stdlib-time.lisp",
+        "lib/stdlib-read-line.lisp",
+        "lib/stdlib-wait.lisp"
+      ],
+      "exports": ["nthcdr", "reverse", "time", "key-event", "read-line", "wait"]
+    },
+    {
+      "name": "random",
+      "requires": ["core"],
+      "suite": "tests/bytecode/libs/p0-stdlib-random-base.json",
+      "sources": ["lib/stdlib-random.lisp"],
+      "exports": ["random", "random-seed"]
+    },
+    {
+      "name": "q",
+      "requires": [],
+      "suite": "tests/bytecode/libs/p0-stdlib-q-base.json",
+      "sources": ["lib/stdlib-q.lisp"],
+      "exports": ["q", "int->q", "q->int", "q+", "q-", "q*", "q/", "q->string"]
+    }
+  ]
+}

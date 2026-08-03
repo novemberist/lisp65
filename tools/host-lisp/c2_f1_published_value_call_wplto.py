@@ -274,7 +274,7 @@ def static_gate() -> dict[str, Any]:
     require(
         report["static_code_bytes"] == EXPECTED_STATIC
         and report["entries"] == EXPECTED_ENTRIES
-        and len(mutations) == 6,
+        and len(mutations) == 7,
         "F1 static-plane gate red",
     )
     STATIC_RECEIPT.parent.mkdir(parents=True, exist_ok=True)

@@ -24,6 +24,10 @@
 #define R3_DESCRIPTOR_NAME "boot.id"
 #define R3_DESCRIPTOR_HEADER_BYTES 16u
 #define R3_DESCRIPTOR_RECORD_BYTES 32u
+#if defined(LISP65_C2_LITE_MEDIA_STAGER) || defined(LISP65_SHIP_MEDIA_STAGER)
+#define LISP65_VERIFIED_MEDIA_STAGER 1
+#endif
+
 #ifdef LISP65_C2_LITE_MEDIA_STAGER
 #define R3_DESCRIPTOR_BYTES 432u
 #define R3_DESCRIPTOR_RECORDS 13u
@@ -33,6 +37,15 @@
 #define R3_ROLE_PRODUCT 9u
 #define R3_ROLE_LAST 13u
 #define R3_ROLE_MASK 0x1fffu
+#elif defined(LISP65_SHIP_MEDIA_STAGER)
+#define R3_DESCRIPTOR_BYTES 80u
+#define R3_DESCRIPTOR_RECORDS 2u
+#define R3_DESCRIPTOR_VERSION 3u
+#define R3_ROLE_FIRST_STAGE 1u
+#define R3_ROLE_LAST_STAGE 1u
+#define R3_ROLE_PRODUCT 2u
+#define R3_ROLE_LAST 2u
+#define R3_ROLE_MASK 0x0003u
 #else
 #define R3_DESCRIPTOR_BYTES 272u
 #define R3_DESCRIPTOR_RECORDS 8u
@@ -52,7 +65,7 @@
 #define R3_NORMAL_F018B_LIMIT 0x00100000ul
 #define R3_PHYSICAL_ADDRESS_LIMIT 0x10000000ul
 
-#ifndef LISP65_C2_LITE_MEDIA_STAGER
+#ifndef LISP65_VERIFIED_MEDIA_STAGER
 #define R3_ROLE_BANK5 1u
 #define R3_ROLE_ATTIC 2u
 #define R3_ROLE_PRODUCT 3u
@@ -80,7 +93,7 @@ extern void r3_rom_write_enable(void);
 static uint8_t descriptor[R3_DESCRIPTOR_BYTES];
 static uint8_t sector_payload[254];
 static uint8_t verify_buffer[256];
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
 static volatile uint8_t c2_target_readback[254];
 #endif
 #ifdef LISP65_G5_IO_TRIGGER_PROBE
@@ -119,7 +132,7 @@ struct r3_edma_job {
 };
 
 __attribute__((used)) static struct r3_edma_job edma_job;
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
 struct r3_f018b_job {
     uint8_t list[12];
 };
@@ -237,7 +250,7 @@ static void edma_copy(uint32_t src, uint32_t dst, uint16_t count) {
         ::: "a", "memory");
 }
 
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
 static void c2_f018b_prepare(struct r3_f018b_job *job, uint32_t src,
                              uint32_t dst, uint16_t count, uint8_t command) {
     job->list[0] = command;
@@ -356,7 +369,11 @@ static uint8_t c2_stage_address_domain(uint32_t address, uint32_t length) {
 
 static uint8_t c2_stage_record_domain_valid(
         uint8_t role, const uint8_t *record) {
+#ifdef LISP65_SHIP_MEDIA_STAGER
+    uint8_t expected = C2_STAGE_CHIP;
+#else
     uint8_t expected = role <= 3u ? C2_STAGE_CHIP : C2_STAGE_ATTIC;
+#endif
     return record && record[0] == role &&
            c2_stage_address_domain(
                rd32(record + 4), rd32(record + 8)) == expected;
@@ -413,7 +430,11 @@ static uint8_t product_media_identity(void) {
 #else
     uint16_t off;
     volatile uint8_t *p;
+#ifdef LISP65_SHIP_MEDIA_STAGER
+    static const char name[] = "L65APP";
+#else
     static const char name[] = "L65SYS";
+#endif
     uint8_t index;
     uint8_t ok = 1;
     if (!f011_read(40, 0, &off)) return 0;
@@ -473,13 +494,13 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
     uint16_t fuel;
     uint32_t length = 0;
     uint32_t crc = 0xfffffffful;
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
     uint8_t stage_domain = stage
         ? c2_stage_address_domain(destination, expected_length)
         : C2_STAGE_INVALID;
 #endif
     if (!expected_length || expected_length > R3_MAX_MEDIA_BYTES) return 0;
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
     if (stage && stage_domain == C2_STAGE_INVALID) return 0;
 #endif
     fuel = (uint16_t)((expected_length + R3_LOGICAL_SECTOR_PAYLOAD - 1ul) /
@@ -511,7 +532,7 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
         }
         lisp65_f011_unmap_buffer();
         if (stage && count) {
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
             uint16_t poll;
             uint8_t wraps = 0;
             uint8_t raster = *(volatile uint8_t *)0xd012;
@@ -610,7 +631,7 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
     return length == expected_length && (crc ^ 0xfffffffful) == expected_crc;
 }
 
-#ifndef LISP65_C2_LITE_MEDIA_STAGER
+#ifndef LISP65_VERIFIED_MEDIA_STAGER
 static uint32_t memory_crc32(uint32_t address, uint32_t length) {
     uint32_t crc = 0xfffffffful;
     while (length) {
@@ -719,7 +740,7 @@ static uint8_t validate_descriptor(void) {
     return seen == R3_ROLE_MASK;
 }
 
-#ifndef LISP65_C2_LITE_MEDIA_STAGER
+#ifndef LISP65_VERIFIED_MEDIA_STAGER
 static uint8_t memory_record_valid(const uint8_t *record,
                                    uint32_t profile_build_id) {
 #ifdef R3_G3_TRACE
@@ -769,7 +790,7 @@ static uint8_t disk_record(const uint8_t *record, uint8_t stage) {
 #endif
 }
 
-#ifndef LISP65_C2_LITE_MEDIA_STAGER
+#ifndef LISP65_VERIFIED_MEDIA_STAGER
 static uint8_t staged_state_valid(uint32_t profile_build_id) {
     const uint8_t *bank5 = find_role(R3_ROLE_BANK5);
     const uint8_t *attic = find_role(R3_ROLE_ATTIC);
@@ -782,7 +803,7 @@ static uint8_t staged_state_valid(uint32_t profile_build_id) {
 #endif
 
 static uint8_t restage_and_reverify(uint32_t profile_build_id) {
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
     uint8_t attempt;
     uint8_t role;
     (void)profile_build_id;
@@ -862,7 +883,11 @@ static void prepare_chain(const uint8_t *product) {
 }
 
 static void show_disk_error(void) {
+#ifdef LISP65_SHIP_MEDIA_STAGER
+    static const char message[] = "L65APP DISK ERROR - CHECK MEDIA";
+#else
     static const char message[] = "L65SYS DISK ERROR - CHECK MEDIA";
+#endif
     uint8_t index;
     R3_BORDER = 2;
     for (index = 0; index < sizeof message - 1u && index < 40u; index++)
@@ -878,13 +903,15 @@ int main(void) {
     if (!product_media_identity() || !load_descriptor() || !validate_descriptor())
         show_disk_error();
     profile_build_id = rd32(descriptor + 12);
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
     /* Bank 2 and Bank 3 are writable Chip RAM only after the idempotent
      * HYPPO memory-trap service has removed ROM backing-bank protection.
      * Re-establish the I/O personality immediately at this ownership
      * boundary, then enable writes before the first stage-role job. */
     io_enable();
+#ifdef LISP65_C2_LITE_MEDIA_STAGER
     r3_rom_write_enable();
+#endif
     if (!restage_and_reverify(profile_build_id))
 #else
     if (!staged_state_valid(profile_build_id) &&
@@ -893,7 +920,7 @@ int main(void) {
         show_disk_error();
     for (index = 0; index < R3_DESCRIPTOR_RECORDS; index++) {
         const uint8_t *record = record_at(index);
-#ifdef LISP65_C2_LITE_MEDIA_STAGER
+#ifdef LISP65_VERIFIED_MEDIA_STAGER
         if (!(record[1] & R3_FLAG_STAGE) &&
             record[0] != R3_ROLE_PRODUCT &&
 #else
@@ -905,7 +932,7 @@ int main(void) {
     product = find_role(R3_ROLE_PRODUCT);
     if (!product || rd32(product + 4) != R3_PRODUCT_STAGE ||
         !(product[1] & R3_FLAG_PRG) || !disk_record(product, 1)
-#ifndef LISP65_C2_LITE_MEDIA_STAGER
+#ifndef LISP65_VERIFIED_MEDIA_STAGER
         || !staged_state_valid(profile_build_id)
 #endif
         ) show_disk_error();

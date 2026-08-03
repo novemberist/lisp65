@@ -1,0 +1,109 @@
+{
+  "extends": "p0-stdlib-random-base.json",
+  "sources": [
+    "lib/stdlib-q.lisp"
+  ],
+  "functions": [
+    "%q-error",
+    "%q-add2",
+    "int->q",
+    "q",
+    "q->int",
+    "q+",
+    "q-",
+    "%q-negative-product-p",
+    "%q-mag-low",
+    "%q-mag-high",
+    "%q-write-inputs",
+    "%q-wait-multiply",
+    "%q-wait-divide",
+    "%q-finish-magnitude",
+    "%q-round-magnitude",
+    "%q-product-result",
+    "%q-read-product",
+    "q*",
+    "%q-scaled-low",
+    "%q-scaled-mid",
+    "%q-scaled-high",
+    "%q-division-result",
+    "%q-read-division",
+    "q/",
+    "%q-fraction-string",
+    "q->string"
+  ],
+  "tailcall_self": [
+    "%q-wait-multiply",
+    "%q-wait-divide"
+  ],
+  "cases": [
+    {
+      "name": "q-constructor",
+      "expr": "(list (q 1 64) (q -1 -64) (q 0))",
+      "expect": "(192 -192 0)"
+    },
+    {
+      "name": "q-integer-conversions",
+      "expr": "(list (int->q 127) (int->q -128) (q->int 191) (q->int -191) (q->int -16384))",
+      "expect": "(16256 -16384 1 -1 -128)"
+    },
+    {
+      "name": "q-add-sub",
+      "expr": "(list (q+ 160 32) (q- 160 32) (q- -16384 -16384))",
+      "expect": "(192 128 0)"
+    },
+    {
+      "name": "q-multiply-main",
+      "expr": "(list (q* 192 256) (q* -192 256) (q* -16384 128))",
+      "expect": "(384 -384 -16384)",
+      "expect_io_min": {
+        "math_input_write": 24,
+        "math_refresh": 24
+      }
+    },
+    {
+      "name": "q-multiply-ties-away",
+      "expr": "(list (q* 1 64) (q* -1 64) (q* 16383 1))",
+      "expect": "(1 -1 128)"
+    },
+    {
+      "name": "q-divide-main",
+      "expr": "(list (q/ 128 384) (q/ -128 384) (q/ -16384 128))",
+      "expect": "(43 -43 -16384)",
+      "expect_io_min": {
+        "math_input_write": 24,
+        "math_refresh": 24
+      }
+    },
+    {
+      "name": "q-divide-ties-away",
+      "expr": "(list (q/ 1 256) (q/ -1 256) (q/ 3 256))",
+      "expect": "(1 -1 2)"
+    },
+    {
+      "name": "q-render",
+      "expr": "(list (q->string 192) (q->string 1) (q->string -192) (q->string -16384) (q->string 0))",
+      "expect": "(\"1.5\" \"0.0078125\" \"-1.5\" \"-128.0\" \"0.0\")"
+    },
+    {
+      "name": "q-overflow-add",
+      "expr": "(q+ 16383 1)",
+      "expect_vm_error": "TypeError"
+    },
+    {
+      "name": "q-overflow-multiply",
+      "expr": "(q* 16383 129)",
+      "expect_vm_error": "TypeError"
+    },
+    {
+      "name": "q-overflow-divide",
+      "expr": "(q/ 16383 1)",
+      "expect_vm_error": "TypeError"
+    },
+    {
+      "name": "q-division-zero",
+      "expr": "(q/ 128 0)",
+      "expect_vm_error": "TypeError"
+    }
+  ],
+  "description": "v1.2.4 Q8.7 base-composition candidate using the modeled MEGA65 math-register surface."
+}

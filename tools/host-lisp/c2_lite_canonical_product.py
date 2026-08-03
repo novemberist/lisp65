@@ -349,7 +349,7 @@ def fresh_link57_authority() -> dict[str, Any]:
     keymap = LINK57.KEYGATE.validate(key_bundle, run_oracle=True)
     keymap["mutations_rejected"] = LINK57.KEYGATE.mutation_tests(key_bundle)
     require(
-        plane["mutations_rejected"] == 6
+        plane["mutations_rejected"] == 7
         and keymap["mutations_rejected"] == 10,
         "fresh Link-57 static/keymap authority is incomplete")
     return {

@@ -1,0 +1,90 @@
+{
+  "format": "lisp65-ship-builder-contract-v1",
+  "version": 1,
+  "status": "accepted-for-implementation",
+  "surface": {
+    "form": "(ship string :entry quoted-symbol)",
+    "project_format": "l65-project-v1",
+    "entry_abi": "named-zero-argument-p0",
+    "overwrite": "forbidden"
+  },
+  "authorities": {
+    "project_parser_and_resolver": "tools/host-lisp/l65p_v1.py",
+    "library_catalog": "config/ship-library-catalog-v1.json",
+    "bytecode_emitter": "tools/host-lisp/bytecode_p0_stdlib.py",
+    "runtime_entry": "products/runtime-core/main.c",
+    "runtime_linker": "scripts/lisp65-mega65-runtime-core-inline-overlay.ld",
+    "cold_stager": "scripts/r3-cold-stager-main.c",
+    "cold_trampoline": "scripts/c2-lite-cold-stager-chain.s",
+    "license": "LICENSE"
+  },
+  "closure": {
+    "project_functions": "all",
+    "library_functions": "reachable-only",
+    "dependency_order": "l65p-v1-resolution-lock",
+    "unknown_dynamic_target": "reject",
+    "diagnostics": "forbidden",
+    "probes": "forbidden",
+    "compiler_and_workbench": "forbidden"
+  },
+  "media": {
+    "label": "L65APP",
+    "disk_id": "65",
+    "bytes": 819200,
+    "descriptor_version": 3,
+    "runtime_entry": "linked-elf-_start",
+    "files": [
+      "AUTOBOOT.C65",
+      "BOOT.ID",
+      "RUNTIME.PRG",
+      "RUNTIME.BIN",
+      "APP.L65M",
+      "PROJECT.L65P",
+      "SHIP.LOCK",
+      "SHIP.JSON",
+      "LICENSE.TXT"
+    ]
+  },
+  "runtime": {
+    "profile": "dialect-v2-evaluator-free-ship-v1",
+    "base_library": "core",
+    "preload_bank": 5,
+    "preload_offset": 0,
+    "forbidden_symbols": [
+      "compile_top_form",
+      "crepl_boot_init",
+      "eval",
+      "eval_env",
+      "eval_init",
+      "eval_vm_bridge",
+      "lcc_install_obj",
+      "load_source_stream",
+      "read_atom",
+      "read_expr",
+      "read_expr_1",
+      "repl"
+    ]
+  },
+  "budgets": {
+    "max_d81_bytes": 819200,
+    "max_preload_bytes": 65536,
+    "max_code_object_bytes": 255,
+    "min_boot_stack_gap_bytes": 512,
+    "min_post_boot_reserve_bytes": 8192,
+    "max_runtime_prg_file_end": "0xb000",
+    "max_symbols": 720,
+    "max_directory_entries": 552
+  },
+  "redistribution": {
+    "runtime_license": "MPL-2.0",
+    "license_file": "LICENSE",
+    "source_location": "https://github.com/MEGA65/lisp65",
+    "user_program_relicensed": false
+  },
+  "gates": {
+    "contract": ["strict-schema", "mutations"],
+    "host": ["closure", "entry", "runtime-elf", "media-reopen"],
+    "reproducibility": "two-independent-clean-builds-byte-identical",
+    "samples": ["hello", "random-q", "long-runner", "interactive"]
+  }
+}

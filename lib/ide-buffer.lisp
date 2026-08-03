@@ -444,25 +444,45 @@
                (cons line-index new-column)))))))
 
 (defun ide-split-line (buffer)
-  ((lambda (point)
-     ((lambda (line)
-        ((lambda (prefix)
-           ((lambda (suffix)
-              (%ide-buffer-with-lines-point
-               buffer
-               (%ide-lines-insert
-                (%ide-lines-replace (ide-buffer-lines buffer)
-                                    (ide-point-line point)
-                                    prefix)
-                (+ (ide-point-line point) 1)
-                suffix)
-               (cons (+ (ide-point-line point) 1) 0)))
-            (ide-string-suffix line (ide-point-column point))))
-         (if (= (ide-point-column point) (string-length line))
-             line
-             (ide-string-prefix line (ide-point-column point)))))
-      (ide-line-at buffer (ide-point-line point))))
-   (ide-buffer-point buffer)))
+  (let* ((point (ide-buffer-point buffer))
+         (line-index (ide-point-line point))
+         (column (ide-point-column point))
+         (cache (ide-buffer-locals buffer)))
+    ;; The ordinary typing cache owns its reverse character list.  At the fill
+    ;; boundary this operation consumes the cache, so nreverse may turn it into
+    ;; the committed string without allocating a second 79-cell list.  The
+    ;; returned buffer clears locals; no live successor observes the consumed
+    ;; cache.
+    (if (and cache
+             (= (car cache) line-index)
+             (= (car (cdr (cdr cache))) column))
+        (%ide-buffer-with-lines-point
+         buffer
+         (%ide-lines-insert
+          (%ide-lines-replace
+           (car (cdr (cdr buffer)))
+           line-index
+           (list->string (nreverse (car (cdr cache)))))
+          (+ line-index 1)
+          (%ide-empty-str))
+         (cons (+ line-index 1) 0))
+        ((lambda (line)
+           ((lambda (prefix)
+              ((lambda (suffix)
+                 (%ide-buffer-with-lines-point
+                  buffer
+                  (%ide-lines-insert
+                   (%ide-lines-replace (ide-buffer-lines buffer)
+                                       line-index
+                                       prefix)
+                   (+ line-index 1)
+                   suffix)
+                  (cons (+ line-index 1) 0)))
+               (ide-string-suffix line column)))
+            (if (= column (string-length line))
+                line
+                (ide-string-prefix line column))))
+         (ide-line-at buffer line-index)))))
 
 (defun ide-delete-backward-char (buffer)
   (let* ((point (ide-buffer-point buffer))

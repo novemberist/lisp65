@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "config/c2-time-contract.json"
 SOURCE = ROOT / "lib/stdlib-time.lisp"
 SUITE = ROOT / "tests/bytecode/libs/p0-stdlib-time-base.json"
-BASE_SUITE = ROOT / "tests/bytecode/libs/p0-stdlib-fx-base.json"
+BASE_SUITE = ROOT / "tests/bytecode/libs/p0-stdlib-q-base.json"
 PROFILE = ROOT / "config/c2-l-full-product-profile.json"
 BUILD = ROOT / "build/post-promotion/v124/time/host-first"
 BASE_PREFIX = BUILD / "base/stdlib-p0"
@@ -107,7 +107,7 @@ def validate(
     )
     require(
         placement == {
-            "code": "Bank-2 base composition after fx",
+            "code": "Bank-2 base composition after q",
             "admission_budget_bytes": 512,
             "resident_code_bytes": 0,
             "resident_state_bytes": 0,
@@ -145,7 +145,7 @@ def validate(
         "time single-evaluation/read-only/output invariant drift",
     )
     require(
-        suite["extends"] == "p0-stdlib-fx-base.json"
+        suite["extends"] == "p0-stdlib-q-base.json"
         and suite["sources"] == ["lib/stdlib-time.lisp"]
         and suite["functions"] == TIME_NAMES
         and suite["tailcall_self"] == ["%time-read"]
@@ -321,15 +321,18 @@ def artifact_gate() -> dict[str, Any]:
     )
     profile = load(PROFILE)
     option_a = profile.get("require_prior_append_option_A_delta")
-    option_code = (
-        0 if option_a is None else int(option_a["stdlib_code_bytes"]))
+    if option_a is not None:
+        require(
+            option_a["contract"] == "config/c2-require-resolver-contract.json",
+            "bound require-option-A profile delta drift",
+        )
     bound_time = profile.get("time_base_delta")
     if bound_time is None:
-        baseline_code = int(profile["bank2_static_code"]["bytes"]) - option_code
+        baseline_code = 42936
     else:
         require(
             bound_time == {
-                "baseline": "v1.2.4 fx candidate",
+                "baseline": "v1.3 q candidate",
                 "stdlib_code_bytes": 282,
                 "new_entries": 3,
                 "new_resolutions": 12,
@@ -341,19 +344,35 @@ def artifact_gate() -> dict[str, Any]:
             },
             "bound time profile delta drift",
         )
-        baseline_code = (
-            int(profile["bank2_static_code"]["bytes"])
-            - int(bound_time["stdlib_code_bytes"])
-            - option_code
-        )
+        # The time admission predecessor is the accepted fx composition,
+        # independent of every later Bank-2-only addition.
+        baseline_code = 42936
     require(
-        profile.get("fx_base_delta") is not None and baseline_code == 42936,
+        profile.get("q_base_delta") is not None and baseline_code == 42936,
         "time profile is not the accepted fx predecessor",
     )
     projected = baseline_code + code_delta
     require(
         projected == 43218 and 65536 - projected == 22318,
         "time projected Bank-2 capacity drift",
+    )
+    current_code = int(profile["bank2_static_code"]["bytes"])
+    current = {
+        "bank2_static_code_bytes": current_code,
+        "bank2_headroom_bytes": 65536 - current_code,
+        "entries": int(profile["entries"]),
+        "entry_headroom": 2048 - int(profile["entries"]),
+        "resolutions": int(profile["resolutions"]),
+        "resolution_headroom": 4096 - int(profile["resolutions"]),
+        "roots": int(profile["roots"]),
+        "root_headroom": 1536 - int(profile["roots"]),
+    }
+    require(
+        int(profile["bank2_static_code"]["headroom_bytes"])
+            == current["bank2_headroom_bytes"]
+        and all(value >= 0 for key, value in current.items()
+                if "headroom" in key),
+        "time current-composition capacity red",
     )
     return {
         "baseline": {
@@ -379,6 +398,7 @@ def artifact_gate() -> dict[str, Any]:
             "bank2_headroom_bytes": 65536 - projected,
             "admission_budget_bytes": 512,
         },
+        "current_composition": current,
         "execution": {
             "tracked_cases_per_lane": len(load(SUITE)["cases"]),
             "independent_oracle_cases_per_lane": len(dynamic["cases"]),

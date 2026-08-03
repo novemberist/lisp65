@@ -43,7 +43,8 @@
       "artifact_role": "c2d-v6-code-plane",
       "name": "c2d.bin",
       "destination": "0x00050000",
-      "policy": "stage-and-independent-target-readback"
+      "policy": "stage-and-independent-target-readback",
+      "staging_transform": "canonical-prefix-plus-zero-reset-suffix"
     },
     {
       "role_id": 3,
@@ -123,6 +124,30 @@
       "policy": "media-CRC-only"
     }
   ],
+  "bank5_reset_domain": {
+    "artifact_role": "c2d-v6-code-plane",
+    "destination": "0x00050000",
+    "canonical_prefix_bytes": 33840,
+    "region_bytes": 50816,
+    "zero_suffix": [
+      33840,
+      50816
+    ],
+    "c2j": [
+      50752,
+      50816
+    ],
+    "boot_scratch": [
+      34048,
+      37333
+    ],
+    "write_order": [
+      "write-and-readback-complete-reset-domain",
+      "write-and-readback-authenticated-boot-scratch",
+      "chain-to-product"
+    ],
+    "ready_rule": "READY follows successful full-domain readback and the existing product validation; no READY shortcut"
+  },
   "staging": {
     "execution": "always-restage-before-product-chain",
     "fastpath": "none",
@@ -171,6 +196,9 @@
     "record-array-CRC-mismatch",
     "source-file-CRC-mismatch",
     "target-readback-mismatch-or-timeout",
+    "prefix-only-Bank-5-restage",
+    "nonzero-C2J-after-reset-domain-restage",
+    "boot-scratch-before-full-reset-domain",
     "chain-before-all-stage-records-proven",
     "product-PRG-load-or-entry-drift"
   ],

@@ -20,7 +20,7 @@ import repl_screen_check as SCREEN  # noqa: E402
 
 OUT = PM.OUT
 RECEIPT = PM.HARDWARE
-FX_CONTRACT = ROOT / "config/c2-fx-contract.json"
+FX_CONTRACT = ROOT / "config/c2-q-contract.json"
 
 
 class CloseError(RuntimeError):
