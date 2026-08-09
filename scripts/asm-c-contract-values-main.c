@@ -26,6 +26,14 @@ int main(void) {
         offsetof(vm_l65m_batch_header, repeat_phase));
     equ("ASM_R3_CHAIN_JOB_ADDR_LO", R3_CHAIN_JOB_ADDR & 0xffu);
     equ("ASM_R3_CHAIN_JOB_ADDR_HI", (R3_CHAIN_JOB_ADDR >> 8) & 0xffu);
+    equ("ASM_R3_CHAIN_STATE_ADDR", R3_CHAIN_STATE_ADDR);
+    equ("ASM_R3_PRODUCT_LOAD_LO", R3_PRODUCT_LOAD & 0xffu);
+    equ("ASM_R3_PRODUCT_LOAD_HI", (R3_PRODUCT_LOAD >> 8) & 0xffu);
+    equ("ASM_R3_PRODUCT_CRC_INIT_0", R3_PRODUCT_CRC_INIT_0);
+    equ("ASM_R3_PRODUCT_CRC_INIT_1", R3_PRODUCT_CRC_INIT_1);
+    equ("ASM_R3_PRODUCT_CRC_INIT_2", R3_PRODUCT_CRC_INIT_2);
+    equ("ASM_R3_PRODUCT_CRC_INIT_3", R3_PRODUCT_CRC_INIT_3);
+    equ("ASM_R3_CHAIN_CRC_ATTEMPTS", R3_CHAIN_CRC_ATTEMPTS);
     equ("ASM_R3_PRODUCT_ENTRY", R3_PRODUCT_ENTRY);
     return 0;
 }

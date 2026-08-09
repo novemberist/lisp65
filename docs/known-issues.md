@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.3.0. Sealed
+This is the maintained user-facing issue register for lisp65 1.4.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -54,14 +54,22 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Not delivered in 1.3.0: `defstruct` and dynamic packages
+## Not delivered in 1.4.0: `defstruct`
 
-`defstruct` and the associated dynamic package-loading freight are not part of
-the v1.3.0 user surface. In a quiet hardware run, `(require 'defstruct)`
-returned `t`, but `(defstruct point x y)` then ran for 180 seconds and entered
-the red fail-closed stop without monitor traffic. The fault is reproducible;
-no workaround or fix is claimed. The host-side designs and test artifacts are
-development material, not commands promised by this release.
+`defstruct` is not part of the v1.4.0 user surface. On the optimized v1.4
+carrier, `(require 'defstruct)` returned `t`, then `(defstruct point x y)`
+reached a red fail-closed frame within the 180-second quiet window with no
+external observation. This rules out observation crossing as a sufficient
+explanation for that run, but does not establish an infinite hang or an inner
+failure mechanism. The development library and diagnostics are not shipped.
+
+## Not delivered in 1.4.0: `trace` and `untrace`
+
+`trace` and `untrace` are designed but not delivered. The Link-92 core ABI can
+set a symbol's function cell but cannot read its exact previous value, so a
+library wrapper cannot promise correct restoration. Delivery waits for a
+function-cell getter or equivalent journal old-value exposure plus atomic
+wrapper publication and restoration.
 
 ## Not delivered in 1.3.0: `gc`, `room` and `error`
 
@@ -77,20 +85,21 @@ them; a user simply does not have them.
 `restart-repl` is outside the contracted product surface for this era. A user
 who wants a clean image restarts the machine.
 
-## Active editor issue: possible stall near the first collection
+## Editor transport finding: physical 64/64
 
-Status: **deterministic in the development reproducer; mechanism parked**
+Status: **no current product-stall claim**
 
-One hardware sequence accepted 55 typed keys and then stopped processing at
-key 56, close to the first collection in the lean editor allocation profile.
-RUN/STOP recovered the observed session. Host replay, sanitizers, and a binary
-comparison found no editor-code regression relative to the older renderer;
-the faster renderer remains in 1.3.0 because it reduces the measured average
-from about 78 to 24 raster frames per key.
+One virtual-input diagnostic persisted 56 of 64 requested keys. The release
+session then typed 64 keys on the physical keyboard, without observation during
+the active window, and the buffer postcondition contained all 64. The virtual
+56/64 result therefore points to the known virtual transport seam and is not
+evidence of an editor product stall. The faster renderer remains because it
+reduces the measured average from about 78 to 24 raster frames per key.
 
-If typing stops responding, press RUN/STOP once. If the REPL does not recover,
-cold-restart. Preserve the preceding forms and approximate number of typed
-characters for a report. No cause or complete fix is claimed.
+If physical typing stops responding naturally, press RUN/STOP once; cold-start
+if the REPL does not recover. Preserve the preceding forms and approximate key
+count. Reopening the parked diagnosis requires a natural physical recurrence
+with a hardware arrival witness.
 
 ## Active Ship limitation: RUN/STOP source not independently verified
 

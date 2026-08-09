@@ -1,0 +1,229 @@
+{
+  "format": "lisp65-c2-dma-content-consumption-sweep-v1",
+  "status": "owner-commissioned-broaden-once",
+  "images": {
+    "ship-runtime": "build/post-promotion/v14/link91-content-convergence-preflight7/parity-toy.runtime.elf",
+    "ship-stager": "build/post-promotion/v14/link91-content-convergence-preflight7/parity-toy.stager.elf",
+    "workbench": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/lisp65-c2-substitution-linked.prg.elf"
+  },
+  "sites": [
+    {
+      "classification": "predecessor-content-consumed-source-fixed",
+      "image": "workbench",
+      "oracle": "all CPU-consumed EXT reads route through the shared source-derived first-difference primitive before Link 91",
+      "evidence": {
+        "all": [
+          "static void ext_dma_read_or_abort(",
+          "vm_code_load_converged(source_bank, source, length, destination)",
+          "uint8_t ext_type(uint16_t i){ ext_dma_read_or_abort("
+        ],
+        "path": "src/mem.c"
+      },
+      "ordinal": 0,
+      "owner": "ext_dma",
+      "register": "$D700"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "LISP65_RTOV_COMPLETION_TIMEOUT_FRAMES",
+          "rtov_crc_converge",
+          "VM_RUNTIME_OVERLAY_ERR_COMPLETION_TIMEOUT"
+        ],
+        "path": "src/vm_runtime_overlay.c"
+      },
+      "image": "workbench",
+      "oracle": "independent-destination-crc-convergence",
+      "ordinal": 0,
+      "owner": "vm_runtime_overlay_exec_family",
+      "register": "$D705"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2k_crc16",
+          "C2_KERNAL_WINDOW_CRC16",
+          "return 0u;"
+        ],
+        "path": "src/c2_kernal_runtime.c"
+      },
+      "image": "workbench",
+      "oracle": "independent-cpu-visible-crc-fail-closed",
+      "ordinal": 0,
+      "owner": "c2k_copy",
+      "register": "$D705"
+    },
+    {
+      "classification": "predecessor-content-consumed-source-fixed",
+      "image": "workbench",
+      "oracle": "one D700 source-derived first-difference discriminator followed by one primary copy before Link 91",
+      "evidence": {
+        "all": [
+          "uint8_t C2_VM_CODE_LOAD_CONVERGED_IMPL(",
+          "c2_dma_source_byte(bank, (uint16_t)(offset + i), &expected)",
+          "while (observed[i] != expected)",
+          "C2_DMA_CONTENT_TIMEOUT_FRAMES"
+        ],
+        "path": "src/c2_platform_dma.c"
+      },
+      "ordinal": 0,
+      "owner": "c2_facade_target_c2_dma",
+      "register": "$D700"
+    },
+    {
+      "classification": "predecessor-content-consumed-source-fixed",
+      "image": "workbench",
+      "oracle": "one D705 source-derived first-difference discriminator followed by one primary copy before Link 91",
+      "evidence": {
+        "all": [
+          "uint8_t C2_PHYSICAL_READ_CONVERGED_IMPL(",
+          "c2_physical_source_byte(source + i, &expected)",
+          "while (observed[i] != expected)",
+          "C2_DMA_CONTENT_TIMEOUT_FRAMES"
+        ],
+        "path": "src/c2_product_runtime.c"
+      },
+      "ordinal": 0,
+      "owner": "c2_product_physical_copy",
+      "register": "$D705"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2_chip_stage_copy_readback",
+          "c2_target_readback[poll] != sector_payload[poll]",
+          "while (wraps < 192u)",
+          "if (!match) return 0;"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-target-readback-byte-convergence",
+      "ordinal": 0,
+      "owner": "disk_record",
+      "register": "$D700"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2_attic_stage_copy_readback",
+          "c2_target_readback[poll] != sector_payload[poll]",
+          "while (wraps < 192u)",
+          "if (!match) return 0;"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-target-readback-byte-convergence",
+      "ordinal": 0,
+      "owner": "disk_record",
+      "register": "$D705"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "c2_attic_retry_readback",
+          "c2_target_readback[poll] != sector_payload[poll]",
+          "while (wraps < 192u)",
+          "if (!match) return 0;"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-target-readback-byte-convergence",
+      "ordinal": 1,
+      "owner": "disk_record",
+      "register": "$D705"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "edma_copy(R3_PRODUCT_STAGE",
+          "rd16(verify_buffer) != R3_PRODUCT_LOAD",
+          "return;"
+        ],
+        "path": "scripts/r3-cold-stager-main.c"
+      },
+      "image": "ship-stager",
+      "oracle": "independent-fixed-content-readback-fail-closed",
+      "ordinal": 0,
+      "owner": "main",
+      "register": "$D705"
+    },
+    {
+      "classification": "content-consumed",
+      "evidence": {
+        "all": [
+          "R3_CRC_EXPECT_0",
+          "cmp\tR3_CRC_EXPECT_0",
+          "cmp\t#ASM_R3_CHAIN_CRC_ATTEMPTS",
+          "sta\t$d020"
+        ],
+        "path": "scripts/c2-lite-cold-stager-chain.s"
+      },
+      "image": "ship-stager",
+      "oracle": "manifest CRC32 versus complete CPU-visible product payload; bounded fail closed",
+      "ordinal": 0,
+      "owner": "r3_chain_begin",
+      "register": "$D700"
+    },
+    {
+      "classification": "fire-and-forget-or-deferred-content",
+      "evidence": {
+        "all": [
+          "static void ext_dma_read_or_abort(",
+          "vm_code_load_converged(source_bank, source, length, destination)",
+          "void    ext_set_type(uint16_t i,uint8_t t)"
+        ],
+        "path": "src/mem.c"
+      },
+      "image": "ship-runtime",
+      "oracle": "raw site remains only for writes/copies; every CPU read enters the converged seam",
+      "ordinal": 0,
+      "owner": "ext_dma",
+      "register": "$D700"
+    },
+    {
+      "classification": "fire-and-forget-or-deferred-content",
+      "evidence": {
+        "all": [
+          "uint8_t vm_code_load_converged(",
+          "vm_dma_source_byte(bank, (uint16_t)(off + i), &expected)",
+          "if (!vm_code_load_converged(SYMVAL_EXT_BANK,"
+        ],
+        "path": "src/vm_embed.c"
+      },
+      "image": "ship-runtime",
+      "oracle": "raw site is primary copy or write; all CPU consumers require the independent verifier",
+      "ordinal": 0,
+      "owner": "vm_dma",
+      "register": "$D700"
+    },
+    {
+      "classification": "verification-transport",
+      "evidence": {
+        "all": [
+          "vm_dma_source_byte(bank, (uint16_t)(off + i), &expected)",
+          "while (observed[i] != expected)",
+          "VM_CODE_CONVERGENCE_TIMEOUT_FRAMES"
+        ],
+        "path": "src/vm_embed.c"
+      },
+      "image": "ship-runtime",
+      "oracle": "source-derived-first-difference-convergence",
+      "ordinal": 0,
+      "owner": "vm_code_load_converged",
+      "register": "$D700"
+    }
+  ],
+  "trigger_opcodes": {
+    "$D700": "8d00d7",
+    "$D705": "8d05d7"
+  }
+}

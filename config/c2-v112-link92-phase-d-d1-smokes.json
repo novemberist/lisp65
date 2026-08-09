@@ -1,0 +1,69 @@
+{
+  "format": "lisp65-c2-v112-link92-phase-d-d1-smokes-v1",
+  "status": "owner-authorized-split-media-phase-d-restart",
+  "authorization_commit": "d528bc85",
+  "split_restart_commit": "a1cf5b9b",
+  "first_red_authority": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-time-oracle-first-red.json",
+    "status": "first-red-d1-time-exact-zero-frame-oracle"
+  },
+  "launch_authority": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-split-d1-boot-device-receipt.json",
+    "status": "passed-split-media-link92-d1-autoboot-launch-banner-and-prompt"
+  },
+  "candidate": {
+    "media": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/lisp65-product.d81",
+    "sha256": "ed4e5c7281913e351550f10533a585c2516a7a0a4214a66cf93cf35252aee306",
+    "banner": "WORKBENCH 1.4.0",
+    "prompt": "lisp65>"
+  },
+  "rows": [
+    {
+      "id": "q",
+      "form": "(q->string(q*(q 1 64)(q -2 0)))",
+      "expect": "\"-3.0\"",
+      "authority": "config/c2-v14-link89-device-session.json:D3.q_form/q_expected"
+    },
+    {
+      "id": "time",
+      "form": "(time(+ 1 2))",
+      "oracle": {
+        "kind": "nonnegative-frame-count-plus-exact-result",
+        "minimum_frames": 0,
+        "result": "3"
+      },
+      "authority": "config/c2-time-contract.json:public_surface"
+    },
+    {
+      "id": "strings",
+      "form": "(string-trim \" -\" \" --hi- \")",
+      "expect": "\"hi\"",
+      "authority": "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json:string-trim"
+    }
+  ],
+  "runner_policy": {
+    "order": [
+      "q",
+      "time",
+      "strings"
+    ],
+    "split_restart_order": [
+      "q",
+      "time",
+      "strings"
+    ],
+    "reuse_prior_q_green": false,
+    "reuse_green_live_repl": true,
+    "cold_reset": false,
+    "media_remount": false,
+    "one_form_per_submission": true,
+    "verified_input_before_return": true,
+    "per_row_result_postcondition": true,
+    "exact_frame_value_forbidden": true,
+    "expect_poll_seconds": 45,
+    "fail_closed_frame_check": true,
+    "D3_touched": false,
+    "D2_touched": false
+  },
+  "claim_limit": "The three D1 q/time/string smokes only, against the already-green live Link-92-r5 REPL. No D3, D2, selector, Halt, Phase E or release claim."
+}

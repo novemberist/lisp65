@@ -15,6 +15,7 @@ uint8_t lisp65_ship_io_init(void);
 int lisp65_ship_io_getin(uint8_t blocking);
 void lisp65_ship_io_putc(uint8_t code);
 uint8_t lisp65_ship_io_peek(uint16_t address, uint8_t *value);
+uint16_t lisp65_ship_io_frame_count(void);
 
 #ifndef __mos__
 /* Supplied by each host witness as a complete 9-bit raster sample plus an

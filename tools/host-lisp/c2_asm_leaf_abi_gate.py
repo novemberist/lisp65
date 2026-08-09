@@ -140,6 +140,28 @@ ABI_POLICIES = {
             "obj result A/X; ASM->C c2_stream_c2d_read: offset A/X, "
             "destination __rc2/__rc3, length __rc4/__rc5; Z=0"),
     },
+    "vm_code_load_converged": {
+        "source": ROOT / "src/c2_mapped_far_service.s",
+        "section_token":
+            ".section .lisp65_c2_mapped_far_facade.entries",
+        "linked": "required-when-C-called",
+        "abi": (
+            "C->ASM mapped-far facade: bank A; offset X/__rc2; "
+            "length __rc3/__rc4; destination __rc6/__rc7; result A; "
+            "facade preserves arguments across MAP, calls the owned far "
+            "body, restores the caller map and returns with Z=0"),
+    },
+    "c2_physical_read_converged": {
+        "source": ROOT / "src/c2_mapped_far_service.s",
+        "section_token":
+            ".section .lisp65_c2_mapped_far_facade.entries",
+        "linked": "required-when-C-called",
+        "abi": (
+            "C->ASM mapped-far facade: physical source A/X/__rc2/__rc3; "
+            "destination __rc4/__rc5; length __rc6/__rc7; result A; "
+            "facade preserves arguments across MAP, calls the owned far "
+            "body, restores the caller map and returns with Z=0"),
+    },
 }
 
 

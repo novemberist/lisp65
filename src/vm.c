@@ -92,6 +92,405 @@ static uint8_t vm_diag_valid = 0;
  * hypothesis that hardware refuted; in the tight bank-0 budget the 128 B are worth more than
  * the saved shallow header reloads. Reload DMA is proven uncritical on hardware.) */
 static uint8_t vm_codebuf[VM_CODEBUF];
+
+#ifdef LISP65_V14_READ_EDGE_WITNESS
+#ifndef LISP65_V14_WITNESS_SHAPE_OFF
+#error "Link-90 shape object offset is required for the read-edge witness"
+#endif
+#ifndef LISP65_V14_WITNESS_REFILL_PC
+#error "Link-90 refill PC is required for the read-edge witness"
+#endif
+#ifndef LISP65_V14_WITNESS_RETURN_PC
+#error "Link-90 return PC is required for the read-edge witness"
+#endif
+
+typedef struct {
+    uint8_t window_stage;
+    uint8_t read_stage;
+    uint8_t return_stage;
+    uint8_t mirror_tag;
+    uint8_t mirror_value;
+} lisp65_v14_read_edge_witness_record;
+
+volatile lisp65_v14_read_edge_witness_record lisp65_v14_read_edge_witness
+    __attribute__((used, section(".bss.lisp65_v14_read_edge_witness")));
+
+void lisp65_v14_read_edge_witness_reset(void) {
+    lisp65_v14_read_edge_witness.window_stage = 0x11u;
+    lisp65_v14_read_edge_witness.read_stage = 0x22u;
+    lisp65_v14_read_edge_witness.return_stage = 0x33u;
+    lisp65_v14_read_edge_witness.mirror_tag = 0x44u;
+    lisp65_v14_read_edge_witness.mirror_value = 0x55u;
+}
+
+#define LISP65_V14_WITNESS_WINDOW(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_WITNESS_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_WITNESS_REFILL_PC) \
+            lisp65_v14_read_edge_witness.window_stage = 0xa1u; \
+    } while (0)
+#define LISP65_V14_WITNESS_READ(address_, value_) do { \
+        if ((address_) == 0xd06cu) { \
+            lisp65_v14_read_edge_witness.mirror_value = (value_); \
+            lisp65_v14_read_edge_witness.mirror_tag = 0xd4u; \
+            lisp65_v14_read_edge_witness.read_stage = 0xb2u; \
+        } \
+    } while (0)
+#define LISP65_V14_WITNESS_RETURN(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_WITNESS_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_WITNESS_RETURN_PC) \
+            lisp65_v14_read_edge_witness.return_stage = 0xc3u; \
+    } while (0)
+#else
+#define LISP65_V14_WITNESS_WINDOW(bank_, off_, pc_) do { \
+        (void)(bank_); (void)(off_); (void)(pc_); \
+    } while (0)
+#define LISP65_V14_WITNESS_READ(address_, value_) do { \
+        (void)(address_); (void)(value_); \
+    } while (0)
+#define LISP65_V14_WITNESS_RETURN(bank_, off_, pc_) do { \
+        (void)(bank_); (void)(off_); (void)(pc_); \
+    } while (0)
+#endif
+
+#ifdef LISP65_V14_RETURN_REFILL_WITNESS
+#ifndef LISP65_V14_RR_SHAPE_OFF
+#error "Link-90 shape object offset is required for the return/refill witness"
+#endif
+#ifndef LISP65_V14_RR_SECOND_RETURN_PC
+#error "Link-90 second unlock return PC is required for the return/refill witness"
+#endif
+
+typedef struct {
+    uint8_t helper_return_tag;
+    uint8_t helper_return_status;
+    uint8_t refill_stage;
+} lisp65_v14_return_refill_witness_record;
+
+volatile lisp65_v14_return_refill_witness_record
+    lisp65_v14_return_refill_witness
+    __attribute__((used, section(".bss.lisp65_v14_return_refill_witness")));
+
+void lisp65_v14_return_refill_witness_reset(void) {
+    lisp65_v14_return_refill_witness.helper_return_tag = 0x31u;
+    lisp65_v14_return_refill_witness.helper_return_status = 0x42u;
+    lisp65_v14_return_refill_witness.refill_stage = 0x53u;
+}
+
+/* Write the unconstrained status first and the non-colliding completion tag
+ * last.  A post-stop reader can therefore distinguish "returned with zero"
+ * from "the return edge was never reached" without assigning meaning to the
+ * status byte itself. */
+#define LISP65_V14_RR_HELPER_RETURN(bank_, off_, pc_, status_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_RR_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_RR_SECOND_RETURN_PC) { \
+            lisp65_v14_return_refill_witness.helper_return_status = (status_); \
+            lisp65_v14_return_refill_witness.helper_return_tag = 0xd1u; \
+        } \
+    } while (0)
+#define LISP65_V14_RR_REFILL(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_RR_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_RR_SECOND_RETURN_PC) \
+            lisp65_v14_return_refill_witness.refill_stage = 0xe2u; \
+    } while (0)
+#else
+#define LISP65_V14_RR_HELPER_RETURN(bank_, off_, pc_, status_) do { \
+        (void)(bank_); (void)(off_); (void)(pc_); (void)(status_); \
+    } while (0)
+#define LISP65_V14_RR_REFILL(bank_, off_, pc_) do { \
+        (void)(bank_); (void)(off_); (void)(pc_); \
+    } while (0)
+#endif
+
+#ifdef LISP65_V14_FULL_LADDER_WITNESS
+#ifndef LISP65_V14_LADDER_SHAPE_OFF
+#error "Link-90 shape object offset is required for the full ladder"
+#endif
+#ifndef LISP65_V14_LADDER_FIRST_RETURN_PC
+#error "Link-90 first unlock return PC is required for the full ladder"
+#endif
+#ifndef LISP65_V14_LADDER_HELPER_OFF
+#error "Link-90 byte-write helper offset is required for the full ladder"
+#endif
+
+typedef struct {
+    uint8_t first_return_tag;
+    uint8_t first_return_status;
+    uint8_t middle_refill_stage;
+    uint8_t second_entry_stage;
+} lisp65_v14_full_ladder_witness_record;
+
+volatile lisp65_v14_full_ladder_witness_record lisp65_v14_full_ladder_witness
+    __attribute__((used, section(".bss.lisp65_v14_full_ladder_witness")));
+
+void lisp65_v14_full_ladder_witness_reset(void) {
+    lisp65_v14_full_ladder_witness.first_return_tag = 0x31u;
+    lisp65_v14_full_ladder_witness.first_return_status = 0x42u;
+    lisp65_v14_full_ladder_witness.middle_refill_stage = 0x53u;
+    lisp65_v14_full_ladder_witness.second_entry_stage = 0x64u;
+}
+
+#define LISP65_V14_LADDER_FIRST_RETURN(bank_, off_, pc_, status_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_LADDER_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_LADDER_FIRST_RETURN_PC) { \
+            lisp65_v14_full_ladder_witness.first_return_status = (status_); \
+            lisp65_v14_full_ladder_witness.first_return_tag = 0xd1u; \
+        } \
+    } while (0)
+#define LISP65_V14_LADDER_MIDDLE_REFILL(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_LADDER_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_LADDER_FIRST_RETURN_PC) \
+            lisp65_v14_full_ladder_witness.middle_refill_stage = 0xe2u; \
+    } while (0)
+/* Both unlock writes call the same byte-write object.  The completed first
+ * return and middle-refill tags distinguish the second invocation without
+ * relying on a call counter or on a value that may legitimately be zero. */
+#define LISP65_V14_LADDER_SECOND_ENTRY(bank_, off_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_LADDER_HELPER_OFF \
+            && lisp65_v14_full_ladder_witness.first_return_tag == 0xd1u \
+            && lisp65_v14_full_ladder_witness.middle_refill_stage == 0xe2u) \
+            lisp65_v14_full_ladder_witness.second_entry_stage = 0xf3u; \
+    } while (0)
+#else
+#define LISP65_V14_LADDER_FIRST_RETURN(bank_, off_, pc_, status_) do { \
+        (void)(bank_); (void)(off_); (void)(pc_); (void)(status_); \
+    } while (0)
+#define LISP65_V14_LADDER_MIDDLE_REFILL(bank_, off_, pc_) do { \
+        (void)(bank_); (void)(off_); (void)(pc_); \
+    } while (0)
+#define LISP65_V14_LADDER_SECOND_ENTRY(bank_, off_) do { \
+        (void)(bank_); (void)(off_); \
+    } while (0)
+#endif
+
+#ifdef LISP65_V14_MECHANISM_WITNESS
+#ifndef LISP65_V14_MECH_SHAPE_OFF
+#error "Link-90 shape object offset is required for the mechanism witness"
+#endif
+#ifndef LISP65_V14_MECH_SECOND_RETURN_PC
+#error "Link-90 second-call return PC is required for the mechanism witness"
+#endif
+#ifndef LISP65_V14_MECH_SECOND_CALL_PC
+#error "Link-90 second-call instruction PC is required for the mechanism witness"
+#endif
+#ifndef LISP65_V14_MECH_HELPER_OFF
+#error "Link-90 byte-write helper offset is required for the mechanism witness"
+#endif
+
+typedef struct {
+    uint8_t decode_tag;
+    uint8_t decoded_opcode;
+    uint8_t decoded_literal;
+    uint8_t decoded_argc;
+    uint8_t resolution_tag;
+    uint8_t descriptor_low;
+    uint8_t descriptor_high;
+    uint8_t directory_low;
+    uint8_t directory_high;
+    uint8_t pre_inner_stage;
+} lisp65_v14_mechanism_witness_record;
+
+volatile lisp65_v14_mechanism_witness_record lisp65_v14_mechanism_witness
+    __attribute__((used, section(".bss.lisp65_v14_mechanism_witness")));
+
+void lisp65_v14_mechanism_witness_reset(void) {
+    lisp65_v14_mechanism_witness.decode_tag = 0x11u;
+    lisp65_v14_mechanism_witness.decoded_opcode = 0x21u;
+    lisp65_v14_mechanism_witness.decoded_literal = 0x31u;
+    lisp65_v14_mechanism_witness.decoded_argc = 0x41u;
+    lisp65_v14_mechanism_witness.resolution_tag = 0x12u;
+    lisp65_v14_mechanism_witness.descriptor_low = 0x22u;
+    lisp65_v14_mechanism_witness.descriptor_high = 0x32u;
+    lisp65_v14_mechanism_witness.directory_low = 0x42u;
+    lisp65_v14_mechanism_witness.directory_high = 0x52u;
+    lisp65_v14_mechanism_witness.pre_inner_stage = 0x13u;
+}
+
+#define LISP65_V14_MECH_PAYLOAD(bank_, off_, pc_, op_, byte1_, byte2_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_MECH_SHAPE_OFF \
+            && (pc_) == (uint16_t)(LISP65_V14_MECH_SECOND_CALL_PC + 1u)) { \
+            lisp65_v14_mechanism_witness.decoded_opcode = (op_); \
+            lisp65_v14_mechanism_witness.decoded_literal = (byte1_); \
+            lisp65_v14_mechanism_witness.decoded_argc = (byte2_); \
+            lisp65_v14_mechanism_witness.decode_tag = 0xa1u; \
+        } \
+    } while (0)
+#define LISP65_V14_MECH_RESOLVE(bank_, off_, pc_, descriptor_, directory_) do { \
+        uint16_t descriptor16_ = (uint16_t)(descriptor_); \
+        uint16_t directory16_ = (uint16_t)(directory_); \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_MECH_SHAPE_OFF \
+            && (pc_) == (uint16_t)LISP65_V14_MECH_SECOND_RETURN_PC) { \
+            lisp65_v14_mechanism_witness.descriptor_low = \
+                (uint8_t)descriptor16_; \
+            lisp65_v14_mechanism_witness.descriptor_high = \
+                (uint8_t)(descriptor16_ >> 8); \
+            lisp65_v14_mechanism_witness.directory_low = \
+                (uint8_t)directory16_; \
+            lisp65_v14_mechanism_witness.directory_high = \
+                (uint8_t)(directory16_ >> 8); \
+            lisp65_v14_mechanism_witness.resolution_tag = 0xb2u; \
+        } \
+    } while (0)
+#define LISP65_V14_MECH_PRE_INNER(bank_, off_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_MECH_HELPER_OFF \
+            && lisp65_v14_mechanism_witness.decode_tag == 0xa1u \
+            && lisp65_v14_mechanism_witness.resolution_tag == 0xb2u) \
+            lisp65_v14_mechanism_witness.pre_inner_stage = 0xc3u; \
+    } while (0)
+#else
+#define LISP65_V14_MECH_PAYLOAD(bank_, off_, pc_, op_, byte1_, byte2_) \
+    do { } while (0)
+#define LISP65_V14_MECH_RESOLVE(bank_, off_, pc_, descriptor_, directory_) do { } while (0)
+#define LISP65_V14_MECH_PRE_INNER(bank_, off_) do { } while (0)
+#endif
+
+#ifdef LISP65_V14_INSTRUCTION_WITNESS
+#ifndef LISP65_V14_INSTR_SHAPE_OFF
+#error "Link-90 shape object offset is required for the instruction witness"
+#endif
+
+typedef struct {
+    uint8_t after_drop_stage;
+    uint8_t post_pushlit_tag;
+    uint8_t pushlit_value_low;
+    uint8_t pushlit_value_high;
+    uint8_t after_pushi47_stage;
+    uint8_t after_pushi83_stage;
+} lisp65_v14_instruction_witness_record;
+
+volatile lisp65_v14_instruction_witness_record lisp65_v14_instruction_witness
+    __attribute__((used, section(".bss.lisp65_v14_instruction_witness")));
+
+void lisp65_v14_instruction_witness_reset(void) {
+    lisp65_v14_instruction_witness.after_drop_stage = 0x11u;
+    lisp65_v14_instruction_witness.post_pushlit_tag = 0x12u;
+    lisp65_v14_instruction_witness.pushlit_value_low = 0x21u;
+    lisp65_v14_instruction_witness.pushlit_value_high = 0x31u;
+    lisp65_v14_instruction_witness.after_pushi47_stage = 0x13u;
+    lisp65_v14_instruction_witness.after_pushi83_stage = 0x14u;
+}
+
+#define LISP65_V14_INSTR_AFTER_DROP(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_INSTR_SHAPE_OFF \
+            && (pc_) == 0x0025u) \
+            lisp65_v14_instruction_witness.after_drop_stage = 0xa1u; \
+    } while (0)
+/* The raw value is written before its non-colliding tag.  In particular, zero
+ * remains a valid observed object word rather than meaning "not reached". */
+#define LISP65_V14_INSTR_AFTER_PUSHLIT(bank_, off_, pc_, index_, value_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_INSTR_SHAPE_OFF \
+            && (pc_) == 0x0027u && (index_) == 1u \
+            && lisp65_v14_instruction_witness.after_drop_stage == 0xa1u) { \
+            uint16_t value16_ = (uint16_t)(value_); \
+            lisp65_v14_instruction_witness.pushlit_value_low = \
+                (uint8_t)value16_; \
+            lisp65_v14_instruction_witness.pushlit_value_high = \
+                (uint8_t)(value16_ >> 8); \
+            lisp65_v14_instruction_witness.post_pushlit_tag = 0xb2u; \
+        } \
+    } while (0)
+#define LISP65_V14_INSTR_AFTER_PUSHI8(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_INSTR_SHAPE_OFF \
+            && lisp65_v14_instruction_witness.after_drop_stage == 0xa1u \
+            && lisp65_v14_instruction_witness.post_pushlit_tag == 0xb2u) { \
+            if ((pc_) == 0x0029u) \
+                lisp65_v14_instruction_witness.after_pushi47_stage = 0xc3u; \
+            else if ((pc_) == 0x002bu \
+                     && lisp65_v14_instruction_witness.after_pushi47_stage \
+                        == 0xc3u) \
+                lisp65_v14_instruction_witness.after_pushi83_stage = 0xd4u; \
+        } \
+    } while (0)
+#else
+#define LISP65_V14_INSTR_AFTER_DROP(bank_, off_, pc_) do { } while (0)
+#define LISP65_V14_INSTR_AFTER_PUSHLIT(bank_, off_, pc_, index_, value_) \
+    do { } while (0)
+#define LISP65_V14_INSTR_AFTER_PUSHI8(bank_, off_, pc_) do { } while (0)
+#endif
+
+#ifdef LISP65_V14_OPCODE_VIEW_WITNESS
+#ifndef LISP65_V14_OPCODE_SHAPE_OFF
+#error "Link-90 shape object offset is required for the opcode-view witness"
+#endif
+
+typedef struct {
+    uint8_t refill_arm_tag;
+    uint8_t dispatch_view_tag;
+    uint8_t cursor_low;
+    uint8_t cursor_high;
+    uint8_t opcode;
+    uint8_t owner_bank;
+    uint8_t owner_off_low;
+    uint8_t owner_off_high;
+    uint8_t window_low;
+    uint8_t window_high;
+} lisp65_v14_opcode_view_witness_record;
+
+volatile lisp65_v14_opcode_view_witness_record lisp65_v14_opcode_view_witness
+    __attribute__((used, section(".bss.lisp65_v14_opcode_view_witness")));
+
+void lisp65_v14_opcode_view_witness_reset(void) {
+    lisp65_v14_opcode_view_witness.refill_arm_tag = 0x11u;
+    lisp65_v14_opcode_view_witness.dispatch_view_tag = 0x12u;
+    lisp65_v14_opcode_view_witness.cursor_low = 0x21u;
+    lisp65_v14_opcode_view_witness.cursor_high = 0x31u;
+    lisp65_v14_opcode_view_witness.opcode = 0x41u;
+    lisp65_v14_opcode_view_witness.owner_bank = 0x51u;
+    lisp65_v14_opcode_view_witness.owner_off_low = 0x61u;
+    lisp65_v14_opcode_view_witness.owner_off_high = 0x71u;
+    lisp65_v14_opcode_view_witness.window_low = 0x81u;
+    lisp65_v14_opcode_view_witness.window_high = 0x91u;
+}
+
+/* Arm inside the successful refill branch.  The subsequent dispatcher probe
+ * keys only on this tag, not on an expected cursor, so a bad restore cannot
+ * skip the observation intended to measure it. */
+#define LISP65_V14_OPCODE_VIEW_ARM(bank_, off_, pc_) do { \
+        if ((bank_) == 5u \
+            && (off_) == (uint16_t)LISP65_V14_OPCODE_SHAPE_OFF \
+            && (pc_) == 0x0024u) \
+            lisp65_v14_opcode_view_witness.refill_arm_tag = 0xa1u; \
+    } while (0)
+#define LISP65_V14_OPCODE_VIEW_CAPTURE(cursor_, opcode_, owner_bank_, \
+                                       owner_off_, window_) do { \
+        if (lisp65_v14_opcode_view_witness.refill_arm_tag == 0xa1u \
+            && lisp65_v14_opcode_view_witness.dispatch_view_tag == 0x12u) { \
+            uint16_t cursor16_ = (uint16_t)(cursor_); \
+            uint16_t owner_off16_ = (uint16_t)(owner_off_); \
+            uint16_t window16_ = (uint16_t)(window_); \
+            lisp65_v14_opcode_view_witness.cursor_low = (uint8_t)cursor16_; \
+            lisp65_v14_opcode_view_witness.cursor_high = \
+                (uint8_t)(cursor16_ >> 8); \
+            lisp65_v14_opcode_view_witness.opcode = (uint8_t)(opcode_); \
+            lisp65_v14_opcode_view_witness.owner_bank = \
+                (uint8_t)(owner_bank_); \
+            lisp65_v14_opcode_view_witness.owner_off_low = \
+                (uint8_t)owner_off16_; \
+            lisp65_v14_opcode_view_witness.owner_off_high = \
+                (uint8_t)(owner_off16_ >> 8); \
+            lisp65_v14_opcode_view_witness.window_low = (uint8_t)window16_; \
+            lisp65_v14_opcode_view_witness.window_high = \
+                (uint8_t)(window16_ >> 8); \
+            lisp65_v14_opcode_view_witness.dispatch_view_tag = 0xb2u; \
+        } \
+    } while (0)
+#else
+#define LISP65_V14_OPCODE_VIEW_ARM(bank_, off_, pc_) do { } while (0)
+#define LISP65_V14_OPCODE_VIEW_CAPTURE(cursor_, opcode_, owner_bank_, \
+                                       owner_off_, window_) do { } while (0)
+#endif
 /* OWNER TAG (2026-07-03): which code object is in the buffer? After a call the caller
  * reloads ONLY if another object used the buffer. Leaf calls into C prims (screen-*, car,
  * ...) never touch it -> the reload disappears entirely. Measured on the device:
@@ -99,7 +498,8 @@ static uint8_t vm_codebuf[VM_CODEBUF];
 static uint8_t  vm_buf_bank = 0xFF;
 static uint16_t vm_buf_off  = 0xFFFF;
 
-#if defined(VM_STEP_LIMIT) || defined(LISP65_DMA_PROF)
+#if defined(VM_STEP_LIMIT) || defined(LISP65_DMA_PROF) \
+    || defined(LISP65_VM_FAULT_CAPTURE)
 /* Minimal capture on watchdog/error (diagnosis without the heavy LISP65_VM_DIAGNOSTICS
  * module): pc/op = the stuck location, bank/off = code object (function via the manifest). */
 volatile uint16_t vm_dbg_pc = 0, vm_dbg_off = 0;   /* volatile: LTO strips write-only objects */
@@ -225,8 +625,13 @@ static uint8_t vm_object_load(uint8_t bank, uint16_t object,
     if (bank == LISP65_C2_CODE_BANK_TAG)
         return c2_product_entry_read(object, relative, destination, length);
 #endif
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    return vm_code_load_converged(
+        bank, (uint16_t)(object + relative), length, destination);
+#else
     vm_code_load(bank, (uint16_t)(object + relative), length, destination);
     return 1;
+#endif
 }
 /* Callee-Aufloesung O(1) statt linearem dir_sym-Scan (2026-07-02): die Funktionszelle des
  * Symbols traegt den Directory-Index als BCODE-Immediate. Nebenwirkung erwuenscht:
@@ -1362,15 +1767,25 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #ifdef LISP65_SHIP_RUNTIME_IO
         if (pid == 61) {
             uint8_t value;
-            if (lisp65_ship_io_peek(address, &value)) return MKFIX(value);
+            if (lisp65_ship_io_peek(address, &value)) {
+                LISP65_V14_WITNESS_READ(address, value);
+                return MKFIX(value);
+            }
         }
 #endif
 #ifdef LISP_REAL_MEM
-        if (pid == 61) return MKFIX(*(volatile unsigned char *)(uintptr_t)address);
+        if (pid == 61) {
+            uint8_t value = *(volatile unsigned char *)(uintptr_t)address;
+            LISP65_V14_WITNESS_READ(address, value);
+            return MKFIX(value);
+        }
         *(volatile unsigned char *)(uintptr_t)address = (unsigned char)FIXVAL(a[2]);
 #else
         (void)address;
-        if (pid == 61) return MKFIX(0);
+        if (pid == 61) {
+            LISP65_V14_WITNESS_READ(address, 0u);
+            return MKFIX(0);
+        }
 #endif
         return a[2];
     }
@@ -1516,6 +1931,7 @@ obj vm_run(uint8_t bank, uint16_t off, uint16_t len,
 #ifdef LISP65_STACK_GUARD
     if (lisp_stack_low()) { vm_status = VM_STACKOVER; return NIL; }
 #endif
+    LISP65_V14_MECH_PRE_INNER(bank, off);
     return vm_run_inner(bank, off, len, args, nargs_actual);
 }
 
@@ -1579,6 +1995,8 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #ifdef LISP65_VM_DIAGNOSTICS
     obj run_fn = vm_pending_fn;
 #endif
+
+    LISP65_V14_LADDER_SECOND_ENTRY(bank, off);
 
     /* KEIN Status-Reset am Eintritt (2026-07-06): der bedingungslose Reset
      * verschluckte Fehler verschachtelter Laeufe (STACKOVER eines inneren Calls ->
@@ -1666,6 +2084,10 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
                 winlen = (uint16_t)(((uint16_t)(payload_len - pc_) < pwin_max) ? (uint16_t)(payload_len - pc_) : pwin_max); \
                 if (!vm_object_load(bank, off, (uint16_t)(payload_off + pc_), winlen, cbuf + hdrlen)) { vm_status = VM_BADOPCODE; goto done; } \
                 ip = code; \
+                LISP65_V14_WITNESS_WINDOW(bank, off, pc_); \
+                LISP65_V14_RR_REFILL(bank, off, pc_); \
+                LISP65_V14_LADDER_MIDDLE_REFILL(bank, off, pc_); \
+                LISP65_V14_OPCODE_VIEW_ARM(bank, off, pc_); \
             } \
         } \
     } while (0)
@@ -1729,20 +2151,37 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
 #endif
         HB(2);
         WIN_ENSURE();          /* Fenster deckt die naechste Instruktion ([pc, pc+3)) */
+        LISP65_V14_OPCODE_VIEW_CAPTURE(
+            (uint16_t)(win + (uint16_t)(ip - code)), *ip,
+            vm_buf_bank, vm_buf_off, win);
 #ifdef LISP65_VM_DIAGNOSTICS
         op_pc = (uint16_t)(win + (uint16_t)(ip - code));
 #endif
         op = RD8();
+        LISP65_V14_MECH_PAYLOAD(
+            bank, off, (uint16_t)(win + (uint16_t)(ip - code)),
+            op, ip[0], ip[1]);
         switch (op) {
         case OP_HALT:
         case OP_RET:
             r = (gc_rootsp > vb) ? gc_rootstack[gc_rootsp - 1] : NIL;
             vm_status = VM_OK; goto done;
 
-        case OP_PUSHI8:  PUSH(MKFIX((int8_t)RD8())); break;
+        case OP_PUSHI8:
+            PUSH(MKFIX((int8_t)RD8()));
+            LISP65_V14_INSTR_AFTER_PUSHI8(
+                bank, off, (uint16_t)(win + (uint16_t)(ip - code)));
+            break;
         case OP_PUSHNIL: PUSH(NIL); break;
         case OP_PUSHT:   PUSH(vm_t); break;
-        case OP_PUSHLIT: { uint8_t i = RD8(); PUSH(LIT(i)); break; }
+        case OP_PUSHLIT: {
+            uint8_t i = RD8();
+            PUSH(LIT(i));
+            LISP65_V14_INSTR_AFTER_PUSHLIT(
+                bank, off, (uint16_t)(win + (uint16_t)(ip - code)), i,
+                gc_rootstack[gc_rootsp - 1]);
+            break;
+        }
 
         case OP_PUSHARG0: PUSH(SLOT(0)); break;
         case OP_PUSHARG1: PUSH(SLOT(1)); break;
@@ -1750,7 +2189,11 @@ obj vm_run_inner(uint8_t bank, uint16_t off, uint16_t len,
         case OP_PUSHARGN: { uint8_t n = RD8(); PUSH(SLOT(n)); break; }
         case OP_LOADL:    { uint8_t n = RD8(); PUSH(SLOT(n)); break; }
         case OP_STOREL:   { uint8_t n = RD8(); a = POP(); SLOT(n) = a; break; }
-        case OP_DROP:     (void)POP(); break;
+        case OP_DROP:
+            (void)POP();
+            LISP65_V14_INSTR_AFTER_DROP(
+                bank, off, (uint16_t)(win + (uint16_t)(ip - code)));
+            break;
 
         case OP_ADD: case OP_SUB: case OP_MUL: case OP_DIV:
         case OP_REMAINDER: case OP_MOD:
@@ -1793,6 +2236,8 @@ relative_branch: {
             uint8_t li = RD8(), n = RD8();
             obj sym = LIT(li);               /* JETZT lesen (vor dem Puffer-Ueberschreiben) */
             int di = IS_BCODE(sym) ? (int)BCODE_IDX(sym) : dir_find(sym);
+            LISP65_V14_MECH_RESOLVE(
+                bank, off, (uint16_t)(win + (uint16_t)(ip - code)), sym, di);
             obj cargs[VM_MAXARGS]; unsigned i; obj res;
             /* Resume-pc VOR dem Nested-Call sichern: der Callee besitzt danach die
              * vmr_*-Fenster-Globals (C-Stack-Diaet) — win/code sind dann seine. */
@@ -1811,8 +2256,11 @@ relative_branch: {
             } else {
                 r = vm_dirmiss_detail(sym); goto done;
             }
+            LISP65_V14_RR_HELPER_RETURN(bank, off, pcur, vm_status);
+            LISP65_V14_LADDER_FIRST_RETURN(bank, off, pcur, vm_status);
             if (vm_status != VM_OK) { r = res; goto done; }
             BUF_ENSURE_MINE(pcur);   /* Callee ueberschrieb Puffer+Globals -> reparsen */
+            LISP65_V14_WITNESS_RETURN(bank, off, pcur);
             PUSH(res);
             break;
         }
@@ -1891,7 +2339,7 @@ relative_branch: {
     }
 
 done:
-#ifdef LISP65_DMA_PROF
+#if defined(LISP65_DMA_PROF) || defined(LISP65_VM_FAULT_CAPTURE)
     /* Diagnostic seam: record the error location even WITHOUT the heavy diagnostics module
      * (bank/offset + window pc + opcode -> function via the manifest/disassembly). */
     if (vm_status != VM_OK && vm_status != VM_HALT && vm_dbg_pc == 0) {

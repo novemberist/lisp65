@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 1.3.0**. The language remains
+This living reference describes **lisp65 1.4.0**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -94,6 +94,8 @@ The released surface includes:
 - input: `read-line` (a Bank-2 last-row editor), plus low-level `key-event`
   for polling or raw events;
 - timing: `time`, `wait`;
+- optional strings from the string-extra library: `capitalize`, `string-split`;
+- optional inspection from the inspect library: `who-calls`;
 - strings and character codes: `string-length`, `string-ref`, `search`,
   `string-trim`, `string-upcase`, `string-downcase`, `char-upcase`,
   `char-downcase`, `string=`, `string<`, `string-equal`, `string-prefix-p`,
@@ -104,6 +106,11 @@ The released surface includes:
 
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
+
+Function tracing is not part of the v1.4.0 surface. The designed tracing pair
+waits for a core ABI that can capture and atomically restore an exact function
+cell; the released surface never includes a tool that cannot restore what it
+changes.
 
 The higher-order sequence functions `every`, `some`, `filter`, `mapcar`, and
 `reduce` traverse cons lists, not packed strings. Dialect V2 does not expose

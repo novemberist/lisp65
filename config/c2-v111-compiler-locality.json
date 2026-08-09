@@ -1,0 +1,57 @@
+{
+  "format": "lisp65-c2-v111-compiler-locality-contract-v1",
+  "recorded_on": "2026-08-07",
+  "scope": {
+    "execution": "host-only",
+    "placement": "Bank 2 compiler carrier",
+    "resident_delta_bytes": 0,
+    "device_contacts": 0,
+    "product_links": 0,
+    "release_claim": false,
+    "public_surface_claim": false,
+    "packaging_deferred_to_release_block": true
+  },
+  "baseline": {
+    "v110_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.10-persistent-performance-receipt.json",
+    "carrier_manifest": "build/post-promotion/phase-v/while/gate/carrier/lcc.manifest.json"
+  },
+  "candidate": {
+    "generator": "tools/host-lisp/c2_v111_compiler_tier.py",
+    "base_generator": "tools/host-lisp/c2_product_compiler_tier.py",
+    "suite": "build/post-promotion/v111/candidate/compiler-tier/suite.json",
+    "generation_receipt": "build/post-promotion/v111/candidate/compiler-tier/generation.json",
+    "artifact_prefix": "build/post-promotion/v111/candidate/carrier/lcc",
+    "profile_source": "lib/dialect-v2/lcc-locality-candidate.lisp",
+    "frozen_v1_source": "lib/lcc.lisp",
+    "private_inline_functions": [
+      "%lcc-emit-local",
+      "%lcc-st",
+      "%lcc-lits",
+      "%lcc-max",
+      "%lcc-v2-nargs",
+      "%lcc-v2-optional",
+      "%lcc-v2-rest",
+      "%lcc-rev",
+      "%lcc-v2-max0",
+      "%lcc-v2-param-p"
+    ]
+  },
+  "graph": {
+    "comfort_contract": "config/comfort-track-contract.json",
+    "edge_authority": "directory_only.entry_refs",
+    "comfort_exact_edges": 109,
+    "baseline_carrier_edges": 306,
+    "candidate_carrier_edges": 270
+  },
+  "budget": {
+    "bank2_headroom_authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-parity-pilot-profile-receipt.json",
+    "bank2_headroom_json_pointer": "/geometry/bank2_headroom_bytes",
+    "minimum_preserved_headroom_bytes": 8192
+  },
+  "target": {
+    "post_require_operational_floor_seconds_lt": 180,
+    "persistent_appends": 9,
+    "generated_definition_bytes": 182,
+    "final_journal": "CLEAR"
+  }
+}

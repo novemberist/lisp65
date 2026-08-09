@@ -1,0 +1,455 @@
+{
+  "format": "lisp65-c2-stack-overlay-ownership-contract-v1",
+  "recorded_on": "2026-08-04",
+  "status": "halt-1-fourth-class-priced-fit",
+  "claim": "Architecture inventory and candidate pricing only; no product identity, WPLTO, hardware or release claim.",
+  "oracle_policy": {
+    "artifact_truth": "Addresses and sizes come from llvm-readobj JSON for the bound final ELF. Failed-link facts come only from the bound linker maps and First-Red receipts because no final ELF exists.",
+    "independence": "No expected address is read from the linker source being assessed. Historical product ELFs and receipts are the address oracle; the generated linker scripts are evidence only for placement provenance.",
+    "fit": "Code, service state, descriptors, compiler stack and the largest simultaneous overlay are one live envelope. Per-section fits are insufficient.",
+    "bootstrap": "An overlay service must exist before its first consumer and may not be loaded through the refill seam it protects."
+  },
+  "authorities": {
+    "link88_elf": "build/ship-builder/v13/link88-full-raster-wplto/wplto/resident-island-seed.prg.elf",
+    "link88_linker": "build/ship-builder/v13/link88-full-raster-wplto/wplto/c2-substitution.ld",
+    "link90_elf": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/resident-island-seed.prg.elf",
+    "link90_linker": "build/post-promotion/v14/link90-vic-unlock-wplto/wplto/c2-substitution.ld",
+    "link91_full_map": "build/post-promotion/v14/link91-content-convergence-wplto2/wplto/resident-island-seed.prg.map",
+    "link91_full_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link91-content-convergence-wplto-first-red.json",
+    "link91_compact_map": "build/post-promotion/v14/link91-content-convergence-compact-wplto/wplto/resident-island-seed.prg.map",
+    "link91_compact_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-link91-compact-convergence-wplto-first-red.json",
+    "link36_floor": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.2-crc-convergence-terminal-floor-wplto-receipt.json",
+    "del_joint": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-ship-joint-wplto-first-red.json",
+    "del_inline": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-backspace-inline-wplto-first-red.json",
+    "del_nonlto": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.3-screen-nonlto-wplto-first-red.json",
+    "convergence_contract": "config/c2-code-window-convergence-contract.json",
+    "dma_sweep": "config/c2-dma-content-consumption-sweep.json",
+    "link90_product_manifest": "build/c2.3/v1.4.0-candidate-product-link90-r1/canonical-product-manifest.json",
+    "link90_bank2_static_code": "build/post-promotion/v14/link90-vic-unlock-wplto/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+    "link90_static_product": "build/post-promotion/v14/link90-vic-unlock-wplto/static-plane/narrow-static/product/substitution-artifacts.json",
+    "link91_compact_lto_object": "build/post-promotion/v14/link91-content-convergence-compact-wplto/wplto/resident-island-seed.prg.lto.o",
+    "media_contract": "config/c2-lite-media-product.json",
+    "map_source": "src/c2_kernal_map.s",
+    "irq_source": "src/c2_kernal_window.s",
+    "chipset_reference": "docs/reference/mega65-chipset-reference.pdf"
+  },
+  "map_semantics_authority": {
+    "repository": "https://github.com/MEGA65/mega65-core",
+    "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+    "manual_url": "https://github.com/MEGA65/mega65-core/blob/a9158930665763c592d004c895d52eff4a9eefc3/docs/usermanual0.md#62-the-map-opcode",
+    "manual_sha256": "4375afeec8e2d22ee5056c5b9da2cd653d57973a8aa51b4f3e76c8234fd39bae",
+    "core_model_url": "https://github.com/MEGA65/mega65-core/blob/a9158930665763c592d004c895d52eff4a9eefc3/src/tools/hyppotest.c",
+    "core_model_sha256": "7cb19b8d62e63c709a7236a4bb5340fd50329fe33b43af112e764b5c12402f2b",
+    "low_half_formula": "physical = cpu + ((maplo & 0x0fff) << 8); A upper nibble enables CPU blocks 0..3, A lower nibble supplies offset bits 8..11, X supplies offset bits 12..19"
+  },
+  "section_rules": [
+    {
+      "match": "exact",
+      "value": ".zp.data",
+      "owner": "ordinary-zero-page-data",
+      "lifetime": "always-resident",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".zp.bss",
+      "owner": "ordinary-zero-page-bss",
+      "lifetime": "always-resident",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".zp",
+      "owner": "llvm-mos-zero-page-runtime",
+      "lifetime": "always-resident",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_fixed_zp",
+      "owner": "c2-fixed-zero-page",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".basic_header",
+      "owner": "product-entry",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".text",
+      "owner": "ordinary-bank0-text",
+      "lifetime": "always-resident-mixed",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".rodata",
+      "owner": "ordinary-bank0-rodata",
+      "lifetime": "always-resident",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".data",
+      "owner": "ordinary-bank0-data",
+      "lifetime": "always-resident",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".bss",
+      "owner": "ordinary-bank0-bss",
+      "lifetime": "always-resident",
+      "placement": "ordinary-section-order"
+    },
+    {
+      "match": "exact",
+      "value": ".noinit",
+      "owner": "llvm-mos-static-stack",
+      "lifetime": "always-resident",
+      "placement": "compiler-generated-static-stack"
+    },
+    {
+      "match": "prefix",
+      "value": ".lisp65_c2_fixed_bank0",
+      "owner": "c2-fixed-bank0",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_kernal_handoff",
+      "owner": "c2-ownership-handoff",
+      "lifetime": "boot-only",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_host_facade",
+      "owner": "c2-fixed-facade",
+      "lifetime": "always-resident-post-ownership",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_kernal_io_reveal",
+      "owner": "c2-ownership-handoff",
+      "lifetime": "boot-only",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_kernal_map_switch",
+      "owner": "c2-ownership-handoff",
+      "lifetime": "boot-only",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_kernal_state",
+      "owner": "c2-handoff-state",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_runtime_overlay_verifier_bindings",
+      "owner": "runtime-overlay-verifier-table",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "prefix",
+      "value": ".lisp65_c2_kernal_window",
+      "owner": "c2-owned-e000",
+      "lifetime": "always-resident-post-ownership",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_c2_vectors",
+      "owner": "c2-owned-vectors",
+      "lifetime": "always-resident-post-ownership",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_resident_island",
+      "owner": "resident-island-code",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_resident_island_annex",
+      "owner": "resident-island-state",
+      "lifetime": "always-resident",
+      "placement": "explicit-linker-section"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_workbench_overlay",
+      "owner": "workbench-boot-overlay",
+      "lifetime": "boot-only-overlay",
+      "placement": "explicit-overlay-lma"
+    },
+    {
+      "match": "prefix",
+      "value": ".lisp65_boot",
+      "owner": "boot-overlay",
+      "lifetime": "boot-only-overlay",
+      "placement": "explicit-overlay-lma"
+    },
+    {
+      "match": "exact",
+      "value": ".lisp65_rt_bank3_stage_session",
+      "owner": "session-overlay",
+      "lifetime": "session-only-overlay",
+      "placement": "explicit-overlay-lma"
+    },
+    {
+      "match": "prefix",
+      "value": ".lisp65_rt_",
+      "owner": "runtime-phase-overlay",
+      "lifetime": "phase-only-overlay",
+      "placement": "explicit-overlay-lma"
+    }
+  ],
+  "required_sections": [
+    ".zp.data",
+    ".zp.bss",
+    ".zp",
+    ".lisp65_c2_fixed_zp",
+    ".basic_header",
+    ".text",
+    ".rodata",
+    ".data",
+    ".bss",
+    ".noinit",
+    ".lisp65_c2_kernal_handoff",
+    ".lisp65_c2_host_facade",
+    ".lisp65_c2_kernal_io_reveal",
+    ".lisp65_c2_kernal_map_switch",
+    ".lisp65_c2_kernal_state",
+    ".lisp65_runtime_overlay_verifier_bindings",
+    ".lisp65_c2_fixed_bank0",
+    ".lisp65_c2_fixed_bank0_code",
+    ".lisp65_c2_fixed_bank0_hot_bss",
+    ".lisp65_c2_kernal_window.c2_resident",
+    ".lisp65_c2_kernal_window.profile_rodata",
+    ".lisp65_c2_kernal_window.state",
+    ".lisp65_c2_vectors",
+    ".lisp65_resident_island",
+    ".lisp65_resident_island_annex"
+  ],
+  "descriptors": {
+    "link90": [
+      {
+        "symbol": "c2_edma_job",
+        "bytes": 20,
+        "section": ".lisp65_c2_fixed_bank0",
+        "role": "fixed-primary-d705-job"
+      },
+      {
+        "symbol": "c2_dma_list",
+        "bytes": 12,
+        "section": ".bss",
+        "role": "shared-primary-d700-job"
+      }
+    ],
+    "compact_link91": [
+      {
+        "symbol": "c2_dma_verify_list",
+        "bytes": 24,
+        "role": "d700-source-probe-pair"
+      },
+      {
+        "symbol": "c2_edma_probe_jobs",
+        "bytes": 40,
+        "role": "d705-source-probe-pair"
+      },
+      {
+        "symbol": "c2_dma_verify",
+        "bytes": 1,
+        "role": "d700-witness-byte"
+      },
+      {
+        "symbol": "c2_edma_probe_value",
+        "bytes": 1,
+        "role": "d705-witness-byte"
+      }
+    ],
+    "compact_link91_markers": [
+      {
+        "symbol": "c2_dma_verify_marker",
+        "bytes": 1,
+        "role": "d700-source-marker"
+      },
+      {
+        "symbol": "c2_edma_probe_marker",
+        "bytes": 1,
+        "role": "d705-source-marker"
+      }
+    ],
+    "compact_link91_scratch": [
+      {
+        "symbol": "c2_dma_verify_done",
+        "bytes": 1,
+        "role": "d700-completion-scratch"
+      },
+      {
+        "symbol": "c2_edma_probe_done",
+        "bytes": 1,
+        "role": "d705-completion-scratch"
+      }
+    ],
+    "full_link91_missing_owner": {
+      "symbol": "c2_edma_verify_job",
+      "bytes": 20,
+      "role": "phase-split-d705-verifier-job"
+    }
+  },
+  "geometry": {
+    "screen_end_exclusive": "0x17a0",
+    "resident_island_start": "0x1800",
+    "resident_island_limit": "0x2000",
+    "text_limit": "0xb4a3",
+    "ordinary_bss_limit": "0xc080",
+    "fixed_hot_end": "0xc34d",
+    "overlay_floor": "0xc354",
+    "overlay_entry": "0xc356",
+    "overlay_capacity_bytes": 1792,
+    "e000_profile_rodata_start": "0xfd2c",
+    "compiler_stack_fixture_capacity_bytes": 12,
+    "candidate_service_state_bytes": 68,
+    "candidate_service_state_named_bytes": 66,
+    "candidate_source_marker_bytes": 2,
+    "candidate_completion_scratch_zp": {
+      "start": "0x87",
+      "end_exclusive": "0x89",
+      "capacity_bytes": 2
+    },
+    "candidate_static_stack_arena": {
+      "start": "0xc074",
+      "end_exclusive": "0xc080",
+      "capacity_bytes": 12
+    },
+    "candidate_service_state_arena": {
+      "start": "0xc000",
+      "end_exclusive": "0xc044",
+      "capacity_bytes": 68
+    }
+  },
+  "convergence_code_symbols": [
+    "c2_dma_read_or_abort",
+    "vm_code_load_converged",
+    "c2_physical_read_converged",
+    "c2_mapped_far_vm_code_load_converged",
+    "c2_mapped_far_physical_read_converged"
+  ],
+  "mapped_far_service": {
+    "cpu_window": {
+      "start": "0x6000",
+      "end_exclusive": "0x8000",
+      "block": 3,
+      "capacity_bytes": 8192
+    },
+    "bank2": {
+      "physical_base": "0x00020000",
+      "capacity_bytes": 65536,
+      "current_static_bytes": 47282,
+      "current_headroom_bytes": 18254,
+      "service_physical_start": "0x0002b8b2",
+      "service_physical_end_exclusive": "0x0002bc1c",
+      "service_bytes": 874,
+      "owner_capacity_bytes": 1499,
+      "post_service_static_bytes": 48156,
+      "post_service_headroom_bytes": 17380
+    },
+    "map_tuple": {
+      "maplo_a": "0x80",
+      "maplo_x": "0x24",
+      "maphi_y": "0x00",
+      "maphi_z": "0x80",
+      "mapped_physical_slab_start": "0x0002a000",
+      "mapped_service_cpu_start": "0x78b2",
+      "mapped_service_cpu_end_exclusive": "0x7c1c",
+      "restore_a": "0x00",
+      "restore_x": "0x00",
+      "restore_y": "0x00",
+      "restore_z": "0x80"
+    },
+    "resident": {
+      "start": "0xb3b0",
+      "end_exclusive": "0xb4a3",
+      "capacity_bytes": 243,
+      "dma_abort_wrapper_bytes": 46,
+      "map_trampoline_bytes": 52,
+      "total_bytes": 98,
+      "headroom_after_bytes": 145,
+      "entry_wrappers": 2
+    },
+    "far_symbols": [
+      {"name": "c2_mapped_far_convergence_assembly_body", "bytes": 874}
+    ],
+    "resident_symbols": [
+      {"name": "c2_dma_read_or_abort", "bytes": 46}
+    ],
+    "external_code_dependencies": [],
+    "external_data_dependencies": [
+      "c2_dma_verify",
+      "c2_dma_verify_marker",
+      "c2_dma_verify_list",
+      "c2_dma_verify_done",
+      "c2_dma_list",
+      "c2_edma_job",
+      "c2_edma_probe_jobs",
+      "c2_edma_probe_value",
+      "c2_edma_probe_marker",
+      "c2_edma_probe_done"
+    ],
+    "bootstrap": {
+      "media_role": "c2-bank2-static-code-plane",
+      "stage_policy": "stage-and-independent-target-readback",
+      "publish_order_precedes": "chain-to-bound-resident-entry",
+      "service_packaging": "append native far-service bytes to the canonical Bank-2 static artifact before media staging",
+      "protected_refill_used_to_install_service": false
+    }
+  },
+  "phase_c_owners": {
+    "selected_layout": "mapped-bank2-far-service",
+    "implementation_owner": "handwritten-assembly-with-permanent-c-reference-equivalence",
+    "expectation_authority": "halt1-contract",
+    "sections": {
+      "facade": ".lisp65_c2_mapped_far_facade",
+      "far_service": ".lisp65_c2_mapped_far_service",
+      "state": ".lisp65_c2_convergence_state",
+      "scratch_zp": ".lisp65_c2_convergence_zp",
+      "static_stack": ".lisp65_c2_static_stack"
+    },
+    "service_entries": [
+      "vm_code_load_converged",
+      "c2_physical_read_converged"
+    ],
+    "floor_symbol": "__lisp65_workbench_overlay_min_start",
+    "floor_source": "constant-not-derived-from-noinit"
+  },
+  "candidate_rows": [
+    "fixed-low-resident-island",
+    "owned-e000-service-slot",
+    "overlay-service-with-bootstrap-closure",
+    "mapped-bank2-far-service"
+  ],
+  "micro_elf_stack_sizes": [3, 4, 6, 12],
+  "required_mutations": [
+    "missing-section",
+    "missing-owner",
+    "missing-live-peer",
+    "missing-descriptor",
+    "missing-call-edge"
+  ]
+}

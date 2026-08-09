@@ -11,6 +11,8 @@ never pinned privately by this gate.
 from __future__ import annotations
 
 import argparse
+import ast
+import hashlib
 import json
 from pathlib import Path
 import struct
@@ -39,6 +41,13 @@ ENTRY_OFFSET = 2096
 ENTRY_BYTES = 10
 INVALID = 0
 CANONICAL_SPECS: tuple[tuple[str, str, Path], ...] | None = None
+WITNESS_IMAGE = "lcc"
+WITNESS_NAME = "%lcc-consp"
+WITNESS_KIND = "function"
+WITNESS_LITERAL_COUNT = 0
+WITNESS_CODE_BYTES = bytes.fromhex(
+    "b50100021f00000b1d1a0b3d06011d022b050b3d05011d022b050b3d00011d022b052c052b05"
+)
 
 
 class GateError(RuntimeError):
@@ -145,14 +154,21 @@ def canonical_witness() -> dict[str, Any]:
                 resolution_base + int(image.entry_first[local]),
                 1,
             )
+            code_start = int(entry["blob_offset"])
+            code_length = int(entry["length"])
+            code_bytes = image.code[code_start:code_start + code_length]
+            require(len(code_bytes) == code_length,
+                    "zero-literal witness code range drift")
             target = {
                 "ordinal": entry_base + local,
                 "row": row,
                 "image": image.key,
                 "local_ordinal": local,
                 "name": entry["name"],
+                "kind": entry["kind"],
                 "literal_count": int(entry["lit_count"]),
-                "code_length": int(entry["length"]),
+                "code_length": code_length,
+                "code_bytes": code_bytes,
             }
         entry_base += len(entries)
         code_base += len(image.code)
@@ -162,6 +178,120 @@ def canonical_witness() -> dict[str, Any]:
     target["resolution_limit"] = resolution_base
     target["image_entry_counts"] = counts
     return target
+
+
+def semantic_witness_gate(target: dict[str, Any]) -> dict[str, Any]:
+    """Bind witness identity while treating every position as derived."""
+    require(
+        target["image"] == WITNESS_IMAGE
+        and target["name"] == WITNESS_NAME
+        and target["kind"] == WITNESS_KIND
+        and target["literal_count"] == WITNESS_LITERAL_COUNT
+        and target["code_length"] == len(WITNESS_CODE_BYTES)
+        and target["code_bytes"] == WITNESS_CODE_BYTES,
+        f"canonical zero-literal semantic witness drift: {target}",
+    )
+    return {
+        "image": target["image"],
+        "name": target["name"],
+        "kind": target["kind"],
+        "literal_count": target["literal_count"],
+        "code_length": target["code_length"],
+        "code_sha256": hashlib.sha256(target["code_bytes"]).hexdigest(),
+    }
+
+
+def semantic_contract_source_gate(source_override: str | None = None) -> dict[str, Any]:
+    """Forbid position pins and require every semantic identity field."""
+    source = source_override or Path(__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    function = next(
+        (node for node in tree.body
+         if isinstance(node, ast.FunctionDef)
+         and node.name == "semantic_witness_gate"),
+        None,
+    )
+    require(function is not None, "semantic zero-literal witness gate absent")
+    compared: set[str] = set()
+    for comparison in (
+            node for node in ast.walk(function) if isinstance(node, ast.Compare)):
+        for child in ast.walk(comparison):
+            if (isinstance(child, ast.Subscript)
+                    and isinstance(child.value, ast.Name)
+                    and child.value.id == "target"
+                    and isinstance(child.slice, ast.Constant)
+                    and isinstance(child.slice.value, str)):
+                compared.add(child.slice.value)
+    semantic = {
+        "image", "name", "kind", "literal_count", "code_length", "code_bytes"
+    }
+    positional = {"ordinal", "local_ordinal"}
+    require(semantic <= compared,
+            f"semantic zero-literal identity field dimmed: {semantic - compared}")
+    require(not positional & compared,
+            f"positional zero-literal witness pin restored: {positional & compared}")
+    return {
+        "status": "passed-semantic-identity-not-position-contract",
+        "semantic_fields": sorted(semantic),
+        "positional_fields": "derived-only",
+    }
+
+
+def semantic_witness_selftest() -> dict[str, Any]:
+    source = Path(__file__).read_text(encoding="utf-8")
+    contract = semantic_contract_source_gate(source)
+    target: dict[str, Any] = {
+        "image": WITNESS_IMAGE,
+        "name": WITNESS_NAME,
+        "kind": WITNESS_KIND,
+        "literal_count": WITNESS_LITERAL_COUNT,
+        "code_length": len(WITNESS_CODE_BYTES),
+        "code_bytes": WITNESS_CODE_BYTES,
+        "ordinal": 651,
+        "local_ordinal": 5,
+    }
+    semantic_witness_gate(target)
+    mutations: dict[str, str] = {}
+    replacements: dict[str, Any] = {
+        "image": "stdlib-p0",
+        "name": "%lcc-consp-dimmed",
+        "kind": "macro",
+        "literal_count": 1,
+        "code_length": len(WITNESS_CODE_BYTES) - 1,
+        "code_bytes": WITNESS_CODE_BYTES[:-1] + b"\x00",
+    }
+    for field, replacement in replacements.items():
+        mutant = dict(target)
+        mutant[field] = replacement
+        try:
+            semantic_witness_gate(mutant)
+        except GateError:
+            mutations[f"semantic-{field}-dimmed"] = "rejected"
+        else:
+            raise GateError(f"dimmed semantic witness field survived: {field}")
+
+    anchor = "        target[\"image\"] == WITNESS_IMAGE\n"
+    require(anchor in source, "historical ordinal mutation anchor absent")
+    positional_source = source.replace(
+        anchor,
+        "        target[\"local_ordinal\"] == 6\n        and "
+        "target[\"image\"] == WITNESS_IMAGE\n",
+        1,
+    )
+    try:
+        semantic_contract_source_gate(positional_source)
+    except GateError:
+        mutations["historical-local-ordinal-6-restored"] = "rejected"
+    else:
+        raise GateError("historical local ordinal pin survived")
+    require(len(mutations) == 7, "semantic witness mutation accounting drift")
+    return {
+        "status": "passed-semantic-zero-literal-witness-mutations",
+        "contract": contract,
+        "code_sha256": hashlib.sha256(WITNESS_CODE_BYTES).hexdigest(),
+        "mutations": mutations,
+        "mutations_rejected": len(mutations),
+    }
 
 
 def model_gate() -> dict[str, Any]:
@@ -229,14 +359,10 @@ def model_gate() -> dict[str, Any]:
 
 def manifest_gate() -> dict[str, Any]:
     target = canonical_witness()
-    require(target["image"] == "lcc"
-            and target["local_ordinal"] == 6
-            and target["name"] == "%lcc-consp"
-            and target["literal_count"] == 0
-            and target["code_length"] == 38,
-            f"canonical zero-literal witness drift: {target}")
+    identity = semantic_witness_gate(target)
     return {
         "status": "passed-real-static-entry-witness",
+        "identity": identity,
         "image_entry_counts": target["image_entry_counts"],
         "global_ordinal": target["ordinal"],
         "image": target["image"],
@@ -244,6 +370,7 @@ def manifest_gate() -> dict[str, Any]:
         "name": target["name"],
         "literal_count": target["literal_count"],
         "code_length": target["code_length"],
+        "code_sha256": identity["code_sha256"],
         "derived_row_hex": bytes(target["row"]).hex(),
     }
 
@@ -290,6 +417,7 @@ def source_gate(*, generated_runtime: Path | None = None) -> dict[str, Any]:
     return {
         "status": "passed-zero-literal-source-contract",
         "canonical_emitter": "code_length nonzero; literal_count may be zero",
+        "semantic_witness_contract": semantic_witness_selftest(),
         "manifest": manifest_gate(),
         "fixture": model_gate(),
         "generated_sources": generated,

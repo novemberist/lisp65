@@ -346,6 +346,7 @@ def mutation_gate(
         index: bytes, artifacts: dict[str, bytes], *,
         artifact_build_id: int = S.PROBE_BUILD_ID) -> dict[str, str]:
     rejected: dict[str, str] = {}
+    row_count = index[8] if len(index) > 8 else 0
 
     def seal_without_record_crc_fields(candidate: bytearray) -> None:
         # Hardware First Red on Link 69: the target parser accidentally used
@@ -413,10 +414,21 @@ def mutation_gate(
              lambda b: b.__setitem__(
                  slice(HEADER_BYTES + 18, HEADER_BYTES + 22), bytes(4)),
              row_crc=0, reseal=True)
-    mutation("dependency-count", lambda b: b.__setitem__(
-        HEADER_BYTES + ROW_BYTES + 22, 9), row_crc=1, reseal=True)
-    mutation("dependency-self", lambda b: b.__setitem__(
-        HEADER_BYTES + ROW_BYTES + 23, 1), row_crc=1, reseal=True)
+    if row_count >= 2:
+        mutation("dependency-count", lambda b: b.__setitem__(
+            HEADER_BYTES + ROW_BYTES + 22, 9), row_crc=1, reseal=True)
+        mutation("dependency-self", lambda b: b.__setitem__(
+            HEADER_BYTES + ROW_BYTES + 23, 1), row_crc=1, reseal=True)
+    else:
+        require(row_count == 1, "one-row mutation witness needs one legal row")
+        candidate = bytearray(index)
+        try:
+            candidate[HEADER_BYTES + ROW_BYTES + 22] = 9
+        except IndexError as error:
+            rejected["one-row-unconditional-second-row-access"] = str(error)
+        else:
+            raise GateError(
+                "one-row unconditional second-row access did not fail loudly")
     mutation("dependency-padding", lambda b: b.__setitem__(
         HEADER_BYTES + 23, 0), row_crc=0, reseal=True)
     mutation("execution-source", lambda b: b.__setitem__(
@@ -433,21 +445,23 @@ def mutation_gate(
         HEADER_BYTES + 45, b[HEADER_BYTES + 45] ^ 1))
     mutation("row-reserved", lambda b: b.__setitem__(
         HEADER_BYTES + 47, 1), row_crc=0, reseal=True)
-    mutation("duplicate-name", lambda b: b.__setitem__(
-        slice(HEADER_BYTES + ROW_BYTES, HEADER_BYTES + ROW_BYTES + 16),
-        b[HEADER_BYTES:HEADER_BYTES + 16]), row_crc=1, reseal=True)
-    mutation("duplicate-identity", lambda b: b.__setitem__(
-        slice(HEADER_BYTES + ROW_BYTES + 18,
-              HEADER_BYTES + ROW_BYTES + 22),
-        b[HEADER_BYTES + 18:HEADER_BYTES + 22]),
-        row_crc=1, reseal=True)
+    if row_count >= 2:
+        mutation("duplicate-name", lambda b: b.__setitem__(
+            slice(HEADER_BYTES + ROW_BYTES, HEADER_BYTES + ROW_BYTES + 16),
+            b[HEADER_BYTES:HEADER_BYTES + 16]), row_crc=1, reseal=True)
+        mutation("duplicate-identity", lambda b: b.__setitem__(
+            slice(HEADER_BYTES + ROW_BYTES + 18,
+                  HEADER_BYTES + ROW_BYTES + 22),
+            b[HEADER_BYTES + 18:HEADER_BYTES + 22]),
+            row_crc=1, reseal=True)
     mutation("artifact-length", lambda b: b.__setitem__(
         HEADER_BYTES + 32, b[HEADER_BYTES + 32] ^ 1),
         row_crc=0, reseal=True)
     mutation("artifact-identity", lambda b: b.__setitem__(
         HEADER_BYTES + 18, b[HEADER_BYTES + 18] ^ 1),
         row_crc=0, reseal=True)
-    require(len(rejected) == 32, "L65I mutation count drift")
+    expected = 32 if row_count >= 2 else 29
+    require(len(rejected) == expected, "L65I mutation count drift")
     return rejected
 
 

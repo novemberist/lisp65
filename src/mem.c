@@ -11,6 +11,10 @@
 #include "c2_product_runtime.h"
 #endif
 #include "c2_kernal_layout.h"
+#ifdef LISP65_DMA_CONTENT_CONVERGENCE
+#include "interrupt.h"
+#include "vm.h"
+#endif
 
 #ifdef LISP65_STAGED_BOOT_OVERLAY
 #define WORKBENCH_BOOTFN __attribute__((section(".lisp65_boot"), noinline, used))
@@ -243,9 +247,22 @@ static void ext_dma(uint16_t sa,uint8_t sb,uint16_t da,uint8_t db,uint16_t n){
         "sta $d700\n\t"
         ::: "a", "memory");
 }
-uint8_t ext_type(uint16_t i){ ext_dma(EXT_OFF(i)+0,EXT_BANK,(uint16_t)(uintptr_t)&ext_stg1,0,1); return ext_stg1; }
-obj     ext_a(uint16_t i)   { ext_dma(EXT_OFF(i)+2,EXT_BANK,(uint16_t)(uintptr_t)&ext_stg,0,2); return (obj)ext_stg; }
-obj     ext_b(uint16_t i)   { ext_dma(EXT_OFF(i)+4,EXT_BANK,(uint16_t)(uintptr_t)&ext_stg,0,2); return (obj)ext_stg; }
+#ifdef LISP65_DMA_CONTENT_CONVERGENCE
+static void ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
+                                  uint8_t *destination, uint16_t length) {
+    if (!vm_code_load_converged(source_bank, source, length, destination)) {
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "DMA content did not converge; reboot");
+        return;
+    }
+}
+#else
+#define ext_dma_read_or_abort(source, bank, destination, length) \
+    ext_dma((source), (bank), (uint16_t)(uintptr_t)(destination), 0u, (length))
+#endif
+uint8_t ext_type(uint16_t i){ ext_dma_read_or_abort(EXT_OFF(i)+0,EXT_BANK,&ext_stg1,1); return ext_stg1; }
+obj     ext_a(uint16_t i)   { ext_dma_read_or_abort(EXT_OFF(i)+2,EXT_BANK,(uint8_t *)&ext_stg,2); return (obj)ext_stg; }
+obj     ext_b(uint16_t i)   { ext_dma_read_or_abort(EXT_OFF(i)+4,EXT_BANK,(uint8_t *)&ext_stg,2); return (obj)ext_stg; }
 void    ext_set_type(uint16_t i,uint8_t t){ ext_stg1=t; ext_dma((uint16_t)(uintptr_t)&ext_stg1,0,EXT_OFF(i)+0,EXT_BANK,1); }
 void    ext_set_a(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uintptr_t)&ext_stg,0,EXT_OFF(i)+2,EXT_BANK,2); }
 void    ext_set_b(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uintptr_t)&ext_stg,0,EXT_OFF(i)+4,EXT_BANK,2); }
@@ -254,9 +271,9 @@ void    ext_set_b(uint16_t i,obj v){ ext_stg=(uint16_t)v; ext_dma((uint16_t)(uin
  * Datei-Bytes bis Bankende; der Produktpin nutzt dieses Fenster fuer die ladbare IDE-Lib.
  * Byteweise, kalt. */
 void    ext_disk_put(uint16_t off, uint8_t v){ ext_stg1 = v; ext_dma((uint16_t)(uintptr_t)&ext_stg1, 0, (uint16_t)(DISK_EXT_BASE + off), EXT_BANK, 1); }
-uint8_t ext_disk_get(uint16_t off){ ext_dma((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, (uint16_t)(uintptr_t)&ext_stg1, 0, 1); return ext_stg1; }
+uint8_t ext_disk_get(uint16_t off){ ext_dma_read_or_abort((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, &ext_stg1, 1); return ext_stg1; }
 void ext_disk_read(uint16_t off, uint8_t *dst, uint16_t len){
-    if (len) ext_dma((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, (uint16_t)(uintptr_t)dst, 0, len);
+    if (len) ext_dma_read_or_abort((uint16_t)(DISK_EXT_BASE + off), EXT_BANK, dst, len);
 }
 #ifdef LISP65_DISK_LIBS
 /* Disk-Lib-Staging (Stufe 2): Blob+Trailer aus dem Disk-Scratch (EXT_BANK @ DISK_EXT_BASE+scratch_off)
@@ -914,8 +931,8 @@ static uint16_t str_alt_off = STR_ARENA_ALT_OFF;   /* Kompaktier-Ziel */
 static uint8_t  str_stg1;
 
 static uint8_t str_read_byte(uint16_t off) {
-    ext_dma((uint16_t)(str_cur_off + off), STR_ARENA_BANK,
-            (uint16_t)(uintptr_t)&str_stg1, 0, 1);
+    ext_dma_read_or_abort((uint16_t)(str_cur_off + off), STR_ARENA_BANK,
+                          &str_stg1, 1);
     return str_stg1;
 }
 static void str_write_byte(uint16_t off, uint8_t b) {

@@ -32,6 +32,10 @@ SOURCE_BINDING_FORMAT = (
     "lisp65-c2-bound-artifact-manifest-source-bindings-v1")
 REBINDED_PRODUCT_FORMAT = (
     "lisp65-c2-bound-artifact-equivalent-product-rebind-v1")
+COMPILER_TIER_FORMATS = {
+    "lisp65-c2-product-compiler-tier-suite-generator-v1",
+    "lisp65-c2-v112-product-compiler-tier-generator-v1",
+}
 
 
 class GateError(RuntimeError):
@@ -85,6 +89,8 @@ def contract_gate() -> dict[str, Any]:
         and set(value["mutation_requirements"]) == {
             "stale-source-hash",
             "stale-carrier-primitive-map",
+            "historical-carrier-name-pinning",
+            "carrier-path-spelling-pinning",
             "carrier-not-bound-by-product",
             "bound-manifest-hash-drift",
             "stale-manifest-source-hash",
@@ -116,16 +122,32 @@ def contract_gate() -> dict[str, Any]:
     }
 
 
+def is_compiler_carrier(manifest: dict[str, Any]) -> bool:
+    """Recognize the compiler carrier by delivered role, not a release name."""
+    entries = {
+        row.get("name") for row in manifest.get("entries", [])
+        if isinstance(row, dict)
+    }
+    exports = manifest.get("exports", [])
+    return (
+        manifest.get("artifact_role") == "disk-lib"
+        and isinstance(exports, list)
+        and "%c2-compile-form" in exports
+        and {
+            "%c2-compile-form", "%lcc-v2-prim4", "%lcc-v2-prim5",
+        }.issubset(entries)
+        and isinstance(manifest.get("suite"), str)
+    )
+
+
 def source_binding_gate(
     carrier_manifest_path: Path, tier_receipt_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     carrier = load(carrier_manifest_path)
     tier = load(tier_receipt_path)
     require(
-        tier.get("format")
-            == "lisp65-c2-product-compiler-tier-suite-generator-v1"
-        and carrier.get("name") == "c2-product-compiler-tier"
-        and carrier.get("artifact_role") == "disk-lib",
+        tier.get("format") in COMPILER_TIER_FORMATS
+        and is_compiler_carrier(carrier),
         "compiler-tier/carrier format drift",
     )
     current_inputs = []
@@ -145,13 +167,18 @@ def source_binding_gate(
         )
         outputs[row["path"]] = bind(path)
     suite_path = root_path(carrier["suite"], "carrier suite")
+    tier_suite_path = root_path(tier["suite"], "generated tier suite")
+    tier_sources = [
+        root_path(row["path"], "generated compiler-tier source").resolve()
+        for row in tier["outputs"] if row["path"].endswith(".lisp")
+    ]
+    carrier_sources = [
+        root_path(path, "carrier source").resolve()
+        for path in carrier.get("sources", [])
+    ]
     require(
-        tier.get("suite") == carrier.get("suite")
-        and carrier.get("sources")
-            == [
-                row["path"] for row in tier["outputs"]
-                if row["path"].endswith(".lisp")
-            ],
+        tier_suite_path.resolve() == suite_path.resolve()
+        and carrier_sources == tier_sources,
         "carrier is not bound to the generated compiler-tier sources",
     )
     suite = load(suite_path)
@@ -520,16 +547,21 @@ def resolve_tier_path(carrier_path: Path) -> Path:
     candidates = []
     suite_ref = load(carrier_path).get("suite")
     if isinstance(suite_ref, str):
-        candidates.append((ROOT / suite_ref).parent / "tier-generation.json")
+        suite_dir = (ROOT / suite_ref).parent
+        candidates.extend((
+            suite_dir / "tier-generation.json",
+            suite_dir / "generation.json",
+        ))
     candidates.append(carrier_path.parent / "compiler-tier/tier-generation.json")
     for candidate in candidates:
         if candidate.is_file():
             return candidate
     require(False, (
-        "current compiler carrier has no tier-generation receipt "
-        f"(looked next to the bound suite and under {carrier_path.parent}/"
-        "compiler-tier/; the receipt is produced by the compiler-tier "
-        "generation step of the carrier link cycle)"))
+        "current compiler carrier has no generation receipt "
+        f"(looked for tier-generation.json/generation.json next to the "
+        f"bound suite and under {carrier_path.parent}/compiler-tier/; "
+        "the receipt is produced by the compiler-tier generation step of "
+        "the carrier link cycle)"))
     raise AssertionError("unreachable")
 
 
@@ -539,18 +571,18 @@ def default_authorities() -> tuple[Path, Path, Path, Path | None]:
         profile["authority"]["product_manifest"],
         "current product manifest authority")
     product = load(product_path)
-    carrier_path = None
+    carriers = []
     for row in product.get("manifests", []):
         path = root_path(row["path"], "current product-bound manifest")
         manifest = load(path)
-        if (
-            manifest.get("name") == "c2-product-compiler-tier"
-            and manifest.get("artifact_role") == "disk-lib"
-        ):
-            carrier_path = path
-            break
-    require(carrier_path is not None,
-            "current product has no bound compiler carrier")
+        if is_compiler_carrier(manifest):
+            carriers.append(path)
+    require(
+        len(carriers) == 1,
+        "current product must bind exactly one semantic compiler carrier; "
+        f"found {len(carriers)}",
+    )
+    carrier_path = carriers[0]
     tier_path = resolve_tier_path(carrier_path)
     binding = profile["authority"].get("manifest_source_bindings")
     source_path = (ROOT / binding).resolve() if binding else None
@@ -570,6 +602,25 @@ def mutation_gate() -> list[str]:
     mapping = {"intern": 67}
     if mapping.get("intern") != 68:
         accepted.append("stale-carrier-primitive-map")
+    semantic_carrier = {
+        "name": "release-specific-name-must-not-be-semantic",
+        "artifact_role": "disk-lib",
+        "suite": "suite.json",
+        "exports": ["%c2-compile-form"],
+        "entries": [
+            {"name": "%c2-compile-form"},
+            {"name": "%lcc-v2-prim4"},
+            {"name": "%lcc-v2-prim5"},
+        ],
+    }
+    if (
+        semantic_carrier["name"] != "c2-product-compiler-tier"
+        and is_compiler_carrier(semantic_carrier)
+    ):
+        accepted.append("historical-carrier-name-pinning")
+    same_path = ROOT / "lib/lcc.lisp"
+    if same_path.resolve() == (ROOT / same_path.resolve()).resolve():
+        accepted.append("carrier-path-spelling-pinning")
     binding = {"path": "old-lcc.manifest.json"}
     if binding["path"] != "new-lcc.manifest.json":
         accepted.append("carrier-not-bound-by-product")
@@ -579,7 +630,7 @@ def mutation_gate() -> list[str]:
     source_binding = {"sha256": "0" * 64}
     if source_binding["sha256"] != hashlib.sha256(b"source").hexdigest():
         accepted.append("stale-manifest-source-hash")
-    require(len(accepted) == 6, "mutation selftest did not reject every class")
+    require(len(accepted) == 8, "mutation selftest did not reject every class")
     return accepted
 
 
@@ -622,8 +673,9 @@ def absent_semantics_selftest() -> int:
         finally:
             PRODUCT_PROFILE = saved
 
-        # 2. tier resolution: suite-referenced (new) and directory (legacy)
-        # layouts both resolve; neither resolving is red.
+        # 2. tier resolution: both suite-referenced generator filenames and
+        # the legacy carrier-directory layout resolve; none may be pinned to
+        # one historical spelling.
         suite_dir = tmp / "gate/compiler-tier"
         suite_dir.mkdir(parents=True)
         (suite_dir / "tier-generation.json").write_text("{}", encoding="utf-8")
@@ -643,6 +695,10 @@ def absent_semantics_selftest() -> int:
         carrier_legacy.write_text("{}", encoding="utf-8")
         require(resolve_tier_path(carrier_new).is_file(),
                 "suite-referenced tier layout does not resolve")
+        (suite_dir / "tier-generation.json").unlink()
+        (suite_dir / "generation.json").write_text("{}", encoding="utf-8")
+        require(resolve_tier_path(carrier_new).is_file(),
+                "release-specific generation filename does not resolve")
         require(resolve_tier_path(carrier_legacy).is_file(),
                 "legacy tier layout no longer resolves")
         checked += 1

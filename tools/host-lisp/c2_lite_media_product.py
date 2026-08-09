@@ -515,15 +515,21 @@ def compile_stager(
     required = {
         "ASM_R3_CHAIN_JOB_ADDR_LO",
         "ASM_R3_CHAIN_JOB_ADDR_HI",
+        "ASM_R3_CHAIN_STATE_ADDR",
+        "ASM_R3_PRODUCT_LOAD_LO",
+        "ASM_R3_PRODUCT_LOAD_HI",
+        "ASM_R3_PRODUCT_CRC_INIT_0",
+        "ASM_R3_PRODUCT_CRC_INIT_1",
+        "ASM_R3_PRODUCT_CRC_INIT_2",
+        "ASM_R3_PRODUCT_CRC_INIT_3",
+        "ASM_R3_CHAIN_CRC_ATTEMPTS",
         "ASM_R3_PRODUCT_ENTRY",
     }
     assembly = STAGER_S.read_text(encoding="utf-8")
     require(
         required <= set(symbols)
         and ASM_CONTRACT_INCLUDE_TOKEN in assembly
-        and assembly.count("ASM_R3_CHAIN_JOB_ADDR_LO") == 2
-        and assembly.count("ASM_R3_CHAIN_JOB_ADDR_HI") == 2
-        and assembly.count("ASM_R3_PRODUCT_ENTRY") == 1,
+        and all(assembly.count(name) == 1 for name in required),
         "C2-lite stager assembler/C constant seam drift")
     ASM_CONTRACT_INCLUDE.parent.mkdir(parents=True, exist_ok=True)
     ASM_CONTRACT_INCLUDE.write_bytes(include)
@@ -564,36 +570,45 @@ def compile_stager(
         rom_enable.value - rom_section.address + rom_enable.bytes]
     product_entry = symbols["ASM_R3_PRODUCT_ENTRY"]
 
-    completion_marker = symbols["ASM_R3_CHAIN_JOB_ADDR_LO"] | (
-        symbols["ASM_R3_CHAIN_JOB_ADDR_HI"] << 8)
-    completion_marker += 24
-    completion_loop = bytes((
-        0xAD, completion_marker & 0xFF, completion_marker >> 8,
-        0xC9, 0xA5, 0xD0, 0xF9,
+    state = symbols["ASM_R3_CHAIN_STATE_ADDR"]
+    terminal_jump = bytes((0x4C, product_entry & 0xFF, product_entry >> 8))
+    destination_fetch = bytes.fromhex("b204")
+    crc_compares = tuple(
+        bytes((0xCD, (state + index) & 0xFF, (state + index) >> 8))
+        for index in range(4)
+    )
+    bounded_attempts = bytes((
+        0xC9, symbols["ASM_R3_CHAIN_CRC_ATTEMPTS"],
     ))
+    fail_closed = bytes.fromhex("a9028d20d080fe")
 
     def chain_entry_gate(data: bytes, entry: int) -> bool:
         return (
             entry == R3_C2_LITE_PRODUCT_ENTRY
             and len(data) == chain_section.bytes
-            and data.count(completion_loop) == 1
-            and data.index(completion_loop) > data.index(bytes.fromhex("8d00d7"))
-            and data[-3:] == bytes((0x4C, entry & 0xFF, entry >> 8))
+            and data.count(bytes.fromhex("8d00d7")) == 1
+            and data.count(destination_fetch) == 1
+            and all(data.count(compare) == 1 for compare in crc_compares)
+            and data.count(bounded_attempts) == 1
+            and data.count(fail_closed) == 1
+            and data.count(terminal_jump) == 1
+            and data.index(destination_fetch) > data.index(bytes.fromhex("8d00d7"))
+            and data.index(terminal_jump) > data.index(crc_compares[-1])
         )
 
-    wrong_profile_chain = (
-        chain_data[:-2]
-        + bytes((R3_LEGACY_PRODUCT_ENTRY & 0xFF,
-                 R3_LEGACY_PRODUCT_ENTRY >> 8))
+    wrong_profile_chain = chain_data.replace(
+        terminal_jump,
+        bytes((0x4C, R3_LEGACY_PRODUCT_ENTRY & 0xFF,
+               R3_LEGACY_PRODUCT_ENTRY >> 8)), 1,
     )
-    missing_completion_chain = chain_data.replace(completion_loop, b"", 1)
-    wrong_completion_chain = chain_data.replace(
-        completion_loop,
-        bytes((
-            0xAD, completion_marker & 0xFF, completion_marker >> 8,
-            0xC9, 0x5A, 0xD0, 0xF9,
-        )),
-        1,
+    stale_destination_chain = chain_data.replace(
+        destination_fetch, bytes.fromhex("a900"), 1,
+    )
+    wrong_crc_oracle_chain = chain_data.replace(
+        crc_compares[0], crc_compares[1], 1,
+    )
+    unbounded_chain = chain_data.replace(
+        bounded_attempts, bytes((0xC9, 0x00)), 1,
     )
     trigger_owner = truth.symbol("disk_record")
     trigger_section = truth.section(trigger_owner.section)
@@ -776,6 +791,12 @@ def compile_stager(
             1),
     )
     handoff_tokens = (
+        "volatile uint8_t *state = (volatile uint8_t *)R3_CHAIN_STATE_ADDR;",
+        "state[0] = product[12];",
+        "state[1] = product[13];",
+        "state[2] = product[14];",
+        "state[3] = product[15];",
+        "wr16(state + 4, (uint16_t)(file_length - 2u));",
         "job[0] = DMA_COPY_CMD | R3_DMA_CHAIN;",
         "wr16(job + 13, 1u);",
         "job[15] = (uint8_t)(R3_CHAIN_JOB_ADDR + 25u);",
@@ -803,6 +824,11 @@ def compile_stager(
         source.replace(
             "job[0] = DMA_COPY_CMD | R3_DMA_CHAIN;",
             "job[0] = DMA_COPY_CMD;", 1),
+        source.replace("state[0] = product[12];",
+                       "state[0] = product[13];", 1),
+        source.replace(
+            "wr16(state + 4, (uint16_t)(file_length - 2u));",
+            "wr16(state + 4, (uint16_t)(file_length - 3u));", 1),
         source.replace("wr16(job + 13, 1u);", "wr16(job + 13, 0u);", 1),
         source.replace(
             "job[15] = (uint8_t)(R3_CHAIN_JOB_ADDR + 25u);",
@@ -857,7 +883,7 @@ def compile_stager(
     transport_domains = stage_domain_gate(rows)
     require(
         STAGER.stat().st_size <= 16384
-        and chain_section.bytes <= 0x40
+        and chain_section.bytes <= 0x100
         and "SHF_EXECINSTR" in chain_section.flags
         and chain_entry_gate(chain_data, product_entry)
         and not chain_entry_gate(wrong_profile_chain, product_entry)
@@ -883,8 +909,9 @@ def compile_stager(
         handoff_source_ok(source)
         and all(not handoff_source_ok(value) for value in handoff_mutations)
         and chain_entry_gate(chain_data, product_entry)
-        and not chain_entry_gate(missing_completion_chain, product_entry)
-        and not chain_entry_gate(wrong_completion_chain, product_entry),
+        and not chain_entry_gate(stale_destination_chain, product_entry)
+        and not chain_entry_gate(wrong_crc_oracle_chain, product_entry)
+        and not chain_entry_gate(unbounded_chain, product_entry),
         "C2-lite product-handoff completion gate red")
     require(
         ownership < io_boundary < rom_boundary < restage_boundary
@@ -907,16 +934,17 @@ def compile_stager(
         "chain_handoff": {
             "status": (
                 "passed-profile-bound-final-product-entry-after-"
-                "ordered-memory-completion"),
+                "manifest-crc-content-convergence"),
             "product_entry": f"0x{product_entry:04x}",
-            "terminal_jump_bytes": chain_data[-3:].hex(),
+            "terminal_jump_bytes": terminal_jump.hex(),
             "wrong_profile_entry": f"0x{R3_LEGACY_PRODUCT_ENTRY:04x}",
             "wrong_profile_mutations_rejected": 1,
-            "completion_marker": f"0x{completion_marker:04x}",
-            "completion_value": "0xa5",
+            "oracle": "manifest-crc32-versus-cpu-visible-product-payload",
+            "state_address": f"0x{state:04x}",
+            "bounded_attempts": symbols["ASM_R3_CHAIN_CRC_ATTEMPTS"],
             "ordered_jobs": 2,
             "source_and_ELF_mutations_rejected": (
-                len(handoff_mutations) + 2),
+                len(handoff_mutations) + 4),
         },
         "ordered_chain_descriptor_bytes": (
             stage_jobs.bytes + attic_stage_jobs.bytes),

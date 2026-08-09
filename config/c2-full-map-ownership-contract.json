@@ -1,0 +1,354 @@
+{
+  "format": "lisp65-c2-full-map-ownership-contract-v1",
+  "recorded_on": "2026-08-04",
+  "status": "phase-b-one-of-one-fit-auto-selected",
+  "claim": "Full-map placement and startup-range contract only; no linker implementation, product build, WPLTO, device, semantic, Link-91 or release claim.",
+  "authorities": {
+    "phase_a": {
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.8-full-map-phase-a-closure-receipt.json",
+      "sha256": "b1fcacf4b0aa276b67e271ce1b10bc681b58381e0adf4a9ecd9076431d66e2ce"
+    },
+    "state_contract": {
+      "path": "config/c2-state-ownership-contract.json",
+      "sha256": "d3aab71ef52a8b52b6302eb2b7ca932860f230b7f0d27289a0aaa1a040bb06f0"
+    },
+    "stack_overlay_contract": {
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    }
+  },
+  "oracle_policy": {
+    "addresses": "Every expected address is a Phase-A fact or an already accepted 1.5/1.7 contract constant; the generated linker source under test is never an oracle.",
+    "fit": "All ordinary outputs, fixed state, zero page, facade, far body, heap and runtime overlay form one simultaneous-live price.",
+    "five_byte_margin": "0xbffb..0xc000 is validation margin, not allocatable capacity or feature budget.",
+    "unknown_allocatable_input": "fail-closed",
+    "source_under_test_is_oracle": false
+  },
+  "generated_linker_requirements": {
+    "mechanism": "replace-inherited-output-stanzas",
+    "insert_after_ordinary_chain_allowed": false,
+    "ordinary_output_instances": 1,
+    "each_allocatable_input_owners": 1,
+    "unknown_allocatable_orphans_allowed": 0,
+    "final_section_inventory_additions": [
+      {
+        "name": ".lisp65_c2_convergence_zp",
+        "address": "0x0087",
+        "bytes": 2,
+        "required_flags": ["SHF_ALLOC", "SHF_WRITE"]
+      },
+      {
+        "name": ".lisp65_c2_mapped_far_facade",
+        "address": "0xb3b0",
+        "bytes": 98,
+        "required_flags": ["SHF_ALLOC", "SHF_EXECINSTR"]
+      },
+      {
+        "name": ".lisp65_c2_mapped_far_service",
+        "address": "0x78b2",
+        "bytes": 874,
+        "required_flags": ["SHF_ALLOC", "SHF_EXECINSTR"]
+      },
+      {
+        "name": ".lisp65_c2_convergence_state",
+        "address": "0xc000",
+        "bytes": 66,
+        "required_flags": ["SHF_ALLOC", "SHF_WRITE"]
+      },
+      {
+        "name": ".lisp65_c2_static_stack",
+        "address": "0xc074",
+        "bytes": 6,
+        "required_flags": ["SHF_ALLOC", "SHF_WRITE"]
+      },
+      {
+        "name": ".rela.lisp65_c2_mapped_far_facade",
+        "address": "0x0000",
+        "bytes": 252,
+        "required_flags": ["SHF_INFO_LINK"]
+      },
+      {
+        "name": ".rela.lisp65_c2_mapped_far_service",
+        "address": "0x0000",
+        "bytes": 3132,
+        "required_flags": ["SHF_INFO_LINK"]
+      }
+    ],
+    "profile_rodata_exclusions": [
+      ".rodata.eval_v2_workbench_service",
+      ".rodata.vm_callprim",
+      ".rodata.vm_native_call"
+    ],
+    "static_stack_exclusion": ".noinit..Lstatic_stack",
+    "predecessor_preservation": {
+      "basic_header_vma": "0x2001",
+      "zp_data_lma": "0x2017",
+      "zp_data_bytes": 12,
+      "text_vma": "0x2023",
+      "text_end_exclusive": "0xb3b0",
+      "text_bytes": 37744,
+      "rule": "Explicit later VMAs may not let lld move the already-proven PRG header, ZP initializer LMA or text predecessor; these are preservation constants, not a new layout row."
+    }
+  },
+  "input_routing": [
+    {
+      "owner": "named-kernal-profile-rodata",
+      "output": ".lisp65_c2_kernal_window.profile_rodata",
+      "matches_exact": [
+        ".rodata.eval_v2_workbench_service",
+        ".rodata.vm_callprim",
+        ".rodata.vm_native_call"
+      ],
+      "demand_bytes": 348
+    },
+    {
+      "owner": "ordinary-bank0-rodata",
+      "output": ".rodata",
+      "matches": [".rodata", ".rodata.*"],
+      "excludes_exact": [
+        ".rodata.eval_v2_workbench_service",
+        ".rodata.vm_callprim",
+        ".rodata.vm_native_call"
+      ],
+      "demand_bytes": 879
+    },
+    {
+      "owner": "runtime-overlay-verifier-table",
+      "output": ".lisp65_runtime_overlay_verifier_bindings",
+      "matches_exact": [".lisp65_runtime_overlay_verifier_bindings"],
+      "demand_bytes": 40
+    },
+    {
+      "owner": "ordinary-bank0-data",
+      "output": ".data",
+      "matches": [".data", ".data.*"],
+      "demand_bytes": 22
+    },
+    {
+      "owner": "ordinary-bank0-bss",
+      "output": ".bss",
+      "matches": [".bss", ".bss.*"],
+      "demand_bytes": 1585
+    },
+    {
+      "owner": "llvm-mos-static-stack",
+      "output": ".lisp65_c2_static_stack",
+      "matches_exact": [".noinit..Lstatic_stack"],
+      "demand_bytes": 6
+    },
+    {
+      "owner": "ordinary-bank0-noinit-empty",
+      "output": ".noinit",
+      "matches": [".noinit", ".noinit.*"],
+      "excludes_exact": [".noinit..Lstatic_stack"],
+      "demand_bytes": 0
+    }
+  ],
+  "selected_layout": {
+    "id": "owned-sequential-crt-chain-empty-noinit",
+    "status": "green-auto-selected",
+    "ordering": [
+      ".rodata",
+      ".lisp65_runtime_overlay_verifier_bindings",
+      ".data",
+      ".bss"
+    ],
+    "ordinary_outputs": [
+      {
+        "output": ".rodata",
+        "owner": "ordinary-bank0-rodata",
+        "start": "0xb61d",
+        "end_exclusive": "0xb98c",
+        "demand_bytes": 879,
+        "maximum_bytes": 879,
+        "alignment": 1,
+        "vma_lma_relation": "equal",
+        "initialization": "immutable-load-image"
+      },
+      {
+        "output": ".lisp65_runtime_overlay_verifier_bindings",
+        "owner": "runtime-overlay-verifier-table",
+        "start": "0xb98c",
+        "end_exclusive": "0xb9b4",
+        "demand_bytes": 40,
+        "maximum_bytes": 40,
+        "alignment": 1,
+        "vma_lma_relation": "equal",
+        "initialization": "immutable-load-image"
+      },
+      {
+        "output": ".data",
+        "owner": "ordinary-bank0-data",
+        "start": "0xb9b4",
+        "end_exclusive": "0xb9ca",
+        "demand_bytes": 22,
+        "maximum_bytes": 22,
+        "alignment": 1,
+        "vma_lma_relation": "equal",
+        "initialization": "copy-load-range-to-vma-range"
+      },
+      {
+        "output": ".bss",
+        "owner": "ordinary-bank0-bss",
+        "start": "0xb9ca",
+        "end_exclusive": "0xbffb",
+        "demand_bytes": 1585,
+        "maximum_bytes": 1585,
+        "alignment": 1,
+        "vma_lma_relation": "noload",
+        "initialization": "zero-complete-range"
+      }
+    ],
+    "crt_ranges": {
+      "data_load_start": "0xb9b4",
+      "data_start": "0xb9b4",
+      "data_end_exclusive": "0xb9ca",
+      "data_bytes": 22,
+      "bss_start": "0xb9ca",
+      "bss_end_exclusive": "0xbffb",
+      "bss_bytes": 1585,
+      "ordinary_noinit_start": "0xc34d",
+      "ordinary_noinit_end_exclusive": "0xc34d",
+      "ordinary_noinit_bytes": 0
+    },
+    "margin": {
+      "start": "0xbffb",
+      "end_exclusive": "0xc000",
+      "bytes": 5,
+      "allocatable": false
+    }
+  },
+  "fixed_simultaneous_live_ledger": [
+    {
+      "owner": "mapped-far-resident-facade",
+      "start": "0xb3b0",
+      "end_exclusive": "0xb412",
+      "demand_bytes": 98,
+      "capacity_end_exclusive": "0xb4a3",
+      "capacity_bytes": 243
+    },
+    {
+      "owner": "c2-handoff-state-predecessor",
+      "start": "0xb609",
+      "end_exclusive": "0xb61d",
+      "demand_bytes": 20
+    },
+    {
+      "owner": "code-window-convergence-state",
+      "start": "0xc000",
+      "end_exclusive": "0xc042",
+      "demand_bytes": 66
+    },
+    {
+      "owner": "unallocated-convergence-stack-gap",
+      "start": "0xc042",
+      "end_exclusive": "0xc074",
+      "demand_bytes": 0,
+      "gap_bytes": 50
+    },
+    {
+      "owner": "llvm-mos-static-stack-arena",
+      "start": "0xc074",
+      "end_exclusive": "0xc080",
+      "demand_bytes": 6,
+      "capacity_bytes": 12,
+      "initialization": "independent-noload-transient"
+    },
+    {
+      "owner": "c2-fixed-bank0-state",
+      "start": "0xc080",
+      "end_exclusive": "0xc34d",
+      "demand_bytes": 717
+    },
+    {
+      "owner": "ordinary-bank0-noinit-empty",
+      "start": "0xc34d",
+      "end_exclusive": "0xc34d",
+      "demand_bytes": 0,
+      "initialization": "preserve-empty-range"
+    },
+    {
+      "owner": "former-noinit-named-gap",
+      "start": "0xc34d",
+      "end_exclusive": "0xc353",
+      "demand_bytes": 0,
+      "gap_bytes": 6
+    },
+    {
+      "owner": "heap-alignment-gap",
+      "start": "0xc353",
+      "end_exclusive": "0xc354",
+      "demand_bytes": 0,
+      "gap_bytes": 1
+    },
+    {
+      "owner": "heap-boundary",
+      "start": "0xc354",
+      "end_exclusive": "0xc354",
+      "demand_bytes": 0
+    },
+    {
+      "owner": "runtime-overlay",
+      "floor": "0xc354",
+      "start": "0xc356",
+      "observed_bytes": 1734,
+      "capacity_bytes": 1792
+    },
+    {
+      "owner": "mapped-bank2-far-service",
+      "cpu_start": "0x78b2",
+      "service_cpu_end_exclusive": "0x7c1c",
+      "owner_cpu_end_exclusive": "0x7e8d",
+      "physical_start": "0x0002b8b2",
+      "service_physical_end_exclusive": "0x0002bc1c",
+      "owner_physical_end_exclusive": "0x0002be8d",
+      "demand_bytes": 874,
+      "capacity_bytes": 1499
+    }
+  ],
+  "zero_page_ledger": [
+    {
+      "owner": "ordinary-zero-page",
+      "start": "0x22",
+      "end_exclusive": "0x87",
+      "demand_bytes": 101,
+      "capacity_bytes": 101
+    },
+    {
+      "owner": "code-window-convergence-zp",
+      "start": "0x87",
+      "end_exclusive": "0x89",
+      "demand_bytes": 2,
+      "capacity_bytes": 2
+    },
+    {
+      "owner": "c2-fixed-zero-page",
+      "start": "0x89",
+      "end_exclusive": "0x90",
+      "demand_bytes": 7,
+      "capacity_bytes": 7
+    }
+  ],
+  "candidate_selection": {
+    "candidate_rows_priced": 1,
+    "fitting_rows": 1,
+    "selected_id": "owned-sequential-crt-chain-empty-noinit",
+    "auto_selected": true,
+    "halt1_required": false,
+    "second_honest_row": "absent-no-artifact-requires-different-order-or-startup-semantics",
+    "rejected_before_pricing_as_non_rows": [
+      "inherited-placement-plus-assertions",
+      "six-byte-ordinary-noinit-duplicate-owner",
+      "consume-five-byte-margin",
+      "change-alignment-to-gain-space",
+      "padding-tenant",
+      "partition-steering",
+      "reorder-bindings-or-data-without-semantic-need"
+    ]
+  },
+  "release_line_consequence_on_green_card": {
+    "ordinary_bank0_state": "frozen",
+    "future_feature_placement": "bank2-or-cold",
+    "margin_bytes_available_to_freight": 0
+  }
+}

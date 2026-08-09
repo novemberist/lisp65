@@ -110,9 +110,16 @@ def canonical_artifact_profile_gate(out: Path) -> dict[str, Any]:
     shelf_bytes = int(shelf_row["bytes"])
     catalog_crc = struct.unpack_from("<I", shelf.read_bytes(), 18)[0]
     build_id = int(identity["product_build_id_u32"])
+    current_artifacts_identity = P.sha(PRODUCT_IDENTITY)
+    embedded_artifacts_identity = (
+        PRODUCT.SEALED_C2_ARTIFACTS_IDENTITY
+        if os.environ.get("LISP65_PUBLIC_CLEAN_BUILD") == "1"
+        and PRODUCT.SEALED_C2_ARTIFACTS_IDENTITY is not None
+        else current_artifacts_identity
+    )
     require(
         "c2_artifacts_sha256="
-            + P.sha(PRODUCT_IDENTITY) in profile
+            + embedded_artifacts_identity in profile
         and len(c2d) == 33840
         and struct.unpack_from("<I", c2d, 40)[0] == catalog_crc
         and struct.unpack_from("<I", c2d, 44)[0] == build_id,
@@ -139,6 +146,8 @@ def canonical_artifact_profile_gate(out: Path) -> dict[str, Any]:
             balance["currencies"]["attic_immutable"]["shelf_bytes"],
         "c2d_catalog_crc32": f"0x{catalog_crc:08x}",
         "c2d_product_build_id": f"0x{build_id:08x}",
+        "current_artifacts_identity": current_artifacts_identity,
+        "embedded_artifacts_identity": embedded_artifacts_identity,
         "mutations_rejected": len(mutations),
     }
 

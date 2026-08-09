@@ -1,0 +1,119 @@
+{
+  "format": "lisp65-c2-v112-release-closure-v1",
+  "recorded_on": "2026-08-07",
+  "owner_commits": {
+    "commission": "b9980cb0",
+    "phase_plan": "f250f322",
+    "phase_a_authorization": "5bd3c2ec",
+    "library_split": "a1cf5b9b",
+    "trace_descope": "f426f7c7",
+    "halt_1_selection": "8e4f4be4",
+    "halt_1_register": "70fb52ec"
+  },
+  "integration_state": "selected",
+  "scope": {
+    "release": "v1.4.0",
+    "product_banner": "WORKBENCH 1.4.0",
+    "product_cores": 1,
+    "media_variants": 2,
+    "device_sessions": 1,
+    "owner_halts": 2,
+    "sealed_release_untouched": "v1.3.0",
+    "resident_delta_bytes": 0
+  },
+  "unconditional_surface": [
+    {"kind": "function", "name": "who-calls"},
+    {"kind": "function", "name": "capitalize"},
+    {"kind": "function", "name": "string-split"}
+  ],
+  "conditional_surface": [
+    {"kind": "macro", "name": "defstruct", "selector": "D2-green"}
+  ],
+  "public_surface": {
+    "capitalize": {"kind": "function", "delivery": "string-extra-library"},
+    "string-split": {"kind": "function", "delivery": "string-extra-library"},
+    "who-calls": {"kind": "function", "delivery": "inspect-library"}
+  },
+  "trace_descope": {
+    "status": "not-delivered-in-v1.4.0",
+    "names": ["trace", "untrace"],
+    "reason": "exact restoration is not representable on the delivered Link-92 ABI",
+    "restart": "explicit core-ABI block with a function-cell getter or journal old-value exposure plus atomic publication/restoration",
+    "authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-trace-fix-library-scope.json"
+  },
+  "promotion": {
+    "compiler_overlay": "lib/dialect-v2/lcc-locality.lisp",
+    "compiler_generator": "tools/host-lisp/c2_v112_product_compiler_tier.py",
+    "compiler_suite": "build/post-promotion/v112/compiler-tier/suite.json",
+    "compiler_manifest": "build/post-promotion/v112/compiler/lcc.manifest.json",
+    "string_extra_manifest": "build/post-promotion/v112/string-extra/string-extra.manifest.json",
+    "inspect_manifest": "build/post-promotion/v112/inspect/inspect.manifest.json",
+    "defstruct_manifest": "build/post-promotion/v110-performance/defstruct-candidate.manifest.json",
+    "freight_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-release-freight-receipt.json"
+  },
+  "selector": {
+    "state": "base",
+    "allowed_states": ["pending", "base", "defstruct"],
+    "d2_required_for_defstruct": true,
+    "invalid_or_setup_red_blocks_selection": true,
+    "d2_red_claim": "not delivered in v1.4.0; no infinite-hang or correctness claim",
+    "structural_price_seconds": 179,
+    "structural_price_is_completion_upper_bound": false,
+    "minimum_quiet_floor_seconds": 180,
+    "selected_media_sha256": "1a77a2f5d71c58ef8e9650316d7d0103675fd419b5aa96d37e8f44e7b24186b7",
+    "selection_authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d2-device-receipt.json",
+    "decision": "base-selected-defstruct-not-delivered"
+  },
+  "media": {
+    "shared_product_core": "build/c2.3/v1.4.0-candidate-product-link92-r5/canonical-product-manifest.json",
+    "base_manifest": "build/c2.3/v1.4.0-candidate-media-link92-r5-split/base-candidate-manifest.json",
+    "defstruct_acceptance_manifest": "build/c2.3/v1.4.0-candidate-media-link92-r5-split/defstruct-acceptance-manifest.json",
+    "allowed_variant_delta": [
+      "defstruct library artifact",
+      "defstruct index row",
+      "conditional surface selection metadata"
+    ],
+    "shared_roles_must_be_byteidentical": true,
+    "only_selected_variant_may_ship": true
+  },
+  "authorities": {
+    "combined_development_contract": "config/comfort-track-contract.json",
+    "combined_development_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/comfort-track-host-first-receipt.json",
+    "persistent_performance_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.10-persistent-performance-receipt.json",
+    "compiler_locality_contract": "config/c2-v111-compiler-locality.json",
+    "compiler_locality_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.11-compiler-locality-receipt.json",
+    "trace_descope_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-trace-fix-library-scope.json",
+    "media_readback_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-split-media-readback-receipt.json",
+    "editor_allocation_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2-v126-editor-allocation-gate-receipt.json",
+    "editor_physical_64_of_64_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-closing-device-first-red-receipt.json",
+    "public_surface": "config/dialect-v2-surface.json",
+    "plan": "docs/planning/1.12-v1.4.0-release-work-plan.md"
+  },
+  "sources": {
+    "who-calls": "lib/comfort-who-calls-generated.lisp",
+    "capitalize": "lib/comfort-strings.lisp",
+    "string-split": "lib/comfort-strings.lisp",
+    "defstruct": "lib/defstruct.lisp"
+  },
+  "consumers": [
+    "README.md",
+    "docs/user-guide.md",
+    "docs/language-reference.md",
+    "docs/known-issues.md",
+    "docs/reference/parked-items-register.md",
+    "config/dialect-v2-surface.json"
+  ],
+  "out_of_scope": [
+    "parity primitives",
+    "tick hook",
+    "ownership retry",
+    "$91 repair",
+    "new string converters",
+    "new product feature outside the commissioned freight"
+  ],
+  "a1": {
+    "preferred_exception_list": [],
+    "calendar_exception_requires_exact_dated_rebind": true,
+    "category_wide_calendar_exception_forbidden": true
+  }
+}

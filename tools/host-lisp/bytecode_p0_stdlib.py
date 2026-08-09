@@ -1843,6 +1843,54 @@ def _validate_case_io(case, vm, path, lane):
                     % (case["name"], path, lane, key, minimum, actual)
                 )
             observed[key] = actual
+    expected_exact = case.get("expect_io_exact")
+    if expected_exact is not None:
+        if not isinstance(expected_exact, dict) or not expected_exact:
+            raise StdlibCheckError(
+                "%s (%s): expect_io_exact must be a non-empty object"
+                % (case["name"], path)
+            )
+        for key, value in expected_exact.items():
+            if key not in vm.io_counters or type(value) is not int or value < 0:
+                raise StdlibCheckError(
+                    "%s (%s): invalid exact I/O witness %s=%r"
+                    % (case["name"], path, key, value)
+                )
+            actual = vm.io_counters[key]
+            if actual != value:
+                raise AssertionError(
+                    "%s (%s %s): exact I/O witness %s expected %d got %d"
+                    % (case["name"], path, lane, key, value, actual)
+                )
+            observed[key] = actual
+    expected_trace = case.get("expect_memory_write_trace")
+    if expected_trace is not None:
+        normalized = [tuple(row) for row in expected_trace]
+        if any(
+            len(row) != 2
+            or type(row[0]) is not int or not 0 <= row[0] <= 0xFFFF
+            or type(row[1]) is not int or not 0 <= row[1] <= 0xFF
+            for row in normalized
+        ):
+            raise StdlibCheckError(
+                "%s (%s): invalid expected memory-write trace"
+                % (case["name"], path)
+            )
+        if vm.memory_write_trace != normalized:
+            raise AssertionError(
+                "%s (%s %s): memory-write trace expected %r got %r"
+                % (case["name"], path, lane, normalized, vm.memory_write_trace)
+            )
+        observed["memory_write_trace"] = len(normalized)
+    expected_suffix = case.get("expect_memory_write_trace_suffix")
+    if expected_suffix is not None:
+        normalized = [tuple(row) for row in expected_suffix]
+        if not normalized or vm.memory_write_trace[-len(normalized):] != normalized:
+            raise AssertionError(
+                "%s (%s %s): memory-write trace suffix expected %r got %r"
+                % (case["name"], path, lane, normalized, vm.memory_write_trace)
+            )
+        observed["memory_write_trace_suffix"] = len(normalized)
     if "expect_output_codes" in case:
         output = case["expect_output_codes"]
         if (

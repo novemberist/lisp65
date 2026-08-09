@@ -72,6 +72,48 @@ volatile uint8_t lisp65_runtime_state = 0;
 volatile obj lisp65_runtime_result = NIL;
 volatile uint8_t lisp65_runtime_preload_detail = RUNTIME_PRELOAD_OK;
 
+#ifdef LISP65_V14_SPRITE_FAULT_DIAGNOSTIC
+/* Non-promotable Link-90 diagnostic identity.  Sample the live VIC sprite
+ * pointer geometry through the CPU's I/O view after the VM has stopped on
+ * its first error, then preserve the state for a read-only monitor capture. */
+volatile uint8_t lisp65_v14_sprite_fault_d06c;
+volatile uint8_t lisp65_v14_sprite_fault_d06d;
+volatile uint8_t lisp65_v14_sprite_fault_d06e;
+volatile uint8_t lisp65_v14_sprite_fault_sampled;
+
+static void lisp65_v14_sprite_fault_sample(void) {
+#if defined(__MEGA65__)
+    lisp65_v14_sprite_fault_d06c = *(volatile uint8_t *)0xd06c;
+    lisp65_v14_sprite_fault_d06d = *(volatile uint8_t *)0xd06d;
+    lisp65_v14_sprite_fault_d06e = *(volatile uint8_t *)0xd06e;
+#else
+    lisp65_v14_sprite_fault_d06c = 0;
+    lisp65_v14_sprite_fault_d06d = 0;
+    lisp65_v14_sprite_fault_d06e = 0;
+#endif
+    lisp65_v14_sprite_fault_sampled = 1;
+}
+#endif
+
+#ifdef LISP65_V14_READ_EDGE_WITNESS
+extern void lisp65_v14_read_edge_witness_reset(void);
+#endif
+#ifdef LISP65_V14_RETURN_REFILL_WITNESS
+extern void lisp65_v14_return_refill_witness_reset(void);
+#endif
+#ifdef LISP65_V14_FULL_LADDER_WITNESS
+extern void lisp65_v14_full_ladder_witness_reset(void);
+#endif
+#ifdef LISP65_V14_MECHANISM_WITNESS
+extern void lisp65_v14_mechanism_witness_reset(void);
+#endif
+#ifdef LISP65_V14_INSTRUCTION_WITNESS
+extern void lisp65_v14_instruction_witness_reset(void);
+#endif
+#ifdef LISP65_V14_OPCODE_VIEW_WITNESS
+extern void lisp65_v14_opcode_view_witness_reset(void);
+#endif
+
 static uint8_t runtime_preload_read(void *context, uint16_t offset,
                                     uint8_t *dst, uint16_t length) {
     uint32_t end;
@@ -126,6 +168,15 @@ int main(void) {
         return 4;
     }
 
+    /* Every target DMA content timeout is measured against the Ship-owned
+     * advancing frame source.  Arm and prove that authority before heap or
+     * VM initialization can consume its first EXT byte. */
+#ifdef LISP65_SHIP_RUNTIME_IO
+    if (!lisp65_ship_io_init()) {
+        lisp65_runtime_state = RUNTIME_IO_ERROR;
+        return 5;
+    }
+#endif
     mem_init();
     vm_dir_reset();
     vm_init();
@@ -134,12 +185,6 @@ int main(void) {
     vm_load_embedded_stdlib();
 #ifdef LISP65_EXT_HEAP
     gc_freeze_boot();
-#endif
-#ifdef LISP65_SHIP_RUNTIME_IO
-    if (!lisp65_ship_io_init()) {
-        lisp65_runtime_state = RUNTIME_IO_ERROR;
-        return 5;
-    }
 #endif
     lisp65_runtime_state = RUNTIME_LOADED;
 
@@ -151,11 +196,41 @@ int main(void) {
         return 2;
     }
 
+#ifdef LISP65_V14_READ_EDGE_WITNESS
+    lisp65_v14_read_edge_witness_reset();
+#endif
+#ifdef LISP65_V14_RETURN_REFILL_WITNESS
+    lisp65_v14_return_refill_witness_reset();
+#endif
+#ifdef LISP65_V14_FULL_LADDER_WITNESS
+    lisp65_v14_full_ladder_witness_reset();
+#endif
+#ifdef LISP65_V14_MECHANISM_WITNESS
+    lisp65_v14_mechanism_witness_reset();
+#endif
+#ifdef LISP65_V14_INSTRUCTION_WITNESS
+    lisp65_v14_instruction_witness_reset();
+#endif
+#ifdef LISP65_V14_OPCODE_VIEW_WITNESS
+    lisp65_v14_opcode_view_witness_reset();
+#endif
     vm_status = VM_OK;
     result = vm_run_dir((int)BCODE_IDX(fn), 0, 0);
     lisp65_runtime_result = result;
     if (vm_status != VM_OK && vm_status != VM_HALT) {
+#ifdef LISP65_V14_SPRITE_FAULT_DIAGNOSTIC
+        lisp65_v14_sprite_fault_sample();
+#endif
         lisp65_runtime_state = RUNTIME_VM_ERROR;
+#if defined(LISP65_V14_SPRITE_FAULT_DIAGNOSTIC) \
+    || defined(LISP65_V14_READ_EDGE_WITNESS) \
+    || defined(LISP65_V14_RETURN_REFILL_WITNESS) \
+    || defined(LISP65_V14_FULL_LADDER_WITNESS) \
+    || defined(LISP65_V14_MECHANISM_WITNESS) \
+    || defined(LISP65_V14_INSTRUCTION_WITNESS) \
+    || defined(LISP65_V14_OPCODE_VIEW_WITNESS)
+        for (;;) { }
+#endif
         return 3;
     }
     lisp65_runtime_state = RUNTIME_COMPLETE;

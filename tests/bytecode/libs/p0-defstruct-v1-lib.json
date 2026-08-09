@@ -19,15 +19,25 @@
     "%defstruct-constructor-form",
     "%defstruct-predicate-form",
     "%defstruct-copy-form",
-    "%defstruct-update-values",
+    "%defstruct-instance-p",
+    "%defstruct-copy",
+    "%defstruct-read",
+    "%defstruct-set",
+    "%defstruct-with",
     "%defstruct-one-slot-forms",
     "%defstruct-slot-forms",
     "%defstruct-register-forms",
+    "%defstruct-register-layout",
     "%defstruct-expansion",
     "defstruct"
   ],
   "require_all_defuns": true,
   "require_all_defmacros": true,
+  "allowed_external_calls": [
+    "%setf-register",
+    "%setf-register-commit",
+    "%setf-register-abort"
+  ],
   "resident_suite": "p0-stdlib-require-resolver.json",
   "max_call_args": 12,
   "cases": [

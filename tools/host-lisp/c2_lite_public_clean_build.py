@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Qualify the public C2-lite entry point in two varied fresh clones."""
+"""Qualify the selected public v1.4 entry point in two varied fresh clones."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from typing import Any, Callable
 ROOT = Path(__file__).resolve().parents[2]
 AUTHORITY = ROOT / "config/c2-lite-public-build-authority.json"
 DEFAULT_MANIFEST_REL = Path(
-    "build/c2.2/v1.2.5-candidate-media/candidate-manifest.json")
+    "build/c2.3/v1.4.0-public-selected/candidate-manifest.json")
 BUILD_COMMAND = ("make", "--no-print-directory", "workbench-product")
 AXES = (
     {
@@ -81,11 +81,13 @@ def authority(root: Path = ROOT) -> dict[str, Any]:
         root / "config/c2-lite-public-build-authority.json",
         "public build authority")
     roles = value.get("sealed_roles")
-    identity = value.get("sealed_profile_identity")
-    legacy = value.get("sealed_legacy_profile_fields")
     require(
-        value.get("format") == "lisp65-c2-lite-public-build-authority-v1"
-        and value.get("version") == 1
+        value.get("format") == "lisp65-c2-lite-public-build-authority-v2"
+        and value.get("version") == 2
+        and value.get("release") == "v1.4.0"
+        and value.get("selected_variant") == "base"
+        and value.get("selected_media_sha256")
+            == "1a77a2f5d71c58ef8e9650316d7d0103675fd419b5aa96d37e8f44e7b24186b7"
         and value.get("build_model")
             == "fresh-source-single-emitter-plus-one-WPLTO"
         and value.get("private_evidence_is_build_input") is False
@@ -93,28 +95,8 @@ def authority(root: Path = ROOT) -> dict[str, Any]:
         and isinstance(value.get("candidate_manifest_path"), str)
         and value["candidate_manifest_path"].endswith(
             "/candidate-manifest.json")
-        and value.get("artifact_count") == 19
-        and isinstance(identity, dict)
-        and set(identity) == {"field", "sha256", "meaning"}
-        and identity.get("field") == "direct_entry_contract_sha256"
-        and isinstance(identity.get("sha256"), str)
-        and len(identity["sha256"]) == 64
-        and all(character in "0123456789abcdef"
-                for character in identity["sha256"])
-        and isinstance(identity.get("meaning"), str)
-        and "private historical receipt bytes are not build inputs"
-            in identity["meaning"]
-        and isinstance(legacy, dict)
-        and set(legacy) == {
-            "persistent_publish_plan", "v2_profile_parity_sha256", "meaning"}
-        and legacy.get("persistent_publish_plan") == "38,39,40,41,0"
-        and legacy.get("v2_profile_parity_sha256")
-            == "4bfee9b37e9f50a556c6ca4819d368231650789995775c43f01b1ba4e8d68db9"
-        and "identity only" in str(legacy.get("meaning", ""))
-        and "37,38,39,40,0" in str(legacy.get("meaning", ""))
-        and "current structured-ELF profile-parity gate"
-            in str(legacy.get("meaning", ""))
-        and isinstance(roles, dict) and len(roles) == 19,
+        and value.get("artifact_count") == 23
+        and isinstance(roles, dict) and len(roles) == 23,
         "public build authority envelope drift")
     for role, row in roles.items():
         require(
@@ -133,11 +115,13 @@ def artifact_projection(
     rows = manifest.get("artifacts")
     require(
         manifest.get("format")
-            == "lisp65-c2-lite-canonical-media-product-v1"
+            == "lisp65-v1.4-public-selected-product-v1"
         and manifest.get("status")
-            == "passed-complete-C2-lite-two-media-product"
-        and manifest.get("artifact_count") == 19
-        and isinstance(rows, list) and len(rows) == 19,
+            == "passed-public-source-selected-base-product"
+        and manifest.get("private_evidence_inputs") == 0
+        and manifest.get("selector") == "base"
+        and manifest.get("artifact_count") == len(expected)
+        and isinstance(rows, list) and len(rows) == len(expected),
         "canonical media manifest envelope drift")
     result: list[dict[str, Any]] = []
     for row in rows:
@@ -264,8 +248,8 @@ def qualify(repository: Path, revision: str, output: Path,
             first[field] == second[field],
             f"varied public clean builds diverged: {field}")
     value = {
-        "format": "lisp65-c2-lite-public-clean-build-receipt-v1",
-        "version": 1,
+        "format": "lisp65-c2-lite-public-clean-build-receipt-v2",
+        "version": 2,
         "status": "passed",
         "measured_on": date.today().isoformat(),
         "source_commit": commit,
@@ -278,13 +262,14 @@ def qualify(repository: Path, revision: str, output: Path,
                 "artifact_set_sha256", "product_build_id",
                 "profile_build_id", "manifest_sha256")
         } for build in builds],
-        "artifact_count": 19,
+        "selected_variant": "base",
+        "artifact_count": len(first["artifacts"]),
         "artifact_set_sha256": first["artifact_set_sha256"],
         "product_build_id": first["product_build_id"],
         "profile_build_id": first["profile_build_id"],
         "artifacts": first["artifacts"],
         "result":
-            "two-varied-fresh-public-clones-reproduce-the-sealed-role-set",
+            "two-varied-fresh-public-clones-reproduce-the-selected-v1.4-role-set",
     }
     validate_receipt(value)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -296,20 +281,21 @@ def validate_receipt(value: dict[str, Any]) -> None:
     required = {
         "format", "version", "status", "measured_on", "source_commit",
         "source_repository_role", "entry_point", "private_evidence_inputs",
-        "builds", "artifact_count", "artifact_set_sha256",
+        "builds", "selected_variant", "artifact_count", "artifact_set_sha256",
         "product_build_id", "profile_build_id", "artifacts", "result",
     }
     require(set(value) == required, "public clean-build receipt schema drift")
     require(
-        value["format"] == "lisp65-c2-lite-public-clean-build-receipt-v1"
-        and value["version"] == 1 and value["status"] == "passed"
+        value["format"] == "lisp65-c2-lite-public-clean-build-receipt-v2"
+        and value["version"] == 2 and value["status"] == "passed"
         and value["source_repository_role"]
             == "curated-public-source-snapshot"
         and value["entry_point"] == "make workbench-product"
         and value["private_evidence_inputs"] == 0
-        and value["artifact_count"] == 19
+        and value["selected_variant"] == "base"
+        and value["artifact_count"] == 23
         and value["result"]
-            == "two-varied-fresh-public-clones-reproduce-the-sealed-role-set",
+            == "two-varied-fresh-public-clones-reproduce-the-selected-v1.4-role-set",
         "public clean-build receipt envelope drift")
     require(
         isinstance(value["builds"], list) and len(value["builds"]) == 2
@@ -318,7 +304,7 @@ def validate_receipt(value: dict[str, Any]) -> None:
         "public clean-build receipt lacks two varied builds")
     require(
         isinstance(value["artifacts"], list)
-        and len(value["artifacts"]) == 19,
+        and len(value["artifacts"]) == 23,
         "public clean-build receipt artifact inventory drift")
     for build in value["builds"]:
         require(
@@ -332,7 +318,7 @@ def selftest() -> None:
     rows = [{
         "role": f"role-{index}", "name": f"{index}.bin",
         "bytes": index + 1, "sha256": f"{index + 1:064x}",
-    } for index in range(19)]
+    } for index in range(23)]
     build = {
         "id": "a", "clone": "fresh-no-local-detached-public-checkout",
         "command": "make --no-print-directory workbench-product",
@@ -343,18 +329,19 @@ def selftest() -> None:
         "manifest_sha256": "b" * 64,
     }
     value = {
-        "format": "lisp65-c2-lite-public-clean-build-receipt-v1",
-        "version": 1, "status": "passed", "measured_on": "2026-07-27",
+        "format": "lisp65-c2-lite-public-clean-build-receipt-v2",
+        "version": 2, "status": "passed", "measured_on": "2026-08-08",
         "source_commit": "c" * 40,
         "source_repository_role": "curated-public-source-snapshot",
         "entry_point": "make workbench-product",
         "private_evidence_inputs": 0,
         "builds": [build, deepcopy(build)],
-        "artifact_count": 19, "artifact_set_sha256": "a" * 64,
+        "selected_variant": "base",
+        "artifact_count": 23, "artifact_set_sha256": "a" * 64,
         "product_build_id": "12345678", "profile_build_id": "90abcdef",
         "artifacts": rows,
         "result":
-            "two-varied-fresh-public-clones-reproduce-the-sealed-role-set",
+            "two-varied-fresh-public-clones-reproduce-the-selected-v1.4-role-set",
     }
     value["builds"][1]["id"] = "b"
     value["builds"][1]["environment"] = {
@@ -381,7 +368,7 @@ def selftest() -> None:
         raise CleanBuildError(f"selftest mutation survived: {label}")
     print(
         "c2-lite-public-clean-build: SELFTEST PASS "
-        f"mutations={len(mutations)} roles=19")
+        f"mutations={len(mutations)} roles=23")
 
 
 def main() -> int:
@@ -407,7 +394,7 @@ def main() -> int:
             value = check_root(ROOT)
             print(
                 "c2-lite-public-clean-build: LOCAL PASS "
-                f"roles=19 set={value['artifact_set_sha256']}")
+                f"roles={len(value['artifacts'])} set={value['artifact_set_sha256']}")
         elif args.action == "qualify":
             output = args.output
             if not output.is_absolute():
@@ -417,7 +404,7 @@ def main() -> int:
                 args.llvm_mos_root)
             print(
                 "c2-lite-public-clean-build: QUALIFIED "
-                f"builds=2 roles=19 set={value['artifact_set_sha256']} "
+                f"builds=2 roles={value['artifact_count']} set={value['artifact_set_sha256']} "
                 f"receipt={output}")
         else:
             receipt = args.receipt
@@ -427,7 +414,7 @@ def main() -> int:
             validate_receipt(value)
             print(
                 "c2-lite-public-clean-build: RECEIPT PASS "
-                f"builds=2 roles=19 set={value['artifact_set_sha256']}")
+                f"builds=2 roles={value['artifact_count']} set={value['artifact_set_sha256']}")
         return 0
     except (
         CleanBuildError, OSError, ValueError, KeyError,

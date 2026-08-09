@@ -7,7 +7,7 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 1.3.0**, using **Dialect V2**.
+The current release is **lisp65 1.4.0**, using **Dialect V2**.
 
 ## Highlights
 
@@ -20,6 +20,10 @@ The current release is **lisp65 1.3.0**, using **Dialect V2**.
 - Q8.7 fixed-point arithmetic, `(time form)`, `wait`, and `read-line`
 - A reproducible Ship Builder for standalone bootable application D81s
 - A lower-allocation editor renderer measured at about 3× the former speed
+- Optional `string-extra` (`capitalize`, `string-split`) and `inspect`
+  (`who-calls`) libraries
+- A more local compiler carrier that cuts the priced persistent-definition
+  workload from 788 to 677 seconds without adding resident bytes
 - Published nullary and fixed-argument calls on the direct-call path
 - Copy-on-write saves and persistent compilation with read-back verification
 - Byte-identical rollback and a usable REPL after RUN/STOP
@@ -28,13 +32,13 @@ The current release is **lisp65 1.3.0**, using **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.3.0.tar.gz` from the
-[v1.3.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.3.0).
+Download `lisp65-1.4.0.tar.gz` from the
+[v1.4.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.4.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.3.0.tar.gz
-cd lisp65-1.3.0
+tar -xzf lisp65-1.4.0.tar.gz
+cd lisp65-1.4.0
 python3 verify.py
 ```
 
@@ -42,7 +46,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.3.0 release notes](docs/releases/1.3.0.md) for the complete change
+See the [1.4.0 release notes](docs/releases/1.4.0.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -76,7 +80,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.3.0.
+identity. There is no on-device disk formatter in 1.4.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -84,7 +88,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.3.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.4.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -114,19 +118,20 @@ acceptance.
 
 ## Verification status
 
-Release 1.3.0 binds product artifact set
-`072ca89affc35bdf0e20cab382e8bd4a9df64babf535e23f6b2e268962daed1f`
-and package set
-`3e0db21adb825cfa44c60bd005f2644a3717f4fcc5b02ae87e1139d3188a3397`:
+Release 1.4.0 binds resident PRG
+`fcc785365d2a6d7a3269367a4234cb372783d46b9debdee6ad37e758f6e20a52`
+and selected Base library D81
+`1a77a2f5d71c58ef8e9650316d7d0103675fd419b5aa96d37e8f44e7b24186b7`:
 
-- G5: 9/9 fresh hardware cases passed
-- G6: 5/5 fresh package, boot, restage, work-media, and product-media cases
-  passed on one physical MEGA65
-- The promoted archive is self-contained, offline-verifiable, reproducibly
-  packed, and mutation-tested
+- the `WORKBENCH 1.4.0` banner, base smokes and three optional-library names
+  passed on one physical MEGA65;
+- 64 physical editor keystrokes persisted 64/64 without observation during
+  the typing window; and
+- the selected library medium and all shared product roles are SHA-bound and
+  offline-verifiable.
 
 Exact hashes and claim limits are recorded in the
-[1.3.0 release notes](docs/releases/1.3.0.md). The maintained limitations and
+[1.4.0 release notes](docs/releases/1.4.0.md). The maintained limitations and
 retired 1.1 latency exception are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
@@ -159,7 +164,7 @@ make workbench-product
 ```
 
 The target uses the single C2 emitter, one WPLTO closure, and the canonical
-media packer. Its final gate requires all 19 roles to reproduce the sealed 1.3.0
+media packer. Its final gate requires all 19 roles to reproduce the sealed 1.4.0
 artifact-set identity. The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -168,7 +173,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
-- [Release Notes for 1.3.0](docs/releases/1.3.0.md)
+- [Release Notes for 1.4.0](docs/releases/1.4.0.md)
 - [Known Issues and Retired Exceptions](docs/known-issues.md)
 - [Contributing](CONTRIBUTING.md)
 - [Development Guide](docs/development.md)

@@ -61,6 +61,9 @@ SESSION_EMITTER_STATE_BASE: int | None = None
 LINK60_FINAL_GEOMETRY = False
 E000_REOPENING = False
 BSS_TRIAGE = False
+FULL_MAP_OWNERSHIP = False
+FULL_MAP_OWNERSHIP_CONTRACT = (
+    ROOT / "config/c2-full-map-ownership-contract.json")
 APPEND_PLAN_FACADE = False
 E000_REOPEN_DEBIT_CAP = 450
 E000_FINAL_FLOOR_BYTES = 63
@@ -75,6 +78,7 @@ PROFILE_RODATA_INPUT_SECTIONS = {
 PROFILE_RODATA_BYTES = sum(PROFILE_RODATA_INPUT_SECTIONS.values())
 PROFILE_RODATA_BASE = 0xFD12
 SEALED_V2_PROFILE_PARITY_IDENTITY: str | None = None
+SEALED_C2_ARTIFACTS_IDENTITY: str | None = None
 C2_LITE_HYBRID_E000_FLOOR_BYTES = 54
 C2_LITE_HYBRID_PROFILE_RODATA_BASE = 0xFD2C
 # Current post-promotion product geometry.  Historical Link-60/66 replay
@@ -83,6 +87,183 @@ C2_LITE_HYBRID_PROFILE_RODATA_BASE = 0xFD2C
 LINK60_VERIFIER_BINDING_BASE = 0xB98A
 VERIFIER_BINDING_SECTION = ".lisp65_runtime_overlay_verifier_bindings"
 VERIFIER_BINDING_BYTES = 32
+
+
+def configure_full_map_ownership() -> None:
+    """Select the v1.8 contract-owned ordinary CRT section chain.
+
+    llvm-mos' platform script includes ``c.ld`` by search path.  The selected
+    full-map row therefore shadows that include with one generated owner for
+    rodata/data/BSS/noinit instead of trying to move inherited outputs with a
+    later INSERT command.  This selector is intentionally one-way for a
+    product-shaped process.
+    """
+    global FULL_MAP_OWNERSHIP
+    FULL_MAP_OWNERSHIP = True
+
+
+def full_map_platform_c_ld() -> str:
+    """Return the owned replacement for llvm-mos' inherited ``c.ld``.
+
+    Expected addresses are contract constants selected in v1.8 Phase B.  The
+    permanent Phase-C gate binds those values independently; this renderer is
+    never its own oracle.
+    """
+    if not FULL_MAP_OWNERSHIP:
+        raise RuntimeError("full-map platform linker requested before selection")
+    return r'''/* Generated v1.8 full-map owner.  This file deliberately
+ * replaces the platform c.ld include; it is not an INSERT overlay. */
+INCLUDE zp.ld
+.text 0x2023 : {
+    INCLUDE text-sections.ld
+} >c_readonly
+
+.rodata 0xb61d : {
+    INCLUDE rodata-sections.ld
+} >c_readonly
+
+.lisp65_runtime_overlay_verifier_bindings 0xb98c : {
+    __lisp65_rtov_binding_section_start = .;
+    KEEP(*(.lisp65_runtime_overlay_verifier_bindings))
+    __lisp65_rtov_binding_section_end = .;
+} >c_writeable
+
+.data 0xb9b4 : AT(0xb9b4) {
+    INCLUDE data-sections.ld
+} >c_writeable
+INCLUDE data-symbols.ld
+
+.bss 0xb9ca (NOLOAD) : {
+    INCLUDE bss-sections.ld
+} >c_writeable
+INCLUDE bss-symbols.ld
+
+/* The sole .noinit-namespace resident is extracted by the named static-stack
+ * owner before this empty ordinary owner.  The old six-byte interval is a
+ * named gap, not padding and not duplicate state. */
+.noinit 0xc34d (NOLOAD) : {
+    INCLUDE noinit-sections.ld
+} >c_writeable
+__lisp65_c2_ordinary_noinit_end = ADDR(.noinit) + SIZEOF(.noinit);
+__heap_start = 0xc354;
+'''
+
+
+def full_map_platform_commodore_ld() -> str:
+    """Return the small parent include that fixes the PRG predecessor too.
+
+    lld assigns address-less outputs after later explicit outputs in the same
+    region.  Once the ordinary chain has contract VMAs, the platform's
+    address-less BASIC header would otherwise drift behind it.  Shadowing the
+    parent include gives that existing predecessor its already-proven $2001
+    VMA; no input ownership or runtime semantics change.
+    """
+    if not FULL_MAP_OWNERSHIP:
+        raise RuntimeError("full-map parent linker requested before selection")
+    return r'''/* Generated v1.8 parent for the owned platform c.ld. */
+__rc0 = __basic_zp_start;
+INCLUDE imag-regs.ld
+__basic_zp_size = __basic_zp_end - __basic_zp_start;
+MEMORY { zp : ORIGIN = __rc31 + 1, LENGTH = __basic_zp_end - (__rc31 + 1) }
+INPUT(basic-header.o)
+REGION_ALIAS("c_readonly", ram)
+REGION_ALIAS("c_writeable", ram)
+SECTIONS {
+    .basic_header 0x2001 : { *(.basic_header) }
+    INCLUDE c.ld
+}
+'''
+
+
+def full_map_platform_zp_data_ld() -> str:
+    """Preserve the existing ZP initializer LMA under explicit later VMAs."""
+    if not FULL_MAP_OWNERSHIP:
+        raise RuntimeError("full-map ZP linker requested before selection")
+    return r'''.zp.data : AT(0x2017) {
+    INCLUDE zp-data-sections.ld
+} >zp
+INCLUDE zp-data-symbols.ld
+'''
+
+
+def full_map_rewrite_product_linker(script: str) -> str:
+    """Own the non-platform pieces of the selected ordinary chain.
+
+    The replacement platform ``c.ld`` owns the verifier table's contract VMA
+    as part of the ordinary chain.  Remove the former product-local INSERT and
+    strengthen the old predecessor-only assertions into the complete
+    simultaneous-live ledger.
+    """
+    if not FULL_MAP_OWNERSHIP:
+        return script
+    binding_block = (
+        "SECTIONS {\n"
+        "    .lisp65_runtime_overlay_verifier_bindings : {\n"
+        "        __lisp65_rtov_binding_section_start = .;\n"
+        "        KEEP(*(.lisp65_runtime_overlay_verifier_bindings))\n"
+        "        __lisp65_rtov_binding_section_end = .;\n"
+        "    } >ram\n"
+        "} INSERT AFTER .rodata;\n\n")
+    if script.count(binding_block) != 1:
+        raise RuntimeError("full-map verifier binding template drift")
+    script = script.replace(binding_block, "", 1)
+    inherited_noinit = re.compile(
+        r"ASSERT\(ADDR\(\.noinit\) == 0x[0-9a-f]+ &&\n"
+        r"       SIZEOF\(\.noinit\) == [0-9]+ &&\n"
+        r"       __lisp65_workbench_overlay_min_start == 0x[0-9a-f]+ &&\n"
+        r"       __lisp65_workbench_overlay_min_start <=\n"
+        r"           __lisp65_workbench_runtime_overlay_vma,\n"
+        r"       \"C2 inherited noinit/fixed-block geometry drift\"\);\n")
+    script, replacements = inherited_noinit.subn(
+        "ASSERT(ADDR(.noinit) == 0xc34d &&\\n"
+        "       SIZEOF(.noinit) == 0 &&\\n"
+        "       __heap_start == 0xc354 &&\\n"
+        "       __lisp65_workbench_overlay_min_start == 0xc354 &&\\n"
+        "       __lisp65_workbench_overlay_min_start <=\\n"
+        "           __lisp65_workbench_runtime_overlay_vma,\\n"
+        "       \"C2 full-map empty-noinit/heap geometry drift\");\\n",
+        script, count=1)
+    if replacements != 1:
+        raise RuntimeError("full-map inherited noinit assertion drift")
+    return script + r'''
+
+/* v1.8 full-map simultaneous-live closure.  All addresses are duplicated in
+ * the independent Phase-B contract and checked by the permanent gate. */
+ASSERT(ADDR(.rodata) == 0xb61d && SIZEOF(.rodata) == 879 &&
+       ADDR(.lisp65_runtime_overlay_verifier_bindings) == 0xb98c &&
+       SIZEOF(.lisp65_runtime_overlay_verifier_bindings) == 40 &&
+       ADDR(.data) == 0xb9b4 && LOADADDR(.data) == 0xb9b4 &&
+       SIZEOF(.data) == 22 &&
+       ADDR(.bss) == 0xb9ca && SIZEOF(.bss) == 1585 &&
+       ADDR(.bss) + SIZEOF(.bss) == 0xbffb,
+       "ordinary full-map chain drift");
+ASSERT(ADDR(.lisp65_c2_convergence_state) == 0xc000 &&
+       ADDR(.lisp65_c2_static_stack) == 0xc074 &&
+       SIZEOF(.lisp65_c2_static_stack) == 6 &&
+       ADDR(.lisp65_c2_fixed_bank0) == 0xc080 &&
+       ADDR(.lisp65_c2_fixed_bank0_hot_bss) +
+           SIZEOF(.lisp65_c2_fixed_bank0_hot_bss) == 0xc34d &&
+       ADDR(.noinit) == 0xc34d && SIZEOF(.noinit) == 0 &&
+       __heap_start == 0xc354 &&
+       __lisp65_workbench_overlay_min_start == 0xc354 &&
+       __lisp65_workbench_runtime_overlay_vma >= __heap_start,
+       "fixed/full-map/heap/overlay simultaneous-live relation drift");
+ASSERT(0xc000 - (ADDR(.bss) + SIZEOF(.bss)) == 5,
+       "five-byte validation margin drifted; it is not capacity");
+'''
+
+
+def write_product_linker_sources(
+        out: Path, probe_definitions: tuple[str, ...] = ()) -> None:
+    """Write every linker source selected for one product-shaped link."""
+    write(out / "c2-substitution.ld", linker_script(
+        ownership_opt_in=ownership_scope_selected(probe_definitions)))
+    if FULL_MAP_OWNERSHIP:
+        include_dir = out / "full-map-linker"
+        include_dir.mkdir(parents=True, exist_ok=True)
+        write(include_dir / "c.ld", full_map_platform_c_ld())
+        write(include_dir / "commodore.ld", full_map_platform_commodore_ld())
+        write(include_dir / "zp-data.ld", full_map_platform_zp_data_ld())
 
 
 def configure_require_resolver_profile_geometry() -> None:
@@ -218,6 +399,41 @@ C2_PHASE_SOURCES = [
     ROOT / "scripts/c2-stream-v2-phase-12.c",
     ROOT / "scripts/c2-stream-v2-phase-13.c",
 ]
+
+CONVERGENCE_FEATURE = "LISP65_CODE_WINDOW_CONVERGENCE"
+CONVERGENCE_DEFINES = (
+    CONVERGENCE_FEATURE,
+    "LISP65_DMA_CONTENT_CONVERGENCE",
+    "LISP65_C2_ASM_CONVERGENCE",
+)
+CONVERGENCE_SOURCES = (
+    ROOT / "src/c2_mapped_far_service.s",
+    ROOT / "src/c2_mapped_far_convergence.s",
+)
+OWNERSHIP_CONTRACT = ROOT / "config/c2-stack-overlay-ownership-contract.json"
+SOURCE_OWNER_SCOPES = ({
+    "name": "mapped-far-content-convergence",
+    "trigger": CONVERGENCE_FEATURE,
+    "defines": CONVERGENCE_DEFINES,
+    "sources": CONVERGENCE_SOURCES,
+},)
+
+
+def ownership_scope_selected(
+        extra_definitions: tuple[str, ...] = ()) -> bool:
+    """Return whether the parked ownership/Link-91 closure is selected."""
+    return FULL_MAP_OWNERSHIP or CONVERGENCE_FEATURE in extra_definitions
+
+
+def ownership_link_flags(
+        extra_definitions: tuple[str, ...] = ()) -> tuple[str, ...]:
+    """Return the complete linker-flag side of the ownership opt-in seam."""
+    if not ownership_scope_selected(extra_definitions):
+        return ()
+    return (
+        "-Wl,--no-check-sections",
+        "-Wl,--defsym=__lisp65_c2_mapped_far_required_param=1",
+    )
 
 C2_DECODER_SLICES = [
     ("00", "c2_stream_phase_00"),
@@ -1153,10 +1369,26 @@ def replace_region(text: str, start: str, end: str, replacement: str) -> str:
     return text[:first] + replacement + text[last:]
 
 
-def linker_script() -> str:
+def linker_script(*, ownership_opt_in: bool = False) -> str:
     text = (ROOT / "scripts/lisp65-mega65-workbench-overlay.ld").read_text(
         encoding="utf-8"
     )
+    ownership_selected = ownership_opt_in or FULL_MAP_OWNERSHIP
+    ownership: dict[str, object] | None = None
+    if ownership_selected:
+        contract = json.loads(OWNERSHIP_CONTRACT.read_text(encoding="utf-8"))
+        ownership = contract["mapped_far_service"]
+        geometry = contract["geometry"]
+        overlay_floor = int(geometry["overlay_floor"], 0)
+        old_floor = (
+            "__lisp65_workbench_overlay_min_start = "
+            "ALIGN(__lisp65_workbench_noinit_end + 1, 2);")
+        if text.count(old_floor) != 1:
+            raise RuntimeError("derived overlay-floor template drift")
+        text = text.replace(
+            old_floor,
+            f"__lisp65_workbench_overlay_min_start = 0x{overlay_floor:04x};",
+            1)
     overlay_start = "    OVERLAY __lisp65_workbench_runtime_overlay_vma : NOCROSSREFS {"
     overlay_end = "    } >ram\n} INSERT AFTER .noinit;"
     sections = [
@@ -1874,9 +2106,96 @@ ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) +
         "ASSERT(ADDR(.llvm_sympart) == 0,\n"
         "       \"LTO partition metadata moved from address zero\");\n"
     )
+    owned_layout = ""
+    if ownership_selected:
+        if ownership is None:
+            raise RuntimeError("selected ownership contract is absent")
+        cpu = ownership["cpu_window"]
+        bank2 = ownership["bank2"]
+        mapping = ownership["map_tuple"]
+        resident = ownership["resident"]
+        owned_layout = f"""/* Halt-1-selected stack/state/far-service owners.
+ * Expected addresses live in the reviewed ownership contract; the permanent
+ * gate compares this generated script and the final ELF against that
+ * independent authority. */
+SECTIONS {{
+    .lisp65_c2_convergence_zp 0x87 (NOLOAD) : {{
+        KEEP(*(.lisp65_c2_convergence_zp.*))
+    }} >zp
+}} INSERT AFTER .lisp65_c2_fixed_zp;
+
+SECTIONS {{
+    .lisp65_c2_convergence_state 0xc000 (NOLOAD) : {{
+        KEEP(*(.lisp65_c2_convergence_state.*))
+    }} >ram
+    .lisp65_c2_static_stack 0xc074 (NOLOAD) : {{
+        KEEP(*(.noinit..Lstatic_stack*))
+    }} >ram
+}} INSERT BEFORE .noinit;
+
+SECTIONS {{
+    .lisp65_c2_mapped_far_facade {int(resident['start'], 0):#06x} : {{
+        KEEP(*(.lisp65_c2_mapped_far_facade.*))
+    }} >ram
+    .lisp65_c2_mapped_far_service {int(mapping['mapped_service_cpu_start'], 0):#06x}
+        : AT({int(bank2['service_physical_start'], 0):#010x}) {{
+        KEEP(*(.lisp65_c2_mapped_far_service))
+        KEEP(*(.lisp65_c2_mapped_far_service.*))
+    }} >ram
+}} INSERT AFTER .text;
+
+__lisp65_c2_mapped_far_required =
+    DEFINED(__lisp65_c2_mapped_far_required_param)
+        ? __lisp65_c2_mapped_far_required_param : 0;
+__lisp65_c2_mapped_far_service_start =
+    ADDR(.lisp65_c2_mapped_far_service);
+__lisp65_c2_mapped_far_service_end =
+    ADDR(.lisp65_c2_mapped_far_service) +
+    SIZEOF(.lisp65_c2_mapped_far_service);
+__lisp65_c2_mapped_far_service_load_start =
+    LOADADDR(.lisp65_c2_mapped_far_service);
+__lisp65_c2_mapped_far_service_load_end =
+    LOADADDR(.lisp65_c2_mapped_far_service) +
+    SIZEOF(.lisp65_c2_mapped_far_service);
+
+ASSERT(ADDR(.lisp65_c2_static_stack) == 0xc074 &&
+       SIZEOF(.lisp65_c2_static_stack) <= 12 &&
+       ADDR(.lisp65_c2_static_stack) +
+           SIZEOF(.lisp65_c2_static_stack) <= 0xc080,
+       "compiler static stack escaped its owned 12-byte arena");
+ASSERT(__lisp65_workbench_overlay_min_start == 0xc354,
+       "runtime overlay floor drifted from its owner contract");
+ASSERT(__lisp65_c2_mapped_far_required == 0 ||
+       (ADDR(.lisp65_c2_convergence_zp) == 0x87 &&
+        SIZEOF(.lisp65_c2_convergence_zp) == 2 &&
+        ADDR(.lisp65_c2_convergence_state) == 0xc000 &&
+        SIZEOF(.lisp65_c2_convergence_state) == 66),
+       "convergence state escaped its named owners");
+ASSERT(__lisp65_c2_mapped_far_required == 0 ||
+       (ADDR(.lisp65_c2_mapped_far_facade) == {int(resident['start'], 0):#06x} &&
+        SIZEOF(.lisp65_c2_mapped_far_facade) == {int(resident['total_bytes'])} &&
+        ADDR(.lisp65_c2_mapped_far_facade) +
+            SIZEOF(.lisp65_c2_mapped_far_facade) <= {int(resident['end_exclusive'], 0):#06x}),
+       "mapped far facade escaped its resident wall");
+ASSERT(__lisp65_c2_mapped_far_required == 0 ||
+       (ADDR(.lisp65_c2_mapped_far_service) == {int(mapping['mapped_service_cpu_start'], 0):#06x} &&
+        LOADADDR(.lisp65_c2_mapped_far_service) == {int(bank2['service_physical_start'], 0):#010x} &&
+        SIZEOF(.lisp65_c2_mapped_far_service) == {int(bank2['service_bytes'])} &&
+        __lisp65_c2_mapped_far_service_end == {int(mapping['mapped_service_cpu_end_exclusive'], 0):#06x} &&
+        __lisp65_c2_mapped_far_service_load_end == {int(bank2['service_physical_end_exclusive'], 0):#010x}),
+       "mapped far body escaped its Bank-2 owner");
+ASSERT(__lisp65_c2_mapped_far_required == 0 ||
+       ADDR(.text) + SIZEOF(.text) <= {int(resident['start'], 0):#06x},
+       "ordinary text displaced the mapped far facade");
+ASSERT({int(cpu['start'], 0):#06x} == 0x6000 &&
+       {int(cpu['end_exclusive'], 0):#06x} == 0x8000,
+       "mapped CPU slab contract drifted");
+"""
     result = (memory_layout + text + "\n" + binding_layout + kernal_layout
-              + bss_triage_layout + reopen_layout + metadata_layout).replace(
+              + owned_layout + bss_triage_layout + reopen_layout
+              + metadata_layout).replace(
         "directly after Slot 37", "directly after the final C2 runtime slice")
+    result = full_map_rewrite_product_linker(result)
     if PROFILE_RODATA_BASE != 0xFD12:
         replacements = (
             (".lisp65_c2_kernal_window.profile_rodata 0xfd12",
@@ -1966,12 +2285,109 @@ def source_list(extra_definitions: tuple[str, ...] = ()) -> list[str]:
         sources.append(str(ROOT / "src/c2_journal_prepare_select.s"))
     if "LISP65_RTOV_DMA_COMPLETION_FENCE" in extra_definitions:
         sources.append(str(ROOT / "src/rtov_dma_completion.s"))
+    if ownership_scope_selected(extra_definitions):
+        sources.extend(str(path) for path in CONVERGENCE_SOURCES)
     if BANK3_STAGING_SLICES:
         sources.append(str(ROOT / "src/c2_lite_bank3_stage_entry.s"))
         sources.append(str(ROOT / "src/c2_boot_chain_commit.s"))
     if E000_REOPENING:
         sources.append(str(ROOT / "src/c2_kernal_facade_reopen.s"))
     return sources
+
+
+def scoped_probe_definitions(
+        extra_definitions: tuple[str, ...] = ()) -> tuple[str, ...]:
+    """Close every opt-in define bundle over its source-owner trigger."""
+    if len(extra_definitions) != len(set(extra_definitions)):
+        raise RuntimeError("duplicate probe definition")
+    result = list(extra_definitions)
+    if FULL_MAP_OWNERSHIP and CONVERGENCE_FEATURE not in result:
+        result.append(CONVERGENCE_FEATURE)
+    for scope in SOURCE_OWNER_SCOPES:
+        trigger = str(scope["trigger"])
+        companions = set(scope["defines"]) - {trigger}
+        if trigger not in result:
+            if companions.intersection(result):
+                raise RuntimeError(
+                    f"source-owner companion escaped trigger: {scope['name']}")
+            continue
+        for item in scope["defines"]:
+            if item not in result:
+                result.append(str(item))
+    return tuple(result)
+
+
+def source_owner_scope_gate(
+        base_definitions: list[str], extra_definitions: tuple[str, ...],
+        sources: list[str]) -> dict[str, object]:
+    """Prove optional defines and their source owners share one scope."""
+    base = set(base_definitions)
+    scoped = set(scoped_probe_definitions(extra_definitions))
+    linked_sources = {Path(path).resolve() for path in sources}
+    rows: list[dict[str, object]] = []
+    for scope in SOURCE_OWNER_SCOPES:
+        defines = set(scope["defines"])
+        owners = {path.resolve() for path in scope["sources"]}
+        if base.intersection(defines):
+            raise RuntimeError(
+                f"optional source-owned define leaked into base: {scope['name']}")
+        selected = str(scope["trigger"]) in scoped
+        if (defines <= scoped) != selected:
+            raise RuntimeError(
+                f"optional define bundle is partial: {scope['name']}")
+        if (owners <= linked_sources) != selected:
+            raise RuntimeError(
+                f"optional source-owner bundle is partial: {scope['name']}")
+        rows.append({
+            "name": scope["name"],
+            "selected": selected,
+            "defines": sorted(defines),
+            "sources": sorted(path.relative_to(ROOT).as_posix()
+                              for path in owners),
+        })
+    return {"status": "passed-define-and-source-owner-scope-closure",
+            "scopes": rows}
+
+
+def source_owner_scope_selftest() -> dict[str, object]:
+    dummy = {
+        "product_build_id_hex": "0x00000000",
+        "artifacts": {"shelf": {"bytes": 0}},
+    }
+    base = definitions(dummy)
+    base_sources = source_list()
+    ordinary = source_owner_scope_gate(base, (), base_sources)
+    selected = source_owner_scope_gate(
+        base, (CONVERGENCE_FEATURE,),
+        source_list((CONVERGENCE_FEATURE,)))
+    rejected: dict[str, str] = {}
+    mutations = {
+        "parked-defines-restored-in-base": (
+            [*base, *CONVERGENCE_DEFINES], (), base_sources),
+        "selected-owner-source-removed": (
+            base, (CONVERGENCE_FEATURE,),
+            [path for path in source_list((CONVERGENCE_FEATURE,))
+             if Path(path).resolve() != CONVERGENCE_SOURCES[0].resolve()]),
+        "companion-define-without-trigger": (
+            base, (CONVERGENCE_DEFINES[1],), base_sources),
+    }
+    for name, (mutant_base, mutant_extra, mutant_sources) in mutations.items():
+        try:
+            source_owner_scope_gate(
+                mutant_base, mutant_extra, mutant_sources)
+        except RuntimeError as error:
+            rejected[name] = str(error)
+        else:
+            raise RuntimeError(f"source-owner scope mutation survived: {name}")
+    if len(rejected) != 3:
+        raise RuntimeError("source-owner mutation accounting drift")
+    return {
+        "status": "passed-source-owner-scope-selftest",
+        "ordinary": ordinary,
+        "selected": selected,
+        "mutations": rejected,
+        "mutations_rejected": len(rejected),
+    }
 
 
 def definitions(artifacts: dict[str, object]) -> list[str]:
@@ -2031,6 +2447,9 @@ def compile_link(out: Path, name: str, headers: list[Path],
     target = out / name
     target_arg = checkout_arg(target)
     product_definitions = definitions(artifacts)
+    scoped_definitions = scoped_probe_definitions(probe_definitions)
+    source_owner_scope_gate(
+        product_definitions, probe_definitions, source_list(probe_definitions))
     require_exact_v2_profile(product_definitions)
     compiler = str(TOOLCHAIN / "mos-mega65-clang")
     compile_flags = [
@@ -2067,7 +2486,7 @@ def compile_link(out: Path, name: str, headers: list[Path],
             f"-Wl,--lto-partitions={lto_threads}",
         ])
     compile_flags.extend(
-        f"-D{item}" for item in (*product_definitions, *probe_definitions))
+        f"-D{item}" for item in (*product_definitions, *scoped_definitions))
     for header in headers:
         compile_flags.extend(["-include", checkout_arg(header)])
     compile_flags.extend([
@@ -2090,6 +2509,14 @@ def compile_link(out: Path, name: str, headers: list[Path],
         "-Wl,--defsym=__mulhi3=lisp65_hw_mulhi3",
         "-Wl,--defsym=__divhi3=lisp65_hw_divhi3",
         "-Wl,--defsym=__modhi3=lisp65_hw_modhi3",
+    ])
+    if FULL_MAP_OWNERSHIP:
+        # The platform link.ld includes c.ld by search path.  Put the generated
+        # full-map owner before llvm-mos' common/lib directory so the inherited
+        # ordinary stanzas do not exist in this link at all.
+        link_flags.append(
+            "-Wl,-L," + checkout_arg(out / "full-map-linker"))
+    link_flags.extend([
         "-Wl,-T," + checkout_arg(out / "c2-substitution.ld"),
         "-Wl,--defsym=__lisp65_workbench_required_boot_stack_param=512",
         "-Wl,--defsym=__lisp65_workbench_required_runtime_stack_param=1450",
@@ -2107,6 +2534,11 @@ def compile_link(out: Path, name: str, headers: list[Path],
         "-Wl,-Map=" + target_arg + ".map",
         "-o", target_arg,
     ])
+    # The selected far service deliberately shares CPU VMA $6000..$7fff with
+    # the ordinary Bank-0 underlay and has a distinct physical Bank-2 LMA.
+    # The complete flag pair is part of the same opt-in closure as its sources
+    # and linker layout; the canonical scope receives neither flag.
+    link_flags.extend(ownership_link_flags(probe_definitions))
     deterministic_objects = (
         os.environ.get("LISP65_DETERMINISTIC_OBJECTS") == "1")
     if deterministic_objects:
@@ -2908,6 +3340,39 @@ def _final_section_inventory_base_pin() -> list[str]:
     return names
 
 
+def _full_map_final_section_owners() -> list[dict[str, object]]:
+    """Read the independent v1.8 owner rows used by the final inventory.
+
+    The checked ELF is deliberately absent from this derivation.  Phase C
+    binds the same contract against the SHA-owned v1.7 replay before a fresh
+    product card is permitted.
+    """
+    contract = json.loads(
+        FULL_MAP_OWNERSHIP_CONTRACT.read_text(encoding="utf-8"))
+    raw = contract["generated_linker_requirements"][
+        "final_section_inventory_additions"]
+    if not isinstance(raw, list) or len(raw) != 7:
+        raise RuntimeError(
+            "full-map final-section contract must own exactly seven rows")
+    owners: list[dict[str, object]] = []
+    for value in raw:
+        if not isinstance(value, dict):
+            raise RuntimeError("full-map final-section owner is not an object")
+        flags = value.get("required_flags")
+        if not isinstance(flags, list) or not flags:
+            raise RuntimeError("full-map final-section flags are absent")
+        owners.append({
+            "name": str(value["name"]),
+            "address": int(str(value["address"]), 0),
+            "bytes": int(value["bytes"]),
+            "flags": tuple(str(flag) for flag in flags),
+        })
+    names = [str(row["name"]) for row in owners]
+    if len(set(names)) != len(names):
+        raise RuntimeError("full-map final-section owners are not unique")
+    return owners
+
+
 def _append_inventory_names(
         slices: list[tuple[str, str]]) -> tuple[list[str], list[str]]:
     allocated = [f".lisp65_rt_c2append_{name}" for name, _entry in slices]
@@ -2978,6 +3443,9 @@ def final_section_inventory_expectation() -> dict[str, object]:
     if typed_queue_profile:
         profile_names.append(
             ".rela.lisp65_c2_kernal_window.typed_queue_driver")
+    if FULL_MAP_OWNERSHIP:
+        profile_names.extend(
+            str(row["name"]) for row in _full_map_final_section_owners())
     if len(profile_names) != len(set(profile_names)):
         raise RuntimeError(
             "profile-derived final-section names are not unique")
@@ -3010,6 +3478,8 @@ def final_section_inventory_expectation() -> dict[str, object]:
             "their relocation sections; the "
             "configured typed-queue profile replaces the retired frame-source "
             "and event-poll members and adds its actual relocation section; "
+            "the selected full-map profile adds its five named owned sections "
+            "and two relocation sections from the independent v1.8 contract; "
             "the target ELF is never an expectation source"),
     }
 
@@ -3019,7 +3489,9 @@ def _final_section_inventory_pin() -> list[str]:
 
 
 def _final_section_inventory_violations(
-        expected: list[str], sections: list[dict[str, object]]) -> list[str]:
+        expected: list[str], sections: list[dict[str, object]],
+        full_map_owners: list[dict[str, object]] | None = None
+        ) -> list[str]:
     actual = [str(row["name"]) for row in sections]
     violations: list[str] = []
     if len(actual) != len(expected):
@@ -3038,18 +3510,40 @@ def _final_section_inventory_violations(
             violations.append("final-sympart-address")
         if "SHF_ALLOC" in partition["flags"]:
             violations.append("final-sympart-alloc")
+    owners = (
+        _full_map_final_section_owners()
+        if full_map_owners is None and FULL_MAP_OWNERSHIP
+        else (full_map_owners or []))
+    for owner in owners:
+        name = str(owner["name"])
+        matches = [row for row in sections if row["name"] == name]
+        if len(matches) != 1:
+            violations.append(f"full-map-owner-count:{name}")
+            continue
+        row = matches[0]
+        if int(row["address"]) != int(owner["address"]):
+            violations.append(f"full-map-owner-address:{name}")
+        if int(row["bytes"]) != int(owner["bytes"]):
+            violations.append(f"full-map-owner-size:{name}")
+        if set(str(flag) for flag in row["flags"]) != set(owner["flags"]):
+            violations.append(f"full-map-owner-flags:{name}")
     return violations
 
 
 def _final_section_inventory_model_selftest() -> dict[str, str]:
-    expected = [".text", ".llvm_sympart"]
-    valid = [
+    owners = _full_map_final_section_owners()
+    expected = [".text", *(str(row["name"]) for row in owners),
+                ".llvm_sympart"]
+    valid: list[dict[str, object]] = [
         {"name": ".text", "address": 0x2001, "bytes": 2,
          "flags": ["SHF_ALLOC"]},
+        *[{"name": row["name"], "address": row["address"],
+           "bytes": row["bytes"], "flags": list(row["flags"])}
+          for row in owners],
         {"name": ".llvm_sympart", "address": 0, "bytes": 15,
          "flags": []},
     ]
-    if _final_section_inventory_violations(expected, valid):
+    if _final_section_inventory_violations(expected, valid, owners):
         raise AssertionError("valid final section inventory rejected")
     cases = {
         "missing-section": (valid[:-1], "section-count"),
@@ -3057,24 +3551,55 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
             valid + [{"name": ".unknown", "address": 0, "bytes": 1,
                       "flags": []}], "section-count"),
         "allocated-sympart": (
-            [valid[0], {**valid[1], "flags": ["SHF_ALLOC"]}],
+            [*valid[:-1], {**valid[-1], "flags": ["SHF_ALLOC"]}],
             "final-sympart-alloc"),
         "loaded-address-sympart": (
-            [valid[0], {**valid[1], "address": 0x2000}],
+            [*valid[:-1], {**valid[-1], "address": 0x2000}],
             "final-sympart-address"),
         "resized-sympart": (
-            [valid[0], {**valid[1], "bytes": 16}],
+            [*valid[:-1], {**valid[-1], "bytes": 16}],
             "final-sympart-size"),
     }
     for name, (sections, expected_violation) in cases.items():
         if expected_violation not in _final_section_inventory_violations(
-                expected, sections):
+                expected, sections, owners):
             raise AssertionError(f"section-inventory mutation accepted: {name}")
-    if _final_section_inventory_violations(expected, list(reversed(valid))):
+    deletion_mutations: dict[str, str] = {}
+    movement_mutations: dict[str, str] = {}
+    for owner in owners:
+        section = str(owner["name"])
+        deleted = [row for row in valid if row["name"] != section]
+        if not _final_section_inventory_violations(
+                expected, deleted, owners):
+            raise AssertionError(
+                f"full-map deleted-section mutation accepted: {section}")
+        deletion_mutations[section] = "rejected"
+        moved = [
+            ({**row, "address": int(row["address"]) + 1}
+             if row["name"] == section else dict(row))
+            for row in valid]
+        marker = f"full-map-owner-address:{section}"
+        if marker not in _final_section_inventory_violations(
+                expected, moved, owners):
+            raise AssertionError(
+                f"full-map moved-section mutation accepted: {section}")
+        movement_mutations[section] = "rejected"
+    stray = [*valid, {"name": ".lisp65_unowned_stray", "address": 0,
+                      "bytes": 1, "flags": ["SHF_ALLOC"]}]
+    if "section-name-set" not in _final_section_inventory_violations(
+            expected, stray, owners):
+        raise AssertionError("full-map unowned-stray mutation accepted")
+    if _final_section_inventory_violations(
+            expected, list(reversed(valid)), owners):
         raise AssertionError("non-semantic section reordering was rejected")
     return {"exact-pinned-inventory": "passed",
             "reordered-sections": "passed-provenance-only",
-            **{name: "rejected" for name in cases}}
+            **{name: "rejected" for name in cases},
+            "full-map-deleted-sections":
+                f"rejected-{len(deletion_mutations)}-of-{len(owners)}",
+            "full-map-moved-sections":
+                f"rejected-{len(movement_mutations)}-of-{len(owners)}",
+            "full-map-unowned-stray": "rejected"}
 
 
 def final_section_inventory_check(target: Path) -> dict[str, object]:
@@ -5090,7 +5615,7 @@ def whole_phase_facade_probe(out: Path) -> None:
     old_window_pin = kernal_window_identity_pin()
     out.mkdir(parents=True, exist_ok=True)
     old_window_source = verify_kernal_window_pin_source(out, old_window_pin)
-    write(out / "c2-substitution.ld", linker_script())
+    write_product_linker_sources(out)
     contract_lines = [
         "profile=" + PROFILE,
         "mode=link24-latency-whole-phase-facade-capacity-probe",
@@ -5297,7 +5822,7 @@ def coarse_split_capacity_probe(out: Path) -> None:
     manifest_path = PRODUCT_ARTIFACTS_MANIFEST
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     out.mkdir(parents=True, exist_ok=True)
-    write(out / "c2-substitution.ld", linker_script())
+    write_product_linker_sources(out)
     contract_lines = [
         "profile=" + PROFILE,
         "mode=link24-phase-02-06-coarse-split-capacity-probe",
@@ -5441,7 +5966,7 @@ def v2_profile_data_placement_probe(out: Path) -> None:
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     out.mkdir(parents=True, exist_ok=True)
     profile = write_v2_profile_report(out, artifacts)
-    write(out / "c2-substitution.ld", linker_script())
+    write_product_linker_sources(out)
     contract_lines = [
         "profile=" + PROFILE,
         "mode=link28-v2-profile-data-placement-probe",
@@ -5848,7 +6373,8 @@ def single_link(out: Path, *,
                 probe_definitions: tuple[str, ...] = (),
                 direct_entry_receipt: Path = DIRECT_ENTRY_CONTRACT_RECEIPT,
                 direct_entry_check_tool: str = "c2_direct_entry_contract.py",
-                extra_contract_lines: tuple[str, ...] = ()) -> None:
+                extra_contract_lines: tuple[str, ...] = (),
+                seed_only: bool = False) -> Path | None:
     manifest_path = PRODUCT_ARTIFACTS_MANIFEST
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     tool(direct_entry_check_tool, "check")
@@ -5880,7 +6406,20 @@ def single_link(out: Path, *,
             or any(character not in "0123456789abcdef"
                    for character in profile_parity_identity)):
         raise RuntimeError("sealed v2 profile-parity identity is invalid")
-    write(out / "c2-substitution.ld", linker_script())
+    write_product_linker_sources(out, probe_definitions)
+    current_artifacts_identity = hashlib.sha256(
+        manifest_path.read_bytes()).hexdigest()
+    if (SEALED_C2_ARTIFACTS_IDENTITY is not None
+            and os.environ.get("LISP65_PUBLIC_CLEAN_BUILD") != "1"):
+        raise RuntimeError(
+            "sealed C2-artifacts identity is valid only for the canonical "
+            "public clean build")
+    artifacts_identity = (
+        SEALED_C2_ARTIFACTS_IDENTITY or current_artifacts_identity)
+    if (len(artifacts_identity) != 64
+            or any(character not in "0123456789abcdef"
+                   for character in artifacts_identity)):
+        raise RuntimeError("sealed C2-artifacts identity is invalid")
     contract_lines = [
         "profile=" + PROFILE,
         "lto_rng_seed=" + os.environ.get("LISP65_LTO_RNG_SEED", "unbound"),
@@ -5897,7 +6436,7 @@ def single_link(out: Path, *,
         + os.environ.get("LISP65_LLVM_LINK", "unbound"),
         "link_aslr_disabled="
         + os.environ.get("LISP65_DISABLE_LINK_ASLR", "unbound"),
-        "c2_artifacts_sha256=" + hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        "c2_artifacts_sha256=" + artifacts_identity,
         "direct_entry_contract_sha256="
         + direct_entry_identity,
         "linker_sha256=" + hashlib.sha256((out / "c2-substitution.ld").read_bytes()).hexdigest(),
@@ -5959,6 +6498,101 @@ def single_link(out: Path, *,
     common = [stage_header, runtime_prepared, island_prepared, error_header]
     seed = compile_link(out, "resident-island-seed.prg", common, artifacts,
                         probe_definitions=probe_definitions)
+    environment_seed_only = (
+        os.environ.get("LISP65_CANONICAL_SCOPE_SEED_ONLY") == "1")
+    if seed_only or environment_seed_only:
+        leaked = sorted(set(probe_definitions) & set(CONVERGENCE_DEFINES))
+        if FULL_MAP_OWNERSHIP or leaked:
+            raise RuntimeError(
+                "canonical opt-out seed closure selected parked ownership: "
+                f"full_map={FULL_MAP_OWNERSHIP} defines={leaked}")
+        selected_sources = {
+            Path(path).resolve() for path in source_list(probe_definitions)
+        }
+        leaked_sources = sorted(
+            path.relative_to(ROOT).as_posix()
+            for path in CONVERGENCE_SOURCES if path.resolve() in selected_sources)
+        if leaked_sources or ownership_link_flags(probe_definitions):
+            raise RuntimeError(
+                "canonical opt-out seed closure retained parked ownership "
+                f"sources/flags: sources={leaked_sources} "
+                f"flags={ownership_link_flags(probe_definitions)}")
+        linker = out / "c2-substitution.ld"
+        linker_text = linker.read_text(encoding="utf-8")
+        forbidden = (
+            ".lisp65_c2_convergence_zp",
+            ".lisp65_c2_convergence_state",
+            ".lisp65_c2_static_stack",
+            ".lisp65_c2_mapped_far_facade",
+            ".lisp65_c2_mapped_far_service",
+            "compiler static stack escaped its owned 12-byte arena",
+            "runtime overlay floor drifted from its owner contract",
+        )
+        present = [token for token in forbidden if token in linker_text]
+        if present:
+            raise RuntimeError(
+                "canonical opt-out seed linker retained ownership tokens: "
+                f"{present}")
+        derived_floor = (
+            "__lisp65_workbench_overlay_min_start = "
+            "ALIGN(__lisp65_workbench_noinit_end + 1, 2);")
+        if linker_text.count(derived_floor) != 1:
+            raise RuntimeError(
+                "canonical opt-out seed lost its derived overlay floor")
+        receipt_path_raw = os.environ.get(
+            "LISP65_CANONICAL_SCOPE_SEED_RECEIPT")
+        if environment_seed_only and receipt_path_raw is None:
+            raise RuntimeError(
+                "canonical seed-only environment lacks its receipt path")
+        if receipt_path_raw is not None:
+            receipt_path = Path(receipt_path_raw)
+            if not receipt_path.is_absolute():
+                receipt_path = ROOT / receipt_path
+            artifacts_bound = {}
+            for name, path in (
+                    ("seed_prg", seed),
+                    ("seed_elf", Path(str(seed) + ".elf")),
+                    ("seed_map", Path(str(seed) + ".map")),
+                    ("linker", linker),
+                    ("profile", contract)):
+                if not path.is_file():
+                    raise RuntimeError(
+                        f"canonical seed artifact absent: {path}")
+                artifacts_bound[name] = {
+                    "path": path.relative_to(ROOT).as_posix(),
+                    "bytes": path.stat().st_size,
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                }
+            final = out / "lisp65-c2-substitution-linked.prg"
+            report = {
+                "format": "lisp65-c2-v112-canonical-opt-out-seed-v1",
+                "recorded_on": "2026-08-07",
+                "status": "passed-canonical-scope-seed-link-opt-out",
+                "ownership_opt_in": False,
+                "full_map_ownership": False,
+                "parked_defines": leaked,
+                "parked_sources": leaked_sources,
+                "parked_link_flags": [],
+                "derived_overlay_floor_instances": 1,
+                "seed_links": 1,
+                "product_links": 0,
+                "product_completed": False,
+                "final_product_absent": not final.exists(),
+                "artifacts": artifacts_bound,
+                "claim_limit": (
+                    "Canonical opt-out seed-link closure only; no materialized "
+                    "island, final product link, media, device, Link-92 card, "
+                    "Halt or release claim."),
+            }
+            write(receipt_path,
+                  json.dumps(report, indent=2, sort_keys=True) + "\n")
+        if environment_seed_only:
+            # SystemExit deliberately crosses the successor-driver stack: its
+            # Exception handlers must not turn this successful pre-product
+            # terminal condition into a card result or continue to a final
+            # link.
+            raise SystemExit(0)
+        return seed
     tool("resident_island.py", "materialize", "--elf", str(seed) + ".elf",
          "--nm", str(TOOLCHAIN / "llvm-nm"), "--objcopy", str(TOOLCHAIN / "llvm-objcopy"),
          "--abi-contract", str(contract), "--header", str(island_header))
@@ -5967,6 +6601,7 @@ def single_link(out: Path, *,
                           error_header, kernal_header_path], artifacts,
                          probe_definitions=probe_definitions)
     finish_single_link(out, final, contract)
+    return None
 
 
 def resume_single_link(out: Path) -> None:
@@ -6148,12 +6783,17 @@ def main() -> int:
         assert orphan_matrix["wrong-origin-object"] == "rejected"
         assert orphan_matrix["wrong-section"] == "rejected"
         inventory_matrix = _final_section_inventory_model_selftest()
-        assert len(inventory_matrix) == 7
+        assert len(inventory_matrix) == 10
         assert inventory_matrix["exact-pinned-inventory"] == "passed"
         assert inventory_matrix["missing-section"] == "rejected"
         assert inventory_matrix["additional-section"] == "rejected"
         assert inventory_matrix["reordered-sections"] == "passed-provenance-only"
         assert inventory_matrix["allocated-sympart"] == "rejected"
+        assert inventory_matrix["full-map-deleted-sections"] == (
+            "rejected-7-of-7")
+        assert inventory_matrix["full-map-moved-sections"] == (
+            "rejected-7-of-7")
+        assert inventory_matrix["full-map-unowned-stray"] == "rejected"
         assert len(_final_section_inventory_pin()) == 138
         publish_before = bytes(80)
         publish_domains = [

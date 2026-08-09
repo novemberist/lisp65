@@ -195,6 +195,8 @@ uint8_t lisp65_ship_io_peek(uint16_t address, uint8_t *value) {
     return 0u;
 }
 
+uint16_t lisp65_ship_io_frame_count(void) { return ship_frame_read(); }
+
 #else
 
 /* The native host execution is a real VM/bytecode lane.  Only the physical
@@ -270,6 +272,8 @@ uint8_t lisp65_ship_io_peek(uint16_t address, uint8_t *value) {
     }
     return 0u;
 }
+
+uint16_t lisp65_ship_io_frame_count(void) { return ship_frame_read(); }
 
 uint16_t lisp65_ship_io_input_used(void) { return host_input_pos; }
 uint16_t lisp65_ship_io_output_count(void) { return host_output_count; }

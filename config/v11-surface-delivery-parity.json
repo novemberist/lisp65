@@ -9,11 +9,13 @@
   "native_registry": "config/v2-native-function-registry.json",
   "artifact_closure": "config/v2-workbench-artifact-closure.json",
   "workbench_profile": "config/workbench.mk",
-  "resident_manifest": "build/ship-builder/v13/input-wait-host-first/candidate/stdlib-p0.manifest.json",
+  "resident_manifest": "build/post-promotion/v112/stdlib/stdlib-p0.manifest.json",
   "library_manifests": [
     "build/bytecode/dialect-v2/libs/ide.manifest.json",
     "build/bytecode/dialect-v2/libs/idex.manifest.json",
-    "build/bytecode/dialect-v2/libs/m65d.manifest.json"
+    "build/bytecode/dialect-v2/libs/m65d.manifest.json",
+    "build/post-promotion/v112/string-extra/string-extra.manifest.json",
+    "build/post-promotion/v112/inspect/inspect.manifest.json"
   ],
   "profile_exclusions": [
     {
@@ -26,6 +28,23 @@
     }
   ],
   "claims": [
+    {
+      "name": "capitalize",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-v112-release-closure.json"
+      },
+      "delivery": {
+        "kind": "library",
+        "manifest": "build/post-promotion/v112/string-extra/string-extra.manifest.json"
+      },
+      "implementation": {
+        "path": "lib/comfort-strings.lisp",
+        "required_defuns": ["capitalize"]
+      }
+    },
     {
       "name": "eval",
       "kind": "function",
@@ -223,6 +242,23 @@
       }
     },
     {
+      "name": "string-split",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-v112-release-closure.json"
+      },
+      "delivery": {
+        "kind": "library",
+        "manifest": "build/post-promotion/v112/string-extra/string-extra.manifest.json"
+      },
+      "implementation": {
+        "path": "lib/comfort-strings.lisp",
+        "required_defuns": ["%comfort-string-split-from", "string-split"]
+      }
+    },
+    {
       "name": "time",
       "kind": "macro",
       "surface_extension": true,
@@ -242,6 +278,23 @@
       "implementation": {
         "path": "lib/stdlib-wait.lisp",
         "required_defuns": ["wait"]
+      }
+    },
+    {
+      "name": "who-calls",
+      "kind": "function",
+      "surface_extension": true,
+      "authority": {
+        "kind": "owner-public-surface-contract",
+        "path": "config/c2-v112-release-closure.json"
+      },
+      "delivery": {
+        "kind": "library",
+        "manifest": "build/post-promotion/v112/inspect/inspect.manifest.json"
+      },
+      "implementation": {
+        "path": "lib/comfort-who-calls-generated.lisp",
+        "required_defuns": ["%comfort-callers-index", "who-calls"]
       }
     }
   ]

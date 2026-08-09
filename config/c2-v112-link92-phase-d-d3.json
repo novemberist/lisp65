@@ -1,0 +1,126 @@
+{
+  "format": "lisp65-c2-v112-link92-phase-d-d3-v1",
+  "status": "commissioned-after-green-D1",
+  "D1_authority": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-link92-r5-phase-d-d1-smoke-device-receipt.json",
+    "status": "passed-link92-d1-q-time-string-smokes"
+  },
+  "identity": {
+    "library_medium": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link92-r5-split/base/lisp65-library.d81",
+      "bytes": 819200,
+      "sha256": "1a77a2f5d71c58ef8e9650316d7d0103675fd419b5aa96d37e8f44e7b24186b7"
+    },
+    "remote": "V14L92LIB.D81",
+    "product": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/final/lisp65-c2-substitution-linked.prg",
+      "bytes": 41566,
+      "sha256": "fcc785365d2a6d7a3269367a4234cb372783d46b9debdee6ad37e758f6e20a52"
+    },
+    "preloads": [
+      {
+        "role": "c2d-v6-reset-domain",
+        "address": "0x00050000",
+        "path": "build/c2.3/v1.4.0-candidate-media-link92-r5/shared-system/c2d-v6-reset-domain.bin",
+        "bytes": 50816,
+        "sha256": "e3de3e387ca2757d84003d828aa341fcc8cad9fb3471d013ff72021ed11a100a"
+      },
+      {
+        "role": "c2-two-record-boot-stage",
+        "address": "0x00058500",
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/artifacts/bootstage.bin",
+        "bytes": 3286,
+        "sha256": "e7ac43bc3e5684084f72b7d637c856df05fafa10319cbb9a7463258fa9f9d104"
+      },
+      {
+        "role": "c2-session-family-region-0",
+        "address": "0x08000000",
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/final/runtime-overlays-session-final.bin",
+        "bytes": 65423,
+        "sha256": "638d80a2b28df37b2e8051e9c94e00b7e890cdb6f27675d2fd2358d4f51e453f"
+      },
+      {
+        "role": "c2-product-shelf",
+        "address": "0x08100000",
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/static-plane/narrow-static/product/product-shelf-v4-direct.bin",
+        "bytes": 93082,
+        "sha256": "0c6bc252732257e38d4ff9075539cee447fd98a67e14690ce6e1284e89c3bfc2"
+      },
+      {
+        "role": "c2-boot-family",
+        "address": "0x08200000",
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/final/runtime-overlays-boot-final.bin",
+        "bytes": 19402,
+        "sha256": "6ffae7bd6a36a3854fb5c3ee46ffef23195a6f8d53f9c1000e581d600568063f"
+      },
+      {
+        "role": "c2-session-family-region-1",
+        "address": "0x08300000",
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/final/runtime-overlays-session-final-region1.bin",
+        "bytes": 1956,
+        "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
+      },
+      {
+        "role": "c2-kernal-window",
+        "address": "0x087fe000",
+        "path": "build/c2.3/v1.4.0-candidate-product-link92-r5/final/c2-product-kernal-window.bin",
+        "bytes": 8192,
+        "sha256": "3149bfcd57090f89d6f8b32d8c58ac359f5f7f07563b6561d45ed9dc18ff3abc"
+      }
+    ],
+    "c2j_clear": {
+      "address": "0x0005c640",
+      "bytes": 64,
+      "authority": "build/ship-builder/v13/closing-device-session/zero-c2j.bin",
+      "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+    },
+    "boot_quiet_seconds": 45,
+    "banner": "WORKBENCH 1.4.0",
+    "prompt": "lisp65>"
+  },
+  "libraries": {
+    "requires": [
+      {
+        "id": "string-extra",
+        "form": "(require(quote string-extra))",
+        "expect": "t",
+        "quiet_seconds": 120
+      },
+      {
+        "id": "inspect",
+        "form": "(require(quote inspect))",
+        "expect": "t",
+        "quiet_seconds": 120
+      }
+    ],
+    "rows": [
+      {
+        "id": "capitalize",
+        "form": "(capitalize \"hello\")",
+        "expect": "\"Hello\""
+      },
+      {
+        "id": "string-split",
+        "form": "(string-split \"a,b,c\" \",\")",
+        "expect": "(\"a\" \"b\" \"c\")"
+      },
+      {
+        "id": "who-calls",
+        "form": "(who-calls(quote %ide-region-parts-tail))",
+        "expect": "(%ide-region-parts %ide-region-parts-tail)"
+      }
+    ]
+  },
+  "editor": {
+    "form": "(ide\"measure3\")",
+    "context_wait_seconds": 12,
+    "buffer": "measure3",
+    "initial_fill": 0,
+    "physical_text": "1234567 1234567 1234567 1234567 1234567 1234567 1234567 12345678",
+    "physical_keys": 64,
+    "return_pressed": false,
+    "observations_during_physical_window": 0,
+    "final_fill": 64
+  },
+  "claim_limit": "D3 string-extra and who-calls-only inspect surface plus one quiet 64-key physical editor row on the immutable Link-92-r5 candidate. trace/untrace are explicitly absent. No D2, selector, Halt, Phase E or release claim."
+}

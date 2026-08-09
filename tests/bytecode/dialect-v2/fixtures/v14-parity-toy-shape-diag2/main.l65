@@ -1,0 +1,24 @@
+; Non-promotable Link-89 discriminator, revision 2.  Mirror the production
+; order: unlock VIC-IV before reading its live pointer-table registers.
+
+(defun main ()
+  (let ((shape
+          "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+    (progn
+      (%m65-vic-open)
+      (m65-byte-write 23 160 (m65-byte-read 208 108))
+      (m65-byte-write 23 161 (m65-byte-read 208 109))
+      (m65-byte-write 23 162 (m65-byte-read 208 110))
+      (m65-byte-write 23 163 (string-length shape))
+      (m65-byte-write 23 164 (string-ref shape 0))
+      (m65-byte-write 23 165 (if (%m65-sprite-number-p 0) 1 0))
+      (m65-byte-write 23 166 (if (stringp shape) 1 0))
+      (m65-byte-write 23 167
+        (if (and (= (m65-byte-read 208 110) 0)
+                 (<= (m65-byte-read 208 108) 248))
+            1 0))
+      (m65-byte-write 23 168 0)
+      (m65-byte-write 23 169 71)
+      (m65-sprite-shape 0 shape)
+      (m65-byte-write 23 168 165)
+      t)))

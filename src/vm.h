@@ -98,6 +98,15 @@ obj vm_dirmiss_detail(obj detail);
 /* Platform seam: loads len bytes from the code location (bank:off in extended RAM) into dst (hot).
  * MUST be provided by the build (host: memcpy; mega65: bulk DMA). */
 void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst);
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+/* A streamed code consumer needs a content boundary, not merely a submitted
+ * DMA job.  The platform implementation derives the first source byte which
+ * differs from the current destination, submits once, and returns only after
+ * that independent byte witness converges or the bounded window expires.
+ * Exhaustive whole-window equality belongs to the host/device class gates. */
+uint8_t vm_code_load_converged(uint8_t bank, uint16_t off, uint16_t len,
+                               uint8_t *dst);
+#endif
 
 void vm_init(void);   /* interns t; call once before vm_run */
 #if defined(LISP65_DIALECT_FAMILY_HARNESS) && defined(LISP65_DIALECT_V2)

@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-c2.3-v1.6-defstruct-patience-session-v1",
+  "recorded_on": "2026-08-06",
+  "pricing_authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-duration-pricing-receipt.json",
+  "forms": [
+    "(require 'defstruct)",
+    "(defstruct point x y)",
+    "(make-point 3 4)"
+  ],
+  "owner_actions": {
+    "launch": "physical RUN",
+    "input": "physical keyboard only",
+    "require_expected": "t",
+    "defstruct_submission_starts_clock": true
+  },
+  "quiet_contract": {
+    "minimum_seconds_after_defstruct_submission": 780,
+    "monitor_accesses": 0,
+    "screenshots": 0,
+    "virtual_input": 0,
+    "screen_polling": 0,
+    "jtag_reads": 0,
+    "early_owner_visual_check": false,
+    "first_observation": "one physical-screen postcondition look at or after the floor"
+  },
+  "postconditions": {
+    "completed": "defstruct result followed by a live lisp65> prompt",
+    "control": "(make-point 3 4) returns (point 3 4)",
+    "incomplete": "do not resume or retry; one commissioned stop and the existing full read set only"
+  },
+  "accounting": {
+    "product_bytes_changed": 0,
+    "product_links": 0,
+    "device_contacts_authorized": 1,
+    "contact_started": false
+  }
+}

@@ -214,8 +214,12 @@ def static_plane_valid() -> bool:
 def public_build_authority() -> dict[str, Any]:
     value = load(PUBLIC_BUILD_AUTHORITY)
     identity = value.get("sealed_profile_identity")
+    legacy = value.get("sealed_legacy_profile_fields")
     require(
-        value["format"] == "lisp65-c2-lite-public-build-authority-v1"
+        value["format"] in {
+            "lisp65-c2-lite-public-build-authority-v1",
+            "lisp65-c2-lite-public-build-authority-v2",
+        }
         and value["build_model"] ==
             "fresh-source-single-emitter-plus-one-WPLTO"
         and value["private_evidence_is_build_input"] is False
@@ -226,7 +230,13 @@ def public_build_authority() -> dict[str, Any]:
         and re.fullmatch(r"[0-9a-f]{64}", identity["sha256"]) is not None
         and isinstance(identity["meaning"], str)
         and "private historical receipt bytes are not build inputs"
-            in identity["meaning"],
+            in identity["meaning"]
+        and isinstance(legacy, dict)
+        and re.fullmatch(
+            r"[0-9a-f]{64}", str(legacy.get("c2_artifacts_sha256", "")))
+            is not None
+        and "checkout-absolute diagnostic paths"
+            in str(legacy.get("meaning", "")),
         "public C2-lite build authority drift")
     return value
 
@@ -1293,6 +1303,8 @@ def configure_wplto() -> dict[str, Any]:
         "product_extra_include_dirs": PRODUCT.EXTRA_INCLUDE_DIRS,
         "product_profile_parity_identity":
             PRODUCT.SEALED_V2_PROFILE_PARITY_IDENTITY,
+        "product_c2_artifacts_identity":
+            PRODUCT.SEALED_C2_ARTIFACTS_IDENTITY,
         "nested_initial_c2d": NESTED_MODEL.INITIAL,
         "nested_prelink_artifacts": NESTED_PRELINK.ARTIFACTS,
         "direct_entry_artifacts": DIRECT_ENTRY.ARTIFACTS,
@@ -1367,6 +1379,8 @@ def configure_wplto() -> dict[str, Any]:
         "sealed_legacy_profile_fields"]
     PRODUCT.SEALED_V2_PROFILE_PARITY_IDENTITY = legacy_profile[
         "v2_profile_parity_sha256"]
+    PRODUCT.SEALED_C2_ARTIFACTS_IDENTITY = legacy_profile[
+        "c2_artifacts_sha256"]
     NESTED_MODEL.INITIAL = STATIC_PRODUCT / "initial.c2d-v3.bin"
     NESTED_PRELINK.ARTIFACTS = (
         STATIC_PRODUCT / "substitution-artifacts.json")
@@ -1491,6 +1505,8 @@ def restore_wplto(old: dict[str, Any]) -> None:
     PRODUCT.EXTRA_INCLUDE_DIRS = old["product_extra_include_dirs"]
     PRODUCT.SEALED_V2_PROFILE_PARITY_IDENTITY = old[
         "product_profile_parity_identity"]
+    PRODUCT.SEALED_C2_ARTIFACTS_IDENTITY = old[
+        "product_c2_artifacts_identity"]
     NESTED_MODEL.INITIAL = old["nested_initial_c2d"]
     NESTED_PRELINK.ARTIFACTS = old["nested_prelink_artifacts"]
     DIRECT_ENTRY.ARTIFACTS = old["direct_entry_artifacts"]

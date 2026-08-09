@@ -218,12 +218,27 @@ def verify_values(
             if len(registry_matches) != 1:
                 raise ParityError(f"native registry does not deliver exactly one {name}")
         else:
+            delivery = claim.get("delivery")
+            delivery_entries = entries
+            if delivery is not None:
+                if (
+                    not isinstance(delivery, dict)
+                    or set(delivery) != {"kind", "manifest"}
+                    or delivery.get("kind") != "library"
+                    or delivery.get("manifest") not in contract["library_manifests"]
+                ):
+                    raise ParityError(f"claim {name} has invalid library delivery")
+                index = contract["library_manifests"].index(delivery["manifest"])
+                delivery_entries = library_manifests[index].get("entries")
+                if not isinstance(delivery_entries, list):
+                    raise ParityError(f"claim {name} library delivery schema drift")
             manifest_matches = [
-                row for row in entries
+                row for row in delivery_entries
                 if isinstance(row, dict) and row.get("name") == name and row.get("kind") == kind
             ]
             if len(manifest_matches) != 1:
-                raise ParityError(f"resident manifest does not deliver exactly one {name}")
+                role = "library" if delivery is not None else "resident"
+                raise ParityError(f"{role} manifest does not deliver exactly one {name}")
         if name not in reference_names:
             raise ParityError(f"language reference does not document {name}")
         if authorities:
@@ -276,7 +291,8 @@ def selftest() -> None:
     claims = [
         {"name": "eval", "kind": "function"},
         {"name": "filter", "kind": "function"},
-        {"name": "random", "kind": "function", "surface_extension": True},
+        {"name": "random", "kind": "function", "surface_extension": True,
+         "delivery": {"kind": "library", "manifest": "library"}},
     ]
     contract = {
         "format": "lisp65-v11-surface-delivery-parity-v1", "version": 1,
@@ -297,9 +313,9 @@ def selftest() -> None:
     dialect = {"public_names": ["eval", "filter", "screen-write-string"]}
     manifest = {"entries": [
         {"name": "eval", "kind": "function"}, {"name": "filter", "kind": "function"},
-        {"name": "random", "kind": "function"},
         {"name": "screen-bulk-p", "kind": "function"},
     ]}
+    library = {"entries": [{"name": "random", "kind": "function"}]}
     registry = {"entries": [
         {"name": "screen-write-string", "kind": "callprim", "value": 12},
     ], "intrinsic_aliases": [], "restricted_primitives": []}
@@ -310,12 +326,12 @@ def selftest() -> None:
         "The complete native visibility follows.\n"
     )
     verify_values(
-        contract, surface, dialect, manifest, [], reference, registry, closure,
+        contract, surface, dialect, manifest, [library], reference, registry, closure,
         workbench_profile, authorities=False,
     )
     for label in (
         "surface", "dialect", "manifest", "reference", "registry", "profile",
-        "reverse", "extension-flag", "extension-second-truth",
+        "reverse", "extension-flag", "extension-second-truth", "library-delivery",
     ):
         c, s, d, m, n = map(copy.deepcopy, (contract, surface, dialect, manifest, registry))
         r = reference
@@ -328,13 +344,15 @@ def selftest() -> None:
         elif label == "profile": p += "WORKBENCH_DEFINES += -DLISP65_SCREEN_WRITE_STRING\n"
         elif label == "reverse": r = r.replace("`eval`", "`ghost-function`")
         elif label == "extension-flag": c["claims"][2]["surface_extension"] = False
+        elif label == "library-delivery": c["claims"][2]["delivery"]["manifest"] = "missing"
         else:
             s["definitions"].append(
                 {"name": "random", "kind": "function", "visibility": "public"}
             )
             d["public_names"].append("random")
         try:
-            verify_values(c, s, d, m, [], r, n, closure, p, authorities=False)
+            verify_values(c, s, d, m, [copy.deepcopy(library)], r, n, closure, p,
+                          authorities=False)
         except ParityError:
             continue
         raise ParityError(f"selftest mutation accepted: {label}")
@@ -348,7 +366,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.selftest:
             selftest()
-            print("v11-surface-delivery-parity: SELFTEST PASS mutations=9")
+            print("v11-surface-delivery-parity: SELFTEST PASS mutations=10")
             return 0
         contract = load(args.contract, "parity contract")
         names = verify_values(

@@ -38,10 +38,15 @@
     "%defstruct-constructor-form",
     "%defstruct-predicate-form",
     "%defstruct-copy-form",
-    "%defstruct-update-values",
+    "%defstruct-instance-p",
+    "%defstruct-copy",
+    "%defstruct-read",
+    "%defstruct-set",
+    "%defstruct-with",
     "%defstruct-one-slot-forms",
     "%defstruct-slot-forms",
     "%defstruct-register-forms",
+    "%defstruct-register-layout",
     "%defstruct-expansion",
     "defstruct"
   ],
@@ -63,7 +68,32 @@
     {
       "name": "defstruct-register-chain-publish-last",
       "expr": "(%defstruct-register-forms 'probe-point-c '(x y))",
-      "expect": "(if (%setf-register (quote probe-point-c-x) (quote probe-point-c-set-x)) (if (%setf-register (quote probe-point-c-y) (quote probe-point-c-set-y)) (%setf-register-commit) (%setf-register-abort)) (%setf-register-abort))"
+      "expect": "(%defstruct-register-layout (quote ((probe-point-c-x probe-point-c-set-x) (probe-point-c-y probe-point-c-set-y))))"
+    },
+    {
+      "name": "defstruct-shared-predicate-keeps-tag-contract",
+      "expr": "(list (%defstruct-instance-p 'point '(point 1 2)) (%defstruct-instance-p 'point '(other 1 2)) (%defstruct-instance-p 'point 7))",
+      "expect": "(t nil nil)"
+    },
+    {
+      "name": "defstruct-shared-copy-does-not-alias-spine",
+      "expr": "(let ((original '(point 1 2))) (let ((copy (%defstruct-copy original))) (%defstruct-set 1 copy 9) (list original copy)))",
+      "expect": "((point 1 2) (point 9 2))"
+    },
+    {
+      "name": "defstruct-shared-functional-update-keeps-source",
+      "expr": "(let ((original '(point 1 2))) (list (%defstruct-with 'point 2 2 original 9) original))",
+      "expect": "((point 1 9) (point 1 2))"
+    },
+    {
+      "name": "defstruct-shared-register-layout-publishes-last",
+      "expr": "(progn (%setf-register-begin) (%defstruct-register-layout '((probe-reader-a probe-setter-a) (probe-reader-b probe-setter-b))) (list (%setf-place-setter 'probe-reader-a) (%setf-place-setter 'probe-reader-b)))",
+      "expect": "(probe-setter-a probe-setter-b)"
+    },
+    {
+      "name": "defstruct-shared-register-layout-rolls-back-conflict",
+      "expr": "(progn (%setf-register-begin) (%setf-register 'probe-reader-old 'probe-setter-old) (%setf-register-commit) (%setf-register-begin) (list (%defstruct-register-layout '((probe-reader-new probe-setter-new) (probe-reader-old probe-setter-other))) (%setf-place-setter 'probe-reader-new) (%setf-place-setter 'probe-reader-old)))",
+      "expect": "(nil nil probe-setter-old)"
     },
     {
       "name": "defstruct-duplicate-slot-rejected",

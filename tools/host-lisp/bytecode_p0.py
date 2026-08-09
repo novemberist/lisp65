@@ -888,10 +888,14 @@ class P0VM:
             "key_event": 0,
             "write_char": 0,
             "screen_put_char": 0,
+            "memory_read": 0,
+            "memory_write": 0,
             "memory_read_sequence": 0,
         }
         self.disk_read_trace = []
         self.disk_write_trace = []
+        self.memory_read_trace = []
+        self.memory_write_trace = []
 
     def _math_u32(self, address):
         return sum(
@@ -1973,6 +1977,8 @@ class P0VM:
             if any(value < 0 or value > 255 for value in values):
                 raise VMError("TypeError", "peek arguments must be in 0..255")
             address = (values[0] << 8) | values[1]
+            self.io_counters["memory_read"] += 1
+            self.memory_read_trace.append(address)
             sequence = self.memory_read_sequences.get(address)
             if sequence:
                 self.io_counters["memory_read_sequence"] += 1
@@ -1987,6 +1993,8 @@ class P0VM:
             if any(value < 0 or value > 255 for value in values):
                 raise VMError("TypeError", "poke arguments must be in 0..255")
             address = (values[0] << 8) | values[1]
+            self.io_counters["memory_write"] += 1
+            self.memory_write_trace.append((address, values[2]))
             self.memory[address] = values[2]
             if 0xD770 <= address <= 0xD777:
                 self.io_counters["math_input_write"] += 1

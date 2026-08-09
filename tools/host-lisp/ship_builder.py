@@ -62,6 +62,7 @@ SAMPLE_FLEET = (
     ("random-q", "examples/ship/random-q/project.l65p"),
     ("long-runner", "examples/ship/long-runner/project.l65p"),
     ("interactive", "examples/ship/interactive/project.l65p"),
+    ("parity-toy", "examples/ship/parity-toy/project.l65p"),
 )
 
 
@@ -164,6 +165,13 @@ def validate_contract(contract: dict[str, Any], catalog: dict[str, Any], *, root
     require(contract["runtime"]["base_library"] == "core", "ship base library drift")
     require(contract["budgets"]["max_preload_bytes"] == 65536, "ship preload budget drift")
     require(contract["redistribution"]["runtime_license"] == "MPL-2.0", "ship license drift")
+    contracted_samples = contract["gates"]["samples"]
+    fleet_names = [name for name, _project in SAMPLE_FLEET]
+    require(
+        contracted_samples == fleet_names
+        and len(contracted_samples) == len(set(contracted_samples)),
+        "ship contracted sample fleet does not match the executed fleet",
+    )
     require(
         set(catalog) == {"format", "version", "libraries"}
         and catalog["format"] == CATALOG_FORMAT and catalog["version"] == 1,
@@ -377,6 +385,19 @@ def closure_for(
     functions = list(project_forms) + [
         name for name in library_forms if name in shipped_library
     ]
+    declared_private_inline: list[str] = []
+    for library_name in ordered_libraries:
+        library_suite = load_json(
+            root / by_name[library_name]["suite"],
+            f"ship library suite {library_name}",
+        )
+        for name in library_suite.get("private_inline_functions", []):
+            require(
+                name not in declared_private_inline,
+                f"duplicate-private-inline:{name}",
+            )
+            declared_private_inline.append(name)
+    private_inline = [name for name in declared_private_inline if name in functions]
     suite = {
         "format": Stdlib.SUITE_FORMAT_DISK_LIB,
         "name": f"ship-{project.name}",
@@ -390,6 +411,7 @@ def closure_for(
         "functions": functions,
         "max_code_object_bytes": 255,
         "max_call_args": 12,
+        "private_inline_functions": private_inline,
         # The timing contract deliberately enters the ordinary undefined-
         # function error boundary on duration overflow.  It is not a dynamic
         # target and remains absent from successful Runtime executions.
@@ -409,6 +431,7 @@ def closure_for(
         "shipped_library_functions": shipped_library,
         "omitted_library_functions": sorted(set(library_forms) - set(shipped_library)),
         "functions": functions,
+        "private_inline_functions": private_inline,
         "edges": [
             {"caller": name, "callees": graph[name]}
             for name in functions
@@ -485,7 +508,7 @@ def build_artifact(build_dir: Path, root: Path) -> tuple[Path, dict[str, Any]]:
 def host_smoke(build_dir: Path, prefix: Path, entry: str, root: Path) -> dict[str, Any]:
     binary = build_dir / "ship-runtime-host"
     defines = [
-        "-DLISP65_VM", "-DLISP65_EMBED_STDLIB", "-DLISP65_BYTECODE_STDLIB_EMIT_METADATA",
+        "-DLISP65_VM", "-DLISP65_VM_DIAGNOSTICS", "-DLISP65_EMBED_STDLIB", "-DLISP65_BYTECODE_STDLIB_EMIT_METADATA",
         "-DLISP65_RUNTIME_CORE", "-DVM_CODEBUF=56", "-DGC_ROOTS=128",
         "-DLISP65_MARK_BITMAP", "-DLISP65_EXT_HEAP", "-DEXT_CELLS=1024",
         "-DLISP65_STRING_ARENA", "-DSTR_ARENA_SIZE=0x2480",
@@ -495,7 +518,8 @@ def host_smoke(build_dir: Path, prefix: Path, entry: str, root: Path) -> dict[st
         "-DLISP65_V2_NATIVE_STRING_CODECS", "-DLISP65_TREEWALK_STRIP",
         "-DLISP65_V2_SERVICE_REGISTRY_CLOSED", "-DLISP65_V2_CARRIER_CUT",
         "-DLISP65_SCREEN_DRIVER", "-DLISP65_VM_SCREEN_PRIMS",
-        "-DLISP65_SHIP_RUNTIME_IO",
+        "-DLISP65_SHIP_RUNTIME_IO", "-DLISP65_CODE_WINDOW_CONVERGENCE",
+        "-DLISP65_DMA_CONTENT_CONVERGENCE",
         f'-DLISP65_SHIP_ENTRY="{entry}"',
     ]
     run([
@@ -545,7 +569,8 @@ def runtime_compile(
         "-DLISP65_V2_SERVICE_REGISTRY_CLOSED", "-DLISP65_V2_CARRIER_CUT",
         "-DLISP65_STDLIB_BOOT_OVERLAY_CODE", "-DLISP65_SHIP_RUNTIME",
         "-DLISP65_SCREEN_DRIVER", "-DLISP65_VM_SCREEN_PRIMS",
-        "-DLISP65_SHIP_RUNTIME_IO",
+        "-DLISP65_SHIP_RUNTIME_IO", "-DLISP65_CODE_WINDOW_CONVERGENCE",
+        "-DLISP65_DMA_CONTENT_CONVERGENCE",
         f'-DLISP65_RUNTIME_ENTRY="{entry}"',
     ]
     sources = [
@@ -688,7 +713,7 @@ def compile_stager(
         "sha256": sha(stager),
         "descriptor_build_id": f"{build_id:08x}",
         "entry": f"0x{symbols['ASM_R3_PRODUCT_ENTRY']:04x}",
-        "transport": "normal-f018b-d700-content-readback",
+        "transport": "normal-f018b-d700-manifest-crc-content-convergence",
     }
 
 
@@ -969,6 +994,14 @@ def contract_selftest() -> dict[str, Any]:
         rejected += 1
     else:
         raise ShipError("ship catalog mutation escaped")
+    missing_sample = json.loads(json.dumps(contract))
+    missing_sample["gates"]["samples"] = missing_sample["gates"]["samples"][:-1]
+    try:
+        validate_contract(missing_sample, catalog)
+    except ShipError:
+        rejected += 1
+    else:
+        raise ShipError("ship sample execution-list mutation escaped")
     with tempfile.TemporaryDirectory(prefix="lisp65-ship-selftest-") as raw:
         wrong = Path(raw) / "wrong-name.d81"
         try:
@@ -1062,8 +1095,8 @@ def sample_fleet(out: Path, *, cc_override: Path | None) -> dict[str, Any]:
         "media_members_verified": sum(row["media_members_verified"] for row in rows),
     }
     require(
-        value["sample_count"] == 4 and value["host_executions"] == 4
-        and value["media_members_verified"] == 36
+        value["sample_count"] == 5 and value["host_executions"] == 5
+        and value["media_members_verified"] == 45
         and "input=4 output=13" in next(
             row["host_output"] for row in rows if row["name"] == "interactive"
         ),

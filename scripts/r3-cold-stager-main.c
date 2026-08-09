@@ -846,10 +846,21 @@ static void prepare_chain(const uint8_t *product) {
     uint32_t file_length = rd32(product + 8);
     volatile uint8_t *chain = (volatile uint8_t *)R3_CHAIN_CODE_ADDR;
     volatile uint8_t *job = (volatile uint8_t *)R3_CHAIN_JOB_ADDR;
+    volatile uint8_t *state = (volatile uint8_t *)R3_CHAIN_STATE_ADDR;
     edma_copy(R3_PRODUCT_STAGE, (uint32_t)(uintptr_t)verify_buffer, 2);
-    if (rd16(verify_buffer) != R3_PRODUCT_LOAD || chain_size > 0x40u || file_length < 3u)
+    if (rd16(verify_buffer) != R3_PRODUCT_LOAD ||
+        chain_size > R3_CHAIN_JOB_ADDR - R3_CHAIN_CODE_ADDR ||
+        file_length < 3u)
         return;
     for (index = 0; index < chain_size; index++) chain[index] = r3_chain_begin[index];
+    /* The relocated trampoline outlives the C stager.  Bind it to the
+     * manifest CRC and exact payload length before the product copy begins;
+     * it will recompute that CRC over the CPU-visible destination. */
+    state[0] = product[12];
+    state[1] = product[13];
+    state[2] = product[14];
+    state[3] = product[15];
+    wr16(state + 4, (uint16_t)(file_length - 2u));
     /* Job 2 publishes $a5 only after the Bank-4 -> Bank-0 copy has completed.
      * DMAgic job submission is not a CPU-stall boundary on the acceptance
      * device, so the relocated trampoline waits on this memory witness before

@@ -1,0 +1,36 @@
+{
+  "format": "lisp65-c2-code-window-content-convergence-v1",
+  "recorded_on": "2026-08-04",
+  "status": "owner-commissioned-permanent-gate",
+  "scope": "every Ship and C2-lite Workbench VM object/header/payload refill",
+  "timeout_frames": 64,
+  "content_oracle": {
+    "source": "one independent source-derived first-difference discriminator at the shared submit seam",
+    "descriptor": "one target-owned immutable two-job source-probe/marker chain; the primary descriptor is distinct and submitted exactly once",
+    "initialization": "make each source probe content-defined with its ordered marker, scan it against the current destination and retain the first unequal source byte",
+    "acceptance": "the retained destination byte equals the retained source byte after the single primary submit",
+    "ordering": "witness equality is tested before the 64-frame timeout",
+    "resubmission": "the primary transfer is submitted exactly once"
+  },
+  "structural_form": {
+    "primitive_count_per_product": 1,
+    "per_consumer_convergence_loops": 0,
+    "resident_destination_witness_bytes": 1,
+    "exhaustive_oracle_location": "host and device class gates",
+    "route_rule": "all four VM refills consume the common vm_object_load to vm_code_load_converged seam"
+  },
+  "covered_refill_paths": [
+    "initial object load and TAILCALL object replacement through OBJ_SETUP",
+    "foreign-caller minimal header reload through BUF_ENSURE_MINE",
+    "foreign-caller complete header/literal reload through BUF_ENSURE_MINE",
+    "streamed payload and post-return window refill through WIN_ENSURE"
+  ],
+  "failure": {
+    "vm_status": "VM_BADOPCODE",
+    "ship_state": "RUNTIME_VM_ERROR=$E3",
+    "silent_retry": false
+  },
+  "model_cases": 8,
+  "mutation_cases": 15,
+  "claim_limit": "The oracle proves destination content before consumption. It does not distinguish late delivery from target transfer malfunction."
+}

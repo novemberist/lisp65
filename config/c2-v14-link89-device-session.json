@@ -1,0 +1,92 @@
+{
+  "format": "lisp65-c2.3-v1.4-link89-bundled-device-session-v1",
+  "recorded_on": "2026-08-03",
+  "status": "commissioned-phase-D",
+  "candidate": {
+    "link": 89,
+    "product_build_id": "0xac5f997a",
+    "hardware_banner": "WORKBENCH 1.3.0",
+    "banner_note": "The one-WPLTO Link-89 Phase-D candidate retains the released 1.3 banner; Phase E owns the commissioned 1.4 release rebind after Halt 1.",
+    "product_manifest": "build/c2.3/v1.4.0-candidate-product-link89-r1/canonical-product-manifest.json",
+    "media_manifest": "build/c2.3/v1.4.0-candidate-media-link89-r1/candidate-manifest.json",
+    "product_d81": {
+      "path": "build/c2.3/v1.4.0-candidate-media-link89-r1/lisp65-product.d81",
+      "sha256": "cc3509b7a6df421bb749f85dcbb77bf75d704016c0cb702b011e20c5d3b54696"
+    },
+    "library_d81": {
+      "path": "build/post-promotion/require-option-A-fresh-fixtures/require-place-current-bound.d81",
+      "sha256": "e2966adeae825023846f66607277d217f25f8ae96ee0fc744dfbd8ad91700367"
+    },
+    "resident_prg": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link89-r1/final/lisp65-c2-substitution-linked.prg",
+      "sha256": "fe495013c7928b31b551077a78173c503f27a68c73b1e4ceeac802403d582859"
+    },
+    "bank2": {
+      "path": "build/c2.3/v1.4.0-candidate-product-link89-r1/final/fresh-c2-lite-prelink-gates/v6-semantics/bank2-static-code.bin",
+      "address": "0x00020000",
+      "bytes": 47298,
+      "sha256": "eb45f07ed2edc179812c585399aef5ee9ceb0dbdd02f1126e086e357156f4c30"
+    }
+  },
+  "D1": {
+    "bounds_form": "(m65-draw-line 0 0 80 0 42 7)",
+    "recovery_form": "(+ 4 5)",
+    "draw_forms": [
+      "(m65-draw-fill 1 8 30 12 32 6)",
+      "(m65-draw-line 1 8 30 8 42 7)",
+      "(m65-draw-line 1 12 30 12 42 7)"
+    ]
+  },
+  "D2": {
+    "image": {
+      "path": "build/post-promotion/v14/sample-fleet-host/parity-toy.d81",
+      "sha256": "2020ee8b641dcc82ae0b53b31d723dab0779e838ea09cd7f35f638afd7f34060"
+    },
+    "runtime_elf": "build/post-promotion/v14/sample-fleet-host/parity-toy.runtime.elf",
+    "runtime_state": "0x00000085",
+    "runtime_result": "0x00000086",
+    "pre_input_state": 2,
+    "complete_state": 3,
+    "pointer_probe_form": "(list(m65-byte-read 208 108)(m65-byte-read 208 109)(m65-byte-read 208 110))",
+    "physical_input": "one physical key",
+    "expected": "visible character-cell panel and sprite before input; audible SID note after input"
+  },
+  "D3": {
+    "require_form": "(require(quote place))",
+    "require_expected": "t",
+    "c2d_header": {
+      "address": "0x00050000",
+      "bytes": 48
+    },
+    "place_row": {
+      "slot": 6,
+      "address": "0x000500f0",
+      "bytes": 32
+    },
+    "q_form": "(q->string(q*(q 1 64)(q -2 0)))",
+    "q_expected": "\"-3.0\"",
+    "time_form": "(time(+ 1 2))",
+    "time_expected": "0 3",
+    "read_line_form": "(read-line)",
+    "physical_input": "Ada followed by RETURN",
+    "read_line_expected": "\"Ada\"",
+    "liveness_form": "(+ 4 5)",
+    "liveness_expected": "9"
+  },
+  "session_policy": {
+    "cold_reset_before_each_identity": true,
+    "fresh_BASIC_screenshot_assert": true,
+    "FTP_no_progress_timeout_seconds": 120,
+    "exact_media_readback": true,
+    "workbench_bank2_readback": true,
+    "persistent_forms_are_monitor_quiet": true,
+    "IO_readback": "CPU-side through m65-hw forms; m65 memsave is forbidden for I/O registers",
+    "physical_owner_observation_required": [
+      "D1 drawing visible",
+      "D2 toy sprite visible and moved",
+      "D2 SID note audible"
+    ],
+    "dependency_scoped_first_red": true
+  },
+  "claim_limit": "One non-promotable Link-89 device session for the synchronous parity pilot, fifth Ship sample and standing trailing rows. No v1.4 release, tick-hook implementation or continuous graphics/audio claim."
+}

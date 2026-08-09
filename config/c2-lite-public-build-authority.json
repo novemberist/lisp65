@@ -1,101 +1,51 @@
 {
-  "acceptance_evidence_rule": "Private R4/R5/R6/G5/G6 receipts establish release acceptance but are not inputs to compilation, linking, media construction, or clean-build qualification.",
-  "artifact_count": 19,
+  "acceptance_evidence_rule": "Private Phase-D/Halt receipts establish release acceptance but are not inputs to compilation, linking, media construction, or clean-build qualification.",
+  "artifact_count": 23,
   "build_model": "fresh-source-single-emitter-plus-one-WPLTO",
-  "candidate_manifest_path": "build/c2.3/v1.3.0-candidate-media-link88-r1/candidate-manifest.json",
+  "candidate_manifest_path": "build/c2.3/v1.4.0-public-selected/candidate-manifest.json",
   "entry_point": "make workbench-product",
-  "format": "lisp65-c2-lite-public-build-authority-v1",
-  "nondeterminism_policy": "Any role mismatch is a clean-build First Red. A documented nondeterminism class must name the affected non-product diagnostic role; no sealed product or media role is exempt.",
+  "format": "lisp65-c2-lite-public-build-authority-v2",
+  "nondeterminism_policy": "Any role mismatch is a clean-build First Red; no selected product, library, or media role is exempt.",
   "private_evidence_is_build_input": false,
+  "release": "v1.4.0",
   "sealed_legacy_profile_fields": {
-    "meaning": "Stable resolved-profile identity only. The executable persistent plan is independently derived from current source and gated as 37,38,39,40,0; the current structured-ELF profile-parity gate also runs and must pass. These legacy fields do not select or validate executable plan bytes and do not replace the current parity result.",
+    "c2_artifacts_sha256": "80836d99d15153932e58e049467fe719fdcb500ede04f6e3ff0e9488709b8ff1",
+    "meaning": "Stable resolved-profile identity only. The executable persistent plan is independently derived from current source and gated as 37,38,39,40,0; the current structured-ELF profile-parity gate also runs and must pass. The C2-artifacts token preserves the accepted profile identity because its diagnostic manifests contain checkout-absolute diagnostic paths, while their code and container identities are freshly rebuilt and checked. These legacy fields do not select or validate executable plan bytes and do not replace the current parity result.",
     "persistent_publish_plan": "38,39,40,41,0",
     "v2_profile_parity_sha256": "4bfee9b37e9f50a556c6ca4819d368231650789995775c43f01b1ba4e8d68db9"
   },
-  "sealed_package_set_sha256": "3e0db21adb825cfa44c60bd005f2644a3717f4fcc5b02ae87e1139d3188a3397",
-  "sealed_product_artifact_set_sha256": "072ca89affc35bdf0e20cab382e8bd4a9df64babf535e23f6b2e268962daed1f",
+  "sealed_product_artifact_set_sha256": "d4c7f0b0783226526902bdd01a25b75c11e28a997a0d0a2eb10e294578f8af2f",
   "sealed_profile_identity": {
     "field": "direct_entry_contract_sha256",
     "meaning": "Release identity already embedded in the accepted C2-lite profile. Public builds regenerate and check the current direct-entry semantic receipt, but use this stable identity token for the legacy profile field so private historical receipt bytes are not build inputs.",
     "sha256": "d2c186c4e8919cf4d3b50c4d3190bb35c70bad39add483b2d8f9106114dcdf65"
   },
   "sealed_roles": {
-    "boot-descriptor": {
-      "bytes": 432,
-      "sha256": "1c7744f93cbc84270e80aa75c86a4e3a3950d44582c1fa814458d69dda27572c"
-    },
-    "c2-bank2-static-code-plane": {
-      "bytes": 45514,
-      "sha256": "49658f5239abf867a29875a1464629f1885d3dab58102077fda5ba19af882589"
-    },
-    "c2-boot-family": {
-      "bytes": 19402,
-      "sha256": "0cdc54c032afd548b340e57b57c8a80d60c0d4bbe027d30d6c1c59ae25971a98"
-    },
-    "c2-kernal-window": {
-      "bytes": 8192,
-      "sha256": "cf15ec50fafd849419bddf5b9af61965e3a81bfb1529f4504b90d9977d0dbfaa"
-    },
-    "c2-product-shelf": {
-      "bytes": 93218,
-      "sha256": "0e6a90bb1fb796761ac83b7f8b8754b32253f5e1c43a52044eed1d606a9056f4"
-    },
-    "c2-resident-prg": {
-      "bytes": 41566,
-      "sha256": "c9441f9d38b5deaaba2918198f9f9b33c8c07e8f85c8f0294e764283433ed5ba"
-    },
-    "c2-session-family-region-0": {
-      "bytes": 65423,
-      "sha256": "067c767b359b7d4609beb69d349dbd21dbf10fe22574ba415b7cb6792c7d4f72"
-    },
-    "c2-session-family-region-1": {
-      "bytes": 1956,
-      "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"
-    },
-    "c2-two-record-boot-stage": {
-      "bytes": 3286,
-      "sha256": "2d55098e9c1e40eea41a04eabbe9303f4a05bb2c512fd005b4b446be146eddaa"
-    },
-    "c2d-v6-code-plane": {
-      "bytes": 50816,
-      "sha256": "26bec13fc2ace4f4f9a27128212e03ff98cb4400a5f845d1cc6219108d7ee3f8"
-    },
-    "cold-stager": {
-      "bytes": 5911,
-      "sha256": "deb3d46c852e69a9aedb80fedb27ff31cfb403553c163c1ca751e93f0208291a"
-    },
-    "library-ide": {
-      "bytes": 31886,
-      "sha256": "6320b070885e2de285b30eda350e95a7beefc0819fdec5ff2fbc0034d32cacd2"
-    },
-    "library-idex": {
-      "bytes": 7380,
-      "sha256": "e7bb1a4139f9cd31696d23809bc008c3759d2bc445ea5303ad1738c7c948b392"
-    },
-    "library-m65d": {
-      "bytes": 6573,
-      "sha256": "4a32837cc87480375c982a3d39ee8f1759b124c2e563cf4d1aaafd439a8e720e"
-    },
-    "linked-product-elf": {
-      "bytes": 622560,
-      "sha256": "c44fada3f183d528515836eb1f361809a1d36b61a93a2e248e9e9bbd05875be7"
-    },
-    "product-d81": {
-      "bytes": 819200,
-      "sha256": "7c07f6130f404b540dd3e4228b1c51139b3a012a8f00ddcaf313561c570fee38"
-    },
-    "product-mount-descriptor": {
-      "bytes": 645,
-      "sha256": "1289d9d0851ad383cf2f8430a88cd3fb37f8ae54c47ff8cf0fef6144453860e7"
-    },
-    "resolved-profile": {
-      "bytes": 12052,
-      "sha256": "480345fb1f49befa0a4f94ba755328e772c50dedf7f90fd69e861b1e241dd221"
-    },
-    "work-d81": {
-      "bytes": 819200,
-      "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"
-    }
+    "boot-descriptor": {"bytes": 432, "sha256": "44cb2004e5e53acac3fcf5987101b67d3c13b72b2114b91d7c66d5d60f5b9150"},
+    "c2-bank2-static-code-plane": {"bytes": 45794, "sha256": "f6844434b528a24a5194aa919ed8a39cf7d7d29bc67ccfb3d8084d5d8a43751e"},
+    "c2-boot-family": {"bytes": 19402, "sha256": "6ffae7bd6a36a3854fb5c3ee46ffef23195a6f8d53f9c1000e581d600568063f"},
+    "c2-kernal-window": {"bytes": 8192, "sha256": "3149bfcd57090f89d6f8b32d8c58ac359f5f7f07563b6561d45ed9dc18ff3abc"},
+    "c2-product-shelf": {"bytes": 93082, "sha256": "0c6bc252732257e38d4ff9075539cee447fd98a67e14690ce6e1284e89c3bfc2"},
+    "c2-resident-prg": {"bytes": 41566, "sha256": "fcc785365d2a6d7a3269367a4234cb372783d46b9debdee6ad37e758f6e20a52"},
+    "c2-session-family-region-0": {"bytes": 65423, "sha256": "638d80a2b28df37b2e8051e9c94e00b7e890cdb6f27675d2fd2358d4f51e453f"},
+    "c2-session-family-region-1": {"bytes": 1956, "sha256": "b65dda146d6b4855cec4324d22bf2a26e956c13f9434db18ac25d831a0c96dde"},
+    "c2-two-record-boot-stage": {"bytes": 3286, "sha256": "e7ac43bc3e5684084f72b7d637c856df05fafa10319cbb9a7463258fa9f9d104"},
+    "c2d-v6-code-plane": {"bytes": 50816, "sha256": "e3de3e387ca2757d84003d828aa341fcc8cad9fb3471d013ff72021ed11a100a"},
+    "cold-stager": {"bytes": 6117, "sha256": "13416a5fec4a29a768806ee834e52c2df65f1797027cceac268e0c9fd1275434"},
+    "library-ide": {"bytes": 31886, "sha256": "6320b070885e2de285b30eda350e95a7beefc0819fdec5ff2fbc0034d32cacd2"},
+    "library-idex": {"bytes": 7380, "sha256": "e7bb1a4139f9cd31696d23809bc008c3759d2bc445ea5303ad1738c7c948b392"},
+    "library-inspect": {"bytes": 4334, "sha256": "708e786bfafc8586c06e4ba566f558c5c63c1eefa418c8e66f1d81ea0abecfbc"},
+    "library-m65d": {"bytes": 6573, "sha256": "4a32837cc87480375c982a3d39ee8f1759b124c2e563cf4d1aaafd439a8e720e"},
+    "library-string-extra": {"bytes": 506, "sha256": "f25ea8db77c62a2ba679a63c3a36c87d37bbbd1f471450962774b0286376efbd"},
+    "linked-product-elf": {"bytes": 622592, "sha256": "e7cca3de31062c6872cdb35fde711a16af802cc2a7b1023bcfcdee34366766f8"},
+    "optional-library-d81": {"bytes": 819200, "sha256": "1a77a2f5d71c58ef8e9650316d7d0103675fd419b5aa96d37e8f44e7b24186b7"},
+    "optional-library-index": {"bytes": 128, "sha256": "9afafe84844946712dcfde4e4d16c3a44b1175266a540dc459265700e5d19905"},
+    "product-d81": {"bytes": 819200, "sha256": "ed4e5c7281913e351550f10533a585c2516a7a0a4214a66cf93cf35252aee306"},
+    "product-mount-descriptor": {"bytes": 645, "sha256": "03f75ca5d82e3f352ad64afe77dedc97c0bdb98377af3f54b078f659ad2ae9a2"},
+    "resolved-profile": {"bytes": 12052, "sha256": "95092a27a5c523e3a328be042604ab07114594fe1c6650505e8fa6f259c76bca"},
+    "work-d81": {"bytes": 819200, "sha256": "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"}
   },
-  "version": 1
+  "selected_media_sha256": "1a77a2f5d71c58ef8e9650316d7d0103675fd419b5aa96d37e8f44e7b24186b7",
+  "selected_variant": "base",
+  "version": 2
 }

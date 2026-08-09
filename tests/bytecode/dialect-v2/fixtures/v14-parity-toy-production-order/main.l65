@@ -1,0 +1,62 @@
+; Non-promotable Link-90 production-order witness.  This mirrors the guarded
+; m65-sprite-shape path while recording three monotonic stages in ordinary
+; RAM: argument guard, pointer guard, and completion of the first shape byte.
+
+(defun %v14-order-write-shape (shape index)
+  (if (< index 63)
+      (progn
+        (m65-byte-write (%m65-sprite-shape-slot-hi)
+                        (+ (%m65-sprite-shape-slot-lo) index)
+                        (string-ref shape index))
+        (if (= index 0) (m65-byte-write 23 178 195) nil)
+        (%v14-order-write-shape shape (+ index 1)))
+      (m65-byte-write (%m65-sprite-shape-slot-hi) 255 0)))
+
+(defun %v14-order-sprite-shape (sprite shape)
+  (if (and (%m65-sprite-number-p sprite)
+           (stringp shape)
+           (= (string-length shape) 63))
+      (%v14-order-pointer-stage sprite shape)
+      (%m65-error)))
+
+(defun %v14-order-pointer-stage (sprite shape)
+  (progn
+    (m65-byte-write 23 176 161)
+    (%m65-vic-open)
+    (let* ((table-low
+             (m65-byte-read
+               (%m65-reg-vic-sprite-pointer-address-low-hi)
+               (%m65-reg-vic-sprite-pointer-address-low-lo)))
+           (table-mid
+             (m65-byte-read
+               (%m65-reg-vic-sprite-pointer-address-mid-hi)
+               (%m65-reg-vic-sprite-pointer-address-mid-lo)))
+           (table-high
+             (m65-byte-read
+               (%m65-reg-vic-sprite-pointer-address-high-hi)
+               (%m65-reg-vic-sprite-pointer-address-high-lo))))
+      (progn
+        (m65-byte-write 23 179 table-low)
+        (m65-byte-write 23 180 table-mid)
+        (m65-byte-write 23 181 table-high)
+        (if (and (= table-high 0) (<= table-low 248))
+            (progn
+              (m65-byte-write 23 177 178)
+              (%v14-order-write-shape shape 0)
+              (m65-byte-write table-mid (+ table-low sprite)
+                              (%m65-sprite-shape-pointer))
+              t)
+            (%m65-error))))))
+
+(defun main ()
+  (let ((shape
+          "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+    (progn
+      (m65-byte-write 23 176 0)
+      (m65-byte-write 23 177 0)
+      (m65-byte-write 23 178 0)
+      (m65-byte-write 23 179 0)
+      (m65-byte-write 23 180 0)
+      (m65-byte-write 23 181 0)
+      (%v14-order-sprite-shape 0 shape)
+      t)))

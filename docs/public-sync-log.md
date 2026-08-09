@@ -4,6 +4,26 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.4.0 — prepared 2026-08-08
+
+- Promoted the locality-optimized compiler carrier with zero resident growth;
+  the structural full-sequence price fell from 788 to 677 seconds and the
+  post-require definition price to 179 seconds. These are prices, not
+  completion ceilings.
+- Added the optional `string-extra` library (`capitalize`, `string-split`) and
+  the optional `inspect` library (`who-calls`).
+- Kept `trace`, `untrace`, and `defstruct` outside the delivered surface after
+  their hardware rows failed their independent delivery conditions.
+- Reclassified the virtual editor 56/64 result after a quiet physical 64/64
+  acceptance row; no editor product stall is claimed from the transport loss.
+- Updated the visible banner to `WORKBENCH 1.4.0` and selected the exact Base
+  library D81 at Halt #1 without rebuilding either media variant.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-#2 publication
+authorization.
+
 ## v1.3.0 — prepared 2026-08-03
 
 - Added the reproducible Ship Builder and four standalone sample projects,

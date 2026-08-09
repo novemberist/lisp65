@@ -1,15 +1,16 @@
-# lisp65 1.3.0 User Guide
+# lisp65 1.4.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.3.0` release bundle
+- The extracted `lisp65-1.4.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
-The bundle supplies both `media/lisp65-product.d81` and a blank convenience
-image, `media/lisp65-work.d81`. Any valid non-product 1581 image may be used as
-the work disk.
+The bundle supplies `media/lisp65-product.d81`, the optional-library medium
+`media/lisp65-library.d81`, and a blank convenience image,
+`media/lisp65-work.d81`. Any valid non-product 1581 image may be used as the
+work disk.
 
 ## Verify the bundle
 
@@ -88,6 +89,34 @@ Example:
 (load-lib "answer")
 (answer)                           ; => 42
 ```
+
+### Optional string and inspection libraries
+
+The two small v1.4 libraries are named for what they provide. Load only the
+one a session needs:
+
+1. Mount `media/lisp65-library.d81` in drive 8.
+2. If M65D is already active, run `(m65d-remount)` so the session sees the new
+   medium.
+3. Require the desired library, then restore the work disk and run
+   `(m65d-remount)` again before saving.
+
+```lisp
+(require 'string-extra)            ; => t
+(capitalize "hello")               ; => "Hello"
+(string-split "a,b,c" ",")          ; => ("a" "b" "c")
+
+(require 'inspect)                 ; => t
+(who-calls 'my-function)           ; callers known to the compiled shelf graph
+```
+
+`who-calls` takes a symbol. The libraries are independent; requiring one does
+not implicitly load the other.
+
+Function tracing is not delivered in v1.4.0. Its design is parked until the
+core can expose the exact previous function-cell value and publish or restore
+a wrapper atomically. This avoids shipping a tool that cannot reliably undo
+its own mutation.
 
 ## Build a standalone disk
 
@@ -372,10 +401,11 @@ further writes. The release does not claim atomicity inside that window.
   claimed.
 - The editor has fixed-capacity buffers and no undo/redo, interactive symbol
   completion, integrated help, or full structural editing.
-- A deterministic editor stall has been observed around the first collection
-  after roughly 56 typed keys. RUN/STOP recovered in the observed case. The
-  faster renderer is retained because the same path exists in the older
-  renderer; preserve the preceding session if the stall recurs.
+- A virtual-input diagnostic delivered only 56 of 64 requested keys, but the
+  release session persisted 64 of 64 physical keystrokes with no observation
+  during the typing window. No editor product stall is claimed from the
+  virtual result. Preserve the preceding session if physical typing ever
+  stops responding naturally.
 - The screen scrolls character RAM but not color RAM. Text moving through the
   former banner rows may inherit the banner colors. This is display-only;
   `screen-clear` is not a workaround because it leaves color attributes intact.

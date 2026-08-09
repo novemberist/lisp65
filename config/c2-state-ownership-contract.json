@@ -1,0 +1,148 @@
+{
+  "format": "lisp65-c2-state-ownership-contract-v2",
+  "recorded_on": "2026-08-04",
+  "status": "phase-c-owner-commissioned-assembly-fourth-row",
+  "claim": "State ownership and structural pricing only; no source annotation, product build, WPLTO, link identity, hardware, semantic or release claim.",
+  "authorities": {
+    "phase_a_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-state-ownership-phase-a-inventory-receipt.json",
+    "v15_contract": "config/c2-stack-overlay-ownership-contract.json",
+    "v15_first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-stack-overlay-mapped-far-service-wplto-first-red.json",
+    "work_plan": "docs/planning/1.7-state-ownership-work-plan.md"
+  },
+  "oracle_policy": {
+    "addresses": "All expected addresses are independent constants from the accepted Phase-A inventory and the 1.5 Halt-1 contract; none is read from a linker script under test.",
+    "identity": "An optimizer-emitted payload size is observation, not an ownership constant. A smaller payload is still red when exact far-body identity is required.",
+    "fit": "Bank-0, zero page, far payload/owner range, stack, fixed state and overlay are one simultaneous-live set.",
+    "rejections": [
+      "repin-current-LTO-output",
+      "padding-or-reserved-tail-presented-as-body-identity",
+      "compiler-partition-or-frozen-object",
+      "assertion-only-wall-change"
+    ]
+  },
+  "family_owners": {
+    "ordinary-bank0-bss": {
+      "semantic_owner": "workbench-runtime-state",
+      "arena": "ordinary-bank0-state-arena",
+      "initialization": "CRT zeroes the complete arena before main; session operations preserve it unless their existing subsystem initializer changes a member."
+    },
+    "ordinary-zero-page": {
+      "semantic_owner": "workbench-zero-page-state",
+      "arena": "ordinary-zero-page-arena",
+      "initialization": ".zp.data is copied, .zp.bss is zeroed and .zp.noinit retains its existing compiler-defined noinit semantics."
+    },
+    "convergence-bank0-state": {
+      "semantic_owner": "code-window-convergence",
+      "arena": "convergence-state-arena",
+      "initialization": "Per-submit descriptors and witness bytes are initialized by the convergence primitive before consumption."
+    },
+    "convergence-zero-page": {
+      "semantic_owner": "code-window-convergence",
+      "arena": "convergence-zero-page-gap",
+      "initialization": "Per-submit completion scratch is initialized by the convergence primitive; no boot persistence is claimed."
+    },
+    "fixed-c2-bank0-state": {
+      "semantic_owner": "c2-fixed-bank0",
+      "arena": "fixed-c2-bank0-arena",
+      "initialization": "Existing C2 ownership, phase and subsystem initialization contracts remain unchanged."
+    },
+    "compiler-static-stack": {
+      "semantic_owner": "llvm-mos-static-stack",
+      "arena": "compiler-static-stack-arena",
+      "initialization": "NOLOAD compiler stack; contents are not persistent state and capacity is fail-closed."
+    },
+    "mapped-far-service-body": {
+      "semantic_owner": "mapped-bank2-far-service",
+      "arena": "mapped-far-code-owner",
+      "initialization": "Immutable code is staged and independently read back before resident entry; it is never loaded through the refill seam it protects."
+    }
+  },
+  "arena_skeleton": {
+    "ordinary_bank0_state": {
+      "start": "0xb9c8",
+      "end_exclusive": "0xc000",
+      "capacity_bytes": 1592,
+      "demand_bytes": 1585,
+      "headroom_bytes": 7
+    },
+    "convergence_state": {
+      "start": "0xc000",
+      "end_exclusive": "0xc042",
+      "capacity_bytes": 66,
+      "demand_bytes": 66
+    },
+    "compiler_static_stack": {
+      "start": "0xc074",
+      "end_exclusive": "0xc080",
+      "capacity_bytes": 12,
+      "observed_demand_bytes": 6
+    },
+    "fixed_c2_bank0_including_code": {
+      "start": "0xc080",
+      "end_exclusive": "0xc34d",
+      "capacity_bytes": 717,
+      "demand_bytes": 717
+    },
+    "overlay_floor": "0xc354",
+    "deliberate_bank0_gaps": [
+      {"start": "0xc042", "end_exclusive": "0xc074", "bytes": 50},
+      {"start": "0xc07a", "end_exclusive": "0xc080", "bytes": 6},
+      {"start": "0xc34d", "end_exclusive": "0xc354", "bytes": 7}
+    ],
+    "zero_page": {
+      "ordinary_start": "0x22",
+      "ordinary_end_exclusive": "0x87",
+      "ordinary_bytes": 101,
+      "convergence_gap_start": "0x87",
+      "convergence_gap_end_exclusive": "0x89",
+      "convergence_bytes": 2,
+      "fixed_start": "0x89",
+      "fixed_end_exclusive": "0x90",
+      "fixed_bytes": 7,
+      "capacity_end_exclusive": "0x90"
+    },
+    "mapped_far": {
+      "cpu_start": "0x78b2",
+      "owner_cpu_end_exclusive": "0x7e8d",
+      "physical_start": "0x0002b8b2",
+      "owner_physical_end_exclusive": "0x0002be8d",
+      "owner_capacity_bytes": 1499,
+      "observed_product_LTO_payload_bytes": 1433,
+      "identity_delta_bytes": -66,
+      "assembly_body_bytes": 874,
+      "assembly_cpu_end_exclusive": "0x7c1c",
+      "assembly_physical_end_exclusive": "0x0002bc1c",
+      "bank2_headroom_after_assembly_bytes": 17380
+    }
+  },
+  "candidate_rows": [
+    {
+      "id": "owned-arenas-plus-isolated-far-load-current-lto",
+      "bank0_state": "fits 1585/1592",
+      "zero_page": "fits by routing convergence scratch to 0x87..0x89",
+      "far_body": "red: 1433-byte whole-product LTO payload remains optimizer-owned against exact 1499-byte identity",
+      "status": "rejected-current-output-repin"
+    },
+    {
+      "id": "owned-arenas-plus-66-byte-far-tail",
+      "bank0_state": "fits 1585/1592",
+      "zero_page": "fits by routing convergence scratch to 0x87..0x89",
+      "far_body": "red: a 66-byte tail makes section extent 1499 without making emitted code identity optimizer-independent",
+      "status": "rejected-padding"
+    },
+    {
+      "id": "owned-arenas-plus-frozen-or-nonlto-far-object",
+      "bank0_state": "fits 1585/1592",
+      "zero_page": "fits by routing convergence scratch to 0x87..0x89",
+      "far_body": "geometrically priceable, but obtains identity by a separate compiler/frozen object boundary",
+      "status": "rejected-partition"
+    }
+  ],
+  "halt1": {
+    "fits_before_owner_extension": 0,
+    "priced_before_owner_extension": 3,
+    "owner_decision": "commission-handwritten-assembly-fourth-row",
+    "identity_not_space": true,
+    "equivalence_contract": "config/c2-mapped-far-asm-equivalence-contract.json"
+  }
+}

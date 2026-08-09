@@ -1,0 +1,42 @@
+{
+  "format": "lisp65-c2-mapped-far-assembly-equivalence-v1",
+  "recorded_on": "2026-08-04",
+  "status": "owner-commissioned-phase-c",
+  "claim": "Assembly/source-artifact equivalence and exact mapped-body identity only; no product WPLTO, Link 91, hardware or release claim.",
+  "reference": {
+    "ordinary_c_source": "src/c2_platform_dma.c",
+    "ordinary_function": "C2_VM_CODE_LOAD_CONVERGED_IMPL",
+    "physical_c_source": "src/c2_product_runtime.c",
+    "physical_function": "C2_PHYSICAL_READ_CONVERGED_IMPL",
+    "timeout_frames": 64,
+    "primary_submissions": 1
+  },
+  "artifact": {
+    "source": "src/c2_mapped_far_convergence.s",
+    "section": ".lisp65_c2_mapped_far_service",
+    "cpu_vma": "0x78b2",
+    "physical_lma": "0x0002b8b2",
+    "exact_bytes": 874,
+    "capacity_bytes": 1499,
+    "static_stack_bytes": 0,
+    "entries": [
+      "c2_mapped_far_vm_code_load_converged",
+      "c2_mapped_far_physical_read_converged"
+    ]
+  },
+  "abi": {
+    "ordinary": "bank=A offset=X/__rc2 length=__rc3/__rc4 destination=__rc6/__rc7 result=A",
+    "physical": "source=A/X/__rc2/__rc3 destination=__rc4/__rc5 length=__rc6/__rc7 result=A",
+    "pseudo_registers": {"start": "0x02", "end_exclusive": "0x20"}
+  },
+  "cases_per_entry": 8,
+  "required_existing_mutations": 15,
+  "new_seam_mutations": 10,
+  "witness_rules": {
+    "content": "source-derived first differing byte, never submission metadata",
+    "completion": "destination witness is compared before the bounded timeout",
+    "resubmission": "the primary descriptor is submitted exactly once",
+    "artifact": "execution uses linked section bytes and resolved relocations, never source interpretation",
+    "identity": "size, VMA and LMA are independent contract constants"
+  }
+}

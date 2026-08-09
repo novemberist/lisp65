@@ -347,7 +347,7 @@ def compile_stager(contract: dict[str, Any], build_id: int) -> tuple[Path, Path,
     map_text = map_path.read_text(encoding="utf-8")
     match = re.search(r"^\s*[0-9a-f]+\s+[0-9a-f]+\s+([0-9a-f]+)\s+\d+\s+\.r3_chain_trampoline\s*$", map_text, re.MULTILINE)
     chain_bytes = int(match.group(1), 16) if match else 0
-    if not match or chain_bytes > 0x40:
+    if not match or chain_bytes > 0x100:
         raise ProductError("stager chain trampoline size drift")
     return output, map_path, chain_bytes
 

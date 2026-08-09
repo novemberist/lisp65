@@ -12,6 +12,9 @@
 #include "mem.h"      /* alloc, cons, GC_* */
 #include "symbol.h"   /* intern */
 #include "interrupt.h" /* lisp_abort (kalter Boot-Pfad; kein LTO-Risiko wie bei mem.c) */
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+#include "ship_runtime_io.h"
+#endif
 
 #if defined(LISP65_RUNTIME_OVERLAY) || defined(L65M_COMMIT_OVERLAY_HOST_DIRECT)
 #include "l65m_batch_contract.h"
@@ -324,7 +327,15 @@ static MDHELPFN void md_read(uint16_t off, void *dst, uint16_t len) {
         return;
     }
 #endif
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    if (!vm_code_load_converged(lisp65_stdlib_bank,
+                                (uint16_t)(md_base + off), len,
+                                (uint8_t *)dst))
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "DMA content did not converge; reboot");
+#else
     vm_code_load(lisp65_stdlib_bank, (uint16_t)(md_base + off), len, (uint8_t *)dst);
+#endif
 }
 static inline uint16_t md_u16(const uint8_t *b) { return (uint16_t)(b[0] | ((uint16_t)b[1] << 8)); }
 static MDHELPFN uint16_t md_idx(uint16_t i) {
@@ -742,6 +753,102 @@ void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst) {
 #endif
     vm_dma(off, bank, (uint16_t)(uintptr_t)dst, 0, len);
 }
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+#ifndef LISP65_SHIP_RUNTIME_IO
+#error "code-window convergence requires the Ship-owned advancing frame source"
+#endif
+#ifndef VM_CODEBUF
+#error "code-window convergence requires the linked VM_CODEBUF bound"
+#endif
+#define VM_CODE_CONVERGENCE_TIMEOUT_FRAMES 64u
+
+/* The source discriminator owns a distinct descriptor.  Consumers own no
+ * proof buffer and cannot bypass this one convergence primitive. */
+__attribute__((used)) unsigned char vm_dma_verify_list[24];
+static volatile uint8_t vm_code_verify;
+static volatile uint8_t vm_code_verify_done;
+static const uint8_t vm_code_verify_marker = 0xa5u;
+
+static void vm_dma_verify_submit(uint16_t source, uint8_t source_bank,
+                                 uint8_t *destination) {
+    uint8_t *next = vm_dma_verify_list + 12u;
+    vm_dma_verify_list[0] = 4u;
+    vm_dma_verify_list[1] = 1u;
+    vm_dma_verify_list[2] = 0u;
+    vm_dma_verify_list[3] = (uint8_t)source;
+    vm_dma_verify_list[4] = (uint8_t)(source >> 8);
+    vm_dma_verify_list[5] = source_bank;
+    vm_dma_verify_list[6] = (uint8_t)(uintptr_t)destination;
+    vm_dma_verify_list[7] =
+        (uint8_t)((uint16_t)(uintptr_t)destination >> 8);
+    vm_dma_verify_list[8] = 0u;
+    vm_dma_verify_list[9] = 0u;
+    vm_dma_verify_list[10] = 0u;
+    vm_dma_verify_list[11] = 0u;
+    next[0] = 0u;
+    next[1] = 1u;
+    next[2] = 0u;
+    next[3] = (uint8_t)(uintptr_t)&vm_code_verify_marker;
+    next[4] =
+        (uint8_t)((uint16_t)(uintptr_t)&vm_code_verify_marker >> 8);
+    next[5] = 0u;
+    next[6] = (uint8_t)(uintptr_t)&vm_code_verify_done;
+    next[7] = (uint8_t)((uint16_t)(uintptr_t)&vm_code_verify_done >> 8);
+    next[8] = 0u;
+    next[9] = 0u;
+    next[10] = 0u;
+    next[11] = 0u;
+    __asm__ volatile(
+        "lda #0\n\t"
+        "sta $d702\n\t"
+        "lda #mos16hi(vm_dma_verify_list)\n\t"
+        "sta $d701\n\t"
+        "lda #mos16lo(vm_dma_verify_list)\n\t"
+        "sta $d700\n\t"
+        ::: "a", "memory");
+}
+
+static uint8_t vm_dma_source_byte(uint8_t bank, uint16_t off,
+                                  uint8_t *value) {
+    uint16_t start = lisp65_ship_io_frame_count();
+    vm_code_verify_done = (uint8_t)~vm_code_verify_marker;
+    vm_dma_verify_submit(off, bank, (uint8_t *)&vm_code_verify);
+    while (vm_code_verify_done != vm_code_verify_marker) {
+        if ((uint16_t)(lisp65_ship_io_frame_count() - start)
+            >= VM_CODE_CONVERGENCE_TIMEOUT_FRAMES) return 0u;
+    }
+    *value = vm_code_verify;
+    return 1u;
+}
+
+/* Resident sufficiency uses one source-derived discriminator byte.  The
+ * source scan precedes the one primary submission; an already-equal span is
+ * trivially converged.  The match test precedes the timeout test, so exact
+ * convergence on frame 64 succeeds.  There is no primary resubmission loop. */
+uint8_t vm_code_load_converged(uint8_t bank, uint16_t off, uint16_t len,
+                               uint8_t *dst) {
+    volatile uint8_t *observed = (volatile uint8_t *)dst;
+    uint8_t expected;
+    uint16_t start;
+    uint16_t i;
+    if (!dst || !len) return 0u;
+
+    for (i = 0u; i < len; ++i) {
+        if (!vm_dma_source_byte(bank, (uint16_t)(off + i), &expected))
+            return 0u;
+        if (observed[i] != expected) break;
+    }
+    if (i == len) return 1u;
+
+    start = lisp65_ship_io_frame_count();
+    vm_code_load(bank, off, len, dst);
+    while (observed[i] != expected) {
+        if ((uint16_t)(lisp65_ship_io_frame_count() - start)
+            >= VM_CODE_CONVERGENCE_TIMEOUT_FRAMES) return 0u;
+    }
+    return 1u;
+}
+#endif
 /* Blob (hot) ins erw. RAM schreiben (Staging-Naht). */
 void vm_ext_write(const uint8_t *src, uint16_t len, uint8_t bank, uint16_t off) {
 #ifdef LISP65_DMA_PROF
@@ -765,7 +872,15 @@ void sympool_read(uint16_t off, char *dst, uint16_t len) {
 #ifdef LISP65_DMA_PROF
     DMA_COUNT(dma_sym);
 #endif
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    if (!vm_code_load_converged(SYMPOOL_EXT_BANK,
+                                (uint16_t)(SYMPOOL_EXT_OFF + off), len,
+                                (uint8_t *)dst))
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "DMA content did not converge; reboot");
+#else
     vm_dma((uint16_t)(SYMPOOL_EXT_OFF + off), SYMPOOL_EXT_BANK, (uint16_t)(uintptr_t)dst, 0, len);
+#endif
 }
 void sympool_write(uint16_t off, const char *src, uint16_t len) {
     vm_dma((uint16_t)(uintptr_t)src, 0, (uint16_t)(SYMPOOL_EXT_OFF + off), SYMPOOL_EXT_BANK, len);
@@ -785,7 +900,15 @@ void sympool_write(uint16_t off, const char *src, uint16_t len) {
 #endif
 obj symval_get(uint16_t i) {
     uint16_t v;
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    if (!vm_code_load_converged(SYMVAL_EXT_BANK,
+                                (uint16_t)(SYMVAL_EXT_OFF + i * 2u), 2u,
+                                (uint8_t *)&v))
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "DMA content did not converge; reboot");
+#else
     vm_dma((uint16_t)(SYMVAL_EXT_OFF + i * 2u), SYMVAL_EXT_BANK, (uint16_t)(uintptr_t)&v, 0, 2);
+#endif
     return (obj)v;
 }
 void symval_set(uint16_t i, obj val) {
@@ -807,7 +930,15 @@ void symval_set(uint16_t i, obj val) {
 #endif
 uint16_t nameoff_get(uint16_t i) {
     uint16_t v;
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    if (!vm_code_load_converged(NAMEOFF_EXT_BANK,
+                                (uint16_t)(NAMEOFF_EXT_OFF + i * 2u), 2u,
+                                (uint8_t *)&v))
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "DMA content did not converge; reboot");
+#else
     vm_dma((uint16_t)(NAMEOFF_EXT_OFF + i * 2u), NAMEOFF_EXT_BANK, (uint16_t)(uintptr_t)&v, 0, 2);
+#endif
     return v;
 }
 void nameoff_set(uint16_t i, uint16_t off) {
@@ -850,7 +981,15 @@ void nameoff_set(uint16_t i, uint16_t off) {
 #endif
 obj symfn_ext_get(uint16_t i) {
     uint16_t v;
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    if (!vm_code_load_converged(SYMFN_EXT_BANK,
+                                (uint16_t)(SYMFN_EXT_OFF + i * 2u), 2u,
+                                (uint8_t *)&v))
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "DMA content did not converge; reboot");
+#else
     vm_dma((uint16_t)(SYMFN_EXT_OFF + i * 2u), SYMFN_EXT_BANK, (uint16_t)(uintptr_t)&v, 0, 2);
+#endif
     return (obj)v;
 }
 void symfn_ext_set(uint16_t i, obj val) {

@@ -24,10 +24,18 @@
       "generated_symbols": [
         "ASM_R3_CHAIN_JOB_ADDR_LO",
         "ASM_R3_CHAIN_JOB_ADDR_HI",
+        "ASM_R3_CHAIN_STATE_ADDR",
+        "ASM_R3_PRODUCT_LOAD_LO",
+        "ASM_R3_PRODUCT_LOAD_HI",
+        "ASM_R3_PRODUCT_CRC_INIT_0",
+        "ASM_R3_PRODUCT_CRC_INIT_1",
+        "ASM_R3_PRODUCT_CRC_INIT_2",
+        "ASM_R3_PRODUCT_CRC_INIT_3",
+        "ASM_R3_CHAIN_CRC_ATTEMPTS",
         "ASM_R3_PRODUCT_ENTRY"
       ],
       "kind": "generated-c-contract",
-      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1"],
+      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1", "ldz\t#0"],
       "path": "scripts/r3-cold-stager-chain.s"
     },
     {
@@ -157,6 +165,18 @@
       "class": "elf-gated-product-leaf",
       "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
       "reason": "Bank-3 staging entry is covered by the ELF-derived C/ASM ABI gate."
+    },
+    {
+      "path": "src/c2_mapped_far_service.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_mapped_far_service_gate.py",
+      "reason": "Mapped Bank-2 entry facade is byte-, MAP-ABI-, ownership-, and final-ELF-gated by the permanent far-service gate."
+    },
+    {
+      "path": "src/c2_mapped_far_convergence.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_mapped_far_asm_equivalence.py",
+      "reason": "Mapped Bank-2 convergence body is byte-, VMA-, ABI-, semantic-equivalence-, mutation-, and final-ELF-gated against the retained C reference."
     },
     {
       "path": "src/l65e_bcode_ordinal.s",

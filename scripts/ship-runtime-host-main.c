@@ -42,6 +42,21 @@ void vm_code_load(uint8_t bank, uint16_t off, uint16_t len, uint8_t *dst) {
     memcpy(dst, ext_code + off, len);
 }
 
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+uint8_t vm_code_load_converged(uint8_t bank, uint16_t off, uint16_t len,
+                               uint8_t *dst) {
+    uint16_t first;
+    if (!dst || !len || bank != 5
+        || (uint32_t)off + len > sizeof(ext_code))
+        return 0u;
+    for (first = 0u; first < len
+         && dst[first] == ext_code[(uint16_t)(off + first)]; ++first) { }
+    if (first == len) return 1u;
+    vm_code_load(bank, off, len, dst);
+    return (uint8_t)(dst[first] == ext_code[(uint16_t)(off + first)]);
+}
+#endif
+
 int main(void) {
     obj truth, entry, fn, result;
     if (setjmp(lisp_toplevel)) {
@@ -50,15 +65,6 @@ int main(void) {
         return 1;
     }
     lisp_toplevel_active = 1;
-    mem_init();
-    vm_dir_reset();
-    vm_init();
-    truth = intern("t");
-    set_sym_value(truth, truth);
-    vm_load_embedded_stdlib();
-#ifdef LISP65_EXT_HEAP
-    gc_freeze_boot();
-#endif
     if (lisp65_ship_io_host_clock_armed()
         || lisp65_ship_io_host_clock_verified()
         || lisp65_ship_io_host_input_armed()) {
@@ -73,6 +79,15 @@ int main(void) {
         fprintf(stderr, "ship-runtime-host: FAIL boot I/O was not proved\n");
         return 1;
     }
+    mem_init();
+    vm_dir_reset();
+    vm_init();
+    truth = intern("t");
+    set_sym_value(truth, truth);
+    vm_load_embedded_stdlib();
+#ifdef LISP65_EXT_HEAP
+    gc_freeze_boot();
+#endif
     entry = intern(LISP65_SHIP_ENTRY);
     fn = sym_function(entry);
     if (!IS_BCODE(fn)) {
@@ -82,7 +97,8 @@ int main(void) {
     vm_status = VM_OK;
     result = vm_run_dir((int)BCODE_IDX(fn), 0, 0);
     if (vm_status != VM_OK && vm_status != VM_HALT) {
-        fprintf(stderr, "ship-runtime-host: FAIL status=%u\n", (unsigned)vm_status);
+        fprintf(stderr, "ship-runtime-host: FAIL status=%u detail=%s\n",
+                (unsigned)vm_status, vm_status_message());
         return 1;
     }
     lisp_toplevel_active = 0;

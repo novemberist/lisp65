@@ -1,0 +1,12 @@
+; Non-promotable target discriminator for the exact VIC-IV unlock pair.
+
+(defun main ()
+  (progn
+    (m65-byte-write 23 160 160)
+    (m65-byte-write 208 47 71)
+    (m65-byte-write 208 47 83)
+    (m65-byte-write 23 161 161)
+    (m65-byte-write 23 162 (m65-byte-read 208 108))
+    (m65-byte-write 23 163 (m65-byte-read 208 109))
+    (m65-byte-write 23 164 (m65-byte-read 208 110))
+    t))

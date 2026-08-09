@@ -27,6 +27,22 @@
       "suite": "tests/bytecode/libs/p0-stdlib-q-base.json",
       "sources": ["lib/stdlib-q.lisp"],
       "exports": ["q", "int->q", "q->int", "q+", "q-", "q*", "q/", "q->string"]
+    },
+    {
+      "name": "m65-hw",
+      "requires": ["core", "q"],
+      "suite": "tests/bytecode/libs/p0-stdlib-m65-hw-base.json",
+      "sources": [
+        "lib/m65-hw-registers.lisp",
+        "lib/m65-hw.lisp"
+      ],
+      "exports": [
+        "m65-byte-read", "m65-byte-write",
+        "m65-bit-set", "m65-bit-clear", "m65-bit-test", "m65-word-read",
+        "m65-word-write", "m65-draw-plot", "m65-draw-line", "m65-draw-fill",
+        "m65-sprite-enable", "m65-sprite-position", "m65-sprite-shape",
+        "m65-sprite-color", "m65-sid-voice"
+      ]
     }
   ]
 }

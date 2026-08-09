@@ -61,23 +61,39 @@
 
 (defun %defstruct-predicate-form (name)
   (list 'defun (%defstruct-symbol "" name "-p") (list 'value)
-        (list 'if (list 'consp 'value)
-              (list 'eq (list 'car 'value) (list 'quote name))
-              nil)))
+        (list '%defstruct-instance-p (list 'quote name) 'value)))
 
 (defun %defstruct-copy-form (name)
   (list 'defun (%defstruct-symbol "copy-" name "") (list 'value)
-        (list 'cons (list 'car 'value)
-              (list 'copy-list (list 'cdr 'value)))))
+        (list '%defstruct-copy 'value)))
 
-(defun %defstruct-update-values (slots selected index)
-  (if slots
-      (cons
-       (if (eq (car slots) selected)
-           'new-value
-           (list 'nth index 'value))
-       (%defstruct-update-values (cdr slots) selected (+ index 1)))
+; Keep generated functions small: the shared operations live in Bank 2
+; instead of being recompiled into every persistent definition.
+(defun %defstruct-instance-p (name value)
+  (if (consp value)
+      (eq (car value) name)
       nil))
+
+(defun %defstruct-copy (value)
+  (cons (car value) (copy-list (cdr value))))
+
+(defun %defstruct-read (index value)
+  (nth index value))
+
+(defun %defstruct-set (index value new-value)
+  (rplaca (nthcdr index value) new-value))
+
+(defun %defstruct-with (name count selected value new-value)
+  (let ((index 1)
+        (values nil))
+    (while (not (> index count))
+      (setq values
+            (cons (if (= index selected)
+                      new-value
+                      (nth index value))
+                  values))
+      (setq index (+ index 1)))
+    (cons name (reverse values))))
 
 (defun %defstruct-one-slot-forms (name all-slots slot index)
   (let ((reader (%defstruct-slot-symbol name "-" slot))
@@ -85,14 +101,13 @@
         (updater (%defstruct-slot-symbol name "-with-" slot)))
     (list
      (list 'defun reader (list 'value)
-           (list 'nth index 'value))
+           (list '%defstruct-read index 'value))
      (list 'defun setter (list 'value 'new-value)
-           (list 'rplaca (list 'nthcdr index 'value) 'new-value))
+           (list '%defstruct-set index 'value 'new-value))
      (list 'defun updater (list 'value 'new-value)
-           (cons 'list
-                 (cons (list 'quote name)
-                       (%defstruct-update-values
-                        all-slots slot 1)))))))
+           (list '%defstruct-with
+                 (list 'quote name) (length all-slots) index
+                 'value 'new-value)))))
 
 (defun %defstruct-slot-forms (name all-slots slots index)
   (if slots
@@ -103,15 +118,30 @@
       nil))
 
 (defun %defstruct-register-forms (name slots)
-  (if slots
-      (let ((reader (%defstruct-slot-symbol name "-" (car slots)))
-            (setter (%defstruct-slot-symbol name "-set-" (car slots))))
-        (list 'if
-              (list '%setf-register
-                    (list 'quote reader) (list 'quote setter))
-              (%defstruct-register-forms name (cdr slots))
-              (list '%setf-register-abort)))
-      (list '%setf-register-commit)))
+  (let ((rest slots)
+        (pairs nil))
+    (while rest
+      (setq pairs
+            (cons
+             (list (%defstruct-slot-symbol name "-" (car rest))
+                   (%defstruct-slot-symbol name "-set-" (car rest)))
+             pairs))
+      (setq rest (cdr rest)))
+    (list '%defstruct-register-layout
+          (list 'quote (reverse pairs)))))
+
+(defun %defstruct-register-layout (pairs)
+  (let ((rest pairs)
+        (valid t))
+    (while (if rest valid nil)
+      (let ((pair (car rest)))
+        (if (%setf-register (car pair) (car (cdr pair)))
+            nil
+            (setq valid nil)))
+      (setq rest (cdr rest)))
+    (if valid
+        (%setf-register-commit)
+        (%setf-register-abort))))
 
 (defun %defstruct-expansion (name slots)
   (cons 'progn

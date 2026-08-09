@@ -1,0 +1,46 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "comfort-track",
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
+  "d81_name": "COMFORT",
+  "provides": ["comfort"],
+  "requires": ["core"],
+  "resident_suite": "p0-stdlib-ship-input-wait-base.json",
+  "description": "Host-only Bank-2 development freight; packaging and public-surface claims remain deferred to a release block.",
+  "sources": [
+    "lib/comfort-strings.lisp",
+    "lib/comfort-trace.lisp",
+    "lib/comfort-who-calls-generated.lisp"
+  ],
+  "functions": [
+    "capitalize",
+    "%comfort-string-split-from",
+    "string-split",
+    "%comfort-trace-remove",
+    "%comfort-trace-wrapper-form",
+    "%comfort-trace-install-form",
+    "trace",
+    "untrace",
+    "%comfort-callers-index",
+    "who-calls"
+  ],
+  "require_all_defuns": true,
+  "require_all_defmacros": true,
+  "max_call_args": 12,
+  "cases": [
+    {"name": "capitalize-empty", "expr": "(capitalize \"\")", "expect": "\"\""},
+    {"name": "capitalize-mixed", "expr": "(capitalize \"hELLO\")", "expect": "\"Hello\""},
+    {"name": "capitalize-leading-nonletter", "expr": "(capitalize \"1ABC\")", "expect": "\"1abc\""},
+    {"name": "string-split-basic", "expr": "(string-split \"a,b,c\" \",\")", "expect": "(\"a\" \"b\" \"c\")"},
+    {"name": "string-split-preserves-empty-fields", "expr": "(string-split \",a,,b,\" \",\")", "expect": "(\"\" \"a\" \"\" \"b\" \"\")"},
+    {"name": "string-split-multichar", "expr": "(string-split \"ab--cd--ef\" \"--\")", "expect": "(\"ab\" \"cd\" \"ef\")"},
+    {"name": "string-split-absent", "expr": "(string-split \"abc\" \",\")", "expect": "(\"abc\")"},
+    {"name": "string-split-empty-input", "expr": "(string-split \"\" \",\")", "expect": "(\"\")"},
+    {"name": "string-split-empty-separator", "expr": "(string-split \"abc\" \"\")", "expect": "(\"abc\")"},
+    {"name": "who-calls-known", "expr": "(who-calls '%ide-region-parts-tail)", "expect": "(%ide-region-parts %ide-region-parts-tail)"},
+    {"name": "who-calls-unknown", "expr": "(who-calls 'comfort-no-such-target)", "expect": "nil"},
+    {"name": "trace-remove-head", "expr": "(%comfort-trace-remove 'a '((a . one) (b . two)))", "expect": "((b . two))"},
+    {"name": "trace-remove-tail", "expr": "(%comfort-trace-remove 'b '((a . one) (b . two)))", "expect": "((a . one))"}
+  ]
+}

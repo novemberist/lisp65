@@ -1,0 +1,57 @@
+{
+  "format": "lisp65-c2-v110-persistent-performance-contract-v1",
+  "recorded_on": "2026-08-07",
+  "scope": {
+    "execution": "host-only",
+    "placement": "Bank 2 library freight",
+    "resident_delta_bytes": 0,
+    "device_contacts": 0,
+    "product_links": 0,
+    "release_claim": false,
+    "public_surface_claim": false,
+    "packaging_deferred_to_release_block": true
+  },
+  "baseline": {
+    "phase_a_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-phase-a-host-reconstruction-receipt.json",
+    "vm_cost_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-defstruct-vm-cost-closure-receipt.json",
+    "defstruct_manifest": "build/post-promotion/defstruct-v1/foundations/defstruct.manifest.json"
+  },
+  "candidate": {
+    "suite": "tests/bytecode/libs/p0-defstruct-v1-lib.json",
+    "integration_suite": "tests/bytecode/libs/p0-place-defstruct-v1-integration.json",
+    "artifact_prefix": "build/post-promotion/v110-performance/defstruct-candidate",
+    "source": "lib/defstruct.lisp"
+  },
+  "budget": {
+    "bank2_headroom_authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-parity-pilot-profile-receipt.json",
+    "bank2_headroom_json_pointer": "/geometry/bank2_headroom_bytes",
+    "minimum_preserved_headroom_bytes": 8192
+  },
+  "price": {
+    "frame_hz": "51.96615805290813",
+    "window_event_ceiling_frames": 1,
+    "append_cycle_ceiling_frames": 98,
+    "historical_cycles_per_vm_instruction": 1100,
+    "target_cpu_hz": 40000000,
+    "safety_margin_numerator": 1,
+    "safety_margin_denominator": 2,
+    "headline_seconds": 180
+  },
+  "sacred_contracts": {
+    "persistent_appends": 9,
+    "publish_last": true,
+    "rollback_correct": true,
+    "final_journal": "CLEAR",
+    "generated_entries": [
+      "make-point",
+      "point-p",
+      "copy-point",
+      "point-x",
+      "point-set-x",
+      "point-with-x",
+      "point-y",
+      "point-set-y",
+      "point-with-y"
+    ]
+  }
+}

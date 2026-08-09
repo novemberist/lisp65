@@ -1,0 +1,108 @@
+{
+  "format": "lisp65-c2-m65-hw-synchronous-pilot-v1",
+  "recorded_on": "2026-08-03",
+  "scope": "v1.4 synchronous MEGA65 drawing, VIC sprite and SID voice freight over existing public primitives",
+  "public_surface": {
+    "m65-byte-read": "(m65-byte-read address-high address-low) -> byte",
+    "m65-byte-write": "(m65-byte-write address-high address-low byte) -> byte",
+    "m65-bit-set": "(m65-bit-set address-high address-low mask) -> new byte",
+    "m65-bit-clear": "(m65-bit-clear address-high address-low mask) -> new byte",
+    "m65-bit-test": "(m65-bit-test address-high address-low mask) -> boolean",
+    "m65-word-read": "(m65-word-read address-high address-low) -> (low-byte . high-byte)",
+    "m65-word-write": "(m65-word-write address-high address-low low-byte high-byte) -> (low-byte . high-byte)",
+    "m65-draw-plot": "(m65-draw-plot x y character-code color) -> t",
+    "m65-draw-line": "(m65-draw-line x0 y0 x1 y1 character-code color) -> t",
+    "m65-draw-fill": "(m65-draw-fill x0 y0 x1 y1 character-code color) -> t",
+    "m65-sprite-enable": "(m65-sprite-enable sprite enabled) -> enabled",
+    "m65-sprite-position": "(m65-sprite-position sprite x y) -> t",
+    "m65-sprite-shape": "(m65-sprite-shape sprite 63-byte-string) -> t",
+    "m65-sprite-color": "(m65-sprite-color sprite color) -> color",
+    "m65-sid-voice": "(m65-sid-voice voice frequency-low frequency-high control attack-decay sustain-release volume) -> t"
+  },
+  "registers": {
+    "vic_key": "0xd02f",
+    "vic_sprite_xy_base": "0xd000",
+    "vic_sprite_x_msb": "0xd010",
+    "vic_sprite_enable": "0xd015",
+    "vic_sprite_color_base": "0xd027",
+    "vic_sprite_pointer_address_low": "0xd06c",
+    "vic_sprite_pointer_address_mid": "0xd06d",
+    "vic_sprite_pointer_address_high": "0xd06e",
+    "sid_voice_base": "0xd400",
+    "sid_volume": "0xd418"
+  },
+  "register_authority": {
+    "generator": "tools/host-lisp/c2_m65_hw_registers.py",
+    "generated_source": "lib/m65-hw-registers.lisp",
+    "rule": "the JSON register map is the sole hand-maintained address authority; private inline-only Lisp constant functions are generated from it and must leave no runtime entries"
+  },
+  "byte_and_word_access": {
+    "byte_domain": [0, 255],
+    "word_representation": "one cons pair (low-byte . high-byte); never a fixnum and no Runtime-only Buffer service",
+    "word_start_ffff": "type error before any I/O because the second byte would wrap",
+    "bit_test_result": "t when any masked bit is set, otherwise nil"
+  },
+  "drawing": {
+    "surface": "the current character-cell screen reported by screen-size",
+    "plot_unit": "one character cell with an 8-bit character code and color 0..15",
+    "line": "inclusive integer Bresenham between two in-bounds cells",
+    "fill": "inclusive axis-aligned rectangle; reversed corners are rejected",
+    "bounds": "both endpoints must be within the live screen dimensions before the first visible write",
+    "bitmap_exclusion": "the historical $2000 H640 bitmap overlaps today's product text; Bank-4 pixels require the separately priced EDMA/flat-memory rider and are not claimed by this pilot"
+  },
+  "sprite": {
+    "indices": [0, 7],
+    "x": [0, 511],
+    "y": [0, 255],
+    "color": [0, 15],
+    "shape_bytes": 63,
+    "shape_representation": "a string of exactly 63 byte-valued characters",
+    "shape_slot": "0x17c0-0x17ff",
+    "shape_pointer": 95,
+    "vic_unlock_rule": "the exact $47/$53 pair is private-inlined into m65-sprite-shape; no standalone %m65-vic-open code object or target TAILCALL may remain",
+    "shape_slot_rule": "one pilot-owned 64-byte slot in the proven 0x17a0-0x17ff screen/island gap; all sprites may share it and loading a new shape changes every sprite that selects pointer 95",
+    "pointer_table_rule": "read the live VIC-IV pointer-table address from $D06C-$D06E after the $47/$53 unlock; reject a non-Bank-0 table or a low byte above $f8 before writing",
+    "padding": "byte 63 is always zeroed after the 63 payload bytes"
+  },
+  "sid": {
+    "voices": [0, 2],
+    "frequency": "two strict byte arguments, low then high",
+    "control_attack_decay_sustain_release": "strict bytes",
+    "volume": [0, 15],
+    "write_order": ["frequency-low", "frequency-high", "attack-decay", "sustain-release", "volume", "control"],
+    "synchronous_limit": "the call writes one complete voice snapshot; sequencing, envelope progression and continuous playback wait for the tick-hook block"
+  },
+  "placement": {
+    "code": "Bank-2 library freight",
+    "admission_budget_bytes": 2048,
+    "resident_code_bytes": 0,
+    "resident_state_bytes": 0,
+    "new_resident_gc_roots": 0,
+    "runtime_overlay_records": 0,
+    "native_primitives": 0,
+    "require_dependency": false
+  },
+  "ship_closure": {
+    "library": "m65-hw",
+    "policy": "reachable-only through the existing ship-builder closure",
+    "sample": "examples/ship/parity-toy",
+    "required_companions": ["core", "q"]
+  },
+  "proof": {
+    "execution_lanes": [
+      "source-compiled P0 VM with modeled RAM, screen, VIC and SID registers",
+      "emitted-artifact P0 VM over the same independent fixtures"
+    ],
+    "positive_witnesses": ["generic memory reads", "generic memory writes", "screen cell writes", "sprite pointer and payload bytes", "SID transaction bytes"],
+    "mutation_families": [
+      "wrong generated register address",
+      "word byte order or wrap",
+      "draw bounds or built-but-not-run",
+      "sprite index, X-MSB, pointer table, shape length or padding",
+      "SID voice stride, write order, volume bound or waveform byte",
+      "resident, native or require dependency"
+    ],
+    "execution_witness": "every domain has positive source and artifact I/O counts; zero executions is red"
+  },
+  "claim_limit": "Host source/artifact semantics and one WPLTO capacity card until the bundled device session proves visible drawing, sprite motion and audible SID output."
+}

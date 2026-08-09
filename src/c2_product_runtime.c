@@ -18,6 +18,7 @@
 #include "c2_product_decoder.h"
 #include "c2_kernal_facade.h"
 #include "c2_kernal_layout.h"
+#include "c2_mapped_far_service.h"
 #include "c2_kernal_runtime.h"
 #include "c2_phase_scratch.h"
 #include "c2_platform_dma.h"
@@ -128,7 +129,19 @@ static c2_stream_context *LISP65_C2_FIXED_BANK0("decode_active")
 
 /* Hardened 20-byte Enhanced-DMA job.  The job owns all high address nibbles;
  * callers never truncate a 28-bit physical address through uintptr_t. */
-static uint8_t LISP65_C2_FIXED_BANK0("edma_job") c2_edma_job[20];
+uint8_t LISP65_C2_FIXED_BANK0("edma_job") c2_edma_job[20];
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+/* One ordinary, explicitly retained owner for the two immutable source-probe
+ * jobs.  It is outside the pinned hot-state ABI; the primary descriptor above
+ * remains byte-for-byte owned by that ABI. */
+uint8_t c2_edma_probe_jobs[40]
+    LISP65_C2_CONVERGENCE_STATE("d705_jobs");
+volatile uint8_t c2_edma_probe_value
+    LISP65_C2_CONVERGENCE_STATE("d705_value");
+volatile uint8_t LISP65_C2_ZP c2_edma_probe_done
+    LISP65_C2_CONVERGENCE_ZP("d705_done");
+const uint8_t c2_edma_probe_marker = 0xa5u;
+#endif
 
 typedef struct __attribute__((may_alias)) {
     c2_stream_context *before;
@@ -268,9 +281,28 @@ C2_APPEND_INLINE void c2_record_u32(uint8_t *p, uint32_t value) {
 static uint8_t c2_publish_exports_from(uint16_t first);
 #endif
 
+#if !defined(__mos__) || !defined(LISP65_C2_ASM_CONVERGENCE)
+static LISP65_C2_MAPPED_FAR_FN
+void c2_edma_prepare(uint8_t *job, uint32_t source, uint32_t target,
+                     uint16_t length, uint8_t command) {
+    job[0] = 0x0bu; job[1] = 0x80u; job[2] = (uint8_t)(source >> 20);
+    job[3] = 0x81u; job[4] = (uint8_t)(target >> 20);
+    job[5] = 0x85u; job[6] = 1u; job[7] = 0u;
+    job[8] = command;
+    job[9] = (uint8_t)length; job[10] = (uint8_t)(length >> 8);
+    job[11] = (uint8_t)source; job[12] = (uint8_t)(source >> 8);
+    job[13] = (uint8_t)((source >> 16) & 0x0fu);
+    job[14] = (uint8_t)target; job[15] = (uint8_t)(target >> 8);
+    job[16] = (uint8_t)((target >> 16) & 0x0fu);
+    job[17] = 0u; job[18] = 0u; job[19] = 0u;
+}
+#endif
+
 C2_KERNAL_RESIDENT void c2_product_physical_copy(
         uint32_t source, uint32_t target, uint16_t length) {
     uint8_t *job = c2_edma_job;
+    /* The historical descriptor uses four option pairs followed by its
+     * terminator and 12-byte F018B list. */
     job[0] = 0x0bu; job[1] = 0x80u; job[2] = (uint8_t)(source >> 20);
     job[3] = 0x81u; job[4] = (uint8_t)(target >> 20);
     job[5] = 0x85u; job[6] = 1u; job[7] = 0u; job[8] = 0u;
@@ -288,6 +320,77 @@ C2_KERNAL_RESIDENT void c2_product_physical_copy(
 }
 
 #define c2_dma_copy c2_product_physical_copy
+
+#if defined(LISP65_CODE_WINDOW_CONVERGENCE) \
+    && (!defined(__mos__) || !defined(LISP65_C2_ASM_CONVERGENCE))
+static LISP65_C2_MAPPED_FAR_FN uint8_t c2_physical_source_byte(
+        uint32_t source, uint8_t *value) {
+    uint8_t *first = c2_edma_probe_jobs;
+    uint8_t *second = c2_edma_probe_jobs + 20u;
+    uint16_t start;
+    c2_edma_prepare(first, source,
+                    (uint32_t)(uint16_t)(uintptr_t)&c2_edma_probe_value,
+                    1u, 4u);
+    c2_edma_prepare(second,
+                    (uint32_t)(uint16_t)(uintptr_t)&c2_edma_probe_marker,
+                    (uint32_t)(uint16_t)(uintptr_t)&c2_edma_probe_done,
+                    1u, 0u);
+    c2_edma_probe_done = (uint8_t)~c2_edma_probe_marker;
+    start = c2_kernal_frame_count_inline();
+    __asm__ volatile(
+        "lda #1\n\tsta $d703\n\tlda #0\n\tsta $d702\n\tsta $d704\n\t"
+        "lda #mos16hi(c2_edma_probe_jobs)\n\tsta $d701\n\t"
+        "lda #mos16lo(c2_edma_probe_jobs)\n\tsta $d705\n\t"
+        ::: "a", "memory");
+    while (c2_edma_probe_done != c2_edma_probe_marker) {
+        if ((uint16_t)(c2_kernal_frame_count_inline() - start)
+            >= C2_DMA_CONTENT_TIMEOUT_FRAMES)
+            return 0u;
+    }
+    *value = c2_edma_probe_value;
+    return 1u;
+}
+#endif
+
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+
+#ifdef __mos__
+#define C2_PHYSICAL_READ_CONVERGED_IMPL \
+    c2_mapped_far_physical_read_converged
+uint8_t c2_physical_read_converged(
+    uint32_t source, uint8_t *destination, uint16_t length);
+#else
+#define C2_PHYSICAL_READ_CONVERGED_IMPL c2_physical_read_converged
+#endif
+#if !defined(__mos__) || !defined(LISP65_C2_ASM_CONVERGENCE)
+LISP65_C2_MAPPED_FAR_FN
+uint8_t C2_PHYSICAL_READ_CONVERGED_IMPL(
+        uint32_t source, uint8_t *destination, uint16_t length) {
+    volatile uint8_t *observed = (volatile uint8_t *)destination;
+    uint8_t expected;
+    uint16_t start;
+    uint16_t i;
+    if (!destination) return 0u;
+    if (!length) return 1u;
+
+    for (i = 0u; i < length; ++i) {
+        if (!c2_physical_source_byte(source + i, &expected)) return 0u;
+        if (observed[i] != expected) break;
+    }
+    if (i == length) return 1u;
+
+    start = c2_kernal_frame_count_inline();
+    c2_product_physical_copy(
+        source, (uint32_t)(uint16_t)(uintptr_t)destination, length);
+    while (observed[i] != expected) {
+        if ((uint16_t)(c2_kernal_frame_count_inline() - start)
+            >= C2_DMA_CONTENT_TIMEOUT_FRAMES)
+            return 0u;
+    }
+    return 1u;
+}
+#endif
+#endif
 
 static uint16_t c2_u16(const uint8_t *p) {
     return (uint16_t)p[0] | (uint16_t)p[1] << 8;
@@ -308,18 +411,28 @@ C2_KERNAL_RESIDENT uint8_t c2_stream_shelf_read(uint32_t offset, void *dst, uint
         limit = LISP65_C2_SESSION_BYTES;
     }
     if (offset > limit || length > limit - offset) return 0;
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    return c2_physical_read_converged(base + offset, (uint8_t *)dst, length);
+#else
     c2_dma_copy(base + offset,
                 (uint32_t)(uint16_t)(uintptr_t)dst, length);
-    return 1;
+    return 1u;
+#endif
 }
 
 C2_KERNAL_RESIDENT uint8_t c2_stream_c2d_read(uint16_t offset, void *dst, uint16_t length) {
     if (offset > LISP65_C2D_REGION_BYTES
         || length > (uint16_t)(LISP65_C2D_REGION_BYTES - offset)) return 0;
+#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+    return vm_code_load_converged(
+        LISP65_C2D_BANK, (uint16_t)(LISP65_C2D_BASE + offset),
+        length, (uint8_t *)dst);
+#else
     c2_facade_vm_code_load(LISP65_C2D_BANK,
                            (uint16_t)(LISP65_C2D_BASE + offset),
                            length, (uint8_t *)dst);
-    return 1;
+    return 1u;
+#endif
 }
 
 C2_KERNAL_RESIDENT uint8_t c2_stream_c2d_write(uint16_t offset, const void *src, uint16_t length) {

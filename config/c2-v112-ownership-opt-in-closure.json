@@ -1,0 +1,124 @@
+{
+  "format": "lisp65-c2-v112-parked-ownership-opt-in-closure-v1",
+  "recorded_on": "2026-08-07",
+  "status": "owner-commissioned-complete-opt-in-inventory",
+  "claim": "Complete source/linker/checker selection vocabulary and canonical opt-out seed-link closure only; no product card, Link 92, media, device, Halt or release claim.",
+  "selector": {
+    "primary_define": "LISP65_CODE_WINDOW_CONVERGENCE",
+    "full_map_switch": "FULL_MAP_OWNERSHIP",
+    "rule": "Every parked ownership member is selected by the explicit Link-91/ownership seam; the canonical scope selects neither branch."
+  },
+  "parked_defines": [
+    "LISP65_CODE_WINDOW_CONVERGENCE",
+    "LISP65_DMA_CONTENT_CONVERGENCE",
+    "LISP65_C2_ASM_CONVERGENCE"
+  ],
+  "parked_sources": [
+    "src/c2_mapped_far_service.s",
+    "src/c2_mapped_far_convergence.s"
+  ],
+  "guarded_consumers": {
+    "src/c2_mapped_far_service.h": [
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "src/c2_platform_dma.c": [
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "src/c2_platform_dma.h": [
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "src/c2_product_runtime.c": [
+      "LISP65_C2_ASM_CONVERGENCE",
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "src/mem.c": [
+      "LISP65_DMA_CONTENT_CONVERGENCE"
+    ],
+    "src/vm.c": [
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "src/vm.h": [
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "src/vm_embed.c": [
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ]
+  },
+  "selected_linker": {
+    "sections": [
+      ".lisp65_c2_convergence_zp",
+      ".lisp65_c2_convergence_state",
+      ".lisp65_c2_static_stack",
+      ".lisp65_c2_mapped_far_facade",
+      ".lisp65_c2_mapped_far_service"
+    ],
+    "input_patterns": [
+      ".lisp65_c2_convergence_zp.*",
+      ".lisp65_c2_convergence_state.*",
+      ".noinit..Lstatic_stack*",
+      ".lisp65_c2_mapped_far_facade.*",
+      ".lisp65_c2_mapped_far_service",
+      ".lisp65_c2_mapped_far_service.*"
+    ],
+    "symbols": [
+      "__lisp65_c2_mapped_far_required",
+      "__lisp65_c2_mapped_far_required_param",
+      "__lisp65_c2_mapped_far_service_start",
+      "__lisp65_c2_mapped_far_service_end",
+      "__lisp65_c2_mapped_far_service_load_start",
+      "__lisp65_c2_mapped_far_service_load_end"
+    ],
+    "assertion_messages": [
+      "compiler static stack escaped its owned 12-byte arena",
+      "runtime overlay floor drifted from its owner contract",
+      "convergence state escaped its named owners",
+      "mapped far facade escaped its resident wall",
+      "mapped far body escaped its Bank-2 owner",
+      "ordinary text displaced the mapped far facade",
+      "mapped CPU slab contract drifted"
+    ],
+    "fixed_overlay_floor": "__lisp65_workbench_overlay_min_start = 0xc354;",
+    "flags": [
+      "-Wl,--no-check-sections",
+      "-Wl,--defsym=__lisp65_c2_mapped_far_required_param=1"
+    ]
+  },
+  "canonical_linker": {
+    "derived_overlay_floor": "__lisp65_workbench_overlay_min_start = ALIGN(__lisp65_workbench_noinit_end + 1, 2);",
+    "required_assertion_message": "C2 inherited noinit/fixed-block geometry drift",
+    "parked_member_instances": 0,
+    "parked_link_flags": 0,
+    "parked_sources": 0,
+    "parked_defines": 0
+  },
+  "full_map_selected_only": {
+    "generated_platform_linkers": [
+      "c.ld",
+      "commodore.ld",
+      "zp-data.ld"
+    ],
+    "final_inventory_additions": [
+      ".lisp65_c2_convergence_zp",
+      ".lisp65_c2_mapped_far_facade",
+      ".lisp65_c2_mapped_far_service",
+      ".lisp65_c2_convergence_state",
+      ".lisp65_c2_static_stack",
+      ".rela.lisp65_c2_mapped_far_facade",
+      ".rela.lisp65_c2_mapped_far_service"
+    ]
+  },
+  "convicted_precedents": [
+    "unconditional-convergence-defines-without-source-owner",
+    "unconditional-static-stack-c074-against-canonical-noinit-c34d"
+  ],
+  "canonical_seed": {
+    "driver": "tools/host-lisp/c2_v112_candidate_product.py",
+    "action": "ownership-closure-seed",
+    "build": "build/c2.3/v1.4.0-ownership-opt-out-seed-closure",
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.12-ownership-opt-out-seed-link-receipt.json",
+    "required_status": "passed-canonical-scope-seed-link-opt-out",
+    "seed_links": 1,
+    "product_links": 0
+  }
+}

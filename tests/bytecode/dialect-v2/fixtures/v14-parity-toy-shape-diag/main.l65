@@ -1,0 +1,15 @@
+; Non-promotable Link-89 discriminator.  The ordinary-RAM witness is written
+; before m65-sprite-shape so a target type error cannot erase its inputs.
+
+(defun main ()
+  (let ((shape
+          "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+    (progn
+      (m65-byte-write 23 160 (m65-byte-read 208 108))
+      (m65-byte-write 23 161 (m65-byte-read 208 109))
+      (m65-byte-write 23 162 (m65-byte-read 208 110))
+      (m65-byte-write 23 163 (string-length shape))
+      (m65-byte-write 23 164 (string-ref shape 0))
+      (m65-sprite-shape 0 shape)
+      (m65-byte-write 23 165 165)
+      t)))

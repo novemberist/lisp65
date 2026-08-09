@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-comfort-track-contract-v1",
+  "recorded_on": "2026-08-06",
+  "scope": {
+    "execution": "host-only",
+    "placement": "Bank 2 development material",
+    "resident_delta_bytes": 0,
+    "device_contacts": 0,
+    "release_claim": false,
+    "public_surface_claim": false,
+    "packaging_deferred_to_release_block": true
+  },
+  "budget": {
+    "bank2_headroom_authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.4-parity-pilot-profile-receipt.json",
+    "bank2_headroom_json_pointer": "/geometry/bank2_headroom_bytes",
+    "minimum_preserved_headroom_bytes": 8192
+  },
+  "shelf_manifests": [
+    "tests/bytecode/dialect-v2/fixtures/v130-static-inputs/idex.manifest.json",
+    "tests/bytecode/dialect-v2/fixtures/v130-static-inputs/m65d.manifest.json"
+  ],
+  "suite": "tests/bytecode/libs/p0-comfort-track.json",
+  "sources": [
+    "lib/comfort-strings.lisp",
+    "lib/comfort-trace.lisp",
+    "lib/comfort-who-calls-generated.lisp"
+  ],
+  "public_names_deferred": [
+    "who-calls",
+    "trace",
+    "untrace",
+    "capitalize",
+    "string-split"
+  ],
+  "who_calls": {
+    "edge_authority": "directory_only.entry_refs",
+    "forbidden_inference": "generic kind-8 symbol literals are not calls",
+    "generated_source": "lib/comfort-who-calls-generated.lisp"
+  },
+  "trace": {
+    "form": "treewalk-evaluated macro expansion with function-cell wrapping",
+    "registry_symbol": "*comfort-trace-bindings*",
+    "requirements": [
+      "capture the original function cell before installation",
+      "root the original callable through the registry symbol value",
+      "wrapper calls the captured callable, never the wrapped name",
+      "untrace restores the exact captured callable"
+    ]
+  },
+  "string_split": {
+    "separator": "non-empty string",
+    "empty_separator": "returns a singleton containing the original string",
+    "empty_fields": "preserved, including leading and trailing fields"
+  }
+}
