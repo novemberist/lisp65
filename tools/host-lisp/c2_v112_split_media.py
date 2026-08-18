@@ -117,9 +117,20 @@ def bind(path: Path) -> dict[str, Any]:
 def configure() -> dict[str, Any]:
     OLD.VARIANTS = VARIANTS
     OLD.configure_shared()
-    shared = OLD.MEDIA.check()
+    # The split-media receipt is a sealed v1.4 readback.  Its shared-system
+    # manifest deliberately names the Link-92 artifact world; asking the live
+    # canonical-media producer to reconstruct that world would couple this
+    # historical check to today's generated resident symbols.  Invert the
+    # readback onto the persisted aggregate and its SHA-bound shared manifest
+    # instead.  Current-source product builds have their own successor gates.
+    sealed = load(OLD.RECEIPT)
+    aggregate = load(OLD.MANIFEST)
+    shared = load(OLD.MEDIA.MANIFEST)
     require(
-        bind(OLD.MEDIA.PRODUCT_MANIFEST) == bind(OLD.PRODUCT_MANIFEST)
+        sealed == aggregate
+        and aggregate.get("shared_media_manifest") == bind(OLD.MEDIA.MANIFEST)
+        and aggregate.get("product_manifest") == bind(OLD.PRODUCT_MANIFEST)
+        and shared.get("canonical_product") == bind(OLD.PRODUCT_MANIFEST)
         and shared.get("artifact_count") == 19,
         "immutable Link-92-r5 shared-system authority drift",
     )

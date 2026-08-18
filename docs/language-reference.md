@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 1.4.0**. The language remains
+This living reference describes **lisp65 1.5.0**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -95,7 +95,11 @@ The released surface includes:
   for polling or raw events;
 - timing: `time`, `wait`;
 - optional strings from the string-extra library: `capitalize`, `string-split`;
-- optional inspection from the inspect library: `who-calls`;
+- optional inspection from the inspect library: `who-calls`, `trace`,
+  `untrace`;
+- optional positional structures from the defstruct library: `defstruct` and
+  its generated constructor, predicate, copier, accessors, setters and
+  functional updaters;
 - strings and character codes: `string-length`, `string-ref`, `search`,
   `string-trim`, `string-upcase`, `string-downcase`, `char-upcase`,
   `char-downcase`, `string=`, `string<`, `string-equal`, `string-prefix-p`,
@@ -107,10 +111,17 @@ The released surface includes:
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
 
-Function tracing is not part of the v1.4.0 surface. The designed tracing pair
-waits for a core ABI that can capture and atomically restore an exact function
-cell; the released surface never includes a tool that cannot restore what it
-changes.
+`trace` and `untrace` take an unquoted function name as macro input. Tracing
+publishes a wrapper transactionally, saves the exact original function-cell
+value and prints ordered `trace-enter`/`trace-exit` records. `untrace` restores
+the captured value exactly.
+
+`(defstruct name slot*)` is positional and option-free. It publishes
+`make-NAME`, `NAME-p`, `copy-NAME`, `NAME-SLOT`, `NAME-set-SLOT`, and
+`NAME-with-SLOT` functions. Records are tagged lists. Setters mutate the given
+record; `with` functions return a copied record with one changed field. The
+defining macro is a durable multi-definition operation and is visibly slower
+than an ordinary expression.
 
 The higher-order sequence functions `every`, `some`, `filter`, `mapcar`, and
 `reduce` traverse cons lists, not packed strings. Dialect V2 does not expose
@@ -146,6 +157,10 @@ RETURN. `(key-event 0)` polls and `(key-event 1)` blocks, returning
 `(key code modifiers)` when an event is available. RUN/STOP remains the global
 abort and is never returned as ordinary input.
 
+At the interactive boundary, PETSCII Shift-Space `$A0` is normalized to the
+ordinary space byte `$20`; display-equivalent whitespace therefore cannot
+silently become a symbol character. Non-displayable control input is rejected.
+
 `(wait frames)` blocks for zero through 16,383 raster frames and returns
 `nil`. It uses the same atomic counter as `time`; RUN/STOP can abort the wait.
 
@@ -174,16 +189,15 @@ First-class byte buffers were added in 1.1. They print as the opaque marker
 `?`. Read their contents with `buffer-ref` and their length with
 `buffer-length`; the marker is not a readable representation.
 
-## Interactive latency limitation
+## Interactive latency boundary
 
-On the reference MEGA65, the first expression compiled after a persistent
-definition typically takes **1.90 to 1.96 seconds**; occasionally longer times
-have been observed. Immediately following warm expressions take about
-**0.20 seconds**. This is a dated, owner-approved release
-limitation, not a passed performance target. Entering related definitions as
-one block amortizes the compiler-tier reload. The committed cure is the C2
-direct-Attic-execution architecture for 1.2; the exception does not renew
-silently if C2 leaves that scope.
+Ordinary non-persistent expressions use the v1.5 direct path and begin at the
+interactive price: nested arithmetic, list access, function calls and structure
+accessors no longer pay the transient append/rollback ceremony. Durable forms
+such as `setq`, `defun`, `defmacro`, and macros that expand into definitions
+still perform publication and rollback work; an ordinary such form costs about
+1.2 seconds on the accepted MEGA65. That visible moment is a documented
+architecture boundary, not a cost paid by already compiled program loops.
 
 ## Calls and errors
 

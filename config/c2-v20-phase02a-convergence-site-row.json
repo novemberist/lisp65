@@ -1,0 +1,72 @@
+{
+  "format": "lisp65-c2-v20-phase02a-convergence-site-row-v1",
+  "status": "host-specified-owner-authorization-pending",
+  "candidate_elf": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+  "precondition": {
+    "device_state": "the D1 E25 state captured under 7478ce73 remains stopped and unchanged",
+    "tuple_and_media_identity_first": true,
+    "runs": 0,
+    "resumes": 0,
+    "resets": 0,
+    "D2_D5_executed": false
+  },
+  "read_protocol": {
+    "code": "CPU-view bytes must be owner-bound before symbol interpretation",
+    "data": "all state and descriptors are physical Bank-0 reads after the full mapping tuple is captured",
+    "dynamic_tail": "decode the last descriptor first, then read only its first-difference target byte and the corresponding immutable physical source byte in the same stopped session"
+  },
+  "physical_bank0_ranges": [
+    {
+      "name": "compiler-static-stack-and-pseudo-registers",
+      "address": "0x0002",
+      "bytes": 30
+    },
+    {
+      "name": "convergence-done-markers",
+      "address": "0x0087",
+      "bytes": 2
+    },
+    {
+      "name": "D700-primary-descriptor",
+      "address": "0xb9d3",
+      "bytes": 12
+    },
+    {
+      "name": "D700-source-probe-descriptors",
+      "address": "0xc000",
+      "bytes": 24
+    },
+    {
+      "name": "D705-source-probe-descriptors-and-value",
+      "address": "0xc019",
+      "bytes": 41
+    },
+    {
+      "name": "D705-primary-descriptor",
+      "address": "0xc0b2",
+      "bytes": 20
+    }
+  ],
+  "linked_symbol_bindings": {
+    "c2_dma_verify_done": ["0x0087", 1],
+    "c2_edma_probe_done": ["0x0088", 1],
+    "c2_dma_list": ["0xb9d3", 12],
+    "c2_dma_verify_list": ["0xc000", 24],
+    "c2_edma_probe_jobs": ["0xc019", 40],
+    "c2_edma_probe_value": ["0xc041", 1],
+    "c2_edma_job": ["0xc0b2", 20]
+  },
+  "site_discriminators": {
+    "D700-C2D-image-row": "the current source-probe or primary descriptor names Bank 5 offset 0x0030, the first C2D image row",
+    "D705-phase02a-outer-Shelf": "the D705 descriptor names physical source 0x08100020 and its primary target is the phase-02a frame's s[32] buffer (caller static-stack pointer minus 32)",
+    "D705-image-reader-Shelf-cross-read": "the D705 descriptor names physical source 0x08100020 and its primary target is c2_stream_product_image_read's source[32] buffer (caller static-stack pointer minus 136)",
+    "probe-timeout-before-primary": "a CLEAR done marker with the current source-probe descriptor and no matching current primary target names the transport family but does not distinguish the two D705 callers"
+  },
+  "nature_discriminators": {
+    "verifier-oracle-fault": "the primary destination equals the immutable source byte while the retained probe value differs; the marker certified the probe job, not the probe byte's visibility",
+    "true-primary-nonconvergence": "after the full 64-frame wait the primary destination still differs from the immutable source byte",
+    "source-probe-timeout": "the relevant done marker remains CLEAR after the bound wait; report the D700/D705 family and do not invent a primary-copy claim",
+    "identity-red": "any descriptor, source address, target geometry or immutable source byte contradicts the bound ELF/media model; make no mechanism claim"
+  },
+  "claim_limit": "This row is specified, not authorized. It permits no device access, fix, resume, repeat boot, D2-D5 execution or release claim. If a D705 probe timed out before a primary descriptor was built, the exact outer-versus-inner Shelf caller remains unresolvable from this row and must stay unnamed."
+}

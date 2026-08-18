@@ -233,7 +233,8 @@ def walls_and_shape(elf: Path) -> tuple[dict[str, int], dict[str, Any]]:
     return walls, shape
 
 
-def stage_product_gate(elf: Path) -> dict[str, Any]:
+def stage_product_gate(
+        elf: Path, *, verifier_base: int = VERIFIER_BASE) -> dict[str, Any]:
     truth = ElfTruth.read(elf, llvm_readobj=P.TOOLCHAIN / "llvm-readobj")
     expected = {
         "c2_lite_stage_boot_family_impl": ".lisp65_boot_bank3_stage",
@@ -259,7 +260,7 @@ def stage_product_gate(elf: Path) -> dict[str, Any]:
             and rows["vm_boot_overlay_chain_expected"]["bytes"] == 6,
             "accepted assembler fallback size drift")
     section = truth.section(P.VERIFIER_BINDING_SECTION)
-    require(section.address == VERIFIER_BASE and section.bytes == 40,
+    require(section.address == verifier_base and section.bytes == 40,
             "repinned 40-byte section geometry drift")
     state = STAGE.state_machine_gate()
     source = STAGE.source_contract_gate()

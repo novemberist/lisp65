@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-c2-v20-link105-phase02a-capture-row-v1",
+  "status": "owner-authorized-9d8ea782",
+  "precondition": {
+    "device_state": "the fresh Link-105 D1 E25 state remains running in the fail-closed loop",
+    "stop_count": 1,
+    "resume_count": 0,
+    "D2_D5_executed": false
+  },
+  "identity": {
+    "first_red": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-source-oracle-d1-first-red-receipt.json",
+    "candidate_elf": "build/c2.3/v2.0-source-oracle-replacement3-card/final/lisp65-c2-substitution-linked.prg.elf",
+    "product_readback": "build/c2.3/v2.0-source-oracle-d1/product-readback.d81",
+    "library_readback": "build/c2.3/v2.0-source-oracle-d1/library-readback.d81",
+    "screen": "build/c2.3/v2.0-source-oracle-d1/product-boot.png"
+  },
+  "static_reads": [
+    {"name": "compiler-static-stack-and-pseudo-registers", "view": "physical-bank0", "address": "0x00000002", "bytes": 30},
+    {"name": "convergence-done-markers", "view": "physical-bank0", "address": "0x00000087", "bytes": 2},
+    {"name": "D700-primary-descriptor", "view": "physical-bank0", "address": "0x0000b9d3", "bytes": 12},
+    {"name": "D705-primary-descriptor", "view": "physical-bank0", "address": "0x0000c0b2", "bytes": 20},
+    {"name": "phase02a-preserved-frame-domain", "view": "physical-bank0", "address": "0x0000cf00", "bytes": 256},
+    {"name": "linked-verifier-oracle-tables", "view": "cpu-resolved-0x0777xxxx", "address": "0x0000c356", "bytes": 24},
+    {"name": "linked-timeout-compare", "view": "cpu-resolved-0x0777xxxx", "address": "0x0000c990", "bytes": 20},
+    {"name": "frame-counter", "view": "cpu-resolved-0x0777xxxx", "address": "0x0000ff83", "bytes": 2}
+  ],
+  "oracle": {
+    "shelf_physical_base": "0x08100000",
+    "shelf_record_base": "0x08100020",
+    "shelf_crc16": ["0xce26", "0x46f5", "0xfccb", "0xbc88", "0xf871", "0xe3f7"],
+    "c2d_crc16": ["0xe27e", "0x8cc6", "0x74d8", "0x277a", "0x9866", "0xe9dc"],
+    "record_bytes": 32,
+    "timeout_frames": 64
+  },
+  "dynamic_reads": "Decode the retained D700/D705 primary descriptor after the complete static checkpoint; read exactly the selected 32-byte target and its immutable 32-byte physical source.",
+  "claim_limit": "One raw-first stopped-state row only. No resume, reset, repeat boot, D2-D5, fix, release, or product claim is authorized."
+}

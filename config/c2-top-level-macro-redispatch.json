@@ -1,0 +1,70 @@
+{
+  "format": "lisp65-c2-top-level-macro-redispatch-contract-v1",
+  "scope": "Link 94 outer-macro expansion before top-level classification",
+  "owner_commission": "d532562e6b27b96cb24baed1ac7754a89740e4c8",
+  "sources": {
+    "compiler": "lib/lcc.lisp",
+    "profile": "lib/dialect-v2/lcc-profile.lisp",
+    "locality": "lib/dialect-v2/lcc-locality.lisp",
+    "prelude": "lib/dialect-v2/prelude-control.lisp",
+    "product_runtime": "lib/dialect-v2/eval-runtime.lisp",
+    "actual_lcc_binary": "build/equivalence/dialect-v2-equivalence-check"
+  },
+  "macro_preload": [
+    "(defmacro define-one (name) (list (quote defun) name nil 41))",
+    "(defmacro define-op (name) (list (quote defmacro) name (list (quote x)) (list (quote list) (list (quote quote) (quote +)) (quote x) 1)))",
+    "(defmacro chain-b (name) (list (quote defun) name nil 17))",
+    "(defmacro chain-a (name) (list (quote chain-b) name))",
+    "(defmacro define-and-call (name value) (list (quote progn) (list (quote defun) name nil value) (list name)))",
+    "(defmacro pass-expression (form) form)"
+  ],
+  "cases": [
+    {
+      "id": "macro-generated-defun",
+      "form": "(lcc-run (quote (define-one generated-one)))",
+      "expected": "generated-one"
+    },
+    {
+      "id": "macro-generated-defun-call",
+      "form": "(lcc-run (quote (generated-one)))",
+      "expected": "41"
+    },
+    {
+      "id": "macro-generated-defmacro",
+      "form": "(lcc-run (quote (define-op add-one)))",
+      "expected": "add-one"
+    },
+    {
+      "id": "macro-generated-defmacro-call",
+      "form": "(lcc-run (quote (add-one 8)))",
+      "expected": "9"
+    },
+    {
+      "id": "nested-outer-macro-chain",
+      "form": "(lcc-run (quote (chain-a chained-one)))",
+      "expected": "chained-one"
+    },
+    {
+      "id": "nested-outer-macro-chain-call",
+      "form": "(lcc-run (quote (chained-one)))",
+      "expected": "17"
+    },
+    {
+      "id": "macro-generated-top-level-progn",
+      "form": "(lcc-run (quote (define-and-call generated-two 23)))",
+      "expected": "23"
+    },
+    {
+      "id": "macro-remains-expression",
+      "form": "(lcc-run (quote (pass-expression (+ 2 3))))",
+      "expected": "5"
+    }
+  ],
+  "walls": {
+    "resident_delta_bytes": 0,
+    "maximum_bank2_delta_bytes": 256,
+    "outer_expansion_only": true,
+    "top_level_progn_redispatch": true,
+    "expression_fallback_preserved": true
+  }
+}

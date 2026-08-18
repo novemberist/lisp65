@@ -483,7 +483,15 @@ def audit_elf(elf: Path) -> dict[str, Any]:
     scratch = truth.symbol("lisp65_c2_phase_scratch")
     helper, helper_body = symbol_body(
         truth, "c2_completion_mode_length")
-    header, header_body = symbol_body(truth, "c2_append_header_phase")
+    # The terminal-return guard keeps the public phase entry as a naked ABI
+    # wrapper and gives the semantic C implementation its own sized symbol.
+    # Audit the implementation when that opt-in symbol is present; auditing
+    # the wrapper would confuse ABI protection with lost completion roles.
+    header_name = (
+        "c2tr_header_body"
+        if truth.symbols_by_name.get("c2tr_header_body")
+        else "c2_append_header_phase")
+    header, header_body = symbol_body(truth, header_name)
     require(
         reader.bytes > 0 and scratch.bytes >= RETIRED_LENGTH_OFFSET + 1,
         "completion reader or phase scratch lacks sized ELF identity")
@@ -510,6 +518,8 @@ def audit_elf(elf: Path) -> dict[str, Any]:
     linked = audit_bodies(
         poll_body, poll.value, reader.value, helper_body, helper.value, retired)
     phase_calls = audit_phase_calls(header_body, header.value, poll.value)
+    phase_calls["phase_entry_symbol"] = "c2_append_header_phase"
+    phase_calls["phase_body_symbol"] = header.name
     phase_mutations = phase_call_mutations(
         header_body, header.value, poll.value)
     linked["structured_call_edges"] = [

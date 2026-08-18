@@ -25,6 +25,9 @@ DIRECT_NAMES = (
     "%c2-direct-value",
     "%c2-direct-values",
     "%c2-published-direct-call-p",
+    "%c2-top-level-expand",
+    "%c2-top-level-run-forms",
+    "%c2-run-expanded",
     "lcc-run",
 )
 
@@ -81,18 +84,34 @@ EXPECTED_FORMS = C.parse_all(
                   nil)
               nil)
           nil))
+    (defun %c2-top-level-expand (form)
+      (if (if (consp form) (%lcc-macro-p (car form)) nil)
+          (%c2-top-level-expand (macroexpand-1 form))
+          form))
+    (defun %c2-top-level-run-forms (forms)
+      (if forms
+          (if (cdr forms)
+              (progn (lcc-run (car forms))
+                     (%c2-top-level-run-forms (cdr forms)))
+              (lcc-run (car forms)))
+          nil))
+    (defun %c2-run-expanded (form)
+      (cond ((if (consp form) (eq (car form) 'progn) nil)
+             (%c2-top-level-run-forms (cdr form)))
+            ((%c2-published-direct-call-p form)
+             (if (null (cdr form))
+                 (funcall (car form))
+                 (apply (car form) (%c2-direct-values (cdr form)))))
+            (t
+             (let ((compiled (%c2-compile-form form)))
+               (cond ((if (consp form) (eq (car form) 'defmacro) nil)
+                      (%set-macro (car (cdr form))
+                                  (lcc-install compiled nil)))
+                     ((if (consp form) (eq (car form) 'defun) nil)
+                      (lcc-install compiled (car (cdr form))))
+                     (t (lcc-install compiled 't)))))))
     (defun lcc-run (form)
-      (if (%c2-published-direct-call-p form)
-          (if (null (cdr form))
-              (funcall (car form))
-              (apply (car form) (%c2-direct-values (cdr form))))
-          (let ((compiled (%c2-compile-form form)))
-            (cond ((if (consp form) (eq (car form) 'defmacro) nil)
-                   (%set-macro (car (cdr form))
-                               (lcc-install compiled nil)))
-                  ((if (consp form) (eq (car form) 'defun) nil)
-                   (lcc-install compiled (car (cdr form))))
-                  (t (lcc-install compiled 't))))))
+      (%c2-run-expanded (%c2-top-level-expand form)))
     """
 )
 
@@ -240,7 +259,8 @@ def _runtime() -> tuple[B.Heap, dict[int, B.CodeObject], dict[Any, str], dict]:
     ledger = C._abi_ledger("dialect-v2", None)
     symbols = {
         *DIRECT_NAMES,
-        "%c2-compile-form", "lcc-install", "%set-macro",
+        "%c2-compile-form", "lcc-install", "%set-macro", "%lcc-macro-p",
+        "macroexpand-1", "progn",
         "defmacro", "defun", "bytecode", "primitive", "quote",
         "%f1-fixed", "%f1-zero", "%f1-optional", "%f1-rest",
         "%f1-variable", "%f1-nested", "%f1-macro", "%f1-undefined",
@@ -263,6 +283,7 @@ def _runtime() -> tuple[B.Heap, dict[int, B.CodeObject], dict[Any, str], dict]:
     for form in EXPECTED_FORMS:
         add(form)
     for text in (
+        "(defun %lcc-macro-p (op) (if (symbolp op) (eq (function-kind op) 'macro) nil))",
         "(defun %f1-zero () 't)",
         "(defun %f1-fixed (x y) (cons x y))",
         "(defun %f1-optional (x &optional y) (cons x y))",
@@ -344,13 +365,11 @@ def executable_fixtures() -> dict[str, Any]:
         "F1 wrong arity did not reach the VM authority directly",
     )
 
-    macro = heap.intern("%f1-macro")
     fallback_cases = (
         ("variable", "(%f1-fixed x 8)", ()),
         ("nested", "(%f1-fixed (%f1-nested) 8)", ()),
         ("compound", "(%f1-fixed (if t 7 8) 9)", ()),
         ("primitive", "(screen-size)", ()),
-        ("macro", "(%f1-macro 7)", (macro,)),
         ("undefined", "(%f1-undefined 7)", ()),
         ("atom", "7", ()),
     )
@@ -402,6 +421,9 @@ def executable_fixtures() -> dict[str, Any]:
         "status": "passed-executable-direct-fallback-and-equivalence-suites",
         "direct": direct_rows,
         "fallback": fallback_rows,
+        "macro_fallback_authority": (
+            "c2.3-link94-top-level-macro-redispatch-receipt.json actual lcc-run lane"
+        ),
         "wrong_arity": {
             "status": "passed-VM-ArityError-without-wrapper",
             "compiler_calls": 0,

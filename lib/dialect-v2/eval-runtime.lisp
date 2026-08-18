@@ -34,7 +34,7 @@
 (defun %c2-direct-values-p (forms)
   (if forms
       (if (consp forms)
-          (if (%c2-direct-value-p (car forms))
+          (if (%c2-direct-expression-p (car forms))
               (%c2-direct-values-p (cdr forms))
               nil)
           nil)
@@ -43,9 +43,25 @@
 (defun %c2-direct-value (form)
   (if (%c2-direct-quoted-value-p form) (car (cdr form)) form))
 
+(defun %c2-direct-expression-p (form)
+  (if (%c2-direct-value-p form)
+      t
+      (if (symbolp form)
+          (boundp form)
+          (%c2-published-direct-call-p form))))
+
+(defun %c2-direct-expression (form)
+  (if (%c2-direct-value-p form)
+      (%c2-direct-value form)
+      (if (symbolp form)
+          (symbol-value form)
+          (if (null (cdr form))
+              (funcall (car form))
+              (apply (car form) (%c2-direct-values (cdr form)))))))
+
 (defun %c2-direct-values (forms)
   (if forms
-      (cons (%c2-direct-value (car forms))
+      (cons (%c2-direct-expression (car forms))
             (%c2-direct-values (cdr forms)))
       nil))
 
@@ -58,24 +74,41 @@
           nil)
       nil))
 
+(defun %c2-top-level-expand (form)
+  (if (if (consp form) (%lcc-macro-p (car form)) nil)
+      (%c2-top-level-expand (macroexpand-1 form))
+      form))
+
+(defun %c2-top-level-run-forms (forms)
+  (if forms
+      (if (cdr forms)
+          (progn (lcc-run (car forms))
+                 (%c2-top-level-run-forms (cdr forms)))
+          (lcc-run (car forms)))
+      nil))
+
+(defun %c2-run-expanded (form)
+  ; A tree made solely of published bytecode calls, bound variable reads and
+  ; already-direct values is a complete execution object.  Evaluate that tree
+  ; left-to-right through the published cells instead of reopening the full
+  ; transient append/publication/rollback transaction.  The CodeObject/VM
+  ; remains the one arity authority.  Definitions, macros, special forms,
+  ; malformed lists, unbound names and undefined operators retain the proven
+  ; compiler path; no persistent form can enter this branch.
+  (cond ((if (consp form) (eq (car form) 'progn) nil)
+         (%c2-top-level-run-forms (cdr form)))
+        ((%c2-published-direct-call-p form)
+         (%c2-direct-expression form))
+        (t
+         (let ((compiled (%c2-compile-form form)))
+           (cond ((if (consp form) (eq (car form) 'defmacro) nil)
+                  (%set-macro (car (cdr form)) (lcc-install compiled nil)))
+                 ((if (consp form) (eq (car form) 'defun) nil)
+                  (lcc-install compiled (car (cdr form))))
+                 (t (lcc-install compiled 't)))))))
+
 (defun lcc-run (form)
-  ; A published bytecode call whose arguments are already values is a complete
-  ; execution object.  Recompiling it as a transient wrapper would reopen the
-  ; full append, publication and rollback transaction without adding
-  ; semantics.  The CodeObject/VM remains the one arity authority; this guard
-  ; only proves that no argument evaluation is being skipped.  Variables,
-  ; nested calls, special forms, malformed lists and unbound names retain the
-  ; proven compiler path.
-  (if (%c2-published-direct-call-p form)
-      (if (null (cdr form))
-          (funcall (car form))
-          (apply (car form) (%c2-direct-values (cdr form))))
-      (let ((compiled (%c2-compile-form form)))
-        (cond ((if (consp form) (eq (car form) 'defmacro) nil)
-               (%set-macro (car (cdr form)) (lcc-install compiled nil)))
-              ((if (consp form) (eq (car form) 'defun) nil)
-               (lcc-install compiled (car (cdr form))))
-              (t (lcc-install compiled 't))))))
+  (%c2-run-expanded (%c2-top-level-expand form)))
 
 (defun %number->string-result (negative codes)
   (%string-from-codes (if negative (cons 45 codes) codes)))

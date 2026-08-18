@@ -1,0 +1,46 @@
+{
+  "format": "lisp65-c2-repl-direct-expression-contract-v1",
+  "accepted_by": "48164d54",
+  "scope": "Phase C REPL direct-expression widening",
+  "baseline": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-repl-pipeline-cost-attribution-receipt.json",
+    "hardware_frames_per_non_direct_form": [60, 62]
+  },
+  "direct_domain": {
+    "operator": "published bytecode function cell",
+    "arguments_recursive": [
+      "fixnum",
+      "string",
+      "nil",
+      "t",
+      "exact unary quote",
+      "bound variable read",
+      "another admitted published bytecode call"
+    ],
+    "evaluation_order": "left-to-right",
+    "arity_authority": "published CodeObject header consumed by the VM",
+    "transaction_effect": "none"
+  },
+  "fallback_wall": {
+    "must_compile": [
+      "setq and every other special form",
+      "defun",
+      "defmacro",
+      "macro expansion whose result is a definition",
+      "unbound variable reference",
+      "undefined or non-bytecode operator",
+      "malformed or improper call"
+    ],
+    "persistent_rule": "Every form which can publish a definition reaches lcc-install; no persistent outcome is admitted by the direct-expression predicate.",
+    "rollback_rule": "The widening does not alter append, publication, execution or rollback code."
+  },
+  "accounting": {
+    "resident_bytes": 0,
+    "transaction_state_bytes": 0,
+    "new_roots": 0,
+    "placement": "Bank-2 product runtime",
+    "product_link_authorized": false,
+    "hardware_claim": false,
+    "release_claim": false
+  }
+}

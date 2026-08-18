@@ -1,0 +1,77 @@
+{
+  "format": "lisp65-c2-v20-map-tuple-d1-e25-capture-row-v1",
+  "status": "host-specified-owner-authorization-pending",
+  "candidate_elf": "build/c2.3/v2.0-map-tuple-fix-replacement-card/final/lisp65-c2-substitution-linked.prg.elf",
+  "observation": {
+    "precondition": "D1 displayed all three liveness lines, then E25 on a red frame without a prompt",
+    "stop_count": 1,
+    "resume_count": 0,
+    "read_session": "tuple first, then only the listed physical Bank-0 ranges in the same stopped session",
+    "D2_D5_executed": false
+  },
+  "tuple_first": [
+    "PC",
+    "SP",
+    "A",
+    "X",
+    "Y",
+    "P",
+    "MAPH",
+    "MAPL",
+    "MB",
+    "CPU-port-ROMC-state"
+  ],
+  "code_rule": "Bind the sampled PC to bytes in the captured CPU view before assigning a symbol.",
+  "data_rule": "Read the listed state as physical Bank-0 RAM after capturing the mapping tuple; a raw ROM-overlaid logical read is not evidence.",
+  "physical_bank0_ranges": [
+    {
+      "name": "boot-publication-zp",
+      "address": "0x002e",
+      "bytes": 9
+    },
+    {
+      "name": "roots-ready-oom-zp",
+      "address": "0x008a",
+      "bytes": 6
+    },
+    {
+      "name": "pending-error-pointer",
+      "address": "0xbfef",
+      "bytes": 2
+    },
+    {
+      "name": "c2-boot-runtime",
+      "address": "0xc080",
+      "bytes": 50
+    }
+  ],
+  "symbol_bindings": {
+    "c2_journal_count": ["0x002e", 2],
+    "pending_code": ["0x0036", 1],
+    "c2_pending_roots": ["0x008a", 2],
+    "c2_ready": ["0x008c", 1],
+    "mem_oom": ["0x008f", 1],
+    "lisp_error_msg": ["0xbfef", 2],
+    "c2_committed_roots": ["0xc080", 2],
+    "c2_decode_active": ["0xc082", 2],
+    "c2_runtime": ["0xc084", 46]
+  },
+  "runtime_layout": {
+    "phase": "0xc0ae",
+    "finished": "0xc0af",
+    "error": "0xc0b0",
+    "reserved_provenance": "0xc0b1",
+    "successful_decode_tuple": {
+      "phase": 13,
+      "finished": 1,
+      "error": 0
+    }
+  },
+  "decision_rows": {
+    "decoder-failure": "error is nonzero, or the successful-decode tuple is absent before roots are committed; report phase/error/provenance only.",
+    "export-publication-failure": "phase=13, finished=1, error=0 and pending/committed roots equal c2_runtime.c2_root_count while c2_ready=0; mem_oom and journal_count further split allocation from structural publication failure.",
+    "identity-or-visibility-red": "pending_code is not 0x25, the runtime pointer/layout contradicts the bound ELF, or physical and mapped reads disagree; make no decoder or publication claim.",
+    "ambiguous": "make no product-mechanism claim and return the one complete row to the owner."
+  },
+  "claim_limit": "This specification authorizes no device access, repeat boot, product fix, D2-D5 execution or E25 submechanism claim."
+}

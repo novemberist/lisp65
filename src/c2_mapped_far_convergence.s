@@ -2,9 +2,12 @@
 ;
 ; This is the product implementation.  The C bodies remain the host/reference
 ; authority, while this leaf fixes the target identity independently of LTO.
-; It deliberately uses only caller-clobbered llvm-mos pseudo registers and
-; the named state owners from the Halt-1 contract: there is no compiler static
-; stack and no private BSS.  Submission return is never content truth.
+; It uses caller-clobbered __rc2..__rc15 and preserves every touched
+; callee-saved llvm-mos imaginary register (__rc16..__rc31) on the hardware
+; stack.  The two public bodies each run underneath one save/restore wrapper,
+; so all eight body exits restore the identical ABI state.  The named state
+; owners from the Halt-1 contract remain unchanged: there is no compiler
+; static stack and no private BSS.  Submission return is never content truth.
 ;
 ; llvm-mos ABI, vm-code entry:
 ;   bank=A, offset=X/__rc2, length=__rc3/__rc4, destination=__rc6/__rc7
@@ -50,6 +53,79 @@
 	.equ C2_TIMEOUT_FRAMES, 64
 	.equ C2_MARKER, 0xa5
 	.equ C2_MARKER_CLEAR, 0x5a
+
+; llvm-mos treats __rc16..__rc31 as callee-saved.  Keep the save and restore
+; sets visibly symmetric; the linked-image ABI gate proves every byte and
+; every public-body exit rather than trusting these macros as source claims.
+	.macro c2_far_save_callee
+	lda __rc16
+	pha
+	lda __rc17
+	pha
+	lda __rc18
+	pha
+	lda __rc19
+	pha
+	lda __rc20
+	pha
+	lda __rc21
+	pha
+	lda __rc22
+	pha
+	lda __rc23
+	pha
+	lda __rc24
+	pha
+	lda __rc25
+	pha
+	lda __rc26
+	pha
+	lda __rc27
+	pha
+	lda __rc28
+	pha
+	lda __rc29
+	pha
+	lda __rc30
+	pha
+	lda __rc31
+	pha
+	.endm
+
+	.macro c2_far_restore_callee
+	pla
+	sta __rc31
+	pla
+	sta __rc30
+	pla
+	sta __rc29
+	pla
+	sta __rc28
+	pla
+	sta __rc27
+	pla
+	sta __rc26
+	pla
+	sta __rc25
+	pla
+	sta __rc24
+	pla
+	sta __rc23
+	pla
+	sta __rc22
+	pla
+	sta __rc21
+	pla
+	sta __rc20
+	pla
+	sta __rc19
+	pla
+	sta __rc18
+	pla
+	sta __rc17
+	pla
+	sta __rc16
+	.endm
 
 ; Shared clock leaf.  Return low in A, high in X, sampled atomically.
 .Lc2_far_frame:
@@ -208,6 +284,15 @@
 	.globl c2_mapped_far_vm_code_load_converged
 	.type c2_mapped_far_vm_code_load_converged,@function
 c2_mapped_far_vm_code_load_converged:
+	sta __rc8
+	c2_far_save_callee
+	lda __rc8
+	jsr .Lc2_d700_body
+	tax
+	c2_far_restore_callee
+	txa
+	rts
+.Lc2_d700_body:
 	sta __rc8
 	stx __rc9
 	lda __rc2
@@ -490,6 +575,15 @@ c2_mapped_far_vm_code_load_converged:
 	.globl c2_mapped_far_physical_read_converged
 	.type c2_mapped_far_physical_read_converged,@function
 c2_mapped_far_physical_read_converged:
+	sta __rc8
+	c2_far_save_callee
+	lda __rc8
+	jsr .Lc2_d705_body
+	tax
+	c2_far_restore_callee
+	txa
+	rts
+.Lc2_d705_body:
 	sta __rc8
 	stx __rc9
 	lda __rc2

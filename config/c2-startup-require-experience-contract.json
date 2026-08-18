@@ -1,0 +1,78 @@
+{
+  "format": "lisp65-c2-startup-require-experience-contract-v1",
+  "accepted_by": "236eba09f55d396e62090a379821df91b81ab8ee",
+  "scope": "Experience pillars one and two: cold-boot liveness and require intent",
+  "boot": {
+    "activation_define": "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+    "screen_base": 2048,
+    "screen_columns": 80,
+    "progress": [
+      {
+        "id": "stager",
+        "owner": "separate AUTOBOOT stager",
+        "row": 8,
+        "message": "LISP65: STAGING MEDIA",
+        "must_precede": "io_enable"
+      },
+      {
+        "id": "heap",
+        "owner": "disposable .lisp65_boot overlay",
+        "row": 9,
+        "message": "LISP65: BUILDING HEAP",
+        "must_precede": "mem_init heap construction"
+      },
+      {
+        "id": "libraries",
+        "owner": "transported .lisp65_rt_c2d_00 slice",
+        "row": 10,
+        "message": "LISP65: LOADING LIBRARIES",
+        "must_precede": "C2D validation and read"
+      }
+    ],
+    "terminal_life_sign": {
+      "banner": "WORKBENCH 1.4.0",
+      "prompt": "lisp65>",
+      "owner": "existing Bank-2 banner and REPL"
+    },
+    "timing_consumers_unchanged": {
+      "cold_boot_upper_bound_seconds": 27.653,
+      "release_acceptance_window_seconds": 45
+    },
+    "target_micro_price_bytes": {
+      "separate_stager": 116,
+      "disposable_boot_overlay": 116,
+      "transported_decoder_slice": 133,
+      "resident": 0
+    }
+  },
+  "require": {
+    "activation": "successor source substitution; historical product worlds retain the accepted definition",
+    "intent_prefix": "loading ",
+    "dynamic_name_authority": "symbol-name of the requested library",
+    "intent_suffix": "...",
+    "newline": true,
+    "must_precede": [
+      "%require-fast-loaded-p",
+      "%l65i-parse",
+      "%require-resolve"
+    ],
+    "terminal_result_owner": "ordinary REPL result echo",
+    "non_symbol_output": "none",
+    "accepted_target_baselines": {
+      "first_seconds": 12,
+      "repeat_seconds": 9,
+      "first_vm_instructions": 136765,
+      "repeat_vm_instructions": 134788,
+      "first_prim67_reads": 399,
+      "repeat_prim67_reads": 384
+    }
+  },
+  "accounting": {
+    "resident_bytes": 0,
+    "mutable_state_bytes": 0,
+    "maximum_require_bank2_delta_bytes": 512,
+    "product_link_authorized": false,
+    "hardware_claim": false,
+    "release_claim": false
+  }
+}

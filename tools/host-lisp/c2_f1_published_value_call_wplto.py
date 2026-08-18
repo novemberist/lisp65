@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
@@ -29,6 +30,9 @@ RECEIPTS = BUILD / "receipts"
 STATIC_RECEIPT = RECEIPTS / "f1-static-plane-authority.json"
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 RECEIPT = EVIDENCE / "c2.2-f1-published-value-call-wplto-receipt.json"
+VMA_GOLDEN = ROOT / (
+    "tests/bytecode/dialect-v2/golden-layout/"
+    "c2-full-map-owned-vma-invariants-v3.json")
 EXPECTED_STATIC = 34748
 EXPECTED_ENTRIES = 596
 EXPECTED_RESOLUTIONS = 2283
@@ -88,6 +92,28 @@ def bank2_fixture_product() -> dict[str, Any]:
     return {"host_c2d_v6": {"artifacts": artifacts}}
 
 
+def capacity_contract(arena_id: str, section: str) -> dict[str, Any]:
+    """Resolve one section's capacity from its named Golden arena."""
+    golden = load(VMA_GOLDEN)
+    arenas = [row for row in golden["capacity_arenas"]
+              if row["id"] == arena_id]
+    require(len(arenas) == 1, f"capacity arena identity drift: {arena_id}")
+    arena = arenas[0]
+    require(
+        section in arena["members"]
+        and int(arena["end_exclusive"]) > int(arena["start"]),
+        f"capacity arena/section domain mismatch: {arena_id}/{section}",
+    )
+    return {
+        "arena": arena_id,
+        "section": section,
+        "bytes": int(arena["end_exclusive"]) - int(arena["start"]),
+        "start": int(arena["start"]),
+        "end_exclusive": int(arena["end_exclusive"]),
+        "golden": bind(VMA_GOLDEN),
+    }
+
+
 def bank2_target_fixture(product: dict[str, Any]) -> dict[str, Any]:
     artifacts = product["host_c2d_v6"]["artifacts"]
     shelf_path = ROOT / artifacts["shelf"]["path"]
@@ -112,9 +138,13 @@ def bank2_target_fixture(product: dict[str, Any]) -> dict[str, Any]:
     c2d = c2d_path.read_bytes()
     expected_plane = expected_path.read_bytes()
     scratch = workbench_path.read_bytes()
+    static_bytes = int(artifacts["code"]["bytes"])
+    capacity = capacity_contract(
+        "workbench-boot-overlay", ".lisp65_workbench_overlay")
     require(
-        len(expected_plane) == EXPECTED_STATIC
-        and 0 < len(scratch) <= 1792,
+        bind(expected_path) == artifacts["code"]
+        and len(expected_plane) == static_bytes
+        and 0 < len(scratch) <= min(capacity["bytes"], static_bytes),
         "F1 Bank-2 target fixture artifact geometry drift",
     )
     rows: list[dict[str, Any]] = []
@@ -139,9 +169,9 @@ def bank2_target_fixture(product: dict[str, Any]) -> dict[str, Any]:
             "bytes": length, "crc32": f"0x{crc:08x}",
         })
         cursor += length
-    require(cursor == EXPECTED_STATIC,
+    require(cursor == static_bytes,
             "F1 Bank-2 records do not close the exact plane")
-    scratch_plane = scratch + bytes(EXPECTED_STATIC - len(scratch))
+    scratch_plane = scratch + bytes(static_bytes - len(scratch))
     scratch_matches = sum(
         (zlib.crc32(scratch_plane[row["target"]:
                                   row["target"] + row["bytes"]])
@@ -157,6 +187,8 @@ def bank2_target_fixture(product: dict[str, Any]) -> dict[str, Any]:
         "static_plane_bytes": cursor,
         "expected_plane_all_target_crcs": "passed",
         "workbench_scratch_bytes": len(scratch),
+        "workbench_capacity_domain": capacity,
+        "workbench_headroom_bytes": capacity["bytes"] - len(scratch),
         "workbench_scratch_passing_records": scratch_matches,
         "ready_if_workbench_scratch_remains": False,
         "shelf": bind(shelf_path),
@@ -165,6 +197,122 @@ def bank2_target_fixture(product: dict[str, Any]) -> dict[str, Any]:
         "workbench": bind(workbench_path),
         "linked_elf": bind(elf),
     }
+
+
+def target_identity_source_gate(source: str | None = None) -> dict[str, Any]:
+    """Prove that the target fixture consumes artifact identity, not history."""
+    text = (Path(__file__).read_text(encoding="utf-8")
+            if source is None else source)
+    tree = ast.parse(text)
+    node = next((item for item in tree.body
+                 if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+                 and item.name == "bank2_target_fixture"), None)
+    require(node is not None, "F1 target fixture function absent")
+    body = ast.get_source_segment(text, node) or ""
+    required = (
+        'static_bytes = int(artifacts["code"]["bytes"])',
+        'bind(expected_path) == artifacts["code"]',
+        "len(expected_plane) == static_bytes",
+        "cursor == static_bytes",
+        "bytes(static_bytes - len(scratch))",
+    )
+    require("EXPECTED_STATIC" not in body and all(row in body for row in required),
+            "F1 target fixture regressed from candidate identity to position")
+    return {
+        "status": "passed-F1-target-fixture-candidate-identity-not-position",
+        "candidate_size_source": "artifacts.code.bytes",
+        "candidate_content_source": "full artifacts.code binding",
+        "historical_static_constant_consumed": False,
+    }
+
+
+def target_identity_mutations() -> list[str]:
+    source = Path(__file__).read_text(encoding="utf-8")
+    cases = {
+        "restore-historical-size": source.replace(
+            'static_bytes = int(artifacts["code"]["bytes"])',
+            "static_bytes = EXPECTED_STATIC", 1),
+        "drop-content-identity": source.replace(
+            'bind(expected_path) == artifacts["code"]\n        and ', "", 1),
+        "pin-plane-length": source.replace(
+            "len(expected_plane) == static_bytes",
+            "len(expected_plane) == EXPECTED_STATIC", 1),
+        "pin-record-closure": source.replace(
+            "cursor == static_bytes", "cursor == EXPECTED_STATIC", 1),
+    }
+    rejected: list[str] = []
+    for name, mutant in cases.items():
+        try:
+            target_identity_source_gate(mutant)
+        except ProbeError:
+            rejected.append(name)
+    require(len(rejected) == len(cases),
+            "F1 candidate-identity mutation survived")
+    return rejected
+
+
+def capacity_domain_source_gate(source: str | None = None) -> dict[str, Any]:
+    """Prove that each capacity comparison names and validates its arena."""
+    text = (Path(__file__).read_text(encoding="utf-8")
+            if source is None else source)
+    tree = ast.parse(text)
+    functions = {item.name: item for item in tree.body
+                 if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))}
+    require("capacity_contract" in functions
+            and "bank2_target_fixture" in functions,
+            "F1 capacity-domain functions absent")
+    contract = ast.get_source_segment(text, functions["capacity_contract"]) or ""
+    target = ast.get_source_segment(text, functions["bank2_target_fixture"]) or ""
+    require(
+        'if row["id"] == arena_id' in contract
+        and 'section in arena["members"]' in contract
+        and '"bytes": int(arena["end_exclusive"]) - int(arena["start"])'
+            in contract
+        and '"workbench-boot-overlay", ".lisp65_workbench_overlay"'
+            in target
+        and 'min(capacity["bytes"], static_bytes)' in target
+        and "min(1792, static_bytes)" not in target
+        and "min(2730, static_bytes)" not in target,
+        "F1 capacity comparison is not owned by its named Golden arena",
+    )
+    capacity = capacity_contract(
+        "workbench-boot-overlay", ".lisp65_workbench_overlay")
+    require(capacity["bytes"] == 2730,
+            "Workbench capacity contract no longer resolves to 2,730 bytes")
+    return {
+        "status": "passed-F1-capacity-owned-by-named-Golden-arena",
+        "arena": capacity["arena"],
+        "section": capacity["section"],
+        "capacity_bytes": capacity["bytes"],
+        "numeric_capacity_pinned_in_consumer": False,
+        "cross_domain_comparison_allowed": False,
+        "golden": capacity["golden"],
+    }
+
+
+def capacity_domain_mutations() -> list[str]:
+    source = Path(__file__).read_text(encoding="utf-8")
+    cases = {
+        "substitute-runtime-slice-arena": source.replace(
+            '"workbench-boot-overlay", ".lisp65_workbench_overlay"',
+            '"runtime-overlay-slices", ".lisp65_workbench_overlay"', 1),
+        "pin-workbench-number": source.replace(
+            'min(capacity["bytes"], static_bytes)',
+            "min(2730, static_bytes)", 1),
+        "drop-arena-identity": source.replace(
+            'if row["id"] == arena_id', "if True", 1),
+        "drop-section-membership": source.replace(
+            'section in arena["members"]', "True", 1),
+    }
+    rejected: list[str] = []
+    for name, mutant in cases.items():
+        try:
+            capacity_domain_source_gate(mutant)
+        except (ProbeError, KeyError):
+            rejected.append(name)
+    require(rejected == list(cases),
+            "F1 capacity-domain mutation survived")
+    return rejected
 
 
 def configure() -> None:
@@ -415,4 +563,19 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--target-identity-selftest"]:
+        try:
+            gate = target_identity_source_gate()
+            rejected = target_identity_mutations()
+            domain = capacity_domain_source_gate()
+            domain_rejected = capacity_domain_mutations()
+        except (ProbeError, SyntaxError, OSError) as error:
+            print("c2-f1-target-identity: FIRST RED: " + str(error),
+                  file=sys.stderr)
+            raise SystemExit(2)
+        print("c2-f1-target-identity: PASS "
+              f"mutations={len(rejected) + len(domain_rejected)} "
+              f"source={gate['candidate_size_source']} "
+              f"arena={domain['arena']}")
+        raise SystemExit(0)
     raise SystemExit(main())

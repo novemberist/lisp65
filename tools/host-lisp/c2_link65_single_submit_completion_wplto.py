@@ -80,9 +80,15 @@ def configure() -> None:
     BASE.RUNNER_PATH = Path(__file__)
 
 
-def linked_gates() -> tuple[dict[str, Any], dict[str, Any]]:
-    linked = LENGTH.audit_elf(BASE.ELF)
-    abi = ABI.audit_elf(BASE.ELF, require_bank3_chain=True)
+def linked_gates(
+        elf: Path | None = None, *, receipt: Path | None = None
+        ) -> tuple[dict[str, Any], dict[str, Any]]:
+    if elf is None:
+        elf = BASE.ELF
+    if receipt is None:
+        receipt = LINKED_GATE
+    linked = LENGTH.audit_elf(elf)
+    abi = ABI.audit_elf(elf, require_bank3_chain=True)
     require(
         linked["status"] ==
             "passed-linked-stateless-mode-derived-completion-length"
@@ -109,7 +115,7 @@ def linked_gates() -> tuple[dict[str, Any], dict[str, Any]]:
         "status":
             "passed-single-submit-local-observation-and-complete-leaf-ABI",
         "authority": {
-            "ELF": bind(BASE.ELF),
+            "ELF": bind(elf),
             "mode_length_source": bind(
                 ROOT / "src/c2_completion_mode_length.s"),
             "mode_length_gate": bind(Path(LENGTH.__file__)),
@@ -127,7 +133,7 @@ def linked_gates() -> tuple[dict[str, Any], dict[str, Any]]:
             "hardware_runs": 0,
         },
     }
-    write_receipt(LINKED_GATE, value)
+    write_receipt(receipt, value)
     return linked, abi
 
 

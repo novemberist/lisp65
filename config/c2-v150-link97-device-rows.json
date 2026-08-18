@@ -1,0 +1,144 @@
+{
+  "format": "lisp65-c2-v150-link97-device-rows-v1",
+  "session_authority": "config/c2-v150-link97-device-session.json",
+  "rows": [
+    {
+      "form": "(require (quote inspect))",
+      "id": "d2-require-inspect",
+      "oracle": {"kind": "ordered", "values": ["loading inspect...", "t"]},
+      "phase": "D2",
+      "quiet_floor_seconds": 30
+    },
+    {
+      "form": "(require (quote string-extra))",
+      "id": "d2-require-string-extra",
+      "oracle": {"kind": "ordered", "values": ["loading string-extra...", "t"]},
+      "phase": "D2",
+      "quiet_floor_seconds": 30
+    },
+    {
+      "form": "(defun trace-probe (x) (+ x 1))",
+      "id": "d2-define-probe",
+      "oracle": {"kind": "exact", "value": "trace-probe"},
+      "phase": "D2",
+      "quiet_floor_seconds": 5
+    },
+    {
+      "form": "(trace trace-probe)",
+      "id": "d2-install-trace",
+      "oracle": {"kind": "exact", "value": "trace-probe"},
+      "phase": "D2",
+      "quiet_floor_seconds": 5
+    },
+    {
+      "form": "(trace-probe 4)",
+      "id": "d2-traced-call",
+      "oracle": {
+        "kind": "ordered",
+        "values": ["(trace-enter trace-probe 4)", "(trace-exit trace-probe 5)", "5"]
+      },
+      "phase": "D2",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(untrace trace-probe)",
+      "id": "d2-remove-trace",
+      "oracle": {"kind": "exact", "value": "trace-probe"},
+      "phase": "D2",
+      "quiet_floor_seconds": 5
+    },
+    {
+      "form": "(trace-probe 4)",
+      "id": "d2-restored-call",
+      "oracle": {"forbid": ["trace-enter", "trace-exit"], "kind": "exact", "value": "5"},
+      "phase": "D2",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(require (quote defstruct))",
+      "id": "d3-require-defstruct",
+      "oracle": {"kind": "ordered", "values": ["loading defstruct...", "t"]},
+      "phase": "D3",
+      "quiet_floor_seconds": 180
+    },
+    {
+      "form": "(defstruct point x y)",
+      "id": "d3-define-point",
+      "oracle": {"kind": "exact", "value": "t"},
+      "phase": "D3",
+      "quiet_floor_seconds": 240
+    },
+    {
+      "form": "(make-point 3 4)",
+      "id": "d3-make-point",
+      "oracle": {"kind": "exact", "value": "(point 3 4)"},
+      "phase": "D3",
+      "quiet_floor_seconds": 30
+    },
+    {
+      "form": "(+ 1 (* 2 3))",
+      "id": "d4-nested-arithmetic",
+      "oracle": {"kind": "exact", "value": "7"},
+      "phase": "D4",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(point-y (make-point 3 4))",
+      "id": "d4-accessor",
+      "oracle": {"kind": "exact", "value": "4"},
+      "phase": "D4",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(car (cdr (list 1 2)))",
+      "id": "d4-list-read",
+      "oracle": {"kind": "exact", "value": "2"},
+      "phase": "D4",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(setq v15-ceremony-probe 1)",
+      "id": "d4-durable-ceremony",
+      "oracle": {"kind": "exact", "value": "1"},
+      "phase": "D4",
+      "quiet_floor_seconds": 3,
+      "timing_authority": "structural 60/62-frame price; 72-frame release ceiling, not remeasured by this postcondition row"
+    },
+    {
+      "form": "(defun v15-perf-probe (x) (+ x 1))",
+      "id": "d5-setup-published-call",
+      "oracle": {"kind": "exact", "value": "v15-perf-probe"},
+      "phase": "D5",
+      "quiet_floor_seconds": 5
+    },
+    {
+      "form": "(time (car (cdr (list 1 2))))",
+      "id": "d5-list-read",
+      "oracle": {"kind": "time", "max_frames": 2, "value": "2"},
+      "phase": "D5",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+      "id": "d5-list-write",
+      "oracle": {"kind": "time", "max_frames": 2, "value": "(9 2)"},
+      "phase": "D5",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(time (string-ref \"abc\" 1))",
+      "id": "d5-string-op",
+      "oracle": {"kind": "time", "max_frames": 2, "value": "98"},
+      "phase": "D5",
+      "quiet_floor_seconds": 3
+    },
+    {
+      "form": "(time (v15-perf-probe 41))",
+      "id": "d5-published-call",
+      "oracle": {"kind": "time", "max_frames": 2, "value": "42"},
+      "phase": "D5",
+      "quiet_floor_seconds": 3
+    }
+  ],
+  "status": "prepared-not-run"
+}

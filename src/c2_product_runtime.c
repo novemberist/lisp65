@@ -75,6 +75,59 @@ static inline void c2_header_watermark(uint8_t header[48], uint16_t value);
 #endif
 #define C2_APPEND_SECTION(name) __attribute__((noinline, section(".lisp65_rt_c2append_" name)))
 #define C2_APPEND_INLINE static __attribute__((always_inline)) inline
+
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+/*
+ * Guard the actual overlay ABI, not a C helper frame.  __call_indir tail-jumps
+ * into this naked wrapper, so $0101,X/$0102,X are the sole hardware return
+ * word for the phase.  The body may use any C prologue and any number of
+ * returns; they all rejoin here.  The wrapper snapshots that word plus the
+ * already-owned phase-owner handoff before entry, compares them before RTS,
+ * records the first differing byte with tag-last commit, restores the shadow,
+ * and continues.  A missing arm or invalid initial owner cannot be restored
+ * honestly and enters the existing fail-closed sink.
+ *
+ * No resident declaration is added.  Arm, shadow and first-mismatch state
+ * occupy $B582..$B591 inside the proven owner-free $B582..$B5C4 interval;
+ * the ordinary product image delivers that gap as zero-filled RAM.
+ */
+#define C2TR_STR_INNER(value) #value
+#define C2TR_STR(value) C2TR_STR_INNER(value)
+#define C2TR_WRAPPER_ASM(body, transfer_id) \
+    "tsx\n\t" \
+    "lda $0101,x\n\tsta $b583\n\t" \
+    "lda $0102,x\n\tsta $b584\n\t" \
+    "lda $89\n\tcmp #2\n\tbne 9f\n\tsta $b585\n\t" \
+    "lda #1\n\tsta $b582\n\t" \
+    "jsr " C2TR_STR(body) "\n\tpha\n\t" \
+    "dec $b582\n\tbne 9f\n\t" \
+    "tsx\n\tlda $0102,x\n\tcmp $b583\n\tbne 1f\n\t" \
+    "lda $0103,x\n\tcmp $b584\n\tbne 2f\n\t" \
+    "lda $89\n\tcmp $b585\n\tbeq 5f\n\tldx #2\n\tbra 4f\n" \
+    "1:\n\tldx #0\n\tbra 4f\n" \
+    "2:\n\tldx #1\n\tbra 4f\n" \
+    "4:\n\ttay\n\t" \
+    "lda $b583+(" transfer_id "*3)\n\tbne 6f\n\t" \
+    "tya\n\tsta $b584+(" transfer_id "*3)\n\t" \
+    "lda $b583,x\n\tsta $b585+(" transfer_id "*3)\n\t" \
+    "inx\n\tstx $b583+(" transfer_id "*3)\n" \
+    "6:\n\ttsx\n\tlda $b583\n\tsta $0102,x\n\t" \
+    "lda $b584\n\tsta $0103,x\n\t" \
+    "lda $b585\n\tsta $89\n" \
+    "5:\n\tpla\n\trts\n" \
+    "9:\n\tjmp c2_kernal_fail_closed"
+
+#define C2TR_DEFINE_PHASE_WRAPPER(public_name, name, transfer_id) \
+    C2_APPEND_SECTION(C2TR_STR(name)) \
+    __attribute__((naked, used)) uint8_t public_name(void *opaque) { \
+        __asm__ volatile(C2TR_WRAPPER_ASM(c2tr_##name##_body, \
+                                          C2TR_STR(transfer_id))); \
+    }
+#define C2TR_BODY_USED __attribute__((used))
+#else
+#define C2TR_DEFINE_PHASE_WRAPPER(public_name, name, transfer_id)
+#define C2TR_BODY_USED
+#endif
 #ifdef __mos__
 /* The target definition is the named, sized, ABI-gated assembler leaf in
  * rtov_crc_mem.s.  C2J bookends reuse it instead of materializing another
@@ -411,7 +464,13 @@ C2_KERNAL_RESIDENT uint8_t c2_stream_shelf_read(uint32_t offset, void *dst, uint
         limit = LISP65_C2_SESSION_BYTES;
     }
     if (offset > limit || length > limit - offset) return 0;
-#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+#ifdef LISP65_C2_MAP_CPU_TRANSPORT
+    extern uint8_t c2_facade_map_cpu_read(uint32_t, uint8_t *, uint16_t)
+        __asm__("c2_facade_runtime_overlay_exec");
+    uint8_t result = c2_facade_map_cpu_read(
+        base + offset, (uint8_t *)dst, length);
+    return result;
+#elif defined(LISP65_CODE_WINDOW_CONVERGENCE)
     return c2_physical_read_converged(base + offset, (uint8_t *)dst, length);
 #else
     c2_dma_copy(base + offset,
@@ -423,7 +482,15 @@ C2_KERNAL_RESIDENT uint8_t c2_stream_shelf_read(uint32_t offset, void *dst, uint
 C2_KERNAL_RESIDENT uint8_t c2_stream_c2d_read(uint16_t offset, void *dst, uint16_t length) {
     if (offset > LISP65_C2D_REGION_BYTES
         || length > (uint16_t)(LISP65_C2D_REGION_BYTES - offset)) return 0;
-#ifdef LISP65_CODE_WINDOW_CONVERGENCE
+#ifdef LISP65_C2_MAP_CPU_TRANSPORT
+    extern uint8_t c2_facade_map_cpu_read(uint32_t, uint8_t *, uint16_t)
+        __asm__("c2_facade_runtime_overlay_exec");
+    uint8_t result = c2_facade_map_cpu_read(
+        ((uint32_t)LISP65_C2D_BANK << 16)
+            + (uint16_t)(LISP65_C2D_BASE + offset),
+        (uint8_t *)dst, length);
+    return result;
+#elif defined(LISP65_CODE_WINDOW_CONVERGENCE)
     return vm_code_load_converged(
         LISP65_C2D_BANK, (uint16_t)(LISP65_C2D_BASE + offset),
         length, (uint8_t *)dst);
@@ -2597,7 +2664,11 @@ C2_APPEND_SECTION("entries") uint8_t c2_append_entries_phase(void *opaque) {
     return C2_STREAM_OK;
 }
 
-C2_APPEND_SECTION("header") uint8_t c2_append_header_phase(void *opaque) {
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#define c2_append_header_phase c2tr_header_body
+#endif
+C2TR_BODY_USED C2_APPEND_SECTION("header") uint8_t c2_append_header_phase(
+        void *opaque) {
     C2_INSTALL_TRACE_STAMP_SLOT(LISP65_C2_APPEND_HEADER_SLOT);
     C2_FRAME_ATTRIBUTION_STAMP(LISP65_C2_FRAME_ATTR_APPEND_HEADER);
     c2_append_state *w = opaque; uint8_t mode; uint16_t i;
@@ -2677,6 +2748,10 @@ C2_APPEND_SECTION("header") uint8_t c2_append_header_phase(void *opaque) {
     C2AW_COMPLETION_MARK(w) = 0u;
     return C2_STREAM_OK;
 }
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#undef c2_append_header_phase
+#endif
+C2TR_DEFINE_PHASE_WRAPPER(c2_append_header_phase, header, 1)
 
 #ifdef LISP65_C2_LITE_COLD_EVICTION
 /* C2-lite publication captures every cold C2I fact once, before exports are
@@ -2740,11 +2815,14 @@ uint8_t c2_append_publish_plan_phase(void *opaque) {
  * phase consumes those rows, interns names and overwrites each row with its
  * source-free publication form.  Header publication cannot occur between the
  * two slots, and the marker rejects skip or replay. */
-C2_APPEND_SECTION("publish_plan_scan")
-uint8_t c2_append_publish_plan_scan_phase(void *opaque) {
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#define c2_append_publish_plan_scan_phase c2tr_publish_plan_scan_body
+#endif
+C2TR_BODY_USED C2_APPEND_SECTION("publish_plan_scan") uint8_t c2_append_publish_plan_scan_phase(
+        void *opaque) {
     C2_INSTALL_TRACE_STAMP_SLOT(LISP65_C2_APPEND_PUBLISH_PLAN_SCAN_SLOT);
     c2_append_state *w = opaque;
-    uint8_t d[10], image[20], h[24], entry[16], row[8];
+    uint8_t d[10], image[20], h[24], entry[16], row[8], size[2];
     uint16_t ordinal, base, local, strings, bytes, name, count = 0;
     uint32_t metadata, at;
     if (!w || !w->append.finished || (w->staged && w->committed)
@@ -2769,19 +2847,20 @@ uint8_t c2_append_publish_plan_scan_phase(void *opaque) {
         if (name == 0xffffu) continue;
         strings = c2_u16(h + 18); bytes = c2_u16(h + 20);
         if (name > bytes || (uint16_t)(bytes - name) < 2u
-            || count >= C2D_ENTRY_CAP) return C2_STREAM_ERR_STATE;
+            || count == (uint16_t)((C2_EXPORT_PLAN_LIMIT
+                - C2_EXPORT_JOURNAL_BASE) / C2_EXPORT_PLAN_RECORD_BYTES))
+            return C2_STREAM_ERR_STATE;
         at = metadata + strings + name;
-        if (at > 0xffffffUL) return C2_STREAM_ERR_STATE;
+        if (!c2_stream_shelf_read(at, size, sizeof size)
+            || size[1] || size[0] > (uint16_t)(bytes - name - 2u))
+            return C2_STREAM_ERR_STATE;
         row[0] = (uint8_t)at; row[1] = (uint8_t)(at >> 8);
         row[2] = (uint8_t)(at >> 16);
-        c2_record_u16(row + 3, (uint16_t)(bytes - name));
-        c2_record_u16(row + 5, (uint16_t)(ordinal
-            | ((entry[11] & 1u) ? 0x8000u : 0u)));
+        row[3] = size[0];
+        c2_record_u16(row + 4, ordinal);
+        row[6] = entry[11];
         row[7] = C2_EXPORT_SCAN_MARK;
-        if ((uint32_t)C2_EXPORT_JOURNAL_BASE
-                + (uint32_t)(count + 1u) * C2_EXPORT_PLAN_RECORD_BYTES
-                > C2_EXPORT_PLAN_LIMIT
-            || !c2_stream_c2d_write((uint16_t)(C2_EXPORT_JOURNAL_BASE
+        if (!c2_stream_c2d_write((uint16_t)(C2_EXPORT_JOURNAL_BASE
                 + count * C2_EXPORT_PLAN_RECORD_BYTES), row, sizeof row))
             return C2_STREAM_ERR_STATE;
         ++count;
@@ -2790,12 +2869,20 @@ uint8_t c2_append_publish_plan_scan_phase(void *opaque) {
     C2AW_PLAN_MARK(w) = C2_EXPORT_PLAN_MARK;
     return C2_STREAM_OK;
 }
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#undef c2_append_publish_plan_scan_phase
+#endif
+C2TR_DEFINE_PHASE_WRAPPER(c2_append_publish_plan_scan_phase,
+                          publish_plan_scan, 2)
 
-C2_APPEND_SECTION("publish_plan_resolve")
-uint8_t c2_append_publish_plan_resolve_phase(void *opaque) {
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#define c2_append_publish_plan_resolve_phase c2tr_publish_plan_resolve_body
+#endif
+C2TR_BODY_USED C2_APPEND_SECTION("publish_plan_resolve") uint8_t c2_append_publish_plan_resolve_phase(
+        void *opaque) {
     C2_INSTALL_TRACE_STAMP_SLOT(LISP65_C2_APPEND_PUBLISH_PLAN_RESOLVE_SLOT);
-    c2_append_state *w = opaque; uint8_t row[8], size[2];
-    uint16_t i, count, available, length, symbol, target; uint32_t at;
+    c2_append_state *w = opaque; uint8_t row[8];
+    uint16_t i, count, symbol, target; uint8_t length; uint32_t at;
     if (!w || C2AW_PLAN_MARK(w) != C2_EXPORT_PLAN_MARK)
         return C2_STREAM_ERR_STATE;
     count = c2_u16(w->meta + 22);
@@ -2805,12 +2892,9 @@ uint8_t c2_append_publish_plan_resolve_phase(void *opaque) {
                 + i * C2_EXPORT_PLAN_RECORD_BYTES), row, sizeof row)
             || row[7] != C2_EXPORT_SCAN_MARK)
             return C2_STREAM_ERR_STATE;
-        at = c2_u24(row); available = c2_u16(row + 3);
-        target = c2_u16(row + 5);
-        if (available < 2u || !c2_stream_shelf_read(at, size, sizeof size)
-            || !(length = c2_u16(size)) || length > LISP65_SYMBOL_NAME_MAX
-            || length > (uint16_t)(available - 2u)
-            || !c2_stream_name_value(8u, at + 2u, length, &symbol))
+        at = c2_u24(row); length = row[3]; target = c2_u16(row + 4);
+        if (row[6] & 1u) target |= 0x8000u;
+        if (!c2_stream_name_value(8u, at + 2u, length, &symbol))
             return C2_STREAM_ERR_STATE;
         c2_record_u16(row, symbol);
         c2_record_u16(row + 2, (uint16_t)sym_function((obj)symbol));
@@ -2822,6 +2906,11 @@ uint8_t c2_append_publish_plan_resolve_phase(void *opaque) {
     C2AW_PLAN_MARK(w) = 0u;
     return C2_STREAM_OK;
 }
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#undef c2_append_publish_plan_resolve_phase
+#endif
+C2TR_DEFINE_PHASE_WRAPPER(c2_append_publish_plan_resolve_phase,
+                          publish_plan_resolve, 3)
 #endif
 #endif
 
@@ -2890,7 +2979,10 @@ uint8_t c2_append_publish_exports_phase(void *opaque) {
  * clears it before either body mutates state, so skip/replay/foreign markers
  * all fail closed.  Neither body loads or calls another overlay. */
 C2_PUBLISH_CLEAR_SECTION
-uint8_t c2_append_publish_clear_phase(void *opaque) {
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#define c2_append_publish_clear_phase c2tr_publish_clear_body
+#endif
+C2TR_BODY_USED uint8_t c2_append_publish_clear_phase(void *opaque) {
     C2_INSTALL_TRACE_STAMP_SLOT_IF_UNLOCKED(
         LISP65_C2_APPEND_PUBLISH_CLEAR_SLOT);
     c2_append_state *w = opaque;
@@ -2904,6 +2996,10 @@ uint8_t c2_append_publish_clear_phase(void *opaque) {
         return c2_append_journal_clear_phase(opaque);
     return C2_STREAM_ERR_STATE;
 }
+#if defined(LISP65_C2_TERMINAL_RETURN_GUARD) && defined(__mos__)
+#undef c2_append_publish_clear_phase
+#endif
+C2TR_DEFINE_PHASE_WRAPPER(c2_append_publish_clear_phase, publish_clear, 4)
 #undef C2_PUBLISH_CLEAR_SECTION
 #endif
 #else

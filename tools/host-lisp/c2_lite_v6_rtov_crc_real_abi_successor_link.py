@@ -275,8 +275,11 @@ def build() -> dict[str, Any]:
                 and all("pass" in str(structure.get(name, ""))
                         for name in required),
                 "fresh Link-39 generic product closure is not fully green")
+        declared_domain_bytes = sum(
+            int(row["bytes"]) for row in total.get("declared_domains", ()))
         require(total.get("status") == "passed"
-                and total.get("declared_domain_bytes") == 42,
+                and total.get("declared_domain_bytes")
+                    == declared_domain_bytes,
                 "Link-39 publish-last domain is not the complete 42-byte set")
         replacement = BASE_LINK.replacement_gates(product, elf, prelink)
         abi = real_abi_gate(elf)

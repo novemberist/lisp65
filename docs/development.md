@@ -64,9 +64,9 @@ make workbench-product
 ```
 
 The target emits the six-image Lisp plane once, performs one whole-program LTO
-closure, completes the publish-last bindings, constructs both canonical D81
-images, and checks all 19 artifact roles against
-`config/c2-lite-public-build-authority.json`. The retired 1.1 compiler-tier
+closure, completes the publish-last bindings, constructs the product, work and
+optional-library D81 images, and checks all 25 selected artifact roles against
+`config/c2-v150-public-build-authority.json`. The retired 1.1 compiler-tier
 composition is not part of this entry point.
 
 Maintainers qualify changes to the build path in two varied, detached fresh

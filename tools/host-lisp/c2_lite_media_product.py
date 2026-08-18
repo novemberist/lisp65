@@ -77,6 +77,27 @@ def require(value: bool, message: str) -> None:
         raise MediaError(message)
 
 
+def close_packed_artifacts(
+        artifacts: dict[str, Path], gates: dict[str, Any]) -> dict[str, Any]:
+    """Run every registered gate inside the closure that ships its artifact.
+
+    Builders may choose different artifact sets and predicates, but they may
+    not report a complete role/SHA closure while silently omitting a gate for
+    one of the packed artifacts.  The exact key-set equality is intentional:
+    registration without execution and execution without a delivered object
+    are both closure defects.
+    """
+    require(set(artifacts) == set(gates) and bool(artifacts),
+            "packed-artifact closure omits an artifact or registered gate")
+    results = {name: gates[name](artifacts[name]) for name in artifacts}
+    return {
+        "complete": True,
+        "registered": sorted(gates),
+        "executed": sorted(results),
+        "results": results,
+    }
+
+
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -503,10 +524,18 @@ def stage_domain_gate(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def compile_stager(
     build_id: int, rows: list[dict[str, Any]],
+    *,
+    build_dir: Path = BUILD,
+    stager: Path = STAGER,
+    stager_map: Path = STAGER_MAP,
+    compile_defines: tuple[str, ...] = (),
 ) -> dict[str, Any]:
-    c_object = BUILD / "autoboot-main.o"
-    s_object = BUILD / "autoboot-chain.o"
-    rom_object = BUILD / "autoboot-rom-write-enable.o"
+    build_dir.mkdir(parents=True, exist_ok=True)
+    stager.parent.mkdir(parents=True, exist_ok=True)
+    stager_map.parent.mkdir(parents=True, exist_ok=True)
+    c_object = build_dir / "autoboot-main.o"
+    s_object = build_dir / "autoboot-chain.o"
+    rom_object = build_dir / "autoboot-rom-write-enable.o"
     relative = lambda path: path.relative_to(ROOT).as_posix()
     contract = ASM_CONTRACT.load_contract()
     include = ASM_CONTRACT.compile_output(
@@ -535,7 +564,7 @@ def compile_stager(
     ASM_CONTRACT_INCLUDE.write_bytes(include)
     run([
         str(CANONICAL.COMPILER), "-std=c99", "-Oz", "-Wall", "-Wextra",
-        "-Werror", "-DLISP65_C2_LITE_MEDIA_STAGER",
+        "-Werror", "-DLISP65_C2_LITE_MEDIA_STAGER", *compile_defines,
         f"-DR3_EXPECTED_PRODUCT_BUILD_ID=0x{build_id:08x}UL",
         "-c", relative(STAGER_C), "-o", relative(c_object),
     ], "C2-lite cold-stager C build")
@@ -550,11 +579,11 @@ def compile_stager(
     run([
         "/usr/bin/setarch", os.uname().machine, "-R",
         str(CANONICAL.COMPILER), "-Oz",
-        f"-Wl,-Map,{relative(STAGER_MAP)}",
+        f"-Wl,-Map,{relative(stager_map)}",
         relative(c_object), relative(s_object), relative(rom_object),
-        "-o", relative(STAGER),
+        "-o", relative(stager),
     ], "C2-lite cold-stager link")
-    stager_elf = Path(str(STAGER) + ".elf")
+    stager_elf = Path(str(stager) + ".elf")
     truth = ElfTruth.read(
         stager_elf, llvm_readobj=CANONICAL.COMPILER.parent / "llvm-readobj",
         include_section_data=True)
@@ -702,7 +731,8 @@ def compile_stager(
             loop = primary.index("while (wraps < 192u)", attic_submit)
             compare = primary.index("if (match) break;", loop)
             retry = primary.index("c2_attic_retry_readback();", compare)
-            timeout = primary.index("if (!match) return 0;", retry)
+            timeout = primary.index(
+                "C2_V21_TRACE_CONVERGENCE_TIMEOUT", retry)
         except ValueError:
             return False
         return (
@@ -751,8 +781,8 @@ def compile_stager(
             "role <= 3u ? C2_STAGE_CHIP : C2_STAGE_ATTIC",
             "role <= 4u ? C2_STAGE_CHIP : C2_STAGE_ATTIC", 1),
         source.replace(
-            "c2_stage_record_domain_valid(role, record) &&",
-            "record &&", 1),
+            "c2_stage_record_domain_valid(role, record)",
+            "record != 0"),
         source.replace(
             "if (stage_domain == C2_STAGE_CHIP)",
             "if (stage_domain == C2_STAGE_ATTIC)", 1),
@@ -882,7 +912,7 @@ def compile_stager(
         )
     transport_domains = stage_domain_gate(rows)
     require(
-        STAGER.stat().st_size <= 16384
+        stager.stat().st_size <= 16384
         and chain_section.bytes <= 0x100
         and "SHF_EXECINSTR" in chain_section.flags
         and chain_entry_gate(chain_data, product_entry)
@@ -903,7 +933,8 @@ def compile_stager(
                 for value in hybrid_mutations)
         and transport_domains["mutations_rejected"] == 6
         and "while (wraps < 192u)" in source
-        and "if (!match) return 0;" in source,
+        and "C2_V21_TRACE_CONVERGENCE_TIMEOUT" in source
+        and "c2_v21_stage_trace[31] = 0xa5u;" in source,
         "C2-lite hybrid stager completion/dataflow gate red")
     require(
         handoff_source_ok(source)
@@ -929,7 +960,7 @@ def compile_stager(
         "status": (
             "passed-strict-build-and-address-qualified-hybrid-f018b-"
             "content-defined-target-readback"),
-        "bytes": STAGER.stat().st_size,
+        "bytes": stager.stat().st_size,
         "chain_bytes": chain_section.bytes,
         "chain_handoff": {
             "status": (
@@ -1033,7 +1064,7 @@ def artifact_set_sha(rows: list[dict[str, Any]]) -> str:
         identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def build() -> dict[str, Any]:
+def build(*, stager_compile_defines: tuple[str, ...] = ()) -> dict[str, Any]:
     require(not BUILD.exists(), "canonical media build is one-shot")
     BUILD.mkdir(parents=True)
     contract = load(CONTRACT)
@@ -1053,7 +1084,13 @@ def build() -> dict[str, Any]:
     parsed = parse_descriptor(descriptor, build_id, rows)
     mutations = mutation_gate(descriptor, build_id, rows)
     transport_domains = stage_domain_gate(rows)
-    stager_gate = compile_stager(build_id, rows)
+    # BUILD/STAGER are rebound by every qualified successor-media producer.
+    # Default arguments capture the module's import-time paths and can silently
+    # emit a current stager into a predecessor directory.  Pass the live
+    # bindings explicitly at the only production callsite.
+    stager_gate = compile_stager(
+        build_id, rows, build_dir=BUILD, stager=STAGER,
+        stager_map=STAGER_MAP, compile_defines=stager_compile_defines)
 
     expected = {
         row["name"]: row["path"].read_bytes() for row in rows}

@@ -62,6 +62,7 @@ LINK60_FINAL_GEOMETRY = False
 E000_REOPENING = False
 BSS_TRIAGE = False
 FULL_MAP_OWNERSHIP = False
+LOW_RESIDENT_LMA_RESET = False
 FULL_MAP_OWNERSHIP_CONTRACT = (
     ROOT / "config/c2-full-map-ownership-contract.json")
 APPEND_PLAN_FACADE = False
@@ -100,6 +101,128 @@ def configure_full_map_ownership() -> None:
     """
     global FULL_MAP_OWNERSHIP
     FULL_MAP_OWNERSHIP = True
+
+
+LOW_RESIDENT_LMA_SECTIONS = (
+    ".lisp65_c2_kernal_handoff",
+    ".lisp65_c2_host_facade",
+    ".lisp65_c2_kernal_io_reveal",
+    ".lisp65_c2_kernal_map_switch",
+)
+
+
+def configure_low_resident_lma_reset() -> None:
+    """Reset the post-far-service LMA chain at existing resident outputs.
+
+    The mapped far service deliberately has a Bank-2 LMA.  These four later
+    ``INSERT AFTER .text`` outputs are ordinary boot-critical PRG material;
+    without an explicit reset lld inherits the mapped service's LMA/VMA
+    delta.  This selector is one-way and product-card-local so historical
+    linker worlds remain byte-identical.
+    """
+    global LOW_RESIDENT_LMA_RESET
+    if not FULL_MAP_OWNERSHIP:
+        raise RuntimeError(
+            "low-resident LMA reset requires full-map ownership")
+    LOW_RESIDENT_LMA_RESET = True
+
+
+def apply_low_resident_lma_reset(layout: str) -> str:
+    """Give exactly the four resident outputs an explicit LMA equal to VMA."""
+    result = layout
+    for name in LOW_RESIDENT_LMA_SECTIONS:
+        pattern = re.compile(
+            rf"(?m)^(\s*{re.escape(name)}\s+)(0x[0-9a-f]+)\s+:\s+\{{$")
+        matches = list(pattern.finditer(result))
+        if len(matches) != 1:
+            raise RuntimeError(
+                f"low-resident LMA reset section template drift: {name}")
+        address = matches[0].group(2)
+        result = pattern.sub(
+            rf"\g<1>{address} : AT({address}) {{", result, count=1)
+    result += "\n/* Reset the inherited Bank-2 LMA delta at the existing " \
+              "resident PRG chain. */\n"
+    for name in LOW_RESIDENT_LMA_SECTIONS:
+        result += (
+            f"ASSERT(LOADADDR({name}) == ADDR({name}),\n"
+            f'       "{name} escaped the resident PRG LMA chain");\n')
+    return result
+
+
+def low_resident_lma_reset_gate(script: str) -> dict[str, str]:
+    """Require the exact four LMA=VMA resets and reject a broader rewrite."""
+    explicit = re.findall(
+        r"(?m)^\s*(\.lisp65_c2_[A-Za-z0-9_.]+)\s+"
+        r"(0x[0-9a-f]+)\s+:\s+AT\((0x[0-9a-f]+)\)\s+\{", script)
+    rows = {name: (vma, lma) for name, vma, lma in explicit
+            if name in LOW_RESIDENT_LMA_SECTIONS}
+    if set(rows) != set(LOW_RESIDENT_LMA_SECTIONS):
+        raise RuntimeError("low-resident LMA reset set is incomplete")
+    if any(vma != lma for vma, lma in rows.values()):
+        raise RuntimeError("low-resident LMA reset does not equal its VMA")
+    for name in LOW_RESIDENT_LMA_SECTIONS:
+        assertion = f"ASSERT(LOADADDR({name}) == ADDR({name}),"
+        if script.count(assertion) != 1:
+            raise RuntimeError(
+                f"low-resident LMA assertion absent or duplicated: {name}")
+    forbidden: set[str] = set()
+    for name, vma, lma in explicit:
+        if (name.startswith(".lisp65_c2_kernal_")
+                or name == ".lisp65_c2_host_facade") \
+                and name not in LOW_RESIDENT_LMA_SECTIONS and vma == lma:
+            forbidden.add(name)
+    if forbidden:
+        raise RuntimeError(
+            "low-resident LMA reset broadened beyond four outputs: "
+            + ", ".join(sorted(forbidden)))
+    return {name: rows[name][0] for name in LOW_RESIDENT_LMA_SECTIONS}
+
+
+def low_resident_lma_reset_mutation_selftest() -> dict[str, str]:
+    fixture = """SECTIONS {
+    .lisp65_c2_kernal_handoff 0xb4a3 : {
+    }
+    .lisp65_c2_host_facade 0xb5c4 : {
+    }
+    .lisp65_c2_kernal_io_reveal 0xb5f4 : {
+    }
+    .lisp65_c2_kernal_map_switch 0xb5ff : {
+    }
+    .lisp65_c2_kernal_state 0xb609 (NOLOAD) : {
+    }
+}
+"""
+    valid = apply_low_resident_lma_reset(fixture)
+    low_resident_lma_reset_gate(valid)
+    cases = {
+        "missing-handoff-reset": valid.replace(
+            "0xb4a3 : AT(0xb4a3)", "0xb4a3 :", 1),
+        "missing-facade-reset": valid.replace(
+            "0xb5c4 : AT(0xb5c4)", "0xb5c4 :", 1),
+        "missing-reveal-reset": valid.replace(
+            "0xb5f4 : AT(0xb5f4)", "0xb5f4 :", 1),
+        "missing-map-reset": valid.replace(
+            "0xb5ff : AT(0xb5ff)", "0xb5ff :", 1),
+        "wrong-handoff-lma": valid.replace(
+            "AT(0xb4a3)", "AT(0x02f4a3)", 1),
+        "broaden-to-state": valid.replace(
+            ".lisp65_c2_kernal_state 0xb609 (NOLOAD) : {",
+            ".lisp65_c2_kernal_state 0xb609 : AT(0xb609) {", 1),
+        "duplicate-handoff-assertion": valid + (
+            "ASSERT(LOADADDR(.lisp65_c2_kernal_handoff) == "
+            "ADDR(.lisp65_c2_kernal_handoff), \"duplicate\");\n"),
+    }
+    result: dict[str, str] = {}
+    for name, mutant in cases.items():
+        try:
+            low_resident_lma_reset_gate(mutant)
+        except RuntimeError:
+            result[name] = "rejected"
+        else:
+            result[name] = "accepted"
+    if set(result.values()) != {"rejected"}:
+        raise RuntimeError("low-resident LMA reset mutation survived")
+    return result
 
 
 def full_map_platform_c_ld() -> str:
@@ -319,6 +442,184 @@ FAMILY_STAGE_BINDING_SENTINELS = (0xC100, 0xC101, 0xC110, 0xC111)
 RUNTIME_OVERLAY_FORMAT_VERSION = 3
 SESSION_REGION1_SLICE_NAMES: set[str] = set()
 EXTRA_INCLUDE_DIRS: tuple[Path, ...] = ()
+COMPILER_CONSUMED_STATIC_HEADER: Path | None = None
+COMPILER_CONSUMED_STATIC_HEADER_BINDING: dict[str, object] | None = None
+COMPILER_CONSUMED_STATIC_CODE_BYTES: int | None = None
+COMPILER_CONSUMED_FEATURE_PROFILE: Path | None = None
+COMPILER_CONSUMED_FEATURE_PROFILE_BINDING: dict[str, object] | None = None
+COMPILER_CONSUMED_FEATURES: tuple[str, ...] = ()
+
+
+def configure_compiler_consumed_static_header(
+        header: Path, binding: dict[str, object], code_bytes: int) -> None:
+    """Force and verify the candidate static-plane header in real compiles.
+
+    Binding an input in a preflight receipt is not enough: the compiler must
+    receive that exact path.  ``compile_link`` force-includes the bound header
+    and a build-local assertion after it for every C/assembler participant.
+    A successful link therefore proves both path consumption and macro value.
+    """
+    global COMPILER_CONSUMED_STATIC_HEADER
+    global COMPILER_CONSUMED_STATIC_HEADER_BINDING
+    global COMPILER_CONSUMED_STATIC_CODE_BYTES
+    raw = header.read_bytes()
+    actual = {
+        "path": header.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    values = re.findall(
+        rb"^#define LISP65_C2_LITE_STATIC_CODE_BYTES ([0-9]+)UL$",
+        raw, re.MULTILINE)
+    if actual != binding or values != [str(code_bytes).encode()]:
+        raise RuntimeError(
+            "bound candidate static header identity/value mismatch")
+    COMPILER_CONSUMED_STATIC_HEADER = header
+    COMPILER_CONSUMED_STATIC_HEADER_BINDING = dict(binding)
+    COMPILER_CONSUMED_STATIC_CODE_BYTES = code_bytes
+
+
+def compiler_consumed_static_header_flags(
+        out: Path, target: Path) -> tuple[list[str], dict[str, object] | None]:
+    """Return the actual force-include flags and their build-local proof."""
+    if COMPILER_CONSUMED_STATIC_HEADER is None:
+        if (COMPILER_CONSUMED_STATIC_HEADER_BINDING is not None
+                or COMPILER_CONSUMED_STATIC_CODE_BYTES is not None):
+            raise RuntimeError("partial compiler-consumed header state")
+        return [], None
+    header = COMPILER_CONSUMED_STATIC_HEADER
+    binding = COMPILER_CONSUMED_STATIC_HEADER_BINDING
+    code_bytes = COMPILER_CONSUMED_STATIC_CODE_BYTES
+    if binding is None or code_bytes is None:
+        raise RuntimeError("partial compiler-consumed header contract")
+    raw = header.read_bytes()
+    actual = {
+        "path": header.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    if actual != binding:
+        raise RuntimeError("compiler-consumed candidate header drift")
+    assertion = out / (target.stem + ".compiler-input-assert.h")
+    write(assertion, "\n".join([
+        "#ifndef LISP65_C2_LITE_STATIC_CODE_BYTES",
+        '#error "bound candidate static-plane header was not consumed"',
+        "#endif",
+        f"#if LISP65_C2_LITE_STATIC_CODE_BYTES != {code_bytes}UL",
+        '#error "consumed static-plane extent differs from bound candidate"',
+        "#endif", "",
+    ]))
+    flags = [
+        "-include", header.relative_to(ROOT).as_posix(),
+        "-include", assertion.relative_to(ROOT).as_posix(),
+    ]
+    return flags, {
+        "format": "lisp65-real-compiler-input-consumption-v1",
+        "status": "passed-bound-candidate-header-consumed",
+        "consumer": "c2_product_substitution_link.compile_link",
+        "target": target.relative_to(ROOT).as_posix(),
+        "bound_header": binding,
+        "macro": "LISP65_C2_LITE_STATIC_CODE_BYTES",
+        "consumed_value": code_bytes,
+        "force_include_order": [
+            header.relative_to(ROOT).as_posix(),
+            assertion.relative_to(ROOT).as_posix(),
+        ],
+        "compile_time_assertion": {
+            "path": assertion.relative_to(ROOT).as_posix(),
+            "bytes": assertion.stat().st_size,
+            "sha256": hashlib.sha256(assertion.read_bytes()).hexdigest(),
+        },
+        "historical_same_basename_accepted": False,
+    }
+
+
+def configure_compiler_consumed_feature_profile(
+        profile: Path, binding: dict[str, object],
+        features: tuple[str, ...]) -> tuple[
+            Path | None, dict[str, object] | None, tuple[str, ...]]:
+    """Bind a resolved feature profile to the actual compiler command."""
+    global COMPILER_CONSUMED_FEATURE_PROFILE
+    global COMPILER_CONSUMED_FEATURE_PROFILE_BINDING
+    global COMPILER_CONSUMED_FEATURES
+    raw = profile.read_bytes()
+    actual = {
+        "path": profile.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    rows = [line.split("=", 1)[1].split(",")
+            for line in raw.decode("utf-8").splitlines()
+            if line.startswith("feature_defines=")]
+    if (actual != binding or len(rows) != 1
+            or tuple(rows[0]) != features or not features
+            or len(features) != len(set(features))):
+        raise RuntimeError("bound compiler feature-profile identity/value mismatch")
+    old = (COMPILER_CONSUMED_FEATURE_PROFILE,
+           COMPILER_CONSUMED_FEATURE_PROFILE_BINDING,
+           COMPILER_CONSUMED_FEATURES)
+    COMPILER_CONSUMED_FEATURE_PROFILE = profile
+    COMPILER_CONSUMED_FEATURE_PROFILE_BINDING = dict(binding)
+    COMPILER_CONSUMED_FEATURES = tuple(features)
+    return old
+
+
+def restore_compiler_consumed_feature_profile(
+        state: tuple[Path | None, dict[str, object] | None,
+                     tuple[str, ...]]) -> None:
+    global COMPILER_CONSUMED_FEATURE_PROFILE
+    global COMPILER_CONSUMED_FEATURE_PROFILE_BINDING
+    global COMPILER_CONSUMED_FEATURES
+    (COMPILER_CONSUMED_FEATURE_PROFILE,
+     COMPILER_CONSUMED_FEATURE_PROFILE_BINDING,
+     COMPILER_CONSUMED_FEATURES) = state
+
+
+def compiler_consumed_feature_profile_gate(
+        compile_flags: list[str], target: Path) -> dict[str, object] | None:
+    """Prove every bound profile feature occurs once in real compiler flags."""
+    profile = COMPILER_CONSUMED_FEATURE_PROFILE
+    binding = COMPILER_CONSUMED_FEATURE_PROFILE_BINDING
+    features = COMPILER_CONSUMED_FEATURES
+    if profile is None:
+        if binding is not None or features:
+            raise RuntimeError("partial compiler feature-profile state")
+        return None
+    if binding is None or not features:
+        raise RuntimeError("partial compiler feature-profile contract")
+    raw = profile.read_bytes()
+    actual = {
+        "path": profile.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    rows = [line.split("=", 1)[1].split(",")
+            for line in raw.decode("utf-8").splitlines()
+            if line.startswith("feature_defines=")]
+    if actual != binding or len(rows) != 1 or tuple(rows[0]) != features:
+        raise RuntimeError("compiler feature-profile authority drift")
+    definitions = [flag[2:] for flag in compile_flags if flag.startswith("-D")]
+    names = [item.split("=", 1)[0] for item in definitions]
+    missing = [name for name in features if name not in names]
+    non_unique = [name for name in features if names.count(name) != 1]
+    if missing or non_unique:
+        raise RuntimeError(
+            "bound compiler feature escaped real command: "
+            f"missing={missing} non_unique={non_unique}")
+    return {
+        "format": "lisp65-real-compiler-feature-consumption-v1",
+        "status": "passed-bound-feature-profile-consumed",
+        "consumer": "c2_product_substitution_link.compile_link",
+        "target": target.relative_to(ROOT).as_posix(),
+        "bound_profile": binding,
+        "bound_features": list(features),
+        "bound_feature_count": len(features),
+        "consumed_features": list(features),
+        "consumed_feature_count": len(features),
+        "missing_features": [],
+        "non_unique_features": [],
+        "actual_definition_count": len(names),
+    }
 
 
 def runtime_binding_bytes() -> int:
@@ -410,13 +711,19 @@ CONVERGENCE_SOURCES = (
     ROOT / "src/c2_mapped_far_service.s",
     ROOT / "src/c2_mapped_far_convergence.s",
 )
+TERMINAL_RETURN_GUARD_FEATURE = "LISP65_C2_TERMINAL_RETURN_GUARD"
 OWNERSHIP_CONTRACT = ROOT / "config/c2-stack-overlay-ownership-contract.json"
 SOURCE_OWNER_SCOPES = ({
     "name": "mapped-far-content-convergence",
     "trigger": CONVERGENCE_FEATURE,
     "defines": CONVERGENCE_DEFINES,
     "sources": CONVERGENCE_SOURCES,
-},)
+}, {
+    "name": "map-cpu-library-read",
+    "trigger": "LISP65_C2_MAP_CPU_TRANSPORT",
+    "defines": ("LISP65_C2_MAP_CPU_TRANSPORT",),
+    "sources": (ROOT / "src/optional/c2_map_cpu_read.s",),
+})
 
 
 def ownership_scope_selected(
@@ -430,10 +737,15 @@ def ownership_link_flags(
     """Return the complete linker-flag side of the ownership opt-in seam."""
     if not ownership_scope_selected(extra_definitions):
         return ()
-    return (
+    flags = [
         "-Wl,--no-check-sections",
         "-Wl,--defsym=__lisp65_c2_mapped_far_required_param=1",
-    )
+    ]
+    if "LISP65_C2_MUTABLE_CPU_READS" in extra_definitions:
+        flags.append(
+            "-Wl,--defsym="
+            "__lisp65_c2_mapped_far_facade_padding_required_param=1")
+    return tuple(flags)
 
 C2_DECODER_SLICES = [
     ("00", "c2_stream_phase_00"),
@@ -1146,6 +1458,51 @@ def _machine_instruction_records(lines: list[str]) -> list[dict[str, object]]:
     return records
 
 
+def _jsr_targets_address(record: dict[str, object], address: int) -> bool:
+    """Bind a JSR to its encoded target, never objdump's display label.
+
+    LLVM may render an address using a nearby linker symbol rather than the
+    exact local callee name.  The machine operand and the ELF symbol value are
+    the contract; the pretty-printed operand is deliberately irrelevant.
+    """
+    encoding = bytes(record["encoding"])
+    return (
+        record["mnemonic"] == "jsr"
+        and len(encoding) == 3
+        and encoding[0] == 0x20
+        and (encoding[1] | (encoding[2] << 8)) == address
+    )
+
+
+def _kernal_crc_call_binding_model_selftest() -> dict[str, str]:
+    target = 0xA12B
+    base = {
+        "address": 0xB4F0,
+        "encoding": bytes((0x20, 0x2B, 0xA1)),
+        "mnemonic": "jsr",
+        "operand": "$a12b <an_unrelated_rendered_symbol+0x250f>",
+    }
+    cases = {
+        "encoded-target-with-unrelated-display-label": (
+            base, True),
+        "display-name-with-wrong-encoded-target": ({
+            **base,
+            "encoding": bytes((0x20, 0x2C, 0xA1)),
+            "operand": "$a12b <c2k_crc16>",
+        }, False),
+        "non-jsr-with-matching-bytes": ({**base, "mnemonic": "jmp"}, False),
+        "truncated-jsr": ({**base, "encoding": bytes((0x20, 0x2B))}, False),
+    }
+    result: dict[str, str] = {}
+    for name, (record, expected) in cases.items():
+        observed = _jsr_targets_address(record, target)
+        if observed != expected:
+            raise RuntimeError(
+                f"KERNAL CRC call binding mutation survived: {name}")
+        result[name] = "passed" if observed else "rejected"
+    return result
+
+
 def _kernal_crc_binding_locations(elf: Path) -> dict[str, int]:
     disassembly = run([
         str(TOOLCHAIN / "llvm-objdump"), "-d",
@@ -1157,11 +1514,14 @@ def _kernal_crc_binding_locations(elf: Path) -> dict[str, int]:
     if len(ownership) != 1:
         raise RuntimeError("KERNAL CRC binding ownership function is not unique")
     records = _machine_instruction_records(ownership[0]["lines"])
+    symbols = defined_symbols(elf)
+    crc16_address = symbols.get("c2k_crc16")
+    if crc16_address is None:
+        raise RuntimeError("KERNAL CRC binding callee c2k_crc16 is absent")
     candidates: list[tuple[dict[str, object], dict[str, object]]] = []
     for call_index in range(len(records) - 4):
         call = records[call_index]
-        if (call["mnemonic"] != "jsr"
-                or "c2k_crc16" not in str(call["operand"])):
+        if not _jsr_targets_address(call, crc16_address):
             continue
         first = records[call_index + 1]
         branch_a = records[call_index + 2]
@@ -1981,6 +2341,9 @@ ASSERT(ADDR(.lisp65_c2_vectors) == 0xfffa && SIZEOF(.lisp65_c2_vectors) == 6,
                 raise RuntimeError(f"Link-60 fixed-code template drift: {old}")
             kernal_layout = kernal_layout.replace(old, new, 1)
 
+    if LOW_RESIDENT_LMA_RESET:
+        kernal_layout = apply_low_resident_lma_reset(kernal_layout)
+
     bss_triage_layout = ""
     if BSS_TRIAGE:
         hot_end = FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES
@@ -2135,6 +2498,11 @@ SECTIONS {{
 
 SECTIONS {{
     .lisp65_c2_mapped_far_facade {int(resident['start'], 0):#06x} : {{
+        KEEP(*(.lisp65_c2_mapped_far_facade.entries))
+        KEEP(*(.lisp65_c2_mapped_far_facade.abort))
+        __lisp65_c2_mapped_far_facade_padding_start = .;
+        KEEP(*(.lisp65_c2_mapped_far_facade.padding))
+        __lisp65_c2_mapped_far_facade_padding_end = .;
         KEEP(*(.lisp65_c2_mapped_far_facade.*))
     }} >ram
     .lisp65_c2_mapped_far_service {int(mapping['mapped_service_cpu_start'], 0):#06x}
@@ -2147,6 +2515,9 @@ SECTIONS {{
 __lisp65_c2_mapped_far_required =
     DEFINED(__lisp65_c2_mapped_far_required_param)
         ? __lisp65_c2_mapped_far_required_param : 0;
+__lisp65_c2_mapped_far_facade_padding_required =
+    DEFINED(__lisp65_c2_mapped_far_facade_padding_required_param)
+        ? __lisp65_c2_mapped_far_facade_padding_required_param : 0;
 __lisp65_c2_mapped_far_service_start =
     ADDR(.lisp65_c2_mapped_far_service);
 __lisp65_c2_mapped_far_service_end =
@@ -2177,6 +2548,13 @@ ASSERT(__lisp65_c2_mapped_far_required == 0 ||
         ADDR(.lisp65_c2_mapped_far_facade) +
             SIZEOF(.lisp65_c2_mapped_far_facade) <= {int(resident['end_exclusive'], 0):#06x}),
        "mapped far facade escaped its resident wall");
+ASSERT(__lisp65_c2_mapped_far_facade_padding_required == 0 ||
+       (DEFINED(__lisp65_c2_mapped_far_facade_padding_contract_bytes) &&
+        __lisp65_c2_mapped_far_facade_padding_end -
+            __lisp65_c2_mapped_far_facade_padding_start ==
+                __lisp65_c2_mapped_far_facade_padding_contract_bytes &&
+        __lisp65_c2_mapped_far_facade_padding_contract_bytes == 19),
+       "mapped far facade explicit padding drift");
 ASSERT(__lisp65_c2_mapped_far_required == 0 ||
        (ADDR(.lisp65_c2_mapped_far_service) == {int(mapping['mapped_service_cpu_start'], 0):#06x} &&
         LOADADDR(.lisp65_c2_mapped_far_service) == {int(bank2['service_physical_start'], 0):#010x} &&
@@ -2285,8 +2663,12 @@ def source_list(extra_definitions: tuple[str, ...] = ()) -> list[str]:
         sources.append(str(ROOT / "src/c2_journal_prepare_select.s"))
     if "LISP65_RTOV_DMA_COMPLETION_FENCE" in extra_definitions:
         sources.append(str(ROOT / "src/rtov_dma_completion.s"))
-    if ownership_scope_selected(extra_definitions):
-        sources.extend(str(path) for path in CONVERGENCE_SOURCES)
+    selected_definitions = set(scoped_probe_definitions(extra_definitions))
+    selected_scope_sources: list[Path] = []
+    for scope in SOURCE_OWNER_SCOPES:
+        if str(scope["trigger"]) in selected_definitions:
+            selected_scope_sources.extend(Path(path) for path in scope["sources"])
+    sources.extend(str(path) for path in dict.fromkeys(selected_scope_sources))
     if BANK3_STAGING_SLICES:
         sources.append(str(ROOT / "src/c2_lite_bank3_stage_entry.s"))
         sources.append(str(ROOT / "src/c2_boot_chain_commit.s"))
@@ -2436,7 +2818,10 @@ def definitions(artifacts: dict[str, object]) -> list[str]:
 def compile_link(out: Path, name: str, headers: list[Path],
                  artifacts: dict[str, object], *,
                  probe_definitions: tuple[str, ...] = (),
-                 final_inventory: bool = True) -> Path:
+                 final_inventory: bool = True,
+                 deterministic_object_prefix: list[dict[str, object]] | None =
+                 None,
+                 deterministic_object_directory: Path | None = None) -> Path:
     def checkout_arg(path: Path) -> str:
         """Keep Clang's implicit include buffer independent of checkout path."""
         try:
@@ -2487,6 +2872,9 @@ def compile_link(out: Path, name: str, headers: list[Path],
         ])
     compile_flags.extend(
         f"-D{item}" for item in (*product_definitions, *scoped_definitions))
+    consumed_flags, consumed_report = compiler_consumed_static_header_flags(
+        out, target)
+    compile_flags.extend(consumed_flags)
     for header in headers:
         compile_flags.extend(["-include", checkout_arg(header)])
     compile_flags.extend([
@@ -2498,6 +2886,8 @@ def compile_link(out: Path, name: str, headers: list[Path],
     ])
     for directory in EXTRA_INCLUDE_DIRS:
         compile_flags.extend(["-I", checkout_arg(directory)])
+    feature_consumption_report = compiler_consumed_feature_profile_gate(
+        compile_flags, target)
     link_flags.extend([
         "-Wl,--icf=all",
         "-Wl,--emit-relocs",
@@ -2542,23 +2932,59 @@ def compile_link(out: Path, name: str, headers: list[Path],
     deterministic_objects = (
         os.environ.get("LISP65_DETERMINISTIC_OBJECTS") == "1")
     if deterministic_objects:
-        object_root = out / (".canonical-objects-" + target.stem)
-        object_root.mkdir()
+        object_root = (deterministic_object_directory
+                       if deterministic_object_directory is not None
+                       else out / (".canonical-objects-" + target.stem))
+        if object_root.parent != out:
+            raise RuntimeError(
+                "deterministic object directory escaped producer output")
+        sources = [Path(item) for item in source_list(probe_definitions)]
+        resumed_names: set[str] = set()
+        if deterministic_object_prefix is None:
+            object_root.mkdir()
+        else:
+            if not object_root.is_dir() or object_root.is_symlink():
+                raise RuntimeError(
+                    "deterministic object-prefix directory absent")
+            expected_names = [
+                f"{index:03d}-{source.stem}{source.suffix}.o"
+                for index, source in enumerate(
+                    sources[:len(deterministic_object_prefix)])
+            ]
+            supplied_names = [str(row.get("name"))
+                              for row in deterministic_object_prefix]
+            existing_names = sorted(
+                path.name for path in object_root.iterdir()
+                if path.is_file() and not path.is_symlink())
+            if (supplied_names != expected_names
+                    or existing_names != expected_names):
+                raise RuntimeError(
+                    "deterministic object prefix is not exact and contiguous")
+            for row, name_expected in zip(
+                    deterministic_object_prefix, expected_names, strict=True):
+                path = object_root / name_expected
+                raw = path.read_bytes()
+                if (int(row.get("bytes", -1)) != len(raw)
+                        or str(row.get("sha256")) !=
+                            hashlib.sha256(raw).hexdigest()):
+                    raise RuntimeError(
+                        f"deterministic object prefix identity drift: {path}")
+                resumed_names.add(name_expected)
         bitcode_objects: list[str] = []
         native_objects: list[str] = []
-        for index, source_raw in enumerate(source_list(probe_definitions)):
-            source = Path(source_raw)
+        for index, source in enumerate(sources):
             source_arg = source.relative_to(ROOT).as_posix()
             object_path = object_root / (
                 f"{index:03d}-{source.stem}{source.suffix}.o")
             object_arg = object_path.relative_to(ROOT).as_posix()
-            source_flags = (
-                ["-Qunused-arguments", *compile_flags]
-                if source.suffix == ".s" else compile_flags)
-            run([
-                compiler, *source_flags, "-c", source_arg,
-                "-o", object_arg,
-            ])
+            if object_path.name not in resumed_names:
+                source_flags = (
+                    ["-Qunused-arguments", *compile_flags]
+                    if source.suffix == ".s" else compile_flags)
+                run([
+                    compiler, *source_flags, "-c", source_arg,
+                    "-o", object_arg,
+                ])
             if source.suffix == ".c":
                 bitcode_objects.append(object_arg)
             else:
@@ -2600,6 +3026,25 @@ def compile_link(out: Path, name: str, headers: list[Path],
             str(setarch), os.uname().machine, "-R", *command,
         ]
     run_link_with_exact_orphan_wrapper(out, target, command)
+    if consumed_report is not None:
+        expected_flags = [
+            "-include", consumed_report["force_include_order"][0],
+            "-include", consumed_report["force_include_order"][1],
+        ]
+        positions = [
+            index for index in range(len(compile_flags) - 3)
+            if compile_flags[index:index + 4] == expected_flags]
+        if len(positions) != 1:
+            raise RuntimeError(
+                "bound candidate header escaped the real compiler flags")
+        consumed_report["actual_force_include_flags"] = expected_flags
+        receipt = Path(str(target) + ".compiler-input-consumption.json")
+        write(receipt, json.dumps(
+            consumed_report, indent=2, sort_keys=True) + "\n")
+    if feature_consumption_report is not None:
+        receipt = Path(str(target) + ".compiler-feature-consumption.json")
+        write(receipt, json.dumps(
+            feature_consumption_report, indent=2, sort_keys=True) + "\n")
     if final_inventory:
         final_section_inventory_gate(out, target)
     lto_partition_metadata_gate(out, target)
@@ -3361,11 +3806,16 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
         flags = value.get("required_flags")
         if not isinstance(flags, list) or not flags:
             raise RuntimeError("full-map final-section flags are absent")
+        name = str(value["name"])
+        is_relocation = name.startswith(".rela.")
         owners.append({
-            "name": str(value["name"]),
+            "name": name,
             "address": int(str(value["address"]), 0),
             "bytes": int(value["bytes"]),
             "flags": tuple(str(flag) for flag in flags),
+            "size_policy": (
+                "candidate-derived-relocation-records"
+                if is_relocation else "fixed-contract"),
         })
     names = [str(row["name"]) for row in owners]
     if len(set(names)) != len(names):
@@ -3523,7 +3973,16 @@ def _final_section_inventory_violations(
         row = matches[0]
         if int(row["address"]) != int(owner["address"]):
             violations.append(f"full-map-owner-address:{name}")
-        if int(row["bytes"]) != int(owner["bytes"]):
+        if owner.get("size_policy") == "candidate-derived-relocation-records":
+            # A relocation section's count follows the emitted freight.  Its
+            # identity, VMA and flags remain owner contract; the candidate's
+            # SHT_RELA extent is well-formed iff it contains whole ELF32 RELA
+            # records.  No historical record count is an acceptance input.
+            if (row.get("type") not in (None, "SHT_RELA")
+                    or int(row["bytes"]) <= 0
+                    or int(row["bytes"]) % 12 != 0):
+                violations.append(f"full-map-owner-relocation-shape:{name}")
+        elif int(row["bytes"]) != int(owner["bytes"]):
             violations.append(f"full-map-owner-size:{name}")
         if set(str(flag) for flag in row["flags"]) != set(owner["flags"]):
             violations.append(f"full-map-owner-flags:{name}")
@@ -3538,7 +3997,10 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
         {"name": ".text", "address": 0x2001, "bytes": 2,
          "flags": ["SHF_ALLOC"]},
         *[{"name": row["name"], "address": row["address"],
-           "bytes": row["bytes"], "flags": list(row["flags"])}
+           "bytes": row["bytes"],
+           "type": ("SHT_RELA" if str(row["name"]).startswith(".rela.")
+                    else "SHT_PROGBITS"),
+           "flags": list(row["flags"])}
           for row in owners],
         {"name": ".llvm_sympart", "address": 0, "bytes": 15,
          "flags": []},
@@ -3584,6 +4046,24 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
             raise AssertionError(
                 f"full-map moved-section mutation accepted: {section}")
         movement_mutations[section] = "rejected"
+        if owner.get("size_policy") == "candidate-derived-relocation-records":
+            resized = [
+                ({**row, "bytes": int(row["bytes"]) - 12}
+                 if row["name"] == section else dict(row))
+                for row in valid]
+            if _final_section_inventory_violations(
+                    expected, resized, owners):
+                raise AssertionError(
+                    f"candidate-derived relocation count rejected: {section}")
+            malformed = [
+                ({**row, "bytes": int(row["bytes"]) - 1}
+                 if row["name"] == section else dict(row))
+                for row in valid]
+            marker = f"full-map-owner-relocation-shape:{section}"
+            if marker not in _final_section_inventory_violations(
+                    expected, malformed, owners):
+                raise AssertionError(
+                    f"malformed relocation extent accepted: {section}")
     stray = [*valid, {"name": ".lisp65_unowned_stray", "address": 0,
                       "bytes": 1, "flags": ["SHF_ALLOC"]}]
     if "section-name-set" not in _final_section_inventory_violations(
@@ -3608,7 +4088,17 @@ def final_section_inventory_check(target: Path) -> dict[str, object]:
     expectation = final_section_inventory_expectation()
     expected = list(expectation["names"])
     sections = _readobj_sections(elf)
-    violations = _final_section_inventory_violations(expected, sections)
+    # Preserve the long-standing report schema while giving the relocation
+    # shape check the real emitted section types.  Type is an acceptance
+    # input, not a new field in every historical inventory report.
+    truth = ElfTruth.read(elf, llvm_readobj=TOOLCHAIN / "llvm-readobj")
+    section_types = {row.name: row.section_type for row in truth.sections
+                     if row.name}
+    checked_sections = [
+        {**row, "type": section_types.get(str(row["name"]))}
+        for row in sections]
+    violations = _final_section_inventory_violations(
+        expected, checked_sections)
     if violations:
         actual = [str(row["name"]) for row in sections]
         missing = [name for name in expected if name not in actual]
@@ -3636,6 +4126,20 @@ def final_section_inventory_check(target: Path) -> dict[str, object]:
             ("\n".join(str(row["name"]) for row in sections) + "\n").encode(
                 "ascii")).hexdigest(),
         "order_semantics": "provenance-only-not-an-acceptance-predicate",
+        "full_map_owner_size_semantics": [{
+            "name": str(owner["name"]),
+            "policy": str(owner["size_policy"]),
+            "contract_snapshot_bytes": int(owner["bytes"]),
+            "candidate_bytes": int(next(
+                row["bytes"] for row in sections
+                if row["name"] == owner["name"])),
+            "candidate_records": (
+                int(next(row["bytes"] for row in sections
+                         if row["name"] == owner["name"])) // 12
+                if owner["size_policy"] ==
+                    "candidate-derived-relocation-records" else None),
+        } for owner in (
+            _full_map_final_section_owners() if FULL_MAP_OWNERSHIP else [])],
         "llvm_sympart": {
             **partition,
             "runtime_load_bytes": 0,
@@ -3778,7 +4282,8 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
     elf = Path(str(target) + ".elf")
     fixed_leaf = FIXED_BLOCK_LEAF.audit_elf(
         elf, out=out / f"fixed-block-rtov-fail-{suffix}.json",
-        require_hot_bss=BSS_TRIAGE)
+        require_hot_bss=BSS_TRIAGE,
+        full_map_ownership=FULL_MAP_OWNERSHIP)
     sections = section_table(elf)
     symbols = defined_symbols(elf)
     required_sections = {
@@ -3795,9 +4300,16 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
     if BSS_TRIAGE:
         required_sections[".lisp65_c2_fixed_bank0_hot_bss"] = (
             FIXED_BANK0_HOT_BSS_BASE, FIXED_BANK0_HOT_BSS_BYTES)
-        required_sections[".noinit"] = (
-            FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES,
-            FIXED_BANK0_NOINIT_BYTES)
+        if FULL_MAP_OWNERSHIP:
+            required_sections[".noinit"] = (
+                FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES, 0)
+            required_sections[FIXED_BLOCK_LEAF.OWNED_STACK_SECTION] = (
+                FIXED_BLOCK_LEAF.OWNED_STACK_ADDRESS,
+                FIXED_BLOCK_LEAF.OWNED_STACK_BYTES)
+        else:
+            required_sections[".noinit"] = (
+                FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES,
+                FIXED_BANK0_NOINIT_BYTES)
     for name, (address, size) in required_sections.items():
         row = sections.get(name)
         if row != {"address": address, "bytes": size}:
@@ -3912,10 +4424,22 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
                 "bytes": FIXED_BANK0_HOT_BSS_BYTES,
                 "end_exclusive": (
                     FIXED_BANK0_HOT_BSS_BASE + FIXED_BANK0_HOT_BSS_BYTES),
-                "following_noinit_bytes": FIXED_BANK0_NOINIT_BYTES,
-                "contract_end_exclusive": fixed_bank0_contract_end(),
+                "following_noinit_bytes": (
+                    0 if FULL_MAP_OWNERSHIP else FIXED_BANK0_NOINIT_BYTES),
+                "owned_static_stack": ({
+                    "section": FIXED_BLOCK_LEAF.OWNED_STACK_SECTION,
+                    "base": FIXED_BLOCK_LEAF.OWNED_STACK_ADDRESS,
+                    "bytes": FIXED_BLOCK_LEAF.OWNED_STACK_BYTES,
+                } if FULL_MAP_OWNERSHIP else None),
+                "geometry_authority": (
+                    "full-map-state-ownership"
+                    if FULL_MAP_OWNERSHIP else "historical-inherited-noinit"),
+                "contract_end_exclusive": (
+                    0xC354 if FULL_MAP_OWNERSHIP
+                    else fixed_bank0_contract_end()),
                 "headroom_to_runtime_overlay_bytes": (
-                    0xC356 - fixed_bank0_contract_end()),
+                    2 if FULL_MAP_OWNERSHIP
+                    else 0xC356 - fixed_bank0_contract_end()),
             } if BSS_TRIAGE else {"status": "not-selected"}),
             "symbols": fixed_state,
         },
@@ -6732,6 +7256,9 @@ def main() -> int:
     parser.add_argument("--replay-link-18", action="store_true")
     args = parser.parse_args()
     if args.selftest:
+        lma_reset_matrix = low_resident_lma_reset_mutation_selftest()
+        assert len(lma_reset_matrix) == 7
+        assert set(lma_reset_matrix.values()) == {"rejected"}
         profile_matrix = v2_profile_mutation_selftest()
         assert profile_matrix["missing_define_mutations_rejected"] == 8
         assert list(profile_matrix["overbroad_define_mutation"].values()) == ["rejected"]
@@ -6823,6 +7350,12 @@ def main() -> int:
         assert VERIFIER_BINDING_BASE == 0xB954
         assert KERNAL_CRC_BINDING_HIGH_ADDRESS == 0xB4F4
         assert KERNAL_CRC_BINDING_LOW_ADDRESS == 0xB4FA
+        crc_call_matrix = _kernal_crc_call_binding_model_selftest()
+        assert len(crc_call_matrix) == 4
+        assert crc_call_matrix[
+            "encoded-target-with-unrelated-display-label"] == "passed"
+        assert crc_call_matrix[
+            "display-name-with-wrong-encoded-target"] == "rejected"
         try:
             checked_public_projection(["literal_prep", "literal-prep"])
         except RuntimeError:
@@ -6846,6 +7379,7 @@ def main() -> int:
         assert ".lisp65_runtime_overlay_verifier_bindings" in generated
         assert "SIZEOF(.lisp65_runtime_overlay_verifier_bindings) == 32" in generated
         assert ".lisp65_c2_kernal_handoff 0xb4a3" in generated
+        assert ".lisp65_c2_kernal_handoff 0xb4a3 : AT(" not in generated
         assert ".lisp65_c2_kernal_io_reveal 0xb5eb" in generated
         assert ".lisp65_c2_kernal_map_switch 0xb5f6" in generated
         assert "SIZEOF(.lisp65_c2_kernal_window.session_emitter_code) == 0" in generated

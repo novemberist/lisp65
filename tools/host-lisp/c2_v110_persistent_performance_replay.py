@@ -16,7 +16,7 @@ import c2_v110_persistent_performance as V110  # noqa: E402
 
 
 HISTORICAL_COMMIT = "d13bd166"
-REBOUND_ON = "2026-08-07"
+REBOUND_ON = "2026-08-09"
 AUTHORITY_KEYS = ("closing_plan", "gate_wiring", "driver")
 
 
@@ -63,6 +63,25 @@ def check() -> dict[str, object]:
     current = V110.derive()
     for key in ("closing_plan", "gate_wiring"):
         current["authorities"][key] = recorded["authorities"][key]
+    # Link 95 intentionally changes the surrounding packed stdlib.  The
+    # historical defstruct carrier remains semantically identical, but the
+    # live symbol allocator moves its generated manifest SHA and the absolute
+    # window-schedule SHA.  Normalize exactly those two container identities;
+    # every count, price, form result, freight byte and transaction witness
+    # remains subject to the full receipt equality below.
+    require(
+        current["authorities"]["candidate_manifest"]
+            != recorded["authorities"]["candidate_manifest"]
+        and current["host_execution"]["window_schedule_sha256"]
+            != recorded["host_execution"]["window_schedule_sha256"],
+        "Link-95 container-identity rebind no longer has its exact two inputs",
+    )
+    current["authorities"]["candidate_manifest"] = (
+        recorded["authorities"]["candidate_manifest"]
+    )
+    current["host_execution"]["window_schedule_sha256"] = (
+        recorded["host_execution"]["window_schedule_sha256"]
+    )
     require(current == recorded,
             "current host reconstruction differs beyond historical authorities")
     return {
@@ -73,7 +92,10 @@ def check() -> dict[str, object]:
         ).stdout.strip(),
         "rebound_on": REBOUND_ON,
         "historical_receipt_rewritten": False,
-        "normalized_authorities": ["closing_plan", "gate_wiring"],
+        "normalized_authorities": [
+            "closing_plan", "gate_wiring", "candidate_manifest",
+            "window_schedule_sha256",
+        ],
         "mutations": 22,
     }
 

@@ -34,7 +34,9 @@ FINAL_COMPOSITION_RECEIPT = ROOT / (
 )
 PUBLIC_BUILD_RECEIPT = BUILD / "public-build-current-source-receipt.json"
 CURRENT_COMPOSITION_RECEIPT = BUILD / "v1.2.5-current-composition.json"
-TIME_NAMES = ["%time-read", "%time-delta", "time"]
+TIME_NAMES = [
+    "%time-read", "%time-delta", "%time-error-duration-overflow", "time",
+]
 
 
 class GateError(RuntimeError):
@@ -130,6 +132,8 @@ def validate(
         "(if (>= high 64)",
         "(%time-error-duration-overflow)",
         "(+ (* high 256) low)",
+        "(defun %time-error-duration-overflow ()",
+        "(mod 1 0)",
         "(defmacro time (form)",
         "(,value ,form)",
         "(print (%time-delta ,start ,finish))",
@@ -154,14 +158,14 @@ def validate(
         and any(row["name"] == "time-expander-head"
                 and row["expect"] == "let*" for row in suite["cases"])
         and any(row["name"] == "time-delta-overflow"
-                and row["expect_vm_error"] == "DirMiss"
+                and row["expect_vm_error"] == "TypeError"
                 for row in suite["cases"]),
         "time suite/execution witness drift",
     )
     return {
         "status": "passed-time-source-contract",
         "public_macros": ["time"],
-        "private_functions": 2,
+        "private_functions": 3,
         "counter": "$FF84/$FF83/$FF84",
         "maximum_reportable_frames": 16383,
         "resident_delta_bytes": 0,
@@ -200,6 +204,8 @@ def mutations(
     )
     source_mutation(
         "overflow-admitted", "(if (>= high 64)", "(if (> high 64)")
+    source_mutation(
+        "overflow-helper-no-longer-fail-closed", "(mod 1 0)", "nil")
     source_mutation(
         "form-evaluated-twice",
         "(,value ,form)",
@@ -253,7 +259,7 @@ def generated_cases() -> list[dict[str, Any]]:
         try:
             row["expect"] = str(delta(start, finish))
         except OverflowError:
-            row["expect_vm_error"] = "DirMiss"
+            row["expect_vm_error"] = "TypeError"
         cases.append(row)
     return cases
 
@@ -305,9 +311,9 @@ def artifact_gate() -> dict[str, Any]:
     )
     require(
         code_delta <= 512
-        and code_delta == 282
-        and (directory_delta, entry_delta, resolution_delta) == (21, 3, 12)
-        and [row["name"] for row in new["entries"][-3:]] == TIME_NAMES
+        and code_delta == 295
+        and (directory_delta, entry_delta, resolution_delta) == (28, 4, 12)
+        and [row["name"] for row in new["entries"][-4:]] == TIME_NAMES
         and new["entries"][-1]["flags"] == 1,
         "time emitted artifact delta/admission drift",
     )
@@ -353,7 +359,7 @@ def artifact_gate() -> dict[str, Any]:
     )
     projected = baseline_code + code_delta
     require(
-        projected == 43218 and 65536 - projected == 22318,
+        projected == 43231 and 65536 - projected == 22305,
         "time projected Bank-2 capacity drift",
     )
     current_code = int(profile["bank2_static_code"]["bytes"])

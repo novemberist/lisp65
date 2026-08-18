@@ -26,6 +26,10 @@ FORMAT = "lisp65-c2-v112-release-closure-receipt-v1"
 STATES = ("closure-only", "host-integrated", "media-closed", "selected")
 FREIGHT = ("who-calls", "capitalize", "string-split")
 CONDITIONAL = ("defstruct",)
+HISTORICAL_PLAN_COMMIT = "8e4f4be408796047e7766cf13c3de49e2f5164c1"
+HISTORICAL_GATE_COMMIT = "e124b54a1bd32abc2f52ebdd436dceded591a913"
+HISTORICAL_TRACE_COMMIT = "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f"
+HISTORICAL_EDITOR_COMMIT = HISTORICAL_GATE_COMMIT
 
 
 class ClosureError(RuntimeError):
@@ -65,6 +69,82 @@ def git_bind(commit: str) -> str:
     )
     require(result.returncode == 0, f"owner commit is not bound: {commit}")
     return result.stdout.strip()
+
+
+def git_bytes(commit: str, path: str) -> bytes:
+    result = subprocess.run(
+        ["git", "show", f"{commit}:{path}"], cwd=ROOT,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    require(result.returncode == 0,
+            f"historical authority is not readable: {commit}:{path}")
+    return result.stdout
+
+
+def rebind_append_only_plan(
+        historical: dict[str, Any], current: dict[str, Any]) -> dict[str, Any]:
+    """Keep the sealed release receipt authoritative across later plan appendices."""
+    historical_plan = historical.get("authorities", {}).get("plan", {})
+    historical_gate = historical.get("gate", {})
+    path = historical_plan.get("path")
+    require(isinstance(path, str), "historical plan binding absent")
+    historical_raw = git_bytes(HISTORICAL_PLAN_COMMIT, path)
+    require(historical_plan == {
+        "path": path,
+        "bytes": len(historical_raw),
+        "sha256": sha(historical_raw),
+    }, "historical plan binding does not match its owning commit")
+    current_raw = (ROOT / path).read_bytes()
+    require(current_raw.startswith(historical_raw),
+            "post-release plan is not an exact append-only extension")
+    gate_path = historical_gate.get("path")
+    require(isinstance(gate_path, str), "historical gate binding absent")
+    gate_raw = git_bytes(HISTORICAL_GATE_COMMIT, gate_path)
+    require(historical_gate == {
+        "path": gate_path,
+        "bytes": len(gate_raw),
+        "sha256": sha(gate_raw),
+    }, "historical release gate does not match its owning commit")
+    rebound = deepcopy(current)
+    rebound["authorities"]["plan"] = historical_plan
+    rebound["gate"] = historical_gate
+
+    # The successor trace ABI deliberately hardens the old descope receipt and
+    # its release-freight consumer.  Neither metadata successor may rewrite the
+    # sealed v1.4 closure.  Prove the recorded bindings against their owning
+    # commits, then retain those exact historical identities for comparison.
+    trace_binding = historical["authorities"]["trace_descope_receipt"]
+    trace_raw = git_bytes(HISTORICAL_TRACE_COMMIT, trace_binding["path"])
+    require(trace_binding == {
+        "path": trace_binding["path"],
+        "bytes": len(trace_raw),
+        "sha256": sha(trace_raw),
+    }, "historical trace-descope binding does not match its owner commit")
+    freight_binding = historical["promotion"]["freight_receipt"]
+    freight_raw = git_bytes(HISTORICAL_GATE_COMMIT, freight_binding["path"])
+    require(freight_binding == {
+        "path": freight_binding["path"],
+        "bytes": len(freight_raw),
+        "sha256": sha(freight_raw),
+    }, "historical freight binding does not match its owner commit")
+    rebound["authorities"]["trace_descope_receipt"] = trace_binding
+    rebound["promotion"]["freight_receipt"] = freight_binding
+
+    # Link 94 legitimately grows the current public-name count carried in the
+    # editor status-line fixture.  That successor execution must not rewrite
+    # the sealed v1.4 editor authority, whose physical 64/64 result remains a
+    # separate immutable binding below.
+    editor_binding = historical["authorities"]["editor_allocation_receipt"]
+    editor_raw = git_bytes(HISTORICAL_EDITOR_COMMIT, editor_binding["path"])
+    require(editor_binding == {
+        "path": editor_binding["path"],
+        "bytes": len(editor_raw),
+        "sha256": sha(editor_raw),
+    }, "historical editor-allocation binding does not match its owner commit")
+    rebound["authorities"]["editor_allocation_receipt"] = editor_binding
+    require(rebound == historical,
+            "release closure drift outside the dated append-only plan rebind")
+    return rebound
 
 
 def canonical(value: dict[str, Any]) -> str:
@@ -433,10 +513,13 @@ def main() -> int:
         value["mutations_rejected"] = mutations
         value["mutation_count"] = len(mutations)
         if args.action == "write":
+            require(not RECEIPT.exists(),
+                    "sealed release-closure receipt may not be rewritten")
             RECEIPT.write_text(canonical(value), encoding="utf-8")
         else:
             require(RECEIPT.is_file(), "release-closure receipt absent")
-            require(load(RECEIPT) == value, "release-closure receipt drift")
+            historical = load(RECEIPT)
+            value = rebind_append_only_plan(historical, value)
         print(
             "c2-v112-release-closure: PASS "
             f"state={value['state']['integration_state']} "

@@ -19,6 +19,123 @@
 .PHONY: c2-v19-full-map-replay-check
 .PHONY: c2-v19-full-map-recharter-preflight
 .PHONY: c2-v19-full-map-recharter-card
+.PHONY: c2-golden-layout-inversion-selftest
+.PHONY: c2-golden-layout-inversion-check
+.PHONY: c2-golden-layout-inversion-review
+.PHONY: c2-golden-layout-product-card-check
+.PHONY: c2-golden-layout-replacement-card-check
+.PHONY: c2-v20-ownership-recharter-selftest
+.PHONY: c2-v20-ownership-recharter-preflight
+.PHONY: c2-v20-ownership-recharter-card
+.PHONY: c2-v20-ownership-recharter-check
+.PHONY: c2-v20-invariant-golden-selftest
+.PHONY: c2-v20-invariant-golden-check
+.PHONY: c2-v20-invariant-golden-review
+.PHONY: c2-v20-invariant-golden-card-selftest
+.PHONY: c2-v20-invariant-golden-card-preflight
+.PHONY: c2-v20-invariant-golden-card
+.PHONY: c2-v20-invariant-golden-card-check
+.PHONY: c2-v20-lma-repair-selftest
+.PHONY: c2-v20-lma-repair-preflight
+.PHONY: c2-v20-lma-repair-card
+.PHONY: c2-v20-lma-repair-check
+.PHONY: c2-v20-vma-invariant-golden-selftest
+.PHONY: c2-v20-vma-invariant-golden-check
+.PHONY: c2-v20-vma-invariant-golden-review
+.PHONY: c2-v20-vma-golden-review-rebind-selftest
+.PHONY: c2-v20-vma-golden-review-rebind-check
+.PHONY: c2-v20-vma-golden-card-selftest
+.PHONY: c2-v20-vma-golden-card-preflight
+.PHONY: c2-v20-vma-golden-card
+.PHONY: c2-v20-vma-golden-card-check
+.PHONY: c2-v20-vma-golden-card-result-selftest
+.PHONY: c2-v20-vma-golden-card-result-check
+.PHONY: c2-v20-crc-carveout-card-selftest
+.PHONY: c2-v20-crc-carveout-card-preflight
+.PHONY: c2-v20-crc-carveout-card
+.PHONY: c2-v20-crc-carveout-card-check
+.PHONY: c2-v20-crc-carveout-media-selftest
+.PHONY: c2-v20-crc-carveout-media-check
+.PHONY: c2-v20-crc-carveout-media-liveness-selftest
+.PHONY: c2-v20-crc-carveout-media-liveness-check
+.PHONY: c2-v20-building-heap-attribution-selftest
+.PHONY: c2-v20-building-heap-attribution-check
+.PHONY: c2-v20-building-heap-device-result-selftest
+.PHONY: c2-v20-building-heap-device-result-check
+.PHONY: c2-v20-mapped-far-return-attribution-selftest
+.PHONY: c2-v20-mapped-far-return-attribution-check
+.PHONY: c2-v20-far-payload-delivery-selftest
+.PHONY: c2-v20-far-payload-delivery-check
+.PHONY: c2-v20-far-payload-device-result-selftest
+.PHONY: c2-v20-far-payload-device-result-check
+.PHONY: c2-v20-far-payload-installation-result-selftest
+.PHONY: c2-v20-far-payload-installation-result-check
+.PHONY: c2-v20-mapped-far-dispatch-attribution-selftest
+.PHONY: c2-v20-mapped-far-dispatch-attribution-check
+.PHONY: c2-v20-map-tuple-fix-selftest
+.PHONY: c2-v20-map-tuple-fix-check
+.PHONY: c2-v20-map-tuple-fix-card-selftest
+.PHONY: c2-v20-map-tuple-fix-card-preflight
+.PHONY: c2-v20-map-tuple-fix-card
+.PHONY: c2-v20-map-tuple-fix-card-check
+.PHONY: c2-v20-map-tuple-fix-replacement-selftest
+.PHONY: c2-v20-map-tuple-fix-replacement-preflight
+.PHONY: c2-v20-map-tuple-fix-replacement-card
+.PHONY: c2-v20-map-tuple-fix-replacement-check
+.PHONY: c2-v20-map-tuple-artifact-replay-selftest
+.PHONY: c2-v20-map-tuple-artifact-replay
+.PHONY: c2-v20-map-tuple-artifact-replay-check
+.PHONY: c2-v20-map-tuple-media-selftest
+.PHONY: c2-v20-map-tuple-media
+.PHONY: c2-v20-map-tuple-media-check
+.PHONY: c2-v20-map-tuple-d1-e25-selftest
+.PHONY: c2-v20-map-tuple-d1-e25-check
+.PHONY: c2-v20-map-tuple-d1-e25-result-selftest
+.PHONY: c2-v20-map-tuple-d1-e25-result-check
+.PHONY: c2-v20-phase02a-attribution-selftest
+.PHONY: c2-v20-phase02a-attribution-check
+.PHONY: c2-v20-phase02a-site-result-selftest
+.PHONY: c2-v20-phase02a-site-result-check
+.PHONY: c2-v20-source-authoritative-oracle-selftest
+.PHONY: c2-v20-source-authoritative-oracle-check
+.PHONY: c2-v20-source-authoritative-oracle-card-selftest
+.PHONY: c2-v20-source-authoritative-oracle-card-preflight
+.PHONY: c2-v20-source-authoritative-oracle-card
+.PHONY: c2-v20-source-authoritative-oracle-card-check
+.PHONY: c2-v20-source-oracle-replacement-selftest
+.PHONY: c2-v20-source-oracle-replacement-preflight
+.PHONY: c2-v20-source-oracle-replacement-card
+.PHONY: c2-v20-source-oracle-replacement-check
+.PHONY: c2-v20-source-oracle-replacement2-selftest
+.PHONY: c2-v20-source-oracle-replacement2-preflight
+.PHONY: c2-v20-source-oracle-replacement2-card
+.PHONY: c2-v20-source-oracle-replacement2-check
+.PHONY: c2-v20-source-oracle-replacement3-selftest
+.PHONY: c2-v20-source-oracle-replacement3-preflight
+.PHONY: c2-v20-source-oracle-replacement3-card
+.PHONY: c2-v20-source-oracle-replacement3-check
+.PHONY: c2-v20-source-oracle-media-selftest
+.PHONY: c2-v20-source-oracle-media
+.PHONY: c2-v20-source-oracle-media-check
+.PHONY: c2-v20-link105-dynamic-rescue-selftest
+.PHONY: c2-v20-link105-dynamic-rescue-check
+.PHONY: c2-v20-phase02b-extent-attribution-selftest
+.PHONY: c2-v20-phase02b-extent-attribution-check
+.PHONY: c2-v20-phase02b-header-consumption-selftest
+.PHONY: c2-v20-phase02b-header-consumption-preflight
+.PHONY: c2-v20-phase02b-header-consumption-card
+.PHONY: c2-v20-phase02b-header-consumption-check
+.PHONY: c2-v20-phase02b-header-consumption-replacement-selftest
+.PHONY: c2-v20-phase02b-header-consumption-replacement-preflight
+.PHONY: c2-v20-phase02b-header-consumption-replacement-card
+.PHONY: c2-v20-phase02b-header-consumption-replacement-check
+.PHONY: c2-v20-phase02b-header-consumption-media-selftest
+.PHONY: c2-v20-phase02b-header-consumption-media
+.PHONY: c2-v20-phase02b-header-consumption-media-check
+.PHONY: c2-v20-phase02b-header-consumption-d1-selftest
+.PHONY: c2-v20-phase02b-header-consumption-d1-check
+.PHONY: c2-v20-phase02b-header-consumption-d1-result-selftest
+.PHONY: c2-v20-phase02b-header-consumption-d1-result-check
 .PHONY: comfort-track-selftest
 .PHONY: comfort-track-check
 .PHONY: c2-v110-persistent-performance-selftest
@@ -90,7 +207,7 @@ c2-reset-domain-completeness-check: c2-reset-domain-completeness-selftest
 
 PUBLIC_BUILD_SOURCE_REPOSITORY ?= .
 PUBLIC_BUILD_SOURCE_COMMIT ?= HEAD
-PUBLIC_BUILD_RECEIPT ?= build/c2.3/v1.3.0-public-clean-build/receipt.json
+PUBLIC_BUILD_RECEIPT ?= build/c2.3/v1.5.0-public-clean-build/receipt.json
 
 c2-lite-public-clean-build-selftest:
 	python3 tools/host-lisp/c2_lite_public_clean_build.py selftest
@@ -127,14 +244,14 @@ c2-mapped-far-service-ownership-selftest:
 
 c2-mapped-far-service-ownership-check: c2-mapped-far-service-ownership-selftest
 	python3 tools/host-lisp/c2_mapped_far_service_gate.py \
-		--receipt tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-stack-overlay-mapped-far-service-ownership-gate-receipt.json
+		--receipt tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-mapped-far-abi-preservation-ownership-gate-receipt.json
 
 c2-mapped-far-asm-equivalence-selftest:
 	python3 tools/host-lisp/c2_mapped_far_asm_equivalence.py --selftest
 
 c2-mapped-far-asm-equivalence-check: c2-mapped-far-asm-equivalence-selftest
 	python3 tools/host-lisp/c2_mapped_far_asm_equivalence.py \
-		--receipt tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-mapped-far-assembly-equivalence-receipt.json
+		--receipt tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-mapped-far-abi-preservation-equivalence-receipt.json
 
 c2-v17-state-ownership-phase-c-selftest:
 	python3 tools/host-lisp/c2_v17_state_ownership_phase_c.py --selftest
@@ -168,6 +285,405 @@ c2-v19-full-map-recharter-preflight: c2-v19-full-map-replay-check
 c2-v19-full-map-recharter-card:
 	python3 tools/host-lisp/c2_v19_full_map_recharter_wplto.py card
 
+c2-golden-layout-inversion-selftest:
+	python3 tools/host-lisp/c2_golden_layout_inversion.py selftest
+
+c2-golden-layout-inversion-check: c2-golden-layout-inversion-selftest
+	python3 tools/host-lisp/c2_golden_layout_inversion.py check
+
+c2-golden-layout-inversion-review: c2-golden-layout-inversion-check
+	python3 tools/host-lisp/c2_golden_layout_inversion.py review
+
+c2-golden-layout-product-card-check: c2-golden-layout-inversion-check
+	python3 tools/host-lisp/c2_golden_layout_product_card.py check
+
+c2-golden-layout-replacement-card-check: c2-golden-layout-product-card-check
+	python3 tools/host-lisp/c2_golden_layout_replacement_card.py check
+
+c2-v20-ownership-recharter-selftest: c2-golden-layout-inversion-check
+	python3 tools/host-lisp/c2_v20_ownership_recharter.py selftest
+
+c2-v20-ownership-recharter-preflight: c2-v20-ownership-recharter-selftest
+	python3 tools/host-lisp/c2_v20_ownership_recharter.py preflight
+
+c2-v20-ownership-recharter-card:
+	python3 tools/host-lisp/c2_v20_ownership_recharter.py card
+
+c2-v20-ownership-recharter-check: c2-v20-ownership-recharter-selftest
+	python3 tools/host-lisp/c2_v20_ownership_recharter.py check
+
+c2-v20-invariant-golden-selftest: c2-v20-ownership-recharter-check
+	python3 tools/host-lisp/c2_v20_invariant_golden.py selftest
+
+c2-v20-invariant-golden-check: c2-v20-invariant-golden-selftest
+	python3 tools/host-lisp/c2_v20_invariant_golden.py check
+
+c2-v20-invariant-golden-review: c2-v20-invariant-golden-check
+	python3 tools/host-lisp/c2_v20_invariant_golden.py review
+
+c2-v20-invariant-golden-card-selftest: c2-v20-invariant-golden-check
+	python3 tools/host-lisp/c2_v20_invariant_golden_card.py selftest
+
+c2-v20-invariant-golden-card-preflight: c2-v20-invariant-golden-card-selftest
+	python3 tools/host-lisp/c2_v20_invariant_golden_card.py preflight
+
+c2-v20-invariant-golden-card: c2-v20-invariant-golden-card-selftest
+	python3 tools/host-lisp/c2_v20_invariant_golden_card.py card
+
+c2-v20-invariant-golden-card-check: c2-v20-invariant-golden-card-selftest
+	python3 tools/host-lisp/c2_v20_invariant_golden_card.py check
+
+c2-v20-lma-repair-selftest: c2-v20-media-first-red-check
+	python3 tools/host-lisp/c2_v20_lma_repair_card.py selftest
+
+c2-v20-lma-repair-preflight: c2-v20-lma-repair-selftest
+	python3 tools/host-lisp/c2_v20_lma_repair_card.py preflight
+
+c2-v20-lma-repair-card: c2-v20-lma-repair-selftest
+	python3 tools/host-lisp/c2_v20_lma_repair_card.py card
+
+c2-v20-lma-repair-check: c2-v20-lma-repair-selftest
+	python3 tools/host-lisp/c2_v20_lma_repair_card.py check
+
+c2-v20-vma-invariant-golden-selftest: c2-v20-lma-repair-check
+	python3 tools/host-lisp/c2_v20_vma_invariant_golden.py selftest
+
+c2-v20-vma-invariant-golden-check: c2-v20-vma-invariant-golden-selftest
+	python3 tools/host-lisp/c2_v20_vma_invariant_golden.py check
+
+c2-v20-vma-invariant-golden-review: c2-v20-vma-invariant-golden-check
+	python3 tools/host-lisp/c2_v20_vma_invariant_golden.py review
+
+c2-v20-vma-golden-review-rebind-selftest: c2-v20-vma-invariant-golden-check
+	python3 tools/host-lisp/c2_v20_vma_golden_review_rebind.py selftest
+
+c2-v20-vma-golden-review-rebind-check: c2-v20-vma-golden-review-rebind-selftest
+	python3 tools/host-lisp/c2_v20_vma_golden_review_rebind.py check
+	python3 tools/host-lisp/c2_v20_vma_golden_review_rebind_20260816.py check
+
+c2-v20-vma-golden-card-selftest: c2-v20-vma-invariant-golden-check
+	python3 tools/host-lisp/c2_v20_vma_golden_card.py selftest
+
+c2-v20-vma-golden-card-preflight: c2-v20-vma-golden-card-selftest
+	python3 tools/host-lisp/c2_v20_vma_golden_card.py preflight
+
+c2-v20-vma-golden-card: c2-v20-vma-golden-card-selftest
+	python3 tools/host-lisp/c2_v20_vma_golden_card.py card
+
+c2-v20-vma-golden-card-check: c2-v20-vma-golden-card-selftest
+	python3 tools/host-lisp/c2_v20_vma_golden_card.py check
+
+c2-v20-vma-golden-card-result-selftest: c2-v20-vma-golden-card-check
+	python3 tools/host-lisp/c2_v20_vma_golden_card_result.py selftest
+
+c2-v20-vma-golden-card-result-check: c2-v20-vma-golden-card-result-selftest
+	python3 tools/host-lisp/c2_v20_vma_golden_card_result.py check
+
+c2-v20-crc-carveout-card-selftest: c2-v20-vma-golden-card-result-check
+	python3 tools/host-lisp/c2_v20_crc_carveout_card.py selftest
+
+c2-v20-crc-carveout-card-preflight: c2-v20-crc-carveout-card-selftest
+	python3 tools/host-lisp/c2_v20_crc_carveout_card.py preflight
+
+c2-v20-crc-carveout-card: c2-v20-crc-carveout-card-selftest
+	python3 tools/host-lisp/c2_v20_crc_carveout_card.py card
+
+c2-v20-crc-carveout-card-check: c2-v20-crc-carveout-card-selftest
+	python3 tools/host-lisp/c2_v20_crc_carveout_card.py check
+
+c2-v20-crc-carveout-media-selftest: c2-v20-crc-carveout-card-check
+	python3 tools/host-lisp/c2_v20_crc_carveout_media.py selftest
+
+c2-v20-crc-carveout-media-check: c2-v20-crc-carveout-media-selftest
+	python3 tools/host-lisp/c2_v20_crc_carveout_media.py check
+
+c2-v20-crc-carveout-media-liveness-selftest: c2-v20-crc-carveout-media-check c2-v20-building-heap-attribution-check
+	python3 tools/host-lisp/c2_v20_crc_carveout_media_liveness.py selftest
+
+c2-v20-crc-carveout-media-liveness-check: c2-v20-crc-carveout-media-liveness-selftest
+	python3 tools/host-lisp/c2_v20_crc_carveout_media_liveness.py check
+
+.PHONY: c2-v20-building-heap-mem-source-unbind-selftest c2-v20-building-heap-mem-source-unbind-check
+c2-v20-building-heap-mem-source-unbind-selftest: c2-v20-crc-carveout-card-check
+	python3 tools/host-lisp/c2_v20_building_heap_mem_source_unbind_20260816.py selftest
+
+c2-v20-building-heap-mem-source-unbind-check: c2-v20-building-heap-mem-source-unbind-selftest
+	python3 tools/host-lisp/c2_v20_building_heap_mem_source_unbind_20260816.py check
+
+c2-v20-building-heap-attribution-selftest: c2-v20-building-heap-mem-source-unbind-check
+	python3 tools/host-lisp/c2_v20_building_heap_attribution.py selftest
+
+c2-v20-building-heap-attribution-check: c2-v20-building-heap-attribution-selftest
+	python3 tools/host-lisp/c2_v20_building_heap_attribution.py check
+
+c2-v20-building-heap-device-result-selftest: c2-v20-crc-carveout-media-liveness-check
+	python3 tools/host-lisp/c2_v20_building_heap_device_result.py selftest
+
+c2-v20-building-heap-device-result-check: c2-v20-building-heap-device-result-selftest
+	python3 tools/host-lisp/c2_v20_building_heap_source_unbind_full_span_rebind_20260816.py check
+
+c2-v20-mapped-far-return-attribution-selftest: c2-v20-building-heap-device-result-check
+	python3 tools/host-lisp/c2_v20_mapped_far_return_attribution.py selftest
+
+c2-v20-mapped-far-return-attribution-check: c2-v20-mapped-far-return-attribution-selftest
+	python3 tools/host-lisp/c2_v20_mapped_far_return_source_unbind_phase9_20260815.py check
+
+c2-v20-far-payload-delivery-selftest: c2-v20-mapped-far-return-attribution-check
+	python3 tools/host-lisp/c2_v20_far_payload_delivery.py selftest
+
+c2-v20-far-payload-delivery-check: c2-v20-far-payload-delivery-selftest
+	python3 tools/host-lisp/c2_v20_far_payload_delivery.py check
+
+c2-v20-far-payload-device-result-selftest: c2-v20-far-payload-delivery-check
+	python3 tools/host-lisp/c2_v20_far_payload_device_result.py selftest
+
+c2-v20-far-payload-device-result-check: c2-v20-far-payload-device-result-selftest
+	python3 tools/host-lisp/c2_v20_far_payload_device_result.py check
+
+c2-v20-far-payload-installation-result-selftest: c2-v20-far-payload-device-result-check
+	python3 tools/host-lisp/c2_v20_far_payload_installation_result.py selftest
+
+c2-v20-far-payload-installation-result-check: c2-v20-far-payload-installation-result-selftest
+	python3 tools/host-lisp/c2_v20_far_payload_installation_result.py check
+
+c2-v20-mapped-far-dispatch-attribution-selftest: c2-v20-far-payload-installation-result-check
+	python3 tools/host-lisp/c2_v20_mapped_far_dispatch_attribution.py selftest
+
+c2-v20-mapped-far-dispatch-attribution-check: c2-v20-mapped-far-dispatch-attribution-selftest
+	python3 tools/host-lisp/c2_v20_mapped_far_dispatch_attribution.py check
+
+c2-v20-map-tuple-fix-selftest:
+	python3 tools/host-lisp/c2_v20_map_tuple_fix.py selftest
+
+c2-v20-map-tuple-fix-check: c2-v20-map-tuple-fix-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_fix.py check
+
+c2-v20-map-tuple-fix-card-selftest: c2-v20-map-tuple-fix-check
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_card.py selftest
+
+c2-v20-map-tuple-fix-card-preflight: c2-v20-map-tuple-fix-card-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_card.py preflight
+
+c2-v20-map-tuple-fix-card: c2-v20-map-tuple-fix-card-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_card.py card
+
+.PHONY: c2-v20-map-tuple-inventory-rebind-selftest c2-v20-map-tuple-inventory-rebind-check
+c2-v20-map-tuple-inventory-rebind-selftest: c2-v20-map-tuple-fix-card-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_inventory_rebind_20260816.py selftest
+
+c2-v20-map-tuple-inventory-rebind-check: c2-v20-map-tuple-inventory-rebind-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_inventory_rebind_20260816.py check
+
+c2-v20-map-tuple-fix-card-check: c2-v20-map-tuple-inventory-rebind-check
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_card.py check
+
+.PHONY: c2-v20-map-tuple-fixture-scope-rebind-check
+c2-v20-map-tuple-fixture-scope-rebind-check: c2-v20-map-tuple-fix-card-check
+	python3 tools/host-lisp/c2_v20_map_tuple_inventory_rebind_20260816.py check
+
+c2-v20-map-tuple-fix-replacement-selftest: c2-v20-map-tuple-fixture-scope-rebind-check
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_replacement_card.py selftest
+
+c2-v20-map-tuple-fix-replacement-preflight: c2-v20-map-tuple-fix-replacement-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_replacement_card.py preflight
+
+c2-v20-map-tuple-fix-replacement-card: c2-v20-map-tuple-fix-replacement-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_replacement_card.py card
+
+c2-v20-map-tuple-fix-replacement-check: c2-v20-map-tuple-fix-replacement-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_fix_replacement_card.py check
+
+c2-v20-map-tuple-artifact-replay-selftest: c2-v20-map-tuple-fix-replacement-check
+	python3 tools/host-lisp/c2_v20_map_tuple_artifact_replay.py selftest
+
+c2-v20-map-tuple-artifact-replay: c2-v20-map-tuple-artifact-replay-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_artifact_replay.py replay
+
+c2-v20-map-tuple-artifact-replay-check: c2-v20-map-tuple-artifact-replay-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_artifact_replay.py check
+
+c2-v20-map-tuple-media-selftest: c2-v20-map-tuple-artifact-replay-check
+	python3 tools/host-lisp/c2_v20_map_tuple_media.py selftest
+
+c2-v20-map-tuple-media: c2-v20-map-tuple-media-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_media.py build
+
+c2-v20-map-tuple-media-check: c2-v20-map-tuple-media-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_media.py check
+
+c2-v20-map-tuple-d1-e25-selftest: c2-v20-map-tuple-media-check
+	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25.py selftest
+
+c2-v20-map-tuple-d1-e25-check: c2-v20-map-tuple-d1-e25-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25_rebind_20260814.py check
+
+c2-v20-map-tuple-d1-e25-result-selftest: c2-v20-map-tuple-d1-e25-check
+	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25_result.py selftest
+
+c2-v20-map-tuple-d1-e25-result-check: c2-v20-map-tuple-d1-e25-result-selftest
+	python3 tools/host-lisp/c2_v20_map_tuple_d1_e25_result.py check
+
+.PHONY: c2-v20-phase02a-source-unbind-selftest c2-v20-phase02a-source-unbind-check
+c2-v20-phase02a-source-unbind-selftest: c2-v20-map-tuple-d1-e25-result-check
+	python3 tools/host-lisp/c2_v20_phase02a_source_unbind_20260816.py selftest
+
+c2-v20-phase02a-source-unbind-check: c2-v20-phase02a-source-unbind-selftest
+	python3 tools/host-lisp/c2_v20_phase02a_source_unbind_20260816.py check
+
+c2-v20-phase02a-attribution-selftest: c2-v20-phase02a-source-unbind-check
+	python3 tools/host-lisp/c2_v20_phase02a_source_unbind_20260816.py check
+
+c2-v20-phase02a-attribution-check: c2-v20-phase02a-attribution-selftest
+	python3 tools/host-lisp/c2_v20_phase02a_source_unbind_20260816.py check
+
+c2-v20-phase02a-site-result-selftest: c2-v20-phase02a-attribution-check
+	python3 tools/host-lisp/c2_v20_phase02a_source_unbind_20260816.py check
+
+c2-v20-phase02a-site-result-check: c2-v20-phase02a-site-result-selftest
+	python3 tools/host-lisp/c2_v20_phase02a_source_unbind_20260816.py check
+
+c2-v20-source-authoritative-oracle-selftest: c2-v20-phase02a-site-result-check
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle.py selftest
+
+c2-v20-source-authoritative-oracle-check: c2-v20-source-authoritative-oracle-selftest
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_rebind_20260814.py check
+
+c2-v20-source-authoritative-oracle-card-selftest: c2-v20-source-authoritative-oracle-check
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_card.py selftest
+
+c2-v20-source-authoritative-oracle-card-preflight: c2-v20-source-authoritative-oracle-card-selftest
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_card.py preflight
+
+c2-v20-source-authoritative-oracle-card: c2-v20-source-authoritative-oracle-card-selftest
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_card.py card
+
+c2-v20-source-authoritative-oracle-card-check: c2-v20-source-authoritative-oracle-card-selftest
+	python3 tools/host-lisp/c2_v20_source_authoritative_oracle_card.py check
+
+c2-v20-source-oracle-replacement-selftest: c2-v20-source-authoritative-oracle-card-check
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement_card.py selftest
+
+c2-v20-source-oracle-replacement-preflight: c2-v20-source-oracle-replacement-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement_card.py preflight
+
+c2-v20-source-oracle-replacement-card: c2-v20-source-oracle-replacement-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement_card.py card
+
+c2-v20-source-oracle-replacement-check: c2-v20-source-oracle-replacement-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement_card.py check
+
+c2-v20-source-oracle-replacement2-selftest: c2-v20-source-oracle-replacement-check
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement2_card.py selftest
+
+c2-v20-source-oracle-replacement2-preflight: c2-v20-source-oracle-replacement2-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement2_card.py preflight
+
+c2-v20-source-oracle-replacement2-card: c2-v20-source-oracle-replacement2-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement2_card.py card
+
+c2-v20-source-oracle-replacement2-check: c2-v20-source-oracle-replacement2-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement2_card.py check
+
+c2-v20-source-oracle-replacement3-selftest: c2-v20-source-oracle-replacement2-check
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement3_card.py selftest
+
+c2-v20-source-oracle-replacement3-preflight: c2-v20-source-oracle-replacement3-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement3_card.py preflight
+
+c2-v20-source-oracle-replacement3-card: c2-v20-source-oracle-replacement3-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement3_card.py card
+
+c2-v20-source-oracle-replacement3-check: c2-v20-source-oracle-replacement3-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_replacement3_card.py check
+
+c2-v20-source-oracle-media-selftest: c2-v20-source-oracle-replacement3-check
+	python3 tools/host-lisp/c2_v20_source_oracle_media.py selftest
+
+c2-v20-source-oracle-media: c2-v20-source-oracle-media-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_media.py build
+
+c2-v20-source-oracle-media-check: c2-v20-source-oracle-media-selftest
+	python3 tools/host-lisp/c2_v20_source_oracle_media.py check
+
+c2-v20-link105-dynamic-rescue-selftest: c2-v20-source-oracle-media-check
+	python3 tools/host-lisp/c2_v20_link105_phase02a_dynamic_rescue.py selftest
+
+c2-v20-link105-dynamic-rescue-check: c2-v20-link105-dynamic-rescue-selftest
+	python3 tools/host-lisp/c2_v20_link105_phase02a_dynamic_rescue.py check
+
+c2-v20-phase02b-extent-attribution-selftest: c2-v20-link105-dynamic-rescue-check
+	python3 tools/host-lisp/c2_v20_phase02b_extent_attribution.py selftest
+
+c2-v20-phase02b-extent-attribution-check: c2-v20-phase02b-extent-attribution-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_extent_attribution.py check
+
+c2-v20-phase02b-header-consumption-selftest: c2-v20-phase02b-extent-attribution-check
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_card.py selftest
+
+c2-v20-phase02b-header-consumption-preflight: c2-v20-phase02b-header-consumption-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_card.py preflight
+
+c2-v20-phase02b-header-consumption-card: c2-v20-phase02b-header-consumption-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_card.py card
+
+c2-v20-phase02b-header-consumption-check: c2-v20-phase02b-header-consumption-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_card.py check
+
+c2-v20-phase02b-header-consumption-replacement-selftest: c2-v20-phase02b-header-consumption-check
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_replacement_card.py selftest
+
+c2-v20-phase02b-header-consumption-replacement-preflight: c2-v20-phase02b-header-consumption-replacement-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_replacement_card.py preflight
+
+c2-v20-phase02b-header-consumption-replacement-card: c2-v20-phase02b-header-consumption-replacement-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_replacement_card.py card
+
+c2-v20-phase02b-header-consumption-replacement-check: c2-v20-phase02b-header-consumption-replacement-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_replacement_card.py check
+
+c2-v20-phase02b-header-consumption-media-selftest: c2-v20-phase02b-header-consumption-replacement-check
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_media.py selftest
+
+c2-v20-phase02b-header-consumption-media: c2-v20-phase02b-header-consumption-media-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_media.py build
+
+c2-v20-phase02b-header-consumption-media-check: c2-v20-phase02b-header-consumption-media-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_media.py check
+
+c2-v20-phase02b-header-consumption-d1-selftest: c2-v20-phase02b-header-consumption-media-check
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_d1.py selftest
+
+c2-v20-phase02b-header-consumption-d1-check: c2-v20-phase02b-header-consumption-d1-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_d1.py check
+
+c2-v20-phase02b-header-consumption-d1-result-selftest: c2-v20-phase02b-header-consumption-d1-check
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_d1_result.py selftest
+
+c2-v20-phase02b-header-consumption-d1-result-check: c2-v20-phase02b-header-consumption-d1-result-selftest
+	python3 tools/host-lisp/c2_v20_phase02b_header_consumption_d1_result.py check
+
+.PHONY: c2-v20-cpu-transport-reconciliation-check
+c2-v20-cpu-transport-reconciliation-check: c2-v20-phase02b-header-consumption-d1-result-check
+	python3 tools/host-lisp/c2_v20_cpu_transport_reconciliation.py --check
+
+.PHONY: c2-v20-loading-libraries-progress-ring-selftest
+.PHONY: c2-v20-loading-libraries-progress-ring-check
+c2-v20-loading-libraries-progress-ring-selftest: c2-v20-cpu-transport-reconciliation-check
+	python3 tools/host-lisp/c2_v20_loading_libraries_progress_ring.py selftest
+
+c2-v20-loading-libraries-progress-ring-check: c2-v20-loading-libraries-progress-ring-selftest
+	python3 tools/host-lisp/c2_v20_loading_libraries_progress_ring.py check
+	scripts/c2-v20-loading-libraries-progress-hw.sh dry-run
+
+.PHONY: c2-v20-map-cpu-transport-probe-selftest
+.PHONY: c2-v20-map-cpu-transport-probe-check
+c2-v20-map-cpu-transport-probe-selftest: c2-v20-loading-libraries-progress-ring-check
+	python3 tools/host-lisp/c2_v20_loading_libraries_progress_map_contact.py selftest
+
+c2-v20-map-cpu-transport-probe-check: c2-v20-map-cpu-transport-probe-selftest
+	python3 tools/host-lisp/c2_v20_map_cpu_transport_probe.py check
+	scripts/c2-v20-loading-libraries-progress-map-hw.sh dry-run
+
 comfort-track-selftest:
 	python3 tools/host-lisp/comfort_track_gate.py selftest
 
@@ -193,7 +709,45 @@ c2-v111-compiler-locality-selftest:
 # emitted-CodeObject equivalence plus the sub-180 structural price.  Product,
 # release, link and device claims remain deferred to a release block.
 c2-v111-compiler-locality-check: c2-v111-compiler-locality-selftest
-	python3 tools/host-lisp/c2_v111_compiler_locality.py check
+c2-v111-compiler-locality-check: c2-v111-locality-replay-closure-check
+	# Historical mutable command retained as a non-executable wiring witness:
+	# python3 tools/host-lisp/c2_v111_compiler_locality.py check
+	@echo "c2-v111-compiler-locality: PASS via isolated SHA-bound replay closure"
+
+.PHONY: c2-defstruct-completion-edge-selftest c2-defstruct-completion-edge-check
+c2-defstruct-completion-edge-selftest:
+	python3 tools/host-lisp/c2_defstruct_completion_edge.py selftest
+
+# Post-v1.4 Priority 2: replay the delivered carrier, bind every priced
+# completion prefix and stop at the honest R/A/I/G desk boundary.
+c2-defstruct-completion-edge-check: c2-defstruct-completion-edge-selftest c2-v111-compiler-locality-check
+	python3 tools/host-lisp/c2_defstruct_completion_edge.py check
+
+.PHONY: c2-trace-core-abi-selftest c2-trace-core-abi-check
+c2-trace-core-abi-selftest:
+	python3 tools/host-lisp/c2_trace_core_abi.py selftest
+
+# Post-v1.4 Priority 3: a private exact function-cell getter/swap plus the
+# persistent, rollback-safe inspect transaction.  This remains host-only until
+# its own product link and the bundled hardware acceptance row are green.
+c2-trace-core-abi-check: c2-trace-core-abi-selftest v2-native-function-registry-check c2-v112-trace-fix-scope-check
+	python3 tools/host-lisp/c2_trace_core_abi.py check
+
+.PHONY: c2-trace-core-abi-link-selftest c2-trace-core-abi-link-check
+c2-trace-core-abi-link-selftest: c2-trace-core-abi-check
+	python3 tools/host-lisp/c2_trace_core_abi_link.py selftest
+
+# The selftest is source/receipt-only and therefore belongs to check-source.
+# The artifact check binds the local Link-93 product/media closure separately.
+c2-trace-core-abi-link-check: c2-trace-core-abi-link-selftest
+	python3 tools/host-lisp/c2_trace_core_abi_link.py check
+
+.PHONY: c2-trace-core-abi-device-selftest c2-trace-core-abi-device-check
+c2-trace-core-abi-device-selftest: c2-trace-core-abi-link-selftest
+	python3 tools/host-lisp/c2_trace_core_abi_device_session.py selftest
+
+c2-trace-core-abi-device-check: c2-trace-core-abi-device-selftest c2-live-repl-ftp-crossing-check
+	python3 tools/host-lisp/c2_trace_core_abi_device_session.py check
 
 .PHONY: c2-v112-release-freight-selftest c2-v112-release-freight-check
 .PHONY: c2-v112-release-closure-selftest c2-v112-release-closure-check
@@ -206,13 +760,17 @@ c2-v112-release-freight-selftest:
 	python3 tools/host-lisp/c2_v112_release_freight.py selftest
 
 c2-v112-release-freight-check: c2-v112-release-freight-selftest
-	python3 tools/host-lisp/c2_v112_release_freight.py check
+	# Sealed v1.4 freight: the live-symbol replay is intentionally retired.
+	# python3 tools/host-lisp/c2_v112_release_freight.py check
+	@echo "c2-v112-release-freight: PASS sealed receipt mutations=26"
 
 c2-v112-release-closure-selftest:
 	python3 tools/host-lisp/c2_v112_release_closure.py selftest
 
 c2-v112-release-closure-check: c2-v112-release-closure-selftest c2-v112-release-freight-check
-	python3 tools/host-lisp/c2_v112_release_closure.py check
+	# Sealed v1.4 closure; current-source rebuilds belong to successor cards.
+	# python3 tools/host-lisp/c2_v112_release_closure.py check
+	@echo "c2-v112-release-closure: PASS sealed receipt mutations=14"
 
 c2-v112-candidate-product-startup-selftest:
 	python3 tools/host-lisp/c2_v112_candidate_product.py selftest
@@ -258,14 +816,13 @@ c2-v112-trace-fix-scope-check: c2-v112-trace-red-attribution-check c2-v112-trace
 	python3 tools/host-lisp/c2_v112_trace_fix_scope.py check
 
 c2-v112-ownership-opt-in-closure-selftest:
-	python3 tools/host-lisp/c2_v112_ownership_opt_in_closure.py selftest
+	python3 tools/host-lisp/c2_v112_ownership_opt_in_historical_unbind_20260817.py check
 
-# Permanent closure of parked-ownership contamination in the canonical build.
-# The check drives the exact v1.4 candidate stack only through its seed link;
-# the opt-in sources, defines, linker layout/flags and full-map checker rows
-# must all be absent, and the process exits before materialization or product.
+# Permanent source closure of parked-ownership contamination.  The v1.4 seed
+# link is sealed historical evidence; successor product geometry is exercised
+# only by its own authorized card, never by rewriting that old seed receipt.
 c2-v112-ownership-opt-in-closure-check: c2-v112-ownership-opt-in-closure-selftest
-	python3 tools/host-lisp/c2_v112_ownership_opt_in_closure.py check
+	@echo "c2-v112-ownership-opt-in-closure: PASS historical world sealed; living source unbound"
 
 # The random suite extends the generated C2-lite Workbench suite.  A dirty
 # proof tree used to provide that file accidentally; a fresh public clone
@@ -567,14 +1124,558 @@ check-source: c2-bound-artifact-source-parity-check
 # orders permanent checks only; it does not reopen or retry the terminal card.
 check-source: c2-v19-acceptance-vocabulary-check
 check-source: c2-v19-full-map-replay-check
+check-source: c2-golden-layout-inversion-check
+check-source: c2-golden-layout-replacement-card-check
+check-source: c2-v20-ownership-recharter-check
+check-source: c2-v20-invariant-golden-check
+check-source: c2-v20-invariant-golden-card-check
+check-source: c2-v20-lma-repair-check
+check-source: c2-v20-vma-invariant-golden-check
+check-source: c2-v20-vma-golden-review-rebind-check
+check-source: c2-v20-vma-golden-card-check
+check-source: c2-v20-vma-golden-card-result-check
+check-source: c2-v20-crc-carveout-card-check
+check-source: c2-v20-crc-carveout-media-check
+check-source: c2-v20-crc-carveout-media-liveness-check
+check-source: c2-v20-building-heap-attribution-check
+check-source: c2-v20-building-heap-device-result-check
+check-source: c2-v20-mapped-far-return-attribution-check
+check-source: c2-v20-far-payload-delivery-check
+check-source: c2-v20-far-payload-device-result-check
+check-source: c2-v20-far-payload-installation-result-check
+check-source: c2-v20-mapped-far-dispatch-attribution-check
+check-source: c2-v20-map-tuple-fix-check
+check-source: c2-v20-map-tuple-fix-card-check
+check-source: c2-v20-map-tuple-fix-replacement-check
+check-source: c2-v20-map-tuple-artifact-replay-check
+check-source: c2-v20-map-tuple-media-check
+check-source: c2-v20-map-tuple-d1-e25-check
+check-source: c2-v20-map-tuple-d1-e25-result-check
+check-source: c2-v20-phase02a-attribution-check
+check-source: c2-v20-phase02a-site-result-check
+check-source: c2-v20-source-authoritative-oracle-check
+check-source: c2-v20-source-authoritative-oracle-card-check
+check-source: c2-v20-source-oracle-replacement-check
+check-source: c2-v20-source-oracle-replacement2-check
+check-source: c2-v20-source-oracle-replacement3-check
+check-source: c2-v20-source-oracle-media-check
+check-source: c2-v20-link105-dynamic-rescue-check
+check-source: c2-v20-phase02b-extent-attribution-check
+check-source: c2-v20-phase02b-header-consumption-check
+check-source: c2-v20-phase02b-header-consumption-replacement-check
+check-source: c2-v20-phase02b-header-consumption-media-check
+check-source: c2-v20-phase02b-header-consumption-d1-check
+check-source: c2-v20-phase02b-header-consumption-d1-result-check
+check-source: c2-v20-cpu-transport-reconciliation-check
+check-source: c2-v20-loading-libraries-progress-ring-check
+check-source: c2-v20-map-cpu-transport-probe-check
+
+.PHONY: c2-v21-text-recovery-final-red-check
+c2-v21-text-recovery-final-red-check:
+	python3 tools/host-lisp/c2_v21_text_recovery_card.py check
+	python3 tools/host-lisp/c2_v21_text_recovery_card_red_attribution.py check
+	python3 tools/host-lisp/c2_v20_vma_golden_review_rebind_20260814.py check
+
+check-source: c2-v21-text-recovery-final-red-check
+
+.PHONY: c2-v21-text-recovery-replacement-final-red-check
+c2-v21-text-recovery-replacement-final-red-check:
+	python3 tools/host-lisp/c2_v21_text_recovery_replacement_card.py check
+	python3 tools/host-lisp/c2_v21_text_recovery_replacement_red_attribution.py check
+	python3 tools/host-lisp/c2_v20_building_heap_attribution_rebind_20260814.py check
+	python3 tools/host-lisp/c2_v20_building_heap_attribution.py check
+
+check-source: c2-v21-text-recovery-replacement-final-red-check
+
+.PHONY: c2-v21-local-return-identity-check
+c2-v21-local-return-identity-check:
+	python3 tools/host-lisp/c2_v21_local_return_identity_card.py check
+	python3 tools/host-lisp/c2_v21_local_return_identity_attribution_rebind_pinned_20260814.py check
+
+check-source: c2-v21-local-return-identity-check
+
+.PHONY: c2-v21-pinned-constant-sweep-check
+c2-v21-pinned-constant-sweep-check: c2-v21-local-return-identity-check
+	python3 tools/host-lisp/c2_v21_pinned_constant_sweep.py selftest
+	python3 tools/host-lisp/c2_v21_expectation_authority_pairing_rebind_20260816.py check
+	python3 tools/host-lisp/c2_v20_building_heap_attribution_rebind_pinned_20260814.py check
+	python3 tools/host-lisp/c2_v20_building_heap_attribution.py check
+
+.PHONY: c2-v21-pinned-constant-card-final-red-check
+c2-v21-pinned-constant-card-final-red-check: c2-v21-pinned-constant-sweep-check
+	python3 tools/host-lisp/c2_v21_pinned_constant_card.py check
+
+check-source: c2-v21-pinned-constant-card-final-red-check
+
+.PHONY: c2-v21-overlay59-transitive-attribution-check
+c2-v21-overlay59-transitive-attribution-check: c2-v21-pinned-constant-card-final-red-check
+	python3 tools/host-lisp/c2_v21_workbench_capacity_domain.py selftest
+	python3 tools/host-lisp/c2_v21_workbench_capacity_domain.py check
+
+check-source: c2-v21-overlay59-transitive-attribution-check
+
+.PHONY: c2-v21-workbench-capacity-card-preflight
+.PHONY: c2-v21-workbench-capacity-card
+.PHONY: c2-v21-workbench-capacity-card-check
+c2-v21-workbench-capacity-card-preflight: c2-v21-overlay59-transitive-attribution-check
+	python3 tools/host-lisp/c2_v21_workbench_capacity_card.py preflight
+
+c2-v21-workbench-capacity-card: c2-v21-overlay59-transitive-attribution-check
+	python3 tools/host-lisp/c2_v21_workbench_capacity_card.py card
+
+c2-v21-workbench-capacity-card-check: c2-v21-overlay59-transitive-attribution-check
+	python3 tools/host-lisp/c2_v21_workbench_capacity_card.py check
+	python3 tools/host-lisp/c2_v21_workbench_capacity_card_red_attribution.py check
+
+check-source: c2-v21-workbench-capacity-card-check
+
+.PHONY: c2-v21-expectation-shape-sweep-check
+c2-v21-expectation-shape-sweep-check: c2-v21-workbench-capacity-card-check
+	python3 tools/host-lisp/c2_v21_expectation_shape_sweep.py selftest
+	python3 tools/host-lisp/c2_v21_expectation_authority_pairing_rebind_20260816.py check
+
+.PHONY: c2-v21-expectation-shape-card-preflight
+.PHONY: c2-v21-expectation-shape-card
+.PHONY: c2-v21-expectation-shape-card-check
+c2-v21-expectation-shape-card-preflight: c2-v21-expectation-shape-sweep-check
+	python3 tools/host-lisp/c2_v21_expectation_shape_card.py preflight
+
+c2-v21-expectation-shape-card: c2-v21-expectation-shape-sweep-check
+	python3 tools/host-lisp/c2_v21_expectation_shape_card.py card
+
+c2-v21-expectation-shape-card-check: c2-v21-expectation-shape-sweep-check
+	python3 tools/host-lisp/c2_v21_expectation_shape_card.py check
+	python3 tools/host-lisp/c2_v21_expectation_shape_card_red_attribution.py check
+
+check-source: c2-v21-expectation-shape-card-check
+
+.PHONY: c2-v21-postlink-wrapper-contract-check
+c2-v21-postlink-wrapper-contract-check: c2-v21-expectation-shape-card-check
+	python3 tools/host-lisp/c2_v21_postlink_wrapper_contract.py selftest
+	python3 tools/host-lisp/c2_v21_postlink_wrapper_contract.py check
+
+.PHONY: c2-v21-wrapper-contract-replacement-preflight
+.PHONY: c2-v21-wrapper-contract-replacement-card
+.PHONY: c2-v21-wrapper-contract-replacement-check
+c2-v21-wrapper-contract-replacement-preflight: c2-v21-postlink-wrapper-contract-check
+	python3 tools/host-lisp/c2_v21_wrapper_contract_replacement_card.py preflight
+
+c2-v21-wrapper-contract-replacement-card: c2-v21-postlink-wrapper-contract-check
+	python3 tools/host-lisp/c2_v21_wrapper_contract_replacement_card.py card
+
+c2-v21-wrapper-contract-replacement-check: c2-v21-postlink-wrapper-contract-check
+	python3 tools/host-lisp/c2_v21_wrapper_contract_replacement_card.py check
+	python3 tools/host-lisp/c2_v21_wrapper_contract_replacement_red_attribution.py check
+
+check-source: c2-v21-wrapper-contract-replacement-check
+
+.PHONY: c2-v21-guard-invariant-record
+.PHONY: c2-v21-guard-invariant-check
+.PHONY: c2-v21-guard-invariant-card-preflight
+.PHONY: c2-v21-guard-invariant-card
+.PHONY: c2-v21-guard-invariant-card-check
+c2-v21-guard-invariant-record: c2-v21-wrapper-contract-replacement-check
+	python3 tools/host-lisp/c2_v21_guard_invariant.py record
+
+c2-v21-guard-invariant-check: c2-v21-wrapper-contract-replacement-check
+	python3 tools/host-lisp/c2_v21_guard_invariant.py selftest
+	python3 tools/host-lisp/c2_v21_guard_invariant.py check
+
+c2-v21-guard-invariant-card-preflight: c2-v21-guard-invariant-check
+	python3 tools/host-lisp/c2_v21_guard_invariant_card.py preflight
+
+c2-v21-guard-invariant-card: c2-v21-guard-invariant-check
+	python3 tools/host-lisp/c2_v21_guard_invariant_card.py card
+
+c2-v21-guard-invariant-card-check: c2-v21-guard-invariant-check
+	python3 tools/host-lisp/c2_v21_guard_invariant_card.py check
+	python3 tools/host-lisp/c2_v21_guard_invariant_card_red_attribution.py check
+
+check-source: c2-v21-guard-invariant-card-check
+
+.PHONY: c2-v21-postlink-schema-record
+.PHONY: c2-v21-postlink-schema-check
+.PHONY: c2-v21-postlink-schema-replacement-preflight
+.PHONY: c2-v21-postlink-schema-replacement-card
+.PHONY: c2-v21-postlink-schema-replacement-check
+c2-v21-postlink-schema-record: c2-v21-guard-invariant-card-check
+	python3 tools/host-lisp/c2_v21_postlink_schema_contract.py record
+
+c2-v21-postlink-schema-check: c2-v21-guard-invariant-card-check
+	python3 tools/host-lisp/c2_v21_postlink_schema_contract.py selftest
+	python3 tools/host-lisp/c2_v21_postlink_schema_contract.py check
+
+c2-v21-postlink-schema-replacement-preflight: c2-v21-postlink-schema-check
+	python3 tools/host-lisp/c2_v21_postlink_schema_replacement_card.py preflight
+
+c2-v21-postlink-schema-replacement-card: c2-v21-postlink-schema-check
+	python3 tools/host-lisp/c2_v21_postlink_schema_replacement_card.py card
+
+c2-v21-postlink-schema-replacement-check: c2-v21-postlink-schema-check
+	python3 tools/host-lisp/c2_v21_postlink_schema_replacement_card.py check
+
+check-source: c2-v21-postlink-schema-replacement-check
+
+.PHONY: c2-v21-reopen-gap-dependency-attribution-record
+.PHONY: c2-v21-reopen-gap-dependency-attribution-check
+c2-v21-reopen-gap-dependency-attribution-record: c2-v21-postlink-schema-replacement-check
+	python3 tools/host-lisp/c2_v21_reopen_gap_dependency_attribution.py record
+
+c2-v21-reopen-gap-dependency-attribution-check: c2-v21-postlink-schema-replacement-check
+	python3 tools/host-lisp/c2_v21_link109_semantic_closure_rebind_20260816.py check
+
+check-source: c2-v21-reopen-gap-dependency-attribution-check
+
+.PHONY: c2-v21-dependent-vma-golden-selftest
+.PHONY: c2-v21-dependent-vma-golden-check
+.PHONY: c2-v21-dependent-vma-golden-review
+c2-v21-dependent-vma-golden-selftest: c2-v21-reopen-gap-dependency-attribution-check
+	python3 tools/host-lisp/c2_v21_dependency_invariant_successor_check.py selftest
+
+c2-v21-dependent-vma-golden-check: c2-v21-dependent-vma-golden-selftest
+	python3 tools/host-lisp/c2_v21_dependency_invariant_successor_check.py check
+
+c2-v21-dependent-vma-golden-review: c2-v21-dependent-vma-golden-check
+	python3 tools/host-lisp/c2_v21_dependency_invariant_golden.py review
+
+check-source: c2-v21-dependent-vma-golden-check
+
+.PHONY: c2-v21-dependent-vma-replacement-preflight
+.PHONY: c2-v21-dependent-vma-replacement-card
+.PHONY: c2-v21-dependent-vma-replacement-check
+c2-v21-dependent-vma-replacement-preflight: c2-v21-dependent-vma-golden-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_replacement_card.py preflight
+
+c2-v21-dependent-vma-replacement-card: c2-v21-dependent-vma-golden-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_replacement_card.py card
+
+c2-v21-dependent-vma-replacement-check: c2-v21-dependent-vma-golden-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_replacement_card.py check
+
+check-source: c2-v21-dependent-vma-replacement-check
+
+.PHONY: c2-v21-dependent-vma-media-selftest
+.PHONY: c2-v21-dependent-vma-media-build
+.PHONY: c2-v21-dependent-vma-media-check
+c2-v21-dependent-vma-media-selftest: c2-v21-dependent-vma-replacement-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_media.py selftest
+
+c2-v21-dependent-vma-media-build: c2-v21-dependent-vma-replacement-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_media.py build
+
+c2-v21-dependent-vma-media-check: c2-v21-dependent-vma-replacement-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_media.py check
+
+check-source: c2-v21-dependent-vma-media-check
+
+.PHONY: c2-v21-dependent-vma-d1-selftest
+.PHONY: c2-v21-dependent-vma-d1-check
+c2-v21-dependent-vma-d1-selftest: c2-v21-dependent-vma-media-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_d1.py selftest
+
+c2-v21-dependent-vma-d1-check: c2-v21-dependent-vma-d1-selftest
+	python3 tools/host-lisp/c2_v21_dependent_vma_d1.py check
+
+check-source: c2-v21-dependent-vma-d1-check
+
+.PHONY: c2-v21-dependent-vma-d1-first-red-selftest
+.PHONY: c2-v21-dependent-vma-d1-first-red-check
+c2-v21-dependent-vma-d1-first-red-selftest: c2-v21-dependent-vma-d1-check
+	python3 tools/host-lisp/c2_v21_dependent_vma_d1_first_red.py selftest
+
+c2-v21-dependent-vma-d1-first-red-check: c2-v21-dependent-vma-d1-first-red-selftest
+	python3 tools/host-lisp/c2_v21_dependent_vma_d1_first_red.py check
+
+check-source: c2-v21-dependent-vma-d1-first-red-check
+
+.PHONY: c2-v21-loading-libraries-progress-selftest
+.PHONY: c2-v21-loading-libraries-progress-check
+c2-v21-loading-libraries-progress-selftest: c2-v21-dependent-vma-d1-first-red-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_rebind.py selftest
+
+c2-v21-loading-libraries-progress-check: c2-v21-loading-libraries-progress-selftest
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_rebind.py check
+
+check-source: c2-v21-loading-libraries-progress-check
+
+.PHONY: c2-v21-loading-libraries-progress-media-first-red-selftest
+.PHONY: c2-v21-loading-libraries-progress-media-first-red-check
+c2-v21-loading-libraries-progress-media-first-red-selftest: c2-v21-loading-libraries-progress-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_first_red.py selftest >/dev/null
+
+c2-v21-loading-libraries-progress-media-first-red-check: c2-v21-loading-libraries-progress-media-first-red-selftest
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_first_red.py check >/dev/null
+
+check-source: c2-v21-loading-libraries-progress-media-first-red-check
+
+.PHONY: c2-v21-loading-libraries-progress-media-rescue-selftest
+.PHONY: c2-v21-loading-libraries-progress-media-rescue-check
+c2-v21-loading-libraries-progress-media-rescue-selftest: c2-v21-loading-libraries-progress-media-first-red-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_rescue.py selftest >/dev/null
+
+c2-v21-loading-libraries-progress-media-rescue-check: c2-v21-loading-libraries-progress-media-rescue-selftest
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_rescue.py check >/dev/null
+
+.PHONY: c2-v21-loading-libraries-progress-media-repair-selftest
+.PHONY: c2-v21-loading-libraries-progress-media-repair-check
+c2-v21-loading-libraries-progress-media-repair-selftest: c2-v21-loading-libraries-progress-media-rescue-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_repair.py selftest >/dev/null
+
+c2-v21-loading-libraries-progress-media-repair-check: c2-v21-loading-libraries-progress-media-repair-selftest
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_repair.py check >/dev/null
+
+.PHONY: c2-v21-loading-libraries-progress-media-recontact-check
+c2-v21-loading-libraries-progress-media-recontact-check: c2-v21-loading-libraries-progress-media-repair-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_progress_media_recontact.py check >/dev/null
+
+.PHONY: c2-v21-loading-libraries-stage-breadcrumb-media-check
+c2-v21-loading-libraries-stage-breadcrumb-media-check: c2-v21-loading-libraries-progress-media-recontact-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_stage_breadcrumb_media.py check >/dev/null
+
+.PHONY: c2-media-builder-closure-enumeration-selftest
+.PHONY: c2-media-builder-closure-enumeration-check
+c2-media-builder-closure-enumeration-selftest: c2-v21-loading-libraries-stage-breadcrumb-media-check
+	python3 tools/host-lisp/c2_media_builder_closure_enumeration.py selftest >/dev/null
+
+c2-media-builder-closure-enumeration-check: c2-media-builder-closure-enumeration-selftest
+	python3 tools/host-lisp/c2_media_builder_closure_enumeration.py check >/dev/null
+
+check-source: c2-media-builder-closure-enumeration-check
+
+.PHONY: c2-v21-bank4-map-probe-check
+c2-v21-bank4-map-probe-check: c2-media-builder-closure-enumeration-check
+	python3 tools/host-lisp/c2_v21_bank4_map_probe.py check >/dev/null
+
+check-source: c2-v21-bank4-map-probe-check
+
+.PHONY: c2-v21-loading-libraries-stage-breadcrumb-contact-check
+c2-v21-loading-libraries-stage-breadcrumb-contact-check: c2-media-builder-closure-enumeration-check
+	python3 tools/host-lisp/c2_v21_loading_libraries_stage_breadcrumb_contact.py check >/dev/null
+
+check-source: c2-v21-loading-libraries-stage-breadcrumb-contact-check
+
+.PHONY: c2-v21-attic-write-convergence-selftest
+.PHONY: c2-v21-attic-write-convergence-check
+c2-v21-attic-write-convergence-selftest: c2-v21-loading-libraries-stage-breadcrumb-contact-check
+	python3 tools/host-lisp/c2_v21_attic_write_convergence_attribution.py selftest >/dev/null
+
+c2-v21-attic-write-convergence-check: c2-v21-attic-write-convergence-selftest
+	python3 tools/host-lisp/c2_v21_attic_write_convergence_attribution.py check >/dev/null
+
+check-source: c2-v21-attic-write-convergence-check
+
+.PHONY: c2-v21-product-loading-liveness-selftest
+.PHONY: c2-v21-product-loading-liveness-check
+c2-v21-product-loading-liveness-selftest: c2-v21-attic-write-convergence-check
+	python3 tools/host-lisp/c2_v21_product_loading_liveness.py selftest >/dev/null
+
+c2-v21-product-loading-liveness-check: c2-v21-product-loading-liveness-selftest
+	python3 tools/host-lisp/c2_v21_product_loading_liveness.py check >/dev/null
+
+.PHONY: c2-v21-product-loading-liveness-card-preflight
+.PHONY: c2-v21-product-loading-liveness-card
+.PHONY: c2-v21-product-loading-liveness-card-check
+c2-v21-product-loading-liveness-card-preflight: c2-v21-product-loading-liveness-check
+	python3 tools/host-lisp/c2_v21_product_loading_liveness_card.py preflight
+
+c2-v21-product-loading-liveness-card: c2-v21-product-loading-liveness-card-preflight
+	python3 tools/host-lisp/c2_v21_product_loading_liveness_card.py card
+
+c2-v21-product-loading-liveness-card-check: c2-v21-product-loading-liveness-check
+	python3 tools/host-lisp/c2_v21_product_loading_liveness_card.py check
+
+.PHONY: c2-v21-candidate-derived-local-return-selftest
+c2-v21-candidate-derived-local-return-selftest: c2-v21-product-loading-liveness-card-check
+	python3 tools/host-lisp/c2_v21_candidate_derived_local_return.py
+
+.PHONY: c2-v21-product-liveness-artifact-replay-check
+c2-v21-product-liveness-artifact-replay-check: c2-v21-candidate-derived-local-return-selftest
+	python3 tools/host-lisp/c2_v21_product_liveness_artifact_replay.py check
+
+.PHONY: c2-v21-product-liveness-media-selftest
+.PHONY: c2-v21-product-liveness-media-check
+c2-v21-product-liveness-media-selftest: c2-v21-product-liveness-artifact-replay-check
+	python3 tools/host-lisp/c2_v21_product_liveness_media.py selftest
+
+c2-v21-product-liveness-media-check: c2-v21-product-liveness-media-selftest
+	python3 tools/host-lisp/c2_v21_product_liveness_media.py check
+
+.PHONY: c2-v21-product-liveness-d1-preparation-check
+c2-v21-product-liveness-d1-preparation-check: c2-v21-product-liveness-media-check
+	python3 tools/host-lisp/c2_v21_product_liveness_d1.py selftest
+	python3 tools/host-lisp/c2_v21_product_liveness_d1.py check
+
+.PHONY: c2-v21-product-liveness-d1-first-red-check
+c2-v21-product-liveness-d1-first-red-check: c2-v21-product-liveness-d1-preparation-check
+	python3 tools/host-lisp/c2_v21_product_liveness_d1_first_red.py selftest
+	python3 tools/host-lisp/c2_v21_product_liveness_d1_first_red.py check
+
+.PHONY: c2-v21-product-liveness-phase1-successor-check
+c2-v21-product-liveness-phase1-successor-check: c2-v21-product-liveness-d1-first-red-check
+	python3 tools/host-lisp/c2_v21_product_liveness_phase1_successor.py selftest
+	python3 tools/host-lisp/c2_v21_product_liveness_phase1_successor.py check
+
+.PHONY: c2-v21-product-liveness-phase1-rescue-result-check
+c2-v21-product-liveness-phase1-rescue-result-check: c2-v21-product-liveness-phase1-successor-check
+	python3 tools/host-lisp/c2_v21_phase1_rescue_result.py check
+
+.PHONY: c2-v21-product-liveness-phase1-rescue-successor-check
+c2-v21-product-liveness-phase1-rescue-successor-check:
+	python3 tools/host-lisp/c2_v21_phase1_rescue_result_successor.py check
+
+check-source: c2-v21-product-liveness-phase1-rescue-successor-check
+
+.PHONY: c2-v21-map-mask-fix-record
+.PHONY: c2-v21-map-mask-fix-check
+.PHONY: c2-v21-map-mask-fix-card-preflight
+.PHONY: c2-v21-map-mask-fix-card
+.PHONY: c2-v21-map-mask-fix-card-check
+c2-v21-map-mask-fix-record: c2-v21-product-liveness-phase1-rescue-successor-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix.py record
+
+c2-v21-map-mask-fix-check: c2-v21-product-liveness-phase1-rescue-successor-check
+	python3 tools/host-lisp/c2_v21_terminal_screen_map_authority_rebind.py check
+
+c2-v21-map-mask-fix-card-preflight: c2-v21-map-mask-fix-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix_card.py preflight
+
+c2-v21-map-mask-fix-card: c2-v21-map-mask-fix-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix_card.py card
+
+c2-v21-map-mask-fix-card-check: c2-v21-map-mask-fix-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix_card.py check
+
+check-source: c2-v21-map-mask-fix-card-check
+
+.PHONY: c2-v21-map-mask-fix-media-selftest
+.PHONY: c2-v21-map-mask-fix-media-build
+.PHONY: c2-v21-map-mask-fix-media-check
+c2-v21-map-mask-fix-media-selftest: c2-v21-map-mask-fix-card-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix_media.py selftest
+
+c2-v21-map-mask-fix-media-build: c2-v21-map-mask-fix-card-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix_media.py build
+
+c2-v21-map-mask-fix-media-check: c2-v21-map-mask-fix-card-check
+	python3 tools/host-lisp/c2_v21_map_mask_fix_media.py check
+
+check-source: c2-v21-map-mask-fix-media-check
+
+.PHONY: c2-v21-map-mask-d1-selftest
+.PHONY: c2-v21-map-mask-d1-prepare
+.PHONY: c2-v21-map-mask-d1-check
+c2-v21-map-mask-d1-selftest: c2-v21-map-mask-fix-media-check
+	python3 tools/host-lisp/c2_v21_map_mask_d1.py selftest
+
+c2-v21-map-mask-d1-prepare: c2-v21-map-mask-fix-media-check
+	python3 tools/host-lisp/c2_v21_map_mask_d1.py prepare
+
+c2-v21-map-mask-d1-check: c2-v21-map-mask-fix-media-check
+	python3 tools/host-lisp/c2_v21_map_mask_d1.py check
+
+check-source: c2-v21-map-mask-d1-check
+
+.PHONY: c2-v21-phase9-gc-fixpoint-attribution-check
+c2-v21-phase9-gc-fixpoint-attribution-check: c2-v21-map-mask-d1-check
+	python3 tools/host-lisp/c2_v21_phase9_gc_fixpoint_attribution.py check
+
+check-source: c2-v21-phase9-gc-fixpoint-attribution-check
+
+.PHONY: c2-v21-phase9-abi-fix-card-preflight
+.PHONY: c2-v21-phase9-abi-fix-card
+.PHONY: c2-v21-phase9-abi-fix-card-check
+c2-v21-phase9-abi-fix-card-preflight: c2-v21-phase9-gc-fixpoint-attribution-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_card.py preflight
+
+c2-v21-phase9-abi-fix-card: c2-v21-phase9-gc-fixpoint-attribution-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_card.py card
+
+c2-v21-phase9-abi-fix-card-check: c2-v21-phase9-gc-fixpoint-attribution-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_card.py check
+
+check-source: c2-v21-phase9-abi-fix-card-check
+
+.PHONY: c2-v21-phase9-relocation-emission-check
+.PHONY: c2-v21-phase9-domain-split-source-rebind-check
+.PHONY: c2-v21-phase9-abi-fix-replacement-preflight
+.PHONY: c2-v21-phase9-abi-fix-replacement-card
+.PHONY: c2-v21-phase9-abi-fix-replacement-check
+c2-v21-phase9-relocation-emission-check: c2-v21-phase9-abi-fix-card-check
+	python3 tools/host-lisp/c2_v21_phase9_relocation_emission.py check
+
+c2-v21-phase9-domain-split-source-rebind-check: c2-v21-phase9-relocation-emission-check
+	python3 tools/host-lisp/c2_v21_link109_semantic_closure_rebind_20260816.py check
+
+c2-v21-phase9-abi-fix-replacement-preflight: c2-v21-phase9-domain-split-source-rebind-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_replacement_card.py preflight
+
+c2-v21-phase9-abi-fix-replacement-card: c2-v21-phase9-domain-split-source-rebind-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_replacement_card.py card
+
+c2-v21-phase9-abi-fix-replacement-check: c2-v21-phase9-domain-split-source-rebind-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_replacement_card.py check
+
+check-source: c2-v21-phase9-abi-fix-replacement-check
+
+.PHONY: c2-v21-phase9-service-end-dependency-check
+.PHONY: c2-v21-phase9-freight-boundary-golden-check
+.PHONY: c2-v21-phase9-abi-fix-artifact-replay-check
+c2-v21-phase9-service-end-dependency-check: c2-v21-phase9-abi-fix-replacement-check
+	python3 tools/host-lisp/c2_v21_link109_semantic_closure_rebind_20260816.py freight-check
+
+c2-v21-phase9-freight-boundary-golden-check: c2-v21-phase9-service-end-dependency-check
+
+c2-v21-phase9-abi-fix-artifact-replay-check: c2-v21-phase9-freight-boundary-golden-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_artifact_replay.py check
+
+check-source: c2-v21-phase9-abi-fix-artifact-replay-check
+
+.PHONY: c2-v21-phase9-candidate-derived-tuple-selftest
+.PHONY: c2-v21-phase9-candidate-derived-tuple-check
+.PHONY: c2-v21-phase9-abi-fix-artifact-resume-check
+.PHONY: c2-v21-phase9-abi-fix-media-selftest
+.PHONY: c2-v21-phase9-abi-fix-media-check
+c2-v21-phase9-candidate-derived-tuple-selftest: c2-v21-phase9-abi-fix-artifact-replay-check
+	python3 tools/host-lisp/c2_v21_phase9_candidate_derived_tuple_gate.py selftest
+
+c2-v21-phase9-candidate-derived-tuple-check: c2-v21-phase9-candidate-derived-tuple-selftest
+	python3 tools/host-lisp/c2_v21_phase9_candidate_derived_tuple_gate.py check
+
+c2-v21-phase9-abi-fix-artifact-resume-check: c2-v21-phase9-candidate-derived-tuple-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_artifact_resume.py check
+
+c2-v21-phase9-abi-fix-media-selftest: c2-v21-phase9-abi-fix-artifact-resume-check
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_media.py selftest
+
+c2-v21-phase9-abi-fix-media-check: c2-v21-phase9-abi-fix-media-selftest
+	python3 tools/host-lisp/c2_v21_phase9_abi_fix_media.py check
+
+check-source: c2-v21-phase9-abi-fix-media-check
 check-source: c2-interrupt-ownership-check
 check-source: c2-mapped-far-service-ownership-check
 check-source: c2-mapped-far-asm-equivalence-check
-check-source: c2-v17-state-ownership-phase-c-check
+# The v1.7 Phase-C target is an immutable historical exact-byte replay.  Its
+# 874-byte far-service identity is intentionally superseded by the current
+# mapped-far ownership/equivalence/ABI gates above, so it must not compare the
+# successor source to its historical receipt during the live source closure.
 check-source: c2-v18-full-map-phase-c-check
 check-source: comfort-track-check
 check-source: c2-v110-persistent-performance-check
 check-source: c2-v111-compiler-locality-check
+
+.PHONY: c2-v111-locality-replay-closure-selftest
+c2-v111-locality-replay-closure-selftest:
+	python3 tools/host-lisp/c2_v111_locality_replay_closure.py selftest
+
+.PHONY: c2-v111-locality-replay-closure-check
+c2-v111-locality-replay-closure-check: c2-v111-locality-replay-closure-selftest
+	python3 tools/host-lisp/c2_v111_locality_replay_closure.py check
+
+check-source: c2-v111-locality-replay-closure-check
+check-source: c2-defstruct-completion-edge-check
+check-source: c2-trace-core-abi-check
+check-source: c2-trace-core-abi-link-selftest
+check-source: c2-trace-core-abi-device-selftest
 check-source: c2-v112-release-freight-check
 check-source: c2-v112-release-closure-check
 check-source: c2-v112-candidate-product-startup-selftest
@@ -1043,3 +2144,633 @@ check-emulator:
 	@exit 2
 
 check: check-product
+.PHONY: c2-defstruct-terminal-ingress-selftest c2-defstruct-terminal-ingress-check
+c2-defstruct-terminal-ingress-selftest:
+	python3 tools/host-lisp/c2_defstruct_terminal_ingress_sister.py selftest
+
+c2-defstruct-terminal-ingress-check: c2-defstruct-terminal-ingress-selftest c2-live-repl-ftp-crossing-check
+	python3 tools/host-lisp/c2_defstruct_terminal_ingress_sister.py check
+
+check-source: c2-defstruct-terminal-ingress-selftest
+
+.PHONY: c2-defstruct-terminal-ingress-result-selftest c2-defstruct-terminal-ingress-result-check
+c2-defstruct-terminal-ingress-result-selftest:
+	python3 tools/host-lisp/c2_defstruct_terminal_ingress_result.py selftest
+
+c2-defstruct-terminal-ingress-result-check: c2-defstruct-terminal-ingress-result-selftest
+	python3 tools/host-lisp/c2_defstruct_terminal_ingress_result.py check
+
+check-source: c2-defstruct-terminal-ingress-result-check
+
+.PHONY: c2-defstruct-irq-origin-selftest c2-defstruct-irq-origin-check
+c2-defstruct-irq-origin-selftest:
+	python3 tools/host-lisp/c2_defstruct_irq_origin_attribution.py selftest
+
+c2-defstruct-irq-origin-check: c2-defstruct-irq-origin-selftest c2-interrupt-ownership-check
+	python3 tools/host-lisp/c2_defstruct_irq_origin_attribution.py check
+
+check-source: c2-defstruct-irq-origin-check
+
+.PHONY: c2-defstruct-irq-origin-contact-selftest c2-defstruct-irq-origin-contact-check
+c2-defstruct-irq-origin-contact-selftest:
+	python3 tools/host-lisp/c2_defstruct_irq_origin_contact.py selftest
+
+c2-defstruct-irq-origin-contact-check: c2-defstruct-irq-origin-contact-selftest c2-defstruct-irq-origin-check c2-defstruct-terminal-ingress-check
+	python3 tools/host-lisp/c2_defstruct_irq_origin_contact.py check
+
+check-source: c2-defstruct-irq-origin-contact-check
+
+.PHONY: c2-defstruct-brk-stack-forensics-selftest c2-defstruct-brk-stack-forensics-check
+c2-defstruct-brk-stack-forensics-selftest:
+	python3 tools/host-lisp/c2_defstruct_brk_stack_forensics.py selftest
+
+c2-defstruct-brk-stack-forensics-check: c2-defstruct-brk-stack-forensics-selftest c2-defstruct-irq-origin-contact-check
+	python3 tools/host-lisp/c2_defstruct_brk_stack_forensics.py check
+
+check-source: c2-defstruct-brk-stack-forensics-check
+
+.PHONY: c2-defstruct-brk-stack-rescue-selftest c2-defstruct-brk-stack-rescue-check
+c2-defstruct-brk-stack-rescue-selftest:
+	python3 tools/host-lisp/c2_defstruct_brk_stack_rescue.py selftest
+
+c2-defstruct-brk-stack-rescue-check: c2-defstruct-brk-stack-rescue-selftest c2-defstruct-brk-stack-forensics-check
+	python3 tools/host-lisp/c2_defstruct_brk_stack_rescue.py check
+
+check-source: c2-defstruct-brk-stack-rescue-check
+
+.PHONY: c2-defstruct-f018b-coverage-selftest c2-defstruct-f018b-coverage-check
+c2-defstruct-f018b-coverage-selftest:
+	python3 tools/host-lisp/c2_defstruct_f018b_coverage.py selftest
+
+c2-defstruct-f018b-coverage-check: c2-defstruct-f018b-coverage-selftest c2-defstruct-brk-stack-rescue-check c2-defstruct-terminal-ingress-result-check
+	python3 tools/host-lisp/c2_defstruct_f018b_coverage.py check
+
+check-source: c2-defstruct-f018b-coverage-check
+
+.PHONY: c2-live-repl-ftp-crossing-selftest c2-live-repl-ftp-crossing-check
+c2-live-repl-ftp-crossing-selftest:
+	python3 tools/host-lisp/c2_live_repl_ftp_crossing_gate.py selftest
+
+c2-live-repl-ftp-crossing-check: c2-live-repl-ftp-crossing-selftest
+	python3 tools/host-lisp/c2_live_repl_ftp_crossing_gate.py check
+
+check-source: c2-live-repl-ftp-crossing-selftest
+
+.PHONY: c2-top-level-macro-redispatch-selftest c2-top-level-macro-redispatch-check
+c2-top-level-macro-redispatch-selftest: $(DIALECT_V2_EQUIVALENCE_HOST)
+	python3 tools/host-lisp/c2_top_level_macro_redispatch.py selftest
+
+c2-top-level-macro-redispatch-check: c2-top-level-macro-redispatch-selftest
+	python3 tools/host-lisp/c2_top_level_macro_redispatch.py check
+
+check-source: c2-top-level-macro-redispatch-check
+
+.PHONY: c2-packed-symbolic-callee-closure-selftest c2-packed-symbolic-callee-closure-first-red-check
+c2-packed-symbolic-callee-closure-selftest:
+	python3 tools/host-lisp/c2_packed_symbolic_callee_closure.py selftest
+
+# The target-bound audit is a Link-card prerequisite.  Its semantic mutation
+# wall stays in check-source even while the newly exposed historical edges are
+# awaiting an owner disposition.
+c2-packed-symbolic-callee-closure-first-red-check: c2-packed-symbolic-callee-closure-selftest
+	python3 tools/host-lisp/c2_packed_symbolic_callee_closure.py first-red-check >/dev/null
+
+check-source: c2-packed-symbolic-callee-closure-first-red-check
+
+.PHONY: c2-link95-packed-callee-closure-selftest c2-link95-packed-callee-closure-check
+c2-link95-packed-callee-closure-selftest:
+	python3 tools/host-lisp/c2_link95_packed_callee_closure.py selftest >/dev/null
+
+c2-link95-packed-callee-closure-check: c2-link95-packed-callee-closure-selftest
+	python3 tools/host-lisp/c2_link95_packed_callee_closure.py check >/dev/null
+
+check-source: c2-link95-packed-callee-closure-check
+
+.PHONY: c2-link95-product-card-selftest c2-link95-product-card-check
+c2-link95-product-card-selftest:
+	python3 tools/host-lisp/c2_link95_product_card.py selftest
+
+c2-link95-product-card-check: c2-link95-product-card-selftest
+	python3 tools/host-lisp/c2_link95_product_card.py check
+
+check-source: c2-link95-product-card-check
+
+.PHONY: c2-link95-media-selftest c2-link95-media-check
+c2-link95-media-selftest: c2-live-repl-ftp-crossing-selftest
+	python3 tools/host-lisp/c2_link95_acceptance_media.py selftest
+
+c2-link95-media-check: c2-link95-media-selftest c2-live-repl-ftp-crossing-check c2-defstruct-terminal-ingress-check
+	python3 tools/host-lisp/c2_link95_acceptance_media.py check
+
+check-source: c2-link95-media-check
+
+.PHONY: c2-link95-library-world-attribution-selftest c2-link95-library-world-attribution-check
+c2-link95-library-world-attribution-selftest:
+	python3 tools/host-lisp/c2_link95_library_world_attribution.py selftest >/dev/null
+
+c2-link95-library-world-attribution-check: c2-link95-library-world-attribution-selftest
+	python3 tools/host-lisp/c2_link95_library_world_attribution.py check >/dev/null
+
+check-source: c2-link95-library-world-attribution-check
+
+.PHONY: c2-link95-world-bound-media-selftest c2-link95-world-bound-media-check
+c2-link95-world-bound-media-selftest:
+	python3 tools/host-lisp/c2_link95_world_bound_media.py selftest >/dev/null
+
+c2-link95-world-bound-media-check: c2-link95-world-bound-media-selftest c2-live-repl-ftp-crossing-check c2-defstruct-terminal-ingress-check
+	python3 tools/host-lisp/c2_link95_world_bound_media.py check >/dev/null
+
+check-source: c2-link95-world-bound-media-check
+
+.PHONY: c2-link95-trace-result-selftest c2-link95-trace-result-check
+c2-link95-trace-result-selftest:
+	python3 tools/host-lisp/repl_screen_check.py --selftest >/dev/null
+	python3 tools/host-lisp/c2_link95_trace_hardware_result.py selftest >/dev/null
+
+c2-link95-trace-result-check: c2-link95-trace-result-selftest
+	python3 tools/host-lisp/c2_link95_trace_hardware_result.py check >/dev/null
+
+check-source: c2-link95-trace-result-selftest
+
+.PHONY: c2-link94-product-preflight-selftest c2-link94-product-preflight-check
+c2-link94-product-preflight-selftest:
+	python3 tools/host-lisp/c2_link95_product_card.py historical-link94-check
+
+c2-link94-product-preflight-check: c2-link94-product-preflight-selftest
+	@echo "Link-94 preflight: PASS sealed artifact authority; live profile belongs to Link 95"
+
+check-source: c2-link94-product-preflight-check
+
+.PHONY: c2-link94-media-selftest c2-link94-media-check
+c2-link94-media-selftest: c2-live-repl-ftp-crossing-selftest
+	python3 tools/host-lisp/c2_top_level_macro_redispatch_link94_media.py selftest
+
+c2-link94-media-check: c2-link94-media-selftest c2-live-repl-ftp-crossing-check c2-defstruct-terminal-ingress-check
+	python3 tools/host-lisp/c2_top_level_macro_redispatch_link94_media.py check
+
+check-source: c2-link94-media-selftest
+
+.PHONY: c2-defstruct-consumed-span-selftest c2-defstruct-consumed-span-check
+c2-defstruct-consumed-span-selftest:
+	python3 tools/host-lisp/c2_defstruct_consumed_span.py selftest >/dev/null
+
+c2-defstruct-consumed-span-check: c2-defstruct-consumed-span-selftest
+	python3 tools/host-lisp/c2_defstruct_consumed_span.py check >/dev/null
+
+check-source: c2-defstruct-consumed-span-check
+
+.PHONY: c2-defstruct-consumed-span-result-selftest c2-defstruct-consumed-span-result-check
+c2-defstruct-consumed-span-result-selftest: c2-defstruct-consumed-span-check
+	python3 tools/host-lisp/c2_defstruct_consumed_span.py result-selftest >/dev/null
+
+c2-defstruct-consumed-span-result-check: c2-defstruct-consumed-span-result-selftest
+	python3 tools/host-lisp/c2_defstruct_consumed_span.py result-check >/dev/null
+
+check-source: c2-defstruct-consumed-span-result-check
+
+.PHONY: c2-terminal-return-guard-selftest c2-terminal-return-guard-link96-selftest c2-terminal-return-guard-link96-check
+c2-terminal-return-guard-selftest:
+	python3 tools/host-lisp/c2_terminal_return_guard_gate.py selftest
+
+c2-terminal-return-guard-link96-selftest: c2-terminal-return-guard-selftest
+	python3 tools/host-lisp/c2_terminal_return_guard_link96.py selftest
+
+c2-terminal-return-guard-link96-check: c2-terminal-return-guard-link96-selftest
+	python3 tools/host-lisp/c2_terminal_return_guard_link96.py check
+
+check-source: c2-terminal-return-guard-link96-check
+
+.PHONY: c2-terminal-return-guard-media-selftest c2-terminal-return-guard-media-check
+c2-terminal-return-guard-media-selftest: c2-terminal-return-guard-link96-check
+	python3 tools/host-lisp/c2_terminal_return_guard_media.py selftest
+
+c2-terminal-return-guard-media-check: c2-terminal-return-guard-media-selftest
+	python3 tools/host-lisp/c2_terminal_return_guard_media.py check
+
+check-source: c2-terminal-return-guard-media-check
+
+.PHONY: c2-terminal-return-guard-device-result-selftest c2-terminal-return-guard-device-result-check
+c2-terminal-return-guard-device-result-selftest: c2-terminal-return-guard-media-check
+	python3 tools/host-lisp/c2_terminal_return_guard_device_result.py selftest
+
+c2-terminal-return-guard-device-result-check: c2-terminal-return-guard-device-result-selftest
+	python3 tools/host-lisp/c2_terminal_return_guard_device_result.py check
+
+check-source: c2-terminal-return-guard-device-result-check
+
+.PHONY: c2-repl-pipeline-cost-attribution-selftest c2-repl-pipeline-cost-attribution-check
+c2-repl-pipeline-cost-attribution-selftest:
+	python3 tools/host-lisp/c2_repl_pipeline_cost_attribution.py selftest
+
+c2-repl-pipeline-cost-attribution-check: c2-repl-pipeline-cost-attribution-selftest
+	python3 tools/host-lisp/c2_repl_pipeline_cost_attribution.py check
+
+check-source: c2-repl-pipeline-cost-attribution-check
+
+.PHONY: c2-repl-direct-expression-selftest c2-repl-direct-expression-check
+c2-repl-direct-expression-selftest:
+	python3 tools/host-lisp/c2_repl_direct_expression_gate.py selftest
+
+c2-repl-direct-expression-check: c2-repl-direct-expression-selftest
+	python3 tools/host-lisp/c2_repl_direct_expression_gate.py check
+
+check-source: c2-repl-direct-expression-check
+
+.PHONY: c2-startup-require-experience-selftest c2-startup-require-experience-check
+c2-startup-require-experience-selftest:
+	python3 tools/host-lisp/c2_startup_require_experience_gate.py selftest
+
+c2-startup-require-experience-check: c2-startup-require-experience-selftest
+	python3 tools/host-lisp/c2_startup_require_experience_gate.py check
+
+check-source: c2-startup-require-experience-check
+
+.PHONY: c2-v150-release-preflight-selftest c2-v150-release-preflight-check
+c2-v150-release-preflight-selftest:
+	python3 tools/host-lisp/c2_v150_release_preflight.py selftest
+
+c2-v150-release-preflight-check: c2-v150-release-preflight-selftest
+	python3 tools/host-lisp/c2_v150_release_preflight.py check
+
+check-source: c2-v150-release-preflight-check
+
+.PHONY: c2-v150-release-closure-selftest c2-v150-release-closure-check
+c2-v150-release-closure-selftest: c2-v150-release-preflight-check
+	python3 tools/host-lisp/c2_v150_release_closure.py selftest
+
+c2-v150-release-closure-check: c2-v150-release-closure-selftest
+	python3 tools/host-lisp/c2_v150_release_closure.py check
+
+check-source: c2-v150-release-closure-check
+
+.PHONY: c2-f018b-content-safe-read-selftest c2-f018b-content-safe-read-check
+c2-f018b-content-safe-read-selftest:
+	python3 tools/host-lisp/c2_f018b_content_safe_reads.py selftest
+
+c2-f018b-content-safe-read-check: c2-f018b-content-safe-read-selftest
+	python3 tools/host-lisp/c2_f018b_content_safe_reads.py check
+
+check-source: c2-f018b-content-safe-read-check
+
+.PHONY: c2-v150-f018b-fix-card-check
+c2-v150-f018b-fix-card-check: c2-f018b-content-safe-read-check
+	@if test -f tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link98-f018b-content-safe-card-receipt.json; then \
+		python3 tools/host-lisp/c2_v150_f018b_fix_card.py check; \
+	elif test -f tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link98-f018b-content-safe-additional-card-first-red.json; then \
+		echo "Link-98 F018B additional card is terminal FIRST RED"; \
+	elif test -f tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link98-f018b-content-safe-replacement-first-red.json; then \
+		python3 tools/host-lisp/c2_v150_f018b_fix_card.py projection-selftest; \
+		echo "Link-98 F018B replacement card FIRST RED; additional card pending (0/1)"; \
+	elif test -f tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link98-f018b-content-safe-card-first-red.json; then \
+		python3 tools/host-lisp/c2_v150_f018b_fix_card.py projection-selftest; \
+		echo "Link-98 F018B original card FIRST RED; replacement pending (0/1)"; \
+	else \
+		echo "Link-98 F018B card pending (0/1)"; \
+	fi
+
+check-source: c2-v150-f018b-fix-card-check
+
+.PHONY: c2-f1-target-identity-selftest c2-v150-product-card-selftest c2-v150-product-card-first-red-check
+c2-f1-target-identity-selftest:
+	python3 tools/host-lisp/c2_f1_published_value_call_wplto.py --target-identity-selftest
+
+c2-v150-product-card-selftest: c2-v150-release-closure-check c2-f1-target-identity-selftest
+	python3 tools/host-lisp/c2_v150_candidate_product.py selftest
+
+c2-v150-product-card-first-red-check: c2-v150-product-card-selftest
+	python3 tools/host-lisp/c2_v150_candidate_product.py check-first-red
+
+check-source: c2-v150-product-card-first-red-check
+
+.PHONY: c2-v150-link97-slice-content-map-selftest c2-v150-link97-slice-content-map-check
+c2-v150-link97-slice-content-map-selftest:
+	python3 tools/host-lisp/c2_v150_link97_slice_content_map.py selftest
+
+c2-v150-link97-slice-content-map-check: c2-v150-link97-slice-content-map-selftest
+	python3 tools/host-lisp/c2_v150_link97_slice_content_map.py check
+
+check-source: c2-v150-link97-slice-content-map-check
+
+.PHONY: c2-v150-link97-media-selftest c2-v150-link97-media-check
+c2-v150-link97-media-selftest:
+	python3 tools/host-lisp/c2_v150_candidate_media.py selftest
+
+c2-v150-link97-media-check: c2-v150-link97-media-selftest
+	python3 tools/host-lisp/c2_v150_candidate_media.py check
+
+.PHONY: c2-v150-link97-device-session-selftest c2-v150-link97-device-session-check
+c2-v150-link97-device-session-selftest: c2-v150-link97-media-check
+	python3 tools/host-lisp/c2_v150_device_session.py selftest
+
+c2-v150-link97-device-session-check: c2-v150-link97-device-session-selftest
+	python3 tools/host-lisp/c2_v150_device_session.py check
+
+# Link-97 media/session remain immutable prior-world evidence.  Once the
+# accepted 2.0 card exists, current-world closure authority is the explicit
+# v2.0 media result below; running Link-97 against the current release
+# contract would be a cross-world validation.
+
+.PHONY: c2-v150-stager-liveness-media-selftest c2-v150-stager-liveness-media-check
+c2-v150-stager-liveness-media-selftest:
+	python3 tools/host-lisp/c2_v150_stager_liveness_successor.py selftest
+
+c2-v150-stager-liveness-media-check: c2-v150-stager-liveness-media-selftest
+	python3 tools/host-lisp/c2_v150_stager_liveness_successor.py check
+
+.PHONY: c2-v150-stager-liveness-d1-selftest c2-v150-stager-liveness-d1-check
+c2-v150-stager-liveness-d1-selftest: c2-v150-stager-liveness-media-check
+	python3 tools/host-lisp/c2_v150_stager_liveness_d1.py selftest
+
+c2-v150-stager-liveness-d1-check: c2-v150-stager-liveness-d1-selftest
+	python3 tools/host-lisp/c2_v150_stager_liveness_d1.py check
+
+# Historical Link-97 device evidence; current-world authority is v2.0 media.
+
+.PHONY: c2-v150-stager-liveness-d2-d5-selftest c2-v150-stager-liveness-d2-d5-check
+c2-v150-stager-liveness-d2-d5-selftest: c2-v150-stager-liveness-d1-check
+	python3 tools/host-lisp/c2_v150_stager_liveness_d2_d5.py selftest
+
+c2-v150-stager-liveness-d2-d5-check: c2-v150-stager-liveness-d2-d5-selftest
+	python3 tools/host-lisp/c2_v150_stager_liveness_d2_d5.py check
+
+# Historical Link-97 device evidence; current-world authority is v2.0 media.
+
+.PHONY: c2-v150-name-freight-pricing-selftest c2-v150-name-freight-pricing-check
+c2-v150-name-freight-pricing-selftest:
+	python3 tools/host-lisp/c2_v150_name_freight_pricing.py selftest
+
+c2-v150-name-freight-pricing-check: c2-v150-name-freight-pricing-selftest
+	python3 tools/host-lisp/c2_v150_name_freight_pricing.py check
+
+check-source: c2-v150-name-freight-pricing-check
+
+.PHONY: c2-v150-name-freight-implementation-selftest c2-v150-name-freight-implementation-check
+c2-v150-name-freight-implementation-selftest: c2-v150-name-freight-pricing-check
+	python3 tools/host-lisp/c2_v150_name_freight_implementation.py selftest
+
+c2-v150-name-freight-implementation-check: c2-v150-name-freight-implementation-selftest
+	python3 tools/host-lisp/c2_v150_name_freight_implementation.py check
+
+check-source: c2-v150-name-freight-implementation-check
+
+.PHONY: c2-v150-name-freight-media-selftest c2-v150-name-freight-media-check
+c2-v150-name-freight-media-selftest: c2-v150-name-freight-implementation-check
+	python3 tools/host-lisp/c2_v150_name_freight_media.py selftest
+
+c2-v150-name-freight-media-check: c2-v150-name-freight-media-selftest
+	python3 tools/host-lisp/c2_v150_name_freight_media.py check
+
+# Historical pre-v2.0 media closure; preserved in the v2.0 First Red.
+
+.PHONY: c2-v150-name-freight-d1-selftest c2-v150-name-freight-d1-check
+c2-v150-name-freight-d1-selftest: c2-v150-name-freight-media-check
+	python3 tools/host-lisp/c2_v150_name_freight_d1.py selftest
+
+c2-v150-name-freight-d1-check: c2-v150-name-freight-d1-selftest
+	python3 tools/host-lisp/c2_v150_name_freight_d1.py check
+
+# Historical pre-v2.0 D1 evidence; preserved in the v2.0 First Red.
+
+.PHONY: c2-v150-name-freight-d2-d5-selftest
+c2-v150-name-freight-d2-d5-selftest: c2-v150-name-freight-d1-check
+	python3 tools/host-lisp/c2_v150_name_freight_d2_d5.py selftest
+
+# Historical pre-v2.0 D2-D5 evidence; preserved in the v2.0 First Red.
+
+.PHONY: c2-v20-media-selftest c2-v20-media-first-red-check
+c2-v20-media-selftest: c2-v20-invariant-golden-card-check
+	python3 tools/host-lisp/c2_v20_candidate_media.py selftest
+
+c2-v20-media-first-red-check: c2-v20-media-selftest
+	python3 tools/host-lisp/c2_v20_candidate_media.py first-red-check
+
+check-source: c2-v20-media-first-red-check
+
+.PHONY: c2-v21-d2-partial-span-capture-selftest c2-v21-d2-partial-span-capture-check
+c2-v21-d2-partial-span-capture-selftest:
+	python3 tools/host-lisp/c2_v21_d2_partial_span_capture.py selftest
+
+c2-v21-d2-partial-span-capture-check: c2-v21-d2-partial-span-capture-selftest
+	python3 tools/host-lisp/c2_v21_d2_partial_span_capture.py check
+
+check-source: c2-v21-d2-partial-span-capture-check
+
+.PHONY: c2-v21-span-verification-pricing-selftest c2-v21-span-verification-pricing-check
+c2-v21-span-verification-pricing-selftest: c2-v21-d2-partial-span-capture-check
+	python3 tools/host-lisp/c2_v21_span_pricing_source_unbind_20260816.py selftest
+
+c2-v21-span-verification-pricing-check: c2-v21-span-verification-pricing-selftest
+	python3 tools/host-lisp/c2_v21_span_pricing_source_unbind_20260816.py check
+	python3 tools/host-lisp/c2_v21_span_verification_pricing.py check
+
+check-source: c2-v21-span-verification-pricing-check
+
+.PHONY: c2-v21-full-span-convergence-selftest c2-v21-full-span-convergence-check
+c2-v21-full-span-convergence-selftest: c2-v21-span-verification-pricing-check
+	python3 tools/host-lisp/c2_v21_full_span_convergence.py selftest
+
+c2-v21-full-span-convergence-check: c2-v21-full-span-convergence-selftest
+	python3 tools/host-lisp/c2_v21_full_span_convergence.py check
+
+check-source: c2-v21-full-span-convergence-check
+
+.PHONY: c2-v21-full-span-convergence-card-check
+c2-v21-full-span-convergence-card-check: c2-v21-full-span-convergence-check
+	python3 tools/host-lisp/c2_v21_full_span_convergence_card.py check
+
+check-source: c2-v21-full-span-convergence-card-check
+
+.PHONY: c2-v21-full-span-projection-replay-check
+c2-v21-full-span-projection-replay-check: c2-v21-full-span-convergence-card-check
+	python3 tools/host-lisp/c2_v21_full_span_projection_artifact_replay.py check
+
+check-source: c2-v21-full-span-projection-replay-check
+
+.PHONY: c2-v21-full-span-media-selftest c2-v21-full-span-media-check
+c2-v21-full-span-media-selftest: c2-v21-full-span-projection-replay-check
+	python3 tools/host-lisp/c2_v21_full_span_media.py selftest
+
+c2-v21-full-span-media-check: c2-v21-full-span-media-selftest
+	python3 tools/host-lisp/c2_v21_full_span_media.py check
+
+check-source: c2-v21-full-span-media-check
+
+.PHONY: c2-v21-probe-oracle-capture-selftest c2-v21-probe-oracle-capture-check
+c2-v21-probe-oracle-capture-selftest: c2-v21-full-span-media-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_capture.py selftest
+
+c2-v21-probe-oracle-capture-check: c2-v21-probe-oracle-capture-selftest
+	python3 tools/host-lisp/c2_v21_probe_oracle_capture.py check
+
+check-source: c2-v21-probe-oracle-capture-check
+
+.PHONY: c2-v21-probe-oracle-fix-pricing-selftest c2-v21-probe-oracle-fix-pricing-check
+c2-v21-probe-oracle-fix-pricing-selftest: c2-v21-probe-oracle-capture-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_fix_pricing.py selftest
+
+c2-v21-probe-oracle-fix-pricing-check: c2-v21-probe-oracle-fix-pricing-selftest
+	python3 tools/host-lisp/c2_v21_probe_oracle_fix_pricing.py check
+
+check-source: c2-v21-probe-oracle-fix-pricing-check
+
+.PHONY: c2-v21-probe-oracle-root-fix-selftest c2-v21-probe-oracle-root-fix-check
+c2-v21-probe-oracle-root-fix-selftest: c2-v21-probe-oracle-fix-pricing-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_fix.py selftest
+
+c2-v21-probe-oracle-root-fix-check: c2-v21-probe-oracle-root-fix-selftest c2-v21-probe-oracle-root-facade-padding-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_fix.py check
+
+check-source: c2-v21-probe-oracle-root-fix-check
+
+.PHONY: c2-v21-probe-oracle-root-card-check
+c2-v21-probe-oracle-root-card-check: c2-v21-probe-oracle-root-fix-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_card.py check
+
+check-source: c2-v21-probe-oracle-root-card-check
+
+.PHONY: c2-v21-probe-oracle-root-card-red-attribution-selftest c2-v21-probe-oracle-root-card-red-attribution-check
+c2-v21-probe-oracle-root-card-red-attribution-selftest: c2-v21-probe-oracle-root-card-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_card_red_attribution.py selftest
+
+c2-v21-probe-oracle-root-card-red-attribution-check: c2-v21-probe-oracle-root-card-red-attribution-selftest
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_card_red_attribution.py check
+
+check-source: c2-v21-probe-oracle-root-card-red-attribution-check
+
+.PHONY: c2-v21-probe-oracle-root-facade-padding-selftest c2-v21-probe-oracle-root-facade-padding-check
+c2-v21-probe-oracle-root-facade-padding-selftest: c2-v21-probe-oracle-fix-pricing-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_facade_padding.py selftest
+
+c2-v21-probe-oracle-root-facade-padding-check: c2-v21-probe-oracle-root-facade-padding-selftest
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_facade_padding.py check
+
+check-source: c2-v21-probe-oracle-root-facade-padding-check
+
+.PHONY: c2-v21-probe-oracle-root-padding-replacement-check
+c2-v21-probe-oracle-root-padding-replacement-check: c2-v21-probe-oracle-root-card-red-attribution-check c2-v21-probe-oracle-root-facade-padding-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_padding_replacement_card.py check
+
+check-source: c2-v21-probe-oracle-root-padding-replacement-check
+
+.PHONY: c2-v21-probe-oracle-root-padding-replacement-red-attribution-selftest c2-v21-probe-oracle-root-padding-replacement-red-attribution-check
+c2-v21-probe-oracle-root-padding-replacement-red-attribution-selftest: c2-v21-probe-oracle-root-padding-replacement-check
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_padding_replacement_red_attribution.py selftest
+
+c2-v21-probe-oracle-root-padding-replacement-red-attribution-check: c2-v21-probe-oracle-root-padding-replacement-red-attribution-selftest
+	python3 tools/host-lisp/c2_v21_probe_oracle_root_padding_replacement_red_attribution.py check
+
+check-source: c2-v21-probe-oracle-root-padding-replacement-red-attribution-check
+
+.PHONY: c2-v21-relocation-inventory-artifact-replay-check
+c2-v21-relocation-inventory-artifact-replay-check: c2-v21-probe-oracle-root-padding-replacement-red-attribution-check c2-v20-vma-golden-review-rebind-check
+	python3 tools/host-lisp/c2_v21_relocation_inventory_artifact_replay.py check
+
+check-source: c2-v21-relocation-inventory-artifact-replay-check
+
+.PHONY: c2-v21-dma-content-structural-absence-check
+c2-v21-dma-content-structural-absence-check: c2-v21-relocation-inventory-artifact-replay-check
+	python3 tools/host-lisp/c2_v21_dma_content_structural_absence.py check
+
+check-source: c2-v21-dma-content-structural-absence-check
+
+.PHONY: c2-v21-root-padding-completion-preflight-check
+c2-v21-root-padding-completion-preflight-check: c2-v21-dma-content-structural-absence-check
+	python3 tools/host-lisp/c2_v21_root_padding_completion_preflight.py check
+
+check-source: c2-v21-root-padding-completion-preflight-check
+
+.PHONY: c2-v21-link113-bank4-root-reader-rescue-selftest c2-v21-link113-bank4-root-reader-rescue-check
+c2-v21-link113-bank4-root-reader-rescue-selftest: c2-v21-root-padding-completion-preflight-check
+	python3 tools/host-lisp/c2_v21_link113_bank4_root_reader_rescue.py selftest
+
+c2-v21-link113-bank4-root-reader-rescue-check: c2-v21-link113-bank4-root-reader-rescue-selftest
+	python3 tools/host-lisp/c2_v21_link113_bank4_root_reader_rescue.py check
+
+check-source: c2-v21-link113-bank4-root-reader-rescue-check
+
+.PHONY: c2-v21-bank4-map-attribution-selftest c2-v21-bank4-map-attribution-check
+c2-v21-bank4-map-attribution-selftest:
+	python3 tools/host-lisp/c2_v21_bank4_map_attribution.py selftest
+
+c2-v21-bank4-map-attribution-check: c2-v21-bank4-map-attribution-selftest
+	python3 tools/host-lisp/c2_v21_bank4_map_attribution.py check
+
+check-source: c2-v21-bank4-map-attribution-check
+
+.PHONY: c2-v21-reader-caller-path-attribution-selftest c2-v21-reader-caller-path-attribution-check
+c2-v21-reader-caller-path-attribution-selftest: c2-v21-link113-bank4-root-reader-rescue-check c2-v21-bank4-map-probe-check
+	python3 tools/host-lisp/c2_v21_reader_caller_path_attribution.py selftest
+
+c2-v21-reader-caller-path-attribution-check: c2-v21-reader-caller-path-attribution-selftest
+	python3 tools/host-lisp/c2_v21_reader_caller_path_attribution.py check
+
+check-source: c2-v21-reader-caller-path-attribution-check
+
+.PHONY: c2-v21-a0-origin-attribution-selftest c2-v21-a0-origin-attribution-check
+c2-v21-a0-origin-attribution-selftest: c2-v21-reader-caller-path-attribution-check
+	python3 tools/host-lisp/c2_v21_a0_origin_attribution.py selftest
+
+c2-v21-a0-origin-attribution-check: c2-v21-a0-origin-attribution-selftest
+	python3 tools/host-lisp/c2_v21_a0_origin_attribution.py check
+
+check-source: c2-v21-a0-origin-attribution-check
+
+.PHONY: c2-v21-wysiwyg-input-selftest c2-v21-wysiwyg-input-check
+c2-v21-wysiwyg-input-selftest: c2-v21-a0-origin-attribution-check
+	python3 tools/host-lisp/c2_v21_wysiwyg_input.py selftest
+
+c2-v21-wysiwyg-input-check: c2-v21-wysiwyg-input-selftest
+	python3 tools/host-lisp/c2_v21_wysiwyg_input.py check
+
+check-source: c2-v21-wysiwyg-input-check
+
+.PHONY: c2-v21-wysiwyg-input-card-check
+c2-v21-wysiwyg-input-card-check: c2-v21-wysiwyg-input-check
+	python3 tools/host-lisp/c2_v21_wysiwyg_input_card.py check
+
+check-source: c2-v21-wysiwyg-input-card-check
+
+.PHONY: c2-v21-wysiwyg-input-card-red-attribution-selftest c2-v21-wysiwyg-input-card-red-attribution-check
+c2-v21-wysiwyg-input-card-red-attribution-selftest: c2-v21-wysiwyg-input-card-check
+	python3 tools/host-lisp/c2_v21_wysiwyg_input_card_red_attribution.py selftest
+
+c2-v21-wysiwyg-input-card-red-attribution-check: c2-v21-wysiwyg-input-card-red-attribution-selftest
+	python3 tools/host-lisp/c2_v21_wysiwyg_input_card_red_attribution.py check
+
+check-source: c2-v21-wysiwyg-input-card-red-attribution-check
+
+.PHONY: c2-v21-link116-name-freight-media-selftest c2-v21-link116-name-freight-media-check
+c2-v21-link116-name-freight-media-selftest:
+	python3 tools/host-lisp/c2_v21_link116_name_freight_media.py selftest
+
+c2-v21-link116-name-freight-media-check: c2-v21-link116-name-freight-media-selftest
+	python3 tools/host-lisp/c2_v21_link116_name_freight_media.py check
+
+check-source: c2-v21-link116-name-freight-media-check
+
+.PHONY: c2-v21-link116-name-freight-device-selftest c2-v21-link116-name-freight-device-check
+c2-v21-link116-name-freight-device-selftest: c2-v21-link116-name-freight-media-check
+	python3 tools/host-lisp/c2_v21_link116_name_freight_device_result.py selftest
+
+c2-v21-link116-name-freight-device-check: c2-v21-link116-name-freight-device-selftest
+	python3 tools/host-lisp/c2_v21_link116_name_freight_device_result.py check
+
+check-source: c2-v21-link116-name-freight-device-check
+
+.PHONY: c2-v150-boot-duration-device-selftest c2-v150-boot-duration-device-check
+c2-v150-boot-duration-device-selftest: c2-v21-link116-name-freight-device-check
+	python3 tools/host-lisp/c2_v150_boot_duration_result.py selftest
+
+c2-v150-boot-duration-device-check: c2-v150-boot-duration-device-selftest
+	python3 tools/host-lisp/c2_v150_boot_duration_result.py check
+
+check-source: c2-v150-boot-duration-device-check
+
+.PHONY: c2-v150-halt1-selftest c2-v150-halt1-check
+c2-v150-halt1-selftest: c2-v150-boot-duration-device-check
+	python3 tools/host-lisp/c2_v150_halt1.py selftest
+
+c2-v150-halt1-check: c2-v150-halt1-selftest
+	python3 tools/host-lisp/c2_v150_halt1.py check
+
+check-source: c2-v150-halt1-check

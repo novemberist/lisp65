@@ -16,6 +16,7 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import sys
 from typing import Any, Callable
 
@@ -41,8 +42,9 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.12-link92-r5-trace-fix-library-scope.json"
 )
-FORMAT = "lisp65-c2.3-v1.12-link92-r5-trace-fix-library-scope-v1"
-RECORDED_ON = "2026-08-08"
+FORMAT = "lisp65-c2.3-v1.12-link92-r5-trace-fix-library-scope-v2"
+RECORDED_ON = "2026-08-09"
+HISTORICAL_AUTHORITY = "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f"
 
 
 class ScopeError(RuntimeError):
@@ -75,6 +77,35 @@ def bind(path: Path) -> dict[str, Any]:
     }
 
 
+def git_bytes(path: Path) -> bytes:
+    relative = path.resolve().relative_to(ROOT.resolve()).as_posix()
+    result = subprocess.run(
+        ["git", "show", f"{HISTORICAL_AUTHORITY}:{relative}"],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
+    return result.stdout
+
+
+def git_text(path: Path) -> str:
+    return git_bytes(path).decode("utf-8")
+
+
+def git_json(path: Path) -> dict[str, Any]:
+    value = json.loads(git_text(path))
+    require(isinstance(value, dict), f"historical JSON object required: {path}")
+    return value
+
+
+def bind_git(path: Path) -> dict[str, Any]:
+    raw = git_bytes(path)
+    return {
+        "path": path.resolve().relative_to(ROOT.resolve()).as_posix(),
+        "git_commit": HISTORICAL_AUTHORITY,
+        "bytes": len(raw),
+        "sha256": sha(raw),
+    }
+
+
 def write_json(path: Path, value: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -83,12 +114,16 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def delivered_surface() -> dict[str, Any]:
-    ledger = load(LEDGER)
-    registry = load(REGISTRY)
-    dispatch = DISPATCH.read_text(encoding="utf-8")
-    eval_source = EVAL.read_text(encoding="utf-8")
-    vm_source = VM.read_text(encoding="utf-8")
-    profile = PROFILE.read_text(encoding="utf-8")
+    # This is a sealed Link-92 claim.  Reading the live ABI would rewrite
+    # history as soon as the explicitly commissioned successor capability
+    # appears.  All tracked product authorities therefore come from the
+    # owner-descope commit itself.
+    ledger = git_json(LEDGER)
+    registry = git_json(REGISTRY)
+    dispatch = git_text(DISPATCH)
+    eval_source = git_text(EVAL)
+    vm_source = git_text(VM)
+    profile = git_text(PROFILE)
     compiler = COMPILER.read_text(encoding="utf-8")
 
     prims = {
@@ -230,6 +265,8 @@ def transaction_boundary() -> dict[str, Any]:
 
 def validate_result(value: dict[str, Any]) -> None:
     require(value.get("format") == FORMAT, "scope receipt format drift")
+    require(value.get("historical_authority_commit") == HISTORICAL_AUTHORITY,
+            "sealed Link-92 authority commit drift")
     require(
         value.get("status") == "descope-required-missing-function-cell-capability",
         "library-only descope status dimmed",
@@ -291,8 +328,11 @@ def derive() -> dict[str, Any]:
         "format": FORMAT,
         "recorded_on": RECORDED_ON,
         "status": "descope-required-missing-function-cell-capability",
+        "historical_authority_commit": HISTORICAL_AUTHORITY,
         "bindings": {
-            name: bind(path)
+            name: (bind(path) if name in {
+                "delivered_compiler", "commissioned_trace_source"
+            } else bind_git(path))
             for name, path in {
                 "trace_host_attribution": ATTRIBUTION,
                 "bytecode_abi_ledger": LEDGER,

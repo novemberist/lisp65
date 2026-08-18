@@ -97,7 +97,11 @@ static void echo_char(char ch) {
  * return: 1 = mit RETURN beendet, 0 = EOF (Host), 2 = CLR/HOME (Screen geloescht). */
 static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
     uint8_t n = *np, floor = *np;
+#ifdef DEVICE_KB
+    uint8_t c;
+#else
     int c;
+#endif
     for (;;) {
 #ifdef DEVICE_KB
         kb_cursor_on();
@@ -143,12 +147,18 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
             continue;
         }
 #endif
-        /* IGNORE unhandled control codes (cursor keys, INST, colours, ...): neither echo nor store
-         * them. Otherwise they land in the buffer while the screen shows something else (the BASIC
-         * habit of "cursor back and overtype" desyncs buffer against screen and produces ghost
-         * forms). Editing works with DEL; a line editor is IDE territory. */
-        if (c < 0x20 || (c >= 0x80 && c < 0xA0)) continue;
-        if (n < max - 1) {
+        /* WYSIWYG input boundary: shifted PETSCII Space is visually identical
+         * to Space and therefore must also be semantic whitespace.  Every
+         * remaining unhandled control is rejected visibly; silently dropping
+         * it would make the accepted line differ from the typed one. */
+        /* Clearing bit 7 makes both unhandled PETSCII control bands the
+         * same $00..$1f interval.  Keep the visible rejection, but let its
+         * fall-through share the capacity branch: lisp_abort_code normally
+         * longjmps, and its no-toplevel smoke fallback reaches the loop tail. */
+        if ((c & 0x7F) < 0x20) {
+            lisp_abort_code(LISP65_ERR_READER_INVALID_TOKEN);
+        } else if (n < max - 1) {
+            if (c == 0xA0) c = ' ';
 #ifdef LISP65_SCREEN_DRIVER
             /* PETSCII -> ASCII VOR dem Echo: unshifted Buchstaben ($41-$5A) -> klein,
              * geshiftete ($C1-$DA) -> GROSS; der Treiber mappt ASCII selbst. */

@@ -437,8 +437,7 @@ def check() -> dict[str, Any]:
             "closure_gate": bind(Path(__file__).resolve()),
             "product_linker_generator": bind(
                 ROOT / "tools/host-lisp/c2_product_substitution_link.py"),
-            "candidate_driver": bind(
-                ROOT / "tools/host-lisp/c2_v112_candidate_product.py"),
+            "candidate_driver": bind(ROOT / contract["canonical_seed"]["driver"]),
             "mapped_far_selected_gate": bind(
                 ROOT / "tools/host-lisp/c2_mapped_far_service_gate.py"),
             "convergence_selected_gate": bind(

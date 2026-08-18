@@ -1,0 +1,29 @@
+{
+  "format": "lisp65-c2-v20-link105-phase02a-dynamic-rescue-row-v1",
+  "status": "owner-authorized-6c5d0cb1",
+  "precondition": {
+    "device_state": "the Link-105 phase-02a capture state remains stopped and unchanged",
+    "tuple_and_media_identity_first": true,
+    "additional_stops": 0,
+    "resumes": 0,
+    "runs": 0,
+    "resets": 0,
+    "D2_D5_executed": false
+  },
+  "physical_reads": [
+    {
+      "name": "c2-runtime-and-cutpoint",
+      "address": "0x0000c080",
+      "bytes": 50,
+      "view": "physical-bank0"
+    },
+    {
+      "name": "selected-shelf-source-row",
+      "address": "0x081000c0",
+      "bytes": 32,
+      "view": "physical-28-bit"
+    }
+  ],
+  "persistence": "Both complete dynamic ranges and their raw monitor rows are atomically persisted before any field, CRC, source identity, site or timing interpretation.",
+  "claim_limit": "One read-only rescue on the preserved stopped state. No stop, resume, reset, run, repeat boot, fix, card, media, D2-D5 or release action is authorized."
+}

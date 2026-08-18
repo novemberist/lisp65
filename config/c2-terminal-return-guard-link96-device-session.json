@@ -1,0 +1,43 @@
+{
+  "format": "lisp65-c2.3-link96-terminal-return-guard-device-v1",
+  "status": "prepared-not-run",
+  "link_authority": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-link96-terminal-return-guard-media-receipt.json",
+    "status": "LINK96-GUARDED-MEDIA-R2-GREEN; POINT-HARDWARE-ROW-READY"
+  },
+  "identity": {
+    "product_medium": "build/c2.3/terminal-return-guard-link96-media-r2/shared-system/lisp65-product.d81",
+    "library_medium": "build/c2.3/terminal-return-guard-link96-media-r2/defstruct-library/lisp65-library.d81",
+    "boot_quiet_seconds": 45,
+    "banner": "WORKBENCH 1.4.0",
+    "prompt": "lisp65>",
+    "guard_readback": "0x0000b582..0x0000b591"
+  },
+  "input": {
+    "owner_physical_keyboard": true,
+    "virtual_transport_forbidden": true,
+    "one_form_per_submission": true,
+    "polling_during_persistent_form": false
+  },
+  "rows": [
+    {
+      "id": "require-defstruct",
+      "form": "(require (quote defstruct))",
+      "quiet_floor_seconds": 180,
+      "expect": ["t"]
+    },
+    {
+      "id": "define-point",
+      "form": "(defstruct point x y)",
+      "quiet_floor_seconds": 240,
+      "expect": ["t"]
+    },
+    {
+      "id": "make-point",
+      "form": "(make-point 3 4)",
+      "quiet_floor_seconds": 30,
+      "expect": ["(point 3 4)"]
+    }
+  ],
+  "claim_limit": "One physical guarded defstruct row; no polling during persistent forms and no result before point plus post-session guard readback."
+}

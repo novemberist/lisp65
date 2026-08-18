@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <mega65.h>
 
+#include "../src/boot_progress.h"
 #include "r3-cold-stager-contract.h"
 
 #ifndef R3_EXPECTED_PRODUCT_BUILD_ID
@@ -148,6 +149,101 @@ __attribute__((used)) static struct r3_f018b_job c2_stage_jobs[2];
  * may still consume is ever rewritten in place. */
 __attribute__((used)) static struct r3_edma_job c2_attic_stage_jobs[2];
 __attribute__((used)) static struct r3_edma_job c2_attic_retry_job;
+#ifdef LISP65_V21_STAGE_TRACE
+/* Non-promotable Link-107 stage attribution.  The product image owns none of
+ * these bytes: the cold stager records the exact role/sector and failure edge
+ * before entering its terminal media-error hold.  Byte 31 is written last so
+ * a stopped-state reader never interprets a torn record. */
+__attribute__((used, section(".bss.v21_stage_trace")))
+volatile uint8_t c2_v21_stage_trace[32];
+static uint8_t c2_v21_stage_trace_role;
+static uint8_t c2_v21_stage_trace_attempt;
+
+enum c2_v21_stage_trace_reason {
+    C2_V21_TRACE_MEDIA_IDENTITY = 1,
+    C2_V21_TRACE_DESCRIPTOR_LOAD = 2,
+    C2_V21_TRACE_DESCRIPTOR_VALIDATE = 3,
+    C2_V21_TRACE_ROLE_DOMAIN = 4,
+    C2_V21_TRACE_ROLE_FLAG = 5,
+    C2_V21_TRACE_LENGTH_RANGE = 0x10,
+    C2_V21_TRACE_STAGE_DOMAIN = 0x11,
+    C2_V21_TRACE_FIND_FILE = 0x12,
+    C2_V21_TRACE_F011_READ = 0x13,
+    C2_V21_TRACE_CHAIN_TERMINATOR = 0x14,
+    C2_V21_TRACE_LENGTH_OVERFLOW = 0x15,
+    C2_V21_TRACE_CONVERGENCE_TIMEOUT = 0x16,
+    C2_V21_TRACE_CHAIN_POINTER = 0x17,
+    C2_V21_TRACE_CHAIN_FUEL = 0x18,
+    C2_V21_TRACE_FINAL_LENGTH = 0x19,
+    C2_V21_TRACE_FINAL_CRC = 0x1a,
+    C2_V21_TRACE_NONSTAGE_SCAN = 0x20,
+    C2_V21_TRACE_PRODUCT_RECORD = 0x21,
+    C2_V21_TRACE_PRODUCT_SCAN = 0x22,
+    C2_V21_TRACE_CHAIN_RETURN = 0x23
+};
+
+static void c2_v21_trace_wr32(uint8_t offset, uint32_t value) {
+    c2_v21_stage_trace[offset] = (uint8_t)value;
+    c2_v21_stage_trace[offset + 1u] = (uint8_t)(value >> 8);
+    c2_v21_stage_trace[offset + 2u] = (uint8_t)(value >> 16);
+    c2_v21_stage_trace[offset + 3u] = (uint8_t)(value >> 24);
+}
+
+static void c2_v21_trace_begin(uint8_t phase, uint8_t role,
+                               uint8_t attempt) {
+    uint8_t index;
+    for (index = 0; index < sizeof c2_v21_stage_trace; index++)
+        c2_v21_stage_trace[index] = 0;
+    c2_v21_stage_trace[0] = 0x53u;
+    c2_v21_stage_trace[1] = 0x54u;
+    c2_v21_stage_trace[2] = phase;
+    c2_v21_stage_trace[4] = attempt;
+    c2_v21_stage_trace[5] = role;
+}
+
+static uint8_t c2_v21_trace_fail(uint8_t reason) {
+    c2_v21_stage_trace[3] = reason;
+    c2_v21_stage_trace[31] = 0xa5u;
+    return 0;
+}
+
+static void c2_v21_trace_scan_begin(uint32_t destination, uint8_t stage,
+                                    uint32_t expected_length,
+                                    uint8_t stage_domain) {
+    c2_v21_trace_begin(stage ? 0x31u : 0x32u,
+                       c2_v21_stage_trace_role,
+                       c2_v21_stage_trace_attempt);
+    c2_v21_stage_trace[6] = stage;
+    c2_v21_stage_trace[7] = stage_domain;
+    c2_v21_trace_wr32(12u, destination);
+    c2_v21_trace_wr32(20u, expected_length);
+    c2_v21_trace_wr32(24u, 0xfffffffful);
+}
+
+static void c2_v21_trace_sector(uint16_t ordinal, uint8_t track,
+                                uint8_t sector, uint8_t next_track,
+                                uint8_t next_sector, uint32_t length,
+                                uint32_t crc) {
+    c2_v21_stage_trace[8] = (uint8_t)ordinal;
+    c2_v21_stage_trace[9] = (uint8_t)(ordinal >> 8);
+    c2_v21_stage_trace[10] = track;
+    c2_v21_stage_trace[11] = sector;
+    c2_v21_trace_wr32(16u, length);
+    c2_v21_trace_wr32(24u, crc);
+    c2_v21_stage_trace[28] = next_track;
+    c2_v21_stage_trace[29] = next_sector;
+}
+
+#define C2_V21_TRACE_FAIL(reason) c2_v21_trace_fail((reason))
+#define C2_V21_TRACE_ROLE(attempt, role) do {                         \
+    c2_v21_stage_trace_attempt = (attempt);                            \
+    c2_v21_stage_trace_role = (role);                                  \
+    c2_v21_trace_begin(0x30u, (role), (attempt));                       \
+} while (0)
+#else
+#define C2_V21_TRACE_FAIL(reason) 0
+#define C2_V21_TRACE_ROLE(attempt, role) do { } while (0)
+#endif
 #endif
 
 static uint16_t rd16(const uint8_t *p) {
@@ -494,18 +590,28 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
     uint16_t fuel;
     uint32_t length = 0;
     uint32_t crc = 0xfffffffful;
+#ifdef LISP65_V21_STAGE_TRACE
+    uint16_t sector_ordinal = 0;
+#endif
 #ifdef LISP65_VERIFIED_MEDIA_STAGER
     uint8_t stage_domain = stage
         ? c2_stage_address_domain(destination, expected_length)
         : C2_STAGE_INVALID;
 #endif
-    if (!expected_length || expected_length > R3_MAX_MEDIA_BYTES) return 0;
+#ifdef LISP65_V21_STAGE_TRACE
+    c2_v21_trace_scan_begin(destination, stage, expected_length,
+                            stage_domain);
+#endif
+    if (!expected_length || expected_length > R3_MAX_MEDIA_BYTES)
+        return C2_V21_TRACE_FAIL(C2_V21_TRACE_LENGTH_RANGE);
 #ifdef LISP65_VERIFIED_MEDIA_STAGER
-    if (stage && stage_domain == C2_STAGE_INVALID) return 0;
+    if (stage && stage_domain == C2_STAGE_INVALID)
+        return C2_V21_TRACE_FAIL(C2_V21_TRACE_STAGE_DOMAIN);
 #endif
     fuel = (uint16_t)((expected_length + R3_LOGICAL_SECTOR_PAYLOAD - 1ul) /
                       R3_LOGICAL_SECTOR_PAYLOAD);
-    if (!find_file(name, &track, &sector)) return 0;
+    if (!find_file(name, &track, &sector))
+        return C2_V21_TRACE_FAIL(C2_V21_TRACE_FIND_FILE);
     while (track && fuel--) {
         uint16_t off;
         uint16_t count;
@@ -513,18 +619,23 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
         uint8_t next_track;
         uint8_t next_sector;
         volatile uint8_t *p;
-        if (!f011_read(track, sector, &off)) return 0;
+        if (!f011_read(track, sector, &off))
+            return C2_V21_TRACE_FAIL(C2_V21_TRACE_F011_READ);
         p = (volatile uint8_t *)0xde00 + off;
         next_track = p[0];
         next_sector = p[1];
+#ifdef LISP65_V21_STAGE_TRACE
+        c2_v21_trace_sector(sector_ordinal++, track, sector,
+                            next_track, next_sector, length, crc);
+#endif
         if (!next_track && !next_sector) {
             lisp65_f011_unmap_buffer();
-            return 0;
+            return C2_V21_TRACE_FAIL(C2_V21_TRACE_CHAIN_TERMINATOR);
         }
         count = next_track ? 254u : (uint16_t)(next_sector - 1u);
         if (length + count > expected_length) {
             lisp65_f011_unmap_buffer();
-            return 0;
+            return C2_V21_TRACE_FAIL(C2_V21_TRACE_LENGTH_OVERFLOW);
         }
         for (index = 0; index < count; index++) {
             sector_payload[index] = p[2u + index];
@@ -611,7 +722,13 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
                 g5_probe_hold(match);
             }
 #endif
-            if (!match) return 0;
+            if (!match) {
+#ifdef LISP65_V21_STAGE_TRACE
+                c2_v21_stage_trace[30] = wraps;
+#endif
+                return C2_V21_TRACE_FAIL(
+                    C2_V21_TRACE_CONVERGENCE_TIMEOUT);
+            }
 #else
             edma_copy((uint32_t)(uintptr_t)sector_payload,
                       destination + length, count);
@@ -623,12 +740,22 @@ static uint8_t scan_file(const char *name, uint32_t destination, uint8_t stage,
             break;
         }
         if (next_track < 1 || next_track > 80 || next_sector > 39 ||
-            (next_track == track && next_sector == sector)) return 0;
+            (next_track == track && next_sector == sector))
+            return C2_V21_TRACE_FAIL(C2_V21_TRACE_CHAIN_POINTER);
         track = next_track;
         sector = next_sector;
     }
-    if (track) return 0;
-    return length == expected_length && (crc ^ 0xfffffffful) == expected_crc;
+    if (track) return C2_V21_TRACE_FAIL(C2_V21_TRACE_CHAIN_FUEL);
+#ifdef LISP65_V21_STAGE_TRACE
+    if (length != expected_length)
+        return C2_V21_TRACE_FAIL(C2_V21_TRACE_FINAL_LENGTH);
+    if ((crc ^ 0xfffffffful) != expected_crc)
+        return C2_V21_TRACE_FAIL(C2_V21_TRACE_FINAL_CRC);
+    return 1;
+#else
+    return length == expected_length &&
+           (crc ^ 0xfffffffful) == expected_crc;
+#endif
 }
 
 #ifndef LISP65_VERIFIED_MEDIA_STAGER
@@ -808,13 +935,27 @@ static uint8_t restage_and_reverify(uint32_t profile_build_id) {
     uint8_t role;
     (void)profile_build_id;
     for (attempt = 0; attempt < R3_RESTAGE_LIMIT; attempt++) {
-        uint8_t ok = product_media_identity();
+        uint8_t ok;
+        C2_V21_TRACE_ROLE(attempt, 0u);
+        ok = product_media_identity();
+        if (!ok)
+            (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_MEDIA_IDENTITY);
         for (role = R3_ROLE_FIRST_STAGE;
              ok && role <= R3_ROLE_LAST_STAGE; role++) {
             const uint8_t *record = find_role(role);
+            C2_V21_TRACE_ROLE(attempt, role);
+#ifdef LISP65_V21_STAGE_TRACE
+            if (!c2_stage_record_domain_valid(role, record))
+                ok = C2_V21_TRACE_FAIL(C2_V21_TRACE_ROLE_DOMAIN);
+            else if (!(record[1] & R3_FLAG_STAGE))
+                ok = C2_V21_TRACE_FAIL(C2_V21_TRACE_ROLE_FLAG);
+            else
+                ok = disk_record(record, 1);
+#else
             ok = c2_stage_record_domain_valid(role, record) &&
                  (record[1] & R3_FLAG_STAGE) &&
                  disk_record(record, 1);
+#endif
         }
         if (ok) return 1;
     }
@@ -910,9 +1051,28 @@ int main(void) {
     uint8_t index;
     uint32_t profile_build_id;
     const uint8_t *product;
+    /* First product-owned instruction: explain the otherwise silent media,
+     * reset-domain and handoff work before touching its I/O machinery. */
+    LISP65_BOOT_PROGRESS_STAGER();
     io_enable();
+#ifdef LISP65_V21_STAGE_TRACE
+    C2_V21_TRACE_ROLE(0u, 0u);
+    if (!product_media_identity()) {
+        (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_MEDIA_IDENTITY);
+        show_disk_error();
+    }
+    if (!load_descriptor()) {
+        (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_DESCRIPTOR_LOAD);
+        show_disk_error();
+    }
+    if (!validate_descriptor()) {
+        (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_DESCRIPTOR_VALIDATE);
+        show_disk_error();
+    }
+#else
     if (!product_media_identity() || !load_descriptor() || !validate_descriptor())
         show_disk_error();
+#endif
     profile_build_id = rd32(descriptor + 12);
 #ifdef LISP65_VERIFIED_MEDIA_STAGER
     /* Bank 2 and Bank 3 are writable Chip RAM only after the idempotent
@@ -938,16 +1098,43 @@ int main(void) {
         if (record[0] != R3_ROLE_BANK5 && record[0] != R3_ROLE_ATTIC &&
             record[0] != R3_ROLE_SHELF && record[0] != R3_ROLE_PRODUCT &&
 #endif
-            !disk_record(record, 0)) show_disk_error();
+            !disk_record(record, 0)) {
+#ifdef LISP65_V21_STAGE_TRACE
+            if (c2_v21_stage_trace[31] != 0xa5u)
+                (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_NONSTAGE_SCAN);
+#endif
+            show_disk_error();
+        }
     }
     product = find_role(R3_ROLE_PRODUCT);
+#ifdef LISP65_V21_STAGE_TRACE
+    C2_V21_TRACE_ROLE(0u, R3_ROLE_PRODUCT);
+    if (!product || rd32(product + 4) != R3_PRODUCT_STAGE ||
+        !(product[1] & R3_FLAG_PRG)) {
+        (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_PRODUCT_RECORD);
+        show_disk_error();
+    }
+    if (!disk_record(product, 1)
+#ifndef LISP65_VERIFIED_MEDIA_STAGER
+        || !staged_state_valid(profile_build_id)
+#endif
+        ) {
+        if (c2_v21_stage_trace[31] != 0xa5u)
+            (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_PRODUCT_SCAN);
+        show_disk_error();
+    }
+#else
     if (!product || rd32(product + 4) != R3_PRODUCT_STAGE ||
         !(product[1] & R3_FLAG_PRG) || !disk_record(product, 1)
 #ifndef LISP65_VERIFIED_MEDIA_STAGER
         || !staged_state_valid(profile_build_id)
 #endif
         ) show_disk_error();
+#endif
     prepare_chain(product);
+#ifdef LISP65_V21_STAGE_TRACE
+    (void)C2_V21_TRACE_FAIL(C2_V21_TRACE_CHAIN_RETURN);
+#endif
     show_disk_error();
     return 1;
 }

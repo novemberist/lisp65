@@ -1309,7 +1309,17 @@ static __attribute__((noinline)) uint8_t vm_string_arg_p(obj value) {
     return IS_PTR(value) && cell_type(value) == T_STR;
 }
 #endif
+
 #endif
+
+/* The native surface asks the same extended-heap-aware symbol question in six
+ * switch arms.  Keep one resident predicate instead of letting LTO replicate
+ * the cell-type path at every arm; the private Prim-20 modes fit by sharing
+ * this existing dispatch-domain truth, not by moving a foreign owner into a
+ * cold service. */
+static __attribute__((noinline)) uint8_t vm_symbol_arg_p(obj value) {
+    return IS_SYMI(value) || (IS_PTR(value) && cell_type(value) == T_SYM);
+}
 
 #ifdef LISP65_C2_REQUIRE_RESOLVER
 extern obj vm_c2d_byte(obj *args);
@@ -1371,7 +1381,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #else
         return (n >= 1 && IS_PTR(a[0]) && cell_type(a[0]) == T_STR) ? vm_t : NIL;
 #endif
-    case 5: return (n >= 1 && (IS_SYMI(a[0]) || (IS_PTR(a[0]) && cell_type(a[0]) == T_SYM))) ? vm_t : NIL;  /* symbolp */
+    case 5: return (n >= 1 && vm_symbol_arg_p(a[0])) ? vm_t : NIL;  /* symbolp */
     case 6: return (n >= 1 && IS_FIX(a[0])) ? vm_t : NIL;                              /* numberp */
 #if defined(LISP65_DIALECT_V2) && defined(LISP65_V2_NATIVE_CAPABILITIES)
     case 1: case 2: case 26: case 27: case 40:
@@ -1658,10 +1668,20 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #endif
 #ifdef LISP65_VM_GLOBAL_PRIMS
     case 19:  /* symbol-value */
-        if (n != 1 || !(IS_SYMI(a[0]) || (IS_PTR(a[0]) && cell_type(a[0]) == T_SYM))) { vm_status = VM_TYPEERROR; return NIL; }
+        if (n != 1 || !vm_symbol_arg_p(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         return sym_value(a[0]);
     case 20:  /* set-symbol-value */
-        if (n != 2 || !(IS_SYMI(a[0]) || (IS_PTR(a[0]) && cell_type(a[0]) == T_SYM))) { vm_status = VM_TYPEERROR; return NIL; }
+        if (n == 1 || n == 3) {
+            obj old;
+            if (!vm_symbol_arg_p(a[0])
+                || (n == 3 && (!IS_FIX(a[2]) || FIXVAL(a[2]) != 69))) {
+                vm_status = VM_TYPEERROR; return NIL;
+            }
+            old = sym_function(a[0]);
+            if (n == 3) set_sym_function(a[0], a[1]);
+            return old;
+        }
+        if (n != 2 || !vm_symbol_arg_p(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         set_sym_value(a[0], a[1]); return a[1];
 #endif
 #ifdef LISP65_V2_WORKBENCH_SERVICES
@@ -1708,7 +1728,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
 #ifdef LISP65_DIALECT_V2
     case 57: /* boundp -- public native designator closure */
         if (n != 1) { vm_status = VM_ARITY; return NIL; }
-        if (!(IS_SYMI(a[0]) || (IS_PTR(a[0]) && cell_type(a[0]) == T_SYM))) {
+        if (!vm_symbol_arg_p(a[0])) {
             vm_status = VM_TYPEERROR; return NIL;
         }
         return sym_boundp(a[0]) ? vm_t : NIL;
@@ -1717,7 +1737,7 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         vm_status = VM_TYPEERROR; return NIL;
     case 59: /* set */
         if (n != 2) { vm_status = VM_ARITY; return NIL; }
-        if (!(IS_SYMI(a[0]) || (IS_PTR(a[0]) && cell_type(a[0]) == T_SYM))) {
+        if (!vm_symbol_arg_p(a[0])) {
             vm_status = VM_TYPEERROR; return NIL;
         }
         set_sym_value(a[0], a[1]); return a[1];

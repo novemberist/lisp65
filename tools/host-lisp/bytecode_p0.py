@@ -772,6 +772,10 @@ class P0VM:
             raise ValueError("non-default ABI profile requires an explicit ledger")
         self.heap = heap if heap is not None else Heap()
         self.directory = dict(directory or {})
+        self.function_cells = {}
+        for symbol, code in self.directory.items():
+            if self.heap.symbolp(symbol):
+                self.function_cells[to_i16(symbol)] = to_i16(symbol)
         self.macro_symbols = set(macro_symbols or [])
         self.max_steps = max_steps
         self.max_call_args = max_call_args
@@ -1779,6 +1783,16 @@ class P0VM:
                 raise VMError("TypeError", "symbol-value expects one symbol")
             return self.heap.symbol_value(args[0])
         if prim_id == 20:
+            if argc in (1, 3):
+                if not self.heap.symbolp(args[0]) or (
+                    argc == 3 and (not is_fix(args[2]) or fixval(args[2]) != 69)
+                ):
+                    raise VMError("TypeError", "%function-cell private mode expects a symbol")
+                key = to_i16(args[0])
+                old = self.function_cells.get(key, NIL)
+                if argc == 3:
+                    self.function_cells[key] = to_i16(args[1])
+                return old
             if argc != 2 or not self.heap.symbolp(args[0]):
                 raise VMError("TypeError", "set-symbol-value expects symbol and value")
             return self.heap.set_symbol_value(args[0], args[1])

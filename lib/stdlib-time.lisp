@@ -27,6 +27,11 @@
         (%time-error-duration-overflow)
         (+ (* high 256) low))))
 
+; Product-owned fail-closed edge.  Keeping the named helper published makes
+; both TIME and WAIT independent of an accidental DIRMISS boundary.
+(defun %time-error-duration-overflow ()
+  (mod 1 0))
+
 (defmacro time (form)
   (let* ((start (gensym))
          (value (gensym))

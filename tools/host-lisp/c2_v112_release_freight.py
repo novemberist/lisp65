@@ -8,6 +8,7 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import sys
 from typing import Any, Callable
 
@@ -51,6 +52,9 @@ TRACE_SCOPE = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.12-link92-r5-trace-fix-library-scope.json"
 )
+FORMAT = "lisp65-c2.3-v1.12-release-freight-v2"
+RECORDED_ON = "2026-08-09"
+HISTORICAL_TRACE_AUTHORITY = "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f"
 
 
 class FreightError(RuntimeError):
@@ -78,6 +82,31 @@ def bind(path: Path) -> dict[str, Any]:
     raw = path.read_bytes()
     return {
         "path": path.resolve().relative_to(ROOT.resolve()).as_posix(),
+        "bytes": len(raw),
+        "sha256": sha(raw),
+    }
+
+
+def git_bytes(path: Path) -> bytes:
+    relative = path.resolve().relative_to(ROOT.resolve()).as_posix()
+    result = subprocess.run(
+        ["git", "show", f"{HISTORICAL_TRACE_AUTHORITY}:{relative}"],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
+    return result.stdout
+
+
+def git_json(path: Path) -> dict[str, Any]:
+    value = json.loads(git_bytes(path).decode("utf-8"))
+    require(isinstance(value, dict), f"historical JSON object required: {path}")
+    return value
+
+
+def bind_git(path: Path) -> dict[str, Any]:
+    raw = git_bytes(path)
+    return {
+        "path": path.resolve().relative_to(ROOT.resolve()).as_posix(),
+        "git_commit": HISTORICAL_TRACE_AUTHORITY,
         "bytes": len(raw),
         "sha256": sha(raw),
     }
@@ -215,7 +244,10 @@ def derive() -> dict[str, Any]:
         == graph_info["unique_edges"] == 109,
         "who-calls graph authority drift",
     )
-    trace_scope = load(TRACE_SCOPE)
+    # v1.4 freight is sealed history.  Its trace-descope premise must be read
+    # from the owner decision that made it true, never from a successor ABI's
+    # live reconstruction of that premise.
+    trace_scope = git_json(TRACE_SCOPE)
     require(
         trace_scope.get("status")
         == "descope-required-missing-function-cell-capability",
@@ -281,9 +313,10 @@ def derive() -> dict[str, Any]:
             "integrated Bank-2 freight crosses preserved headroom floor")
 
     return {
-        "format": "lisp65-c2.3-v1.12-release-freight-v1",
-        "recorded_on": "2026-08-07",
+        "format": FORMAT,
+        "recorded_on": RECORDED_ON,
         "status": "passed-host-integrated-release-freight",
+        "historical_trace_authority_commit": HISTORICAL_TRACE_AUTHORITY,
         "execution": {
             "v110_reconstructed": True,
             "v111_reconstructed": True,
@@ -335,7 +368,7 @@ def derive() -> dict[str, Any]:
                 "inspect_trace_objects": sorted(
                     TRACE_NAMES.intersection(
                         row["name"] for row in inspect_manifest["entries"])),
-                "authority": bind(TRACE_SCOPE),
+                "authority": bind_git(TRACE_SCOPE),
             },
             "split_identity": split_identity,
         },
@@ -374,7 +407,7 @@ def derive() -> dict[str, Any]:
             "v110_receipt": bind(V110.RECEIPT),
             "v111_receipt": bind(V111.RECEIPT),
             "comfort_receipt": bind(COMFORT.RECEIPT),
-            "trace_descope_receipt": bind(TRACE_SCOPE),
+            "trace_descope_receipt": bind_git(TRACE_SCOPE),
             "language_reference": bind(ROOT / "docs/language-reference.md"),
         },
         "claim_limit": (
@@ -385,8 +418,14 @@ def derive() -> dict[str, Any]:
 
 
 def audit(value: dict[str, Any]) -> None:
+    require(value.get("format") == FORMAT
+            and value.get("recorded_on") == RECORDED_ON,
+            "freight receipt authority format drift")
     require(value.get("status") == "passed-host-integrated-release-freight",
             "freight status drift")
+    require(value.get("historical_trace_authority_commit")
+            == HISTORICAL_TRACE_AUTHORITY,
+            "sealed trace-descope authority drift")
     require(value.get("defstruct") == {
         "forms": 11, "persistent_appends": 9, "publish_last": True,
         "rollback_correct": True, "constructor_result": "(point 3 4)",
@@ -467,6 +506,7 @@ def mutations(value: dict[str, Any]) -> dict[str, str]:
         ("descope:trace-name-survives", lambda x: x["libraries"]["trace_descope"]["forbidden_names"].pop()),
         ("descope:trace-object-survives", lambda x: x["libraries"]["trace_descope"]["inspect_trace_objects"].append("trace")),
         ("descope:status-dimmed", lambda x: x["libraries"]["trace_descope"].__setitem__("status", "delivered")),
+        ("descope:historical-authority-dimmed", lambda x: x.__setitem__("historical_trace_authority_commit", "0" * 40)),
         ("capacity:base-over", lambda x: x["bank2"].__setitem__("base_remaining_bytes", 8191)),
         ("capacity:sibling-over", lambda x: x["bank2"].__setitem__("defstruct_sibling_remaining_bytes", 8191)),
         ("resident:growth", lambda x: x["bank2"].__setitem__("resident_delta_bytes", 1)),
@@ -477,7 +517,7 @@ def mutations(value: dict[str, Any]) -> dict[str, str]:
     ]
     for label, mutate in tests:
         rejected(label, value, mutate, result)
-    require(len(result) == 25, "release-freight mutation count drift")
+    require(len(result) == 26, "release-freight mutation count drift")
     return result
 
 

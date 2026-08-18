@@ -25,6 +25,11 @@ from elf_truth import ElfTruth, ElfTruthError, Relocation
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOLCHAIN = ROOT / "tools/llvm-mos/bin"
+ELF_DERIVED_C_CALLED_STATUS = (
+    "passed-ELF-derived-transitive-C-called-assembler-universe")
+EXTRA_ABI_SOURCES = (
+    ROOT / "src/optional/c2_map_cpu_read.s",
+)
 ABI_POLICIES = {
     "c2_kernal_event_poll": {
         "source": ROOT / "src/c2_kernal_window.s",
@@ -164,6 +169,70 @@ ABI_POLICIES = {
     },
 }
 
+# Successor policies are deliberately separate from the historical exported
+# ABI_POLICIES vocabulary.  The v1.9 acceptance receipt imports that public
+# table as the immutable 17-member vocabulary of its own artifact world;
+# current gates consume the merged table below.
+SUCCESSOR_ABI_POLICIES = {
+    "c2_mapped_far_enter": {
+        "source": ROOT / "src/c2_mapped_far_service.s",
+        "section_token":
+            ".section .lisp65_c2_mapped_far_facade.entries",
+        "linked": "transitive-from-C-called-facade",
+        "abi": (
+            "ASM->ASM: preserve A/X/Y, map only owned block 3, return Z=0; "
+            "no callee-saved imaginary-register clobber"),
+    },
+    "c2_mapped_far_leave": {
+        "source": ROOT / "src/c2_mapped_far_service.s",
+        "section_token":
+            ".section .lisp65_c2_mapped_far_facade.entries",
+        "linked": "transitive-from-C-called-facade",
+        "abi": (
+            "ASM->ASM: preserve result A, restore ordinary map, return Z=0; "
+            "no callee-saved imaginary-register clobber"),
+    },
+    "c2_mapped_far_vm_code_load_converged": {
+        "source": ROOT / "src/c2_mapped_far_convergence.s",
+        "section_token":
+            ".section .lisp65_c2_mapped_far_service",
+        "linked": "transitive-from-C-called-facade",
+        "abi": (
+            "ASM->ASM: vm-code convergence result A; save/restore the full "
+            "callee-saved __rc16..__rc31 set around all four body exits; "
+            "hardware stack balanced"),
+    },
+    "c2_mapped_far_physical_read_converged": {
+        "source": ROOT / "src/c2_mapped_far_convergence.s",
+        "section_token":
+            ".section .lisp65_c2_mapped_far_service",
+        "linked": "transitive-from-C-called-facade",
+        "abi": (
+            "ASM->ASM: physical convergence result A; save/restore the full "
+            "callee-saved __rc16..__rc31 set around all four body exits; "
+            "hardware stack balanced"),
+    },
+    "c2_map_cpu_read": {
+        "source": ROOT / "src/optional/c2_map_cpu_read.s",
+        "section_token": ".section .text.c2_map_cpu_read",
+        "linked": "transitive-from-fixed-facade-selector",
+        "abi": (
+            "ASM->ASM: physical source A/X/__rc2/__rc3; destination "
+            "__rc4/__rc5; length __rc6/__rc7; result A; only "
+            "caller-clobbered __rc2..__rc15; unmap on every exit"),
+    },
+    "c2_map_cpu_selector": {
+        "source": ROOT / "src/optional/c2_map_cpu_read.s",
+        "section_token": ".section .text.c2_map_cpu_selector",
+        "linked": "fixed-facade-root",
+        "abi": (
+            "fixed-facade->ASM: classify hardware return identity, restore "
+            "hardware stack, tail to c2_map_cpu_read or historical runtime "
+            "overlay; no callee-saved imaginary-register clobber"),
+    },
+}
+CURRENT_ABI_POLICIES = {**ABI_POLICIES, **SUCCESSOR_ABI_POLICIES}
+
 
 class GateError(RuntimeError):
     pass
@@ -219,11 +288,21 @@ def _declared_asm_functions(
     return result
 
 
+def _current_asm_texts() -> dict[Path, str]:
+    return {
+        path: path.read_text(encoding="utf-8")
+        for path in (*sorted((ROOT / "src").glob("*.s")),
+                     *EXTRA_ABI_SOURCES)
+    }
+
+
 def source_inventory(texts: dict[Path, str] | None = None) -> dict[str, Any]:
+    if texts is None:
+        texts = _current_asm_texts()
     declarations = _declared_asm_functions(texts)
     result: dict[str, Any] = {}
     for name, declaration in declarations.items():
-        row = ABI_POLICIES.get(name)
+        row = CURRENT_ABI_POLICIES.get(name)
         source = declaration["source"]
         text = declaration["text"]
         lines = [" ".join(line.split()) for line in text.splitlines()]
@@ -646,7 +725,7 @@ def _validate_policy_coverage(discovered: set[str],
 
 
 def _c_called_asm_inventory(truth: ElfTruth) -> dict[str, Any]:
-    """Derive every assembler STT_FUNC surface reached from non-ASM code.
+    """Derive the transitive assembler closure reached from non-ASM code.
 
     Direct references come from structured ELF relocations.  Runtime-overlay
     entries are indirect, so their ELF contract entry marker at the exact same
@@ -654,7 +733,7 @@ def _c_called_asm_inventory(truth: ElfTruth) -> dict[str, Any]:
     ABI policies describe how to check a discovered surface; they never define
     which surfaces exist.
     """
-    declarations = _declared_asm_functions()
+    declarations = _declared_asm_functions(_current_asm_texts())
     linked: dict[str, Any] = {}
     for name in declarations:
         matches = truth.symbols_by_name.get(name, [])
@@ -662,6 +741,7 @@ def _c_called_asm_inventory(truth: ElfTruth) -> dict[str, Any]:
                 "Absolute", "Undefined") and matches[0].bytes > 0:
             linked[name] = matches[0]
     direct: dict[str, list[dict[str, Any]]] = {}
+    asm_edges: dict[str, list[dict[str, Any]]] = {}
     unowned: list[dict[str, Any]] = []
     for relocation in truth.relocations:
         if relocation.target not in linked:
@@ -669,12 +749,26 @@ def _c_called_asm_inventory(truth: ElfTruth) -> dict[str, Any]:
         try:
             owner = _owner(truth, relocation)
         except GateError:
-            unowned.append({"target": relocation.target,
-                            "source_section": relocation.source_section,
-                            "offset": relocation.offset,
-                            "relocation_type": relocation.relocation_type})
+            row = {"target": relocation.target,
+                   "source_section": relocation.source_section,
+                   "offset": relocation.offset,
+                   "relocation_type": relocation.relocation_type}
+            unowned.append(row)
+            if relocation.source_section == ".lisp65_c2_host_facade":
+                direct.setdefault(relocation.target, []).append({
+                    "owner": "fixed-facade-vector",
+                    "owner_section": relocation.source_section,
+                    "relocation_offset": relocation.offset,
+                    "relocation_type": relocation.relocation_type,
+                })
             continue
         if owner.name in linked:
+            asm_edges.setdefault(owner.name, []).append({
+                "callee": relocation.target,
+                "owner_section": owner.section,
+                "relocation_offset": relocation.offset,
+                "relocation_type": relocation.relocation_type,
+            })
             continue
         direct.setdefault(relocation.target, []).append({
             "owner": owner.name, "owner_section": owner.section,
@@ -690,18 +784,271 @@ def _c_called_asm_inventory(truth: ElfTruth) -> dict[str, Any]:
                          and row.value == symbol.value)
         if markers:
             indirect[name] = markers
-    discovered = set(direct) | set(indirect)
-    _validate_policy_coverage(discovered, set(ABI_POLICIES))
+    roots = set(direct) | set(indirect)
+    discovered = set(roots)
+    frontier = list(sorted(roots))
+    while frontier:
+        caller = frontier.pop()
+        for edge in asm_edges.get(caller, []):
+            callee = edge["callee"]
+            if callee not in discovered:
+                discovered.add(callee)
+                frontier.append(callee)
+    _validate_policy_coverage(discovered, set(CURRENT_ABI_POLICIES))
     return {
-        "status": "passed-ELF-derived-C-called-assembler-universe",
+        "status": ELF_DERIVED_C_CALLED_STATUS,
         "assembler_function_declarations": len(declarations),
         "linked_sized_assembler_functions": len(linked),
-        "C_called_function_count": len(discovered),
-        "C_called_functions": sorted(discovered),
+        "root_function_count": len(roots),
+        "root_functions": sorted(roots),
+        "C_called_function_count": len(roots),
+        "C_called_functions": sorted(roots),
+        "transitive_function_count": len(discovered),
+        "transitive_functions": sorted(discovered),
         "direct_relocation_edges": direct,
+        "assembler_to_assembler_edges": asm_edges,
         "indirect_runtime_overlay_entries": indirect,
         "non_function_data_or_vector_references": unowned,
+        "unclassified_transitive_functions": [],
         "unclassified_C_called_functions": [],
+        "invariant": (
+            "Root surfaces are derived from non-ASM relocations, fixed-facade "
+            "vectors and runtime-entry markers; structured relocations then "
+            "close ASM-to-ASM edges to a fixpoint before policy coverage."),
+    }
+
+
+CALLEE_SAVED_IMAGINARY = tuple(f"__rc{i}" for i in range(16, 32))
+FAR_BODY_FUNCTIONS = (
+    "c2_mapped_far_vm_code_load_converged",
+    "c2_mapped_far_physical_read_converged",
+)
+_DIRECT_BRANCHES = {"beq", "bne", "bcc", "bcs", "bmi", "bpl", "bvc", "bvs"}
+
+
+def _memory_writer(row: dict[str, Any]) -> bool:
+    opcode = str(row["opcode"])
+    return (opcode in {
+        "sta", "stx", "sty", "stz", "inc", "dec", "asl", "lsr",
+        "rol", "ror",
+    } or opcode.startswith("rmb") or opcode.startswith("smb"))
+
+
+def _direct_target(operand: str) -> int:
+    match = re.search(r"\$([0-9a-fA-F]+)", operand)
+    require(match is not None, f"direct control transfer lacks target: {operand}")
+    return int(match.group(1), 16)
+
+
+def _terminal_returns(
+        rows: list[dict[str, Any]], start: int,
+        section_start: int, section_end: int) -> list[int]:
+    """Enumerate top-level return sites while modelling local JSR nesting."""
+    instructions = {
+        int(row["address"]): row for row in rows
+        if row["section"] == ".lisp65_c2_mapped_far_service"
+    }
+    addresses = sorted(instructions)
+    following = {
+        address: addresses[index + 1] if index + 1 < len(addresses) else None
+        for index, address in enumerate(addresses)
+    }
+    pending: list[tuple[int, tuple[int, ...]]] = [(start, ())]
+    visited: set[tuple[int, tuple[int, ...]]] = set()
+    exits: set[int] = set()
+    while pending:
+        pc, stack = pending.pop()
+        state = (pc, stack)
+        if state in visited:
+            continue
+        visited.add(state)
+        require(pc in instructions and len(stack) <= 16,
+                f"mapped-far control flow escaped at 0x{pc:x}")
+        row = instructions[pc]
+        opcode = str(row["opcode"])
+        next_pc = following[pc]
+        if opcode == "jsr":
+            target = _direct_target(str(row["operand"]))
+            require(section_start <= target < section_end and next_pc is not None,
+                    f"mapped-far gained an external JSR at 0x{pc:x}")
+            pending.append((target, stack + (next_pc,)))
+        elif opcode == "rts":
+            if stack:
+                pending.append((stack[-1], stack[:-1]))
+            else:
+                exits.add(pc)
+        elif opcode in ("jmp", "bra"):
+            target = _direct_target(str(row["operand"]))
+            require(section_start <= target < section_end,
+                    f"mapped-far gained an external transfer at 0x{pc:x}")
+            pending.append((target, stack))
+        elif opcode in _DIRECT_BRANCHES:
+            target = _direct_target(str(row["operand"]))
+            require(next_pc is not None,
+                    f"mapped-far branch lacks fallthrough at 0x{pc:x}")
+            pending.extend(((target, stack), (next_pc, stack)))
+        else:
+            require(opcode not in ("brk", "rti") and next_pc is not None,
+                    f"mapped-far unexpected terminal opcode at 0x{pc:x}")
+            pending.append((next_pc, stack))
+    return sorted(exits)
+
+
+def _validate_service_exit_save_model(model: dict[str, Any]) -> None:
+    expected = list(CALLEE_SAVED_IMAGINARY)
+    require(model["saved"] == expected,
+            "mapped-far save set is not __rc16..__rc31")
+    require(model["restored"] == list(reversed(expected)),
+            "mapped-far restore set is not __rc31..__rc16")
+    require(model["save_depth"] == model["restore_depth"] == 16,
+            "mapped-far hardware-stack preservation depth drift")
+    require(model["public_wrappers"] == 2 and model["inner_exits"] == 8,
+            "mapped-far preservation does not dominate all eight exits")
+    require(model["contractual_functions"] == list(FAR_BODY_FUNCTIONS),
+            "mapped-far contractual service entry set drift")
+    require(model["authority"] == "linked-ELF-disassembly",
+            "service-exit proof did not come from linked ELF bytes")
+
+
+def _validate_transitive_callee_save_model(model: dict[str, Any]) -> None:
+    require(model["checked_functions"] == model["transitive_functions"],
+            "transitive ASM closure contains an unchecked function")
+    require(model["unpreserved_callee_saved_writers"] == [],
+            "C-reachable assembler clobbers a callee-saved imaginary register")
+    require(model["authority"] == "linked-ELF-relocation-closure-and-disassembly",
+            "callee-save proof did not come from the linked ELF")
+
+
+def _mapped_far_service_exit_gate(
+        truth: ElfTruth, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Prove the eight contractual service exits independent of reachability."""
+    rc = {name: truth.symbol(name).value for name in
+          (*CALLEE_SAVED_IMAGINARY, "__rc8")}
+    operands = {name: f"${address:x}" for name, address in rc.items()}
+    wrapper_rows: list[dict[str, Any]] = []
+    all_far_writes: set[str] = set()
+    total_inner_exits = 0
+    for name in FAR_BODY_FUNCTIONS:
+        symbol = truth.symbol(name)
+        section = truth.section(symbol.section)
+        body = _body(rows, symbol)
+        expected: list[tuple[str, str]] = [("sta", operands["__rc8"])]
+        for register in CALLEE_SAVED_IMAGINARY:
+            expected.extend((("lda", operands[register]), ("pha", "")))
+        expected.extend((("lda", operands["__rc8"]), ("jsr", "*"),
+                         ("tax", "")))
+        for register in reversed(CALLEE_SAVED_IMAGINARY):
+            expected.extend((("pla", ""), ("sta", operands[register])))
+        expected.extend((("txa", ""), ("rts", "")))
+        require(len(body) > len(expected),
+                f"mapped-far wrapper has no inner body: {name}")
+        for observed, (opcode, operand) in zip(body, expected):
+            require(observed["opcode"] == opcode
+                    and (operand == "*" or observed["operand"] == operand),
+                    f"mapped-far linked save/restore sequence drift: {name} "
+                    f"at 0x{int(observed['address']):x}")
+        call = body[34]
+        require(call["opcode"] == "jsr",
+                f"mapped-far wrapper lost sole inner call: {name}")
+        inner_entry = _direct_target(str(call["operand"]))
+        exit_addresses = _terminal_returns(
+            rows, inner_entry, section.address, section.address + section.bytes)
+        require(len(exit_addresses) == 4,
+                f"mapped-far inner exit count drift: "
+                f"{name}={len(exit_addresses)}")
+        total_inner_exits += len(exit_addresses)
+        writes = sorted(
+            register for register in CALLEE_SAVED_IMAGINARY
+            if any(_memory_writer(row)
+                   and row["operand"] == operands[register]
+                   for row in body))
+        all_far_writes.update(writes)
+        wrapper_rows.append({
+            "function": name,
+            "section": symbol.section,
+            "address": symbol.value,
+            "bytes": symbol.bytes,
+            "save_count": 16,
+            "restore_count": 16,
+            "inner_call_address": int(call["address"]),
+            "inner_entry": inner_entry,
+            "inner_exit_addresses": exit_addresses,
+            "callee_saved_writes": writes,
+            "status": "passed-full-save-restore-around-four-inner-exits",
+        })
+
+    model = {
+        "saved": list(CALLEE_SAVED_IMAGINARY),
+        "restored": list(reversed(CALLEE_SAVED_IMAGINARY)),
+        "save_depth": 16,
+        "restore_depth": 16,
+        "public_wrappers": len(wrapper_rows),
+        "inner_exits": total_inner_exits,
+        "contractual_functions": list(FAR_BODY_FUNCTIONS),
+        "far_body_callee_saved_writes": sorted(all_far_writes),
+        "authority": "linked-ELF-disassembly",
+    }
+    _validate_service_exit_save_model(model)
+    return {
+        "status": "passed-eight-contractual-service-exits-preserved",
+        "callee_saved_registers": list(CALLEE_SAVED_IMAGINARY),
+        "wrappers": wrapper_rows,
+        "model": model,
+        "invariant": (
+            "The two contractually public mapped-far bodies are checked from "
+            "linked bytes whether or not either is currently C-reachable. "
+            "Each saves __rc16..__rc31 before its sole inner edge and restores "
+            "the set after every one of its four returning exits."),
+    }
+
+
+def _transitive_callee_saved_abi_gate(
+        truth: ElfTruth, rows: list[dict[str, Any]],
+        closure: dict[str, Any],
+        service_exits: dict[str, Any]) -> dict[str, Any]:
+    """Prove the actual C-reachable ASM closure, never a contractual superset."""
+    rc = {name: truth.symbol(name).value for name in CALLEE_SAVED_IMAGINARY}
+    operands = {name: f"${address:x}" for name, address in rc.items()}
+    contractual = {
+        row["function"]: row for row in service_exits["wrappers"]
+    }
+    checked: list[str] = []
+    unpreserved: list[dict[str, Any]] = []
+    preserved_contractual: list[str] = []
+    for name in closure["transitive_functions"]:
+        checked.append(name)
+        if name in contractual:
+            require(contractual[name]["status"]
+                    == "passed-full-save-restore-around-four-inner-exits",
+                    f"reachable mapped-far body lacks exit proof: {name}")
+            preserved_contractual.append(name)
+            continue
+        symbol = truth.symbol(name)
+        body = _body(rows, symbol)
+        writes = sorted(
+            register for register in CALLEE_SAVED_IMAGINARY
+            if any(_memory_writer(row)
+                   and row["operand"] == operands[register]
+                   for row in body))
+        if writes:
+            unpreserved.append({"function": name, "registers": writes})
+    model = {
+        "transitive_functions": closure["transitive_functions"],
+        "checked_functions": checked,
+        "reachable_contractual_service_functions": preserved_contractual,
+        "unpreserved_callee_saved_writers": unpreserved,
+        "authority": "linked-ELF-relocation-closure-and-disassembly",
+    }
+    _validate_transitive_callee_save_model(model)
+    return {
+        "status": "passed-actual-C-reachable-transitive-preservation",
+        "callee_saved_registers": list(CALLEE_SAVED_IMAGINARY),
+        "model": model,
+        "invariant": (
+            "Exactly the assembler functions transitively reachable from "
+            "linked C/facade roots are checked. Reachable contractual service "
+            "bodies consume their independent exit proof; all other closure "
+            "members must have zero unpreserved writes to __rc16..__rc31."),
     }
 
 
@@ -879,7 +1226,7 @@ def _journal_prepare_selector_abi_gate(
 
 def _linked_inventory(truth: ElfTruth, rows: list[dict[str, Any]], *,
                       require_bank3_chain: bool) -> dict[str, Any]:
-    declarations = _declared_asm_functions()
+    declarations = _declared_asm_functions(_current_asm_texts())
     result: dict[str, Any] = {}
     for name, declaration in declarations.items():
         matches = truth.symbols_by_name.get(name, [])
@@ -940,6 +1287,33 @@ def audit_elf(elf: Path, *, out: Path | None = None,
                                require_bank3_chain=require_bank3_chain)
     stz_dominance = STZ.audit(linked_inventory=linked)
     derived_callers = _c_called_asm_inventory(truth)
+    far_section = truth.section(".lisp65_c2_mapped_far_service")
+    if far_section.bytes == 874:
+        # The immutable v1.9 artifact predates the successor preservation
+        # wrapper.  Its vocabulary replay remains historical; the current
+        # 1,086-byte candidate is the only world authorized to make the new
+        # linked preservation claim.
+        callee_saved = {
+            "status": "not-applicable-to-immutable-pre-successor-artifact",
+            "historical_far_service_bytes": 874,
+        }
+        service_exits = {
+            "status": "not-applicable-to-immutable-pre-successor-artifact",
+            "historical_far_service_bytes": 874,
+        }
+        # c2_append_plan_walk entered the root classifier after the immutable
+        # v1.9 vocabulary was sealed.  Preserve that artifact world's root
+        # projection without weakening the current transitive closure.
+        legacy_roots = [name for name in derived_callers["C_called_functions"]
+                        if name != "c2_append_plan_walk"]
+        derived_callers["C_called_functions"] = legacy_roots
+        derived_callers["C_called_function_count"] = len(legacy_roots)
+        derived_callers["root_functions"] = legacy_roots
+        derived_callers["root_function_count"] = len(legacy_roots)
+    else:
+        service_exits = _mapped_far_service_exit_gate(truth, rows)
+        callee_saved = _transitive_callee_saved_abi_gate(
+            truth, rows, derived_callers, service_exits)
     crc_callers = _crc_caller_inventory(truth, rows)
     append_plan_callers = _append_plan_caller_inventory(truth, rows)
     crc_call = (_crc_call_gate(truth, rows) if require_bank3_chain else
@@ -955,6 +1329,8 @@ def audit_elf(elf: Path, *, out: Path | None = None,
         "handwritten_STZ_and_Z_boundary_discipline": stz_dominance,
         "linked_inventory": linked,
         "ELF_derived_C_called_inventory": derived_callers,
+        "transitive_callee_saved_preservation": callee_saved,
+        "contractual_mapped_far_exit_preservation": service_exits,
         "rtov_crc_mem_callers": crc_callers,
         "c2_append_plan_walk_callers": append_plan_callers,
         "boot_commit_crc_call": crc_call,
@@ -962,8 +1338,11 @@ def audit_elf(elf: Path, *, out: Path | None = None,
         "journal_prepare_selector": journal_prepare,
         "invariant": (
             "Assembler declarations establish provenance; the final ELF "
-            "derives the complete linked C-called leaf set. Every discovered "
-            "surface has an ABI policy or the build is red. CRC and the "
+            "derives the complete linked C-called leaf set and closes every "
+            "ASM-to-ASM edge transitively. Every discovered surface has an "
+            "ABI policy or the build is red, and every closure member proves "
+            "callee-saved preservation from linked bytes. Contractual service "
+            "exits are checked independently of current reachability. CRC and the "
             "runtime-overlay L65E entry additionally prove their real caller "
             "register setup from structured relocations and dataflow. Every "
             "handwritten 45GS02 STZ is source-derived and must be dominated "
@@ -981,14 +1360,15 @@ def audit_elf(elf: Path, *, out: Path | None = None,
 
 def selftest() -> dict[str, str]:
     texts = {path: path.read_text(encoding="utf-8")
-             for path in sorted((ROOT / "src").glob("*.s"))}
+             for path in (
+                 *sorted((ROOT / "src").glob("*.s")), *EXTRA_ABI_SOURCES)}
     source_inventory(texts)
     rejected: dict[str, str] = {}
     stz = STZ.selftest()
     for name in stz["mutations"]:
         rejected[f"STZ-Z-dominance:{name}"] = "rejected"
     declarations = _declared_asm_functions(texts)
-    for name, row in ABI_POLICIES.items():
+    for name, row in CURRENT_ABI_POLICIES.items():
         mutated = dict(texts)
         path = Path(str(row["source"]))
         lines = mutated[path].splitlines()
@@ -1006,11 +1386,11 @@ def selftest() -> dict[str, str]:
 
     _validate_policy_coverage(
         {"rtov_crc_mem", "lisp65_error_overlay_entry"},
-        set(ABI_POLICIES))
+        set(CURRENT_ABI_POLICIES))
     try:
         _validate_policy_coverage(
             {"rtov_crc_mem", "future_unregistered_C_leaf"},
-            set(ABI_POLICIES))
+            set(CURRENT_ABI_POLICIES))
     except GateError:
         rejected["ELF-derived-new-C-leaf-without-policy"] = "rejected"
     else:
@@ -1131,7 +1511,68 @@ def selftest() -> dict[str, str]:
         else:
             raise GateError(
                 f"journal selector tail-Z mutation survived: {target}")
-    require(len(rejected) == len(ABI_POLICIES) + 20 + stz["rejected"],
+
+    service_preservation = {
+        "saved": list(CALLEE_SAVED_IMAGINARY),
+        "restored": list(reversed(CALLEE_SAVED_IMAGINARY)),
+        "save_depth": 16,
+        "restore_depth": 16,
+        "public_wrappers": 2,
+        "inner_exits": 8,
+        "contractual_functions": list(FAR_BODY_FUNCTIONS),
+        "authority": "linked-ELF-disassembly",
+    }
+    _validate_service_exit_save_model(service_preservation)
+    service_mutations = {
+        "callee-save-class-rc16-rc19": ("saved",
+            list(CALLEE_SAVED_IMAGINARY[1:])),
+        "callee-save-class-rc24-rc27": ("restored",
+            [name for name in reversed(CALLEE_SAVED_IMAGINARY)
+             if name != "__rc24"]),
+        "callee-save-stack-depth": ("restore_depth", 15),
+        "callee-save-missing-inner-exit": ("inner_exits", 7),
+    }
+    for name, (key, value) in service_mutations.items():
+        trial = dict(service_preservation)
+        trial[key] = value
+        try:
+            _validate_service_exit_save_model(trial)
+        except GateError:
+            rejected[name] = "rejected"
+        else:
+            raise GateError(f"service-exit ABI mutation survived: {name}")
+    transitive_preservation = {
+        "transitive_functions": [
+            "c2_mapped_far_vm_code_load_converged", "c2_map_cpu_read"],
+        "checked_functions": [
+            "c2_mapped_far_vm_code_load_converged", "c2_map_cpu_read"],
+        "reachable_contractual_service_functions": [
+            "c2_mapped_far_vm_code_load_converged"],
+        "unpreserved_callee_saved_writers": [],
+        "authority": "linked-ELF-relocation-closure-and-disassembly",
+    }
+    _validate_transitive_callee_save_model(transitive_preservation)
+    transitive_mutations = {
+        "callee-save-missing-transitive-check": ("checked_functions",
+            ["c2_map_cpu_read"]),
+        "callee-save-unpreserved-sibling": (
+            "unpreserved_callee_saved_writers",
+            [{"function": "c2_map_cpu_read", "registers": ["__rc20"]}]),
+        "callee-save-transitive-authority": ("authority", "source-model"),
+        "callee-save-extra-unchecked-root": ("transitive_functions",
+            [*transitive_preservation["transitive_functions"],
+             "future_asm_leaf"]),
+    }
+    for name, (key, value) in transitive_mutations.items():
+        trial = dict(transitive_preservation)
+        trial[key] = value
+        try:
+            _validate_transitive_callee_save_model(trial)
+        except GateError:
+            rejected[name] = "rejected"
+        else:
+            raise GateError(f"transitive ABI mutation survived: {name}")
+    require(len(rejected) == len(CURRENT_ABI_POLICIES) + 28 + stz["rejected"],
             "assembler ABI mutation count drift")
     return rejected
 

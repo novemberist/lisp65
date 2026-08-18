@@ -23,6 +23,8 @@ from elf_truth import ElfTruth  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-mapped-far-asm-equivalence-contract.json"
+SUCCESSOR_CONTRACT = ROOT / (
+    "config/c2-mapped-far-abi-preservation-contract-v2.json")
 ASM = ROOT / "src/c2_mapped_far_convergence.s"
 DMA_C = ROOT / "src/c2_platform_dma.c"
 RUNTIME_C = ROOT / "src/c2_product_runtime.c"
@@ -64,6 +66,39 @@ def bind(path: Path) -> dict[str, Any]:
 
 def canonical(value: dict[str, Any]) -> bytes:
     return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+
+
+def effective_contract() -> tuple[dict[str, Any], dict[str, Any]]:
+    """Project the immutable 874-byte contract into its authorized successor."""
+    base = load(CONTRACT)
+    successor = load(SUCCESSOR_CONTRACT)
+    require(
+        base.get("format") == "lisp65-c2-mapped-far-assembly-equivalence-v1"
+        and base.get("status") == "owner-commissioned-phase-c",
+        "historical assembly equivalence contract drift")
+    require(
+        successor.get("format")
+            == "lisp65-c2-mapped-far-abi-preservation-contract-v2"
+        and successor.get("status") == "owner-authorized-78ae9255",
+        "mapped-far ABI successor contract drift")
+    predecessor = successor["predecessors"]["assembly_equivalence_contract"]
+    require(predecessor["path"] == CONTRACT.relative_to(ROOT).as_posix()
+            and predecessor["sha256"]
+                == hashlib.sha256(CONTRACT.read_bytes()).hexdigest(),
+            "mapped-far ABI successor lost assembly-contract ancestry")
+    artifact = successor["artifact_successor"]
+    projected = deepcopy(base)
+    projected["artifact"].update({
+        "source": artifact["source"],
+        "section": artifact["section"],
+        "cpu_vma": artifact["cpu_vma"],
+        "physical_lma": artifact["physical_lma"],
+        "exact_bytes": artifact["exact_bytes"],
+        "capacity_bytes": artifact["capacity_bytes"],
+        "entries": artifact["entries"],
+    })
+    projected["new_seam_mutations"] = 16
+    return projected, successor
 
 
 def run(command: list[str], label: str, *, input_text: str | None = None,
@@ -467,6 +502,15 @@ def run_assembly_cases(truth: ElfTruth) -> dict[tuple[str, str], dict[str, Any]]
             source_base = 0x1200 if lane == "ordinary" else 0x234560
             cpu = DmaCPU(symbols=symbols, source=source, lane=lane,
                          after=after, start=start, source_base=source_base)
+            callee_saved = {
+                index: (0x31 + case_index * 7
+                        + (0x40 if lane == "physical" else 0)
+                        + index * 11) & 0xff
+                for index in range(16, 32)
+            }
+            for index, value in callee_saved.items():
+                CPU.wr(cpu, rc[index], value)
+            initial_sp = cpu.SP
             code = truth.section_bytes(service.name)
             for i, value in enumerate(code):
                 CPU.wr(cpu, service.address + i, value)
@@ -502,10 +546,21 @@ def run_assembly_cases(truth: ElfTruth) -> dict[tuple[str, str], dict[str, Any]]
                     f"probes={cpu.probe_submissions}") from error
             final = bytes(CPU.rd(cpu, destination_address + i)
                           for i in range(length))
+            preserved = sum(
+                CPU.rd(cpu, rc[index]) == value
+                for index, value in callee_saved.items())
+            require(preserved == len(callee_saved),
+                    f"assembly ABI clobber {lane}/{name}: "
+                    f"preserved={preserved}/{len(callee_saved)}")
+            require(cpu.SP == initial_sp,
+                    f"assembly hardware stack imbalance {lane}/{name}: "
+                    f"0x{cpu.SP:02x} != 0x{initial_sp:02x}")
             rows[(lane, name)] = {
                 "result": cpu.A, "primary": cpu.primary_submissions,
                 "elapsed": cpu.elapsed, "destination": final.hex(),
                 "source_probes": cpu.probe_submissions,
+                "callee_saved_preserved": preserved,
+                "hardware_stack_balanced": True,
             }
     require(len(rows) == 16, "assembly artifact did not execute 16 cases")
     return rows
@@ -516,12 +571,24 @@ def audit(facts: dict[str, Any]) -> None:
     require(facts["assembly_artifact_cases"] == 16,
             "assembly artifact case loss")
     require(facts["equivalent_cases"] == 16, "C/assembly divergence")
-    require(facts["exact_bytes"] == 874, "assembly body identity drift")
+    require(facts["exact_bytes"] == 1086, "assembly successor identity drift")
     require(facts["cpu_vma"] == 0x78B2, "assembly body VMA drift")
     require(facts["physical_lma"] == 0x2B8B2, "assembly body LMA drift")
     require(facts["static_stack_bytes"] == 0,
             "assembly body acquired compiler static stack")
     require(facts["entry_symbols"] == 2, "assembly entry loss")
+    require(facts["callee_saved_registers"] == 16,
+            "llvm-mos callee-saved imaginary-register set drift")
+    require(facts["callee_saved_checks"] == 256,
+            "not every linked execution preserved every callee-saved byte")
+    require(facts["hardware_stack_balanced_cases"] == 16,
+            "mapped-far wrapper did not balance the hardware stack")
+    require(facts["inner_exit_count"] == 8,
+            "mapped-far inner exit coverage drift")
+    require(facts["public_wrappers"] == 2,
+            "mapped-far public wrapper coverage drift")
+    require(facts["preservation_authority"] == "linked-execution-bytes",
+            "callee-save claim came from source instead of linked execution")
     require(facts["primary_submissions_max"] == 1,
             "assembly silently resubmitted the primary transfer")
     require(facts["content_oracle"] == "source-derived-first-difference",
@@ -546,6 +613,12 @@ def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
         "missing-entry": ("entry_symbols", 1),
         "silent-resubmit": ("primary_submissions_max", 2),
         "metadata-oracle": ("content_oracle", "submission-return"),
+        "drop-callee-saved-register": ("callee_saved_registers", 15),
+        "miss-one-preservation-check": ("callee_saved_checks", 255),
+        "unbalanced-hardware-stack": ("hardware_stack_balanced_cases", 15),
+        "miss-one-inner-exit": ("inner_exit_count", 7),
+        "miss-one-public-wrapper": ("public_wrappers", 1),
+        "source-only-preservation": ("preservation_authority", "source-text"),
     }
     rejected: dict[str, str] = {}
     for name, (key, value) in cases.items():
@@ -561,11 +634,7 @@ def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
 
 
 def build_receipt() -> dict[str, Any]:
-    contract = load(CONTRACT)
-    require(contract["format"]
-            == "lisp65-c2-mapped-far-assembly-equivalence-v1"
-            and contract["status"] == "owner-commissioned-phase-c",
-            "assembly equivalence contract drift")
+    contract, successor = effective_contract()
     convergence = load(CONVERGENCE_RECEIPT)
     require(convergence["status"] == "PASS"
             and convergence["execution_witness"] == 8
@@ -605,6 +674,10 @@ def build_receipt() -> dict[str, Any]:
                 "assembly_elapsed_frames": observed["elapsed"],
                 "c_elapsed_frames": expected["elapsed"],
                 "destination": observed["destination"],
+                "callee_saved_preserved": observed[
+                    "callee_saved_preserved"],
+                "hardware_stack_balanced": observed[
+                    "hardware_stack_balanced"],
             }
         facts = {
             "c_reference_cases": len(reference),
@@ -617,6 +690,15 @@ def build_receipt() -> dict[str, Any]:
             "entry_symbols": sum(
                 truth.symbol(entry).section == artifact["section"]
                 for entry in artifact["entries"]),
+            "callee_saved_registers": successor["abi"]
+                ["callee_saved_imaginary_registers"]["count"],
+            "callee_saved_checks": sum(
+                row["callee_saved_preserved"] for row in assembly.values()),
+            "hardware_stack_balanced_cases": sum(
+                row["hardware_stack_balanced"] for row in assembly.values()),
+            "inner_exit_count": successor["abi"]["inner_exit_count"],
+            "public_wrappers": successor["abi"]["public_entry_count"],
+            "preservation_authority": "linked-execution-bytes",
             "primary_submissions_max": max(
                 row["primary"] for row in assembly.values()),
             "content_oracle": "source-derived-first-difference",
@@ -643,6 +725,7 @@ def build_receipt() -> dict[str, Any]:
         "claim": contract["claim"],
         "authorities": {key: bind(path) for key, path in {
             "contract": CONTRACT,
+            "abi_successor_contract": SUCCESSOR_CONTRACT,
             "assembly": ASM,
             "ordinary_c_reference": DMA_C,
             "physical_c_reference": RUNTIME_C,

@@ -1,0 +1,1373 @@
+{
+  "capacity_arenas": [
+    {
+      "end_exclusive": 8215,
+      "id": "basic-header",
+      "members": [
+        ".basic_header"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "default-cpu",
+      "start": 8193
+    },
+    {
+      "end_exclusive": 144,
+      "id": "ordinary-zero-page",
+      "members": [
+        ".zp.data",
+        ".zp.bss",
+        ".zp",
+        ".lisp65_c2_convergence_zp",
+        ".lisp65_c2_fixed_zp"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "zero-page",
+      "start": 34
+    },
+    {
+      "end_exclusive": 46000,
+      "id": "ordinary-text",
+      "members": [
+        ".text"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "default-cpu",
+      "start": 8227
+    },
+    {
+      "end_exclusive": 32397,
+      "id": "mapped-bank2-far-service",
+      "members": [
+        ".lisp65_c2_mapped_far_service"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "mapped-bank2",
+      "start": 30898
+    },
+    {
+      "end_exclusive": 49152,
+      "id": "low-resident-and-ordinary-chain",
+      "members": [
+        ".lisp65_c2_mapped_far_facade",
+        ".lisp65_c2_kernal_handoff",
+        ".lisp65_c2_host_facade",
+        ".lisp65_c2_kernal_io_reveal",
+        ".lisp65_c2_kernal_map_switch",
+        ".lisp65_c2_kernal_state",
+        ".rodata",
+        ".lisp65_runtime_overlay_verifier_bindings",
+        ".data",
+        ".bss"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "default-cpu",
+      "start": 46000
+    },
+    {
+      "end_exclusive": 50004,
+      "id": "owned-bank0-state",
+      "members": [
+        ".lisp65_c2_convergence_state",
+        ".lisp65_c2_static_stack",
+        ".lisp65_c2_fixed_bank0",
+        ".lisp65_c2_fixed_bank0_code",
+        ".lisp65_c2_fixed_bank0_hot_bss",
+        ".noinit"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "default-cpu",
+      "start": 49152
+    },
+    {
+      "end_exclusive": 52736,
+      "id": "workbench-boot-overlay",
+      "members": [
+        ".lisp65_workbench_overlay"
+      ],
+      "policy": "independent-alternate-overlay",
+      "space": "boot-overlay",
+      "start": 50006
+    },
+    {
+      "end_exclusive": 51798,
+      "id": "runtime-overlay-slices",
+      "members": [
+        ".lisp65_boot_bank3_stage",
+        ".lisp65_rt_bank3_stage_session",
+        ".lisp65_rt_buffer_alloc",
+        ".lisp65_rt_buffer_read",
+        ".lisp65_rt_buffer_write",
+        ".lisp65_rt_c2append_abort_control",
+        ".lisp65_rt_c2append_crc_metadata",
+        ".lisp65_rt_c2append_entries",
+        ".lisp65_rt_c2append_envelope",
+        ".lisp65_rt_c2append_header",
+        ".lisp65_rt_c2append_image",
+        ".lisp65_rt_c2append_journal_prepare",
+        ".lisp65_rt_c2append_journal_reconstruct",
+        ".lisp65_rt_c2append_journal_validate",
+        ".lisp65_rt_c2append_publish_clear",
+        ".lisp65_rt_c2append_publish_plan_resolve",
+        ".lisp65_rt_c2append_publish_plan_scan",
+        ".lisp65_rt_c2append_reserve_persistent_bounds",
+        ".lisp65_rt_c2append_reserve_persistent_code",
+        ".lisp65_rt_c2append_reserve_transient_bounds",
+        ".lisp65_rt_c2append_reserve_transient_code",
+        ".lisp65_rt_c2append_rollback_finalize",
+        ".lisp65_rt_c2append_rollback_unpublish",
+        ".lisp65_rt_c2append_rollback_wipe_attic",
+        ".lisp65_rt_c2append_rollback_wipe_chip",
+        ".lisp65_rt_c2append_rollback_wipe_plane",
+        ".lisp65_rt_c2append_roots_fronts",
+        ".lisp65_rt_c2append_stage_copy",
+        ".lisp65_rt_c2append_stage_plane",
+        ".lisp65_rt_c2d_00",
+        ".lisp65_rt_c2d_00b",
+        ".lisp65_rt_c2d_01",
+        ".lisp65_rt_c2d_02a",
+        ".lisp65_rt_c2d_02b",
+        ".lisp65_rt_c2d_03",
+        ".lisp65_rt_c2d_03b",
+        ".lisp65_rt_c2d_04",
+        ".lisp65_rt_c2d_05a",
+        ".lisp65_rt_c2d_05b",
+        ".lisp65_rt_c2d_06a",
+        ".lisp65_rt_c2d_06b",
+        ".lisp65_rt_c2d_07",
+        ".lisp65_rt_c2d_08",
+        ".lisp65_rt_c2d_09",
+        ".lisp65_rt_c2d_10",
+        ".lisp65_rt_c2d_11a",
+        ".lisp65_rt_c2d_11b",
+        ".lisp65_rt_c2d_12",
+        ".lisp65_rt_c2d_13",
+        ".lisp65_rt_c2emit_code",
+        ".lisp65_rt_c2emit_final_crc",
+        ".lisp65_rt_c2emit_final_meta",
+        ".lisp65_rt_c2emit_literal_append",
+        ".lisp65_rt_c2emit_literal_atom",
+        ".lisp65_rt_c2emit_literal_prep",
+        ".lisp65_rt_c2emit_name",
+        ".lisp65_rt_c2emit_prepare",
+        ".lisp65_rt_intern_service",
+        ".lisp65_rt_island_00",
+        ".lisp65_rt_l65e",
+        ".lisp65_rt_rtov_catalog",
+        ".lisp65_rt_rtov_record"
+      ],
+      "policy": "independent-alternate-overlay",
+      "space": "runtime-overlay",
+      "start": 50006
+    },
+    {
+      "end_exclusive": 8192,
+      "id": "resident-island",
+      "members": [
+        ".lisp65_resident_island",
+        ".lisp65_resident_island_annex"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "low-memory-island",
+      "start": 6144
+    },
+    {
+      "end_exclusive": 65536,
+      "id": "kernal-window",
+      "members": [
+        ".lisp65_c2_kernal_window.c2_resident",
+        ".lisp65_c2_kernal_window.irq_handler",
+        ".lisp65_c2_kernal_window.map_switch_and_guards",
+        ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+        ".lisp65_c2_kernal_window.post_startup_output_seam",
+        ".lisp65_c2_kernal_window.profile_rodata",
+        ".lisp65_c2_kernal_window.reopen_gap0",
+        ".lisp65_c2_kernal_window.reopen_gap1",
+        ".lisp65_c2_kernal_window.reopen_gap2",
+        ".lisp65_c2_kernal_window.session_emitter_code",
+        ".lisp65_c2_kernal_window.session_emitter_state",
+        ".lisp65_c2_kernal_window.state",
+        ".lisp65_c2_kernal_window.typed_queue_driver"
+      ],
+      "policy": "fixed-vma-ordered-zero-alias-only",
+      "space": "e000-cpu-window",
+      "start": 57344
+    },
+    {
+      "end_exclusive": 65536,
+      "id": "kernal-vectors",
+      "members": [
+        ".lisp65_c2_vectors"
+      ],
+      "policy": "fixed-vma-ordered-no-overlap",
+      "space": "e000-cpu-window",
+      "start": 65530
+    }
+  ],
+  "derived_fields": {
+    "boundary_symbols": {
+      "__lisp65_workbench_overlay_end": {
+        "frozen_in_golden": false,
+        "operation": "section-vma-plus-bytes",
+        "section": ".lisp65_workbench_overlay"
+      }
+    },
+    "section_bytes": {
+      "frozen_in_golden": false,
+      "source": "candidate-elf-section-table",
+      "validation": "fixed-capacity-arenas"
+    },
+    "section_lmas": {
+      "frozen_in_golden": false,
+      "source": "candidate-elf-program-headers",
+      "validation": "fixed-load-order-and-non-overlap"
+    }
+  },
+  "fixed_boundary_symbols": {
+    "__basic_zp_end": 144,
+    "__basic_zp_size": 142,
+    "__basic_zp_start": 2,
+    "__bss_end": 49147,
+    "__bss_size": 1585,
+    "__bss_start": 47562,
+    "__data_end": 47562,
+    "__data_load_start": 47540,
+    "__data_size": 22,
+    "__data_start": 47540,
+    "__heap_start": 50004,
+    "__lisp65_c2_mapped_far_service_end": 31772,
+    "__lisp65_c2_mapped_far_service_load_end": 179228,
+    "__lisp65_c2_mapped_far_service_load_start": 178354,
+    "__lisp65_c2_mapped_far_service_start": 30898,
+    "__lisp65_resident_island_end": 7882,
+    "__lisp65_resident_island_limit": 8192,
+    "__lisp65_resident_island_start": 6144,
+    "__lisp65_workbench_noinit_end": 49997,
+    "__lisp65_workbench_overlay_min_start": 50004,
+    "__lisp65_workbench_overlay_start": 50006,
+    "__lisp65_workbench_runtime_overlay_vma": 50006,
+    "__zp_bss_size": 77,
+    "__zp_bss_start": 46,
+    "__zp_data_load_start": 8215,
+    "__zp_data_size": 12,
+    "__zp_data_start": 34
+  },
+  "format": "lisp65-c2-full-map-invariant-golden-v2",
+  "load_order": [
+    ".basic_header",
+    ".zp.data",
+    ".text",
+    ".lisp65_c2_mapped_far_facade",
+    ".rodata",
+    ".lisp65_runtime_overlay_verifier_bindings",
+    ".data",
+    ".lisp65_c2_fixed_bank0_code",
+    ".lisp65_workbench_overlay",
+    ".lisp65_boot_bank3_stage",
+    ".lisp65_rt_rtov_catalog",
+    ".lisp65_rt_rtov_record",
+    ".lisp65_rt_c2d_00",
+    ".lisp65_rt_c2d_00b",
+    ".lisp65_rt_c2d_01",
+    ".lisp65_rt_c2d_02a",
+    ".lisp65_rt_c2d_02b",
+    ".lisp65_rt_c2d_03",
+    ".lisp65_rt_c2d_03b",
+    ".lisp65_rt_c2d_04",
+    ".lisp65_rt_c2d_05a",
+    ".lisp65_rt_c2d_05b",
+    ".lisp65_rt_c2d_06a",
+    ".lisp65_rt_c2d_06b",
+    ".lisp65_rt_c2d_07",
+    ".lisp65_rt_c2d_08",
+    ".lisp65_rt_c2d_09",
+    ".lisp65_rt_c2d_10",
+    ".lisp65_rt_c2d_11a",
+    ".lisp65_rt_c2d_11b",
+    ".lisp65_rt_c2d_12",
+    ".lisp65_rt_c2d_13",
+    ".lisp65_rt_bank3_stage_session",
+    ".lisp65_rt_c2emit_prepare",
+    ".lisp65_rt_c2emit_name",
+    ".lisp65_rt_c2emit_literal_prep",
+    ".lisp65_rt_c2emit_literal_atom",
+    ".lisp65_rt_c2emit_literal_append",
+    ".lisp65_rt_c2emit_code",
+    ".lisp65_rt_c2emit_final_meta",
+    ".lisp65_rt_c2emit_final_crc",
+    ".lisp65_rt_c2append_envelope",
+    ".lisp65_rt_c2append_crc_metadata",
+    ".lisp65_rt_c2append_roots_fronts",
+    ".lisp65_rt_c2append_reserve_transient_bounds",
+    ".lisp65_rt_c2append_reserve_transient_code",
+    ".lisp65_rt_c2append_reserve_persistent_bounds",
+    ".lisp65_rt_c2append_reserve_persistent_code",
+    ".lisp65_rt_c2append_journal_prepare",
+    ".lisp65_rt_c2append_journal_validate",
+    ".lisp65_rt_c2append_journal_reconstruct",
+    ".lisp65_rt_c2append_stage_copy",
+    ".lisp65_rt_c2append_stage_plane",
+    ".lisp65_rt_c2append_image",
+    ".lisp65_rt_c2append_entries",
+    ".lisp65_rt_c2append_publish_plan_scan",
+    ".lisp65_rt_c2append_publish_plan_resolve",
+    ".lisp65_rt_c2append_header",
+    ".lisp65_rt_c2append_publish_clear",
+    ".lisp65_rt_c2append_rollback_unpublish",
+    ".lisp65_rt_c2append_rollback_wipe_plane",
+    ".lisp65_rt_c2append_rollback_wipe_chip",
+    ".lisp65_rt_c2append_rollback_wipe_attic",
+    ".lisp65_rt_c2append_rollback_finalize",
+    ".lisp65_rt_c2append_abort_control",
+    ".lisp65_rt_l65e",
+    ".lisp65_rt_island_00",
+    ".lisp65_rt_buffer_read",
+    ".lisp65_rt_buffer_write",
+    ".lisp65_rt_buffer_alloc",
+    ".lisp65_rt_intern_service",
+    ".lisp65_resident_island",
+    ".lisp65_c2_mapped_far_service",
+    ".lisp65_c2_kernal_handoff",
+    ".lisp65_c2_host_facade",
+    ".lisp65_c2_kernal_io_reveal",
+    ".lisp65_c2_kernal_map_switch",
+    ".lisp65_c2_kernal_window.typed_queue_driver",
+    ".lisp65_c2_kernal_window.irq_handler",
+    ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+    ".lisp65_c2_kernal_window.map_switch_and_guards",
+    ".lisp65_c2_kernal_window.post_startup_output_seam",
+    ".lisp65_c2_kernal_window.c2_resident",
+    ".lisp65_c2_kernal_window.reopen_gap0",
+    ".lisp65_c2_kernal_window.profile_rodata",
+    ".lisp65_c2_kernal_window.reopen_gap1",
+    ".lisp65_c2_kernal_window.state",
+    ".lisp65_c2_kernal_window.reopen_gap2",
+    ".lisp65_c2_vectors"
+  ],
+  "section_invariants": [
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_GNU_RETAIN"
+      ],
+      "name": ".basic_header",
+      "section_type": "SHT_PROGBITS",
+      "vma": 8193
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".bss",
+      "section_type": "SHT_NOBITS",
+      "vma": 47562
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".data",
+      "section_type": "SHT_PROGBITS",
+      "vma": 47540
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_boot_bank3_stage",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_convergence_state",
+      "section_type": "SHT_NOBITS",
+      "vma": 49152
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_convergence_zp",
+      "section_type": "SHT_NOBITS",
+      "vma": 135
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_fixed_bank0",
+      "section_type": "SHT_NOBITS",
+      "vma": 49280
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_fixed_bank0_code",
+      "section_type": "SHT_PROGBITS",
+      "vma": 49688
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_fixed_bank0_hot_bss",
+      "section_type": "SHT_NOBITS",
+      "vma": 49757
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_fixed_zp",
+      "section_type": "SHT_NOBITS",
+      "vma": 137
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_host_facade",
+      "section_type": "SHT_PROGBITS",
+      "vma": 46532
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_handoff",
+      "section_type": "SHT_PROGBITS",
+      "vma": 46243
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_io_reveal",
+      "section_type": "SHT_PROGBITS",
+      "vma": 46580
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_map_switch",
+      "section_type": "SHT_PROGBITS",
+      "vma": 46591
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_kernal_state",
+      "section_type": "SHT_NOBITS",
+      "vma": 46601
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.c2_resident",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57501
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.irq_handler",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57400
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.map_switch_and_guards",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57483
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.nmi_and_freezer_return",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57474
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.post_startup_output_seam",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57497
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "name": ".lisp65_c2_kernal_window.profile_rodata",
+      "section_type": "SHT_PROGBITS",
+      "vma": 64812
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.reopen_gap0",
+      "section_type": "SHT_PROGBITS",
+      "vma": 64688
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.reopen_gap1",
+      "section_type": "SHT_PROGBITS",
+      "vma": 65160
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.reopen_gap2",
+      "section_type": "SHT_PROGBITS",
+      "vma": 65424
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "name": ".lisp65_c2_kernal_window.session_emitter_code",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57501
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "name": ".lisp65_c2_kernal_window.session_emitter_state",
+      "section_type": "SHT_NOBITS",
+      "vma": 64802
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "name": ".lisp65_c2_kernal_window.state",
+      "section_type": "SHT_PROGBITS",
+      "vma": 65408
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_kernal_window.typed_queue_driver",
+      "section_type": "SHT_PROGBITS",
+      "vma": 57344
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_mapped_far_facade",
+      "section_type": "SHT_PROGBITS",
+      "vma": 46000
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_c2_mapped_far_service",
+      "section_type": "SHT_PROGBITS",
+      "vma": 30898
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_c2_static_stack",
+      "section_type": "SHT_NOBITS",
+      "vma": 49268
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "name": ".lisp65_c2_vectors",
+      "section_type": "SHT_PROGBITS",
+      "vma": 65530
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_resident_island",
+      "section_type": "SHT_PROGBITS",
+      "vma": 6144
+    },
+    {
+      "alignment": 2,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".lisp65_resident_island_annex",
+      "section_type": "SHT_NOBITS",
+      "vma": 7882
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_bank3_stage_session",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_buffer_alloc",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_buffer_read",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_buffer_write",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_abort_control",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_crc_metadata",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_entries",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_envelope",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_header",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_image",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_journal_prepare",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_journal_reconstruct",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_journal_validate",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_publish_clear",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_publish_plan_resolve",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_publish_plan_scan",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_reserve_persistent_bounds",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_reserve_persistent_code",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_reserve_transient_bounds",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_reserve_transient_code",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_rollback_finalize",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_rollback_unpublish",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_rollback_wipe_attic",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_rollback_wipe_chip",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_rollback_wipe_plane",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_roots_fronts",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_stage_copy",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2append_stage_plane",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_00",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_00b",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_01",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_02a",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_02b",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_03",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_03b",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_04",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_05a",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_05b",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_06a",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_06b",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_07",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_08",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_09",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_10",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_11a",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_11b",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_12",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2d_13",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_code",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_final_crc",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_final_meta",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_literal_append",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_literal_atom",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_literal_prep",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_name",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_c2emit_prepare",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_intern_service",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_island_00",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_l65e",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_rtov_catalog",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_rt_rtov_record",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC"
+      ],
+      "name": ".lisp65_runtime_overlay_verifier_bindings",
+      "section_type": "SHT_PROGBITS",
+      "vma": 47500
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".lisp65_workbench_overlay",
+      "section_type": "SHT_PROGBITS",
+      "vma": 50006
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".noinit",
+      "section_type": "SHT_NOBITS",
+      "vma": 49997
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_MERGE",
+        "SHF_STRINGS"
+      ],
+      "name": ".rodata",
+      "section_type": "SHT_PROGBITS",
+      "vma": 46621
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_EXECINSTR"
+      ],
+      "name": ".text",
+      "section_type": "SHT_PROGBITS",
+      "vma": 8227
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".zp",
+      "section_type": "SHT_NOBITS",
+      "vma": 123
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".zp.bss",
+      "section_type": "SHT_NOBITS",
+      "vma": 46
+    },
+    {
+      "alignment": 1,
+      "flags": [
+        "SHF_ALLOC",
+        "SHF_WRITE"
+      ],
+      "name": ".zp.data",
+      "section_type": "SHT_PROGBITS",
+      "vma": 34
+    }
+  ]
+}

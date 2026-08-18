@@ -1,0 +1,76 @@
+{
+  "format": "lisp65-c2-mapped-far-abi-preservation-contract-v2",
+  "recorded_on": "2026-08-15",
+  "status": "owner-authorized-78ae9255",
+  "claim": "Successor identity for the mapped-far body after the phase-9 GC fixpoint ABI attribution; historical ownership, map-tuple and assembly-equivalence contracts remain immutable predecessors.",
+  "authorization": {
+    "commit": "78ae9255e22acfdb5c6c9bbc922ef3be05953fbf",
+    "scope": [
+      "preserve the complete llvm-mos callee-saved imaginary-register set on all eight mapped-far body exits",
+      "derive a transitive C-to-ASM-to-ASM ABI closure from the linked ELF",
+      "perform one product card after every host gate is green"
+    ]
+  },
+  "predecessors": {
+    "ownership_contract": {
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "assembly_equivalence_contract": {
+      "path": "config/c2-mapped-far-asm-equivalence-contract.json",
+      "sha256": "89818e0b5bc884b04e7039f49991b1b3d881e14b65d1d5e0be36f69721e4510f"
+    },
+    "map_contract": {
+      "path": "config/c2-mapped-far-map-contract-v2.json",
+      "sha256": "ac65e33b870137dad1739325b325a309481eb6d7d6659709e58edbb7dd0da2b0"
+    }
+  },
+  "artifact_successor": {
+    "source": "src/c2_mapped_far_convergence.s",
+    "section": ".lisp65_c2_mapped_far_service",
+    "cpu_vma": "0x78b2",
+    "physical_lma": "0x0002b8b2",
+    "exact_bytes": 1086,
+    "capacity_bytes": 1499,
+    "headroom_bytes": 413,
+    "cpu_end_exclusive": "0x7cf0",
+    "physical_end_exclusive": "0x0002bcf0",
+    "post_service_static_bytes": 48368,
+    "post_service_headroom_bytes": 17168,
+    "entries": [
+      "c2_mapped_far_vm_code_load_converged",
+      "c2_mapped_far_physical_read_converged"
+    ]
+  },
+  "abi": {
+    "caller_clobbered_imaginary_registers": {
+      "start": "__rc2",
+      "end_inclusive": "__rc15"
+    },
+    "callee_saved_imaginary_registers": {
+      "start": "__rc16",
+      "end_inclusive": "__rc31",
+      "count": 16
+    },
+    "public_entry_count": 2,
+    "inner_exits_per_entry": 4,
+    "inner_exit_count": 8,
+    "return": "result A, hardware stack balanced, __rc16..__rc31 byte-identical to entry; the linked facade leave restores the C-entry Z=0 invariant"
+  },
+  "gate": {
+    "linked_execution_cases": 16,
+    "required_preserved_register_checks": 256,
+    "structural_rule": "Every mapped-far public wrapper saves __rc16 through __rc31 before its inner body and restores __rc31 through __rc16 after the sole returning body edge; each inner body has exactly four RTS exits.",
+    "transitive_rule": "Every assembler function transitively reachable from a C or fixed-facade root is classified from linked relocations and either preserves every callee-saved register it can clobber or is rejected.",
+    "mutation_classes": [
+      "callee-saved-low-half-clobber",
+      "gc-fixpoint-register-clobber",
+      "callee-saved-high-half-clobber",
+      "missing-inner-exit",
+      "missing-transitive-callee",
+      "unbalanced-hardware-stack"
+    ]
+  },
+  "history_rule": "The 874-byte predecessor body and its receipts remain immutable history. This contract is the sole active successor projection for mapped-far body size, end, capacity and ABI preservation.",
+  "claim_limit": "Host source, linked micro-ELF and one authorized product-card identity only; no hardware, D1, phase-9 termination or release claim."
+}

@@ -186,6 +186,12 @@ def validate(contract: dict[str, Any], read_line: str, wait: str,
         "input/wait suite drift",
     )
     require(
+        any(row["name"] == "wait-overflow-rejected"
+            and row["expect_vm_error"] == "TypeError"
+            for row in suite["cases"]),
+        "wait overflow did not use the product-owned fail-closed helper",
+    )
+    require(
         "if (++poll_ == 0) lisp_poll();" in vm
         and "case 60: { /* key-event" in vm
         and "lisp_input_event(1u, 0u, &event)" in vm,
@@ -204,6 +210,9 @@ def validate(contract: dict[str, Any], read_line: str, wait: str,
         and "LISP65_SCREEN_DEL_NONLTO" not in product_link
         and "screen_backspace_nonlto.s" not in ship_builder
         and "LISP65_SCREEN_DEL_NONLTO" not in ship_builder
+        and '"allowed_external_calls": []' in ship_builder
+        and '"allowed_external_calls": ["%time-error-duration-overflow"]'
+            not in ship_builder
         and "scr_backspace();" not in ship_io,
         "abandoned native DEL path remains linked",
     )

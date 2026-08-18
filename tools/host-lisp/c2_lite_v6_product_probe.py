@@ -1099,6 +1099,56 @@ static void rtov_read(uint16_t relative, uint8_t *dst, uint16_t length) {
     # Every phase wrapper is copied beside the projected decoders so quoted
     # includes cannot fall back to the repository originals.
     decoder = (ROOT / "scripts/c2-stream-decoder.c").read_text(encoding="utf-8")
+    shelf_path = PRODUCT_IDENTITY.parent / "product-shelf-v4-direct.bin"
+    c2d_path = OUT / "initial.c2d-v6.bin"
+    require(shelf_path.is_file() and c2d_path.is_file(),
+            "phase-02a delivery-oracle inputs absent")
+    shelf_raw = shelf_path.read_bytes()
+    c2d_raw = c2d_path.read_bytes()
+    records = shelf_raw[7]
+    images_offset = struct.unpack_from("<H", c2d_raw, 28)[0]
+    require(records == 6 and struct.unpack_from("<H", c2d_raw, 12)[0] == records
+            and len(shelf_raw) >= 32 + records * 32
+            and len(c2d_raw) >= images_offset + records * 32,
+            "phase-02a delivery-oracle record domain drift")
+
+    def crc16(raw: bytes) -> int:
+        crc = 0xffff
+        for value in raw:
+            crc ^= value << 8
+            for _ in range(8):
+                crc = ((crc << 1) ^ 0x1021) & 0xffff \
+                    if crc & 0x8000 else (crc << 1) & 0xffff
+        return crc
+
+    def record_crc16s(raw: bytes, offset: int) -> tuple[int, ...]:
+        return tuple(crc16(raw[offset + i * 32:offset + (i + 1) * 32])
+                     for i in range(records))
+
+    shelf_crcs = record_crc16s(shelf_raw, 32)
+    c2d_crcs = record_crc16s(c2d_raw, images_offset)
+
+    def asm_longs(values: tuple[int, ...]) -> str:
+        return "\\n".join(f".short 0x{value:04x}" for value in values)
+
+    oracle_declarations = "\n".join([
+        "/* Generated from the exact delivery-bound Shelf/C2D records. */",
+        "#define C2_PHASE02A_DELIVERY_ORACLE 1",
+        f"#define C2_PHASE02A_ORACLE_RECORDS {records}u",
+        "#define C2_PHASE02A_TIMEOUT_FRAMES 64u",
+        "",
+    ])
+    oracle_owner = "\n".join([
+        "/* The phase-02a wrapper is the sole owner of the CRC tables. */",
+        "__asm__(\".pushsection .lisp65_rt_c2d_02a,\\\"ax\\\",@progbits\\n\"",
+        "        \".global c2_phase02a_shelf_crc16\\n\"",
+        "        \"c2_phase02a_shelf_crc16:\\n" + asm_longs(shelf_crcs) + "\\n\"",
+        "        \".global c2_phase02a_c2d_crc16\\n\"",
+        "        \"c2_phase02a_c2d_crc16:\\n" + asm_longs(c2d_crcs) + "\\n\"",
+        "        \".popsection\\n\");",
+        "",
+    ])
+    decoder = oracle_declarations + decoder
     decoder = replace_once(decoder, "|| h[4] != 5u", "|| h[4] != 6u",
                            "C2D-v6 strict header")
     split_marker = "/* C2-lite v6 cutpoint: validate the immutable entry records"
@@ -1161,7 +1211,10 @@ static void rtov_read(uint16_t relative, uint8_t *dst, uint16_t length) {
     import c2_product_substitution_link as product  # local: mutable configuration
     for original in product.C2_PHASE_SOURCES:
         target = generated / original.name
-        target.write_text(original.read_text(encoding="utf-8"), encoding="utf-8")
+        source = original.read_text(encoding="utf-8")
+        if original.name == "c2-stream-phase-02a.c":
+            source = oracle_owner + source
+        target.write_text(source, encoding="utf-8")
         mapping[original] = target
     return mapping
 

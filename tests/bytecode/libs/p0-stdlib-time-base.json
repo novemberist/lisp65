@@ -6,6 +6,7 @@
   "functions": [
     "%time-read",
     "%time-delta",
+    "%time-error-duration-overflow",
     "time"
   ],
   "tailcall_self": [
@@ -35,7 +36,7 @@
     {
       "name": "time-delta-overflow",
       "expr": "(%time-delta (cons 0 0) (cons 64 0))",
-      "expect_vm_error": "DirMiss"
+      "expect_vm_error": "TypeError"
     },
     {
       "name": "time-kind",

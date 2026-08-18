@@ -1,0 +1,48 @@
+{
+  "format": "lisp65-c2.3-trace-core-abi-contract-v1",
+  "commissioned_on": "2026-08-09",
+  "priority": 3,
+  "status": "link93-host-media-green-hardware-pending",
+  "primitive": {
+    "name": "%function-cell",
+    "carrier_id": 20,
+    "carrier_name": "set-symbol-value",
+    "private_mode_marker": 69,
+    "arity": [1, 2],
+    "one_argument": "return-exact-current-function-cell",
+    "two_arguments": "library-wrapper-uses-carrier-arity-3-to-atomically-swap-and-return-exact-prior-function-cell",
+    "restricted_views": ["apply", "function-kind"],
+    "public_surface": false
+  },
+  "library": {
+    "package": "inspect",
+    "source": "lib/inspect-trace.lisp",
+    "suite": "tests/bytecode/libs/p0-inspect-trace.json",
+    "names": ["trace", "untrace"],
+    "publication": "persistent-wrapper-and-function-cell-change-share-the-existing-C2-journaled-definition-transaction",
+    "restoration": "exact-prior-cell-returned-by-private-swap"
+  },
+  "required_cases": [
+    "exact-getter-distinguishes-bcode-cells",
+    "swap-returns-prior-and-installs-replacement",
+    "traced-call-reaches-original",
+    "untrace-restores-exact-original",
+    "rollback-before-publication-is-retryable",
+    "rollback-inside-publication-restores-old-cell",
+    "double-trace-is-idempotent",
+    "double-untrace-is-idempotent"
+  ],
+  "walls": {
+    "sealed_v1_4_bytes_unchanged": true,
+    "compiler_change": false,
+    "public_primitive": false,
+    "device_contact_before_host_green": false,
+    "release_claim": false
+  },
+  "next_link": {
+    "number": 93,
+    "state": "host-media-green-hardware-pending",
+    "requires": ["host-gate-green", "product-build-green", "inspect-media-green"],
+    "hardware_acceptance": "trace a defined function, observe enter/exit and exact result, untrace, observe original behavior without trace output"
+  }
+}

@@ -174,7 +174,7 @@ static void c2e_w24(uint16_t at, uint32_t value) {
     c2e_put(at, (uint8_t)value); c2e_put((uint16_t)(at + 1u), (uint8_t)(value >> 8));
     c2e_put((uint16_t)(at + 2u), (uint8_t)(value >> 16));
 }
-static void c2e_w32(uint16_t at, uint32_t value) {
+C2E_SECTION("final_crc") static void c2e_w32(uint16_t at, uint32_t value) {
     c2e_w16(at, (uint16_t)value); c2e_w16((uint16_t)(at + 2u), (uint16_t)(value >> 16));
 }
 C2E_SECTION("final_crc") static uint32_t c2e_crc(uint16_t at, uint16_t bytes) {

@@ -1,0 +1,94 @@
+{
+  "D2_D5_open": false,
+  "authority": {
+    "BUILDING_HEAP_attribution": {
+      "bytes": 20536,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.0-building-heap-attribution-receipt.json",
+      "sha256": "79fbdaccd5f7519efab685222101354c8c32473265c532aa85a98928bd50e68b"
+    },
+    "media_closure": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-wysiwyg-text-recovery-liveness-media-receipt.json",
+    "product_card": {
+      "bytes": 35077,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v2.1-wysiwyg-text-recovery-artifact-replay-receipt.json",
+      "sha256": "389e2e99fc9342db7628f07e4bd7554b0f8b5caa43c16f28617d7d1164d23d7e"
+    },
+    "release_contract": {
+      "bytes": 1607,
+      "path": "config/c2-v150-release-contract.json",
+      "sha256": "bab9ec3a606e902c95ab1a5fc4f310b08496b1a056569091f9859ef59dd696a1"
+    }
+  },
+  "boot_access_free_seconds": 45,
+  "format": "lisp65-c2-v150-v20-liveness-device-session-v1",
+  "identity": {
+    "library_medium": "build/c2.3/v2.1-wysiwyg-text-recovery-media-base/library/lisp65-library.d81",
+    "product_medium": "build/c2.3/v2.1-wysiwyg-text-recovery-media-liveness/shared-system/lisp65-product.d81"
+  },
+  "input": {
+    "one_form_per_submission": true,
+    "owner_physical_keyboard": true,
+    "polling_during_persistent_form": false,
+    "virtual_transport_forbidden": true
+  },
+  "order": [
+    "D1",
+    "D2",
+    "D3",
+    "D4",
+    "D5"
+  ],
+  "recontact_authorized": false,
+  "release_terminal_row": "D5",
+  "rows": {
+    "D1": {
+      "expect": [
+        "boot-liveness",
+        "WORKBENCH 1.5.0",
+        "lisp65>"
+      ],
+      "id": "boot-banner-and-prompt"
+    },
+    "D2": {
+      "forms": [
+        "(require (quote inspect))",
+        "(require (quote string-extra))",
+        "(defun trace-probe (x) (+ x 1))",
+        "(trace trace-probe)",
+        "(trace-probe 4)",
+        "(untrace trace-probe)",
+        "(trace-probe 4)"
+      ],
+      "id": "require-echo-and-trace-restoration",
+      "persistent_by_default": true
+    },
+    "D3": {
+      "forms": [
+        "(require (quote defstruct))",
+        "(defstruct point x y)",
+        "(make-point 3 4)"
+      ],
+      "id": "guarded-defstruct-point",
+      "quiet_floor_seconds": [
+        180,
+        240,
+        30
+      ],
+      "shadow_log_postcondition": "all four mismatch records empty on the clean path"
+    },
+    "D4": {
+      "ceremony_max_frames": 72,
+      "forms": [
+        "(+ 1 (* 2 3))",
+        "(point-y (make-point 3 4))",
+        "(car (cdr (list 1 2)))",
+        "(setq v15-ceremony-probe 1)"
+      ],
+      "id": "direct-path-and-durable-ceremony"
+    },
+    "D5": {
+      "id": "release-terminal-performance-smoke",
+      "smokes_from": "config/c2-v150-release-contract.json"
+    }
+  },
+  "status": "prepared-D1-recontact-review-pending"
+}

@@ -24,6 +24,9 @@ import c2_stack_overlay_ownership as OWN  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-stack-overlay-ownership-contract.json"
+MAP_CONTRACT = ROOT / "config/c2-mapped-far-map-contract-v2.json"
+ABI_SUCCESSOR_CONTRACT = ROOT / (
+    "config/c2-mapped-far-abi-preservation-contract-v2.json")
 PRICING = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-stack-overlay-ownership-halt1-candidate-pricing.json")
@@ -35,8 +38,8 @@ SWEEP = ROOT / (
     "c2.3-v1.4-dma-content-consumption-broaden-once-sweep.json")
 EQUIVALENCE = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
-    "c2.3-v1.7-mapped-far-assembly-equivalence-receipt.json")
-FACADE_SOURCE = ROOT / "src/c2_mapped_far_service.s"
+    "c2.3-v2.1-mapped-far-abi-preservation-equivalence-receipt.json")
+FACADE_SOURCE = ROOT / "src/optional/c2_mapped_far_service_v2.s"
 ASSEMBLY_SOURCE = ROOT / "src/c2_mapped_far_convergence.s"
 OWNER_HEADER = ROOT / "src/c2_mapped_far_service.h"
 DMA_SOURCE = ROOT / "src/c2_platform_dma.c"
@@ -78,6 +81,44 @@ def bind(path: Path) -> dict[str, Any]:
 
 def canonical(value: dict[str, Any]) -> bytes:
     return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+
+
+def effective_contract() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Apply the two loud successor projections without rewriting history."""
+    base = load(CONTRACT)
+    map_contract = load(MAP_CONTRACT)
+    successor = load(ABI_SUCCESSOR_CONTRACT)
+    predecessors = successor["predecessors"]
+    for key, path in (
+            ("ownership_contract", CONTRACT),
+            ("map_contract", MAP_CONTRACT)):
+        row = predecessors[key]
+        require(row["path"] == path.relative_to(ROOT).as_posix()
+                and row["sha256"] == hashlib.sha256(path.read_bytes()).hexdigest(),
+                f"mapped-far ABI successor lost {key} ancestry")
+    require(successor.get("status") == "owner-authorized-78ae9255",
+            "mapped-far ABI successor authorization drift")
+    artifact = successor["artifact_successor"]
+    projected = deepcopy(base)
+    far = projected["mapped_far_service"]
+    far["map_tuple"].update(map_contract["tuple"])
+    far["map_tuple"].update({
+        "mapped_physical_slab_start": map_contract["map_semantics"]
+            ["mapped_physical_slab_start"],
+        "mapped_service_cpu_end_exclusive": artifact["cpu_end_exclusive"],
+    })
+    far["bank2"].update({
+        "service_physical_end_exclusive": artifact[
+            "physical_end_exclusive"],
+        "service_bytes": artifact["exact_bytes"],
+        "post_service_static_bytes": artifact["post_service_static_bytes"],
+        "post_service_headroom_bytes": artifact["post_service_headroom_bytes"],
+    })
+    far["far_symbols"] = [{
+        "name": "c2_mapped_far_convergence_assembly_body",
+        "bytes": artifact["exact_bytes"],
+    }]
+    return projected, map_contract, successor
 
 
 def run(command: list[str], label: str, *, input_text: str | None = None,
@@ -228,7 +269,15 @@ def linked_fixture(contract: dict[str, Any], stack_bytes: int,
 
 
 def generated_linker_check(contract: dict[str, Any]) -> dict[str, Any]:
-    script = PRODUCT.linker_script(ownership_opt_in=True)
+    with tempfile.TemporaryDirectory(prefix="lisp65-effective-owner-") as name:
+        projected = Path(name) / "ownership-contract.json"
+        projected.write_bytes(canonical(contract))
+        previous = PRODUCT.OWNERSHIP_CONTRACT
+        try:
+            PRODUCT.OWNERSHIP_CONTRACT = projected
+            script = PRODUCT.linker_script(ownership_opt_in=True)
+        finally:
+            PRODUCT.OWNERSHIP_CONTRACT = previous
     far = contract["mapped_far_service"]
     geometry = contract["geometry"]
     sections = contract["phase_c_owners"]["sections"]
@@ -318,6 +367,12 @@ def validate_facts(facts: dict[str, Any]) -> None:
             "not every service entry restores the map")
     require(facts["irq_survives_mapped_call"] is True,
             "owned raster IRQ does not survive the mapped call")
+    require(facts["callee_saved_registers"] == 16
+            and facts["callee_saved_checks"] == 256,
+            "mapped-far body does not preserve the complete imaginary set")
+    require(facts["hardware_stack_balanced_cases"] == 16
+            and facts["inner_exit_count"] == 8,
+            "mapped-far preservation does not cover every body exit")
 
 
 def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
@@ -331,6 +386,9 @@ def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
         "recursive-overlay-load": ("bootstrap_acyclic", False),
         "missing-unmap": ("map_unmap_pairs", 1),
         "hidden-irq": ("irq_survives_mapped_call", False),
+        "miss-callee-saved-byte": ("callee_saved_checks", 255),
+        "unbalanced-wrapper": ("hardware_stack_balanced_cases", 15),
+        "miss-inner-exit": ("inner_exit_count", 7),
     }
     rejected: dict[str, str] = {}
     for name, (key, value) in cases.items():
@@ -346,7 +404,18 @@ def mutation_selftest(facts: dict[str, Any]) -> dict[str, str]:
 
 
 def build_receipt() -> dict[str, Any]:
-    contract = load(CONTRACT)
+    contract, map_contract, abi_successor = effective_contract()
+    require(
+        map_contract.get("format") == "lisp65-c2-mapped-far-map-contract-v2"
+        and map_contract.get("tuple") == {
+            "maplo_a": "0x40", "maplo_x": "0x82",
+            "maphi_y": "0x00", "maphi_z": "0x80",
+            "restore_a": "0x00", "restore_x": "0x00",
+            "restore_y": "0x00", "restore_z": "0x80",
+        }
+        and map_contract.get("map_semantics", {}).get("cpu_block") == 3
+        and map_contract["map_semantics"]["intended_offset"] == "0x24000",
+        "corrected primary-semantics MAP contract drift")
     pricing = load(PRICING)
     require(pricing["status"] == "halt-1-fourth-class-priced-one-row-fits",
             "Halt-1 pricing authority drift")
@@ -394,7 +463,7 @@ def build_receipt() -> dict[str, Any]:
             leave_code = code[leave.value - facade.address:
                               leave.value - facade.address + leave.bytes]
             require(enter_code == bytes.fromhex(
-                "48 da 5a a9 80 a2 24 a0 00 a3 80 5c ea a3 00 7a fa 68 60")
+                "48 da 5a a9 40 a2 82 a0 00 a3 80 5c ea a3 00 7a fa 68 60")
                 and leave_code == bytes.fromhex(
                 "48 a9 00 a2 00 a0 00 a3 80 5c ea 68 a3 00 60"),
                 "final ELF MAP ABI machine code drift")
@@ -414,6 +483,8 @@ def build_receipt() -> dict[str, Any]:
                     "far_lma": section_lma(elf, service.name),
                     "far_sha256": hashlib.sha256(
                         truth.section_bytes(service.name)).hexdigest(),
+                    "map_enter_machine_code": enter_code.hex(),
+                    "map_contract_tuple": map_contract["tuple"],
                     "state_bytes": state.bytes,
                     "zp_bytes": zp.bytes,
                 }
@@ -444,8 +515,8 @@ def build_receipt() -> dict[str, Any]:
             and equivalence["facts"]["equivalent_cases"] == 16
             and equivalence["facts"]["exact_bytes"]
                 == far["bank2"]["service_bytes"]
-            and len(equivalence["mutations_rejected"]) == 10,
-            "assembly/C equivalence is not 16/16 with 10 seam mutations")
+            and len(equivalence["mutations_rejected"]) == 16,
+            "assembly/C equivalence is not 16/16 with 16 seam mutations")
 
     # MAP changes only CPU block 3.  The raster frame owner at $ff83/$ff84,
     # IRQ/vector block 7, D000 I/O and ZP/stack stay visible.  Model one IRQ
@@ -483,6 +554,12 @@ def build_receipt() -> dict[str, Any]:
         "map_unmap_pairs": owners["map_unmap_pairs"],
         "service_entries": owners["service_entries"],
         "irq_survives_mapped_call": True,
+        "callee_saved_registers": equivalence["facts"]
+            ["callee_saved_registers"],
+        "callee_saved_checks": equivalence["facts"]["callee_saved_checks"],
+        "hardware_stack_balanced_cases": equivalence["facts"]
+            ["hardware_stack_balanced_cases"],
+        "inner_exit_count": abi_successor["abi"]["inner_exit_count"],
     }
     validate_facts(facts)
     rejected = mutation_selftest(facts)
@@ -500,6 +577,8 @@ def build_receipt() -> dict[str, Any]:
             "WPLTO, product identity, Link 91 or hardware claim."),
         "authorities": {key: bind(path) for key, path in {
             "contract": CONTRACT,
+            "map_contract_correction": MAP_CONTRACT,
+            "abi_successor_contract": ABI_SUCCESSOR_CONTRACT,
             "halt1_pricing": PRICING,
             "facade_source": FACADE_SOURCE,
             "assembly_source": ASSEMBLY_SOURCE,

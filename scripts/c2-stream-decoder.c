@@ -1,5 +1,6 @@
 /* Streaming C2I-v2/C2D-v1 decoder used only by the C2.1 substitution proof. */
 #include "c2-stream-decoder.h"
+#include "../src/boot_progress.h"
 #ifdef LISP65_C2_PRODUCT_CUT
 #include "c2_product_runtime.h"
 #include "c2_phase_scratch.h"
@@ -56,8 +57,15 @@ C2_LOCAL uint32_t crc32_update(uint32_t crc, const uint8_t *p, uint16_t n) {
     uint16_t i; uint8_t bit;
     for (i = 0; i < n; ++i) {
         crc ^= p[i];
-        for (bit = 0; bit < 8; ++bit)
-            crc = (crc >> 1) ^ (0xedb88320UL & (uint32_t)-(int32_t)(crc & 1u));
+        for (bit = 0; bit < 8; ++bit) {
+#ifdef LISP65_C2_MAP_CPU_TRANSPORT
+            if (crc & 1u) crc = (crc >> 1) ^ 0xedb88320UL;
+            else crc >>= 1;
+#else
+            crc = (crc >> 1)
+                ^ (0xedb88320UL & (uint32_t)-(int32_t)(crc & 1u));
+#endif
+        }
     }
     return crc;
 }
@@ -168,6 +176,9 @@ C2_LOCAL uint8_t c2_image_read(c2_stream_context *c, uint16_t image,
 C2_SLICE(00) uint8_t c2_stream_phase_00(void *opaque) {
 #ifdef C2_STREAM_PRODUCT_V3
     c2_stream_context *c = opaque; uint8_t h[48];
+    /* Phase 00 is a transported boot-family slice.  The message is part of
+     * that disposable slice, never the resident decoder facade. */
+    LISP65_BOOT_PROGRESS_LIBRARIES();
     if (!c || c->phase || c->error || c->c2d_bytes != 33840u)
         return C2_STREAM_ERR_STATE;
     if (!c2_stream_c2d_read(0, h, sizeof(h))) return fail(c, C2_STREAM_ERR_IO);
@@ -317,7 +328,76 @@ C2_SLICE(02) uint8_t c2_stream_phase_02(void *opaque) {
  * leave the totals close and phase transition to 02b.  `reserved` is the
  * transport cutpoint marker; skipping or replaying either half fails closed. */
 #if C2_STREAM_PHASE == 15
+#ifdef C2_PHASE02A_DELIVERY_ORACLE
+extern const uint16_t c2_phase02a_shelf_crc16[];
+extern const uint16_t c2_phase02a_c2d_crc16[];
+extern uint16_t rtov_crc_mem(const uint8_t *, uint16_t);
+
+/* Phase 02a consumes immutable, delivery-bound records.  Its expected CRCs
+ * are generated from the exact Shelf and C2D bytes packed with this product;
+ * a sample obtained through either guarded DMA channel is never an oracle. */
+static C2_SLICE(02a) uint8_t c2_phase02a_record_read(
+        uint8_t shelf, uint32_t source, uint8_t target[32],
+        uint16_t expected) {
+    uint16_t start = c2_kernal_frame_count_inline();
+    uint8_t i;
+    /* A target which already happens to carry the expected CRC is not a
+     * convergence witness.  Start from a host-proved nonmatching image so
+     * acceptance necessarily follows this submission. */
+    for (i = 0u; i != 32u; ++i) target[i] = 0u;
+    if (shelf) {
+        c2_product_physical_copy(
+            (uint32_t)LISP65_C2_SHELF_PHYSICAL + source,
+            (uint32_t)(uint16_t)(uintptr_t)target, 32u);
+    } else {
+        c2_facade_vm_code_load(LISP65_C2D_BANK, (uint16_t)source,
+                               32u, target);
+    }
+    do {
+        if (rtov_crc_mem(target, 32u) == expected) return 1u;
+    } while ((uint16_t)(c2_kernal_frame_count_inline() - start)
+             < C2_PHASE02A_TIMEOUT_FRAMES);
+    return 0u;
+}
+#endif
+
 C2_SLICE(02a) uint8_t c2_stream_phase_02a(void *opaque) {
+#ifdef C2_PHASE02A_DELIVERY_ORACLE
+    c2_stream_context *c = opaque;
+    uint8_t s[32], source[32], raw[32]; uint16_t i;
+    if (!c || c->phase != 2u || c->error || c->reserved
+        || c->image_count != C2_PHASE02A_ORACLE_RECORDS)
+        return C2_STREAM_ERR_STATE;
+    for (i = 0; i < c->image_count; ++i) {
+        if (!c2_phase02a_record_read(
+                1u, 32u + (uint32_t)i * 32u, s,
+                c2_phase02a_shelf_crc16[i])
+            || !c2_phase02a_record_read(
+                0u, (uint16_t)(c->images_offset + i * 32u), raw,
+                c2_phase02a_c2d_crc16[i]))
+            return fail(c, C2_STREAM_ERR_IO);
+        /* Bind the inner image-reader Shelf view independently.  This is the
+         * third historical verifier site, not an alias of the outer buffer. */
+        if (!c2_phase02a_record_read(
+                1u, 32u + (uint32_t)raw[2] * 32u, source,
+                c2_phase02a_shelf_crc16[i]))
+            return fail(c, C2_STREAM_ERR_IO);
+        /* The exact delivery CRCs make all three records the host-validated
+         * immutable row.  These live checks bind that row to decoder state;
+         * all static field relationships remain independently host-gated. */
+        if (raw[2] != i || r16(raw + 4) != c->generation
+            || r16(raw + 6) != c->entry_cursor
+            || r16(raw + 10) != c->resolution_cursor
+            || r16(raw + 21) != r16(s + 11)
+            || r16(source + 16) != r16(s + 16))
+            return fail(c, C2_STREAM_ERR_SHELF);
+        c->entry_cursor = (uint16_t)(c->entry_cursor + r16(raw + 8));
+        c->resolution_cursor =
+            (uint16_t)(c->resolution_cursor + r16(raw + 12));
+    }
+    c->reserved = 0x2au;
+    return C2_STREAM_OK;
+#else
     c2_stream_context *c = opaque; uint8_t s[32], d[20]; uint16_t i;
     uint32_t co, mo;
     if (!c || c->phase != 2u || c->error || c->reserved)
@@ -339,6 +419,7 @@ C2_SLICE(02a) uint8_t c2_stream_phase_02a(void *opaque) {
     }
     c->reserved = 0x2au;
     return C2_STREAM_OK;
+#endif
 }
 #endif
 

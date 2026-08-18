@@ -163,6 +163,16 @@ uint8_t C2_VM_CODE_LOAD_CONVERGED_IMPL(
 }
 #endif
 
+#ifdef LISP65_C2_MUTABLE_CPU_READS
+static LISP65_C2_MAPPED_FACADE_FN
+void c2_dma_read_or_abort(uint8_t bank, uint16_t offset,
+                          uint16_t length, uint8_t *destination) {
+    uint32_t physical = (uint32_t)offset | ((uint32_t)bank << 16);
+    if (c2_map_cpu_read(physical, destination, length)) return;
+    lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                      "CPU content read failed; reboot");
+}
+#else
 static LISP65_C2_MAPPED_FACADE_FN
 void c2_dma_read_or_abort(uint8_t bank, uint16_t offset,
                           uint16_t length, uint8_t *destination) {
@@ -170,6 +180,7 @@ void c2_dma_read_or_abort(uint8_t bank, uint16_t offset,
     lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
                       "DMA content did not converge; reboot");
 }
+#endif
 #endif
 
 void vm_ext_write(const uint8_t *source, uint16_t length,

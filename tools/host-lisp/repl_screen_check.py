@@ -115,10 +115,10 @@ def _reject_unless_editor_status_tail(
     )
 
 
-def check_latest_result(
-    screen_path: Path, expected_form: str, expect: str | None,
+def _latest_visible_results(
+    screen_path: Path, expected_form: str,
     *, allow_editor_status_tail: bool = False,
-) -> None:
+) -> list[str]:
     try:
         raw_screen = screen_path.read_text(errors="replace")
     except OSError as error:
@@ -163,6 +163,18 @@ def check_latest_result(
     if any(line.startswith("*** ") for line in visible_results):
         visible = " | ".join(visible_results)
         raise CheckError(RESULT_MISMATCH, f"latest REPL form reported an error: {visible}")
+    return visible_results
+
+
+def check_latest_result(
+    screen_path: Path, expected_form: str, expect: str | None,
+    *, allow_editor_status_tail: bool = False,
+) -> None:
+    visible_results = _latest_visible_results(
+        screen_path,
+        expected_form,
+        allow_editor_status_tail=allow_editor_status_tail,
+    )
     if expect is None:
         return
 
@@ -171,6 +183,32 @@ def check_latest_result(
         raise CheckError(
             RESULT_MISMATCH,
             f"latest result is not exactly {expect!r}: {visible or '<empty>'}",
+        )
+
+
+def check_latest_forbidden(
+    screen_path: Path, expected_form: str, forbidden: list[str],
+    *, allow_editor_status_tail: bool = False,
+) -> None:
+    """Reject forbidden text only in the latest form/result segment.
+
+    Earlier output can legitimately remain visible on a 25-row screen.  A
+    whole-screen negative search therefore confuses historical output with a
+    side effect of the latest submitted form.
+    """
+    visible_results = _latest_visible_results(
+        screen_path,
+        expected_form,
+        allow_editor_status_tail=allow_editor_status_tail,
+    )
+    escaped = [
+        token for token in forbidden
+        if any(token in line for line in visible_results)
+    ]
+    if escaped:
+        raise CheckError(
+            RESULT_MISMATCH,
+            "latest result contains forbidden text: " + ", ".join(escaped),
         )
 
 
@@ -370,6 +408,44 @@ def selftest() -> None:
             if actual_code != expected_code:
                 raise AssertionError(f"{name}: expected rc={expected_code}, got rc={actual_code}")
 
+        historical_trace = tmp / "historical-trace-before-restored-call.txt"
+        historical_trace.write_text(_frame([
+            "lisp65> (trace-probe 4)",
+            "(trace-enter trace-probe 4)",
+            "(trace-exit trace-probe 5)",
+            "5",
+            "lisp65> (untrace trace-probe)",
+            "trace-probe",
+            "lisp65> (trace-probe 4)",
+            "5",
+            "lisp65>",
+        ]))
+        check_latest_forbidden(
+            historical_trace,
+            "(trace-probe 4)",
+            ["trace-enter", "trace-exit"],
+        )
+        current_trace = tmp / "current-trace-after-restored-call.txt"
+        current_trace.write_text(_frame([
+            "lisp65> (trace-probe 4)",
+            "(trace-enter trace-probe 4)",
+            "5",
+            "lisp65>",
+        ]))
+        try:
+            check_latest_forbidden(
+                current_trace,
+                "(trace-probe 4)",
+                ["trace-enter", "trace-exit"],
+            )
+        except CheckError as error:
+            if error.code != RESULT_MISMATCH:
+                raise AssertionError(
+                    "current forbidden trace returned the wrong status"
+                ) from error
+        else:
+            raise AssertionError("current forbidden trace survived")
+
         active_cases = [
             ("active-pass", ["lisp65> (+ 20 22)"], "(+ 20 22)", 0),
             (
@@ -480,7 +556,7 @@ def selftest() -> None:
             raise AssertionError("malformed editor tail survived")
     print(
         "repl-screen-check selftest: PASS "
-        f"({len(cases) + len(active_cases) + 7} cases)"
+        f"({len(cases) + len(active_cases) + 9} cases)"
     )
 
 

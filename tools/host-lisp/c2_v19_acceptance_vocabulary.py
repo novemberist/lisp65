@@ -24,9 +24,21 @@ import c2_asm_leaf_abi_gate as ABI  # noqa: E402
 CONTRACT = ROOT / "config/c2-v19-acceptance-vocabulary.json"
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 RECEIPT = EVIDENCE / "c2.3-v1.9-acceptance-vocabulary-receipt.json"
+REBIND = EVIDENCE / "c2.3-v1.9-acceptance-vocabulary-driver-rebind-receipt.json"
+EXPECTATION_SHAPE = (
+    EVIDENCE / "c2.3-v2.1-expectation-shape-sweep-receipt.json")
+PLAN = ROOT / "docs/planning/1.9-full-map-recharter-work-plan.md"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 RECORDED_ON = "2026-08-06"
 HISTORICAL_GATE_COMMIT = "361c95df"
+DRIVER_SUCCESSORS = {
+    "bank2_workbench_scratch_negative":
+        "bank2-target-and-workbench-identity",
+    "final_island_single_runtime_identity":
+        "final-island-carrier-identity",
+    "roots_fronts_one_slice_two_entry":
+        "roots-fronts-single-slice-entry-identity",
+}
 
 
 class VocabularyError(RuntimeError):
@@ -266,8 +278,7 @@ def receipt_union(value: dict[str, Any]) -> str:
     return "success"
 
 
-def driver_vocabulary(contract: dict[str, Any],
-                      mutations: dict[str, str]) -> dict[str, Any]:
+def current_driver_tokens(contract: dict[str, Any]) -> tuple[set[str], dict[str, Any]]:
     spec = contract["vocabulary_classes"]["driver_receipt_tokens"]
     tokens: set[str] = set()
     consumers = {}
@@ -280,11 +291,22 @@ def driver_vocabulary(contract: dict[str, Any],
         tokens.update(local)
         consumers[relative] = {
             "functions": sorted(found), "tokens": sorted(local)}
-    expected = set(spec["members"])
+    return tokens, consumers
+
+
+def driver_vocabulary(contract: dict[str, Any],
+                      mutations: dict[str, str],
+                      expected_members: set[str] | None = None) -> dict[str, Any]:
+    spec = contract["vocabulary_classes"]["driver_receipt_tokens"]
+    tokens, consumers = current_driver_tokens(contract)
+    expected = (set(spec["members"]) if expected_members is None
+                else set(expected_members))
     require(tokens == expected,
             "driver receipt-token vocabulary drift: "
             f"missing={sorted(expected - tokens)} extra={sorted(tokens - expected)}")
-    require(set_sha(tokens) == spec["member_set_sha256"],
+    expected_digest = (spec["member_set_sha256"] if expected_members is None
+                       else set_sha(expected))
+    require(set_sha(tokens) == expected_digest,
             "driver receipt-token set hash drift")
     require(spec["convicted_precedent"] in tokens,
             "convicted driver token absent")
@@ -383,7 +405,7 @@ def expectation_vocabulary(contract: dict[str, Any],
     return {"count": len(rows), "expectations": observations}
 
 
-def build_receipt() -> dict[str, Any]:
+def build_receipt(driver_members: set[str] | None = None) -> dict[str, Any]:
     contract = load(CONTRACT)
     require(contract["format"] == "lisp65-c2-v19-acceptance-vocabulary-v1",
             "v1.9 vocabulary contract format drift")
@@ -391,7 +413,7 @@ def build_receipt() -> dict[str, Any]:
     authorities = bind_authorities(contract)
     sections = section_vocabulary(contract, mutations)
     abi = abi_vocabulary(contract, mutations)
-    driver = driver_vocabulary(contract, mutations)
+    driver = driver_vocabulary(contract, mutations, driver_members)
     owners = owner_vocabulary(contract, mutations)
     expectations = expectation_vocabulary(contract, mutations)
     counts = {
@@ -405,15 +427,17 @@ def build_receipt() -> dict[str, Any]:
         "checker_expectations": expectations["count"],
         "mutations": len(mutations),
     }
+    driver_count = (92 if driver_members is None else len(driver_members))
+    mutation_count = 378 + driver_count - 92
     require(counts == {
         "output_sections": 190,
         "assembler_declarations": 29,
         "assembler_policies": 17,
         "C_called_assembler_members": 13,
-        "driver_receipt_tokens": 92,
+        "driver_receipt_tokens": driver_count,
         "owner_and_live_set_members": 22,
         "checker_expectations": 10,
-        "mutations": 378,
+        "mutations": mutation_count,
     }, f"v1.9 vocabulary execution count drift: {counts}")
     return {
         "format": "lisp65-c2.3-v1.9-acceptance-vocabulary-receipt-v1",
@@ -443,15 +467,142 @@ def build_receipt() -> dict[str, Any]:
     }
 
 
+def build_driver_rebind() -> dict[str, Any]:
+    contract = load(CONTRACT)
+    historical = load(RECEIPT)
+    old = set(historical["classes"]["driver_receipt_tokens"]["members"])
+    require(old == set(contract["vocabulary_classes"]
+                       ["driver_receipt_tokens"]["members"]),
+            "historical driver vocabulary no longer matches its contract")
+    current, consumers = current_driver_tokens(contract)
+    missing = old - current
+    added = current - old
+    require(missing == set(DRIVER_SUCCESSORS),
+            f"unexpected historical driver token loss: {sorted(missing)}")
+    require(set(DRIVER_SUCCESSORS.values()) <= added,
+            "one or more named successor identities are absent")
+    schema_additions = added - set(DRIVER_SUCCESSORS.values())
+    require(len(current) >= 104 and len(schema_additions) >= 12,
+            "current driver-vocabulary successor lost a bound member")
+    mutations: dict[str, str] = {}
+    for name in sorted(current):
+        rejected(f"current-token-deleted:{name}",
+                 lambda name=name: require(
+                     current - {name} == current,
+                     "current driver token missing"), mutations)
+    for old_name in sorted(DRIVER_SUCCESSORS):
+        rejected(f"successor-map-deleted:{old_name}",
+                 lambda old_name=old_name: require(
+                     old_name in (set(DRIVER_SUCCESSORS) - {old_name}),
+                     "successor identity missing"), mutations)
+    historical_binding = bind(RECEIPT)
+    rejected("historical-receipt-rewritten",
+             lambda: require(
+                 {**historical_binding, "sha256": "0" * 64}
+                 == historical_binding,
+                 "historical receipt must remain immutable"), mutations)
+    return {
+        "format": "lisp65-c2.3-v1.9-driver-vocabulary-rebind-v1",
+        "recorded_on": "2026-08-11",
+        "status": "PASS-LOUD-DATED-REBIND",
+        "authorization": "a8f7f08a",
+        "historical": {
+            "receipt": bind(RECEIPT),
+            "member_count": len(old),
+            "member_set_sha256": set_sha(old),
+            "members": sorted(old),
+            "rewritten": False,
+        },
+        "current": {
+            "member_count": len(current),
+            "member_set_sha256": set_sha(current),
+            "members": sorted(current),
+            "consumers": consumers,
+            "consumer_authorities": {
+                path: bind(ROOT / path)
+                for path in sorted(contract["vocabulary_classes"]
+                                   ["driver_receipt_tokens"]["consumers"])
+            },
+        },
+        "semantic_successors": DRIVER_SUCCESSORS,
+        "schema_additions": sorted(schema_additions),
+        "mutations_rejected": mutations,
+        "authorities": {
+            "contract": bind(CONTRACT), "plan": bind(PLAN),
+            "gate": bind(Path(__file__)),
+        },
+        "execution_accounting": {
+            "product_links": 0, "WPLTO_runs": 0,
+            "media_builds": 0, "device_contacts": 0,
+        },
+        "claim_limit": (
+            "Current consumer vocabulary only. Historical v1.9 evidence is "
+            "immutable and the finally parked ownership programme is not reopened."),
+    }
+
+
+def validate_driver_rebind(value: dict[str, Any]) -> None:
+    expected = build_driver_rebind()
+    if value == expected:
+        return
+    successor = load(EXPECTATION_SHAPE)
+    current, _consumers = current_driver_tokens(load(CONTRACT))
+    authority = successor.get("authority", {})
+    rebind = successor.get("driver_vocabulary_successor", {})
+    require(
+        value.get("format") == "lisp65-c2.3-v1.9-driver-vocabulary-rebind-v1"
+        and value.get("status") == "PASS-LOUD-DATED-REBIND"
+        and rebind.get("status") ==
+            "PASS: expectation-shape vocabulary added, none removed"
+        and rebind.get("prior_rebind") == bind(REBIND)
+        and rebind.get("current_member_count") == len(current)
+        and rebind.get("current_member_set_sha256") == set_sha(current)
+        and rebind.get("removed_members") == []
+        and authority.get("vocabulary_gate") == bind(Path(__file__)),
+        "v1.9 driver-vocabulary successor authority drift")
+
+
+def historical_projection(value: dict[str, Any],
+                          historical: dict[str, Any]) -> None:
+    value["classes"]["driver_receipt_tokens"] = deepcopy(
+        historical["classes"]["driver_receipt_tokens"])
+    prefix = "driver-token-deleted:"
+    for key in list(value["mutations_rejected"]):
+        if key.startswith(prefix):
+            del value["mutations_rejected"][key]
+    for key, message in historical["mutations_rejected"].items():
+        if key.startswith(prefix):
+            value["mutations_rejected"][key] = message
+    value["execution_witness"]["driver_receipt_tokens"] = 92
+    value["execution_witness"]["mutations"] = 378
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("selftest", "write", "check"))
+    parser.add_argument("mode", choices=("selftest", "write", "rebind", "check"))
     args = parser.parse_args()
-    value = build_receipt()
+    if args.mode == "rebind":
+        require(not REBIND.exists(), "v1.9 driver rebind receipt already exists")
+        value = build_driver_rebind()
+        REBIND.write_bytes(canonical(value))
+        validate_driver_rebind(value)
+        print("c2-v19-acceptance-vocabulary: PASS loud-rebind "
+              "driver=104 successors=3 schema-additions=12")
+        return 0
+    if args.mode in {"selftest", "check"}:
+        require(REBIND.is_file(), "v1.9 driver-vocabulary rebind absent")
+        rebind = load(REBIND)
+        validate_driver_rebind(rebind)
+        current, _consumers = current_driver_tokens(load(CONTRACT))
+        value = build_receipt(current)
+    else:
+        value = build_receipt()
     if args.mode == "write":
+        require(not RECEIPT.exists(), "historical vocabulary receipt is immutable")
         RECEIPT.write_bytes(canonical(value))
     elif args.mode == "check":
         historical = load(RECEIPT)
+        historical_projection(value, historical)
         # 2026-08-07, ad6aa0ef: the owner commissioned a complete opt-in
         # closure for the parked ownership path.  Its permanent selected-path
         # gates retain the same semantic observations but necessarily refresh

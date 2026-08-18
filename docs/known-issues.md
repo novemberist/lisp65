@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.4.0. Sealed
+This is the maintained user-facing issue register for lisp65 1.5.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -54,22 +54,26 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Not delivered in 1.4.0: `defstruct`
+## Active limitation: `defstruct` is positional and visibly slow
 
-`defstruct` is not part of the v1.4.0 user surface. On the optimized v1.4
-carrier, `(require 'defstruct)` returned `t`, then `(defstruct point x y)`
-reached a red fail-closed frame within the 180-second quiet window with no
-external observation. This rules out observation crossing as a sufficient
-explanation for that run, but does not establish an infinite hang or an inner
-failure mechanism. The development library and diagnostics are not shipped.
+v1.5 delivers positional, option-free `defstruct`. A definition publishes a
+constructor, predicate, copier, and three functions per slot, so it is a much
+heavier durable operation than an ordinary `defun`; wait for its result before
+entering another form or opening the Freezer.
 
-## Not delivered in 1.4.0: `trace` and `untrace`
+The historical red-frame mechanism was narrowed to a terminal control-transfer
+corruption but its destroyed immediate return slot prevented naming the exact
+writer. v1.5 arms a redundant terminal-return shadow guard. The release session
+completed `(defstruct point x y)` and `(make-point 3 4)` with all four mismatch
+records empty and no restoration, so the release claims successful guarded
+execution, not that the historical writer was caught or healed.
 
-`trace` and `untrace` are designed but not delivered. The Link-92 core ABI can
-set a symbol's function cell but cannot read its exact previous value, so a
-library wrapper cannot promise correct restoration. Delivery waits for a
-function-cell getter or equivalent journal old-value exposure plus atomic
-wrapper publication and restoration.
+## Retired in 1.5.0: `trace` and `untrace` absent
+
+The Link-92 limitation is closed. v1.5 has a private exact function-cell ABI,
+transactional wrapper publication and exact restoration. The hardware release
+session traced a call, untraced it and invoked the restored original BCODE with
+no trace output.
 
 ## Not delivered in 1.3.0: `gc`, `room` and `error`
 
@@ -125,8 +129,13 @@ These measurements are visible by design but carry no release limit:
 
 - one-argument published call: 0 frames in the fresh v1.2.1 G5 run;
 - GC envelope: 17 frames for one collection and 96 contract block reads;
-- cold boot: a 27.653-second upper bound from BASIC `RUN` to a captured screen
-  during C2-lite stabilization. The prompt may have appeared earlier.
+- v1.5 cold reset to prompt: 36 seconds, compared with 31 seconds for released
+  v1.4.0 on the same device and owner stopwatch. The five-second safety cost is
+  accepted and all three boot phases are visible;
+- v1.5 direct-path list reads/writes, string access and a published call: zero
+  frames inside each timed body in the release session;
+- an ordinary durable REPL form remains approximately 1.2 seconds because it
+  performs publication and rollback work.
 
 The argument and GC values are measurements, not hard release limits. The
 nullary first-call and warm-call ceilings remain the claims below.

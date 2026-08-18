@@ -28,6 +28,7 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+import subprocess
 import sys
 from typing import Any
 
@@ -82,6 +83,7 @@ RECEIPT = ROOT / (
 )
 FORMAT = "lisp65-c2.3-v1.12-link92-r5-d3-trace-host-attribution-v1"
 RECORDED_ON = "2026-08-08"
+HISTORICAL_AUTHORITY = "f426f7c71b5e85bcbec0a181fa3d1e4838e6388f"
 C2D_ENTRY_CAP = 2048
 
 
@@ -96,6 +98,17 @@ def require(value: bool, message: str) -> None:
 
 def sha(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
+
+
+def historical_bind(path: Path) -> dict[str, Any]:
+    """Bind a tracked Link-92 source from the sealed descope authority."""
+    relative = path.resolve().relative_to(ROOT.resolve()).as_posix()
+    result = subprocess.run(
+        ["git", "show", f"{HISTORICAL_AUTHORITY}:{relative}"],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
+    raw = result.stdout
+    return {"path": relative, "bytes": len(raw), "sha256": sha(raw)}
 
 
 def canonical(value: Any) -> bytes:
@@ -657,7 +670,7 @@ def archive_check() -> dict[str, Any]:
             and recorded.get("mutation_count") == len(rejected),
             "archived trace attribution mutation closure drift")
     current_bindings = recorded.get("bindings", {})
-    for key, path in {
+    paths = {
         "trace_source": TRACE_SOURCE,
         "eval_runtime": EVAL_RUNTIME,
         "compiler_source": COMPILER_SOURCE,
@@ -666,8 +679,11 @@ def archive_check() -> dict[str, Any]:
         "vm_source": VM_SOURCE,
         "workbench_profile": PROFILE,
         "observation_policy": POLICY,
-    }.items():
-        require(current_bindings.get(key) == bind(path),
+    }
+    tracked = set(paths) - {"compiler_source"}
+    for key, path in paths.items():
+        expected = historical_bind(path) if key in tracked else bind(path)
+        require(current_bindings.get(key) == expected,
                 f"archived trace attribution source binding drift: {key}")
     return recorded
 

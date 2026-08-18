@@ -9,8 +9,10 @@
 #include "symbol.h"
 #ifdef LISP65_C2_PRODUCT_CUT
 #include "c2_product_runtime.h"
+#include "c2_platform_dma.h"
 #endif
 #include "c2_kernal_layout.h"
+#include "boot_progress.h"
 #ifdef LISP65_DMA_CONTENT_CONVERGENCE
 #include "interrupt.h"
 #include "vm.h"
@@ -247,7 +249,17 @@ static void ext_dma(uint16_t sa,uint8_t sb,uint16_t da,uint8_t db,uint16_t n){
         "sta $d700\n\t"
         ::: "a", "memory");
 }
-#ifdef LISP65_DMA_CONTENT_CONVERGENCE
+#if defined(LISP65_C2_MUTABLE_CPU_READS)
+static void ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
+                                  uint8_t *destination, uint16_t length) {
+    uint32_t physical = (uint32_t)source | ((uint32_t)source_bank << 16);
+    if (!c2_map_cpu_read(physical, destination, length)) {
+        lisp_abort_static(LISP65_ERR_RUNTIME_OVERLAY_TIMEOUT,
+                          "CPU content read failed; reboot");
+        return;
+    }
+}
+#elif defined(LISP65_DMA_CONTENT_CONVERGENCE)
 static void ext_dma_read_or_abort(uint16_t source, uint8_t source_bank,
                                   uint8_t *destination, uint16_t length) {
     if (!vm_code_load_converged(source_bank, source, length, destination)) {
@@ -354,6 +366,11 @@ uint16_t gc_rootsp = 0;
 
 void mem_init(void) {
     uint16_t i;
+#ifdef LISP65_C2_PRODUCT_CUT
+    /* mem_init is boot-overlay code in the C2 product.  This store therefore
+     * dies with the overlay and adds no resident byte or mutable state. */
+    LISP65_BOOT_PROGRESS_HEAP();
+#endif
 #ifdef LISP65_C2_BSS_TRIAGE
     /* The explicitly placed hot heap is deliberately outside ordinary .bss.
      * It therefore does not ride CRT zero_bss and must be initialized before

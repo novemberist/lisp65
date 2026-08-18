@@ -1,0 +1,76 @@
+{
+  "format": "lisp65-c2-f018b-content-safe-read-contract-v1",
+  "accepted_by": "cf26b779",
+  "status": "owner-commissioned-fix-block",
+  "class_rule": "No content-consuming reader may treat F018B submission return as content truth.",
+  "candidate_feature": "LISP65_CODE_WINDOW_CONVERGENCE",
+  "pricing": {
+    "cpu_28bit": {
+      "resident_target_bytes": 0,
+      "verdict": "rejected-for-bank4-bank5-and-attic",
+      "reason": "The bound physical smoke proves flat CPU access only for Bank-0 high RAM; Bank 4 returns 0xff, and the current EXT contract retains DMA as the sole bank-agnostic path. No unproved CPU transport may replace a convicted DMA reader in a release fix."
+    },
+    "verified_convergence": {
+      "mapped_bank2_body_bytes": 874,
+      "resident_facade_bytes": 98,
+      "bank0_state_bytes": 68,
+      "zero_page_bytes": 2,
+      "timeout_frames": 64,
+      "verdict": "selected",
+      "reason": "The implementation and its independent source-derived first-difference oracle already have host equivalence, mutation and ownership contracts; the new core-surface conviction supplies the reopening basis."
+    }
+  },
+  "site_decisions": [
+    {
+      "site": "workbench:ext_dma:$D700:0",
+      "reader_family": "EXT heap, disk scratch and compiler input",
+      "cpu_28bit": "rejected-by-bound-bank4-flat-smoke",
+      "winner": "verified-convergence"
+    },
+    {
+      "site": "workbench:c2_facade_target_c2_dma:$D700:0",
+      "reader_family": "Bank-3/5 VM, C2D and symbol windows",
+      "cpu_28bit": "rejected-by-bound-bank4-bank5-flat-contract",
+      "winner": "verified-convergence"
+    },
+    {
+      "site": "workbench:c2_product_physical_copy:$D705:0",
+      "reader_family": "Attic product and session shelf",
+      "cpu_28bit": "rejected-without-target-attic-cpu-proof",
+      "winner": "verified-convergence"
+    }
+  ],
+  "already_protected": [
+    "workbench:vm_runtime_overlay_exec_family:$D705:0",
+    "workbench:c2k_copy:$D705:0",
+    "ship-stager:disk_record:$D700:0",
+    "ship-stager:disk_record:$D705:0",
+    "ship-stager:disk_record:$D705:1",
+    "ship-stager:main:$D705:0",
+    "ship-stager:r3_chain_begin:$D700:0",
+    "ship-runtime:vm_code_load_converged:$D700:0"
+  ],
+  "mutation_rule": "Each selected reader family must fail the gate when its convergence call is replaced by the naked submit call.",
+  "card": {
+    "count": 1,
+    "first_attempt": {
+      "status": "pre-WPLTO-first-red-no-product-artifact",
+      "cause": "historical-Link-95-profile-consumed-instead-of-current-preflight",
+      "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-link98-f018b-content-safe-card-first-red.json"
+    },
+    "replacement": {
+      "count": 1,
+      "authorized_by": "da816c8b",
+      "profile_authority": "SHA-bound build-local projection of the current candidate preflight",
+      "status": "pre-WPLTO-first-red-public-authority-kind-substituted"
+    },
+    "additional_card": {
+      "count": 1,
+      "authorized_by": "43ad331e",
+      "profile_authority": "public authority identity preserved; candidate projection provenance additive",
+      "precondition": "real fresh_static_plane_bundle consumer green"
+    },
+    "hardware_contacts_before_card": 0,
+    "release": "v1.5.0"
+  }
+}

@@ -844,10 +844,10 @@ c2-v122-g5-freezer-authority-check:
 	python3 tools/host-lisp/c2_v122_g5_freezer_authority_gate.py
 
 workbench-product:
-	@if test -f build/c2.3/v1.4.0-public-selected/candidate-manifest.json; then \
-		python3 tools/host-lisp/c2_v140_public_product.py check; \
+	@if test -f build/c2.3/v1.5.0-public-selected/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_v150_public_product.py check; \
 	else \
-		python3 tools/host-lisp/c2_v140_public_product.py build; \
+		python3 tools/host-lisp/c2_v150_public_product.py build; \
 	fi
 	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
 

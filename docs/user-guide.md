@@ -1,9 +1,9 @@
-# lisp65 1.4.0 User Guide
+# lisp65 1.5.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.4.0` release bundle
+- The extracted `lisp65-1.5.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -21,8 +21,8 @@ python3 verify.py
 ```
 
 Do not use a bundle that fails. The verifier checks every packaged file, all 19
-product artifacts, and the embedded hardware-acceptance evidence without using
-the live repository or network.
+product artifacts, the six optional-library roles, and the embedded
+hardware-acceptance evidence without using the live repository or network.
 
 ## Start from BASIC and perform the one-drive swap
 
@@ -38,7 +38,9 @@ the live repository or network.
    RUN
    ```
 
-5. Wait for staging, the lisp65 banner, and the REPL.
+5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
+   `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL. On the
+   accepted hardware the full reset-to-prompt path took 36 seconds.
 6. Load the workbench composition while `L65SYS` is mounted:
 
    ```lisp
@@ -75,6 +77,11 @@ denial is the applicable protection in this profile.
 (load-lib "demo-lib")             ; load the compiled library
 ```
 
+The REPL accepts several forms on one input line and evaluates them from left
+to right. If a later form has a reader error, earlier forms on that line have
+already run; durable changes made by them are not rolled back. The error
+applies to the remaining input, not to results already printed.
+
 Persistent compilation no longer uses preallocated `fasl*` slots. `compile-string`
 and the editor compiler path save arbitrary library names through the full M65D
 copy-on-write transaction: allocation and verified staging happen first,
@@ -90,10 +97,10 @@ Example:
 (answer)                           ; => 42
 ```
 
-### Optional string and inspection libraries
+### Optional string, inspection, and structure libraries
 
-The two small v1.4 libraries are named for what they provide. Load only the
-one a session needs:
+The v1.5 libraries are named for what they provide. Load only the package a
+session needs:
 
 1. Mount `media/lisp65-library.d81` in drive 8.
 2. If M65D is already active, run `(m65d-remount)` so the session sees the new
@@ -108,15 +115,33 @@ one a session needs:
 
 (require 'inspect)                 ; => t
 (who-calls 'my-function)           ; callers known to the compiled shelf graph
+
+(defun probe (x) (+ x 1))
+(trace probe)                      ; => probe
+(probe 4)                          ; trace records, then => 5
+(untrace probe)                    ; exact original BCODE restored
+
+(require 'defstruct)               ; => t
+(defstruct point x y)              ; durable, visibly longer operation
+(setq p (make-point 3 4))
+(point-y p)                        ; => 4
+(point-set-y p 9)                  ; destructive setter
+(point-with-y p 4)                 ; functional copy
 ```
 
-`who-calls` takes a symbol. The libraries are independent; requiring one does
-not implicitly load the other.
+`who-calls` takes a symbol. `trace` and `untrace` are macros and therefore take
+the unquoted function name shown above. Their wrapper saves and restores the
+exact function-cell value. `defstruct` is positional and option-free; it
+publishes `make-NAME`, `NAME-p`, `copy-NAME`, and reader, destructive setter,
+and functional updater functions for each slot. Its internal `place`
+dependency is loaded automatically.
 
-Function tracing is not delivered in v1.4.0. Its design is parked until the
-core can expose the exact previous function-cell value and publish or restore
-a wrapper atomically. This avoids shipping a tool that cannot reliably undo
-its own mutation.
+The packages remain independent except for that declared dependency;
+requiring one does not load unrelated tools.
+
+Interactive Shift-Space is normalized to ordinary space. This matters for the
+natural Lisp typing sequence `) (`, where Shift may remain held between the two
+parentheses even though the screen displays an ordinary-looking space.
 
 ## Build a standalone disk
 
@@ -311,7 +336,7 @@ without its corresponding test declaration.
 
 ## Fresh sessions and recovery ladder
 
-Save important edits first. The 1.2 escalation ladder is:
+Save important edits first. The escalation ladder is:
 
 1. RUN/STOP aborts the current evaluation and preserves the session.
 2. Restart lisp65 from the product disk for a fresh Workbench session. The

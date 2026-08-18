@@ -1,0 +1,75 @@
+{
+  "format": "lisp65-c2.3-trace-core-abi-link93-device-session-v1",
+  "status": "prepared-not-run",
+  "link_authority": {
+    "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-trace-core-abi-link93-receipt.json",
+    "status": "LINK93-HOST-AND-MEDIA-GREEN; HARDWARE-PENDING"
+  },
+  "identity": {
+    "product_medium": "build/c2.3/trace-core-abi-link93-r6/trace-acceptance-media/shared-system/lisp65-product.d81",
+    "library_medium": "build/c2.3/trace-core-abi-link93-r6/trace-acceptance-media/trace-library/lisp65-library.d81",
+    "library_index": "build/c2.3/trace-core-abi-link93-r6/trace-acceptance-media/trace-library/l65index",
+    "library_source": "build/c2.3/trace-core-abi-link93-r6/trace-acceptance-media/trace-library/inspect.l65s",
+    "cold_reset": true,
+    "boot_quiet_seconds": 45,
+    "banner": "WORKBENCH 1.4.0",
+    "prompt": "lisp65>"
+  },
+  "input": {
+    "owner_physical_keyboard": true,
+    "virtual_transport_forbidden": true,
+    "one_form_per_submission": true
+  },
+  "observation_policy": {
+    "classification": "persistent-by-default",
+    "monitor_during_active_form": false,
+    "screen_polling_during_active_form": false,
+    "first_observation": "single-postcondition-after-quiet-floor",
+    "failure": "stop-row-without-device-improvisation"
+  },
+  "rows": [
+    {
+      "id": "require-inspect",
+      "form": "(require (quote inspect))",
+      "quiet_floor_seconds": 180,
+      "expect": ["t", "lisp65>"]
+    },
+    {
+      "id": "define-probe",
+      "form": "(defun trace-probe (x) (+ x 1))",
+      "quiet_floor_seconds": 180,
+      "expect": ["trace-probe", "lisp65>"]
+    },
+    {
+      "id": "install-trace",
+      "form": "(trace trace-probe)",
+      "quiet_floor_seconds": 180,
+      "expect": ["trace-probe", "lisp65>"]
+    },
+    {
+      "id": "traced-call",
+      "form": "(trace-probe 4)",
+      "quiet_floor_seconds": 30,
+      "expect_ordered": [
+        "(trace-enter trace-probe 4)",
+        "(trace-exit trace-probe 5)",
+        "5",
+        "lisp65>"
+      ]
+    },
+    {
+      "id": "remove-trace",
+      "form": "(untrace trace-probe)",
+      "quiet_floor_seconds": 120,
+      "expect": ["trace-probe", "lisp65>"]
+    },
+    {
+      "id": "restored-call",
+      "form": "(trace-probe 4)",
+      "quiet_floor_seconds": 30,
+      "expect": ["5", "lisp65>"],
+      "forbid": ["trace-enter", "trace-exit"]
+    }
+  ],
+  "claim_limit": "Link-93 exact trace/restoration hardware acceptance only. Green makes trace/untrace eligible for a later release scope; no publication, public-surface, defstruct, parity or Link-91 claim."
+}

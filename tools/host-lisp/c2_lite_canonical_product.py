@@ -31,6 +31,7 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import bytecode_p0_stdlib as BYTECODE  # noqa: E402
 import c2_append_phase_plan_gate as APPEND_PLAN  # noqa: E402
 import c2_badopcode_hold_shelf_gate as HOLD_SHELF  # noqa: E402
+import c2_candidate_capacity_identity as CAPACITY_IDENTITY  # noqa: E402
 import c2_direct_entry_contract as DIRECT_ENTRY  # noqa: E402
 import c2_asm_leaf_abi_gate as ABI  # noqa: E402
 import c2_completion_retry_length_elf_gate as LENGTH  # noqa: E402
@@ -56,6 +57,7 @@ import c2_nested_append_v5_prelink as NESTED_PRELINK  # noqa: E402
 import c2_product_compiler_tier as COMPILER_TIER  # noqa: E402
 import c2_product_hw_presmoke as HW  # noqa: E402
 import c2_product_substitution_link as PRODUCT  # noqa: E402
+import c2_postlink_successor_identity as SUCCESSOR_IDENTITY  # noqa: E402
 import c2_substitution_artifacts as SUBSTITUTION  # noqa: E402
 import c2_link65_single_submit_completion_wplto as LINK_GATE  # noqa: E402
 import c2_link64_nonlto_completion_artifact_replay as REPLAY  # noqa: E402
@@ -704,38 +706,82 @@ def fresh_final_island_validate_identity(
     }
 
 
-def fresh_real_abi_gate(elf: Path) -> dict[str, Any]:
+def classify_rtov_crc_callers(callers: dict[str, Any]) -> dict[str, Any]:
+    """Classify every candidate-ELF CRC caller by the linked ABI rule.
+
+    Caller identities and cardinality are candidate facts.  The stable
+    expectation is instead the ABI shape that every discovered relocation
+    must satisfy.
+    """
+    expected_model = {
+        "pointer_low": "__rc2", "pointer_high": "__rc3",
+        "length_low": "A", "length_high": "X",
+        "edge": "JSR rtov_crc_mem",
+    }
+    rows = callers.get("callers")
+    require(isinstance(rows, list) and rows,
+            "candidate ELF has no classifiable CRC callers")
+    classified: list[dict[str, Any]] = []
+    for row in rows:
+        require(
+            isinstance(row.get("owner"), str) and bool(row["owner"])
+            and isinstance(row.get("owner_section"), str)
+            and row["owner_section"].startswith(".")
+            and isinstance(row.get("call_address"), int)
+            and row.get("model") == expected_model,
+            f"candidate CRC caller violates the linked ABI rule: {row}")
+        classified.append({
+            "owner": row["owner"],
+            "owner_section": row["owner_section"],
+            "call_address": row["call_address"],
+            "classification": "owned-direct-JSR-with-local-pointer-and-length",
+        })
+    require(
+        callers.get("status") == "passed-complete-final-elf-caller-inventory"
+        and callers.get("callsite_count") == len(rows) == len(classified)
+        and callers.get("direct_jsr_count") == len(classified)
+        and callers.get("non_jsr_or_unowned_count") == 0
+        and len({row["call_address"] for row in classified}) == len(classified),
+        "candidate CRC caller classification is incomplete")
+    return {
+        "rule": "owned-direct-JSR-with-local-pointer-and-length",
+        "candidate_derived_callsite_count": len(classified),
+        "all_callers_classified": True,
+        "callers": classified,
+    }
+
+
+def fresh_real_abi_gate(
+        elf: Path, *, report_path: Path | None = None) -> dict[str, Any]:
     """Bind the legacy Link-39 adapter to the complete current ELF surface."""
+    if report_path is None:
+        report_path = elf.parent / "c2-asm-leaf-real-abi-callers.json"
     report = ABI.audit_elf(
         elf,
-        out=REAL_ABI_LINK.OUT / "c2-asm-leaf-real-abi-callers.json",
+        out=report_path,
         require_bank3_chain=True)
     callers = report["rtov_crc_mem_callers"]
     owners: dict[str, int] = {}
     for row in callers["callers"]:
         owners[row["owner"]] = owners.get(row["owner"], 0) + 1
-    expected = {
-        "vm_runtime_overlay_exec_family": 2,
-        "vm_runtime_overlay_catalog_verifier": 1,
-        "vm_runtime_overlay_record_verifier": 1,
-        "c2_append_journal_write_phase": 1,
-        "c2_append_journal_validate_phase": 1,
-        "c2_completion_poll": 1,
-        "vm_resident_island_install": 2,
-    }
+    classification = classify_rtov_crc_callers(callers)
     derived = report["ELF_derived_C_called_inventory"]
     require(
         report["status"] == "passed-all-assembler-leaf-abi-contracts"
-        and derived["status"]
-            == "passed-ELF-derived-C-called-assembler-universe"
+        and derived["status"] == ABI.ELF_DERIVED_C_CALLED_STATUS
         and derived["unclassified_C_called_functions"] == []
-        and callers["callsite_count"] == 9
-        and owners == expected,
-        f"current ELF-derived CRC caller inventory drift: {owners}")
+        and classification["all_callers_classified"] is True
+        and classification["candidate_derived_callsite_count"]
+            == callers["callsite_count"],
+        f"current ELF-derived CRC caller classification drift: {owners}")
     return {
         "status": report["status"],
         "callsite_count": callers["callsite_count"],
         "owners": owners,
+        "caller_classification": classification,
+        "classified_callsite_count":
+            classification["candidate_derived_callsite_count"],
+        "all_callers_classified": classification["all_callers_classified"],
         "product_assembler_callers": 0,
         "ELF_derived_C_called_functions":
             derived["C_called_function_count"],
@@ -758,7 +804,9 @@ _HISTORICAL_WPLTO_QUALIFICATION_MESSAGES = {
 }
 
 
-def fresh_current_product_postlink_gate() -> dict[str, Any]:
+def fresh_current_product_postlink_gate(
+        *, internal_path: Path | None = None,
+        artifact_root: Path | None = None) -> dict[str, Any]:
     """Replace frozen Link-55/56 maps with the live pre-publish closure.
 
     The historical WPLTO stack runs before artifact-side publish-last
@@ -767,35 +815,53 @@ def fresh_current_product_postlink_gate() -> dict[str, Any]:
     fresh Link-50 identity and family manifest; the public clean-build gate
     separately requires the completed nineteen-role set byte-for-byte.
     """
-    internal = load(LINK_GATE.BASE.INTERNAL)
+    if internal_path is None:
+        internal_path = LINK_GATE.BASE.INTERNAL
+    if artifact_root is None:
+        artifact_root = WPLTO
+    internal = load(internal_path)
     replacement = internal["fresh_replacement_gates"]
+    successor_identity = SUCCESSOR_IDENTITY.project(
+        replacement, artifact_root)
+    successor_proofs = successor_identity["proofs"]
+    bank2_identity = successor_proofs[
+        "bank2-target-and-workbench-identity"]
+    roots_fronts_identity = successor_proofs[
+        "roots-fronts-single-slice-entry-identity"]
+    final_island_identity = successor_proofs[
+        "final-island-carrier-identity"]
     walls = replacement["walls"]
     capacity = replacement["capacity"]
     abi = internal["fresh_real_abi_gate"]
     artifacts = {
         "product":
-            WPLTO / "lisp65-c2-substitution-linked.prg",
+            artifact_root / "lisp65-c2-substitution-linked.prg",
         "elf":
-            WPLTO / "lisp65-c2-substitution-linked.prg.elf",
+            artifact_root / "lisp65-c2-substitution-linked.prg.elf",
         "map":
-            WPLTO / "lisp65-c2-substitution-linked.prg.map",
+            artifact_root / "lisp65-c2-substitution-linked.prg.map",
     }
     for role, path in artifacts.items():
         require(
             path.is_file()
             and bind(path) == internal["product_identity"][role],
             f"current WPLTO identity drift: {role}")
-    session_path = WPLTO / "runtime-overlays-session-final.bin"
-    region1_path = WPLTO / "runtime-overlays-session-final-region1.bin"
+    session_path = artifact_root / "runtime-overlays-session-final.bin"
+    region1_path = artifact_root / "runtime-overlays-session-final-region1.bin"
     session_manifest = load(
-        WPLTO / "runtime-overlays-session-final.json")
+        artifact_root / "runtime-overlays-session-final.json")
     runtime_family = replacement["runtime_family"][
         "successor_bank3_pack"]["session"]
+    storage = session_manifest["storage"]
     overflow = session_manifest["overflow_storage"]
     session_binding = bind(session_path)
-    service_enabled = PRODUCT.INTERN_SESSION_SERVICE
-    expected_records = 52 if service_enabled else 51
-    expected_session_bytes = int(session_manifest["storage"]["size"])
+    expected_records = int(session_manifest["catalog"]["slice_count"])
+    expected_session_bytes = int(storage["size"])
+    session_capacity = int(storage["limit"]) - int(storage["address"])
+    overflow_capacity = int(overflow["limit"]) - int(overflow["address"])
+    service_name = capacity["contract_projection"]["session_service_name"]
+    expected_service_records = sum(
+        row["name"] == service_name for row in session_manifest["slices"])
     require(
         internal["status"]
             in {
@@ -804,37 +870,43 @@ def fresh_current_product_postlink_gate() -> dict[str, Any]:
             }
         and all(session_binding[key] == runtime_family[key]
                 for key in ("path", "bytes", "sha256"))
-        and expected_session_bytes <= 65536
-        and (service_enabled or expected_session_bytes == 64926)
-        and session_manifest["storage"]["sha256"] == sha(session_path)
-        and overflow["used"] == 1956
-        and overflow["capacity"] == 2032
+        and expected_records == len(session_manifest["slices"])
+        and expected_session_bytes <= session_capacity
+        and storage["sha256"] == sha(session_path)
+        and overflow["used"] == region1_path.stat().st_size
+        and overflow["capacity"] == overflow_capacity
+        and overflow["used"] <= overflow_capacity
         and overflow["sha256"] == sha(region1_path)
         and replacement["status"] == "passed"
-        and capacity["status"]
-            == "passed-current-v4-two-region-session-aggregate"
+        and capacity["status"] == "passed"
+        and capacity["identity_status"]
+            == "passed-current-contract-derived-capacity"
         and capacity["session_catalog_records"] == expected_records
-        and capacity["session_service_records"]
-            == (1 if service_enabled else 0)
+        and capacity["session_service_records"] == expected_service_records == 1
         and capacity["session_family_bytes"] == expected_session_bytes
         and capacity["session_family_headroom_bytes"]
-            == 65536 - expected_session_bytes
+            == session_capacity - expected_session_bytes
+        and capacity["session_overflow_bytes"] == overflow["used"]
+        and capacity["session_overflow_headroom_bytes"]
+            == overflow_capacity - overflow["used"]
         and walls["bank0_text_headroom_bytes"] >= 32
         and walls["ordinary_bank0_bss_headroom_bytes"] >= 0
         and walls["fixed_hot_block_headroom_bytes"] >= 0
         and walls["resident_island_headroom_bytes"] >= 0
         and walls["e000_headroom_bytes"] >= 54
-        and replacement["bank2_workbench_scratch_negative"]
-            ["workbench_scratch_passing_records"] == 0
-        and replacement["roots_fronts_one_slice_two_entry"]["status"]
-            == "passed-one-slice-two-entry-current-v4-product"
-        and replacement["final_island_single_runtime_identity"]
-            ["status"]
+        and successor_identity["status"]
+            == "passed-three-current-successor-identities"
+        and bank2_identity["status"]
+            == "passed-current-bank2-records-and-workbench-negative"
+        and bank2_identity["workbench_scratch_passing_records"] == 0
+        and roots_fronts_identity["status"]
+            == "passed-current-one-slice-multiple-entry-identity"
+        and final_island_identity["status"]
             == "passed-final-record-equals-final-island-single-truth"
-        and replacement["final_island_single_runtime_identity"]
-            ["mutation_cases"] == 11
+        and final_island_identity["mutation_cases"] == 11
         and abi["status"] == "passed-all-assembler-leaf-abi-contracts"
-        and abi["callsite_count"] == 9
+        and abi["all_callers_classified"] is True
+        and abi["classified_callsite_count"] == abi["callsite_count"]
         and abi["unclassified_C_called_functions"] == [],
         "current sealed postlink closure is not fully green")
     return {
@@ -843,8 +915,13 @@ def fresh_current_product_postlink_gate() -> dict[str, Any]:
             _HISTORICAL_WPLTO_QUALIFICATION_MESSAGES),
         "walls": walls,
         "capacity": capacity,
+        "current_successor_identity": successor_identity,
         "assembler_leaf_ABI": {
             "callsite_count": abi["callsite_count"],
+            "classified_callsite_count": abi["classified_callsite_count"],
+            "all_callers_classified": abi["all_callers_classified"],
+            "classification_rule":
+                abi["caller_classification"]["rule"],
             "unclassified_C_called_functions":
                 abi["unclassified_C_called_functions"],
         },
@@ -931,98 +1008,8 @@ def fresh_link50_authority() -> dict[str, Any]:
 
 def fresh_session_capacity_gate(
         shape: dict[str, Any], elf: Path) -> dict[str, Any]:
-    """Qualify the current v4/two-region Session geometry.
-
-    The inherited consolidation gate encodes the pre-v4 48-record layout.
-    Current source adds three independently addressable rollback wipes in
-    Region 1.  A configured Session service may append exactly one bounded
-    Region-0 record.  Validate that complete configured inventory and its
-    exact packed result instead of replaying a historical record-count
-    assertion.
-    """
-    gate = LINK50.BASE.CONS
-    truth = gate.ElfTruth.read(
-        elf, llvm_readobj=PRODUCT.TOOLCHAIN / "llvm-readobj")
-    manifest = load(elf.parent / "runtime-overlays-session-final.json")
-    rows = manifest["slices"]
-    sections = [row["section"] for row in rows]
-    region1_rows = [row for row in rows if row["region_id"] == 1]
-    region0_sizes = [
-        truth.section(row["section"]).bytes
-        for row in rows if row["region_id"] == 0]
-    modeled = gate.FINAL.BASE_LINK.DIET.packed_bytes(region0_sizes)
-    session = shape["successor_bank3_pack"]["session"]
-    fused = truth.section(".lisp65_rt_c2append_publish_clear")
-    retired = {name: name in truth.sections_by_name for name in (
-        ".lisp65_rt_c2append_journal_clear",
-        ".lisp65_rt_c2append_publish_exports",
-    )}
-    append_rows = [
-        row for row in rows if row["name"].startswith("c2-append-")]
-    rollback = [
-        row["name"] for row in append_rows
-        if row["name"].startswith("c2-append-rollback-")]
-    service_enabled = PRODUCT.INTERN_SESSION_SERVICE
-    expected_records = 52 if service_enabled else 51
-    service_rows = [
-        row for row in rows if row["name"] == "intern-session-service"]
-    service_bytes = (
-        truth.section(".lisp65_rt_intern_service").bytes
-        if service_enabled else 0)
-    require(
-        len(rows) == expected_records
-        and len(set(sections)) == expected_records
-        and [(row["id"], row["name"]) for row in region1_rows] == [
-            (42, "c2-append-rollback-wipe-plane"),
-            (43, "c2-append-rollback-wipe-chip"),
-            (44, "c2-append-rollback-wipe-attic"),
-        ]
-        and len(append_rows) == 24
-        and [(row["id"], row["name"]) for row in rows[47:51]] == [
-            (47, "error-text-renderer"),
-            (48, "first-class-buffer-read"),
-            (49, "first-class-buffer-write"),
-            (50, "first-class-buffer-alloc"),
-        ]
-        and (
-            len(service_rows) == 1
-            and service_rows[0]["id"] == 51
-            and service_rows[0]["section"] == ".lisp65_rt_intern_service"
-            and service_rows[0]["region_id"] == 0
-            and service_rows[0]["roles"] == ["runtime", "reusable"]
-            and 0 < service_bytes <= 512
-            if service_enabled else not service_rows)
-        and rollback == [
-            "c2-append-rollback-unpublish",
-            "c2-append-rollback-wipe-plane",
-            "c2-append-rollback-wipe-chip",
-            "c2-append-rollback-wipe-attic",
-            "c2-append-rollback-finalize",
-        ]
-        and modeled == session["bytes"] == manifest["storage"]["size"]
-        and modeled <= 65536
-        and session["headroom_bytes"] == 65536 - modeled
-        and (service_enabled or modeled == 64926)
-        and manifest["overflow_storage"]["used"] == 1956
-        and manifest["overflow_storage"]["capacity"] == 2032
-        and 0 < fused.bytes <= 1792
-        and not any(retired.values()),
-        "current v4/two-region Session aggregate/profile gate red")
-    return {
-        "status": "passed-current-v4-two-region-session-aggregate",
-        "slice_cap_bytes": 1792,
-        "pack_quantum_bytes": 256,
-        "publish_clear_bytes": fused.bytes,
-        "publish_clear_headroom_bytes": 1792 - fused.bytes,
-        "retired_sections_present": retired,
-        "session_catalog_records": len(rows),
-        "session_service_records": len(service_rows),
-        "session_service_bytes": service_bytes,
-        "append_records": len(append_rows),
-        "session_family_bytes": modeled,
-        "session_family_headroom_bytes": 65536 - modeled,
-        "region1_rollback_sequence": rollback,
-    }
+    """Delegate current capacity to the candidate-world identity gate."""
+    return CAPACITY_IDENTITY.capacity_gate(shape, elf)
 
 
 def fresh_generated_direct_entry_gate() -> dict[str, Any]:

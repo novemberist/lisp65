@@ -110,7 +110,7 @@
 
 ; ---- Literal -> node (FIX 1, NIL 2, T 3, SYMBOL 4; -1 emits 0xFFFF = no name) ----
 (defun %fasl-litnode (fs lit mainchars)
-  (cond ((if (%lcc-consp lit) (eq (car lit) '%lcc-helper) nil)
+  (cond ((if (consp lit) (eq (car lit) '%lcc-helper) nil)
          (%fasl-node fs 4 0 (%fasl-straddn fs (%fasl-hname mainchars (car (cdr lit))))))
         ((numberp lit) (%fasl-node fs 1 lit -1))
         ((eq lit nil)  (%fasl-node fs 2 0 -1))
@@ -146,14 +146,14 @@
              (%fasl-form2 fs (cdr objs) mainchars (+ j 1) mflags))
       (%fasl-obj fs (car objs) mainchars mainchars mflags)))
 (defun %fasl-form (fs form)
-  (cond ((if (%lcc-consp form) (eq (car form) 'defun) nil)
-         (%fasl-form2 fs (lcc-compile-obj form)
+  (cond ((if (consp form) (eq (car form) 'defun) nil)
+         (%fasl-form2 fs (%c1-compile 0 form nil)
                       (string->list (symbol-name (car (cdr form)))) 0 0))
         ; defmacro (FASL v2 through Codex's macro flag): compile the expander
         ; as a lambda; main entry with flags=1 makes the loader register
         ; T_MACRO(BCODE).
-        ((if (%lcc-consp form) (eq (car form) 'defmacro) nil)
-         (%fasl-form2 fs (lcc-compile-obj (cons 'lambda (cdr (cdr form))))
+        ((if (consp form) (eq (car form) 'defmacro) nil)
+         (%fasl-form2 fs (%c1-compile 0 (cons 'lambda (cdr (cdr form))) nil)
                       (string->list (symbol-name (car (cdr form)))) 0 1))
         (t (%fasl-error-not-a-defun))))
 (defun %fasl-forms (fs forms)

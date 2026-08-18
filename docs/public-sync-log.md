@@ -4,6 +4,29 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.5.0 — prepared 2026-08-18
+
+- Added visible boot and `require` progress, with a clean handoff to the
+  `WORKBENCH 1.5.0` banner and prompt.
+- Added immediate non-persistent REPL evaluation while retaining the durable
+  publication ceremony for definitions and other persistent forms.
+- Delivered reversible `trace`/`untrace` with exact BCODE restoration and the
+  positional, option-free `defstruct` package with its declared `place`
+  dependency.
+- Normalized interactive Shift-Space to ordinary space, so the natural Lisp
+  typing sequence `) (` cannot inject an invisible PETSCII `$A0` token.
+- Replaced content-consuming mutable DMA reads with the hardware-proved MAP
+  CPU transport and retained delivery-bound verification for immutable boot
+  spans.
+- Added release-terminal performance and user-name-headroom contracts. The
+  accepted device retained 34 symbol slots and 545 name bytes over the 32/384
+  minimum, and booted in 36 seconds versus 31 seconds for v1.4.0.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-#2 publication
+authorization.
+
 ## v1.4.0 — prepared 2026-08-08
 
 - Promoted the locality-optimized compiler carrier with zero resident growth;

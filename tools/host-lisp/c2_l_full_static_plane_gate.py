@@ -117,7 +117,8 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
     )
     ide_rows = [
         row for row in substitution["manifests"]
-        if row["path"] == ide_file["path"]
+        if row["bytes"] == ide_file["bytes"]
+        and row["sha256"] == ide_file["sha256"]
     ]
     require(
         substitution["product_build_id_hex"] ==

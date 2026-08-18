@@ -5,7 +5,7 @@
 
 	.globl c2_facade_runtime_overlay_exec
 c2_facade_runtime_overlay_exec:
-	jmp vm_runtime_overlay_exec
+	jmp c2_map_cpu_selector
 
 	; Link-33 BSS-triage contract extension.  The owned window may reach the
 	; fixed Island handle normalizer only through this fifteenth public vector.

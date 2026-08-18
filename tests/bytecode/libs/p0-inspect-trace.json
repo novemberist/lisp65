@@ -1,0 +1,55 @@
+{
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "inspect-trace-next",
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
+  "d81_name": "INSPECT",
+  "provides": ["inspect"],
+  "requires": ["core"],
+  "resident_suite": "p0-stdlib-ship-input-wait-base.json",
+  "description": "Host-only next-release inspect candidate with exact restorable tracing over the private core ABI.",
+  "sources": [
+    "lib/comfort-who-calls-generated.lisp",
+    "lib/inspect-trace.lisp"
+  ],
+  "functions": [
+    "%comfort-callers-index",
+    "who-calls",
+    "%function-cell",
+    "%inspect-trace-remove",
+    "%inspect-trace-binding",
+    "%inspect-trace-original",
+    "%inspect-trace-prepare",
+    "%inspect-trace-finish",
+    "%inspect-trace-call",
+    "%inspect-untrace",
+    "%inspect-trace-form",
+    "trace",
+    "untrace"
+  ],
+  "require_all_defuns": true,
+  "require_all_defmacros": true,
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "who-calls-known",
+      "expr": "(who-calls '%ide-region-parts-tail)",
+      "expect": "(%ide-region-parts %ide-region-parts-tail)"
+    },
+    {
+      "name": "trace-remove-head",
+      "expr": "(%inspect-trace-remove 'a '((a one nil) (b two nil)))",
+      "expect": "((b two nil))"
+    },
+    {
+      "name": "trace-remove-tail",
+      "expr": "(%inspect-trace-remove 'b '((a one nil) (b two nil)))",
+      "expect": "((a one nil))"
+    },
+    {
+      "name": "trace-form-shape",
+      "expr": "(%inspect-trace-form 'sample)",
+      "expect": "(progn (defun sample (&rest %inspect-trace-arguments) (%inspect-trace-call (quote sample) %inspect-trace-arguments)) (%inspect-trace-finish (quote sample)))"
+    }
+  ]
+}

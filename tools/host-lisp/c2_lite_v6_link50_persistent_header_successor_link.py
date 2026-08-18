@@ -81,26 +81,32 @@ def validate_authority() -> dict[str, Any]:
 def corrected_replacement(product: Path, elf: Path,
                           host: dict[str, Any]) -> dict[str, Any]:
     """Current co-resident replacement model, not the retired section view."""
+    artifact_root = elf.parent
     walls, family = BASE_LINK.walls_and_family(elf)
     shape = {"walls": walls, "runtime_slices": family["runtime_slices"],
              "successor_bank3_pack": family["successor_bank3_pack"]}
     capacity = BASE.CONS.capacity_gate(shape, elf)
     semantics = BASE_LINK.DIET.semantic_product_gate(shape, product, elf)
     no_attic = BASE_LINK.LINK.no_runtime_attic_gate(
-        elf, OUT / "generated-product-sources")
-    stage = BASE.ART.stage_product_gate(elf)
-    overlay = BASE_LINK.LINK.BASE.LINK33_BASE.final_overlay_closure(elf)
+        elf, artifact_root / "generated-product-sources")
+    verifier = ElfTruth.read(
+        elf, llvm_readobj=P.TOOLCHAIN / "llvm-readobj").section(
+            P.VERIFIER_BINDING_SECTION)
+    stage = BASE.ART.stage_product_gate(
+        elf, verifier_base=verifier.address)
+    overlay = BASE_LINK.LINK.BASE.LINK33_BASE.final_overlay_closure(
+        elf, expected_sections=set(family["overlay_sections"]))
     preinstall = BASE_LINK.LINK.BASE.ISLAND.static_elf_gate(elf)
     root = BASE_LINK.ROOT_GATE.collect()
     old_direct_out = BASE_LINK.DIRECT.OUT
     try:
-        BASE_LINK.DIRECT.OUT = OUT
+        BASE_LINK.DIRECT.OUT = artifact_root
         direct = BASE_LINK.DIRECT.generated_direct_entry_gate()
     finally:
         BASE_LINK.DIRECT.OUT = old_direct_out
     old_link_out = BASE_LINK.OUT
     try:
-        BASE_LINK.OUT = OUT
+        BASE_LINK.OUT = artifact_root
         crc = BASE_LINK.workbench_crc_gate(product, elf)
     finally:
         BASE_LINK.OUT = old_link_out
@@ -123,6 +129,9 @@ def corrected_replacement(product: Path, elf: Path,
         "product_semantics": semantics,
         "no_runtime_attic": no_attic,
         "bank3_stage_before_publish": stage,
+        "candidate_verifier_binding": {
+            "address": verifier.address, "bytes": verifier.bytes,
+            "derivation": "passed candidate ELF section table"},
         "overlay_closure": overlay,
         "preinstallation_island": preinstall,
         "root_surrogate": root,
@@ -257,7 +266,8 @@ def main() -> int:
             and append["plan_data"]
                 ["lisp65_c2_append_persistent_publish_plan"]["bytes"] ==
                 expected_plan
-            and verifier.address == VERIFIER_BASE and verifier.bytes == 40,
+            and verifier.address == VERIFIER_BASE
+            and verifier.bytes == P.runtime_binding_bytes(),
             "Link-50 final product qualification red")
     os.chmod(RECEIPT, 0o644)
     receipt["format"] = "lisp65-c2-lite-v6-link50-persistent-header-v1"

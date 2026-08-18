@@ -1,0 +1,50 @@
+{
+  "accepted_by": "fbd1983ebeb98ca2dd3e3c5f1a0d1c94c1c2a35c",
+  "correction": {
+    "date": "2026-08-13",
+    "predecessor_contract": {
+      "path": "config/c2-stack-overlay-ownership-contract.json",
+      "sha256": "ba116cb204c7ce963f89d07d181791109a017f4d186cc00f371920fb02664d3e"
+    },
+    "predecessor_tuple": {
+      "maplo_a": "0x80",
+      "maplo_x": "0x24"
+    },
+    "reason": "The inherited tuple transposed MAP offset and block-mask responsibilities; it decodes to +0x48000 on CPU block 1 rather than +0x24000 on CPU block 3.",
+    "supersedes": "mapped_far_service.map_tuple.maplo_a/maplo_x and map_semantics_authority.low_half_formula only"
+  },
+  "format": "lisp65-c2-mapped-far-map-contract-v2",
+  "implementation_source": "src/optional/c2_mapped_far_service_v2.s",
+  "map_semantics": {
+    "block_bytes": 8192,
+    "cpu_block": 3,
+    "cpu_window_end_exclusive": "0x8000",
+    "cpu_window_start": "0x6000",
+    "formula": "offset20 = (X[3:0] << 16) | (A << 8); mapped low-half blocks are selected by X[7:4], with X bit (4 + block) selecting CPU block 0..3; physical = cpu + offset20 for selected blocks",
+    "intended_offset": "0x24000",
+    "mapped_physical_slab_end_exclusive": "0x0002c000",
+    "mapped_physical_slab_start": "0x0002a000"
+  },
+  "primary_sources": {
+    "core": {
+      "commit": "a9158930665763c592d004c895d52eff4a9eefc3",
+      "path": "build/upstream-verification/mega65-core/src/vhdl/gs4510.vhdl",
+      "sha256": "ce8c7f120aac11e142add5e08e9a83dc9450b813b211bf310cb95553b4eae957"
+    },
+    "user_guide": {
+      "commit": "2d0c444a7f086fcc6c4aed9bbaf5ccc17a19ef60",
+      "path": "build/upstream-verification/mega65-user-guide/appendix-45gs02-registers.tex",
+      "sha256": "fbf997ec136de3b8d2cecb0f2f19497f2b8a26da24c68e64dd5576cf887ec121"
+    }
+  },
+  "tuple": {
+    "maphi_y": "0x00",
+    "maphi_z": "0x80",
+    "maplo_a": "0x40",
+    "maplo_x": "0x82",
+    "restore_a": "0x00",
+    "restore_x": "0x00",
+    "restore_y": "0x00",
+    "restore_z": "0x80"
+  }
+}

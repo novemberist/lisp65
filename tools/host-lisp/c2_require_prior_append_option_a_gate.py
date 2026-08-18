@@ -181,13 +181,13 @@ def current_geometry() -> dict[str, int]:
         geometry == {
             "generation": 1,
             "images": 6,
-            "entries": 748,
-            "resolutions": 2913,
+            "entries": 753,
+            "resolutions": 2920,
             "roots": 350,
-            "code_bytes": 45794,
+            "code_bytes": 45939,
             "immutable_images": 6,
             "catalog_crc32": 0,
-            "build_id": 0x3B48650D,
+            "build_id": 0x14D980C3,
         },
         "current profile geometry drift",
     )

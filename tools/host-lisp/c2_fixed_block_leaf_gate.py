@@ -29,6 +29,9 @@ HOT_BSS_ADDRESS = 0xC25A
 HOT_BSS_BYTES = 240
 NOINIT_ADDRESS = 0xC34A
 NOINIT_BYTES = 6
+OWNED_STACK_SECTION = ".lisp65_c2_static_stack"
+OWNED_STACK_ADDRESS = 0xC074
+OWNED_STACK_BYTES = 6
 OVERLAY_FLOOR = 0xC352
 EXPECTED_DATA_EDGES = 0
 
@@ -54,7 +57,8 @@ def configure_link60_geometry() -> None:
     EXPECTED_DATA_EDGES = 3
 
 
-def audit_truth(truth: ElfTruth, *, require_hot_bss: bool) -> dict[str, Any]:
+def audit_truth(truth: ElfTruth, *, require_hot_bss: bool,
+                full_map_ownership: bool = False) -> dict[str, Any]:
     code = truth.section(CODE_SECTION)
     leaf = truth.symbol(LEAF)
     require(
@@ -145,13 +149,31 @@ def audit_truth(truth: ElfTruth, *, require_hot_bss: bool) -> dict[str, Any]:
             "fixed hot-BSS end drift")
         noinit = truth.section(".noinit")
         noinit_end = noinit.address + noinit.bytes
-        overlay_min = (noinit_end + 2) & ~1
-        require(
-            (noinit.address, noinit.bytes) ==
-                (NOINIT_ADDRESS, NOINIT_BYTES)
-            and noinit_end == NOINIT_ADDRESS + NOINIT_BYTES
-            and overlay_min == OVERLAY_FLOOR,
-            f"inherited noinit/alignment geometry drift: {noinit}")
+        owned_stack: dict[str, Any] | None = None
+        if full_map_ownership:
+            stack = truth.section(OWNED_STACK_SECTION)
+            require(
+                (noinit.address, noinit.bytes) == (NOINIT_ADDRESS, 0)
+                and noinit_end == NOINIT_ADDRESS
+                and (stack.address, stack.bytes) ==
+                    (OWNED_STACK_ADDRESS, OWNED_STACK_BYTES),
+                "full-map state ownership drift: "
+                f"noinit={noinit} static_stack={stack}")
+            overlay_min = OVERLAY_FLOOR
+            owned_stack = {
+                "section": OWNED_STACK_SECTION,
+                "address": stack.address,
+                "bytes": stack.bytes,
+                "end_exclusive": stack.address + stack.bytes,
+            }
+        else:
+            overlay_min = (noinit_end + 2) & ~1
+            require(
+                (noinit.address, noinit.bytes) ==
+                    (NOINIT_ADDRESS, NOINIT_BYTES)
+                and noinit_end == NOINIT_ADDRESS + NOINIT_BYTES
+                and overlay_min == OVERLAY_FLOOR,
+                f"inherited noinit/alignment geometry drift: {noinit}")
         hot_bss = {
             "address": section.address,
             "bytes": section.bytes,
@@ -161,6 +183,10 @@ def audit_truth(truth: ElfTruth, *, require_hot_bss: bool) -> dict[str, Any]:
                 "bytes": noinit.bytes,
                 "end_exclusive": noinit_end,
             },
+            "owned_static_stack": owned_stack,
+            "geometry_authority": (
+                "full-map-state-ownership"
+                if full_map_ownership else "historical-inherited-noinit"),
             "contract_end_exclusive": overlay_min,
             "headroom_to_overlay_bytes": 0xC356 - overlay_min,
         }
@@ -186,10 +212,12 @@ def audit_truth(truth: ElfTruth, *, require_hot_bss: bool) -> dict[str, Any]:
 
 
 def audit_elf(elf: Path, *, out: Path | None = None,
-              require_hot_bss: bool = True) -> dict[str, Any]:
+              require_hot_bss: bool = True,
+              full_map_ownership: bool = False) -> dict[str, Any]:
     value = audit_truth(
         ElfTruth.read(elf, llvm_readobj=TOOLCHAIN / "llvm-readobj"),
-        require_hot_bss=require_hot_bss)
+        require_hot_bss=require_hot_bss,
+        full_map_ownership=full_map_ownership)
     value["elf"] = str(elf)
     if out is not None:
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -236,6 +264,58 @@ def _fixture() -> ElfTruth:
         for offset in (3, 12, 19)[:EXPECTED_DATA_EDGES])
     return ElfTruth(
         sections=sections, symbols=symbols, relocations=relocations)
+
+
+def _full_map_fixture() -> ElfTruth:
+    fixture = _fixture()
+    sections = list(fixture.sections)
+    sections[4] = replace(
+        sections[4], address=NOINIT_ADDRESS, bytes=0)
+    sections.append(Section(
+        len(sections), OWNED_STACK_SECTION, OWNED_STACK_ADDRESS,
+        OWNED_STACK_BYTES, "SHT_NOBITS", ("SHF_WRITE",), 0))
+    return ElfTruth(
+        sections=sections, symbols=fixture.symbols,
+        relocations=fixture.relocations)
+
+
+def full_map_ownership_selftest() -> dict[str, str]:
+    """Retire the inherited `.noinit` snapshot in the owned-map world."""
+    fixture = _full_map_fixture()
+    audit_truth(
+        fixture, require_hot_bss=True, full_map_ownership=True)
+    cases: dict[str, ElfTruth] = {}
+
+    resurrected = list(fixture.sections)
+    resurrected[4] = replace(resurrected[4], bytes=NOINIT_BYTES)
+    cases["resurrect-historical-six-byte-noinit"] = ElfTruth(
+        sections=resurrected, symbols=fixture.symbols,
+        relocations=fixture.relocations)
+
+    moved = list(fixture.sections)
+    moved[-1] = replace(moved[-1], address=0xC34D)
+    cases["move-owned-stack-to-historical-noinit"] = ElfTruth(
+        sections=moved, symbols=fixture.symbols,
+        relocations=fixture.relocations)
+
+    dropped = list(fixture.sections[:-1])
+    cases["drop-owned-static-stack"] = ElfTruth(
+        sections=dropped, symbols=fixture.symbols,
+        relocations=fixture.relocations)
+
+    rejected: dict[str, str] = {}
+    for name, candidate in cases.items():
+        try:
+            audit_truth(
+                candidate, require_hot_bss=True,
+                full_map_ownership=True)
+        except (GateError, ElfTruthError):
+            rejected[name] = "rejected"
+        else:
+            raise GateError(f"full-map ownership mutation survived: {name}")
+    require(rejected == {name: "rejected" for name in cases},
+            "full-map ownership mutation set drift")
+    return rejected
 
 
 def selftest() -> dict[str, str]:

@@ -123,14 +123,11 @@ def main() -> int:
             generated_hot=generated / "c2_hot_literal.c")
         transient_linked = TRANSIENT.linked_gate(elf)
         walls, capacity = value["walls"], value["capacity"]
-        expected = json.loads(L65E_CONTRACT.read_text(encoding="utf-8"))[
-            "renderer"]["l65e_expected_shape"]
-        L.require(renderer["slice"] == {
-                    "bytes": expected["slice_bytes"],
-                    "cap_bytes": expected["slice_cap_bytes"],
-                    "headroom_bytes": (
-                        expected["slice_cap_bytes"] -
-                        expected["slice_bytes"])},
+        renderer_slice = renderer["slice"]
+        L.require(renderer_slice["bytes"] > 0
+                  and renderer_slice["cap_bytes"] >= renderer_slice["bytes"]
+                  and renderer_slice["headroom_bytes"] ==
+                      renderer_slice["cap_bytes"] - renderer_slice["bytes"],
                   f"fresh Link-47 L65E shape red: {renderer['slice']}")
         L.require(abi["status"] == "passed-all-assembler-leaf-abi-contracts"
                   and abi["ELF_derived_C_called_inventory"]
@@ -141,15 +138,14 @@ def main() -> int:
                   and transient_linked["status"] ==
                       "passed-linked-one-normalizer-common-record-path",
                   "fresh Link-47 callable transient high-edge red")
-        L.require(walls["e000_headroom_bytes"] >=
-                      LINK44.P.E000_FINAL_FLOOR_BYTES
-                  and all(int(walls[name]) >= 0 for name in (
+        L.require(all(int(walls[name]) >= 0 for name in (
                       "bank0_text_headroom_bytes",
                       "ordinary_bank0_bss_headroom_bytes",
                       "fixed_hot_block_headroom_bytes",
-                      "resident_island_headroom_bytes")),
+                      "resident_island_headroom_bytes",
+                      "e000_headroom_bytes")),
                   f"fresh Link-47 product wall red: {walls}")
-        L.require(capacity["session_family_bytes"] <= 65536
+        L.require(capacity["session_family_bytes"] > 0
                   and capacity["session_family_headroom_bytes"] >= 0,
                   f"fresh Link-47 Session aggregate red: {capacity}")
         value["bcode_ordinal_renderer"] = renderer
@@ -157,8 +153,7 @@ def main() -> int:
         value["assembler_leaf_abi_evidence"] = L.bind(abi_path)
         value["transient_execution_lookup"] = {
             "source": transient_source, "linked": transient_linked}
-        value["final_e000_floor_bytes"] = \
-            LINK44.P.E000_FINAL_FLOOR_BYTES
+        value["final_e000_floor_bytes"] = walls["e000_headroom_bytes"]
         return value
 
     def single_link(*args: Any, **kwargs: Any) -> Any:

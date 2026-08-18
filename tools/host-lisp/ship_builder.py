@@ -412,10 +412,9 @@ def closure_for(
         "max_code_object_bytes": 255,
         "max_call_args": 12,
         "private_inline_functions": private_inline,
-        # The timing contract deliberately enters the ordinary undefined-
-        # function error boundary on duration overflow.  It is not a dynamic
-        # target and remains absent from successful Runtime executions.
-        "allowed_external_calls": ["%time-error-duration-overflow"],
+        # Every symbolic callee in shipped code is supplied by the computed
+        # project/library closure; no unresolved error edge is admissible.
+        "allowed_external_calls": [],
         # The canonical emitter requires an executable oracle case even when
         # cases are excluded from the emitted artifact.  Entry execution is
         # proved separately by ship-runtime-host-main.c below.

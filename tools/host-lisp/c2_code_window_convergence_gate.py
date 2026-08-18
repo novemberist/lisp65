@@ -198,8 +198,12 @@ def validate(contract: dict[str, Any], vm: str, vm_h: str, embed: str,
             and mem.count("vm_code_load_converged(") == 1,
             "consumers did not route through the compact owned primitives")
     require('def ownership_scope_selected(' in c2_link
-            and 'if ownership_scope_selected(extra_definitions):' in c2_link
-            and 'if ownership_scope_selected(probe_definitions):' not in c2_link
+            and ('ownership_opt_in=ownership_scope_selected('
+                 'probe_definitions)') in c2_link
+            and 'if not ownership_scope_selected(extra_definitions):'
+                in c2_link
+            and 'return FULL_MAP_OWNERSHIP or CONVERGENCE_FEATURE in '
+                'extra_definitions' in c2_link
             and 'CONVERGENCE_FEATURE = "LISP65_CODE_WINDOW_CONVERGENCE"'
                 in c2_link
             and 'src/c2_mapped_far_service.s' in c2_link

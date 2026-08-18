@@ -99,15 +99,17 @@ def configure_product_abi() -> None:
             "Link-33 append ABI configuration drift")
 
 
-def final_overlay_closure(elf: Path) -> dict[str, Any]:
+def final_overlay_closure(
+        elf: Path, *, expected_sections: set[str] | frozenset[str] | None = None
+        ) -> dict[str, Any]:
     graph = PRE.relocations(elf)
     overlay = {
         section: targets for section, targets in graph.items()
         if section.startswith(".lisp65_rt_c2append_")
     }
-    expected = {
+    expected = (set(expected_sections) if expected_sections is not None else {
         f".lisp65_rt_c2append_{name}" for name, _entry in P.C2_APPEND_SLICES
-    }
+    })
     require(set(overlay) == expected,
             "FIRST RED: Link-33 final append relocation inventory drift: "
             f"missing={sorted(expected-set(overlay))} "

@@ -1,0 +1,73 @@
+{
+  "accepted_by": "0c99ce21",
+  "banner": "WORKBENCH 1.5.0",
+  "build": {
+    "activation_defines": [
+      "LISP65_C2_TERMINAL_RETURN_GUARD",
+      "LISP65_STARTUP_REQUIRE_EXPERIENCE",
+      "LISP65_CODE_WINDOW_CONVERGENCE"
+    ],
+    "link": 97,
+    "product_cards": 1,
+    "resident_delta_bytes": 0,
+    "same_world_media": true
+  },
+  "device": {
+    "boot_access_free_seconds": 45,
+    "ceremony_frames": {
+      "documented_cold": 60,
+      "documented_warm": 62,
+      "release_max": 72
+    },
+    "defstruct_quiet_seconds": 240,
+    "performance_smokes": [
+      {
+        "expect": "2",
+        "form": "(time (car (cdr (list 1 2))))",
+        "id": "list-read",
+        "max_frames": 2
+      },
+      {
+        "expect": "(9 2)",
+        "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+        "id": "list-write",
+        "max_frames": 2
+      },
+      {
+        "expect": "98",
+        "form": "(time (string-ref \"abc\" 1))",
+        "id": "string-op",
+        "max_frames": 2
+      },
+      {
+        "expect": "42",
+        "form": "(time (v15-perf-probe 41))",
+        "id": "published-call",
+        "max_frames": 2,
+        "setup": "(defun v15-perf-probe (x) (+ x 1))"
+      }
+    ]
+  },
+  "format": "lisp65-c2-v150-release-contract-v1",
+  "freight": {
+    "defstruct": [
+      "place",
+      "defstruct"
+    ],
+    "inspect": [
+      "who-calls",
+      "trace",
+      "untrace"
+    ],
+    "string-extra": [
+      "capitalize",
+      "string-split"
+    ]
+  },
+  "historical_worlds_immutable": [
+    "Link-95",
+    "Link-96",
+    "v1.4.0"
+  ],
+  "release": "v1.5.0"
+}

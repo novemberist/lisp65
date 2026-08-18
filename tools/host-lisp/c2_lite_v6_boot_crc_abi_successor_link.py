@@ -16,7 +16,7 @@ import os
 from pathlib import Path
 import struct
 import sys
-from typing import Any
+from typing import Any, Callable
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -34,6 +34,7 @@ import c2_lite_v6_first_product_link_successor as B2  # noqa: E402
 import c2_lite_v6_first_product_link_successor2 as DIRECT  # noqa: E402
 import c2_lite_v6_product_probe as V6  # noqa: E402
 import c2_product_hw_presmoke as HW  # noqa: E402
+import c2_v150_link97_slice_content_map as SLICE_MAP  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
 
 
@@ -247,17 +248,21 @@ def walls_and_family(elf: Path) -> tuple[dict[str, int], dict[str, Any]]:
             and walls["e000_headroom_bytes"] >=
                 P.E000_FINAL_FLOOR_BYTES,
             f"FIRST RED: successor resident wall red: {walls}")
-    names = {spec.split(":")[2] for spec in
-             P.BOOT_SLICE_SPECS + P.SESSION_SLICE_SPECS}
+    historical_names = {spec.split(":")[2] for spec in
+                        P.BOOT_SLICE_SPECS + P.SESSION_SLICE_SPECS}
+    names = set(SLICE_MAP.expand_historical_sections(
+        historical_names, sections))
     sizes = {name: sections.get(name, {}).get("bytes", 0) for name in names}
     bad = {name: size for name, size in sizes.items()
            if size <= 0 or size > CAP}
     require(not bad, f"FIRST RED: successor slice wall red: {bad}")
-    boot_path = OUT / "runtime-overlays-boot-final.bin"
-    session_path = OUT / "runtime-overlays-session-final.bin"
-    boot = json.loads((OUT / "runtime-overlays-boot-final.json").read_text())
+    family_root = elf.parent
+    boot_path = family_root / "runtime-overlays-boot-final.bin"
+    session_path = family_root / "runtime-overlays-session-final.bin"
+    boot = json.loads(
+        (family_root / "runtime-overlays-boot-final.json").read_text())
     session = json.loads(
-        (OUT / "runtime-overlays-session-final.json").read_text())
+        (family_root / "runtime-overlays-session-final.json").read_text())
     require(boot_path.stat().st_size == boot["storage"]["size"] <= BANK_BYTES
             and session_path.stat().st_size == session["storage"]["size"]
                 <= BANK_BYTES,
@@ -267,6 +272,9 @@ def walls_and_family(elf: Path) -> tuple[dict[str, int], dict[str, Any]]:
             "count": len(sizes), "cap_bytes": CAP,
             "largest_bytes": max(sizes.values()),
             "minimum_headroom_bytes": CAP - max(sizes.values())},
+        "overlay_sections": sorted({
+            row["section"] for row in session["slices"]
+            if row["section"].startswith(".lisp65_rt_c2append_")}),
         "successor_bank3_pack": {
             "boot": {**bind(boot_path),
                      "headroom_bytes": BANK_BYTES - boot_path.stat().st_size},
@@ -276,12 +284,17 @@ def walls_and_family(elf: Path) -> tuple[dict[str, int], dict[str, Any]]:
     }
 
 
-def workbench_crc_gate(product: Path, elf: Path) -> dict[str, Any]:
+def workbench_crc_gate(
+        product: Path, elf: Path, *, report_root: Path | None = None
+        ) -> dict[str, Any]:
+    artifact_root = elf.parent
+    if report_root is None:
+        report_root = artifact_root
     payload = ABI_WPLTO.payload(product, elf)
     expected = CRC.crc_reference(payload)
     truth = ElfTruth.read(elf, llvm_readobj=P.TOOLCHAIN / "llvm-readobj")
     descriptor = HW.boot_overlay_descriptor(
-        build_id=int(sha(OUT / "resolved-profile.txt")[:8], 16),
+        build_id=int(sha(artifact_root / "resolved-profile.txt")[:8], 16),
         start=truth.symbol("__lisp65_workbench_overlay_start").value,
         entry=truth.symbol("vm_workbench_boot_overlay_entry").value,
         payload=payload)
@@ -291,7 +304,7 @@ def workbench_crc_gate(product: Path, elf: Path) -> dict[str, Any]:
     CRC.VECTORS["actual-workbench-overlay"] = payload
     try:
         report = CRC.audit_elf(
-            elf, out=OUT / "c2-crc-asm-leaf-workbench-gate.json")
+            elf, out=report_root / "c2-crc-asm-leaf-workbench-gate.json")
     finally:
         CRC.VECTORS.clear()
         CRC.VECTORS.update(prior)
@@ -308,26 +321,43 @@ def workbench_crc_gate(product: Path, elf: Path) -> dict[str, Any]:
     }
 
 
-def replacement_gates(product: Path, elf: Path,
-                      host: dict[str, Any]) -> dict[str, Any]:
+def replacement_gates(
+        product: Path, elf: Path, host: dict[str, Any], *,
+        capacity_qualifier: Callable[[dict[str, Any], Path], dict[str, Any]]
+            | None = None,
+        root_qualifier: Callable[[], dict[str, Any]] | None = None,
+        direct_qualifier: Callable[[], dict[str, Any]] | None = None,
+        qualification_root: Path | None = None,
+        verifier_base: int = VERIFIER_BASE) -> dict[str, Any]:
+    artifact_root = elf.parent
+    if qualification_root is None:
+        qualification_root = artifact_root
     walls, family = walls_and_family(elf)
     shape = {"walls": walls, "runtime_slices": family["runtime_slices"],
              "successor_bank3_pack": family["successor_bank3_pack"]}
-    capacity = DIET.capacity_gate(shape, elf)
+    qualifier = DIET.capacity_gate if capacity_qualifier is None else (
+        capacity_qualifier)
+    capacity = qualifier(shape, elf)
     semantics = DIET.semantic_product_gate(shape, product, elf)
     no_attic = LINK.no_runtime_attic_gate(
-        elf, OUT / "generated-product-sources")
-    stage = ART.stage_product_gate(elf)
-    overlay = LINK.BASE.LINK33_BASE.final_overlay_closure(elf)
+        elf, artifact_root / "generated-product-sources")
+    stage = ART.stage_product_gate(elf, verifier_base=verifier_base)
+    overlay = LINK.BASE.LINK33_BASE.final_overlay_closure(
+        elf, expected_sections=set(family["overlay_sections"]))
     preinstall = LINK.BASE.ISLAND.static_elf_gate(elf)
-    root = ROOT_GATE.collect()
-    old_direct_out = DIRECT.OUT
-    try:
-        DIRECT.OUT = OUT
-        direct = DIRECT.generated_direct_entry_gate()
-    finally:
-        DIRECT.OUT = old_direct_out
-    crc = workbench_crc_gate(product, elf)
+    root = (ROOT_GATE.collect() if root_qualifier is None
+            else root_qualifier())
+    if direct_qualifier is None:
+        old_direct_out = DIRECT.OUT
+        try:
+            DIRECT.OUT = artifact_root
+            direct = DIRECT.generated_direct_entry_gate()
+        finally:
+            DIRECT.OUT = old_direct_out
+    else:
+        direct = direct_qualifier()
+    crc = workbench_crc_gate(
+        product, elf, report_root=qualification_root)
     require(capacity["status"] == semantics["status"] == "passed"
             and no_attic["status"].startswith("passed")
             and stage["status"] == "passed"
