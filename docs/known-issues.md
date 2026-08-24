@@ -1,12 +1,12 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.5.0. Sealed
+This is the maintained user-facing issue register for lisp65 1.6.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
-## Active v1.5.0 issue: boot refill can trust an incomplete DMA read
+## Retired in 1.6.0: boot refill can trust an incomplete DMA read
 
-Status: **latent and timing-dependent; fixed in v1.6.0**
+Status: **fixed and structurally gated in v1.6.0**
 
 The v1.5.0 boot and library-refill path contains one unverified DMA read. On
 unfavorable hardware timing it can accept an incomplete code refill as
@@ -15,10 +15,10 @@ during startup or library loading. Cold-restart from the product disk if this
 occurs.
 
 The issue was found after the v1.5.0 release. Its shipped hardware sessions and
-ordinary use completed successfully, and no public installation has reported
-the symptom. v1.6.0 removes the unchecked path and verifies the final linked
-reader. A v1.5.1 backport is not planned; that option remains open if a field
-report arrives before v1.6.0 is released.
+ordinary use completed successfully, and no public installation reported the
+symptom before v1.6.0. v1.6.0 removes the unchecked path, verifies the final
+linked reader, and rejects unsafe content-consuming DMA readers in generated
+code as well as authored sources. No v1.5.1 backport is planned.
 
 ## Active product limitation: Freezer during a definition
 
@@ -70,7 +70,7 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Active limitation: `defstruct` is positional and visibly slow
+## Historical v1.5 optional-library limitation: `defstruct`
 
 v1.5 delivers positional, option-free `defstruct`. A definition publishes a
 constructor, predicate, copier, and three functions per slot, so it is a much
@@ -81,8 +81,10 @@ The historical red-frame mechanism was narrowed to a terminal control-transfer
 corruption but its destroyed immediate return slot prevented naming the exact
 writer. v1.5 arms a redundant terminal-return shadow guard. The release session
 completed `(defstruct point x y)` and `(make-point 3 4)` with all four mismatch
-records empty and no restoration, so the release claims successful guarded
-execution, not that the historical writer was caught or healed.
+records empty and no restoration, so the v1.5 release claims successful
+guarded execution, not that the historical writer was caught or healed. The
+v1.6 selected one-row library medium does not include `defstruct`; this
+paragraph does not create a v1.6 package claim.
 
 ## Retired in 1.5.0: `trace` and `untrace` absent
 
@@ -121,9 +123,9 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Active v1.6-candidate finding: evaluator polling races Comfort capture
+## Not delivered in 1.6.0: Comfort REPL and capture path
 
-Status: **product mechanism attributed; single-owner fix under qualification**
+Status: **development evidence retained for v1.7; absent from selected v1.6**
 
 A v1.6 development measurement slowly produced eight visible Comfort-REPL
 characters using 11 physical character attempts. Product counters read
@@ -141,8 +143,11 @@ the slow-typing loss and the smaller raw count.
 
 The correction gives an armed capture sole ownership of the hardware queue;
 `lisp_poll()` retains RUN/STOP through the independent matrix-pending latch.
-Until the corrected final product passes hardware acceptance, repeat a missing
-character normally. This finding is not a keyboard/core limitation.
+The corrected development path later passed the physical eight-of-eight
+arrival comparison, but the larger Comfort feature was descoped as one unit
+after a separate bytecode failure. Neither the capture path nor
+`repl-comfort` is present in the v1.6 selected product. This finding is retained
+as v1.7 evidence and is not a keyboard/core limitation.
 
 ## Active Ship limitation: RUN/STOP source not independently verified
 
@@ -162,9 +167,9 @@ would report the cause needs three bytes of fixed-block space that are not
 available; the resident geometry is closed. If you meet such a stop, the
 reproducer and the surrounding session are what the maintainers need.
 
-## Active limitation: an error during runtime-overlay work can stop fail-closed
+## Retired in 1.6.0: retired-overlay recovery can re-enter cleared code
 
-Status: **pre-existing in v1.5; constructive recovery deferred to v1.7**
+Status: **execution-boundary backstop shipped and hardware-observed**
 
 An ordinary reader or evaluation error while runtime-overlay code is active
 can retire and clear the overlay while a control transfer into that generation
@@ -172,14 +177,16 @@ is still live. If that transfer is later taken, the cleared byte is decoded as
 BRK and the existing fail-closed handler deliberately stops on a red-bordered
 screen instead of returning to the prompt.
 
-Cold-restart lisp65 after such a stop and preserve the form that preceded it.
-The shipped v1.5 ELF already contains the same transient overlay phase, the
-same relevant transfer origin and the abort/wipe/re-entry path; v1.6 did not
-introduce this defect class. The exact observed transfer was reproduced only
-on a v1.6 development candidate, so no claim is made that the identical
-dynamic carrier was seen on released v1.5 hardware. A v1.7 item owns the
-carrier-independent backstop at the execution boundary; v1.6 does not spend
-closed resident capacity on a late recovery retrofit.
+The shipped v1.5 ELF already contained the transient overlay phase and its
+abort/wipe/re-entry class. v1.6 adds a carrier-independent execution-boundary
+backstop and sanitizes all seven restored control/status register pairs before
+the recovery return completes. The accepted hardware session deliberately
+raised the ordinary type error `(>= nil 32)` and returned to a usable native
+prompt; a following list form evaluated normally.
+
+The claim is bounded to the shipped retired-window detector and recovery path.
+An unrelated fail-closed stop can still present a red border without a text
+diagnosis, as documented above.
 
 ## Informative performance positions
 

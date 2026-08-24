@@ -1,9 +1,9 @@
-# lisp65 1.5.0 User Guide
+# lisp65 1.6.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.5.0` release bundle
+- The extracted `lisp65-1.6.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -21,7 +21,7 @@ python3 verify.py
 ```
 
 Do not use a bundle that fails. The verifier checks every packaged file, all 19
-product artifacts, the six optional-library roles, and the embedded
+product artifacts, the three v1.6 library-medium roles, and the embedded
 hardware-acceptance evidence without using the live repository or network.
 
 ## Start from BASIC and perform the one-drive swap
@@ -39,9 +39,17 @@ hardware-acceptance evidence without using the live repository or network.
    ```
 
 5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
-   `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL. On the
-   accepted hardware the full reset-to-prompt path took 36 seconds.
-6. Load the workbench composition while `L65SYS` is mounted:
+   `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL.
+6. To activate v1.6 cursor navigation, mount
+   `media/lisp65-library.d81` and submit:
+
+   ```lisp
+   (require 'v16core)
+   ```
+
+   Restore `media/lisp65-product.d81` before loading the product-resident
+   composition.
+7. Load the workbench composition while `L65SYS` is mounted:
 
    ```lisp
    (load-lib "ide")
@@ -52,9 +60,9 @@ hardware-acceptance evidence without using the live repository or network.
    IDEX is optional when its word, page, mark, region, search, and launcher
    commands are not needed. Load M65D before the one-drive swap when the session
    will save or compile files.
-7. Swap drive 8 to `media/lisp65-work.d81` or another valid non-product 1581
+8. Swap drive 8 to `media/lisp65-work.d81` or another valid non-product 1581
    disk.
-8. Enter the editor with `(edit)`.
+9. Enter the editor with `(edit)`.
 
 A D81 mounted through the Freezer is not retained across a reboot. Automatic
 cold start requires a default disk configured separately in the MEGA65 Config
@@ -82,6 +90,13 @@ to right. If a later form has a reader error, earlier forms on that line have
 already run; durable changes made by them are not rolled back. The error
 applies to the remaining input, not to results already printed.
 
+After `(require 'v16core)`, the REPL line is editable in insertion mode.
+Cursor Left/Right and `C-b`/`C-f` move by one character; `C-a` and `C-e` move
+to the line endpoints; Delete removes backward and `C-d` removes forward.
+Movement or deletion beyond an endpoint is a no-op. The cursor-following
+viewport preserves the 250-character line limit. This is the focused v1.6
+line editor, not the deferred balanced multiline/history Comfort REPL.
+
 Persistent compilation no longer uses preallocated `fasl*` slots. `compile-string`
 and the editor compiler path save arbitrary library names through the full M65D
 copy-on-write transaction: allocation and verified staging happen first,
@@ -97,47 +112,21 @@ Example:
 (answer)                           ; => 42
 ```
 
-### Optional string, inspection, and structure libraries
+### The v1.6 library medium
 
-The v1.5 libraries are named for what they provide. Load only the package a
-session needs:
-
-1. Mount `media/lisp65-library.d81` in drive 8.
-2. If M65D is already active, run `(m65d-remount)` so the session sees the new
-   medium.
-3. Require the desired library, then restore the work disk and run
-   `(m65d-remount)` again before saving.
+The selected v1.6 library medium contains one package, `v16core`, which
+installs the accepted cursor-aware input library. Mount the library D81,
+remount M65D if it is already active, and require it once per cold session:
 
 ```lisp
-(require 'string-extra)            ; => t
-(capitalize "hello")               ; => "Hello"
-(string-split "a,b,c" ",")          ; => ("a" "b" "c")
-
-(require 'inspect)                 ; => t
-(who-calls 'my-function)           ; callers known to the compiled shelf graph
-
-(defun probe (x) (+ x 1))
-(trace probe)                      ; => probe
-(probe 4)                          ; trace records, then => 5
-(untrace probe)                    ; exact original BCODE restored
-
-(require 'defstruct)               ; => t
-(defstruct point x y)              ; durable, visibly longer operation
-(setq p (make-point 3 4))
-(point-y p)                        ; => 4
-(point-set-y p 9)                  ; destructive setter
-(point-with-y p 4)                 ; functional copy
+(m65d-remount)                     ; only when M65D is already active
+(require 'v16core)                 ; => t
 ```
 
-`who-calls` takes a symbol. `trace` and `untrace` are macros and therefore take
-the unquoted function name shown above. Their wrapper saves and restores the
-exact function-cell value. `defstruct` is positional and option-free; it
-publishes `make-NAME`, `NAME-p`, `copy-NAME`, and reader, destructive setter,
-and functional updater functions for each slot. Its internal `place`
-dependency is loaded automatically.
-
-The packages remain independent except for that declared dependency;
-requiring one does not load unrelated tools.
+Restore the product or work disk afterward and run `(m65d-remount)` again
+before loading or saving through M65D. The optional v1.5 package set
+(`string-extra`, `inspect`, `place`, and `defstruct`) is not included in the
+v1.6 selected library image and is outside the v1.6 hardware claim.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two

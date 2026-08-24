@@ -62,11 +62,19 @@ mapping are rejected visibly rather than silently accepted. A line may carry
 several forms; they are evaluated left to right, so forms completed before a
 later reader error remain in effect.
 
+The v1.6 `v16core` library replaces the native line reader with an
+insertion-mode, cursor-following one-line editor. Its navigation bindings come
+from the same generated keymap authority as their tests. Balanced multiline
+input, history and the separate capture/Comfort path are not part of the v1.6
+selected product.
+
 ## Media model
 
-Release 1.5.0 uses two D81 images with one drive:
+Release 1.6.0 uses three D81 roles with one drive:
 
 - `L65SYS` is the immutable product image used for boot and library loading.
+- `lisp65-library.d81` carries the one-row `v16core` package used to activate
+  the v1.6 REPL line editor.
 - A valid non-product 1581 image holds user files.
 
 M65D denies the product medium by identity and binds each transaction to disk

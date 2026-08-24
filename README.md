@@ -7,7 +7,7 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 1.5.0**, using **Dialect V2**.
+The current release is **lisp65 1.6.0**, using **Dialect V2**.
 
 ## Highlights
 
@@ -20,8 +20,7 @@ The current release is **lisp65 1.5.0**, using **Dialect V2**.
 - Q8.7 fixed-point arithmetic, `(time form)`, `wait`, and `read-line`
 - A reproducible Ship Builder for standalone bootable application D81s
 - A lower-allocation editor renderer measured at about 3× the former speed
-- Optional `string-extra` (`capitalize`, `string-split`), `inspect`
-  (`who-calls`, `trace`, `untrace`), and positional `defstruct` libraries
+- Optional `v16core` library with insertion-mode REPL cursor navigation
 - Immediate non-persistent REPL expressions, with durable state changes kept on
   the transactional publication path
 - Visible `STAGING MEDIA`, `BUILDING HEAP`, and `LOADING LIBRARIES` boot phases
@@ -35,13 +34,13 @@ The current release is **lisp65 1.5.0**, using **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.5.0.tar.gz` from the
-[v1.5.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.5.0).
+Download `lisp65-1.6.0.tar.gz` from the
+[v1.6.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.6.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.5.0.tar.gz
-cd lisp65-1.5.0
+tar -xzf lisp65-1.6.0.tar.gz
+cd lisp65-1.6.0
 python3 verify.py
 ```
 
@@ -49,7 +48,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.5.0 release notes](docs/releases/1.5.0.md) for the complete change
+See the [1.6.0 release notes](docs/releases/1.6.0.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -67,7 +66,13 @@ summary and evidence boundary.
    ```
 
 5. Follow the three visible boot phases, then wait for the banner and REPL.
-6. Load the composition while `L65SYS` is still mounted:
+6. Mount `media/lisp65-library.d81` and activate the v1.6 REPL line editor:
+
+   ```lisp
+   (require 'v16core)
+   ```
+
+7. Restore `L65SYS` and load the composition:
 
    ```lisp
    (load-lib "ide")
@@ -75,15 +80,15 @@ summary and evidence boundary.
    (load-lib "m65d")  ; persistence and compiler output
    ```
 
-7. Swap once to `media/lisp65-work.d81` or any valid non-product 1581 disk.
-8. Enter the editor with `(edit)`.
+8. Swap once to `media/lisp65-work.d81` or any valid non-product 1581 disk.
+9. Enter the editor with `(edit)`.
 
 The MEGA65 does not retain a D81 selected in the Freezer across a reboot. An
 automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.5.0.
+identity. There is no on-device disk formatter in 1.6.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -91,14 +96,14 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.5.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.6.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
 
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
-| v1.5.0 boot-refill DMA timing | One unverified DMA refill can rarely surface as `*** vm: bad bytecode` during startup or library loading. Cold-restart if it occurs. | The unchecked reader is removed in v1.6.0; a v1.5.1 backport remains conditional on a field report before that release. |
+| Focused REPL editing | `v16core` adds insertion-mode cursor navigation to the native one-line REPL. Balanced multiline input, history and the Comfort prompt are not delivered in v1.6. | The Comfort REPL and its input-capture work remain a v1.7 item. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | The C2D session store separates immutable code from mutable session state; dependency-aware reclamation remains later work. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
@@ -122,23 +127,24 @@ acceptance.
 
 ## Verification status
 
-Release 1.5.0 binds resident PRG
-`65fc01b0730d3e09bf2e97c6a0fda09e36f319c352f5a3ac934f674b891828d9`
-and optional-library D81
-`139980fe9df48e4a5221f44ff458d4fa7099406d6eb52341513312a16d05208a`:
+Release 1.6.0 binds artifact set
+`8cb9a718b722e9076581a9bb02ee769263b713a2d36caff3b5749cc5ab60685f`,
+resident PRG
+`0e1f6b99afbbd2950bd9e140c9491b487296f04bc52b7023c92a0c28b4a1610d`
+and one-row library D81
+`caa08cc36931cc758c0a1fd68102b7042263c39d982bed5b60145ea3b4b9208b`:
 
-- the `WORKBENCH 1.5.0` banner, all boot life signs, trace restoration,
-  defstruct construction, direct-path and bounded performance smokes passed on
-  one physical MEGA65;
-- the same-device reset-to-prompt comparison measured 36 seconds for v1.5.0
-  versus 31 seconds for v1.4.0;
-- the stopped session retained 34 free symbol slots and 545 free name bytes,
-  above the mandatory 32/384 user floor; and
-- the selected library medium and all shared product roles are SHA-bound and
-  offline-verifiable.
+- insertion, mixed cursor/control movement, endpoint movement, backward and
+  forward deletion, and boundary no-ops passed on one physical MEGA65;
+- an ordinary type error returned to a usable native prompt through the new
+  retired-overlay execution backstop;
+- the stopped D5 session retained 105 free symbol slots and 1,413 free name
+  bytes, above the mandatory 32/384 user floor; and
+- two varied fresh public clones reproduced all 22 selected roles with zero
+  private evidence inputs.
 
 Exact hashes and claim limits are recorded in the
-[1.5.0 release notes](docs/releases/1.5.0.md). The maintained limitations and
+[1.6.0 release notes](docs/releases/1.6.0.md). The maintained limitations and
 retired 1.1 latency exception are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
@@ -167,12 +173,12 @@ With the pinned LLVM-MOS SDK and `c1541` installed, the public C2-lite build is:
 
 ```sh
 make clean
-make workbench-product
+make workbench-product-v160
 ```
 
 The target uses the single C2 emitter, one WPLTO closure, and the canonical
-media packer. Its final gate requires all 19 product roles and six
-optional-library roles to reproduce the sealed 1.5.0 artifact-set identity.
+media packer. Its final gate requires all 19 product roles and the three-role
+`v16core` library medium to reproduce the sealed 1.6.0 artifact-set identity.
 The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -181,6 +187,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 1.6.0](docs/releases/1.6.0.md)
 - [Release Notes for 1.5.0](docs/releases/1.5.0.md)
 - [Known Issues and Retired Exceptions](docs/known-issues.md)
 - [Contributing](CONTRIBUTING.md)
