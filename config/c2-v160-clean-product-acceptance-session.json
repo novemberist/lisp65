@@ -1,0 +1,146 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.6-item-1-cursor-navigation",
+      "v1.6-item-2-comfort-repl"
+    ],
+    "excludes": [
+      "D5-headroom",
+      "release-acceptance",
+      "v1.6-item-3",
+      "v1.6-item-4"
+    ],
+    "green_consequence": "items 1 and 2 accepted; Halt A follows immediately"
+  },
+  "counter_witness": {
+    "addresses": {
+      "raw": "0xBCFC",
+      "seen": "0xBCFD",
+      "stored": "0xBCFE",
+      "taken": "0xBCFF"
+    },
+    "decision_table": {
+      "attempts=raw=seen=stored=taken": "single-owner input path green",
+      "attempts>raw": "keyboard/core before queue-present observation",
+      "raw>seen": "IRQ queue read or filtering",
+      "seen>stored": "ring admission",
+      "stored>taken": "consumer"
+    },
+    "maximum_events": 255,
+    "origin": "atomic zero at Comfort entry while capture tail is closed",
+    "width_bits": 8
+  },
+  "decision_table": {
+    "all-four-groups-green": "items 1 and 2 accepted; Halt A follows immediately",
+    "clean-world-early-boot-$8040-red": "emulator diagnosis with xemu; never the core",
+    "daily-use-blocker": "at most one fix round; a second required round descopes the feature",
+    "other-new-red": "one rescue read, then finish-plan triage",
+    "rare-or-cosmetic": "Known Issue plus v1.7 register row"
+  },
+  "format": "lisp65-c2-v160-clean-product-acceptance-session-v1",
+  "host_half": {
+    "event_6_observed_in_order": true,
+    "forced_collection_frames": 89,
+    "normalization_parity": "256/256 across both consumers",
+    "ordered_events": "94/94",
+    "responsiveness_margin_percent": 29.044052413392606
+  },
+  "liveness_witness": {
+    "class": "retirement-before-wipe",
+    "comfort_prompt": "l65>",
+    "recovery_prompt": "lisp65>",
+    "red_frame": false,
+    "trigger": "(car 1)"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-clean-product-acceptance-media/library/lisp65-library.d81",
+      "remote_name": "V16ALIB.D81",
+      "sha256": "5b1a9f584df671c900fe035d355eb7139281fdc07dec4460a714ba806e35d0cb"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-clean-product-acceptance-media/shared-system/lisp65-product.d81",
+      "remote_name": "V16A.D81",
+      "sha256": "3031c3d2f9ddb04cee5face40b9ca5ae6c31a8799e9465a77b13bb0d9f775e5e"
+    }
+  },
+  "recorded_on": "2026-08-24",
+  "rows": [
+    {
+      "actions": [
+        "cold boot product; mount library physically",
+        "submit (require 'v16core), then (require 'repl-comfort)",
+        "submit (repl)"
+      ],
+      "expect": [
+        "native lisp65> before Comfort",
+        "t after each require",
+        "l65> on the editor row with the cursor immediately after it"
+      ],
+      "group": "prompt rows",
+      "id": "A1-prompts"
+    },
+    {
+      "actions": [
+        "at l65> submit (car 1)",
+        "after recovery submit (repl) once to continue the session"
+      ],
+      "expect": [
+        "no red frame",
+        "clean recovery to native lisp65>",
+        "second Comfort entry shows l65>"
+      ],
+      "group": "abort row",
+      "id": "A2-abort"
+    },
+    {
+      "actions": [
+        "type (list 1 3), move left twice, insert 2 followed by a space, submit",
+        "submit (+ 10 on one line and 32) on the continuation line",
+        "evaluate (list 7 8), then Up and Return",
+        "with Shift-Lock off type lowercase letters and one Shift+8",
+        "rapidly type and submit (list 1 2 3 4 5 6 7 8 9)"
+      ],
+      "expect": [
+        "(1 2 3)",
+        "42",
+        "(7 8) repeats from history",
+        "lowercase remains lowercase and Shift+8 yields (",
+        "no swallowed keys or progressive input backlog"
+      ],
+      "group": "input rows",
+      "id": "A3-input"
+    },
+    {
+      "actions": [
+        "at l65> type and submit (list 1 3)",
+        "inspect the evaluated row and the following prompt"
+      ],
+      "expect": [
+        "prompt and editable input shared one row before Return",
+        "evaluated row is exactly (1 3) with no stale tail",
+        "next l65> and its cursor occupy the same row"
+      ],
+      "group": "composed display",
+      "id": "A4-display"
+    }
+  ],
+  "status": "ready-owner-contact",
+  "triage_limits": {
+    "new_instruments": 0,
+    "new_walls": 0,
+    "raised_bars": 0
+  }
+}

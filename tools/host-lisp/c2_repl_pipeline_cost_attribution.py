@@ -1085,8 +1085,7 @@ def main() -> int:
         check_sealed_receipt()
         print("REPL pipeline cost attribution: PASS")
         return 0
-    value = core_receipt()
-    audit(value)
+    value = check_sealed_receipt()
     require(len(mutation_proof(value)) == 22, "mutation selftest drift")
     print("REPL pipeline cost attribution selftest: PASS")
     return 0

@@ -1,0 +1,108 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.6-item-1-cursor-navigation",
+      "v1.6-item-2-comfort-repl-and-input-fidelity"
+    ],
+    "excludes": [
+      "D5-headroom",
+      "release-acceptance",
+      "v1.6-item-3",
+      "v1.6-item-4"
+    ]
+  },
+  "format": "lisp65-c2-v160-items12-device-session-v1",
+  "host_half": {
+    "event_6_observed_in_order": true,
+    "forced_collection_frames": 89,
+    "normalization_parity": "256/256 across both consumers",
+    "ordered_events": "94/94",
+    "responsiveness_margin_percent": 29.044052413392606
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-items12-hybrid-device-preparation/library/lisp65-library.d81",
+      "remote_name": "V16C12.D81",
+      "sha256": "ef868c6a23cce66b5ccd0cb6d8294e94c6d9235d7cc9e7be14fae03b2927f56d"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-items12-hybrid-device-preparation/shared-system/lisp65-product.d81",
+      "remote_name": "V16P12.D81",
+      "sha256": "c10dbc813637caa4c5c7368fcc6e2efbb8377ed77737e663c67ae50e9a2558f5"
+    }
+  },
+  "recorded_on": "2026-08-20",
+  "rows": [
+    {
+      "actions": [
+        "cold boot product",
+        "mount library physically",
+        "(require 'v16core)",
+        "(require 'repl-comfort)",
+        "(repl)"
+      ],
+      "claim": "boot and activate Comfort REPL",
+      "expect": [
+        "three boot liveness lines",
+        "WORKBENCH 1.5.0",
+        "each require returns t",
+        "Comfort prompt"
+      ],
+      "id": "D1"
+    },
+    {
+      "action": "type (list 1 3), move left twice, insert 2 followed by a space",
+      "expect": "(1 2 3)",
+      "id": "D2-left-insert"
+    },
+    {
+      "action": "physically exercise Left/Right, C-b/C-f, C-a/C-e, Delete and C-d, including boundary no-ops",
+      "expect": "all bindings edit at the cursor, preserve order, and never overwrite",
+      "id": "D2-navigation"
+    },
+    {
+      "action": "submit (+ 10 on line one and 32) on line two",
+      "expect": "42 with continuation indentation",
+      "id": "D2-balanced"
+    },
+    {
+      "action": "evaluate (list 7 8), then Up and Return",
+      "expect": "(7 8) twice",
+      "id": "D2-history"
+    },
+    {
+      "action": "enter one balanced aggregate rapidly: (+ 1, then five continuation comment lines each containing a visually checked 40-digit 0123456789 pattern, then 2); do not pause for automated observation",
+      "expect": "every digit remains present and ordered; final result is 3",
+      "forced_collection_basis": "more than 192 accepted printable editor cells guarantees at least one collection during active input, independent of nursery phase",
+      "id": "D2-input-fidelity"
+    },
+    {
+      "action": "with Shift-Lock off, type a physically entered lowercase alphabetic form and inspect the characters before submission",
+      "expect": "lowercase letters remain lowercase on screen and in the result",
+      "id": "D2-lowercase"
+    },
+    {
+      "action": "type a rapid ordinary sentence-length burst, pause once, then edit its middle with Left/Right and insertions",
+      "expect": "no swallowed keys; echo keeps up without progressive multi-second backlog, and any short burst debt drains during the single pause",
+      "id": "D2-felt-latency"
+    },
+    {
+      "action": "empty Return",
+      "expect": "return to native lisp65> prompt",
+      "id": "D2-exit"
+    }
+  ],
+  "status": "ready-owner-contact"
+}

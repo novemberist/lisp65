@@ -25,6 +25,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v20_building_heap_device_result as PRIOR_MODEL  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 PLAN = ROOT / "docs/planning/2.0-ownership-recharter-work-plan.md"
@@ -43,6 +44,7 @@ FORMAT = "lisp65-c2.3-v20-far-payload-device-result-v1"
 STATUS = "D1-HEAP-RED-REPRODUCED; FAR-DESCRIPTOR-UNINITIALIZED"
 RECORDED_ON = "2026-08-12"
 AUTHORIZATION_COMMIT = "11166ae4"
+SEAL_ERA_COMMIT = "6679167c1c456ac1fd7e8f244349727c93fef188"
 ELF_SHA256 = "34fb0a1173d66c2779ec7778ab0ab208bda7fd9a407989e2bb31660e71af4080"
 PRODUCT_D81_SHA256 = "d2ab92b14140caab5f3ca87b51fa8e4ab65183b387d6fe76ee4ae1588fcd1130"
 DELIVERED_CODE_SHA256 = "94479944eb6f8ece405be2902a424961b72e1936534ecd6acb0e8a2287a9c4ec"
@@ -155,8 +157,10 @@ def derive() -> dict[str, Any]:
             "authorization": git_bind(AUTHORIZATION_COMMIT, PLAN),
             "capture_contract": bind(CAPTURE_CONTRACT),
             "delivery": bind(DELIVERY), "candidate_ELF": bind(ELF),
-            "prior_device_result": bind(PRIOR), "driver": bind(DRIVER),
-            "prior_device_driver": bind(PRIOR_DRIVER),
+            "prior_device_result": bind(PRIOR),
+            "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
+            "prior_device_driver": ERA.era_bind(
+                SEAL_ERA_COMMIT, PRIOR_DRIVER),
         },
         "contact": {
             "owner_observation": {
@@ -243,6 +247,11 @@ def validate(value: dict[str, Any]) -> None:
     require(value["comparison_to_pre_delivery_red"]
             ["physical_ranges_byteidentical"] == len(PHYSICAL),
             "pre-delivery comparison drift")
+    require(value["authority"]["driver"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)
+            and value["authority"]["prior_device_driver"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, PRIOR_DRIVER),
+            "far-payload tool provenance escaped its sealing era")
     require("did not read physical target RAM" in value["open_boundary"]
             and "No target-RAM payload" in value["claim_limit"],
             "claim boundary widened")
@@ -279,6 +288,10 @@ def mutations() -> dict[str, Callable[[dict[str, Any]], None]]:
         "resume": lambda x: x["contact"]["one_stopped_session"].update(resumes=1),
         "open-D2-D5": lambda x: x["contact"]["one_stopped_session"].update(D2_D5_executed=True),
         "claim-target-install": lambda x: x.update(open_boundary="target RAM proven"),
+        "collapse-era-to-live": lambda x: x["authority"].update(
+            prior_device_driver=ERA.era_bind("HEAD", PRIOR_DRIVER)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            driver=bind(DRIVER)),
     }
 
 

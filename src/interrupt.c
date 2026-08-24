@@ -15,11 +15,30 @@
 #define DEVICE 1
 #endif
 
+#ifdef LISP65_C2_KERNAL_UNMAP
+/* Single-owner handoff for the physical keyboard queue.  $ff means that the
+ * IRQ capture is closed; every other tail value makes it the sole queue
+ * consumer.  RUN/STOP remains independently sourced by the IRQ's matrix
+ * latch, so evaluator polling never needs to steal an ordinary queue cell. */
+#define C2K_INPUT_RING_TAIL  (*(volatile uint8_t *)0xff8d)
+#define C2K_BREAK_PENDING    (*(volatile uint8_t *)0xff8a)
+#define C2K_INPUT_RING_CLOSED 0xffu
+#endif
+
 jmp_buf     lisp_toplevel;
-int         lisp_toplevel_active = 0;
+uint8_t     lisp_toplevel_active = 0;
 const char *lisp_error_msg = 0;
 static lisp65_error_code pending_code = LISP65_ERR_NONE;
 static obj pending_symbol = NIL;
+#if defined(__mos__)
+/* Zero-byte linker identities for the resident execution-boundary landing.
+ * The C cells retain internal linkage; these aliases allocate no storage and
+ * let assembler consume the active final world's addresses. */
+__asm__(".globl c2_backstop_pending_code\n"
+        ".set c2_backstop_pending_code, pending_code\n"
+        ".globl c2_backstop_pending_symbol\n"
+        ".set c2_backstop_pending_symbol, pending_symbol\n");
+#endif
 static const char numeric_error_sentinel[] = "";
 
 /* Optional resident dispatcher. A strong product definition may use the runtime
@@ -144,6 +163,13 @@ void lisp_poll(void) {
 #ifdef DEVICE
 #ifdef LISP65_C2_KERNAL_UNMAP
     lisp65_key_event event;
+    if (C2K_INPUT_RING_TAIL != C2K_INPUT_RING_CLOSED) {
+        if (C2K_BREAK_PENDING) {
+            C2K_BREAK_PENDING = 0u;
+            lisp_abort_static(LISP65_ERR_STOPPED, "stopped (run/stop)");
+        }
+        return;
+    }
     /* Evaluator polling prioritises the one global safety event.  Ordinary
      * keystrokes typed while computation is running are not editor input and
      * are deliberately drained rather than represented a second time. */

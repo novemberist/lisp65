@@ -1,0 +1,97 @@
+{
+  "acceptance_bar": {
+    "known_v15_fast_input_loss": "documented; not a v1.6 item-1 claim",
+    "navigation": "all cursor semantics correct",
+    "regression": "no regression versus v1.5 at ordinary typing rate"
+  },
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.6-item-1-cursor-navigation"
+    ],
+    "excludes": [
+      "v1.6-item-2-comfort-repl",
+      "lossless-input",
+      "D5-headroom",
+      "release-acceptance",
+      "v1.6-item-3",
+      "v1.6-item-4"
+    ],
+    "green_consequence": "item 1 accepted; Halt A follows"
+  },
+  "format": "lisp65-c2-v160-item1-only-device-session-v1",
+  "host_half": {
+    "Comfort_product_freight": 0,
+    "cursor_navigation_cases": "8/8",
+    "library_rows": 1
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-item1-only-media/library/lisp65-library.d81",
+      "remote_name": "V16I1LIB.D81",
+      "sha256": "cd1152a94a0747a35aab8b267c357333f6fd3d34bc2cf647abd609d445e2686b"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-item1-only-media/shared-system/lisp65-product.d81",
+      "remote_name": "V16I1.D81",
+      "sha256": "002b132ae86f56e7f257fe81bfd4f2d08d194ee6f9c1e37c6f55aca730650f46"
+    }
+  },
+  "recorded_on": "2026-08-24",
+  "rows": [
+    {
+      "actions": [
+        "cold boot product",
+        "mount library physically",
+        "submit (require 'v16core)"
+      ],
+      "expect": [
+        "three boot liveness lines",
+        "native lisp65> prompt",
+        "require returns t; repl-comfort is not delivered"
+      ],
+      "id": "I1-boot"
+    },
+    {
+      "actions": [
+        "submit (read-line)",
+        "type abde",
+        "press Left twice",
+        "insert c and press Return"
+      ],
+      "expect": "returned string is abcde; insertion does not overwrite",
+      "id": "I1-left-insert"
+    },
+    {
+      "actions": [
+        "in fresh (read-line) inputs exercise Left/Right and C-b/C-f",
+        "exercise C-a/C-e then insert at each endpoint",
+        "exercise Delete/C-d and boundary no-ops"
+      ],
+      "expect": "cursor motions and edits preserve order and boundaries",
+      "id": "I1-navigation"
+    },
+    {
+      "action": "submit (car 1) at native prompt",
+      "expect": "ordinary error returns to native lisp65>; no red frame",
+      "id": "I1-abort"
+    },
+    {
+      "action": "submit (list 1 3)",
+      "expect": "native result is (1 3) with no new regression",
+      "id": "I1-native-echo"
+    }
+  ],
+  "status": "ready-owner-contact"
+}

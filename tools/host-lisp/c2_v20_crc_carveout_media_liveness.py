@@ -28,6 +28,7 @@ import c2_lite_media_product as MEDIA  # noqa: E402
 import c2_link95_world_bound_media as PAIR  # noqa: E402
 import c2_v150_stager_liveness_successor as LIVE  # noqa: E402
 import c2_v20_crc_carveout_media as BASE  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -49,6 +50,9 @@ RECEIPT = EVIDENCE / (
 ATTRIBUTION_RECEIPT = EVIDENCE / (
     "c2.3-v2.0-building-heap-attribution-receipt.json")
 SESSION = ROOT / "config/c2-v150-v20-liveness-device-session.json"
+# The session handoff is sealed in this closure receipt, so the release
+# contract it names is read in the world that sealed it (see evidence_era).
+SEAL_ERA_COMMIT = "c3c5ad77"
 DRIVER = Path(__file__).resolve()
 OPT_IN = LIVE.OPT_IN
 FORMAT = "lisp65-c2.3-v20-crc-carveout-media-liveness-closure-v1"
@@ -203,7 +207,8 @@ def session_value() -> dict[str, Any]:
     value["authority"] = {
         "product_card": bind(BASE.CARD.RECEIPT),
         "media_closure": RECEIPT.relative_to(ROOT).as_posix(),
-        "release_contract": bind(BASE.RELEASE_CONTRACT),
+        "release_contract": ERA.era_bind(
+            SEAL_ERA_COMMIT, BASE.RELEASE_CONTRACT),
         "BUILDING_HEAP_attribution": bind(ATTRIBUTION_RECEIPT),
     }
     value["recontact_authorized"] = False
@@ -258,7 +263,7 @@ def derive(*, configured: bool = False) -> dict[str, Any]:
             "BUILDING_HEAP_attribution": bind(ATTRIBUTION_RECEIPT),
             "frozen_product_manifest": bind(PRODUCT_MANIFEST),
             "frozen_library_D81": bind(LIBRARY_D81),
-            "producer": bind(DRIVER),
+            "producer": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
         },
         "predecessor_retirement": {
             "current_authority": False,

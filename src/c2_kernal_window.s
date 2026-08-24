@@ -1,18 +1,12 @@
 ; Product-owned $e000-$ffff window.  This is linked as an independent product
 ; artifact and staged in Attic RAM; it is not the receipt-less proof carrier.
 
-	.equ C2K_EVENT_CODE,      $ff80
-	.equ C2K_EVENT_MODIFIERS, $ff81
-	.equ C2K_EVENT_READY,     $ff82
-	.equ C2K_FRAME_LO,        $ff83
-	.equ C2K_FRAME_HI,        $ff84
-	.equ C2K_NMI_COUNT,       $ff85
-	.equ C2K_SOURCELESS_IRQS, $ff86
-	.equ C2K_MAP_GENERATION,  $ff87
-	.equ C2K_STATE,           $ff88
-	.equ C2K_UNOWNED_VIC,     $ff89
-	.equ C2K_BREAK_PENDING,   $ff8a
-	.equ C2K_BREAK_HELD,      $ff8b
+	.set C2K_EQUATE_OWNER, 1
+	.include "c2_kernal_window_equates.inc"
+	.zeropage c2_backstop_rtov_busy
+	.zeropage c2_backstop_rtov_loaded_len
+	.zeropage lisp_toplevel_active
+	.zeropage c2_backstop_pending_code
 
 	.section .lisp65_c2_kernal_window.typed_queue_driver,"ax",@progbits
 	.zeropage __rc2
@@ -61,63 +55,6 @@ c2_kernal_event_poll:
 .Lc2_kernal_event_poll_end:
 	.size c2_kernal_event_poll, .Lc2_kernal_event_poll_end-c2_kernal_event_poll
 
-	.section .lisp65_c2_kernal_window.irq_handler,"ax",@progbits
-	.globl c2_kernal_irq_handler
-	.type c2_kernal_irq_handler,@function
-c2_kernal_irq_handler:
-	pha
-	phx
-	phy
-	phz
-	; IRQ entry inherits arbitrary interrupted Z.  On the 45GS02 STZ stores
-	; that register, so establish the handler-local zero authority once.
-	ldz #0
-	lda $d019
-	and #$01
-	beq .Lsource_less
-	; A is already exactly one after the owned-source mask.
-	sta $d019
-	; Rearm one legitimate source-less return for the next raster-delimited
-	; Freezer episode.  This is an episode latch, not a session counter.
-	stz C2K_SOURCELESS_IRQS
-	inc C2K_FRAME_LO
-	bne .Lsample_break
-	inc C2K_FRAME_HI
-.Lsample_break:
-	; D614 was fixed to segment 7 before the owned IRQ was enabled.  Bit 7 is
-	; active low. Released rearms; the first held sample latches exactly one
-	; pending break and disarms until release.
-	lda $d613
-	bmi .Lbreak_released
-	lda C2K_BREAK_HELD
-	bne .Lirq_return
-	inc C2K_BREAK_HELD
-	inc C2K_BREAK_PENDING
-	bra .Lirq_return
-.Lbreak_released:
-	stz C2K_BREAK_HELD
-.Lirq_return:
-	plz
-	ply
-	plx
-	pla
-	rti
-.Lsource_less:
-	; A real Freezer return can resume one CPU-latched IRQ after the external
-	; source has vanished.  Permit exactly one since the last owned raster;
-	; a consecutive source-less entry is an interrupt storm.
-	lda $d019
-	and #$1f
-	sta C2K_UNOWNED_VIC
-	lda C2K_SOURCELESS_IRQS
-	beq .Lfirst_source_less
-	; Cross-section control flow is always an absolute jump.  A long
-	; conditional relocation is not an identity-safe facade.
-	jmp c2_kernal_fail_closed
-.Lfirst_source_less:
-	inc C2K_SOURCELESS_IRQS
-	bra .Lirq_return
-
 	.section .lisp65_c2_kernal_window.nmi_and_freezer_return,"ax",@progbits
 	.globl c2_kernal_nmi_handler
 	.type c2_kernal_nmi_handler,@function
@@ -140,15 +77,85 @@ c2_kernal_fail_closed:
 .Lfailed:
 	jmp .Lfailed
 
+	; Complete retired-window enforcement lives at the execution boundary.
+	; A second source-less interrupt is recoverable only when it is a software
+	; BRK whose stacked continuation belongs to the now-retired overlay, no
+	; overlay transaction is live, and the top-level recovery target exists.
+	; The IRQ handler has already saved A/X/Y/Z, so Y is safe scratch here.
+	.section .text.retired_window_brk_classifier,"ax",@progbits
+	.globl retired_window_brk_classifier
+	.type retired_window_brk_classifier,@function
+	; This sized ASM function is an IRQ-owned tail continuation rather than a
+	; C-callable entry.  Its explicit ABI policy records that distinction while
+	; preserving its ELF function identity for the transitive ownership graph.
+	; It inherits the handler's established Z=0 and returns through the saved
+	; IRQ frame rather than through the ordinary function ABI.
+retired_window_brk_classifier:
+	tsx
+	lda $0105,x
+	and #$10
+	beq .Lretired_window_not_ours
+	lda c2_backstop_rtov_busy
+	ora c2_backstop_rtov_loaded_len
+	ora c2_backstop_rtov_loaded_len+1
+	bne .Lretired_window_not_ours
+	lda lisp_toplevel_active
+	beq .Lretired_window_not_ours
+	lda $0106,x
+	sec
+	sbc #mos16lo(__lisp65_workbench_overlay_start+2)
+	tay
+	lda $0107,x
+	sbc #mos16hi(__lisp65_workbench_overlay_start+2)
+	bcc .Lretired_window_not_ours
+	cmp #mos16hi(__lisp65_workbench_overlay_len)
+	bcc .Lretired_window_accept
+	bne .Lretired_window_not_ours
+	cpy #mos16lo(__lisp65_workbench_overlay_len)
+	bcs .Lretired_window_not_ours
+.Lretired_window_accept:
+	lda #mos16lo(retired_window_resume)
+	sta $0106,x
+	lda #mos16hi(retired_window_resume)
+	sta $0107,x
+	jmp c2_kernal_irq_return
+.Lretired_window_not_ours:
+	jmp c2_kernal_fail_closed
+	.size retired_window_brk_classifier, .-retired_window_brk_classifier
+
+	; Cleanup has already retired and wiped the overlay.  Re-entering it here
+	; would recurse through the defect, so preserve an existing pending error
+	; (or synthesize the stable E3e family-stage identity) and jump directly to
+	; the established top-level continuation.
+	.section .text.retired_window_resume,"ax",@progbits
+	.globl retired_window_resume
+	.type retired_window_resume,@function
+retired_window_resume:
+	; The recovery writer obeys the same liveness contract as retirement.
+	; Sanitize the saved register file before longjmp can restore it.
+	jsr c2_rtov_sanitize_recovery
+	lda c2_backstop_pending_code
+	bne .Lretired_window_pending
+	lda #62
+	sta c2_backstop_pending_code
+	stz c2_backstop_pending_symbol
+	stz c2_backstop_pending_symbol+1
+.Lretired_window_pending:
+	lda #mos16lo(lisp_toplevel)
+	sta __rc2
+	lda #mos16hi(lisp_toplevel)
+	sta __rc3
+	lda #1
+	ldx #0
+	jmp longjmp
+	.size retired_window_resume, .-retired_window_resume
+
 	.section .lisp65_c2_kernal_window.post_startup_output_seam,"ax",@progbits
 	.globl c2_kernal_output_cell
 	.type c2_kernal_output_cell,@function
 c2_kernal_output_cell:
 	sta $0800,x
 	rts
-
-	.section .lisp65_c2_kernal_window.state,"a",@progbits
-	.space 16, 0
 
 	.section .lisp65_c2_vectors,"a",@progbits
 	.word c2_kernal_nmi_handler

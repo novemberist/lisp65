@@ -6,6 +6,7 @@
 #include "eval.h"    /* load_source_stream */
 #include "reader.h"  /* reader_from_fetch (FASL compile-file source stream) */
 #include "vm_runtime_overlay.h" /* persistent source fetch across C1 overlay swaps */
+#include "c2_mapped_far_service.h" /* optional cold disk-chain placement */
 #ifdef LISP65_DISK_LIBS
 #include "vm_embed.h" /* vm_load_lib_ext + lisp65_stdlib_* (Stufe 2: Bytecode-Libs von Disk) */
 #ifdef LISP65_ATTIC_LIBRARY_SHELF
@@ -355,8 +356,21 @@ static LISP65_RESIDENT_ISLAND_FN char disk_source_fetch(void) {
 }
 
 /* Folgt der 1581-Sektorkette ab (T,S) und akkumuliert die Datenbytes DIREKT aus $DE00 in den
- * EXT-Datei-Puffer (kein Bank-0-Puffer). Rueckgabe = Anzahl akkumulierter Bytes (0 = leer). */
-static unsigned int disk_chain_to_scratch(unsigned char track, unsigned char sector) {
+ * EXT-Datei-Puffer (kein Bank-0-Puffer). Rueckgabe = Anzahl akkumulierter Bytes (0 = leer).
+ *
+ * Product builds park this cold body in the product-owned MAP arena.  The
+ * public entry remains ordinary and preserves the two-byte A/X result across
+ * MAP leave; see c2_product_cold_disk_chain.s.  Diagnostic builds retain their
+ * sealed historical source and never own the acceptance product world. */
+#if defined(__mos__) && defined(LISP65_C2_PRODUCT_COLD_DISK_CHAIN)
+unsigned int disk_chain_to_scratch(unsigned char track, unsigned char sector);
+LISP65_C2_MAPPED_PRODUCT_COLD_FN
+unsigned int disk_chain_to_scratch_far(unsigned char track,
+                                       unsigned char sector) {
+#else
+static unsigned int disk_chain_to_scratch(unsigned char track,
+                                          unsigned char sector) {
+#endif
     unsigned int n = 0, off, i, cnt, remaining;
     unsigned char t = track, s = sector, nt, ns;
     while (t) {

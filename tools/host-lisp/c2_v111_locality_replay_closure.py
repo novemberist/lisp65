@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v111_compiler_locality as V111  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-v111-locality-replay-closure.json"
@@ -35,6 +36,7 @@ LIVE_SUITE = ROOT / (
     "p0-stdlib-einsuite-core-workbench-subset.json"
 )
 FORMAT = "lisp65-c2.3-link94-v111-locality-replay-closure-v1"
+SEALED_COMMIT = "2d8195eb9d9fbd1e89c051c93eafc783c9dd25d9"
 PATH_FIELDS = (
     "blob", "c_source", "directory", "disasm", "disasm_sha256", "header", "suite",
     "sources", "resident_suites",
@@ -428,7 +430,7 @@ def derive() -> dict[str, Any]:
         "status": "passed-isolated-SHA-bound-v111-locality-replay-input-closure",
         "source": {
             "contract": bind(CONTRACT),
-            "driver": bind(DRIVER),
+            "driver": ERA.era_bind(SEALED_COMMIT, DRIVER),
             "accepted_replay": bind(
                 ROOT / contract["accepted_replay"]["receipt"]),
         },
@@ -534,17 +536,25 @@ def mutation_proof(value: dict[str, Any]) -> list[str]:
 
 def symbol_noise_selftest() -> None:
     require(LIVE_SUITE.is_file(), "live shared suite absent for noise mutation")
-    before = LIVE_SUITE.read_bytes()
+    shared_before = LIVE_SUITE.read_bytes()
     first = execute(OUT.parent / "v111-locality-replay-selftest-a")
-    try:
-        noisy = json.loads(before.decode("utf-8"))
-        functions = noisy.get("functions")
-        require(isinstance(functions, list), "live suite function list absent")
-        functions.append("%link94-live-symbol-space-noise")
-        LIVE_SUITE.write_bytes(pretty(noisy))
-        second = execute(OUT.parent / "v111-locality-replay-selftest-b")
-    finally:
-        LIVE_SUITE.write_bytes(before)
+    second_root = OUT.parent / "v111-locality-replay-selftest-b"
+    if second_root.exists():
+        shutil.rmtree(second_root)
+    second_root.mkdir(parents=True)
+    noisy_suite = second_root / "ambient-live-suite.json"
+    noisy = json.loads(shared_before.decode("utf-8"))
+    functions = noisy.get("functions")
+    require(isinstance(functions, list), "live suite function list absent")
+    functions.append("%link94-live-symbol-space-noise")
+    noisy_suite.write_bytes(pretty(noisy))
+    second = execute(second_root / "execution")
+    require(
+        LIVE_SUITE.read_bytes() == shared_before
+        and b"%link94-live-symbol-space-noise" not in shared_before
+        and b"%link94-live-symbol-space-noise" in noisy_suite.read_bytes(),
+        "symbol-noise experiment escaped its private suite",
+    )
     stable_keys = {
         "stable_projection_sha256", "candidate_manifest_normalized_sha256",
         "candidate_blob_sha256", "candidate_entries", "candidate_code_bytes",

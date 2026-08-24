@@ -1,0 +1,139 @@
+{
+  "format": "lisp65-c2-v160-comfort-repl-symbol-pricing-v2",
+  "recorded_on": "2026-08-18",
+  "status": "owner-required-bias-adjusted-pricing-only",
+  "owner_condition_commit": "3c750a0f",
+  "owner_bias_correction_commit": "88263f14",
+  "scope": "price the Comfort REPL symbol/name footprint against the measured projection bias before any Comfort source is created",
+  "baseline": {
+    "max_symbols": 752,
+    "namepool_bytes": 10208,
+    "projected_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 562
+    },
+    "release_minimum_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 384
+    },
+    "calibration": {
+      "v15_host_projected_free": {
+        "symbol_slots": 35,
+        "namepool_bytes": 549
+      },
+      "v15_hardware_observed_free": {
+        "symbol_slots": 34,
+        "namepool_bytes": 545
+      },
+      "measured_projection_bias": {
+        "symbol_slots": -1,
+        "namepool_bytes": -4
+      },
+      "required_projected_free": {
+        "symbol_slots": 33,
+        "namepool_bytes": 388
+      }
+    },
+    "pricing_rule": "apply the measured projection bias before comparing a capacity projection with the release floor"
+  },
+  "activation_contract": {
+    "native_repl_calls_lisp_read_line": false,
+    "shelf_entry_required": true,
+    "library_designator": "repl-comfort",
+    "public_entry": "repl",
+    "canonical_new_names": ["repl", "repl-comfort"],
+    "priced_named_private_helpers": 0,
+    "additional_named_helpers_require_repricing": true,
+    "reason": "the standing July design names repl-comfort in INIT.L65 and exposes (repl)"
+  },
+  "options": {
+    "zero_new_symbols": {
+      "viable": false,
+      "reason": "redefining read-line cannot replace or enter the native C REPL loop"
+    },
+    "standing_surface_without_reclamation": {
+      "projected_free": {
+        "symbol_slots": 30,
+        "namepool_bytes": 544
+      },
+      "bias_adjusted_free": {
+        "symbol_slots": 29,
+        "namepool_bytes": 540
+      },
+      "meets_release_contract": false
+    },
+    "two_helper_predecessor": {
+      "helpers": ["%rl-dispatch", "%rl-put"],
+      "projected_free_after_comfort": {
+        "symbol_slots": 32,
+        "namepool_bytes": 565
+      },
+      "bias_adjusted_free_after_comfort": {
+        "symbol_slots": 31,
+        "namepool_bytes": 561
+      },
+      "meets_release_contract": false
+    },
+    "reclaim_three_single_use_helpers": {
+      "helpers": ["%rl-dispatch", "%rl-put", "%take"],
+      "third_helper": {
+        "name": "%take",
+        "only_caller": "butlast",
+        "source": "lib/stdlib-lists.lisp",
+        "private_inline_real_suite_required": true
+      },
+      "reclaimed_symbol_slots": 3,
+      "reclaimed_namepool_bytes": 27,
+      "comfort_new_symbol_slots": 2,
+      "comfort_new_namepool_bytes": 18,
+      "projected_free_after_comfort": {
+        "symbol_slots": 33,
+        "namepool_bytes": 571
+      },
+      "bias_adjusted_free_after_comfort": {
+        "symbol_slots": 32,
+        "namepool_bytes": 567
+      },
+      "bias_adjusted_margin_above_release_minimum": {
+        "symbol_slots": 0,
+        "namepool_bytes": 183
+      },
+      "selected": true,
+      "implementation_condition": "the two cursor helpers are eliminated without changing accepted cursor semantics or allocation ceilings; %take is private-inlined through the real 247-case suite"
+    },
+    "one_name_convergence": {
+      "selected": false,
+      "canonical_name": "repl",
+      "projected_free_after_three_reclaims": {
+        "symbol_slots": 34,
+        "namepool_bytes": 584
+      },
+      "bias_adjusted_free_after_three_reclaims": {
+        "symbol_slots": 33,
+        "namepool_bytes": 580
+      },
+      "reason": "restores one measured slot of margin but changes the standing public library designator and requires owner approval"
+    },
+    "raise_max_sym": {
+      "selected": false,
+      "minimum_raise_to_bias_adjusted_floor": 3,
+      "structural_bank0_array_delta_bytes": 4,
+      "bank5_table_delta_bytes": 18,
+      "minimum_raise_for_one_measured_slot_margin": 4,
+      "one_margin_structural_bank0_array_delta_bytes": 4,
+      "one_margin_bank5_table_delta_bytes": 24,
+      "reason": "breaks the zero-resident freight contract and remains owner-only"
+    }
+  },
+  "walls": {
+    "comfort_source_must_be_absent_during_pricing": true,
+    "hardware_runs": 0,
+    "product_links": 0,
+    "do_not_lower_release_floor": true,
+    "do_not_erase_measured_bias": true,
+    "do_not_raise_max_sym": true,
+    "do_not_relabel_private_helpers_as_public": true,
+    "device_d5_required_before_release": true
+  },
+  "decision": "Comfort REPL may be implemented only after three private single-use helper slots are reclaimed; the standing repl-comfort/repl surface then clears the bias-adjusted projection requirement and lands on the calibrated 32-slot device floor"
+}

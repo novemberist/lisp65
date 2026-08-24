@@ -86,7 +86,7 @@ def authority(root: Path = ROOT) -> dict[str, Any]:
         and value.get("release") == "v1.5.0"
         and value.get("selected_variant") == "v1.5"
         and value.get("selected_media_sha256")
-            == "b1445da2a0d7c0d673b2481723b1f1f922008606066efc8c46ed0e51f0e96831"
+            == "efc9b181a10afb030a90e6c23806d9bc4d84a53d6fbfec3346d701fe8ce28436"
         and value.get("build_model")
             == "fresh-source-single-emitter-plus-one-WPLTO"
         and value.get("private_evidence_is_build_input") is False

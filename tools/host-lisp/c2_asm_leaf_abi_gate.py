@@ -174,6 +174,27 @@ ABI_POLICIES = {
 # table as the immutable 17-member vocabulary of its own artifact world;
 # current gates consume the merged table below.
 SUCCESSOR_ABI_POLICIES = {
+    "retired_window_brk_classifier": {
+        "source": ROOT / "src/c2_kernal_window.s",
+        "section_token": ".section .text.retired_window_brk_classifier",
+        "linked": "transitive-from-IRQ-handler-tail",
+        "abi": (
+            "IRQ-owned ASM tail continuation: entered with the handler's "
+            "post-prologue Z=0 and saved A/X/Y/Z frame; classify only a BRK "
+            "continuation in the retired window; rewrite only the stacked "
+            "PC on acceptance; return through c2_kernal_irq_return or tail "
+            "to the nonreturning fail-closed sink"),
+    },
+    "retired_window_resume": {
+        "source": ROOT / "src/c2_kernal_window.s",
+        "section_token": ".section .text.retired_window_resume",
+        "linked": "transitive-from-retired-window-classifier",
+        "abi": (
+            "RTI landing reached only through a rewritten retired-window "
+            "continuation: preserve an existing pending error or synthesize "
+            "E3e; establish lisp_toplevel in __rc2/__rc3 and tail to longjmp "
+            "with A/X=1/0; cleanup-free and nonreturning"),
+    },
     "c2_mapped_far_enter": {
         "source": ROOT / "src/c2_mapped_far_service.s",
         "section_token":

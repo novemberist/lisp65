@@ -35,6 +35,7 @@ import c2_v150_candidate_media as LINK97_MEDIA  # noqa: E402
 import c2_v20_crc_carveout_card as CARD  # noqa: E402
 import c2_v20_ownership_recharter as PRODUCER  # noqa: E402
 import c2_v20_vma_invariant_golden as INV  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
 
 
@@ -431,6 +432,20 @@ def library_facts(build_id: int, *, existing: bool) -> dict[str, Any]:
     return value
 
 
+# The closure receipt and the session handoff it seals are closed records, so
+# every authority they name has to be read in the world that sealed them.
+# Binding them to the working tree made closed records answer for living files:
+# a later producer edit and the 2026-08-17 correction of the string-op
+# expectation both drifted a closure that had long since been bound.  The
+# media content itself is still verified live -- only identity is era-bound.
+CLOSURE_ERA_COMMIT = "73c6f83d"
+
+
+def era_bind(path: Path) -> dict[str, Any]:
+    """Bind an authority as the media closure sealed it, not as it is today."""
+    return ERA.era_bind(CLOSURE_ERA_COMMIT, path)
+
+
 def session_value() -> dict[str, Any]:
     value = deepcopy(load(LINK97_MEDIA.SESSION))
     value["format"] = "lisp65-c2-v150-v20-device-session-v1"
@@ -441,7 +456,7 @@ def session_value() -> dict[str, Any]:
     value["authority"] = {
         "product_card": bind(CARD.RECEIPT),
         "media_closure": RECEIPT.relative_to(ROOT).as_posix(),
-        "release_contract": bind(RELEASE_CONTRACT),
+        "release_contract": era_bind(RELEASE_CONTRACT),
     }
     return value
 
@@ -544,7 +559,7 @@ def derive(*, configured: bool = False) -> dict[str, Any]:
             "green_card": bind(CARD.RECEIPT),
             "VMA_golden": bind(INV.GOLDEN),
             "product_manifest": bind(MANIFEST),
-            "producer": bind(DRIVER),
+            "producer": era_bind(DRIVER),
         },
         "Link97_closure_retirement": {
             "historical_receipt": bind(OLD_MEDIA_RECEIPT),

@@ -18,8 +18,10 @@ import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 from typing import Any, Iterator
 
 
@@ -40,6 +42,9 @@ import c2_v150_release_closure as CLOSURE  # noqa: E402
 import c2_v150_f018b_fix_card as FIX  # noqa: E402
 import c2_v20_ownership_recharter as OWN  # noqa: E402
 import c2_v21_wysiwyg_text_recovery_replacement_card as CARD  # noqa: E402
+import c2_v21_wysiwyg_candidate_contract as PLACEMENT  # noqa: E402
+import c2_v21_candidate_derived_local_return as CANDIDATE  # noqa: E402
+import c2_v21_map_mask_fix_card as MAP_CARD  # noqa: E402
 import c2_lite_canonical_product as CAN  # noqa: E402
 import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_v20_phase02b_header_consumption_card as HEADER  # noqa: E402
@@ -54,23 +59,24 @@ from elf_truth import ElfTruth  # noqa: E402
 
 BUILD = ROOT / "build/c2.3/v1.5.0-public-selected"
 MANIFEST = BUILD / "candidate-manifest.json"
+PREFLIGHT_OWNED_CHILDREN = frozenset(("ide-check", "ide-codemod"))
 STATIC_HEAP = ROOT / "config/c2-v150-public-ide-resident-heap.json"
 LINK95_SUITE = ROOT / "config/c2-v150-public-link95-suite.json"
 WHO_CALLS = ROOT / "config/c2-v150-public-who-calls-scoped.lisp"
 EXPECTED = {
     "artifact_set_sha256": (
-        "ae06622c09892a7102a6b305c9fdd13034834e0d1c43eb6b477e9ab212ce6631"),
-    "product_build_id": "b47f8efe",
-    "profile_build_id": "39c1dfac",
+        "cdb022874b4c9ee6dfb261182373259a4eeffcd7833509514555014fe46291b2"),
+    "product_build_id": "1cea8cf6",
+    "profile_build_id": "9a4c23dc",
     "roles": {
         "library-ide": (31886,
             "6320b070885e2de285b30eda350e95a7beefc0819fdec5ff2fbc0034d32cacd2"),
         "linked-product-elf": (630792,
-            "4f899d1e0c9bcc89d14c9d13c5384e6a843c4093ba9d1029b321820a11bf4942"),
+            "b0942ce0d75af2485197c47dd0d49d0c753c227ef124df090209053fb8d2ba09"),
         "c2-resident-prg": (41566,
-            "65fc01b0730d3e09bf2e97c6a0fda09e36f319c352f5a3ac934f674b891828d9"),
+            "70fd5752b885ee06b1c4fe17ccc0318c81137cbf7e897a1d4614a08533afd624"),
         "product-d81": (819200,
-            "b1445da2a0d7c0d673b2481723b1f1f922008606066efc8c46ed0e51f0e96831"),
+            "efc9b181a10afb030a90e6c23806d9bc4d84a53d6fbfec3346d701fe8ce28436"),
         "work-d81": (819200,
             "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"),
         "optional-library-d81": (819200,
@@ -181,6 +187,55 @@ def run(command: list[str], label: str) -> str:
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     require(result.returncode == 0, f"{label} red:\n{result.stdout}")
     return result.stdout
+
+
+def public_build_has_owned_state(root: Path) -> bool:
+    """Return whether *root* contains state owned by the one-shot build.
+
+    ``ide-check`` and ``ide-codemod`` are sibling preflight outputs.  Their
+    parent is deliberately shared with the product build, so the directory's
+    bare existence cannot be the one-shot predicate.  Every other child is
+    build-owned (or unknown and therefore fail-closed).
+    """
+    if not root.exists():
+        return False
+    require(root.is_dir() and not root.is_symlink(),
+            "v1.5 public build root is not a real directory")
+    return any(child.name not in PREFLIGHT_OWNED_CHILDREN
+               for child in root.iterdir())
+
+
+def lifecycle_selftest() -> None:
+    with tempfile.TemporaryDirectory(
+            prefix="lisp65-v150-public-lifecycle-") as raw:
+        base = Path(raw)
+        absent = base / "absent"
+        require(not public_build_has_owned_state(absent),
+                "absent public build root was treated as consumed")
+
+        preflight = base / "preflight-only"
+        for name in sorted(PREFLIGHT_OWNED_CHILDREN):
+            (preflight / name).mkdir(parents=True, exist_ok=True)
+        require(not public_build_has_owned_state(preflight),
+                "sibling preflight outputs consumed the public build")
+
+        mutations = (
+            ("completed-manifest", "candidate-manifest.json", False),
+            ("partial-product", "linked-product.json", False),
+            ("unknown-child", "future-output", True),
+        )
+        for label, name, directory in mutations:
+            candidate = base / label
+            (candidate / "ide-check").mkdir(parents=True)
+            target = candidate / name
+            if directory:
+                target.mkdir()
+            else:
+                target.write_text("owned\n", encoding="ascii")
+            require(public_build_has_owned_state(candidate),
+                    f"one-shot mutation survived: {label}")
+    print("c2-v150-public-product: LIFECYCLE SELFTEST PASS "
+          "preflight=2 mutations=3")
 
 
 def _historical_heap() -> tuple[B.Heap, set[str]]:
@@ -334,6 +389,26 @@ def prepare_link95_base() -> None:
         REDISPATCH.candidate_runtime(load(REDISPATCH.CONTRACT)),
         encoding="utf-8")
     base_suite = load(LINK95_SUITE)
+    sources = base_suite.get("sources")
+    require(isinstance(sources, list),
+            "Link-95 public base source inventory absent")
+    current_prefix = codemod.relative_to(ROOT).as_posix() + "/"
+    rewritten_sources: list[str] = []
+    codemod_sources = 0
+    for source in sources:
+        require(isinstance(source, str),
+                "Link-95 public base source is not a path")
+        marker = "/codemod/"
+        if source.startswith("build/") and marker in source:
+            rewritten_sources.append(
+                current_prefix + source.split(marker, 1)[1])
+            codemod_sources += 1
+        else:
+            rewritten_sources.append(source)
+    require(codemod_sources > 0
+            and all((ROOT / source).is_file() for source in rewritten_sources),
+            "Link-95 public base did not consume its build-local codemod")
+    base_suite["sources"] = rewritten_sources
     omissions = list(base_suite.get("allow_omitted_defuns", []))
     omissions.extend({"name": name,
                       "reason": "post-Link-95 source successor; not resident in this base"}
@@ -382,6 +457,78 @@ def prepare_link95_base() -> None:
         SUB.build()
     finally:
         SUB.BUILD, SUB.SPECS = old
+
+
+def configure_link95_paths() -> None:
+    """Keep the reconstructed Link-95 world inside this build's ownership."""
+    base = BUILD / "product-inputs/link95-base"
+    out = BUILD / "product-inputs/link95-closure"
+    L95.BASE = base
+    L95.BASE_SUITE = base / "link95-stdlib-suite.json"
+    L95.BASE_PRODUCT = (
+        base / "static-plane/narrow-static/product/substitution-artifacts.json")
+    L95.OUT = out
+    L95.CODEMOD = out / "codemod"
+    L95.SUITE = out / "link95-closed-stdlib-suite.json"
+    L95.STDLIB_PREFIX = out / "static-plane/narrow-static/stdlib-p0"
+    L95.OBSERVATIONS = out / "stdlib-observations.json"
+    L95.PRODUCT_DIR = out / "static-plane/narrow-static/product"
+    L95.PRODUCT = L95.PRODUCT_DIR / "substitution-artifacts.json"
+
+
+def configure_release_preflight_paths() -> None:
+    """Give the linker-free preflight a build-local one-shot root."""
+    target = BUILD / "product-inputs/release-preflight"
+    PRE.BUILD = target
+    PRE.STATIC = target / "static-plane/narrow-static"
+    PRE.SOURCES = target / "sources"
+    PRE.STDLIB_PREFIX = PRE.STATIC / "stdlib-p0"
+    PRE.STDLIB = PRE.STDLIB_PREFIX.with_suffix(".manifest.json")
+    PRE.PRODUCT = PRE.STATIC / "product/substitution-artifacts.json"
+    PRE.V6_PLANE = PRE.STATIC / "v6-semantics"
+
+
+def configure_product_card_paths() -> None:
+    """Project mutable profile/card outputs into the current build world."""
+    ownership = BUILD / "product-inputs/ownership"
+    OWN.INPUTS = ownership
+    OWN.CANDIDATE_PROFILE = ownership / "candidate-profile.json"
+    OWN.CANDIDATE_CONTRACT = ownership / "c2-lite-execution-contract.json"
+    OWN.CANDIDATE_HEADER = ownership / "c2_lite_static_plane.h"
+
+    card = BUILD / "product-link"
+    preflight = BUILD / "product-link-preflight"
+    CARD.BUILD = card
+    CARD.PREFLIGHT = preflight
+    CARD.PREFLIGHT_RECEIPT = preflight / "preflight.json"
+    CARD.SEMANTIC_RECEIPT = preflight / "semantic-repl-compile.json"
+    CARD.INVOCATION = preflight / "card-invocation.json"
+    CARD.PROJECTED_OWNERSHIP = preflight / "projected-ownership-contract.json"
+    CARD.PROJECTED_FULL_MAP = preflight / "projected-full-map-authority.json"
+    CARD.PRODUCER_RESULT = card / "producer-result.json"
+    CARD.SCOPE_RESULT = card / "owner-scope-result.json"
+    CARD.ACCEPTANCE_RESULT = card / "artifact-acceptance.json"
+    CARD.ABI_REPORT = card / "wplto/c2-asm-leaf-abi.json"
+    CARD.RECEIPT = card / "unused-public-product-card-receipt.json"
+    CARD.FINAL_RED = card / "unused-public-product-card-final-red.json"
+
+
+def configure_candidate_placement_contract() -> None:
+    """Bind placement truth to the ELF emitted by this build.
+
+    The historical liveness receipt describes the pre-WYSIWYG reader world.
+    Link 116 already replaced its pinned end/reserve pair with the accepted
+    candidate-derived contract.  A fresh public product build must project
+    that successor onto its own ELF instead of silently falling back to the
+    historical receipt through import order.
+    """
+    elf = CARD.BUILD / "wplto/lisp65-c2-substitution-linked.prg.elf"
+
+    def derive() -> dict[str, Any]:
+        return PLACEMENT.derive(elf)
+
+    MAP_CARD.placement_contract = derive
+    CANDIDATE.placement_contract = derive
 
 
 def prepare_public_release_authorities() -> None:
@@ -554,6 +701,7 @@ def prepare_public_release_authorities() -> None:
 
 
 def build_linked_product() -> tuple[Path, Path]:
+    configure_link95_paths()
     prepare_link95_base()
     original_candidate_suite = L95.candidate_suite
 
@@ -569,6 +717,24 @@ def build_linked_product() -> tuple[Path, Path]:
         L95.build_product()
     finally:
         L95.candidate_suite = original_candidate_suite
+    configure_release_preflight_paths()
+    # The release preflight is part of this build's one-shot product world.
+    # Its IDE and buffer manifests must therefore be the build-owned copies
+    # produced above, not mutable global convenience outputs which a later
+    # check-source target is allowed to regenerate.  Payload bytes are
+    # unchanged; this only closes the early-check/late-emitter idempotence
+    # seam exposed by the 2.3 authority rebind.
+    PRE.BASE_SPECS = (
+        ("ide", "ide", L95.BASE / "authorities/ide.manifest.json"),
+        ("idex", "idex", ROOT / (
+            "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/"
+            "libs/idex.manifest.json")),
+        ("m65d", "m65d", ROOT / (
+            "build/c2.2/substitution/published-nullary-call-bytecode-artifacts/"
+            "libs/m65d.manifest.json")),
+        ("buffer", "buffer", L95.BASE / "authorities/buffer.manifest.json"),
+        ("lcc", "lcc", ROOT / "build/post-promotion/v112/compiler/lcc.manifest.json"),
+    )
     original_source_suite = PRE.source_suite
 
     def source_suite():
@@ -584,7 +750,52 @@ def build_linked_product() -> tuple[Path, Path]:
         PRE.emit_static_plane()
     finally:
         PRE.source_suite = original_source_suite
+    # The historical card adapter asserts that the canonical emitter and its
+    # preflight consume one identical six-role tuple.  Project the build-local
+    # tuple at that real consumer boundary as well; changing PRE.BASE_SPECS
+    # alone only configured one half of the pair.
+    def project_build_local_specs() -> None:
+        specs = PRE.specs()
+        PRE.L95.CAN.SPECS = specs
+        req = PRE.L95.L94.V112.P.BASE.PROBE.REQ
+        req.SPECS = specs
+        req.F1W.SPECS = specs
+        req.F1W.PLANE.FRESH_MANIFESTS = tuple(
+            path for _key, _name, path in specs)
+
+    project_build_local_specs()
+    original_v112_configure = PRE.L95.L94.V112.configure
+
+    def configure_v112(*args: Any, **kwargs: Any) -> dict[str, Path]:
+        paths = original_v112_configure(*args, **kwargs)
+        # V112's historical adapter reconstructs its ambient six-role tuple.
+        # Project the selected build's tuple after that reconstruction and
+        # before Link-94 consumes it.
+        project_build_local_specs()
+        return paths
+
+    PRE.L95.L94.V112.configure = configure_v112
+    original_link95_configure = PRE.L95.configure_card
+
+    def configure_link95_card() -> dict[str, Path]:
+        # Successor adapters call configure_identity() repeatedly.  Reassert
+        # the paired emitter tuple at every real configuration boundary so a
+        # later adapter cannot restore the ambient historical tuple between
+        # preflight and Link-94's consumer assertion.
+        project_build_local_specs()
+        return original_link95_configure()
+
+    PRE.L95.configure_card = configure_link95_card
+    original_link94_configure = PRE.L95.L94.configure_card
+
+    def configure_link94_card() -> dict[str, Path]:
+        project_build_local_specs()
+        return original_link94_configure()
+
+    PRE.L95.L94.configure_card = configure_link94_card
     prepare_public_release_authorities()
+    configure_product_card_paths()
+    configure_candidate_placement_contract()
     OWN.configure_projection_paths()
     FIX.write_projection()
     CARD.install()
@@ -637,6 +848,12 @@ def product_check() -> dict[str, Any]:
 
 
 def configure_canonical_paths() -> None:
+    # Every action runs in a fresh process.  Reinstall the build-local product
+    # world before deriving Completion paths; relying on configuration left by
+    # the product action would silently route this consumer to historical
+    # defaults.
+    configure_release_preflight_paths()
+    configure_product_card_paths()
     target = BUILD / "canonical-product"
     CAN.BUILD = target
     CAN.WPLTO = CARD.BUILD / "wplto"
@@ -1014,7 +1231,8 @@ def check() -> dict[str, Any]:
 
 
 def build() -> dict[str, Any]:
-    require(not BUILD.exists(), "v1.5 public build is one-shot")
+    require(not public_build_has_owned_state(BUILD),
+            "v1.5 public build is one-shot")
     driver = str(Path(__file__).resolve())
     for action in ("product", "complete", "media", "selected"):
         result = subprocess.run(
@@ -1029,16 +1247,29 @@ def build() -> dict[str, Any]:
 
 def clean() -> None:
     if BUILD.exists():
-        require(BUILD.resolve().is_relative_to((ROOT / "build").resolve()),
+        require(BUILD.is_dir() and not BUILD.is_symlink()
+                and BUILD.resolve().is_relative_to((ROOT / "build").resolve()),
                 "clean path escaped build")
-        shutil.rmtree(BUILD)
+
+        def remove_readonly(function, path, _error) -> None:
+            target = Path(path)
+            require(target.resolve().is_relative_to(BUILD.resolve()),
+                    "clean callback escaped owned build")
+            if target.parent.resolve().is_relative_to(BUILD.resolve()):
+                target.parent.chmod(
+                    target.parent.stat().st_mode | stat.S_IWUSR | stat.S_IXUSR)
+            target.chmod(target.stat().st_mode | stat.S_IWUSR | stat.S_IXUSR)
+            function(path)
+
+        shutil.rmtree(BUILD, onerror=remove_readonly)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "action", choices=("ide-check", "product", "complete", "media",
-                           "selected", "check", "build", "clean"))
+                           "selected", "check", "build", "clean",
+                           "lifecycle-selftest"))
     action = parser.parse_args().action
     if action == "ide-check":
         ide_check()
@@ -1054,9 +1285,11 @@ def main() -> int:
         check()
     elif action == "build":
         build()
-    else:
+    elif action == "clean":
         clean()
         print("c2-v150-public-product: CLEAN")
+    else:
+        lifecycle_selftest()
     return 0
 
 

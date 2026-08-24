@@ -50,6 +50,7 @@ ZERO = "zero"
 NONZERO = "nonzero"
 UNKNOWN = "unknown"
 PRESERVED = "entry-Z-preserved"
+IRQ_ZERO_TAIL_TARGETS = {"retired_window_brk_classifier"}
 
 
 def _interrupt_entry(name: str) -> bool:
@@ -323,7 +324,12 @@ def _entry_exit_proof(
                     "abstract_Z_at_edge": state,
                 }
                 continue
-            expected = PRESERVED if is_interrupt else ZERO
+            # An IRQ-owned tail continuation is not an independent interrupt
+            # entry: it inherits the handler's post-prologue Z=0 and returns
+            # through that handler's saved frame.  Keep the identity explicit
+            # so no ordinary external tail silently gains this allowance.
+            expected = (ZERO if is_interrupt and target in IRQ_ZERO_TAIL_TARGETS
+                        else PRESERVED if is_interrupt else ZERO)
             require(
                 state == expected,
                 f"ASM tail edge violates Z discipline at "

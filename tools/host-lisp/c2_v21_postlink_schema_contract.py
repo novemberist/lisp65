@@ -19,6 +19,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v21_cpu_transport_card as CPU  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 import c2_v21_guard_invariant_card as PREV  # noqa: E402
 import c2_v21_guard_invariant_card_red_attribution as ATTR  # noqa: E402
 import c2_v21_local_return_identity_card as LOCAL  # noqa: E402
@@ -44,6 +45,9 @@ LOCAL_SOURCE = Path(LOCAL.__file__).resolve()
 AUTHORIZATION = "fb760d1c"
 RECORDED_ON = "2026-08-14"
 FORMAT = "lisp65-c2.3-v2.1-postlink-schema-contract-v1"
+# The receipt is sealed inside the replacement card's final red, so its own
+# driver identity is read at the sealing commit (see evidence_era).
+SEAL_ERA_COMMIT = "277b45ef"
 
 
 class SchemaError(RuntimeError):
@@ -253,12 +257,28 @@ def derive() -> dict[str, Any]:
             "schemas both pass before WPLTO."),
         "authority": {"authorization": authorization(), **predecessor(),
             "frozen_ELF": bind(ELF), "frozen_map": bind(MAP),
-            "driver": bind(DRIVER)},
+            "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "contract_gate": gate(),
         "execution_accounting": {"cards_consumed": 0, "WPLTO_runs": 0,
             "product_links": 0, "media_builds": 0, "device_contacts": 0},
         "claim_limit": "Host-only real-consumer preflight; no card has run.",
     }
+
+
+# This receipt is sealed inside the replacement card's final red, so it cannot
+# follow the tree; but what it gates is schema conformance, not file bytes.
+# Requiring byte equality made an unrelated value edit inside a release
+# contract read as "schema authority drift".  Identity and every consumed and
+# produced key still compare exactly; only the content digest of a validated
+# file is allowed to move, because the file is validated live on every run.
+def _schema_content(value: dict[str, Any]) -> dict[str, Any]:
+    value = deepcopy(value)
+    for row in value.get("contract_gate", {}).get("schema_consumers", []):
+        for field in ("producer_artifact", "consumer_source"):
+            binding = row.get(field)
+            if isinstance(binding, dict):
+                row[field] = {"path": binding.get("path")}
+    return value
 
 
 def validate(value: dict[str, Any], *, verify: bool) -> None:
@@ -280,7 +300,8 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
             "device_contacts": 0},
         "post-link schema receipt weakened")
     if verify:
-        require(value == derive(), "post-link schema authority drift")
+        require(_schema_content(value) == _schema_content(derive()),
+                "post-link schema authority drift")
 
 
 def receipt_mutations(value: dict[str, Any]) -> list[str]:

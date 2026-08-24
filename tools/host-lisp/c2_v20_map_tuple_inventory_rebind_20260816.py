@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v20_map_tuple_fix_card as M  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 PLAN = ROOT / "docs/planning/2.1-cpu-transport-work-plan.md"
@@ -31,6 +32,12 @@ HISTORICAL_FIXTURE_REBIND_SHA256 = (
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "3cfa7a36"
 RECORDED_ON = "2026-08-16"
+SEAL_ERA_COMMIT = "ec2480ca93ba08cc67a5ea78b9795bb77e4bfe5d"
+SEALED_MUTATIONS = [
+    "restore-live-count-29", "drop-authorized-successor",
+    "accept-unclassified-member", "rewrite-history",
+    "rewrite-fixture-history",
+]
 
 
 class RebindError(RuntimeError):
@@ -138,14 +145,18 @@ def derive() -> dict[str, Any]:
     successors = live.get("authorized_successors", {})
     historical_count = old["post_red_closure"][
         "real_global_ASM_inventory"]["declared_functions"]
+    historical_members = set(load(M.HISTORICAL_V19_VOCABULARY)["classes"]
+                             ["assembler_abi_policies"]["declared_members"])
+    current_members = set(live.get("classified_functions", []))
     require(
         live.get("expectation") == "rule-classified-candidate-inventory"
         and live.get("unclassified_functions") == []
         and live.get("declared_functions") ==
             len(live.get("classified_functions", []))
-        and live["declared_functions"] == historical_count + len(successors)
-        and sorted(successors) == ["c2_map_cpu_read", "c2_map_cpu_selector"],
-        "live Link-101 inventory delta is not the two authorized successors")
+        and len(historical_members) == historical_count
+        and current_members == historical_members | set(successors)
+        and set(successors) == current_members - historical_members,
+        "live Link-101 inventory delta is not the named authorized successors")
     return {
         "format": "lisp65-c2.3-v20-map-tuple-inventory-rebind-v1",
         "recorded_on": RECORDED_ON,
@@ -154,8 +165,8 @@ def derive() -> dict[str, Any]:
             "historical_final_red": bind(M.FINAL_RED),
             "prior_rebind": bind(M.FINAL_RED_REBIND),
             "historical_fixture_rebind": bind(FIXTURE_REBIND),
-            "current_driver": bind(M.DRIVER),
-            "rebind_driver": bind(DRIVER)},
+            "current_driver": ERA.era_bind(SEAL_ERA_COMMIT, M.DRIVER),
+            "rebind_driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "historical": {"evidence_untouched": True,
                        "declared_functions": historical_count,
                        "fixture_rebind_evidence_untouched": True,
@@ -175,7 +186,31 @@ def derive() -> dict[str, Any]:
 
 
 def validate(value: dict[str, Any]) -> None:
+    require(value.get("authority", {}).get("current_driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, M.DRIVER)
+            and value.get("authority", {}).get("rebind_driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
+            "Link-101 tool provenance escaped its sealing era")
     require(value == derive(), "Link-101 inventory rebind drift")
+
+
+def validate_sealed(value: dict[str, Any]) -> None:
+    """Validate the immutable 31-member world in its own sealing era."""
+    inventory = value.get("live_inventory", {})
+    delta = value.get("delta", {})
+    require(
+        value.get("authority", {}).get("current_driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, M.DRIVER)
+        and value.get("authority", {}).get("rebind_driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)
+        and value.get("historical", {}).get("declared_functions") == 29
+        and inventory.get("declared_functions") == 31
+        and inventory.get("unclassified_functions") == []
+        and set(delta.get("authorized_successors", [])) == {
+            "c2_map_cpu_read", "c2_map_cpu_selector"}
+        and delta.get("count") == 2
+        and value.get("change", {}).get("historical_receipt_rewritten") is False,
+        "sealed Link-101 inventory world drift")
 
 
 def mutations(value: dict[str, Any]) -> list[str]:
@@ -190,6 +225,10 @@ def mutations(value: dict[str, Any]) -> list[str]:
             historical_receipt_rewritten=True),
         "rewrite-fixture-history": lambda x: x["historical"].update(
             fixture_rebind_evidence_untouched=False),
+        "collapse-era-to-live": lambda x: x["authority"].update(
+            current_driver=ERA.era_bind("HEAD", M.DRIVER)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            rebind_driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -212,15 +251,24 @@ def write() -> None:
 
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
-    source_gate(); validate(value)
-    require(rejected == mutations(value), "inventory mutation receipt drift")
-    print("Link-101 inventory rebind: CHECK PASS rule-classified live=31")
+    source_gate(); validate_sealed(value)
+    current = derive(); validate(current)
+    require(rejected == SEALED_MUTATIONS,
+            "sealed inventory mutation receipt drift")
+    require(len(mutations(current)) == 7,
+            "live inventory era mutations did not run")
+    added = sorted(set(current["live_inventory"]["classified_functions"])
+                   - set(value["live_inventory"]["classified_functions"]))
+    require(added == ["retired_window_brk_classifier", "retired_window_resume"],
+            f"Link-101 additive successor drift: {added}")
+    print("Link-101 inventory rebind: CHECK PASS "
+          "sealed=31 live=33 additive=2")
 
 
 def selftest() -> None:
     source_gate(); value = derive()
-    require(len(mutations(value)) == 5, "inventory mutation count drift")
-    print("Link-101 inventory rebind: SELFTEST PASS mutations=5")
+    require(len(mutations(value)) == 7, "inventory mutation count drift")
+    print("Link-101 inventory rebind: SELFTEST PASS mutations=7")
 
 
 def main() -> int:

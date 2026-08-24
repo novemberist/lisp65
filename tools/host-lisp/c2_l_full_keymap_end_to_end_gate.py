@@ -30,6 +30,7 @@ CONTRACT = ROOT / "config/v11-l-lite-keymap.json"
 CROSS_CHECK = ROOT / "config/c2-l-full-keymap-probe.json"
 WINDOW = ROOT / "src/c2_kernal_window.s"
 VM = ROOT / "src/vm.c"
+NORMALIZATION_H = ROOT / "src/petscii_normalization.h"
 RUNTIME_H = ROOT / "src/c2_kernal_runtime.h"
 GENERATED = ROOT / "lib/ide-keymap-generated.lisp"
 WERKBANK = ROOT / "tests/bytecode/stdlib/p0-stdlib-werkbank-subset.json"
@@ -162,6 +163,7 @@ def source_bundle() -> dict[str, Any]:
         "cross_check": json.loads(CROSS_CHECK.read_text(encoding="utf-8")),
         "window": WINDOW.read_text(encoding="utf-8"),
         "vm": VM.read_text(encoding="utf-8"),
+        "normalization_h": NORMALIZATION_H.read_text(encoding="utf-8"),
         "runtime_h": RUNTIME_H.read_text(encoding="utf-8"),
         "generated": GENERATED.read_text(encoding="utf-8"),
         "werkbank": json.loads(WERKBANK.read_text(encoding="utf-8")),
@@ -232,7 +234,9 @@ def validate(bundle: dict[str, Any], *, run_oracle: bool) -> dict[str, Any]:
     )
     vm = bundle["vm"]
     require(
-        "else if (c >= 'A' && c <= 'Z') c += 0x20;" in vm,
+        "lisp65_normalize_petscii((uint8_t)c, &event_modifiers)" in vm
+        and "code >= 0x41u && code <= 0x5au" in bundle["normalization_h"]
+        and "return (uint8_t)(code + 0x20u);" in bundle["normalization_h"],
         "vm_key_event no longer performs the raw-88 to code-120 normalisation",
     )
     require(
@@ -364,9 +368,10 @@ def mutation_tests(bundle: dict[str, Any]) -> int:
         ".Lstore_event:\n\tldz #$00\n\tsta (__rc2),z",
         ".Lstore_event:\n\tldz #$00\n\tsta C2K_EVENT_CODE",
         1)}))
-    add("normalization", lambda b: b.update({"vm": b["vm"].replace(
-        "else if (c >= 'A' && c <= 'Z') c += 0x20;",
-        "else if (c >= 'A' && c <= 'Z') c += 0x00;", 1)}))
+    add("normalization", lambda b: b.update({"normalization_h":
+        b["normalization_h"].replace(
+            "return (uint8_t)(code + 0x20u);",
+            "return (uint8_t)(code + 0x00u);", 1)}))
     add("consumer-modifiers", lambda b: b.update({"generated": b["generated"].replace(
         "(ide-event-modifiers event)", "nil", 1)}))
     add("compiled-source", lambda b: b["werkbank"]["sources"].remove(

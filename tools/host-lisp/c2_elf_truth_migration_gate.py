@@ -168,6 +168,50 @@ COLUMN_TOOL_TOKENS = (
     'llvm-readelf"', "llvm-readelf'",
     'llvm-size"', "llvm-size'",
 )
+COLUMN_TOOL_NAMES = ("llvm-nm", "llvm-readelf", "llvm-size")
+# Naming a column tool is not the same act as parsing its columns.  A source
+# that hands the toolchain path to another script parses nothing; the
+# accountable party is the script named in the same call.  The rule therefore
+# bites on the act it claims, and stays fail-closed: a mention that is not
+# handed to an accountable parser counts as hand parsing and must be pinned.
+
+
+def _mentions_column_tool(value: object) -> bool:
+    return isinstance(value, str) and any(
+        name in value for name in COLUMN_TOOL_NAMES)
+
+
+def delegated_parsers(source: str, accountable: set[str], *,
+                      filename: str = "<source>") -> set[str] | None:
+    """Accountable parsers every column-tool mention is handed to, else None."""
+    try:
+        tree = ast.parse(source, filename=filename)
+    except SyntaxError:
+        return None
+    mentions = {id(node) for node in ast.walk(tree)
+                if isinstance(node, ast.Constant)
+                and _mentions_column_tool(node.value)}
+    if not mentions:
+        return None
+    attributed: set[int] = set()
+    delegates: set[str] = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        named = {child.value for child in ast.walk(node)
+                 if isinstance(child, ast.Constant)
+                 and child.value in accountable}
+        if not named:
+            continue
+        inside = {id(child) for child in ast.walk(node)
+                  if isinstance(child, ast.Constant)
+                  and _mentions_column_tool(child.value)}
+        if inside:
+            attributed |= inside
+            delegates |= named
+    if mentions - attributed:
+        return None
+    return delegates
 
 
 def ungoverned_column_parsers(contract: dict[str, Any]) -> dict[str, Any]:
@@ -181,15 +225,25 @@ def ungoverned_column_parsers(contract: dict[str, Any]) -> dict[str, Any]:
         "ungoverned column-parser pin is malformed",
     )
     tools = Path(__file__).resolve().parent
+    accountable = set(pinned) | GOVERNED_SOURCES
     found = set()
+    parsers = set()
+    delegating: dict[str, list[str]] = {}
     for path in sorted(tools.glob("*.py")):
         if path.name in GOVERNED_SOURCES:
             continue
         source = path.read_text(encoding="utf-8")
-        if any(token in source for token in COLUMN_TOOL_TOKENS) \
-                and "ElfTruth" not in source:
-            found.add(path.name)
-    added = sorted(found - set(pinned))
+        if not any(token in source for token in COLUMN_TOOL_TOKENS) \
+                or "ElfTruth" in source:
+            continue
+        found.add(path.name)
+        delegates = delegated_parsers(
+            source, accountable - {path.name}, filename=path.name)
+        if delegates:
+            delegating[path.name] = sorted(delegates)
+        else:
+            parsers.add(path.name)
+    added = sorted(parsers - set(pinned))
     require(
         not added,
         "new tool parses ELF columns by hand instead of using shared ElfTruth: "
@@ -199,6 +253,8 @@ def ungoverned_column_parsers(contract: dict[str, Any]) -> dict[str, Any]:
         "scope_note": pin["scope"],
         "pinned": len(pinned),
         "present": len(found),
+        "hand_parsers": len(parsers),
+        "delegating": {name: delegating[name] for name in sorted(delegating)},
         "retired_since_pin": sorted(set(pinned) - found),
     }
 
@@ -231,11 +287,35 @@ def selftest() -> None:
         raise MigrationError(
             "a column parser missing from the pin was accepted silently")
 
+    # The rule must bite on the act it claims.  Handing the toolchain path to
+    # an accountable parser is delegation; every other mention counts as hand
+    # parsing, including a mention that merely sits near a delegating call.
+    accountable = {"resident_island.py"}
+    require(
+        delegated_parsers(
+            'PRODUCT.tool("resident_island.py", "materialize",\n'
+            '             "--nm", str(TOOLCHAIN / "llvm-nm"))',
+            accountable) == accountable,
+        "delegation to an accountable parser was not attributed",
+    )
+    for mutation in (
+        'subprocess.run([str(nm), "--defined-only", str(elf)])\n'
+        'check(nm, "llvm-nm", executable=True)',
+        'out = run(["llvm-size", "-A", str(elf)], capture_output=True)',
+        'args = ["--nm", str(TOOLCHAIN / "llvm-nm"), "--elf", str(elf)]',
+        'PRODUCT.tool("resident_island.py", "materialize")\n'
+        'raw = subprocess.run([str(TOOLCHAIN / "llvm-nm"), str(elf)])',
+    ):
+        require(
+            delegated_parsers(mutation, accountable) is None,
+            f"hand parsing was credited as delegation: {mutation!r}",
+        )
+
 
 def main() -> int:
     if len(sys.argv) == 2 and sys.argv[1] == "--selftest":
         selftest()
-        print("c2-elf-truth-migration: SELFTEST PASS mutations=5")
+        print("c2-elf-truth-migration: SELFTEST PASS mutations=10")
         return 0
     require(len(sys.argv) == 1, "usage: c2_elf_truth_migration_gate.py [--selftest]")
     result = collect()
@@ -244,7 +324,9 @@ def main() -> int:
         "c2-elf-truth-migration: PASS "
         f"consumers={len(result['consumers'])} private-in-governed=0 "
         f"ungoverned-probes-pinned={ungoverned['pinned']} "
-        f"present={ungoverned['present']}")
+        f"mentions={ungoverned['present']} "
+        f"hand-parsers={ungoverned['hand_parsers']} "
+        f"delegating={len(ungoverned['delegating'])}")
     return 0
 
 

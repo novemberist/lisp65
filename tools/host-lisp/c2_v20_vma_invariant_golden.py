@@ -34,6 +34,7 @@ import c2_golden_layout_inversion as LEGACY  # noqa: E402
 import c2_product_substitution_link as LINK  # noqa: E402
 import c2_stack_overlay_ownership as OWN  # noqa: E402
 import c2_v20_invariant_golden as V2  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -105,6 +106,20 @@ def bind(path: Path) -> dict[str, Any]:
         "bytes": path.stat().st_size,
         "sha256": sha(path),
     }
+
+
+# The review receipt witnesses the world its reviewer saw.  Binding the two
+# gate sources to the working tree made a historical record depend on living
+# code: every later edit to the linker producer drifted the receipt and bought
+# another rebind (2026-08-14, 2026-08-16).  The authorities are therefore bound
+# to the era commit that carried the review, which reproduces the reviewed
+# bytes exactly and cannot drift again.
+ERA_COMMIT = "d6141fa3bd8b1a1bd4ca8d0fa4b93efb794710c9"
+
+
+def era_bind(path: str) -> dict[str, Any]:
+    """Bind a gate source as the reviewing era saw it, not as it is today."""
+    return ERA.era_bind(ERA_COMMIT, path)
 
 
 def git_binding(commit: str, path: str) -> dict[str, Any]:
@@ -559,8 +574,10 @@ def build_receipt() -> dict[str, Any]:
             "source_world_elf": bind(LEGACY.FINAL_ELF),
             "shared_defect_world_elf": bind(BROKEN_WORLD_ELF),
             "repaired_candidate_world_elf": bind(REPAIRED_WORLD_ELF),
-            "invariant_gate": bind(Path(__file__).resolve()),
-            "closer_gate": bind(ROOT / "tools/host-lisp/c2_product_substitution_link.py"),
+            "invariant_gate": era_bind(
+                "tools/host-lisp/c2_v20_vma_invariant_golden.py"),
+            "closer_gate": era_bind(
+                "tools/host-lisp/c2_product_substitution_link.py"),
         },
         "review_question": (
             "Accept the VMA-only SHA-bound golden once.  Only a later "
@@ -601,6 +618,15 @@ def selftest() -> None:
     closer_crc_proof()
     require(worlds["repaired_candidate_world"]["capacity_arenas"] == 11,
             "repaired candidate capacity closure drift")
+
+    # The era binding must reproduce the reviewed bytes and must not silently
+    # accept today's living sources in their place.
+    require(canonical(build_receipt()) == RECEIPT.read_bytes(),
+            "era-bound review reconstruction left the reviewed receipt")
+    for path in ("tools/host-lisp/c2_v20_vma_invariant_golden.py",
+                 "tools/host-lisp/c2_product_substitution_link.py"):
+        require(era_bind(path) != bind(ROOT / path),
+                f"era authority collapsed onto the living source: {path}")
     print("2.0 VMA invariant golden: SELFTEST PASS "
           f"mutations={len(mutations)} stored-order=0 worlds=3 card=locked")
 

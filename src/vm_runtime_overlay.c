@@ -1,6 +1,7 @@
 /* Resident bootstrap and Attic-backed catalog verifier for runtime overlays. */
 #include "vm_runtime_overlay.h"
 #include "c2_kernal_layout.h"
+#include "c2_mapped_far_service.h"
 #ifdef LISP65_C2_E000_REOPEN
 #include "c2_kernal_facade.h"
 #endif
@@ -456,17 +457,18 @@ rtov_verifiers[LISP65_RUNTIME_OVERLAY_APPLICATION_SLOT_BASE];
 #endif
 
 /* Only the bytes needed to clean the shared execution window survive calls. */
-#if defined(__mos__) && \
-    (defined(LISP65_RTOV_MINIMAL_RESIDENT_RETRY_PROBE) || \
-     defined(LISP65_RTOV_SHARED_RESIDENT_RETRY_PROBE))
-/* Linker-visible only for the non-promotable minimal-resident retry probe.
- * The ordinary product keeps this resident byte-count private. */
-uint16_t rtov_loaded_len;
-#else
 static uint16_t rtov_loaded_len;
-#endif
 static uint8_t rtov_fault;
 static uint8_t rtov_busy;
+#if defined(__mos__)
+/* Zero-byte linker identities for the execution-boundary classifier.  Keep
+ * runtime-overlay state private to this C owner while allowing the resident
+ * assembler to bind its final addresses. */
+__asm__(".globl c2_backstop_rtov_loaded_len\n"
+        ".set c2_backstop_rtov_loaded_len, rtov_loaded_len\n"
+        ".globl c2_backstop_rtov_busy\n"
+        ".set c2_backstop_rtov_busy, rtov_busy\n");
+#endif
 static vm_runtime_overlay_repeat_predicate_fn rtov_repeat;
 /* The installer handoff and diagnostic seams retain these named context and
  * result/target slots. Installer-only volatile accesses below prevent
@@ -1100,12 +1102,21 @@ static LISP65_RESIDENT_ISLAND_FN uint8_t rtov_transaction_context(
 /* The boot installer creates the Island that owns rtov_transaction_context.
  * It may therefore enter that function only after READY has been published.
  * Keep the discriminator test resident; stale bytes at $1800 are untrusted. */
+#if defined(__mos__) && defined(LISP65_CODE_WINDOW_CONVERGENCE)
+LISP65_C2_MAPPED_FAR_FN uint8_t rtov_transaction_context_if_ready_far(
+#else
 static RTOV_NOINLINE uint8_t rtov_transaction_context_if_ready(
+#endif
         rtov_verify_context *verify, uint8_t publish) {
     if (!RTOV_TRANSACTION_ACTIVE()) return 0;
     if (rtov_island_state != RTOV_ISLAND_READY) return 0xfeu;
     return rtov_transaction_context(verify, publish);
 }
+
+#if defined(__mos__) && defined(LISP65_CODE_WINDOW_CONVERGENCE)
+uint8_t rtov_transaction_context_if_ready(
+        rtov_verify_context *verify, uint8_t publish);
+#endif
 #endif
 #endif
 

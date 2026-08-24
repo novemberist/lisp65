@@ -4,6 +4,22 @@ This is the maintained user-facing issue register for lisp65 1.5.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
+## Active v1.5.0 issue: boot refill can trust an incomplete DMA read
+
+Status: **latent and timing-dependent; fixed in v1.6.0**
+
+The v1.5.0 boot and library-refill path contains one unverified DMA read. On
+unfavorable hardware timing it can accept an incomplete code refill as
+successful; the likely visible symptom is a sporadic `*** vm: bad bytecode`
+during startup or library loading. Cold-restart from the product disk if this
+occurs.
+
+The issue was found after the v1.5.0 release. Its shipped hardware sessions and
+ordinary use completed successfully, and no public installation has reported
+the symptom. v1.6.0 removes the unchecked path and verifies the final linked
+reader. A v1.5.1 backport is not planned; that option remains open if a field
+report arrives before v1.6.0 is released.
+
 ## Active product limitation: Freezer during a definition
 
 Status: **documented; C2.3-deferred**
@@ -105,6 +121,29 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
+## Active v1.6-candidate finding: evaluator polling races Comfort capture
+
+Status: **product mechanism attributed; single-owner fix under qualification**
+
+A v1.6 development measurement slowly produced eight visible Comfort-REPL
+characters using 11 physical character attempts. Product counters read
+`raw=seen=stored=taken=8`: every event presented at the queue boundary was
+read, stored and consumed, while three attempts were absent before that first
+witness. The loss did not depend on fast typing or product backlog in this
+measurement.
+
+That arithmetic locates the loss before the capture IRQ's raw witness; it does
+not prove that the platform failed to create the event. Final-ELF evidence
+subsequently found the product's second reader of the same hardware queue:
+`lisp_poll()` can consume and acknowledge an ordinary event while the Comfort
+capture is armed. Whichever reader runs first owns that event, explaining both
+the slow-typing loss and the smaller raw count.
+
+The correction gives an armed capture sole ownership of the hardware queue;
+`lisp_poll()` retains RUN/STOP through the independent matrix-pending latch.
+Until the corrected final product passes hardware acceptance, repeat a missing
+character normally. This finding is not a keyboard/core limitation.
+
 ## Active Ship limitation: RUN/STOP source not independently verified
 
 Standalone Ship runtimes poll the historical KERNAL STKEY byte at `$91` for
@@ -122,6 +161,25 @@ its job, and the stop is deliberate rather than a crash. A capture body that
 would report the cause needs three bytes of fixed-block space that are not
 available; the resident geometry is closed. If you meet such a stop, the
 reproducer and the surrounding session are what the maintainers need.
+
+## Active limitation: an error during runtime-overlay work can stop fail-closed
+
+Status: **pre-existing in v1.5; constructive recovery deferred to v1.7**
+
+An ordinary reader or evaluation error while runtime-overlay code is active
+can retire and clear the overlay while a control transfer into that generation
+is still live. If that transfer is later taken, the cleared byte is decoded as
+BRK and the existing fail-closed handler deliberately stops on a red-bordered
+screen instead of returning to the prompt.
+
+Cold-restart lisp65 after such a stop and preserve the form that preceded it.
+The shipped v1.5 ELF already contains the same transient overlay phase, the
+same relevant transfer origin and the abort/wipe/re-entry path; v1.6 did not
+introduce this defect class. The exact observed transfer was reproduced only
+on a v1.6 development candidate, so no claim is made that the identical
+dynamic carrier was seen on released v1.5 hardware. A v1.7 item owns the
+carrier-independent backstop at the execution boundary; v1.6 does not spend
+closed resident capacity on a late recovery retrofit.
 
 ## Informative performance positions
 

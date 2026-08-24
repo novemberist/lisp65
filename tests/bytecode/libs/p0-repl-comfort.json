@@ -1,0 +1,103 @@
+{
+  "ignored_output_codes": [17, 19],
+  "format": "lisp65-bytecode-p0-disk-lib-suite-v1",
+  "name": "repl-comfort",
+  "d81_name": "REPL",
+  "description": "v1.6 heap-backed balanced-input REPL shelf over the core cursor editor and IDE scanner.",
+  "provides": ["repl-comfort"],
+  "requires": ["core", "ide"],
+  "sources": ["lib/repl-comfort.lisp"],
+  "functions": ["%repl-read", "%repl-step", "repl"],
+  "require_all_defuns": true,
+  "tailcall_self": ["%repl-read", "%repl-step"],
+  "resident_suites": [
+    "p0-repl-comfort-resident.json"
+  ],
+  "allowed_external_calls": [
+    "%ide-line-net-depth", "%read-line-loop", "%rl-render", "lcc-run"
+  ],
+  "abi_profile": "dialect-v2",
+  "strict_arity": true,
+  "private_key_event_modes": true,
+  "max_call_args": 12,
+  "cases": [
+    {
+      "name": "comfort-balanced-expression",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10, 10, 10],
+      "max_steps": 3000000,
+      "key_events": [40, 43, 32, 49, 32, 50, 41, 13, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-multiline-balanced",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10, 10, 10, 10],
+      "max_steps": 3000000,
+      "key_events": [40, 43, 32, 49, 13, 50, 41, 13, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-overclose-runs-nothing",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10, 42, 42, 42, 32, 114, 101, 97, 100, 101, 114, 58, 32, 117, 110, 109, 97, 116, 99, 104, 101, 100, 32, 99, 108, 111, 115, 101, 32, 112, 97, 114, 101, 110, 116, 104, 101, 115, 105, 115, 10, 10],
+      "max_steps": 3000000,
+      "key_events": [41, 40, 43, 32, 49, 32, 57, 41, 13, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-history-up",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10, 10, 10, 10, 10],
+      "max_steps": 3000000,
+      "key_events": [40, 43, 32, 49, 32, 49, 41, 13, 145, 13, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-cursor-down-empty-boundary",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10],
+      "max_steps": 3000000,
+      "key_events": [17, {"empty_polls": 1}, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-auto-indent-prefix",
+      "expr": "(%repl-read \"  \" nil 0 80 24)",
+      "expect": "\"  x\"",
+      "max_steps": 300000,
+      "key_events": [120, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10]
+    },
+    {
+      "name": "comfort-string-parens-do-not-continue",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10, 10, 10],
+      "max_steps": 3000000,
+      "key_events": [40, 115, 116, 114, 105, 110, 103, 45, 108, 101, 110, 103, 116, 104, 32, 34, 40, 34, 41, 13, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-comment-parens-do-not-close",
+      "expr": "(repl)",
+      "expect": "nil",
+      "expect_output_codes": [10, 10, 10, 10],
+      "max_steps": 3000000,
+      "key_events": [40, 43, 32, 49, 32, 59, 32, 105, 103, 110, 111, 114, 101, 100, 32, 41, 13, 50, 41, 13, 13],
+      "expect_key_events_remaining": 0
+    },
+    {
+      "name": "comfort-history-ring-caps-at-ten",
+      "expr": "(length (%repl-read -1 (list \"0\" \"1\" \"2\" \"3\" \"4\" \"5\" \"6\" \"7\" \"8\" \"9\" \"10\") 0 0 0))",
+      "expect": "10",
+      "max_steps": 300000
+    }
+  ]
+}

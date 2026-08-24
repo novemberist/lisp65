@@ -21,6 +21,7 @@ import v2_native_function_registry as REGISTRY  # noqa: E402
 
 CONTRACT = ROOT / "config/c2-bound-artifact-source-parity.json"
 PRODUCT_PROFILE = ROOT / "config/c2-l-full-product-profile.json"
+PUBLIC_PRODUCT_AUTHORITY = ROOT / "config/c2-v150-public-build-authority.json"
 EXPECTED_CLASSES = {
     "device-lcc-carrier",
     "keymaps",
@@ -94,6 +95,7 @@ def contract_gate() -> dict[str, Any]:
             "carrier-not-bound-by-product",
             "bound-manifest-hash-drift",
             "stale-manifest-source-hash",
+            "historical-product-profile-pinning",
         },
         "bound-artifact contract envelope drift",
     )
@@ -565,10 +567,26 @@ def resolve_tier_path(carrier_path: Path) -> Path:
     raise AssertionError("unreachable")
 
 
+def current_public_authority() -> dict[str, Any]:
+    value = load(PUBLIC_PRODUCT_AUTHORITY)
+    require(
+        value.get("format") == "lisp65-c2-lite-public-build-authority-v3"
+        and value.get("candidate_manifest_path")
+        == "build/c2.3/v1.5.0-public-selected/candidate-manifest.json"
+        and value.get("product_manifest_path")
+        == (
+            "build/c2.3/v1.5.0-public-selected/product-link/static-plane/"
+            "narrow-static/product/substitution-artifacts.json"
+        ),
+        "current public product authority drift",
+    )
+    return value
+
+
 def default_authorities() -> tuple[Path, Path, Path, Path | None]:
-    profile = load(PRODUCT_PROFILE)
+    authority = current_public_authority()
     product_path = root_path(
-        profile["authority"]["product_manifest"],
+        authority["product_manifest_path"],
         "current product manifest authority")
     product = load(product_path)
     carriers = []
@@ -584,9 +602,7 @@ def default_authorities() -> tuple[Path, Path, Path, Path | None]:
     )
     carrier_path = carriers[0]
     tier_path = resolve_tier_path(carrier_path)
-    binding = profile["authority"].get("manifest_source_bindings")
-    source_path = (ROOT / binding).resolve() if binding else None
-    return carrier_path, tier_path, product_path, source_path
+    return carrier_path, tier_path, product_path, None
 
 
 def mutation_gate() -> list[str]:
@@ -630,7 +646,11 @@ def mutation_gate() -> list[str]:
     source_binding = {"sha256": "0" * 64}
     if source_binding["sha256"] != hashlib.sha256(b"source").hexdigest():
         accepted.append("stale-manifest-source-hash")
-    require(len(accepted) == 8, "mutation selftest did not reject every class")
+    historical = load(PRODUCT_PROFILE)["authority"]["product_manifest"]
+    current = current_public_authority()["product_manifest_path"]
+    if historical != current:
+        accepted.append("historical-product-profile-pinning")
+    require(len(accepted) == 9, "mutation selftest did not reject every class")
     return accepted
 
 
@@ -801,9 +821,15 @@ def main() -> int:
         # with --require-artifact where absence is a hard failure.  Any
         # partially present state (entry point exists but pieces are
         # missing or stale) stays a hard failure in both modes.
-        profile = load(PRODUCT_PROFILE)
-        entry = ROOT / profile["authority"]["product_manifest"]
+        authority = current_public_authority()
+        candidate = ROOT / authority["candidate_manifest_path"]
+        entry = ROOT / authority["product_manifest_path"]
         if not entry.is_file():
+            require(
+                not candidate.exists(),
+                "current public product is partial: candidate manifest exists "
+                f"but product authority is absent: {relative(entry)}",
+            )
             require(
                 not args.require_artifact,
                 "required bound product is absent: "

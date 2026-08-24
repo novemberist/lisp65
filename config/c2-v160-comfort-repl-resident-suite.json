@@ -1,0 +1,35 @@
+{
+  "extends": "c2-v150-public-link95-suite.json",
+  "sources": [
+    "lib/sexp-depth.lisp",
+    "tests/bytecode/fixtures/c2-v160-lcc-macro-p.lisp"
+  ],
+  "functions": [
+    "%rl-render", "%rl-cut", "%rl-move", "%rl-put", "%rl-dispatch",
+    "%read-line-loop", "read-line", "%rl-screen-tail",
+    "%ide-line-net-depth", "%lcc-macro-p"
+  ],
+  "remove_functions": [
+    "%read-line-clear-from", "%read-line-render-reverse",
+    "%read-line-finish"
+  ],
+  "tailcall_self": ["%ide-line-net-depth"],
+  "private_inline_functions": [
+    "%banner-runs",
+    "%banner-subtitle",
+    "%number->string-result",
+    "%load-lib-note-loaded",
+    "%take",
+    "%case-fold-list",
+    "%fasl-len",
+    "%subseq-list",
+    "%append2",
+    "%require-c2d-header-layout-p",
+    "%fasl-fs"
+  ],
+  "min_private_inline_functions": 11,
+  "private_key_event_modes": true,
+  "require_all_defuns": false,
+  "allow_omitted_defuns": [],
+  "description": "v1.6 adaptive-hybrid successor: Link-95 product semantics plus current cursor editor, shared scanner, and six proved single-caller slot reclaims beyond the standing four."
+}

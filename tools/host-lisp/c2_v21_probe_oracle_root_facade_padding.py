@@ -23,6 +23,7 @@ from elf_truth import ElfTruth  # noqa: E402
 import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_v21_probe_oracle_root_product_config as CONFIG  # noqa: E402
 import c2_v21_probe_oracle_root_fix as ROOT_FIX  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -44,6 +45,8 @@ LLVM = ROOT / "tools/llvm-mos/bin"
 AUTHORIZATION = "7e4a1f86"
 FORMAT = "lisp65-c2.3-v2.1-probe-oracle-root-facade-padding-v1"
 STATUS = "HOST-GREEN: EXPLICIT-NAMED-19-BYTE-FACADE-PADDING"
+FACADE_PRODUCER_REBIND_SEAL_ERA_COMMIT = (
+    "323e3e2396fe985dfbd495c936a69d6b95aeaa0b")
 
 
 class PaddingError(RuntimeError):
@@ -379,7 +382,9 @@ def main() -> int:
             and rebind.get("status") ==
                 "PASS: loud facade-padding linker-producer rebind"
             and rebind.get("authority", {}).get(
-                "authorized_linker_producer") == bind(LINKER_PRODUCER),
+                "authorized_linker_producer") == ERA.era_bind(
+                    FACADE_PRODUCER_REBIND_SEAL_ERA_COMMIT,
+                    LINKER_PRODUCER),
             "historical facade-padding linker-producer rebind drift")
     print(f"probe-oracle root facade padding: PASS action={action} "
           "bytes=19 mutations=10")

@@ -38,9 +38,33 @@ editor. IDEX adds optional navigation and command features. M65D is a separate
 copy-on-write persistence library so the editor can remain loaded without
 paying the disk-write implementation cost until needed.
 
+## Memory transport
+
+Every mutable reader that consumes memory content does so through CPU reads
+under a MAP window, not through DMA. The rule is structural rather than
+advisory: a gate rejects any content-consuming DMA read outside the immutable,
+CRC-covered boot spans, so the class cannot return by inattention. DMA remains
+in use where the payload is immutable and its identity is proven by CRC.
+
+The rule was bought rather than assumed. A DMA transport whose completion
+signal could be trusted while its content was not yet visible produced
+recurring, order-dependent library-load corruption; moving the readers to CPU
+transport removed the class at its root and cost fewer bytes than the guards
+it replaced. Readability proofs cover exactly the banks they probed.
+
+## Input contract
+
+The REPL input boundary is WYSIWYG: what the screen shows is what the reader
+receives. Characters that would be invisible but semantically different --
+notably PETSCII `$A0`, which a shifted keyboard can deliver in place of a
+space -- are normalized at the input boundary, and control codes with no
+mapping are rejected visibly rather than silently accepted. A line may carry
+several forms; they are evaluated left to right, so forms completed before a
+later reader error remain in effect.
+
 ## Media model
 
-Release 1.2.0 uses two D81 images with one drive:
+Release 1.5.0 uses two D81 images with one drive:
 
 - `L65SYS` is the immutable product image used for boot and library loading.
 - A valid non-product 1581 image holds user files.
@@ -63,9 +87,15 @@ The principal constrained resources are:
 - name-pool bytes;
 - L65M directory slots.
 
-Each promoted block reports every affected currency. Release 1.2.0 stops at
-its pinned floors rather than treating unused address space as an implicit
-budget.
+Each promoted block reports every affected currency. Releases stop at their
+pinned floors rather than treating unused address space as an implicit budget,
+and a release contract fixes the user-visible headroom that must survive: free
+interned symbol slots and free name-pool bytes are measured on the shipped
+medium and compared against contracted minima.
+
+Boot progress is a product surface, not a debugging aid. The staging, heap and
+library phases announce themselves, and the library phase carries a decoder
+ordinal, so a long boot is legible rather than mute.
 
 ## Evidence model
 

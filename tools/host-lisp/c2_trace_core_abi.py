@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
 
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_stdlib as STDLIB  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-trace-core-abi.json"
@@ -46,12 +47,23 @@ RECEIPT = ROOT / (
 GATES = ROOT / "mk/gates.mk"
 PLAN = ROOT / "docs/planning/trace-core-abi-work-plan.md"
 FORMAT = "lisp65-c2.3-trace-core-abi-host-v1"
+SEALED_COMMIT = "3a0aba8e1b980a855eb0edde05c5862c430da968"
 TRACE_REPLAY_WORLD_COMMIT = "48164d54ac1da418d84377a2a067a12170c0782e"
 TRACE_REPLAY_EVAL_SHA256 = (
     "f5aa454d38c66a64363f58323104db04db929055e6ff9cfeeec8134bf9e011e3"
 )
 TRACE_REPLAY_EVAL_SUFFIX = (
     "build/bytecode/dialect-v2/sources/lib/dialect-v2/eval-runtime.lisp"
+)
+TRACE_REPLAY_READ_LINE_SUFFIX = "lib/stdlib-read-line.lisp"
+TRACE_REPLAY_READ_LINE_SHA256 = (
+    "c074cc7ec2c96cd716d7b670c287704e62d583f7f22fccc022a1b19ee5bd8cac"
+)
+TRACE_REPLAY_RESIDENT_SUITE_SUFFIX = (
+    "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json"
+)
+TRACE_REPLAY_RESIDENT_SUITE_SHA256 = (
+    "46ec56eca12e89196c11013d36a7c55c6ea14248bdeeb20bd40207541ed593ff"
 )
 TRACE_REPLAY_SUCCESSOR_FUNCTIONS = {
     "%c2-direct-expression-p",
@@ -110,14 +122,25 @@ def build_library() -> dict[str, Any]:
     # the original CLI identity and output, but invert the producer onto its
     # content-bound eval-runtime source and function inventory.  The override
     # is scoped to this call and never rewrites the generated worktree files.
-    historical = subprocess.run(
-        ["git", "show", f"{TRACE_REPLAY_WORLD_COMMIT}:lib/dialect-v2/eval-runtime.lisp"],
-        cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    def historical_blob(path: str, expected_sha256: str) -> bytes:
+        result = subprocess.run(
+            ["git", "show", f"{TRACE_REPLAY_WORLD_COMMIT}:{path}"],
+            cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+        require(result.returncode == 0,
+                f"trace replay historical input is unavailable: {path}")
+        require(sha(result.stdout) == expected_sha256,
+                f"trace replay historical input content drift: {path}")
+        return result.stdout
+
+    historical_eval = historical_blob(
+        "lib/dialect-v2/eval-runtime.lisp", TRACE_REPLAY_EVAL_SHA256)
+    historical_read_line = historical_blob(
+        TRACE_REPLAY_READ_LINE_SUFFIX, TRACE_REPLAY_READ_LINE_SHA256)
+    historical_resident = historical_blob(
+        TRACE_REPLAY_RESIDENT_SUITE_SUFFIX,
+        TRACE_REPLAY_RESIDENT_SUITE_SHA256,
     )
-    require(historical.returncode == 0,
-            "trace replay historical eval-runtime is unavailable")
-    require(sha(historical.stdout.encode("utf-8")) == TRACE_REPLAY_EVAL_SHA256,
-            "trace replay historical eval-runtime content drift")
 
     original_read_source = STDLIB._read_source
     original_read_suite = STDLIB._read_suite
@@ -125,11 +148,24 @@ def build_library() -> dict[str, Any]:
     def replay_read_source(path: str) -> str:
         key = str(path).replace("\\", "/")
         if key.endswith(TRACE_REPLAY_EVAL_SUFFIX):
-            return historical.stdout
+            return historical_eval.decode("utf-8")
+        if key.endswith(TRACE_REPLAY_READ_LINE_SUFFIX):
+            return historical_read_line.decode("utf-8")
         return original_read_source(path)
 
     def replay_read_suite(path: str, seen: set[str] | None = None) -> dict[str, Any]:
-        suite = original_read_suite(path, seen=seen)
+        key = str(path).replace("\\", "/")
+        if key.endswith(TRACE_REPLAY_RESIDENT_SUITE_SUFFIX):
+            child = json.loads(historical_resident.decode("utf-8"))
+            base = original_read_suite(str(
+                ROOT / "tests/bytecode/libs/p0-stdlib-time-base.json"))
+            suite = STDLIB._apply_suite_transforms(
+                STDLIB._merge_suite(base, child))
+            suite["_suite_path"] = str(path)
+            suite["_suite_dir"] = str(
+                ROOT / "tests/bytecode/libs")
+        else:
+            suite = original_read_suite(path, seen=seen)
         suite["functions"] = [
             name for name in suite.get("functions", [])
             if name not in TRACE_REPLAY_SUCCESSOR_FUNCTIONS
@@ -495,7 +531,7 @@ def derive() -> dict[str, Any]:
         "recorded_on": "2026-08-09",
         "status": "host-green-link-pending",
         "bindings": {
-            name: bind(path) for name, path in {
+            name: ERA.era_bind(SEALED_COMMIT, path) for name, path in {
                 "contract": CONTRACT,
                 "plan": PLAN,
                 "ABI_ledger": LEDGER,
@@ -594,10 +630,7 @@ def main() -> int:
             print(f"trace core-ABI: WROTE {RECEIPT.relative_to(ROOT)}")
             return 0
         historical = load(RECEIPT)
-        historical_runtime = historical["bindings"].pop("C2_runtime")
-        current_runtime = value["bindings"].pop("C2_runtime")
-        require(historical_runtime["path"] == current_runtime["path"]
-                and historical == value,
+        require(historical == value,
                 "trace core-ABI semantic receipt is stale")
         print("trace core-ABI check: PASS host-green-link-pending "
               "runtime-source=semantically-revalidated")

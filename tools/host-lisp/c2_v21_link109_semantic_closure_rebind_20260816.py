@@ -19,6 +19,8 @@ HOST = ROOT / "tools/host-lisp"
 if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
+import evidence_era as ERA  # noqa: E402
+
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 PLAN = ROOT / "docs/planning/2.1-cpu-transport-work-plan.md"
@@ -47,6 +49,12 @@ RECEIPT = ARCH / (
     "c2.3-v2.1-link109-semantic-closure-rebind-20260816-receipt.json")
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "b2c5c3e8"
+SEAL_ERA_COMMIT = "ab2d433392a555a70bb4742a54648bfa0ddea827"
+SEALED_MUTATIONS = [
+    "drop-semantic-input", "restore-global-count", "restore-living-plan",
+    "drop-freight-successor", "rewrite-history", "merge-ABI-domains",
+    "lose-service-exit", "fix-freight-end", "run-product-link",
+]
 
 HISTORICAL_SHA256 = {
     "Link109": "b714b8eaf12a5476f5b69ac45b7a53863830390d27697f6f325816666bbba3d4",
@@ -156,7 +164,10 @@ def semantic_inputs() -> list[dict[str, Any]]:
         ("full-span-successor", "partial-transfer-safe convergence", FULL_SPAN),
         ("ABI-vocabulary-pairing", "producer/consumer status identity", ABI_PAIRING),
     ]
-    result = [{"id": name, "role": role, "identity": bind(path)}
+    tool_paths = {ABI_GATE, SERVICE_GATE, EQUIVALENCE_GATE}
+    result = [{"id": name, "role": role,
+               "identity": (ERA.era_bind(SEAL_ERA_COMMIT, path)
+                            if path in tool_paths else bind(path))}
               for name, role, path in rows]
     require(len(result) == 10 and len({row["id"] for row in result}) == 10,
             "Link-109 semantic input inventory is incomplete")
@@ -208,7 +219,8 @@ def derive() -> dict[str, Any]:
         "format": "lisp65-c2.3-v21-link109-semantic-closure-rebind-v1",
         "recorded_on": "2026-08-16",
         "status": "PASS: Link-109 closure is semantic and commit-bound",
-        "authority": {"owner": authorization(), "driver": bind(DRIVER),
+        "authority": {"owner": authorization(),
+                      "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
                       "historical_receipts": history},
         "semantic_inputs": inputs,
         "semantic_input_count": len(inputs),
@@ -234,6 +246,8 @@ def derive() -> dict[str, Any]:
 
 def validate(value: dict[str, Any]) -> None:
     projection = value.get("semantic_projection", {})
+    inputs = {row.get("id"): row.get("identity")
+              for row in value.get("semantic_inputs", [])}
     require(
         value.get("status") ==
             "PASS: Link-109 closure is semantic and commit-bound"
@@ -259,6 +273,15 @@ def validate(value: dict[str, Any]) -> None:
             "freight_successor_checks": 1}
         and not any(value["execution_lock"].values()),
         "Link-109 semantic closure rebind drift")
+    require(value.get("authority", {}).get("driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)
+            and inputs.get("transitive-ABI-gate") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, ABI_GATE)
+            and inputs.get("mapped-far-service-gate") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, SERVICE_GATE)
+            and inputs.get("assembly-equivalence-gate") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, EQUIVALENCE_GATE),
+            "Link-109 tool provenance escaped its sealing era")
 
 
 def mutations(value: dict[str, Any]) -> list[str]:
@@ -280,6 +303,12 @@ def mutations(value: dict[str, Any]) -> list[str]:
             service_end="fixed"),
         "run-product-link": lambda x: x["execution_lock"].update(
             product_links=1),
+        "collapse-era-to-live": lambda x: next(
+            row for row in x["semantic_inputs"]
+            if row["id"] == "mapped-far-service-gate").update(
+                identity=ERA.era_bind("HEAD", SERVICE_GATE)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -303,14 +332,16 @@ def write() -> None:
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
     validate(value); expected = derive(); validate(expected)
-    require(value == expected and rejected == mutations(value),
+    require(value == expected and rejected == SEALED_MUTATIONS,
             "Link-109 semantic closure receipt drift")
+    require(len(mutations(value)) == 11,
+            "live Link-109 era mutations did not run")
     print("Link-109 semantic closure: CHECK PASS history=unchanged inputs=10")
 
 
 def selftest() -> None:
     value = derive(); validate(value)
-    require(len(mutations(value)) == 9, "Link-109 closure mutation drift")
+    require(len(mutations(value)) == 11, "Link-109 closure mutation drift")
     mutant = DRIVER.read_text(encoding="utf-8").replace(
         "git_bind(AUTHORIZATION, PLAN)", "bind(PLAN)", 1)
     try:
@@ -319,7 +350,7 @@ def selftest() -> None:
         pass
     else:
         raise RebindError("living-plan source mutation survived")
-    print("Link-109 semantic closure: SELFTEST PASS mutations=10")
+    print("Link-109 semantic closure: SELFTEST PASS mutations=12")
 
 
 def freight_check() -> None:

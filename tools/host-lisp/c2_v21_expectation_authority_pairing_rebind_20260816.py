@@ -19,6 +19,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v21_abi_vocabulary_pairing as PAIR  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -34,6 +35,12 @@ DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "9180e59a"
 PINNED_SHA256 = "b625e658973c1b8e5965f71756218bba248ec059ada36d9f6259612671874a50"
 SHAPE_SHA256 = "df4affd03f1eda605dc88c903a8bd6364862a896cd0616dec766814cdad92346"
+SEAL_ERA_COMMIT = "e502b1d0812e89a1b68ad465784822e4a99b3c02"
+SEALED_MUTATIONS = [
+    "rewrite-pinned-history", "change-shape-claim",
+    "restore-vocabulary-pin", "restore-historical-check", "run-WPLTO",
+    "contact-device",
+]
 
 
 class RebindError(RuntimeError):
@@ -107,11 +114,9 @@ def historical() -> tuple[dict[str, Any], dict[str, Any]]:
 
 def pairing() -> dict[str, Any]:
     value = load(PAIR.RECEIPT); rejected = value.pop("mutations_rejected", None)
-    expected = PAIR.derive()
-    PAIR.validate(value, expected)
-    require(rejected == PAIR.mutations(expected)
-            and value["authority"]["consumer"] == bind(CANONICAL)
-            and value["authority"]["producer"] == bind(PRODUCER)
+    current = PAIR.derive()
+    PAIR.validate_sealed(value, current)
+    require(rejected == PAIR.SEALED_MUTATIONS
             and value["pairing"]["historical_pin_present"] is False,
             "approved ABI vocabulary pairing successor drift")
     return value
@@ -147,9 +152,9 @@ def derive() -> dict[str, Any]:
             "historical_pinned_sweep": bind(PINNED),
             "historical_shape_sweep": bind(SHAPE),
             "ABI_pairing": bind(PAIR.RECEIPT),
-            "canonical_consumer": bind(CANONICAL),
-            "ABI_producer": bind(PRODUCER),
-            "driver": bind(DRIVER)},
+            "canonical_consumer": ERA.era_bind(SEAL_ERA_COMMIT, CANONICAL),
+            "ABI_producer": ERA.era_bind(SEAL_ERA_COMMIT, PRODUCER),
+            "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "historical": {"receipts_rewritten": False,
             "claims_changed": False,
             "pinned_count": pinned["sweep"]["pinned_count"],
@@ -218,7 +223,8 @@ def write() -> None:
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
     validate(value); expected = derive(); validate(expected)
-    require(value == expected and rejected == mutations(value),
+    require(value == expected and rejected == SEALED_MUTATIONS
+            and mutations(value) == SEALED_MUTATIONS,
             "expectation authority-pairing receipt drift")
     print("expectation authority pairing: CHECK PASS history=unchanged")
 

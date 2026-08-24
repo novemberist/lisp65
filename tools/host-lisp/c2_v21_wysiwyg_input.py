@@ -25,6 +25,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v150_name_freight_d2_badopcode_capture as CAPTURE  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -40,6 +41,16 @@ FORMAT = "lisp65-c2.3-v2.1-wysiwyg-input-v1"
 STATUS = "PASS: A0-TO-SPACE; UNMAPPABLE-CONTROLS-VISIBLE; TWO-CAPTURES-CANONICAL"
 RECORDED_ON = "2026-08-17"
 CANONICAL_CODE = "b50100020500000b01010205"
+SEAL_ERA_COMMIT = "ea1f8377150e9ef9345e4afe06211e0b1286ad95"
+SEALED_MUTATIONS = [
+    "normalize-after-echo", "normalize-after-store", "accept-invisible-a0",
+    "silent-control-drop", "wrong-visible-error", "miss-one-control",
+    "link112-poison-object", "link113-poison-object", "noncanonical-size",
+    "change-reader-rules", "change-stored-files", "change-media",
+    "add-product-source", "authorize-two-cards",
+    "consume-card-in-preflight", "device-contact-in-preflight",
+    "erase-device-byte-type",
+]
 
 
 class GateError(RuntimeError):
@@ -198,9 +209,10 @@ def derive() -> dict[str, Any]:
         },
         "authority": {
             "owner": git_authority(), "origin": bind(ORIGIN),
-            "prior_attribution": bind(PRIOR), "repl": bind(REPL),
+            "prior_attribution": bind(PRIOR),
+            "repl": ERA.era_bind(SEAL_ERA_COMMIT, REPL),
             "reader": reader_binding, "screen": screen_binding,
-            "checker": bind(Path(__file__)),
+            "checker": ERA.era_bind(SEAL_ERA_COMMIT, Path(__file__)),
         },
         "claim_limit": (
             "Host qualification of the physical input boundary only. No WPLTO, "
@@ -213,6 +225,11 @@ def derive() -> dict[str, Any]:
 def validate(value: dict[str, Any]) -> None:
     require(value["format"] == FORMAT and value["status"] == STATUS,
             "WYSIWYG receipt identity drift")
+    require(value["authority"]["repl"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, REPL)
+            and value["authority"]["checker"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, Path(__file__)),
+            "WYSIWYG authority escaped its sealing era")
     contract = value["contract"]
     require(contract["a0_normalized_before_echo"] is True
             and contract["a0_normalized_before_store"] is True
@@ -286,6 +303,10 @@ def mutations(value: dict[str, Any]) -> list[str]:
             device_contacts=1),
         "erase-device-byte-type": lambda x: x["contract"].update(
             device_code_type="int"),
+        "collapse-era-to-live": lambda x: x["authority"].update(
+            repl=bind(REPL)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            checker=bind(Path(__file__))),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -304,16 +325,22 @@ def main() -> int:
     parser.add_argument("action", choices=("record", "check", "selftest"))
     action = parser.parse_args().action
     value = derive()
-    value["mutations_rejected"] = mutations(value)
+    rejected = mutations(value)
     if action == "record":
+        value["mutations_rejected"] = rejected
         RECEIPT.write_bytes(canonical(value))
     elif action == "check":
-        require(load(RECEIPT) == value, "WYSIWYG input receipt stale")
+        historical = load(RECEIPT)
+        sealed_rejected = historical.pop("mutations_rejected", None)
+        require(historical == value and sealed_rejected == SEALED_MUTATIONS
+                and len(rejected) == 19,
+                "WYSIWYG input receipt stale")
     else:
-        require(len(value["mutations_rejected"]) == 17,
+        require(len(rejected) == 19,
                 "mutation count drift")
     print("WYSIWYG input: PASS "
-          f"action={action} fixtures=2 canonical-bytes=12 mutations=17")
+          f"action={action} fixtures=2 canonical-bytes=12 "
+          f"mutations=17+2")
     return 0
 
 

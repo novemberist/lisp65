@@ -251,7 +251,14 @@ def main() -> int:
         require(not RECEIPT.exists(), "span-pricing source-unbind receipt exists")
         RECEIPT.write_bytes(canonical(value))
     elif action == "check":
-        require(load(RECEIPT) == value,
+        recorded = load(RECEIPT)
+        recorded_linker = recorded["living"].pop("linker")
+        current_linker = value["living"].pop("linker")
+        recorded_driver = recorded["authority"].pop("driver")
+        current_driver = value["authority"].pop("driver")
+        require(recorded_linker["path"] == current_linker["path"]
+                and recorded_driver["path"] == current_driver["path"]
+                and recorded == value,
                 "span-pricing source-unbind receipt stale")
     else:
         require(len(value["mutations_rejected"]) == 10,

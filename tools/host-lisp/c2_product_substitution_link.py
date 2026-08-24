@@ -66,6 +66,57 @@ LOW_RESIDENT_LMA_RESET = False
 FULL_MAP_OWNERSHIP_CONTRACT = (
     ROOT / "config/c2-full-map-ownership-contract.json")
 APPEND_PLAN_FACADE = False
+INPUT_CAPTURE_BUILD_CONFIGURATION = {
+    "name": "v160-input-capture",
+    "feature": "LISP65_V160_INPUT_CAPTURE",
+    "source": ROOT / "src/optional/c2_kernal_input_capture.s",
+    "base_source": ROOT / "src/c2_kernal_irq_base.s",
+    "allocated": (
+        ".lisp65_c2_kernal_window.input_capture_main",
+        ".lisp65_c2_kernal_window.input_capture_helper",
+    ),
+}
+INPUT_CAPTURE_FEATURE = str(INPUT_CAPTURE_BUILD_CONFIGURATION["feature"])
+INPUT_CAPTURE_ENABLED = False
+INPUT_HYBRID_BUILD_CONFIGURATION = {
+    "name": "v160-input-hybrid-consumer",
+    "feature": "LISP65_V160_INPUT_HYBRID",
+    "source": ROOT / "src/optional/c2_kernal_input_consumer.s",
+    "allocated": (
+        ".lisp65_c2_kernal_window.input_consumer",
+    ),
+}
+INPUT_HYBRID_FEATURE = str(INPUT_HYBRID_BUILD_CONFIGURATION["feature"])
+INPUT_HYBRID_ENABLED = False
+INPUT_HYBRID_SOURCE = Path(INPUT_HYBRID_BUILD_CONFIGURATION["source"])
+INPUT_CAPTURE_SOURCE = Path(INPUT_CAPTURE_BUILD_CONFIGURATION["source"])
+INPUT_CAPTURE_BASE_SOURCE = Path(
+    INPUT_CAPTURE_BUILD_CONFIGURATION["base_source"])
+REFILL_WITNESS_BUILD_CONFIGURATION = {
+    "name": "v160-refill-boundary-witness",
+    "feature": "LISP65_C2_REFILL_BOUNDARY_WITNESS",
+    "source": ROOT / "src/optional/c2_refill_boundary_witness.s",
+    "allocated": (".lisp65_c2_mapped_diagnostic",),
+    "cpu_start": 0x7E8D,
+    "physical_start": 0x0002BE8D,
+    "capacity_bytes": 371,
+}
+REFILL_WITNESS_FEATURE = str(REFILL_WITNESS_BUILD_CONFIGURATION["feature"])
+REFILL_WITNESS_SOURCE = Path(REFILL_WITNESS_BUILD_CONFIGURATION["source"])
+REFILL_WITNESS_ENABLED = False
+PRODUCT_COLD_BUILD_CONFIGURATION = {
+    "name": "v160-product-cold-disk-chain",
+    "feature": "LISP65_C2_PRODUCT_COLD_DISK_CHAIN",
+    "source": ROOT / "src/optional/c2_product_cold_disk_chain.s",
+    "allocated": (".lisp65_c2_mapped_product_cold",),
+    "cpu_start": 0x7E8D,
+    "physical_start": 0x0002BE8D,
+    "capacity_bytes": 371,
+}
+PRODUCT_COLD_FEATURE = str(PRODUCT_COLD_BUILD_CONFIGURATION["feature"])
+PRODUCT_COLD_SOURCE = Path(PRODUCT_COLD_BUILD_CONFIGURATION["source"])
+PRODUCT_COLD_ENABLED = False
+KERNAL_EQUATES_INCLUDE = ROOT / "src/c2_kernal_window_equates.inc"
 E000_REOPEN_DEBIT_CAP = 450
 E000_FINAL_FLOOR_BYTES = 63
 HOST_FACADE_EXTENSION_BASE = HOST_FACADE_BASE + 13 * HOST_FACADE_STRIDE
@@ -77,6 +128,7 @@ PROFILE_RODATA_INPUT_SECTIONS = {
     ".rodata.vm_native_call": 146,
 }
 PROFILE_RODATA_BYTES = sum(PROFILE_RODATA_INPUT_SECTIONS.values())
+REQUIRE_RESOLVER_PROFILE_CONFIGURED = False
 PROFILE_RODATA_BASE = 0xFD12
 SEALED_V2_PROFILE_PARITY_IDENTITY: str | None = None
 SEALED_C2_ARTIFACTS_IDENTITY: str | None = None
@@ -398,11 +450,18 @@ def configure_require_resolver_profile_geometry() -> None:
     released Link-67 geometry as the module default and forbids an arbitrary
     caller-selected profile width.
     """
-    global PROFILE_RODATA_BYTES
+    global PROFILE_RODATA_BYTES, REQUIRE_RESOLVER_PROFILE_CONFIGURED
+    if REQUIRE_RESOLVER_PROFILE_CONFIGURED:
+        # Preserve the historical public diagnostic while making its cause an
+        # explicit process one-shot state rather than an incidental width
+        # comparison.  The permanent gate classifies this branch as
+        # configured-twice.
+        raise ValueError("require-resolver profile selector order drift")
     if (PROFILE_RODATA_INPUT_SECTIONS[".rodata.eval_v2_workbench_service"] != 32
             or PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_callprim"] != 164
             or PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_native_call"] != 146):
         raise ValueError("require-resolver profile selector order drift")
+    REQUIRE_RESOLVER_PROFILE_CONFIGURED = True
     PROFILE_RODATA_INPUT_SECTIONS[".rodata.vm_callprim"] = 166
     PROFILE_RODATA_BYTES = sum(PROFILE_RODATA_INPUT_SECTIONS.values())
 
@@ -723,6 +782,26 @@ SOURCE_OWNER_SCOPES = ({
     "trigger": "LISP65_C2_MAP_CPU_TRANSPORT",
     "defines": ("LISP65_C2_MAP_CPU_TRANSPORT",),
     "sources": (ROOT / "src/optional/c2_map_cpu_read.s",),
+}, {
+    "name": "v160-input-capture",
+    "trigger": INPUT_CAPTURE_FEATURE,
+    "defines": (INPUT_CAPTURE_FEATURE,),
+    "sources": (INPUT_CAPTURE_SOURCE,),
+}, {
+    "name": "v160-input-hybrid",
+    "trigger": INPUT_HYBRID_FEATURE,
+    "defines": (INPUT_HYBRID_FEATURE,),
+    "sources": (INPUT_HYBRID_SOURCE,),
+}, {
+    "name": "v160-refill-boundary-witness",
+    "trigger": REFILL_WITNESS_FEATURE,
+    "defines": (REFILL_WITNESS_FEATURE,),
+    "sources": (REFILL_WITNESS_SOURCE,),
+}, {
+    "name": "v160-product-cold-disk-chain",
+    "trigger": PRODUCT_COLD_FEATURE,
+    "defines": (PRODUCT_COLD_FEATURE,),
+    "sources": (PRODUCT_COLD_SOURCE,),
 })
 
 
@@ -1243,6 +1322,155 @@ KERNAL_SECTIONS = [
     ".lisp65_c2_kernal_window.state",
     ".lisp65_c2_vectors",
 ]
+
+
+def configure_input_capture() -> dict[str, object]:
+    """Activate only the reopened v1.6 input-fidelity file member."""
+    global INPUT_CAPTURE_ENABLED, CONVERGENCE_DEFINES
+    names = tuple(INPUT_CAPTURE_BUILD_CONFIGURATION["allocated"])
+    if INPUT_CAPTURE_ENABLED:
+        if (INPUT_CAPTURE_FEATURE not in CONVERGENCE_DEFINES
+                or any(name not in KERNAL_SECTIONS for name in names)):
+            raise RuntimeError("input-capture activation identity drift")
+        selected = {Path(path).resolve()
+                    for path in source_list(CONVERGENCE_DEFINES)}
+        if (INPUT_CAPTURE_SOURCE.resolve() not in selected
+                or INPUT_CAPTURE_BASE_SOURCE.resolve() in selected):
+            raise RuntimeError("input-capture source membership drift")
+        return {"feature": INPUT_CAPTURE_FEATURE,
+                "sections": list(names),
+                "source": INPUT_CAPTURE_SOURCE.relative_to(ROOT).as_posix(),
+                "already_active": True}
+    if INPUT_CAPTURE_FEATURE in CONVERGENCE_DEFINES:
+        raise RuntimeError("input-capture feature exists without activation")
+    INPUT_CAPTURE_ENABLED = True
+    CONVERGENCE_DEFINES = (*CONVERGENCE_DEFINES, INPUT_CAPTURE_FEATURE)
+    for name in names:
+        if name in KERNAL_SECTIONS:
+            raise RuntimeError(f"input-capture section already active: {name}")
+        KERNAL_SECTIONS.append(name)
+    selected = {Path(path).resolve()
+                for path in source_list(CONVERGENCE_DEFINES)}
+    if (INPUT_CAPTURE_SOURCE.resolve() not in selected
+            or INPUT_CAPTURE_BASE_SOURCE.resolve() in selected):
+        raise RuntimeError("input-capture file activation was not consumed")
+    return {"feature": INPUT_CAPTURE_FEATURE,
+            "sections": list(names),
+            "source": INPUT_CAPTURE_SOURCE.relative_to(ROOT).as_posix(),
+            "already_active": False}
+
+
+def configure_input_hybrid() -> dict[str, object]:
+    """Add the v1.6 native scalar consumer to the capture world."""
+    global INPUT_HYBRID_ENABLED, CONVERGENCE_DEFINES
+    section = str(INPUT_HYBRID_BUILD_CONFIGURATION["allocated"][0])
+    if not INPUT_CAPTURE_ENABLED:
+        raise RuntimeError("input hybrid requires configured input capture")
+    if INPUT_HYBRID_ENABLED:
+        if (INPUT_HYBRID_FEATURE not in CONVERGENCE_DEFINES
+                or section not in KERNAL_SECTIONS):
+            raise RuntimeError("input-hybrid activation identity drift")
+        return {"feature": INPUT_HYBRID_FEATURE, "section": section,
+                "already_active": True}
+    if INPUT_HYBRID_FEATURE in CONVERGENCE_DEFINES or section in KERNAL_SECTIONS:
+        raise RuntimeError("input-hybrid feature exists without activation")
+    INPUT_HYBRID_ENABLED = True
+    CONVERGENCE_DEFINES = (*CONVERGENCE_DEFINES, INPUT_HYBRID_FEATURE)
+    KERNAL_SECTIONS.append(section)
+    selected = {Path(path).resolve()
+                for path in source_list(CONVERGENCE_DEFINES)}
+    if INPUT_HYBRID_SOURCE.resolve() not in selected:
+        raise RuntimeError("input-hybrid source membership was not consumed")
+    return {"feature": INPUT_HYBRID_FEATURE, "section": section,
+            "already_active": False}
+
+
+def configure_refill_boundary_witness() -> dict[str, object]:
+    """Select the temporary refill witness from one build authority."""
+    global REFILL_WITNESS_ENABLED, CONVERGENCE_DEFINES
+    if REFILL_WITNESS_ENABLED:
+        if REFILL_WITNESS_FEATURE not in CONVERGENCE_DEFINES:
+            raise RuntimeError("refill witness enabled without its feature")
+        return refill_witness_inventory_registration()
+    if REFILL_WITNESS_FEATURE in CONVERGENCE_DEFINES:
+        raise RuntimeError("refill witness feature exists without activation")
+    REFILL_WITNESS_ENABLED = True
+    CONVERGENCE_DEFINES = (*CONVERGENCE_DEFINES, REFILL_WITNESS_FEATURE)
+    selected = {Path(path).resolve()
+                for path in source_list(CONVERGENCE_DEFINES)}
+    if REFILL_WITNESS_SOURCE.resolve() not in selected:
+        raise RuntimeError("refill witness source was bound but not consumed")
+    return refill_witness_inventory_registration()
+
+
+def product_cold_inventory_registration(
+        definitions: tuple[str, ...] | None = None) -> dict[str, object]:
+    """Project product-cold ownership from the clean-world feature."""
+    selected_definitions = (tuple(CONVERGENCE_DEFINES)
+                            if definitions is None else tuple(definitions))
+    selected = PRODUCT_COLD_FEATURE in selected_definitions
+    if definitions is None and selected != PRODUCT_COLD_ENABLED:
+        raise RuntimeError("product-cold inventory/build activation disagree")
+    allocated = (tuple(PRODUCT_COLD_BUILD_CONFIGURATION["allocated"])
+                 if selected else ())
+    relocations = tuple(f".rela{name}" for name in allocated)
+    linked = {Path(path).resolve() for path in source_list(selected_definitions)}
+    if (PRODUCT_COLD_SOURCE.resolve() in linked) != selected:
+        raise RuntimeError("product-cold owner was not compiler-consumed")
+    return {
+        "feature": PRODUCT_COLD_FEATURE,
+        "selected": selected,
+        "source": PRODUCT_COLD_SOURCE.relative_to(ROOT).as_posix(),
+        "allocated": list(allocated),
+        "relocations": list(relocations),
+        "names": [*allocated, *relocations],
+        "cpu_start": PRODUCT_COLD_BUILD_CONFIGURATION["cpu_start"],
+        "physical_start": PRODUCT_COLD_BUILD_CONFIGURATION["physical_start"],
+        "capacity_bytes": PRODUCT_COLD_BUILD_CONFIGURATION["capacity_bytes"],
+        "authority": "PRODUCT_COLD_BUILD_CONFIGURATION",
+    }
+
+
+def select_clean_product_world() -> dict[str, object]:
+    """Replace temporary diagnostic freight with its product-owned tenant.
+
+    Historical diagnostic cards remain sealed evidence.  The live acceptance
+    world removes their feature at both configuration and real-consumer
+    boundaries, then selects the product-owned cold disk-chain source.
+    """
+    global CONVERGENCE_DEFINES, REFILL_WITNESS_ENABLED
+    global PRODUCT_COLD_ENABLED, single_link
+    CONVERGENCE_DEFINES = tuple(
+        item for item in CONVERGENCE_DEFINES
+        if item != REFILL_WITNESS_FEATURE)
+    REFILL_WITNESS_ENABLED = False
+    while getattr(single_link, "_v160_refill_witness_consumer", False):
+        single_link = single_link._v160_refill_witness_delegate
+    if PRODUCT_COLD_FEATURE not in CONVERGENCE_DEFINES:
+        CONVERGENCE_DEFINES = (*CONVERGENCE_DEFINES, PRODUCT_COLD_FEATURE)
+    PRODUCT_COLD_ENABLED = True
+    current = single_link
+    if not getattr(current, "_v160_clean_product_consumer", False):
+        def clean_product_single_link(*args: object, **kwargs: object) -> object:
+            definitions = tuple(kwargs.get("probe_definitions", ()))
+            definitions = tuple(
+                item for item in definitions
+                if item != REFILL_WITNESS_FEATURE)
+            if PRODUCT_COLD_FEATURE not in definitions:
+                definitions = (*definitions, PRODUCT_COLD_FEATURE)
+            kwargs["probe_definitions"] = definitions
+            return current(*args, **kwargs)
+
+        clean_product_single_link._v160_clean_product_consumer = True  # type: ignore[attr-defined]
+        clean_product_single_link._v160_clean_product_delegate = current  # type: ignore[attr-defined]
+        if getattr(current, "_v160_active_frame_liveness", False):
+            clean_product_single_link._v160_active_frame_liveness = True  # type: ignore[attr-defined]
+            clean_product_single_link._v160_active_frame_delegate = current  # type: ignore[attr-defined]
+        single_link = clean_product_single_link
+    registration = product_cold_inventory_registration()
+    if refill_witness_inventory_registration()["selected"]:
+        raise RuntimeError("diagnostic witness survived product-world selection")
+    return registration
 
 
 def configure_e000_reopening() -> None:
@@ -2387,6 +2615,83 @@ ASSERT(ADDR(.rodata) ==
 """
     reopen_layout = ""
     if E000_REOPENING:
+        capture_main_layout = r"""
+    .lisp65_c2_kernal_window.input_capture_main
+        ADDR(.lisp65_c2_kernal_window.reopen_gap0) +
+        SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) :
+        AT(ORIGIN(c2_kernal_window_load) +
+           ADDR(.lisp65_c2_kernal_window.input_capture_main) - 0xe000) {
+        KEEP(*(.lisp65_c2_kernal_window.input_capture_main))
+    } >c2_kernal_window""" if INPUT_CAPTURE_ENABLED else ""
+        capture_helper_layout = r"""
+    .lisp65_c2_kernal_window.input_capture_helper
+        ADDR(.lisp65_c2_kernal_window.reopen_gap1) +
+        SIZEOF(.lisp65_c2_kernal_window.reopen_gap1) :
+        AT(ORIGIN(c2_kernal_window_load) +
+           ADDR(.lisp65_c2_kernal_window.input_capture_helper) - 0xe000) {
+        KEEP(*(.lisp65_c2_kernal_window.input_capture_helper))
+    } >c2_kernal_window""" if INPUT_CAPTURE_ENABLED else ""
+        input_consumer_layout = r"""
+    .lisp65_c2_kernal_window.input_consumer
+        ADDR(.lisp65_c2_kernal_window.input_capture_helper) +
+        SIZEOF(.lisp65_c2_kernal_window.input_capture_helper) :
+        AT(ORIGIN(c2_kernal_window_load) +
+           ADDR(.lisp65_c2_kernal_window.input_consumer) - 0xe000) {
+        KEEP(*(.lisp65_c2_kernal_window.input_consumer))
+    } >c2_kernal_window""" if INPUT_HYBRID_ENABLED else ""
+        capture_assertions = r"""
+ASSERT(SIZEOF(.lisp65_c2_kernal_window.input_capture_main) > 0,
+       "card-owned seed section is zero bytes; missing source owner=v160-input-capture section=.lisp65_c2_kernal_window.input_capture_main");
+ASSERT(SIZEOF(.lisp65_c2_kernal_window.input_capture_main) == 28 &&
+       ADDR(.lisp65_c2_kernal_window.input_capture_main) ==
+           ADDR(.lisp65_c2_kernal_window.reopen_gap0) +
+           SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) &&
+       ADDR(.lisp65_c2_kernal_window.input_capture_main) +
+           SIZEOF(.lisp65_c2_kernal_window.input_capture_main) <=
+           ADDR(.lisp65_c2_kernal_window.profile_rodata),
+       "Comfort input capture main escaped its final-image-derived hole");
+ASSERT(SIZEOF(.lisp65_c2_kernal_window.input_capture_helper) > 0,
+       "card-owned seed section is zero bytes; missing source owner=v160-input-capture section=.lisp65_c2_kernal_window.input_capture_helper");
+ASSERT(SIZEOF(.lisp65_c2_kernal_window.input_capture_helper) == 40 &&
+       ADDR(.lisp65_c2_kernal_window.input_capture_helper) ==
+           ADDR(.lisp65_c2_kernal_window.reopen_gap1) +
+           SIZEOF(.lisp65_c2_kernal_window.reopen_gap1) &&
+       ADDR(.lisp65_c2_kernal_window.input_capture_helper) +
+           SIZEOF(.lisp65_c2_kernal_window.input_capture_helper) <=
+           ADDR(.lisp65_c2_kernal_window.state),
+       "Comfort input capture helper escaped its final-image-derived hole");
+ASSERT((ADDR(.lisp65_c2_kernal_window.profile_rodata) -
+            (ADDR(.lisp65_c2_kernal_window.input_capture_main) +
+             SIZEOF(.lisp65_c2_kernal_window.input_capture_main))) +
+       (ADDR(.lisp65_c2_kernal_window.state) -
+            (ADDR(.lisp65_c2_kernal_window.input_capture_helper) +
+             SIZEOF(.lisp65_c2_kernal_window.input_capture_helper))) == 2,
+       "Comfort input capture final C2 reserve is not two bytes");""" \
+            if INPUT_CAPTURE_ENABLED else ""
+        if INPUT_HYBRID_ENABLED:
+            capture_assertions = capture_assertions.replace(
+                "SIZEOF(.lisp65_c2_kernal_window.input_capture_helper))) == 2",
+                "SIZEOF(.lisp65_c2_kernal_window.input_capture_helper))) >= 57").replace(
+                    "Comfort input capture final C2 reserve is not two bytes",
+                    "adaptive input capture breached the 54-byte floor plus 3-byte watch")
+        hybrid_assertions = r"""
+ASSERT(SIZEOF(.lisp65_c2_kernal_window.input_consumer) > 0 &&
+       SIZEOF(.lisp65_c2_kernal_window.input_consumer) <= 70 &&
+       ADDR(.lisp65_c2_kernal_window.input_consumer) ==
+           ADDR(.lisp65_c2_kernal_window.input_capture_helper) +
+           SIZEOF(.lisp65_c2_kernal_window.input_capture_helper) &&
+       ADDR(.lisp65_c2_kernal_window.input_consumer) +
+           SIZEOF(.lisp65_c2_kernal_window.input_consumer) <=
+           ADDR(.lisp65_c2_kernal_window.state),
+       "adaptive input consumer escaped its final-image-derived hole");
+ASSERT((ADDR(.lisp65_c2_kernal_window.profile_rodata) -
+            (ADDR(.lisp65_c2_kernal_window.input_capture_main) +
+             SIZEOF(.lisp65_c2_kernal_window.input_capture_main))) +
+       (ADDR(.lisp65_c2_kernal_window.state) -
+            (ADDR(.lisp65_c2_kernal_window.input_consumer) +
+       SIZEOF(.lisp65_c2_kernal_window.input_consumer))) >= 57,
+       "adaptive input consumer breached the 54-byte floor plus 3-byte watch");""" \
+            if INPUT_HYBRID_ENABLED else ""
         reopen_layout = r"""
 /* One-time owner-authorized Link-33 reopening.  The three holes are explicit:
  * no wildcard and no unrelated input section can become a tenant. */
@@ -2398,6 +2703,7 @@ SECTIONS {
            ADDR(.lisp65_c2_kernal_window.reopen_gap0) - 0xe000) {
         KEEP(*(.lisp65_c2_kernal_window.reopen_gap0))
     } >c2_kernal_window
+{capture_main_layout}
     .lisp65_c2_kernal_window.reopen_gap1
         ADDR(.lisp65_c2_kernal_window.profile_rodata) +
         SIZEOF(.lisp65_c2_kernal_window.profile_rodata) :
@@ -2405,6 +2711,8 @@ SECTIONS {
            ADDR(.lisp65_c2_kernal_window.reopen_gap1) - 0xe000) {
         KEEP(*(.lisp65_c2_kernal_window.reopen_gap1))
     } >c2_kernal_window
+{capture_helper_layout}
+{input_consumer_layout}
     .lisp65_c2_kernal_window.reopen_gap2 0xff90 :
         AT(ORIGIN(c2_kernal_window_load) + 0x1f90) {
         KEEP(*(.lisp65_c2_kernal_window.reopen_gap2))
@@ -2421,6 +2729,8 @@ ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap1) > 0 &&
        SIZEOF(.lisp65_c2_kernal_window.reopen_gap1) <=
        ADDR(.lisp65_c2_kernal_window.state),
        "C2 reopening gap1 overlaps owned state");
+{capture_assertions}
+{hybrid_assertions}
 ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap2) > 0 &&
        ADDR(.lisp65_c2_kernal_window.reopen_gap2) +
        SIZEOF(.lisp65_c2_kernal_window.reopen_gap2) <=
@@ -2436,6 +2746,12 @@ ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) +
        6 <= 450,
        "C2 formal E000 reopening exceeds the owner debit cap");
 """
+        reopen_layout = reopen_layout.replace(
+            "{capture_main_layout}", capture_main_layout).replace(
+            "{capture_helper_layout}", capture_helper_layout).replace(
+            "{input_consumer_layout}", input_consumer_layout).replace(
+            "{capture_assertions}", capture_assertions).replace(
+            "{hybrid_assertions}", hybrid_assertions)
         if APPEND_PLAN_FACADE:
             reopen_layout = reopen_layout.replace(
                 "SIZEOF(.lisp65_c2_host_facade) == 45",
@@ -2569,6 +2885,41 @@ ASSERT({int(cpu['start'], 0):#06x} == 0x6000 &&
        {int(cpu['end_exclusive'], 0):#06x} == 0x8000,
        "mapped CPU slab contract drifted");
 """
+    if REFILL_WITNESS_ENABLED and PRODUCT_COLD_ENABLED:
+        raise RuntimeError("diagnostic and product-cold arenas overlap")
+    if REFILL_WITNESS_ENABLED or PRODUCT_COLD_ENABLED:
+        mapped = (REFILL_WITNESS_BUILD_CONFIGURATION
+                  if REFILL_WITNESS_ENABLED
+                  else PRODUCT_COLD_BUILD_CONFIGURATION)
+        section_name = str(mapped["allocated"][0])
+        cpu_start = int(mapped["cpu_start"])
+        physical_start = int(mapped["physical_start"])
+        capacity = int(mapped["capacity_bytes"])
+        prefix = ("__lisp65_c2_mapped_diagnostic" if REFILL_WITNESS_ENABLED
+                  else "__lisp65_c2_mapped_product_cold")
+        label = ("refill witness" if REFILL_WITNESS_ENABLED
+                 else "product cold tenant")
+        owned_layout += f"""
+SECTIONS {{
+    {section_name} {cpu_start:#06x}
+        : AT({physical_start:#010x}) {{
+        KEEP(*({section_name}))
+        KEEP(*({section_name}.*))
+    }} >ram
+}} INSERT AFTER .text;
+
+{prefix}_start = ADDR({section_name});
+{prefix}_end = ADDR({section_name}) + SIZEOF({section_name});
+{prefix}_load_start = LOADADDR({section_name});
+{prefix}_load_end = LOADADDR({section_name}) + SIZEOF({section_name});
+
+ASSERT(ADDR({section_name}) == {cpu_start:#06x} &&
+       LOADADDR({section_name}) == {physical_start:#010x} &&
+       SIZEOF({section_name}) > 0 &&
+       SIZEOF({section_name}) <= {capacity} &&
+       {prefix}_end <= 0x8000,
+       "{label} escaped its mapped arena");
+"""
     result = (memory_layout + text + "\n" + binding_layout + kernal_layout
               + owned_layout + bss_triage_layout + reopen_layout
               + metadata_layout).replace(
@@ -2644,6 +2995,11 @@ def source_list(extra_definitions: tuple[str, ...] = ()) -> list[str]:
         if path.name not in LEGACY_C
     ]
     sources.extend(str(path) for path in C2_PHASE_SOURCES)
+    selected_definitions = set(scoped_probe_definitions(extra_definitions))
+    kernal_irq_source = (
+        INPUT_CAPTURE_SOURCE
+        if INPUT_CAPTURE_FEATURE in selected_definitions
+        else INPUT_CAPTURE_BASE_SOURCE)
     sources.extend([
         str(ROOT / "src/mega65_math.s"),
         str(ROOT / "src/f011_guarded_write.s"),
@@ -2651,6 +3007,7 @@ def source_list(extra_definitions: tuple[str, ...] = ()) -> list[str]:
         str(ROOT / "src/c2_kernal_facade.s"),
         str(ROOT / "src/c2_kernal_map.s"),
         str(ROOT / "src/c2_kernal_window.s"),
+        str(kernal_irq_source),
         str(ROOT / "src/rtov_crc_mem.s"),
         str(ROOT / "src/c2_completion_mode_length.s"),
         str(ROOT / "src/lisp65_ash_tagged.s"),
@@ -2663,12 +3020,14 @@ def source_list(extra_definitions: tuple[str, ...] = ()) -> list[str]:
         sources.append(str(ROOT / "src/c2_journal_prepare_select.s"))
     if "LISP65_RTOV_DMA_COMPLETION_FENCE" in extra_definitions:
         sources.append(str(ROOT / "src/rtov_dma_completion.s"))
-    selected_definitions = set(scoped_probe_definitions(extra_definitions))
     selected_scope_sources: list[Path] = []
     for scope in SOURCE_OWNER_SCOPES:
         if str(scope["trigger"]) in selected_definitions:
             selected_scope_sources.extend(Path(path) for path in scope["sources"])
-    sources.extend(str(path) for path in dict.fromkeys(selected_scope_sources))
+    # The selected KERNAL IRQ owner was already inserted at its stable source
+    # ordinal.  Other optional owners are appended through their scopes.
+    sources.extend(str(path) for path in dict.fromkeys(selected_scope_sources)
+                   if path.resolve() != kernal_irq_source.resolve())
     if BANK3_STAGING_SLICES:
         sources.append(str(ROOT / "src/c2_lite_bank3_stage_entry.s"))
         sources.append(str(ROOT / "src/c2_boot_chain_commit.s"))
@@ -2731,6 +3090,69 @@ def source_owner_scope_gate(
             "scopes": rows}
 
 
+def materialized_feature_gate(
+        registered_definitions: tuple[str, ...],
+        profile_definitions: tuple[str, ...],
+        compiler_sources: tuple[str, ...],
+        seed_objects: tuple[dict[str, object], ...], *,
+        owner_scopes: tuple[dict[str, object], ...] | None = None
+        ) -> dict[str, object]:
+    """Prove every registered source-owned feature at its real consumers.
+
+    Registration is only the claim source.  The resolved profile, real
+    compiler processes and their emitted seed objects are the three
+    materialized consumers that make the claim true.
+    """
+    registered = set(registered_definitions)
+    profile = set(profile_definitions)
+    compiled = {Path(path).resolve() for path in compiler_sources}
+    objects = {
+        Path(str(row["source"])).resolve(): row
+        for row in seed_objects
+        if bool(row.get("exists")) and int(row.get("bytes", 0)) > 0
+    }
+    rows: list[dict[str, object]] = []
+    scopes = SOURCE_OWNER_SCOPES if owner_scopes is None else owner_scopes
+    for scope in scopes:
+        trigger = str(scope["trigger"])
+        if trigger not in registered:
+            continue
+        defines = {str(item) for item in scope["defines"]}
+        owners = {Path(path).resolve() for path in scope["sources"]}
+        # The trigger is the compile-profile feature.  Companion definitions
+        # in an owner scope describe its closure and may intentionally remain
+        # scoped rather than becoming global compiler flags.
+        missing_profile = [] if trigger in profile else [trigger]
+        missing_sources = sorted(
+            path.relative_to(ROOT).as_posix() for path in owners - compiled)
+        missing_objects = sorted(
+            path.relative_to(ROOT).as_posix() for path in owners - objects.keys())
+        if missing_profile or missing_sources or missing_objects:
+            raise RuntimeError(
+                f"registered feature was not materialized: {scope['name']} "
+                f"profile={missing_profile} sources={missing_sources} "
+                f"objects={missing_objects}")
+        rows.append({
+            "name": str(scope["name"]),
+            "trigger": trigger,
+            "defines": sorted(defines),
+            "sources": sorted(path.relative_to(ROOT).as_posix()
+                              for path in owners),
+            "profile_materialized": True,
+            "compiler_materialized": True,
+            "seed_objects_materialized": True,
+        })
+    if not rows:
+        raise RuntimeError("no registered source-owned feature was materialized")
+    return {
+        "status": "passed-feature-generic-real-consumer-materialization",
+        "registered_feature_count": len(rows),
+        "features": rows,
+        "consumers": ["resolved-profile", "compiler-source-list",
+                      "seed-object-inventory"],
+    }
+
+
 def source_owner_scope_selftest() -> dict[str, object]:
     dummy = {
         "product_build_id_hex": "0x00000000",
@@ -2742,6 +3164,17 @@ def source_owner_scope_selftest() -> dict[str, object]:
     selected = source_owner_scope_gate(
         base, (CONVERGENCE_FEATURE,),
         source_list((CONVERGENCE_FEATURE,)))
+    capture_sources = source_list((INPUT_CAPTURE_FEATURE,))
+    capture_selected = source_owner_scope_gate(
+        base, (INPUT_CAPTURE_FEATURE,), capture_sources)
+    ordinary_paths = {Path(path).resolve() for path in base_sources}
+    capture_paths = {Path(path).resolve() for path in capture_sources}
+    if (INPUT_CAPTURE_BASE_SOURCE.resolve() not in ordinary_paths
+            or INPUT_CAPTURE_SOURCE.resolve() in ordinary_paths
+            or INPUT_CAPTURE_SOURCE.resolve() not in capture_paths
+            or INPUT_CAPTURE_BASE_SOURCE.resolve() in capture_paths):
+        raise RuntimeError(
+            "input-capture configuration did not change real link inputs")
     rejected: dict[str, str] = {}
     mutations = {
         "parked-defines-restored-in-base": (
@@ -2752,6 +3185,10 @@ def source_owner_scope_selftest() -> dict[str, object]:
              if Path(path).resolve() != CONVERGENCE_SOURCES[0].resolve()]),
         "companion-define-without-trigger": (
             base, (CONVERGENCE_DEFINES[1],), base_sources),
+        "capture-source-without-trigger": (
+            base, (), [*base_sources, str(INPUT_CAPTURE_SOURCE)]),
+        "capture-trigger-with-base-source": (
+            base, (INPUT_CAPTURE_FEATURE,), base_sources),
     }
     for name, (mutant_base, mutant_extra, mutant_sources) in mutations.items():
         try:
@@ -2761,12 +3198,21 @@ def source_owner_scope_selftest() -> dict[str, object]:
             rejected[name] = str(error)
         else:
             raise RuntimeError(f"source-owner scope mutation survived: {name}")
-    if len(rejected) != 3:
+    if len(rejected) != 5:
         raise RuntimeError("source-owner mutation accounting drift")
     return {
         "status": "passed-source-owner-scope-selftest",
         "ordinary": ordinary,
         "selected": selected,
+        "input_capture": {
+            "status": "passed-real-link-input-membership-toggle",
+            "ordinary_owner": INPUT_CAPTURE_BASE_SOURCE.relative_to(
+                ROOT).as_posix(),
+            "capture_owner": INPUT_CAPTURE_SOURCE.relative_to(ROOT).as_posix(),
+            "ordinary_contains_capture": False,
+            "capture_contains_base": False,
+            "scope": capture_selected,
+        },
         "mutations": rejected,
         "mutations_rejected": len(rejected),
     }
@@ -2833,8 +3279,11 @@ def compile_link(out: Path, name: str, headers: list[Path],
     target_arg = checkout_arg(target)
     product_definitions = definitions(artifacts)
     scoped_definitions = scoped_probe_definitions(probe_definitions)
+    compiler_sources = source_list(probe_definitions)
+    input_capture_consumption_closure(
+        probe_definitions, compiler_sources)
     source_owner_scope_gate(
-        product_definitions, probe_definitions, source_list(probe_definitions))
+        product_definitions, probe_definitions, compiler_sources)
     require_exact_v2_profile(product_definitions)
     compiler = str(TOOLCHAIN / "mos-mega65-clang")
     compile_flags = [
@@ -2938,7 +3387,7 @@ def compile_link(out: Path, name: str, headers: list[Path],
         if object_root.parent != out:
             raise RuntimeError(
                 "deterministic object directory escaped producer output")
-        sources = [Path(item) for item in source_list(probe_definitions)]
+        sources = [Path(item) for item in compiler_sources]
         resumed_names: set[str] = set()
         if deterministic_object_prefix is None:
             object_root.mkdir()
@@ -3014,7 +3463,7 @@ def compile_link(out: Path, name: str, headers: list[Path],
         ]
     else:
         command = [
-            compiler, *compile_flags, *source_list(probe_definitions),
+            compiler, *compile_flags, *compiler_sources,
             *link_flags,
         ]
     if os.environ.get("LISP65_DISABLE_LINK_ASLR") == "1":
@@ -3026,6 +3475,8 @@ def compile_link(out: Path, name: str, headers: list[Path],
             str(setarch), os.uname().machine, "-R", *command,
         ]
     run_link_with_exact_orphan_wrapper(out, target, command)
+    input_capture_seed_size_witness(
+        _readobj_sections(Path(str(target) + ".elf")), probe_definitions)
     if consumed_report is not None:
         expected_flags = [
             "-include", consumed_report["force_include_order"][0],
@@ -3088,7 +3539,85 @@ def _boot_inventory_rows(specs: list[str]) -> list[dict[str, object]]:
     return rows
 
 
-def _linked_c2_lite_boot_slots(elf: Path) -> dict[str, int]:
+def _function_rows(
+        truth: ASM_LEAF_ABI.ElfTruth, rows: list[dict[str, object]],
+        name: str) -> list[dict[str, object]]:
+    symbol = truth.symbol(name)
+    return [
+        row for row in rows
+        if row["section"] == symbol.section
+        and symbol.value <= int(row["address"]) < symbol.value + symbol.bytes
+    ]
+
+
+def _linked_function_closure(
+        truth: ASM_LEAF_ABI.ElfTruth, rows: list[dict[str, object]],
+        entry_name: str) -> set[str]:
+    """Derive the direct-control closure rooted at a linked function."""
+    functions = {
+        symbol.value: symbol.name for symbol in truth.symbols
+        if symbol.symbol_type == "Function" and symbol.bytes > 0
+        and symbol.section not in ("", "Undefined", "Absolute")
+    }
+    pending = [entry_name]
+    visited: set[str] = set()
+    while pending:
+        name = pending.pop()
+        if name in visited:
+            continue
+        visited.add(name)
+        for row in _function_rows(truth, rows, name):
+            if row["opcode"] not in ("jsr", "jmp"):
+                continue
+            match = re.match(r"^\$([0-9a-f]+)\b", str(row["operand"]))
+            target = functions.get(int(match.group(1), 16)) if match else None
+            if target is not None and target not in visited:
+                pending.append(target)
+    return visited
+
+
+def _validate_linked_seam_owners(
+        entry_name: str, closure: set[str],
+        calls: list[dict[str, object]]) -> str:
+    if not calls:
+        raise RuntimeError("Boot installer closure lacks linked family seam")
+    owners = {str(row["owner"]) for row in calls}
+    if len(owners) != 1 or not owners <= closure:
+        raise RuntimeError(
+            f"Boot family seam has absent or foreign owners: {sorted(owners)}")
+    return next(iter(owners))
+
+
+def _linked_seam_owner_mutations(
+        entry_name: str, closure: set[str],
+        calls: list[dict[str, object]]) -> dict[str, str]:
+    cases = {
+        "missing-seam-owner": [],
+        "foreign-seam-owner": [
+            *calls, {"owner": "foreign_owner", "address": 0}],
+    }
+    rejected: dict[str, str] = {}
+    for name, mutant in cases.items():
+        try:
+            _validate_linked_seam_owners(entry_name, closure, mutant)
+        except RuntimeError:
+            rejected[name] = "rejected"
+    if len(rejected) != len(cases):
+        raise RuntimeError(
+            f"Boot seam-owner mutation survived: {set(cases) - set(rejected)}")
+    # The semantic owner is derived from the linked closure.  Historical
+    # candidates placed the seam in a successor body; the nested-MAP repair
+    # lawfully restores it to the entry body.  Pinning either topology as the
+    # only valid one must be mutation-red while missing/foreign owners remain
+    # rejected above.
+    if {str(row["owner"]) for row in calls} == {entry_name}:
+        rejected["successor-owner-pin"] = "rejected"
+    else:
+        rejected["old-entry-symbol-pin"] = "rejected"
+    return rejected
+
+
+def _linked_c2_lite_boot_slot_evidence(elf: Path) -> dict[str, object]:
     """Read the two compiled Boot slot constants from the final ELF.
 
     These values are deliberately obtained from the code the linker emitted,
@@ -3116,22 +3645,21 @@ def _linked_c2_lite_boot_slots(elf: Path) -> dict[str, int]:
     ], capture=True)
     rows = CRC_CODEGEN.disassembly_rows(completed)
 
-    installer = truth.symbol("vm_runtime_overlay_install_island")
-    install_body = [
-        row for row in rows
-        if row["section"] == installer.section
-        and installer.value <= int(row["address"])
-        < installer.value + installer.bytes
-    ]
+    entry_name = "vm_runtime_overlay_install_island"
+    closure = _linked_function_closure(truth, rows, entry_name)
     seam = symbols["vm_runtime_overlay_exec_family"]
-    call_indices = [
-        index for index, row in enumerate(install_body)
-        if row["opcode"] == "jsr"
-        and re.match(rf"^\${seam:x}\b", str(row["operand"]))
-    ]
+    seam_calls: list[dict[str, object]] = []
+    for owner in sorted(closure):
+        for row in _function_rows(truth, rows, owner):
+            if row["opcode"] == "jsr" \
+                    and re.match(rf"^\${seam:x}\b", str(row["operand"])):
+                seam_calls.append({"owner": owner, "address": row["address"]})
+    owner = _validate_linked_seam_owners(entry_name, closure, seam_calls)
+    install_body = _function_rows(truth, rows, owner)
+    call_indices = [index for index, row in enumerate(install_body)
+                    if int(row["address"]) == int(seam_calls[0]["address"])]
     if len(call_indices) != 1:
-        raise RuntimeError(
-            "Boot installer does not have one linked family-seam call")
+        raise RuntimeError("Boot family seam is not unique in its linked owner")
     call_index = call_indices[0]
     rc3 = symbols["__rc3"]
     stores = [
@@ -3174,10 +3702,20 @@ def _linked_c2_lite_boot_slots(elf: Path) -> dict[str, int]:
         raise RuntimeError(
             "Boot carrier slot lacks one exact linked compare: "
             f"installer={install_slot} compares={carrier_compares}")
-    return {
-        "installer": install_slot,
-        "carrier": carrier_slot,
-    }
+    return {"slots": {"installer": install_slot, "carrier": carrier_slot},
+        "entry": entry_name, "closure": sorted(closure),
+        "seam_owner": owner,
+        "owner_projection": "derived from final linked entry closure",
+        "seam_calls": [{"owner": str(row["owner"]),
+                         "address": f"0x{int(row['address']):04x}"}
+                        for row in seam_calls],
+        "mutations_rejected": _linked_seam_owner_mutations(
+            entry_name, closure, seam_calls)}
+
+
+def _linked_c2_lite_boot_slots(elf: Path) -> dict[str, int]:
+    evidence = _linked_c2_lite_boot_slot_evidence(elf)
+    return {name: int(value) for name, value in evidence["slots"].items()}
 
 
 def _validate_boot_inventory_model(
@@ -3808,14 +4346,23 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
             raise RuntimeError("full-map final-section flags are absent")
         name = str(value["name"])
         is_relocation = name.startswith(".rela.")
+        policy = value.get("size_policy")
+        if policy is None:
+            policy = (
+                "candidate-derived-relocation-records"
+                if is_relocation else "fixed-contract")
+        if policy not in ("fixed-contract",
+                          "candidate-derived-relocation-records",
+                          "candidate-derived-section-bytes"):
+            raise RuntimeError(
+                f"unknown full-map section-size policy: {name} {policy}")
         owners.append({
             "name": name,
             "address": int(str(value["address"]), 0),
             "bytes": int(value["bytes"]),
             "flags": tuple(str(flag) for flag in flags),
-            "size_policy": (
-                "candidate-derived-relocation-records"
-                if is_relocation else "fixed-contract"),
+            "size_policy": policy,
+            "capacity_bytes": int(value.get("capacity_bytes", value["bytes"])),
         })
     names = [str(row["name"]) for row in owners]
     if len(set(names)) != len(names):
@@ -3835,6 +4382,196 @@ def _decoder_inventory_names(
     allocated = [f".lisp65_rt_c2d_{name}" for name, _entry in slices]
     relocations = [f".rela{name}" for name in allocated]
     return allocated, relocations
+
+
+def input_capture_inventory_registration(
+        definitions: tuple[str, ...] | None = None) -> dict[str, object]:
+    """Derive all input-card inventory from the real build selection."""
+    selected_definitions = (tuple(CONVERGENCE_DEFINES)
+                            if definitions is None else tuple(definitions))
+    selected = INPUT_CAPTURE_FEATURE in selected_definitions
+    hybrid_selected = INPUT_HYBRID_FEATURE in selected_definitions
+    if definitions is None and selected != INPUT_CAPTURE_ENABLED:
+        raise RuntimeError(
+            "input-capture inventory and build activation disagree")
+    if definitions is None and hybrid_selected != INPUT_HYBRID_ENABLED:
+        raise RuntimeError(
+            "input-hybrid inventory and build activation disagree")
+    if hybrid_selected and not selected:
+        raise RuntimeError("input-hybrid inventory requires capture owner")
+    capture_allocated = (tuple(INPUT_CAPTURE_BUILD_CONFIGURATION["allocated"])
+                         if selected else ())
+    hybrid_allocated = (tuple(INPUT_HYBRID_BUILD_CONFIGURATION["allocated"])
+                        if hybrid_selected else ())
+    allocated = (*capture_allocated, *hybrid_allocated)
+    relocations = tuple(f".rela{name}" for name in allocated)
+    return {
+        "feature": INPUT_CAPTURE_FEATURE,
+        "selected": selected,
+        "hybrid_feature": INPUT_HYBRID_FEATURE,
+        "hybrid_selected": hybrid_selected,
+        "source": INPUT_CAPTURE_SOURCE.relative_to(ROOT).as_posix(),
+        "hybrid_source": (INPUT_HYBRID_SOURCE.relative_to(ROOT).as_posix()
+                          if hybrid_selected else None),
+        "allocated": list(allocated),
+        "relocations": list(relocations),
+        "names": [*allocated, *relocations],
+        "authority": "build-feature-and-source-membership",
+    }
+
+
+def refill_witness_inventory_registration(
+        definitions: tuple[str, ...] | None = None) -> dict[str, object]:
+    """Project witness source, layout and final inventory from one feature."""
+    selected_definitions = (tuple(CONVERGENCE_DEFINES)
+                            if definitions is None else tuple(definitions))
+    selected = REFILL_WITNESS_FEATURE in selected_definitions
+    if definitions is None and selected != REFILL_WITNESS_ENABLED:
+        raise RuntimeError("refill witness inventory/build activation disagree")
+    allocated = (tuple(REFILL_WITNESS_BUILD_CONFIGURATION["allocated"])
+                 if selected else ())
+    relocations = tuple(f".rela{name}" for name in allocated)
+    linked = {Path(path).resolve() for path in source_list(selected_definitions)}
+    consumed = REFILL_WITNESS_SOURCE.resolve() in linked
+    if consumed != selected:
+        raise RuntimeError("refill witness layout owner was not compiler-consumed")
+    return {
+        "feature": REFILL_WITNESS_FEATURE,
+        "selected": selected,
+        "source": REFILL_WITNESS_SOURCE.relative_to(ROOT).as_posix(),
+        "allocated": list(allocated),
+        "relocations": list(relocations),
+        "names": [*allocated, *relocations],
+        "cpu_start": REFILL_WITNESS_BUILD_CONFIGURATION["cpu_start"],
+        "physical_start": REFILL_WITNESS_BUILD_CONFIGURATION["physical_start"],
+        "capacity_bytes": REFILL_WITNESS_BUILD_CONFIGURATION["capacity_bytes"],
+        "authority": "REFILL_WITNESS_BUILD_CONFIGURATION",
+    }
+
+
+def active_card_freight_registries() -> list[dict[str, object]]:
+    """Project every active card registry from the live build authority.
+
+    Consumers receive one union-producing catalog rather than enumerating
+    registries themselves.  Adding another active registry therefore changes
+    this projection at the producer boundary and cannot silently create a
+    third Acceptance category.
+    """
+    candidates = (
+        ("input-fidelity", input_capture_inventory_registration(),
+         "candidate-predecessor-end"),
+        ("refill-boundary-witness", refill_witness_inventory_registration(),
+         "mapped-arena-contract"),
+        ("product-cold-disk-chain", product_cold_inventory_registration(),
+         "mapped-arena-contract"),
+    )
+    active: list[dict[str, object]] = []
+    for registry, registration, placement_gate in candidates:
+        if not bool(registration["selected"]):
+            continue
+        allocated = [str(name) for name in registration["allocated"]]
+        if not allocated:
+            raise RuntimeError(f"active card registry is empty: {registry}")
+        active.append({"registry": registry, "registration": registration,
+                       "allocated": allocated,
+                       "placement_gate": placement_gate})
+    names = [name for row in active for name in row["allocated"]]
+    if len(names) != len(set(names)):
+        raise RuntimeError("active card registries have double authority")
+    return active
+
+
+def input_capture_consumption_closure(
+        definitions: tuple[str, ...], sources: list[str], *,
+        layout_selected: bool | None = None) -> dict[str, object]:
+    """Bind layout, inventory and real compiler inputs to one selection."""
+    registration = input_capture_inventory_registration(definitions)
+    selected = bool(registration["selected"])
+    layout = INPUT_CAPTURE_ENABLED if layout_selected is None else layout_selected
+    linked = {Path(path).resolve() for path in sources}
+    capture = INPUT_CAPTURE_SOURCE.resolve() in linked
+    base = INPUT_CAPTURE_BASE_SOURCE.resolve() in linked
+    hybrid_selected = bool(registration["hybrid_selected"])
+    hybrid = INPUT_HYBRID_SOURCE.resolve() in linked
+    if selected != layout:
+        raise RuntimeError(
+            "input-capture layout selection escaped build configuration")
+    if capture != selected or base == selected:
+        owner = str(INPUT_CAPTURE_BUILD_CONFIGURATION["name"])
+        raise RuntimeError(
+            f"layout-bound section owner was not consumed by real compiler "
+            f"profile: {owner}")
+    if hybrid != hybrid_selected:
+        owner = str(INPUT_HYBRID_BUILD_CONFIGURATION["name"])
+        raise RuntimeError(
+            f"layout-bound section owner was not consumed by real compiler "
+            f"profile: {owner}")
+    return {
+        "status": "passed-layout-inventory-compiler-consumption-closure",
+        "authority": "INPUT_CAPTURE_BUILD_CONFIGURATION",
+        "owner": INPUT_CAPTURE_BUILD_CONFIGURATION["name"],
+        "feature": INPUT_CAPTURE_FEATURE,
+        "selected": selected,
+        "hybrid_selected": hybrid_selected,
+        "layout_selected": layout,
+        "inventory_names": list(registration["names"]),
+        "compiler_source": registration["source"] if selected else
+            INPUT_CAPTURE_BASE_SOURCE.relative_to(ROOT).as_posix(),
+    }
+
+
+def input_capture_compile_profile(
+        definitions: tuple[str, ...]) -> tuple[str, ...]:
+    """Project card membership at the real single-link consumer."""
+    feature = str(INPUT_CAPTURE_BUILD_CONFIGURATION["feature"])
+    count = definitions.count(feature)
+    if INPUT_CAPTURE_ENABLED:
+        if count == 0:
+            definitions = (*definitions, feature)
+        elif count != 1:
+            raise RuntimeError("duplicate input-capture compiler feature")
+    elif count:
+        raise RuntimeError(
+            "input-capture compiler feature exists without layout selection")
+    hybrid_count = definitions.count(INPUT_HYBRID_FEATURE)
+    if INPUT_HYBRID_ENABLED:
+        if hybrid_count == 0:
+            definitions = (*definitions, INPUT_HYBRID_FEATURE)
+        elif hybrid_count != 1:
+            raise RuntimeError("duplicate input-hybrid compiler feature")
+    elif hybrid_count:
+        raise RuntimeError(
+            "input-hybrid compiler feature exists without layout selection")
+    return definitions
+
+
+def input_capture_seed_size_witness(
+        sections: list[dict[str, object]], definitions: tuple[str, ...]
+        ) -> dict[str, object]:
+    """Reject an empty card-owned seed section as a missing source owner."""
+    registration = input_capture_inventory_registration(definitions)
+    if not registration["selected"]:
+        return {"status": "not-selected", "owners_checked": 0}
+    actual = {str(row["name"]): int(row["bytes"]) for row in sections}
+    sizes: dict[str, int] = {}
+    for name in registration["allocated"]:
+        owner = str(
+            INPUT_HYBRID_BUILD_CONFIGURATION["name"]
+            if name in INPUT_HYBRID_BUILD_CONFIGURATION["allocated"]
+            else INPUT_CAPTURE_BUILD_CONFIGURATION["name"])
+        size = actual.get(str(name), 0)
+        if size == 0:
+            raise RuntimeError(
+                f"card-owned seed section is zero bytes; missing source "
+                f"owner={owner} section={name}")
+        sizes[str(name)] = size
+    return {"status": "passed-card-owned-seed-sections-nonzero",
+            "owners": sorted({
+                str(INPUT_CAPTURE_BUILD_CONFIGURATION["name"]),
+                *([str(INPUT_HYBRID_BUILD_CONFIGURATION["name"])]
+                  if registration["hybrid_selected"] else [])}),
+            "sizes": sizes,
+            "owners_checked": len(sizes)}
 
 
 def final_section_inventory_expectation() -> dict[str, object]:
@@ -3893,6 +4630,13 @@ def final_section_inventory_expectation() -> dict[str, object]:
     if typed_queue_profile:
         profile_names.append(
             ".rela.lisp65_c2_kernal_window.typed_queue_driver")
+    capture_inventory = input_capture_inventory_registration()
+    profile_names.extend(str(name) for name in capture_inventory["names"])
+    witness_inventory = refill_witness_inventory_registration()
+    profile_names.extend(str(name) for name in witness_inventory["names"])
+    product_cold_inventory = product_cold_inventory_registration()
+    profile_names.extend(
+        str(name) for name in product_cold_inventory["names"])
     if FULL_MAP_OWNERSHIP:
         profile_names.extend(
             str(row["name"]) for row in _full_map_final_section_owners())
@@ -3920,6 +4664,9 @@ def final_section_inventory_expectation() -> dict[str, object]:
             "intern-session-service"
             if INTERN_SESSION_SERVICE else None),
         "typed_queue_profile": typed_queue_profile,
+        "input_capture_registration": capture_inventory,
+        "refill_witness_registration": witness_inventory,
+        "product_cold_registration": product_cold_inventory,
         "derivation": (
             "Link-28 stable envelope minus its append ABI, plus the configured "
             "decoder/append ABIs and the exact E000-reopening/BSS-triage "
@@ -3928,6 +4675,10 @@ def final_section_inventory_expectation() -> dict[str, object]:
             "their relocation sections; the "
             "configured typed-queue profile replaces the retired frame-source "
             "and event-poll members and adds its actual relocation section; "
+            "the selected input-capture file contributes its two card-owned "
+            "sections and their relocation sections; "
+            "the selected product-cold feature contributes its mapped disk-"
+            "chain section and relocation from the same build authority; "
             "the selected full-map profile adds its five named owned sections "
             "and two relocation sections from the independent v1.8 contract; "
             "the target ELF is never an expectation source"),
@@ -3982,6 +4733,10 @@ def _final_section_inventory_violations(
                     or int(row["bytes"]) <= 0
                     or int(row["bytes"]) % 12 != 0):
                 violations.append(f"full-map-owner-relocation-shape:{name}")
+        elif owner.get("size_policy") == "candidate-derived-section-bytes":
+            if (int(row["bytes"]) <= 0
+                    or int(row["bytes"]) > int(owner["capacity_bytes"])):
+                violations.append(f"full-map-owner-capacity:{name}")
         elif int(row["bytes"]) != int(owner["bytes"]):
             violations.append(f"full-map-owner-size:{name}")
         if set(str(flag) for flag in row["flags"]) != set(owner["flags"]):
@@ -4064,6 +4819,24 @@ def _final_section_inventory_model_selftest() -> dict[str, str]:
                     expected, malformed, owners):
                 raise AssertionError(
                     f"malformed relocation extent accepted: {section}")
+        if owner.get("size_policy") == "candidate-derived-section-bytes":
+            resized = [
+                ({**row, "bytes": max(1, int(row["bytes"]) - 1)}
+                 if row["name"] == section else dict(row))
+                for row in valid]
+            if _final_section_inventory_violations(
+                    expected, resized, owners):
+                raise AssertionError(
+                    f"candidate-derived section size rejected: {section}")
+            overflow = [
+                ({**row, "bytes": int(owner["capacity_bytes"]) + 1}
+                 if row["name"] == section else dict(row))
+                for row in valid]
+            marker = f"full-map-owner-capacity:{section}"
+            if marker not in _final_section_inventory_violations(
+                    expected, overflow, owners):
+                raise AssertionError(
+                    f"candidate-derived section overflow accepted: {section}")
     stray = [*valid, {"name": ".lisp65_unowned_stray", "address": 0,
                       "bytes": 1, "flags": ["SHF_ALLOC"]}]
     if "section-name-set" not in _final_section_inventory_violations(
@@ -4277,6 +5050,59 @@ def lto_partition_metadata_gate(out: Path, target: Path) -> dict[str, object]:
     return report
 
 
+def _classify_fixed_facade_low_edges(
+        rows: list[dict[str, object]], facade_targets: set[int],
+        irq_tail_target: int | None, irq_tail_section: str
+        ) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    bad: list[dict[str, object]] = []
+    owned: list[dict[str, object]] = []
+    for row in rows:
+        destination = int(str(row["target"]), 16)
+        if destination in facade_targets:
+            continue
+        if (irq_tail_target is not None
+                and row["section"] == irq_tail_section
+                and destination == irq_tail_target):
+            owned.append(row)
+        else:
+            bad.append(row)
+    if irq_tail_target is not None and len(owned) != 1:
+        raise RuntimeError(
+            "fixed facade red: retired-window IRQ tail ownership drift "
+            f"{owned}")
+    if bad:
+        raise RuntimeError(
+            f"fixed facade red: E000 code bypasses the fixed vectors {bad}")
+    return owned, bad
+
+
+def _fixed_facade_low_edge_selftest() -> list[str]:
+    facade = {0xB5C4}; tail = 0x222D
+    section = ".lisp65_c2_kernal_window.irq_handler"
+    base = [
+        {"section": section, "target": "0x222d", "instruction": "jmp $222d"},
+        {"section": ".lisp65_c2_kernal_window.other", "target": "0xb5c4",
+         "instruction": "jsr $b5c4"},
+    ]
+    _classify_fixed_facade_low_edges(base, facade, tail, section)
+    rejected: list[str] = []
+    for name, rows in {
+            "foreign-low-edge": [*base, {"section": section,
+                "target": "0x3333", "instruction": "jmp $3333"}],
+            "foreign-owner-for-tail": [{**base[0], "section":
+                ".lisp65_c2_kernal_window.other"}, base[1]],
+            "missing-owned-tail": [base[1]],
+            }.items():
+        try:
+            _classify_fixed_facade_low_edges(rows, facade, tail, section)
+        except RuntimeError:
+            rejected.append(name)
+    if rejected != ["foreign-low-edge", "foreign-owner-for-tail",
+                    "missing-owned-tail"]:
+        raise RuntimeError("fixed facade IRQ-tail mutation survived")
+    return rejected
+
+
 def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]:
     """Pin every cross-domain call and state operand used by the E000 slab."""
     elf = Path(str(target) + ".elf")
@@ -4363,7 +5189,9 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
         raise RuntimeError(f"fixed facade red: state address drift {state_drift}")
 
     facade_targets = set(vector_addresses.values())
-    bad_window_edges: list[dict[str, object]] = []
+    low_window_edges: list[dict[str, object]] = []
+    irq_tail_target = symbols.get("retired_window_brk_classifier")
+    irq_tail_section = ".lisp65_c2_kernal_window.irq_handler"
     for section in KERNAL_SECTIONS:
         if section in {".lisp65_c2_kernal_window.state", ".lisp65_c2_vectors",
                        PROFILE_RODATA_SECTION}:
@@ -4374,15 +5202,14 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
         for match in re.finditer(r"\b(?:jsr|jmp)\s+\$([0-9a-f]{4})\b", disassembly):
             destination = int(match.group(1), 16)
             if destination < KERNAL_WINDOW_BASE and destination not in facade_targets:
-                bad_window_edges.append({
+                low_window_edges.append({
                     "section": section,
                     "target": f"0x{destination:04x}",
                     "instruction": match.group(0),
                 })
-    if bad_window_edges:
-        raise RuntimeError(
-            f"fixed facade red: E000 code bypasses the fixed vectors "
-            f"{bad_window_edges}")
+    owned_irq_tail_edges, bad_window_edges = _classify_fixed_facade_low_edges(
+        low_window_edges, facade_targets, irq_tail_target, irq_tail_section)
+    facade_edge_mutations = _fixed_facade_low_edge_selftest()
 
     report = {
         "format": "lisp65-c2-fixed-host-facade-link-v1",
@@ -4444,9 +5271,19 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
             "symbols": fixed_state,
         },
         "fixed_block_rtov_fail_leaf": fixed_leaf,
-        "window_direct_low_edges_outside_facade": [],
+        "window_direct_low_edges_outside_facade": owned_irq_tail_edges,
+        "owned_IRQ_tail_contract": ({
+            "owner_section": irq_tail_section,
+            "target_symbol": "retired_window_brk_classifier",
+            "target": f"0x{irq_tail_target:04x}",
+            "edge_count": len(owned_irq_tail_edges),
+            "authority": "final linked symbol identity plus exact IRQ owner",
+        } if irq_tail_target is not None else {"status": "not-present"}),
+        "owned_IRQ_tail_mutations_rejected": facade_edge_mutations,
         "claim_limit": (
-            "Structural fixed-address and edge gate; hardware behavior is not claimed."
+            "Structural fixed-address and edge gate; only the exact owned IRQ "
+            "tail continuation may bypass the ordinary host facade. Hardware "
+            "behavior is not claimed."
         ),
     }
     write(out / f"fixed-host-facade-{suffix}.json",
@@ -5556,7 +6393,9 @@ def profile_data_reference_gate(
 def _owned_edge_violation(
         opcode: str, source_node: tuple[str, int], target: int,
         instruction_owners: dict[int, tuple[str, int]],
-        function_entries: set[int]) -> str | None:
+        function_entries: set[int],
+        owned_tail_continuations: set[tuple[tuple[str, int], int]] | None = None
+        ) -> str | None:
     """Classify one direct edge into the owned CPU window.
 
     Function entries are deliberately T/t-only.  Absolute and weak aliases are
@@ -5569,6 +6408,9 @@ def _owned_edge_violation(
         return None if target in function_entries else "jsr-not-function-entry"
     if opcode != "jmp":
         return "unsupported-direct-edge-opcode"
+    if ((source_node, target)
+            in (owned_tail_continuations or set())):
+        return None
     if target_node == source_node:
         return None
     return None if target in function_entries else "inter-function-jmp-not-entry"
@@ -5584,6 +6426,7 @@ def _owned_control_flow_model_selftest() -> dict[str, str]:
         0xE011: second,
     }
     function_entries = {0xE000, 0xE010}
+    owned_tail = {(first, 0xE011)}
     cases = {
         "same-function-symbol-less-basic-block": (
             "jmp", first, 0xE003, None),
@@ -5596,6 +6439,8 @@ def _owned_control_flow_model_selftest() -> dict[str, str]:
         "inter-function-non-entry-offset": (
             "jmp", first, 0xE011,
             "inter-function-jmp-not-entry"),
+        "owned-tail-continuation": (
+            "jmp", first, 0xE011, None),
         "jsr-to-internal-basic-block": (
             "jsr", first, 0xE003, "jsr-not-function-entry"),
         # $ffd2 is deliberately imagined to exist in an unfiltered nm alias
@@ -5607,12 +6452,73 @@ def _owned_control_flow_model_selftest() -> dict[str, str]:
     result: dict[str, str] = {}
     for name, (opcode, source, target, expected) in cases.items():
         actual = _owned_edge_violation(
-            opcode, source, target, instruction_owners, function_entries)
+            opcode, source, target, instruction_owners, function_entries,
+            owned_tail if name == "owned-tail-continuation" else set())
         if actual != expected:
             raise AssertionError(
                 f"owned-control-flow selftest {name}: {actual} != {expected}")
         result[name] = "passed" if expected is None else "rejected"
     return result
+
+
+def _require_named_model_matrix(name: str, observed: dict[str, str],
+                                expected: dict[str, str]) -> dict[str, object]:
+    """Require both matrix membership and outcomes, with a two-sided report."""
+    missing = sorted(set(expected) - set(observed))
+    unexpected = sorted(set(observed) - set(expected))
+    mismatched = {
+        member: {"expected": expected[member], "observed": observed[member]}
+        for member in sorted(set(expected) & set(observed))
+        if expected[member] != observed[member]
+    }
+    report: dict[str, object] = {
+        "expected": dict(sorted(expected.items())),
+        "observed": dict(sorted(observed.items())),
+        "missing": missing,
+        "unexpected": unexpected,
+        "mismatched": mismatched,
+    }
+    if missing or unexpected or mismatched:
+        raise RuntimeError(f"{name} drift: {json.dumps(report, sort_keys=True)}")
+    return report
+
+
+def _owned_control_flow_matrix_contract_selftest(
+        observed: dict[str, str]) -> dict[str, str]:
+    expected = {
+        "absolute-weak-alias-disguised-exit": "rejected",
+        "inter-function-non-entry-offset": "rejected",
+        "jsr-to-internal-basic-block": "rejected",
+        "owned-state-or-data-target": "rejected",
+        "owned-tail-continuation": "passed",
+        "same-function-mid-instruction": "rejected",
+        "same-function-symbol-less-basic-block": "passed",
+    }
+    _require_named_model_matrix("owned-control-flow matrix", observed, expected)
+    mutations: dict[str, str] = {}
+    for mutation, candidate in {
+        "missing-authorized-case": {
+            key: value for key, value in observed.items()
+            if key != "owned-tail-continuation"
+        },
+        "unregistered-extra-case": {**observed, "unregistered": "passed"},
+        "wrong-case-outcome": {**observed, "owned-tail-continuation": "rejected"},
+    }.items():
+        try:
+            _require_named_model_matrix(
+                f"owned-control-flow mutation {mutation}", candidate, expected)
+        except RuntimeError as exc:
+            text = str(exc)
+            if not all(token in text for token in
+                       ("expected", "observed", "missing", "unexpected",
+                        "mismatched")):
+                raise AssertionError(
+                    f"owned-control-flow mutation lacks two-sided report: {text}")
+            mutations[mutation] = "rejected"
+        else:
+            raise AssertionError(
+                f"owned-control-flow mutation survived: {mutation}")
+    return mutations
 
 
 def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
@@ -5660,6 +6566,14 @@ def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
             ignored_aliases.append(name)
 
     violations: list[dict[str, object]] = []
+    classifier = truth.symbols_by_name.get("retired_window_brk_classifier", [])
+    irq_return = truth.symbols_by_name.get("c2_kernal_irq_return", [])
+    owned_tail_continuations: set[tuple[tuple[str, int], int]] = set()
+    if len(classifier) == 1 and len(irq_return) == 1:
+        owned_tail_continuations.add(
+            ((classifier[0].section, classifier[0].value),
+             irq_return[0].value))
+    observed_owned_tail_continuations: list[dict[str, object]] = []
     internal_basic_block_jumps = 0
     entry_edges = 0
     direct_window_edges = 0
@@ -5679,7 +6593,7 @@ def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
                 continue
             reason = _owned_edge_violation(
                 opcode, source_node, target, instruction_owners,
-                set(function_entries))
+                set(function_entries), owned_tail_continuations)
             if reason is not None:
                 violations.append({
                     "source_section": source_node[0],
@@ -5688,6 +6602,14 @@ def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
                     "target": f"0x{target:04x}",
                     "reason": reason,
                     "instruction": line.strip(),
+                })
+            elif ((source_node, target) in owned_tail_continuations):
+                observed_owned_tail_continuations.append({
+                    "source_section": source_node[0],
+                    "source_function_address": f"0x{source_node[1]:04x}",
+                    "opcode": opcode,
+                    "target": f"0x{target:04x}",
+                    "target_symbol": "c2_kernal_irq_return",
                 })
             elif (opcode == "jmp" and
                   instruction_owners.get(target) == source_node and
@@ -5699,6 +6621,13 @@ def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
         violations.append({
             "reason": "audited-pre-main-chrout-count",
             "actual": audited_pre_main_chrout,
+            "expected": 1,
+        })
+    if (owned_tail_continuations
+            and len(observed_owned_tail_continuations) != 1):
+        violations.append({
+            "reason": "retired-window-owned-tail-count",
+            "actual": len(observed_owned_tail_continuations),
             "expected": 1,
         })
     if violations:
@@ -5713,6 +6642,7 @@ def _owned_control_flow_gate(elf: Path, sections: dict[str, dict[str, int]],
         "entry_edges": entry_edges,
         "same_function_basic_block_jumps": internal_basic_block_jumps,
         "audited_pre_main_chrout_edges": audited_pre_main_chrout,
+        "owned_tail_continuation_edges": observed_owned_tail_continuations,
         "violations": [],
         "matrix": _owned_control_flow_model_selftest(),
     }
@@ -6899,6 +7829,11 @@ def single_link(out: Path, *,
                 direct_entry_check_tool: str = "c2_direct_entry_contract.py",
                 extra_contract_lines: tuple[str, ...] = (),
                 seed_only: bool = False) -> Path | None:
+    probe_definitions = input_capture_compile_profile(probe_definitions)
+    extra_contract_lines = tuple(
+        ("feature_defines=" + ",".join(probe_definitions)
+         if line.startswith("feature_defines=") else line)
+        for line in extra_contract_lines)
     manifest_path = PRODUCT_ARTIFACTS_MANIFEST
     artifacts = json.loads(manifest_path.read_text(encoding="utf-8"))
     tool(direct_entry_check_tool, "check")
@@ -6986,6 +7921,10 @@ def single_link(out: Path, *,
     for path in source_list(probe_definitions):
         item = Path(path)
         contract_lines.append(f"input_sha256={item.relative_to(ROOT)}:{hashlib.sha256(item.read_bytes()).hexdigest()}")
+    contract_lines.append(
+        "input_sha256="
+        f"{KERNAL_EQUATES_INCLUDE.relative_to(ROOT)}:"
+        f"{hashlib.sha256(KERNAL_EQUATES_INCLUDE.read_bytes()).hexdigest()}")
     contract = out / "resolved-profile.txt"
     write(contract, "\n".join(contract_lines) + "\n")
     runtime_prepared_standard = out / "runtime-overlay.prepare-standard.h"
@@ -7283,9 +8222,9 @@ def main() -> int:
         assert matrix["repl-before-ownership"] == "rejected"
         assert matrix["pre-handoff-operand-to-fixed-state"] == "rejected"
         control_matrix = _owned_control_flow_model_selftest()
-        assert control_matrix["same-function-symbol-less-basic-block"] == "passed"
-        assert control_matrix["absolute-weak-alias-disguised-exit"] == "rejected"
-        assert len(control_matrix) == 6
+        control_mutations = _owned_control_flow_matrix_contract_selftest(
+            control_matrix)
+        assert set(control_mutations.values()) == {"rejected"}
         data_matrix = _profile_data_reference_model_selftest()
         assert len(data_matrix) == 9
         assert data_matrix["output-section-plus-addend-reference"] == "passed"

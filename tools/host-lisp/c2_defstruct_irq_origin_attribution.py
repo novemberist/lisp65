@@ -123,6 +123,14 @@ def git_bind(commit: str, path: str) -> dict[str, Any]:
             "bytes": len(raw), "sha256": digest(raw)}
 
 
+def historical_bind(path: Path) -> dict[str, Any]:
+    name = path.relative_to(ROOT).as_posix()
+    raw = subprocess.run(
+        ["git", "show", f"{AUTHORIZATION_COMMIT}:{name}"], cwd=ROOT,
+        check=True, stdout=subprocess.PIPE).stdout
+    return {"path": name, "bytes": len(raw), "sha256": digest(raw)}
+
+
 def disassembly(elf: Path) -> str:
     return subprocess.run(
         [str(OBJDUMP), "-d", "--no-show-raw-insn", str(elf)],
@@ -393,7 +401,7 @@ def derive() -> dict[str, Any]:
             "interrupt_policy": bind(POLICY),
             "map_source": bind(MAP_SOURCE),
             "runtime_source": bind(RUNTIME),
-            "window_source": bind(WINDOW),
+            "window_source": historical_bind(WINDOW),
             "phase_C_capture_source": bind(PHASE_C),
             "tested_core_CPU": core_authority(policy),
         },

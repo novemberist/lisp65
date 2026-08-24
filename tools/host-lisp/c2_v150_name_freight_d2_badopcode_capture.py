@@ -47,6 +47,8 @@ CANONICAL = ROOT / (
     "build/c2.3/v1.5.0-candidate-product-link97/"
     "canonical-product-manifest.json"
 )
+PUBLIC_AUTHORITY = ROOT / "config/c2-v150-public-build-authority.json"
+PUBLIC_LIBRARIES = ROOT / "build/c2.3/v1.5.0-public-selected/library-inputs"
 INSPECT = ROOT / (
     "build/c2.3/v1.5.0-name-freight-libraries/inspect.manifest.json"
 )
@@ -136,8 +138,29 @@ def stream(raw: bytes, at: int = 0) -> dict[str, int]:
 
 
 def host_compile(source: str) -> dict[str, Any]:
-    canonical_value, stdlib, carrier = PIPE.manifest_paths(CANONICAL)
-    del canonical_value
+    # The captured object is historical, but its canonical host control must
+    # come from the selected product world, not from a mutable Link-97 build
+    # path.  This keeps the control paired with the product authority after a
+    # full source-gate run regenerates global compiler manifests.
+    authority = load(PUBLIC_AUTHORITY)
+    product = load(ROOT / authority["product_manifest_path"])
+    manifests = product.get("manifests", [])
+    require(isinstance(manifests, list) and len(manifests) == 6,
+            "selected product manifest set drift")
+    selected: list[tuple[Path, dict[str, Any]]] = []
+    for row in manifests:
+        path = ROOT / row["path"]
+        require(bind(path) == row, "selected product manifest binding drift")
+        selected.append((path, load(path)))
+    stdlib_rows = [path for path, value in selected
+                   if value.get("artifact_role") == "stdlib"]
+    carrier_rows = [path for path, value in selected
+                    if value.get("name") == "c2-v112-product-compiler-tier"]
+    require(len(stdlib_rows) == len(carrier_rows) == 1,
+            "selected stdlib/compiler pair is ambiguous")
+    stdlib, carrier = stdlib_rows[0], carrier_rows[0]
+    inspect = PUBLIC_LIBRARIES / "inspect.manifest.json"
+    string_extra = PUBLIC_LIBRARIES / "string-extra.manifest.json"
     heap = C.prepare_heap([])
     directory: dict[int, B.CodeObject] = {}
     macros: set[int] = set()
@@ -146,8 +169,8 @@ def host_compile(source: str) -> dict[str, Any]:
     for path, role in (
         (stdlib, "product-runtime"),
         (carrier, "compiler-carrier"),
-        (INSPECT, "required-inspect"),
-        (STRING_EXTRA, "required-string-extra"),
+        (inspect, "required-inspect"),
+        (string_extra, "required-string-extra"),
     ):
         PIPE.load_manifest_entries(
             heap, path, role, directory, macros, names, origins

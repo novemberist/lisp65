@@ -1,0 +1,72 @@
+{
+  "format": "lisp65-c2-v160-repl-cursor-navigation-v1",
+  "recorded_on": "2026-08-18",
+  "status": "owner-commissioned-host-first",
+  "commission_commit": "fc627e57",
+  "scope": "Bank-2 REPL line navigation and insertion; no resident or native freight",
+  "public_surface": {
+    "changed_names": [],
+    "read_line_signature": "(read-line) -> string",
+    "maximum_characters": 250
+  },
+  "keymap": {
+    "single_source": "config/v11-l-lite-keymap.json",
+    "generated_consumer": "lib/stdlib-read-line.lisp",
+    "bindings": [
+      "return",
+      "delete-backward",
+      "cursor-left",
+      "cursor-right",
+      "control-d",
+      "control-f",
+      "control-b",
+      "control-a",
+      "control-e"
+    ],
+    "legacy_delete_alias": 127,
+    "word_motion_in_scope": false,
+    "kill_line_in_scope": false
+  },
+  "editor": {
+    "representation": "mutable forward sentinel chain plus eight-cell state",
+    "cursor_identity": "cell immediately before point",
+    "insert_mode": "insert before the character at point",
+    "viewport": "one-row cursor-following window on the final screen row",
+    "cursor_render": "inverse attribute 129; blank block at end of line",
+    "native_cursor_dependency": false,
+    "boundary_policy": "left/backward-delete at start and right/forward-delete at end are no-ops"
+  },
+  "allocation": {
+    "nursery_cells": 192,
+    "initial_state_cells_before_first_key": 9,
+    "maximum_cells_per_input_key": 4,
+    "maximum_collections_on_one_key_for_any_incoming_phase": 1,
+    "line_start_end_allocate_per_key": 0
+  },
+  "capacity": {
+    "bank2_headroom_authority": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.5.0-release-preflight-receipt.json",
+    "bank2_headroom_before_bytes": 19493,
+    "maximum_bank2_delta_bytes": 2048,
+    "resident_code_delta_bytes": 0,
+    "resident_state_delta_bytes": 0,
+    "native_primitive_delta": 0,
+    "d5_before": {"symbol_slots": 34, "namepool_bytes": 545},
+    "d5_minimum": {"symbol_slots": 32, "namepool_bytes": 384},
+    "d5_projected": {"symbol_slots": 32, "namepool_bytes": 562}
+  },
+  "proof": {
+    "execution_lanes": ["source P0", "emitted-artifact P0"],
+    "required_behaviors": [
+      "insert-middle with Cursor Left",
+      "C-b/C-f parity",
+      "C-a/C-e line edges",
+      "Delete backward",
+      "C-d forward delete",
+      "boundary no-ops",
+      "250-character limit and cursor-following viewport",
+      "RUN/STOP remains fail-closed"
+    ],
+    "closing_rule": "the report and its document-index row are committed before the final full proof run"
+  },
+  "claim_limit": "host source/artifact semantics and Bank-2/D5 pricing; no device claim"
+}

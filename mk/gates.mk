@@ -1437,7 +1437,7 @@ c2-v21-loading-libraries-stage-breadcrumb-media-check: c2-v21-loading-libraries-
 c2-media-builder-closure-enumeration-selftest: c2-v21-loading-libraries-stage-breadcrumb-media-check
 	python3 tools/host-lisp/c2_media_builder_closure_enumeration.py selftest >/dev/null
 
-c2-media-builder-closure-enumeration-check: c2-media-builder-closure-enumeration-selftest
+c2-media-builder-closure-enumeration-check: c2-media-builder-closure-enumeration-selftest c2-v160-item1-only-media-check
 	python3 tools/host-lisp/c2_media_builder_closure_enumeration.py check >/dev/null
 
 check-source: c2-media-builder-closure-enumeration-check
@@ -2774,3 +2774,341 @@ c2-v150-halt1-check: c2-v150-halt1-selftest
 	python3 tools/host-lisp/c2_v150_halt1.py check
 
 check-source: c2-v150-halt1-check
+
+.PHONY: c2-v160-repl-cursor-navigation-selftest c2-v160-repl-cursor-navigation-check
+c2-v160-repl-cursor-navigation-selftest: c2-l-full-keymap-end-to-end-check
+	python3 tools/host-lisp/c2_v160_repl_cursor_navigation.py selftest
+
+c2-v160-repl-cursor-navigation-check: c2-v160-repl-cursor-navigation-selftest
+	python3 tools/host-lisp/c2_v160_repl_cursor_navigation.py check
+
+check-source: c2-v160-repl-cursor-navigation-check
+
+.PHONY: c2-v160-comfort-repl-symbol-pricing-selftest c2-v160-comfort-repl-symbol-pricing-check
+c2-v160-comfort-repl-symbol-pricing-selftest: c2-v160-repl-cursor-navigation-check
+	python3 tools/host-lisp/c2_v160_comfort_repl_symbol_pricing.py selftest
+
+c2-v160-comfort-repl-symbol-pricing-check: c2-v160-comfort-repl-symbol-pricing-selftest
+	python3 tools/host-lisp/c2_v160_comfort_repl_symbol_pricing.py check
+
+check-source: c2-v160-comfort-repl-symbol-pricing-check
+
+.PHONY: c2-v160-comfort-repl-selftest c2-v160-comfort-repl-check
+c2-v160-comfort-repl-selftest: c2-v160-comfort-repl-symbol-pricing-check
+	python3 tools/host-lisp/c2_v160_comfort_repl.py selftest
+
+c2-v160-comfort-repl-check: c2-v160-comfort-repl-selftest
+	python3 tools/host-lisp/c2_v160_comfort_repl.py check
+
+check-source: c2-v160-comfort-repl-check
+
+.PHONY: c2-v160-comfort-input-fidelity-pricing-selftest c2-v160-comfort-input-fidelity-pricing-check
+c2-v160-comfort-input-fidelity-pricing-selftest: c2-v160-comfort-repl-check
+	python3 tools/host-lisp/c2_v160_comfort_input_fidelity_pricing.py selftest
+
+c2-v160-comfort-input-fidelity-pricing-check: c2-v160-comfort-input-fidelity-pricing-selftest
+	python3 tools/host-lisp/c2_v160_comfort_input_fidelity_pricing.py check
+
+check-source: c2-v160-comfort-input-fidelity-pricing-check
+
+.PHONY: c2-v160-comfort-input-fidelity-selftest c2-v160-comfort-input-fidelity-preflight
+c2-v160-comfort-input-fidelity-selftest: c2-v160-comfort-input-fidelity-pricing-check
+	python3 tools/host-lisp/c2_v160_comfort_input_fidelity.py selftest
+
+c2-v160-comfort-input-fidelity-preflight: c2-v160-comfort-input-fidelity-selftest
+	python3 tools/host-lisp/c2_v160_comfort_input_fidelity.py preflight
+
+check-source: c2-v160-comfort-input-fidelity-preflight
+
+.PHONY: c2-v160-input-service-time-pricing-selftest c2-v160-input-service-time-pricing-check
+c2-v160-input-service-time-pricing-selftest: c2-v160-comfort-input-fidelity-preflight
+	python3 tools/host-lisp/c2_v160_input_service_time_pricing.py selftest
+
+c2-v160-input-service-time-pricing-check: c2-v160-input-service-time-pricing-selftest
+	python3 tools/host-lisp/c2_v160_input_service_time_pricing.py check
+
+check-source: c2-v160-input-service-time-pricing-check
+
+.PHONY: c2-v160-input-service-hybrid-selftest c2-v160-input-service-hybrid-check
+c2-v160-input-service-hybrid-selftest:
+	python3 tools/host-lisp/c2_v160_input_service_hybrid.py selftest
+
+c2-v160-input-service-hybrid-check: c2-v160-input-service-hybrid-selftest
+	python3 tools/host-lisp/c2_v160_input_service_hybrid.py check
+
+.PHONY: c2-v160-input-service-hybrid-reclaim-pricing-selftest c2-v160-input-service-hybrid-reclaim-pricing-check
+c2-v160-input-service-hybrid-reclaim-pricing-selftest:
+	python3 tools/host-lisp/c2_v160_input_service_hybrid_reclaim_pricing.py selftest
+
+c2-v160-input-service-hybrid-reclaim-pricing-check: c2-v160-input-service-hybrid-reclaim-pricing-selftest
+	python3 tools/host-lisp/c2_v160_input_service_hybrid_reclaim_pricing.py check
+
+.PHONY: c2-v160-input-service-hybrid-capacity-world-attribution-selftest c2-v160-input-service-hybrid-capacity-world-attribution-check
+c2-v160-input-service-hybrid-capacity-world-attribution-selftest:
+	python3 tools/host-lisp/c2_v160_input_service_hybrid_capacity_world_attribution.py selftest
+
+c2-v160-input-service-hybrid-capacity-world-attribution-check: c2-v160-input-service-hybrid-capacity-world-attribution-selftest
+	python3 tools/host-lisp/c2_v160_input_service_hybrid_capacity_world_attribution.py check
+
+.PHONY: c2-v160-hybrid-consumer-absence-attribution-selftest c2-v160-hybrid-consumer-absence-attribution-check
+c2-v160-hybrid-consumer-absence-attribution-selftest:
+	python3 tools/host-lisp/c2_v160_hybrid_consumer_absence_attribution.py selftest
+
+c2-v160-hybrid-consumer-absence-attribution-check: c2-v160-hybrid-consumer-absence-attribution-selftest
+	python3 tools/host-lisp/c2_v160_hybrid_consumer_absence_attribution.py check
+
+check-source: c2-v160-hybrid-consumer-absence-attribution-check
+
+.PHONY: c2-v160-hybrid-deep-projection-attribution-selftest c2-v160-hybrid-deep-projection-attribution-check
+c2-v160-hybrid-deep-projection-attribution-selftest:
+	python3 tools/host-lisp/c2_v160_hybrid_deep_projection_attribution.py selftest
+
+c2-v160-hybrid-deep-projection-attribution-check: c2-v160-hybrid-deep-projection-attribution-selftest
+	python3 tools/host-lisp/c2_v160_hybrid_deep_projection_attribution.py check
+
+check-source: c2-v160-hybrid-deep-projection-attribution-check
+
+.PHONY: c2-v160-hybrid-live-stack-replacement-check
+c2-v160-hybrid-live-stack-replacement-check: c2-v160-hybrid-deep-projection-attribution-check
+	python3 tools/host-lisp/c2_v160_hybrid_live_stack_replacement_card.py check
+
+check-source: c2-v160-hybrid-live-stack-replacement-check
+
+.PHONY: c2-v160-items12-hybrid-device-preparation-check
+c2-v160-items12-hybrid-device-preparation-check: c2-v160-hybrid-live-stack-replacement-check
+	python3 tools/host-lisp/c2_v160_items12_device_preparation.py successor-check
+
+check-source: c2-v160-items12-hybrid-device-preparation-check
+
+.PHONY: c2-v160-input-drop-counters-selftest c2-v160-input-drop-counters-check
+c2-v160-input-drop-counters-selftest:
+	python3 tools/host-lisp/c2_v160_input_drop_counters.py selftest
+
+c2-v160-input-drop-counters-check: c2-v160-input-drop-counters-selftest
+	python3 tools/host-lisp/c2_v160_input_drop_counters.py check
+
+check-source: c2-v160-input-drop-counters-check
+
+.PHONY: c2-v160-active-frame-liveness-check
+c2-v160-active-frame-liveness-check: c2-v160-input-drop-counters-check asm-c-constant-contract-check
+	python3 tools/host-lisp/c2_v160_active_frame_liveness.py check
+
+check-source: c2-v160-active-frame-liveness-check
+
+.PHONY: c2-v160-bound-origin-fragmentation-resume-check
+c2-v160-bound-origin-fragmentation-resume-check: c2-v160-active-frame-liveness-check
+	python3 tools/host-lisp/c2_v160_bound_origin_fragmentation_acceptance_resume.py check
+
+check-source: c2-v160-bound-origin-fragmentation-resume-check
+
+.PHONY: c2-v160-bound-origin-fragmentation-device-preparation-check
+c2-v160-bound-origin-fragmentation-device-preparation-check: c2-v160-bound-origin-fragmentation-resume-check
+	python3 tools/host-lisp/c2_v160_bound_origin_fragmentation_device_preparation.py check
+
+check-source: c2-v160-bound-origin-fragmentation-device-preparation-check
+
+.PHONY: c2-v160-retired-window-carrier-inversion-check
+c2-v160-retired-window-carrier-inversion-check: c2-v160-bound-origin-fragmentation-device-preparation-check
+	python3 tools/host-lisp/c2_v160_retired_window_carrier_inversion.py check
+
+check-source: c2-v160-retired-window-carrier-inversion-check
+
+.PHONY: c2-v160-retired-window-release-classification-check
+c2-v160-retired-window-release-classification-check: c2-v160-retired-window-carrier-inversion-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_retired_window_release_classification.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_retired_window_release_classification.py check
+
+check-source: c2-v160-retired-window-release-classification-check
+
+.PHONY: c2-v160-bound-origin-measurement-media-check
+c2-v160-bound-origin-measurement-media-check: c2-v160-retired-window-release-classification-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_bound_origin_measurement_media.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_bound_origin_measurement_media.py check
+
+check-source: c2-v160-bound-origin-measurement-media-check
+
+.PHONY: c2-v160-bound-origin-measurement-result-check
+c2-v160-bound-origin-measurement-result-check: c2-v160-bound-origin-measurement-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_bound_origin_measurement_result.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_bound_origin_measurement_result.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_second_queue_consumer_attribution.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_second_queue_consumer_attribution.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_single_owner_gate.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_single_owner_gate.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_single_owner_card.py check
+
+check-source: c2-v160-bound-origin-measurement-result-check
+
+.PHONY: c2-v160-queue-single-owner-replacement-check c2-v160-queue-owner-cold-relocation-pricing-check
+c2-v160-queue-single-owner-replacement-check: c2-v160-bound-origin-measurement-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_single_owner_replacement_card.py check
+
+c2-v160-queue-owner-cold-relocation-pricing-check: c2-v160-queue-single-owner-replacement-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_cold_relocation_pricing.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_cold_relocation_pricing.py check
+
+check-source: c2-v160-queue-owner-cold-relocation-pricing-check
+
+.PHONY: c2-v160-queue-owner-cold-relocation-selftest c2-v160-queue-owner-cold-relocation-card-check
+c2-v160-queue-owner-cold-relocation-selftest: c2-v160-queue-owner-cold-relocation-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_cold_relocation.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_cold_relocation.py source
+
+c2-v160-queue-owner-cold-relocation-card-check: c2-v160-queue-owner-cold-relocation-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_cold_relocation_card.py check
+
+check-source: c2-v160-queue-owner-cold-relocation-card-check
+
+.PHONY: c2-v160-queue-owner-cold-relocation-resume-check
+c2-v160-queue-owner-cold-relocation-resume-check: c2-v160-queue-owner-cold-relocation-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_cold_relocation_resume.py check
+
+check-source: c2-v160-queue-owner-cold-relocation-resume-check
+
+.PHONY: c2-v160-queue-owner-device-preparation-check
+c2-v160-queue-owner-device-preparation-check: c2-v160-queue-owner-cold-relocation-resume-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_queue_owner_device_preparation.py check
+
+check-source: c2-v160-queue-owner-device-preparation-check
+
+.PHONY: c2-v160-display-ownership-selftest c2-v160-display-ownership-check
+c2-v160-display-ownership-selftest: c2-v160-queue-owner-device-preparation-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_display_ownership.py selftest
+
+c2-v160-display-ownership-check: c2-v160-display-ownership-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_display_ownership.py check
+
+check-source: c2-v160-display-ownership-check
+
+.PHONY: c2-v160-display-ownership-card-check
+c2-v160-display-ownership-card-check: c2-v160-display-ownership-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_display_ownership_replacement_card.py check
+
+check-source: c2-v160-display-ownership-card-check
+
+.PHONY: c2-v160-display-ownership-device-preparation-check
+c2-v160-display-ownership-device-preparation-check: c2-v160-display-ownership-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_display_ownership_device_preparation.py check
+
+check-source: c2-v160-display-ownership-device-preparation-check
+
+.PHONY: c2-v160-refill-boundary-witness-device-preparation-check
+c2-v160-refill-boundary-witness-device-preparation-check: c2-v160-display-ownership-device-preparation-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_refill_boundary_witness_device_preparation.py check
+
+check-source: c2-v160-refill-boundary-witness-device-preparation-check
+
+.PHONY: c2-v160-refill-boundary-witness-media-repair-check
+c2-v160-refill-boundary-witness-media-repair-check: c2-v160-refill-boundary-witness-device-preparation-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_refill_boundary_witness_media_repair.py check
+
+check-source: c2-v160-refill-boundary-witness-media-repair-check
+
+.PHONY: c2-v160-nested-map-repricing-check
+c2-v160-nested-map-repricing-check: c2-v160-refill-boundary-witness-media-repair-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_nested_map_repricing.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_nested_map_repricing.py check
+
+check-source: c2-v160-nested-map-repricing-check
+
+.PHONY: c2-v160-nested-map-acceptance-union-resume-check
+c2-v160-nested-map-acceptance-union-resume-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_nested_map_acceptance_union_resume.py check
+
+check-source: c2-v160-nested-map-acceptance-union-resume-check
+
+.PHONY: c2-v160-nested-map-swap-media-check
+c2-v160-nested-map-swap-media-check: c2-v160-nested-map-acceptance-union-resume-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_nested_map_swap_media.py check
+
+check-source: c2-v160-nested-map-swap-media-check
+
+.PHONY: c2-v160-recovery-sanitization-media-check
+c2-v160-recovery-sanitization-media-check: c2-v160-queue-single-owner-replacement-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_recovery_sanitization_media.py check
+
+check-source: c2-v160-recovery-sanitization-media-check
+
+.PHONY: c2-v160-boot-refill-selector-bypass-mutation-set-resume-check
+c2-v160-boot-refill-selector-bypass-mutation-set-resume-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_boot_refill_selector_bypass_mutation_set_resume.py check
+
+check-source: c2-v160-boot-refill-selector-bypass-mutation-set-resume-check
+
+.PHONY: c2-v160-boot-refill-selector-bypass-media-check
+c2-v160-boot-refill-selector-bypass-media-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_boot_refill_selector_bypass_media.py check
+
+check-source: c2-v160-boot-refill-selector-bypass-media-check
+
+.PHONY: c2-v160-selector-blank-first-event-latch-pricing-check
+c2-v160-selector-blank-first-event-latch-pricing-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_selector_blank_first_event_latch_pricing.py check
+
+check-source: c2-v160-selector-blank-first-event-latch-pricing-check
+
+.PHONY: c2-v160-first-event-bitstream-patch-attribution-check
+c2-v160-first-event-bitstream-patch-attribution-check: c2-v160-selector-blank-first-event-latch-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_first_event_bitstream_patch_attribution.py check
+
+check-source: c2-v160-first-event-bitstream-patch-attribution-check
+
+.PHONY: c2-v160-clean-product-candidate-check
+c2-v160-clean-product-candidate-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_clean_product_candidate.py check
+
+check-source: c2-v160-clean-product-candidate-check
+
+.PHONY: c2-v160-clean-product-acceptance-media-check
+c2-v160-clean-product-acceptance-media-check: c2-v160-clean-product-candidate-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_clean_product_acceptance_media.py check
+
+check-source: c2-v160-clean-product-acceptance-media-check
+
+.PHONY: c2-v160-clean-product-operand-root-fix-check
+c2-v160-clean-product-operand-root-fix-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_clean_product_operand_root_fix.py check
+
+check-source: c2-v160-clean-product-operand-root-fix-check
+
+.PHONY: c2-v160-clean-product-operand-root-media-check
+c2-v160-clean-product-operand-root-media-check: c2-v160-clean-product-operand-root-fix-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_clean_product_operand_root_media.py check
+
+check-source: c2-v160-clean-product-operand-root-media-check
+
+.PHONY: c2-v160-item1-only-candidate-check
+c2-v160-item1-only-candidate-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_item1_only_candidate.py check
+
+check-source: c2-v160-item1-only-candidate-check
+
+.PHONY: c2-v160-item1-only-media-check
+c2-v160-item1-only-media-check: c2-v160-item1-only-candidate-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_item1_only_media.py check
+
+check-source: c2-v160-item1-only-media-check
+
+.PHONY: c2-v160-item1-only-device-result-check
+c2-v160-item1-only-device-result-check: c2-v160-item1-only-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_item1_only_media.py device-check
+
+check-source: c2-v160-item1-only-device-result-check
+
+.PHONY: c2-v160-item1-d5-preparation-check
+c2-v160-item1-d5-preparation-check: c2-v160-item1-only-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_item1_d5.py check
+
+check-source: c2-v160-item1-d5-preparation-check
+
+.PHONY: c2-v160-item1-d5-result-check
+c2-v160-item1-d5-result-check: c2-v160-item1-d5-preparation-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_item1_d5.py result-check
+
+check-source: c2-v160-item1-d5-result-check
+
+.PHONY: c2-v160-candidate-seal-check
+c2-v160-candidate-seal-check: c2-v160-item1-d5-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_candidate_seal.py check
+
+check-source: c2-v160-candidate-seal-check

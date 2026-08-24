@@ -6,6 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import c2_source_owner_identity as OWNER_IDENTITY
+
 
 ROOT = Path(__file__).resolve().parents[2]
 FEATURE = "LISP65_C2_FULL_SPAN_CONVERGENCE"
@@ -30,11 +32,13 @@ def configure(product: Any) -> dict[str, Any]:
     require(len(sources) == 2 and sources[1].resolve() == PREDECESSOR.resolve(),
             "full-span predecessor body is not the configured real owner")
     candidate_defines = (*defines, FEATURE)
+    scoped_defines = OWNER_IDENTITY.definitions(
+        product, "mapped-far-content-convergence", defines, (FEATURE,))
     candidate_sources = (sources[0], SOURCE)
     replacement = {
         "name": "mapped-far-content-convergence",
         "trigger": product.CONVERGENCE_FEATURE,
-        "defines": candidate_defines,
+        "defines": scoped_defines,
         "sources": candidate_sources,
     }
     scopes: list[dict[str, Any]] = []

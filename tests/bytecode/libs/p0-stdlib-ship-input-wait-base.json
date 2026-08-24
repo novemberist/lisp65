@@ -1,23 +1,39 @@
 {
   "extends": "p0-stdlib-time-base.json",
+  "private_key_event_modes": true,
   "sources": [
     "lib/stdlib-read-line.lisp",
     "lib/stdlib-wait.lisp"
   ],
   "functions": [
-    "%read-line-clear-from",
-    "%read-line-render-reverse",
-    "%read-line-finish",
+    "%rl-render",
+    "%rl-cut",
+    "%rl-move",
+    "%rl-put",
+    "%rl-dispatch",
     "%read-line-loop",
     "read-line",
+    "%rl-screen-tail",
     "%wait-until",
     "wait"
   ],
   "tailcall_self": [
-    "%read-line-clear-from",
-    "%read-line-render-reverse",
-    "%read-line-loop",
+    "%rl-render",
     "%wait-until"
+  ],
+  "allow_omitted_defuns": [
+    {
+      "name": "screen-write-string",
+      "reason": "excluded from the canonical Workbench product; screen-bulk-p pins the supported fallback path"
+    },
+    {
+      "name": "compile-file",
+      "reason": "excluded from the compile-string Workbench profile"
+    },
+    {
+      "name": "fasl-emit-scratch",
+      "reason": "excluded from the compile-string Workbench profile"
+    }
   ],
   "cases": [
     {
@@ -51,10 +67,83 @@
       "expect_io_min": {"key_event": 5, "write_char": 1, "screen_put_char": 84}
     },
     {
+      "name": "read-line-delete-legacy-127",
+      "expr": "(read-line)",
+      "expect": "\"ac\"",
+      "key_events": [97, 98, 127, 99, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "ac      "}
+    },
+    {
+      "name": "read-line-insert-middle-cursor-left",
+      "expr": "(read-line)",
+      "expect": "\"abc\"",
+      "key_events": [97, 99, 157, 98, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "abc     "}
+    },
+    {
+      "name": "read-line-insert-middle-control-b",
+      "expr": "(read-line)",
+      "expect": "\"abc\"",
+      "key_events": [97, 99, 2, 98, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "abc     "}
+    },
+    {
+      "name": "read-line-control-f-right",
+      "expr": "(read-line)",
+      "expect": "\"acb\"",
+      "key_events": [97, 99, 2, 6, 98, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "acb     "}
+    },
+    {
+      "name": "read-line-line-start-end",
+      "expr": "(read-line)",
+      "expect": "\"xabcy\"",
+      "key_events": [97, 98, 99, 1, 120, 5, 121, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "xabcy   "}
+    },
+    {
+      "name": "read-line-delete-forward",
+      "expr": "(read-line)",
+      "expect": "\"ac\"",
+      "key_events": [97, 98, 99, 2, 2, 4, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "ac      "}
+    },
+    {
+      "name": "read-line-boundary-noops",
+      "expr": "(read-line)",
+      "expect": "\"a\"",
+      "key_events": [157, 2, 20, 4, 97, 29, 6, 4, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "a       "}
+    },
+    {
       "name": "read-line-ignore-control",
       "expr": "(read-line)",
       "expect": "\"a\"",
       "key_events": [17, 97, 13],
+      "expect_key_events_remaining": 0,
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "a       "},
+      "expect_io_min": {"screen_put_char": 81}
+    },
+    {
+      "name": "read-line-ignore-cursor-up-without-history",
+      "expr": "(read-line)",
+      "expect": "\"a\"",
+      "key_events": [145, 97, 13],
       "expect_key_events_remaining": 0,
       "expect_output_codes": [10],
       "expect_screen_rows": {"24": "a       "},

@@ -192,17 +192,38 @@ def derive() -> dict[str, Any]:
     return value
 
 
+# Checking by re-deriving asked the living tree to reproduce a closed event:
+# every later edit to the linker producer made this receipt "drift" although
+# nothing about the recorded rebind had changed.  The check therefore verifies
+# the receipt against the world it names -- its own recorded values and the
+# pinned historical review -- exactly as the 2026-08-14 predecessor does.
+def check() -> None:
+    value = json.loads(RECEIPT.read_text(encoding="utf-8"))
+    rejected = value.pop("mutations_rejected", None)
+    validate(value)
+    require(rejected == mutations(value), "VMA rebind mutation drift")
+    require(digest(V.RECEIPT.read_bytes()) == HISTORICAL_REVIEW_SHA256,
+            "historical VMA review receipt was rewritten")
+    reconstructed = json.loads(V.RECEIPT.read_text(encoding="utf-8"))
+    for field in ("closer_gate", "invariant_gate"):
+        require(value["change"][field]["before"] ==
+                reconstructed["authority"][field],
+                f"recorded rebind predecessor drift: {field}")
+        reconstructed["authority"][field] = value["change"][field]["after"]
+    require(value["authority"]["live_reconstructed_review"] ==
+            bind_raw(V.RECEIPT, V.canonical(reconstructed)),
+            "recorded 2026-08-16 VMA reconstruction drift")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("record", "check"))
     action = parser.parse_args().action
-    value = derive()
     if action == "record":
         require(not RECEIPT.exists(), "VMA rebind receipt exists")
-        RECEIPT.write_bytes(canonical(value))
+        RECEIPT.write_bytes(canonical(derive()))
     else:
-        require(RECEIPT.read_bytes() == canonical(value),
-                "VMA rebind receipt drift")
+        check()
     print("VMA-golden review rebind 2026-08-16: PASS fields=2 mutations=6")
     return 0
 

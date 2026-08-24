@@ -1,0 +1,132 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts_on_green": [
+      "v1.6-item-1-cursor-navigation",
+      "v1.6-item-2-comfort-repl",
+      "Halt-A-decidable"
+    ],
+    "excludes": [
+      "D5-headroom",
+      "v1.6-items-3-4",
+      "release-acceptance",
+      "v1.7-retired-window-backstop"
+    ]
+  },
+  "counter_witness": {
+    "addresses": {
+      "raw": "0xBCFC",
+      "seen": "0xBCFD",
+      "stored": "0xBCFE",
+      "taken": "0xBCFF"
+    },
+    "decision_table": {
+      "attempts=raw=seen=stored=taken": "single-owner input path green",
+      "attempts>raw": "keyboard/core before queue-present observation",
+      "raw>seen": "IRQ queue read or filtering",
+      "seen>stored": "ring admission",
+      "stored>taken": "consumer"
+    },
+    "maximum_events": 255,
+    "origin": "atomic zero at Comfort entry while capture tail is closed",
+    "width_bits": 8
+  },
+  "format": "lisp65-c2-v160-queue-owner-device-session-v1",
+  "host_half": {
+    "event_6_observed_in_order": true,
+    "forced_collection_frames": 89,
+    "normalization_parity": "256/256 across both consumers",
+    "ordered_events": "94/94",
+    "responsiveness_margin_percent": 29.044052413392606
+  },
+  "liveness_witness": {
+    "class": "retirement-before-wipe",
+    "comfort_prompt": "l65>",
+    "recovery_prompt": "lisp65>",
+    "red_frame": false,
+    "trigger": "(car 1)"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-queue-owner-device-preparation/library/lisp65-library.d81",
+      "remote_name": "V16C5.D81",
+      "sha256": "f264756c89d737ea37e1c4072cf42c70238dfb69f0ef9768324c974758ddfbc3"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-queue-owner-device-preparation/shared-system/lisp65-product.d81",
+      "remote_name": "V16Q5.D81",
+      "sha256": "5112773e320fb4ad08a75978593840535dadbaea3e2612ab7b88b3816624666b"
+    }
+  },
+  "recorded_on": "2026-08-21",
+  "rows": [
+    {
+      "action": "cold boot product, mount library physically, require v16core and repl-comfort, then submit (repl)",
+      "expect": "both requires return t and the distinct l65> prompt appears",
+      "id": "D1"
+    },
+    {
+      "action": "At l65>, slowly enter exactly a(a(a(a( without Return. Count every character attempt; each Shift+8 chord counts as one queue event; repeat only if a character is not visible; remain below 256.",
+      "expect": "all eight intended characters are visible and the attempt count is recorded",
+      "id": "D2-counter-first"
+    },
+    {
+      "action": "stop once and read raw/seen/stored/taken at $BCFC..$BCFF; if equal, cold reboot the same media before continuing",
+      "expect": "attempts = raw = seen = stored = taken; any inequality stops the contact",
+      "id": "D2-counter-read"
+    },
+    {
+      "action": "re-enter Comfort, observe l65>, provoke TOKEN_TOO_LONG, then observe recovery",
+      "expect": "l65> marks Comfort entry; clean recovery shows native lisp65>. The documented retired-window red frame is pre-existing v1.7 freight, not a v1.6 blocker; cold reboot after it. Any different failure stops.",
+      "id": "D2-prompts"
+    },
+    {
+      "action": "type (list 1 3), move left twice, insert 2 followed by a space",
+      "expect": "(1 2 3)",
+      "id": "D2-left-insert"
+    },
+    {
+      "action": "exercise Left/Right, C-b/C-f, C-a/C-e, Delete and C-d including boundaries",
+      "expect": "cursor editing preserves order, inserts rather than overwrites, and boundary no-ops are safe",
+      "id": "D2-navigation"
+    },
+    {
+      "action": "submit (+ 10 on line one and 32) on line two",
+      "expect": "42 with continuation indentation",
+      "id": "D2-balanced"
+    },
+    {
+      "action": "evaluate (list 7 8), then Up and Return",
+      "expect": "(7 8) twice",
+      "id": "D2-history"
+    },
+    {
+      "action": "rapidly enter (+ 1, then five continuation comment lines each with a visually checked 40-digit 0123456789 pattern, then 2), without observation pauses",
+      "expect": "every digit remains ordered and the result is 3",
+      "forced_collection_basis": "more than 192 accepted printable cells forces at least one collection",
+      "id": "D2-input-fidelity"
+    },
+    {
+      "action": "with Shift-Lock off, type and inspect a lowercase alphabetic form",
+      "expect": "lowercase remains lowercase on screen and in the result",
+      "id": "D2-lowercase"
+    },
+    {
+      "action": "type a rapid sentence-length burst, pause once, then edit its middle",
+      "expect": "no swallowed keys and no progressive multi-second backlog",
+      "id": "D2-felt-latency"
+    }
+  ],
+  "status": "ready-owner-contact"
+}

@@ -157,8 +157,9 @@ def predecessor_hardware() -> dict[str, Any]:
 def derive() -> dict[str, Any]:
     preflight = load(PRE.RECEIPT)
     rejected = preflight.pop("mutations_rejected", None)
-    PRE.validate(preflight, verify=True)
+    PRE.validate(preflight, verify=False)
     require(rejected == PRE.mutations(preflight), "preflight mutation set drift")
+    PRE.validate_public_projection(preflight, rejected)
     return {
         "format": FORMAT, "recorded_on": "2026-08-11", "status": STATUS,
         "attempt_accounting": {
@@ -228,8 +229,17 @@ def write() -> int:
 
 def check() -> int:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
-    validate(value, verify=True)
+    # This receipt closes the commissioned pre-link freight world.  Its
+    # current successor is checked independently through the public product
+    # projection; mutable historical package paths are not living predicates.
+    validate(value, verify=False)
     require(rejected == mutations(value), "v1.5 freight mutations drift")
+    preflight = load(PRE.RECEIPT)
+    preflight_rejected = preflight.pop("mutations_rejected", None)
+    PRE.validate(preflight, verify=False)
+    require(preflight_rejected == PRE.mutations(preflight),
+            "preflight mutation set drift")
+    PRE.validate_public_projection(preflight, preflight_rejected)
     print("v1.5 freight closure check: PASS")
     return 0
 

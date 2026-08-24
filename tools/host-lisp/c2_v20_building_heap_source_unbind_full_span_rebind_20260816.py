@@ -19,6 +19,12 @@ from typing import Any, Callable
 
 
 ROOT = Path(__file__).resolve().parents[2]
+HOST = ROOT / "tools/host-lisp"
+if str(HOST) not in sys.path:
+    sys.path.insert(0, str(HOST))
+
+import evidence_era as ERA  # noqa: E402
+
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
 PLAN = ROOT / "docs/planning/2.1-cpu-transport-work-plan.md"
 PREDECESSOR = ARCH / (
@@ -31,6 +37,11 @@ RECEIPT = ARCH / (
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "afe63882"
 FORMAT = "lisp65-c2.3-v20-building-heap-source-unbind-rebind-v2"
+SEAL_ERA_COMMIT = "2cc1da14334686c0f860f9f291e5da1ebb81ed65"
+SEALED_MUTATIONS = [
+    "rewrite-predecessor", "change-observation", "revive-source-predicate",
+    "inherit-old-gate", "rename-gate-path", "silent-rebind",
+]
 
 
 class RebindError(RuntimeError):
@@ -104,7 +115,7 @@ def predecessor() -> dict[str, Any]:
 def derive() -> dict[str, Any]:
     old = predecessor()
     prior_gate = old["authority"]["living_ABI_gate"]
-    current_gate = bind(ABI_GATE)
+    current_gate = ERA.era_bind(SEAL_ERA_COMMIT, ABI_GATE)
     require(prior_gate["path"] == current_gate["path"]
             and prior_gate["sha256"] != current_gate["sha256"],
             "authorized ABI-gate drift absent or changed domain")
@@ -114,7 +125,7 @@ def derive() -> dict[str, Any]:
         "status": "PASS: v2.0 source-unbind living authority loudly rebound",
         "authority": {"owner": authorization(),
                       "predecessor": bind(PREDECESSOR),
-                      "driver": bind(DRIVER)},
+                      "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "historical_contract": {
             "predecessor_rewritten": False,
             "historical_observation_changed": False,
@@ -148,6 +159,11 @@ def validate(value: dict[str, Any]) -> None:
         and gates["prior"]["path"] == gates["current"]["path"]
         and gates["prior"]["sha256"] != gates["current"]["sha256"],
         "v2.0 source-unbind rebind drift")
+    require(
+        gates["current"] == ERA.era_bind(SEAL_ERA_COMMIT, ABI_GATE)
+        and value.get("authority", {}).get("driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
+        "v2.0 source-unbind provenance escaped its sealing era")
 
 
 def mutations(base: dict[str, Any]) -> list[str]:
@@ -164,6 +180,10 @@ def mutations(base: dict[str, Any]) -> list[str]:
             ["current"].update(path="historical/other-gate.py"),
         "silent-rebind": lambda x: x["living_acceptance_gate"].update(
             binding_kind="silent"),
+        "collapse-era-to-live": lambda x: x["living_acceptance_gate"].update(
+            current=ERA.era_bind("HEAD", ABI_GATE)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -186,16 +206,18 @@ def record() -> None:
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
     expected = derive(); expected.pop("mutations_rejected", None)
-    require(value == expected and rejected == mutations(value),
+    require(value == expected and rejected == SEALED_MUTATIONS
+            and len(mutations(value)) == 8,
             "v2.0 source-unbind rebind receipt drift")
-    print("v2.0 source-unbind full-span rebind: CHECK PASS mutations=6")
+    print("v2.0 source-unbind full-span rebind: CHECK PASS "
+          "sealed=6 live-era=8")
 
 
 def selftest() -> None:
     value = derive()
-    require(len(value["mutations_rejected"]) == 6,
+    require(len(value["mutations_rejected"]) == 8,
             "v2.0 rebind mutation count drift")
-    print("v2.0 source-unbind full-span rebind: SELFTEST PASS mutations=6")
+    print("v2.0 source-unbind full-span rebind: SELFTEST PASS mutations=8")
 
 
 def main() -> int:

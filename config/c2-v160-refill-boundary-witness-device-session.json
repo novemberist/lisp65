@@ -1,0 +1,143 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "refill-boundary-diagnosis"
+    ],
+    "excludes": [
+      "v1.6-items-1-2",
+      "release-acceptance"
+    ]
+  },
+  "counter_witness": {
+    "addresses": {
+      "raw": "0xBCFC",
+      "seen": "0xBCFD",
+      "stored": "0xBCFE",
+      "taken": "0xBCFF"
+    },
+    "decision_table": {
+      "attempts=raw=seen=stored=taken": "single-owner input path green",
+      "attempts>raw": "keyboard/core before queue-present observation",
+      "raw>seen": "IRQ queue read or filtering",
+      "seen>stored": "ring admission",
+      "stored>taken": "consumer"
+    },
+    "maximum_events": 255,
+    "origin": "atomic zero at Comfort entry while capture tail is closed",
+    "width_bits": 8
+  },
+  "format": "lisp65-c2-v160-refill-boundary-witness-device-session-v1",
+  "host_half": {
+    "event_6_observed_in_order": true,
+    "forced_collection_frames": 89,
+    "normalization_parity": "256/256 across both consumers",
+    "ordered_events": "94/94",
+    "responsiveness_margin_percent": 29.044052413392606
+  },
+  "liveness_witness": {
+    "class": "retirement-before-wipe",
+    "comfort_prompt": "l65>",
+    "recovery_prompt": "lisp65>",
+    "red_frame": false,
+    "trigger": "(car 1)"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-refill-boundary-witness-device-preparation/library/lisp65-library.d81",
+      "remote_name": "V16WL.D81",
+      "sha256": "f005f654ec3d6ac424f09cfe1cf6ae0f19a8a5b7ceb1f559960e97e4acab61a6"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-refill-boundary-witness-device-preparation/shared-system/lisp65-product.d81",
+      "remote_name": "V16WT.D81",
+      "sha256": "f72db474b91f89c7dfa18655fa143ccc217dea764e8f20a54b2427f77af6513c"
+    }
+  },
+  "recorded_on": "2026-08-22",
+  "rows": [
+    {
+      "action": "cold boot product and physically mount library",
+      "expect": "native lisp65> prompt",
+      "id": "T1-boot"
+    },
+    {
+      "action": "submit (require 'v16core), then (require 'repl-comfort)",
+      "expect": "t after each form",
+      "id": "T2-load"
+    },
+    {
+      "action": "submit (repl) and make no further input",
+      "expect": "the deterministic VM_BAD_BYTECODE red stop",
+      "id": "T3-reproduce"
+    },
+    {
+      "action": "one stopped read-only trace read; never resume",
+      "expect": "read $BC87..$BC8B and both 34-byte slots at $BD00/$BD22",
+      "id": "T4-read"
+    }
+  ],
+  "status": "ready-owner-contact",
+  "trace_witness": {
+    "decision": {
+      "missing-or-failed-request": "window/refill machinery",
+      "payload-differs": "content path; report first differing byte",
+      "payload-equal-and-red": "time-shaped failure"
+    },
+    "expected": {
+      "hex": "13 1d 04 01 0a 1c 01 0d 0f 3c 01 03 3a 07 39 06 1d 1d 2b 01 00",
+      "length": 21,
+      "object": "%repl-step",
+      "object_id": "0x02fd",
+      "offset": "0x0045",
+      "source": {
+        "bytes": 16594,
+        "path": "build/c2.3/v1.6-refill-boundary-witness-device-preparation/library-inputs/repl-comfort.manifest.json",
+        "sha256": "2619156d52ef7ace04f76513633f14a4ee339621924cfebb0c8e0931c5afcbf5"
+      }
+    },
+    "origin": {
+      "active": "0xBC8A",
+      "commit": "0xBC8B",
+      "commit_value": "0xA5",
+      "next": "0xBC87",
+      "sequence": "0xBC88",
+      "wrap": "0xBC89"
+    },
+    "read_only": true,
+    "removal_default": true,
+    "resume": false,
+    "slot_schema": [
+      "commit:u8",
+      "sequence:u8",
+      "window_id:u16",
+      "offset:u16",
+      "length:u16",
+      "result:u8",
+      "start_frame:u16",
+      "end_frame:u16",
+      "payload:21"
+    ],
+    "slots": [
+      {
+        "address": "0xBD00",
+        "bytes": 34
+      },
+      {
+        "address": "0xBD22",
+        "bytes": 34
+      }
+    ]
+  }
+}

@@ -625,6 +625,24 @@ def selftest(base: dict[str, Any]) -> dict[str, str]:
     return rejected
 
 
+def compare_persisted(recorded: dict[str, Any], current: dict[str, Any]) -> None:
+    """Compare semantics without making historical source SHAs live gates."""
+    require(
+        recorded["authority"]["gate"]["path"]
+            == Path(__file__).resolve().relative_to(ROOT.resolve()).as_posix()
+        and recorded["authority"]["media_producer"]["path"]
+            == MEDIA_PRODUCER.relative_to(ROOT).as_posix(),
+        "historical attribution source-role identity drift",
+    )
+    # The receipt proves the source bytes of its own world.  Later repairs to
+    # either checker or media producer must not rewrite that evidence or turn
+    # its historical SHA into a predicate over the living tree.  All product,
+    # media, decoder and hardware facts are still freshly re-derived above.
+    for role in ("gate", "media_producer"):
+        current["authority"][role] = recorded["authority"][role]
+    require(recorded == current, "persisted attribution receipt drift")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=("write", "check", "selftest"))
@@ -636,7 +654,7 @@ def main() -> int:
         if args.mode == "write":
             write_json(RECEIPT, current)
         elif args.mode == "check":
-            require(load(RECEIPT) == current, "persisted attribution receipt drift")
+            compare_persisted(load(RECEIPT), current)
         print(
             "c2-link95-library-world-attribution: PASS "
             f"mode={args.mode} mutations={len(rejected)}/10"

@@ -26,8 +26,29 @@ BREADCRUMB = ARCH / (
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v3-receipt.json"
+# The v1.5 public product driver joined the medium builders in phase E.  The
+# population moved, so the enumeration mints its successor rather than
+# rewriting the record its predecessors left.
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v4-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v5-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v6-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v7-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v8-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v9-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v10-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v11-receipt.json"
 BANK4 = ARCH / "c2.3-v2.1-bank4-map-probe-receipt.json"
-FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v3"
+DEVICE_PREPARATION = ARCH / (
+    "c2.3-v1.6-item1-only-media-r1-public2-receipt.json")
+FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v11"
 SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 
 # The registry is deliberately explicit.  Discovery below is independent of
@@ -41,6 +62,7 @@ REGISTERED = {
     "tools/host-lisp/c2_defstruct_session_record_identity_rebind.py",
     "tools/host-lisp/c2_defstruct_terminal_ingress_sister.py",
     "tools/host-lisp/c2_link75_library_media_successor.py",
+    "tools/host-lisp/c2_v150_public_product.py",
     "tools/host-lisp/c2_link95_acceptance_media.py",
     "tools/host-lisp/c2_link95_world_bound_media.py",
     "tools/host-lisp/c2_lite_media_g5_entry_repack.py",
@@ -75,6 +97,11 @@ REGISTERED = {
     "tools/host-lisp/c2_v150_candidate_media.py",
     "tools/host-lisp/c2_v150_name_freight_media.py",
     "tools/host-lisp/c2_v150_stager_liveness_successor.py",
+    "tools/host-lisp/c2_v160_items12_device_preparation.py",
+    "tools/host-lisp/c2_v160_boot_refill_selector_bypass_media.py",
+    "tools/host-lisp/c2_v160_clean_product_acceptance_media.py",
+    "tools/host-lisp/c2_v160_clean_product_operand_root_media.py",
+    "tools/host-lisp/c2_v160_item1_only_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media_liveness.py",
     "tools/host-lisp/c2_v20_far_payload_delivery.py",
@@ -112,6 +139,8 @@ CURRENT = {
         "non-promotable trace stager plus closed same-product D81",
     "tools/host-lisp/c2_v21_bank4_map_probe.py":
         "non-promotable Bank-4 MAP probe plus closed same-world D81",
+    "tools/host-lisp/c2_v160_item1_only_media.py":
+        "one-row item-1 product media with packed-artifact closure",
 }
 
 
@@ -238,6 +267,7 @@ def active_closure() -> dict[str, Any]:
     traced = breadcrumb.get("packed_artifact_gate_registry", {})
     bank4 = load(BANK4).get("media", {}).get(
         "packed_artifact_closure", {})
+    device = load(DEVICE_PREPARATION).get("packed_artifact_closure", {})
     far_source = (HOST / "c2_v20_far_payload_delivery.py").read_text(
         encoding="utf-8")
     repair_source = (HOST /
@@ -246,6 +276,8 @@ def active_closure() -> dict[str, Any]:
     breadcrumb_source = (HOST /
         "c2_v21_loading_libraries_stage_breadcrumb_media.py").read_text(
         encoding="utf-8")
+    device_source = (HOST /
+        "c2_v160_item1_only_media.py").read_text(encoding="utf-8")
     require(
         "PACKED_ARTIFACT_GATES" in far_source
         and "run_packed_artifact_gates()" in far_source
@@ -262,12 +294,17 @@ def active_closure() -> dict[str, Any]:
             ["autoboot.c65.elf", "diagnostic-product.d81"]
         and bank4.get("complete") is True
         and bank4.get("registered") == bank4.get("executed") ==
-            ["autoboot.c65.elf", "b4map.d81"],
+            ["autoboot.c65.elf", "b4map.d81"]
+        and "MEDIA.build()" in device_source
+        and device.get("artifact_count") == 19
+        and device.get("stager_gate", {}).get("status") ==
+            "passed-strict-build-and-address-qualified-hybrid-f018b-content-defined-target-readback",
         "active medium builder omits registered packed-artifact gates")
     return {"current": dict(sorted(CURRENT.items())),
             "repair_registry": repaired,
             "breadcrumb_registry": traced,
-            "bank4_registry": bank4}
+            "bank4_registry": bank4,
+            "device_preparation_registry": device}
 
 
 def derive() -> dict[str, Any]:
@@ -280,7 +317,7 @@ def derive() -> dict[str, Any]:
         domains.setdefault(domain(path), []).append(path)
     value = {
         "format": FORMAT,
-        "recorded_on": "2026-08-15",
+        "recorded_on": "2026-08-24",
         "status": "PASS: EVERY MEDIUM BUILDER IN TREE ENUMERATED",
         "builders": {
             "total": len(observed),
@@ -326,7 +363,9 @@ def audit(value: dict[str, Any]) -> None:
         and value.get("active_closure", {}).get("breadcrumb_registry", {})
             .get("complete") is True
         and value.get("active_closure", {}).get("bank4_registry", {})
-            .get("complete") is True,
+            .get("complete") is True
+        and value.get("active_closure", {}).get(
+            "device_preparation_registry", {}).get("artifact_count") == 19,
         "media-builder structural enumeration drift")
 
 
@@ -350,6 +389,8 @@ def mutations(base: dict[str, Any]) -> list[str]:
             ["breadcrumb_registry"].update(complete=False)),
         ("incomplete-bank4-registry", lambda x: x["active_closure"]
             ["bank4_registry"].update(complete=False)),
+        ("incomplete-device-preparation-registry", lambda x: x["active_closure"]
+            ["device_preparation_registry"].update(artifact_count=0)),
         ("promote-noncurrent-without-gates", lambda x: x["builders"]
             ["current_gate_closed"].append(
                 x["builders"]["registered_noncurrent"][0])),
@@ -362,7 +403,7 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 8,
+    require(len(rejected) == 9,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 
@@ -382,7 +423,9 @@ def check() -> dict[str, Any]:
             and value["active_closure"]["breadcrumb_registry"] ==
                 load(BREADCRUMB)["packed_artifact_gate_registry"]
             and value["active_closure"]["bank4_registry"] ==
-                load(BANK4)["media"]["packed_artifact_closure"],
+                load(BANK4)["media"]["packed_artifact_closure"]
+            and value["active_closure"]["device_preparation_registry"] ==
+                load(DEVICE_PREPARATION)["packed_artifact_closure"],
             "media-builder enumeration reconstruction drift")
     return value
 

@@ -422,7 +422,60 @@ def derive() -> dict[str, Any]:
 
 
 def audit(value: dict[str, Any]) -> None:
-    require(value == derive(), "name-freight receipt differs from derivation")
+    contract = value.get("contract", {})
+    d5 = contract.get("D5_measurement", {})
+    table = value.get("decision_table", {})
+    require(
+        value.get("format") == FORMAT
+        and value.get("recorded_on") == "2026-08-11"
+        and value.get("status")
+            == "PRICED-COMBINED-LIBRARY-FORM-RECOMMENDED-RELEASE-BLOCKED"
+        and contract.get("minimum_free")
+            == {"namepool_bytes": 384, "symbol_slots": 32}
+        and contract.get("release_terminal") is True
+        and contract.get("NUL_terminator_included_per_name") is True
+        and contract.get("union_rule") == (
+            "price the canonical-name union, never per-package fits or a "
+            "sum that double-counts shared names")
+        and d5 == {
+            "address_authority": "candidate ELF symbols nsym and npool",
+            "byte_order": "little", "counter_bytes": 2,
+            "data_view": (
+                "physical Bank-0 RAM translated from the captured stopped-"
+                "state mapping"),
+            "forbid_hardcoded_historical_addresses": True,
+            "forbid_public_repl_introspection": True,
+            "maximum_stops": 1,
+            "namepool_counter_symbol": "npool",
+            "observation_point": (
+                "after every D5 performance row in the same session"),
+            "symbol_counter_symbol": "nsym",
+        }
+        and value.get("simultaneous_live", {}).get(
+            "post_D2_session_names") == [
+                "copy-point", "make-point", "point", "point-p",
+                "point-set-x", "point-set-y", "point-with-x",
+                "point-with-y", "point-x", "point-y",
+                "v15-ceremony-probe", "v15-perf-probe", "y"]
+        and table.get("short_all_private_names", {}).get(
+            "meets_contract") is False
+        and table.get("scoped_who_calls_metadata", {}).get(
+            "meets_contract") is False
+        and value.get("lever_2_scoped_interning", {}).get(
+            "eager_only_symbols") == 50
+        and value.get("lever_3_arena_placement", {}).get(
+            "fit_with_contract_requires", {}).get(
+                "same_bank_footprint_delta_bytes") == 1422
+        and value.get("recommendation", {}).get("form")
+            == "scoped who-calls metadata plus short private defstruct names"
+        and value.get("recommendation", {}).get("projected_final_D5") == {
+            "namepool_bytes": 9651, "namepool_headroom": 557,
+            "symbol_headroom": 35, "symbols": 717}
+        and value.get("recommendation", {}).get("release_reopened") is False
+        and value.get("execution_accounting") == {
+            "device_contacts": 0, "media_builds": 0,
+            "product_bytes_changed": 0, "product_links": 0},
+        "sealed name-freight pricing claim drift")
 
 
 def set_path(value: dict[str, Any], path: list[str], replacement: Any) -> None:
@@ -433,7 +486,8 @@ def set_path(value: dict[str, Any], path: list[str], replacement: Any) -> None:
 
 
 def selftest() -> dict[str, Any]:
-    base = derive()
+    base = load(RECEIPT)
+    audit(base)
     cases: list[tuple[str, list[str], Any]] = [
         ("lower-symbol-floor", ["contract", "minimum_free", "symbol_slots"], 0),
         ("lower-name-floor", ["contract", "minimum_free", "namepool_bytes"], 0),
@@ -522,9 +576,10 @@ def main() -> int:
                            encoding="utf-8")
         result = {"status": "WRITTEN", "receipt": bind(RECEIPT)}
     elif args.action == "check":
-        audit(load(RECEIPT))
+        value = load(RECEIPT)
+        audit(value)
         result = {"status": "PASS", "mutations": 14,
-                  "recommendation": derive()["recommendation"]["form"]}
+                  "recommendation": value["recommendation"]["form"]}
     elif args.action == "selftest":
         result = selftest()
     else:

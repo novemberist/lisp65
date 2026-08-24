@@ -18,7 +18,7 @@
 #endif
 
 extern jmp_buf     lisp_toplevel;
-extern int         lisp_toplevel_active;   /* 1, sobald die REPL setjmp gesetzt hat */
+extern uint8_t     lisp_toplevel_active;   /* 1, sobald die REPL setjmp gesetzt hat */
 extern const char *lisp_error_msg;
 
 void lisp_abort(const char *msg);   /* longjmp zum Toplevel, falls aktiv; sonst no-op */

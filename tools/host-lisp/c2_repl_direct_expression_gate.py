@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+from contextlib import contextmanager
 import hashlib
 import json
 from pathlib import Path
@@ -31,8 +32,10 @@ sys.path.insert(0, str(HOST))
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
 import bytecode_p0_stdlib as STD  # noqa: E402
+import c2_bound_artifact_source_parity as PARITY  # noqa: E402
 import c2_repl_pipeline_cost_attribution as PIPE  # noqa: E402
 import c2_top_level_macro_redispatch as REDISPATCH  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-repl-direct-expression-contract.json"
@@ -65,6 +68,7 @@ EXPERIENCE_PLAN = ROOT / "docs/planning/startup-require-experience-work-plan.md"
 DRIVER = Path(__file__).resolve()
 
 FORMAT = "lisp65-c2.3-repl-direct-expression-v1"
+SEALED_COMMIT = "48f5a7eb01248b343416f39d04971286c815602b"
 OLD_EVAL_SOURCE = (
     "build/c2.3/link95-packed-callee-closure/codemod/sources/"
     "lib/dialect-v2/eval-runtime.lisp"
@@ -72,6 +76,9 @@ OLD_EVAL_SOURCE = (
 PUBLISHED_MACRO_HELPER = "%c2-top-level-macro-p"
 NEW_HELPERS = ("%c2-direct-expression-p", "%c2-direct-expression")
 EXPERIENCE_BASE_COMMIT = "236eba09f55d396e62090a379821df91b81ab8ee"
+EXPERIENCE_READ_LINE_SHA256 = (
+    "c074cc7ec2c96cd716d7b670c287704e62d583f7f22fccc022a1b19ee5bd8cac"
+)
 DIRECT_DEFS = (
     "%c2-direct-quoted-value-p",
     "%c2-direct-value-p",
@@ -229,6 +236,29 @@ def candidate_suite(
     return suite
 
 
+@contextmanager
+def historical_read_line_input() -> Any:
+    """Keep the accepted Experience plane independent of successor freight."""
+    result = subprocess.run(
+        ["git", "show", f"{EXPERIENCE_BASE_COMMIT}:lib/stdlib-read-line.lisp"],
+        cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
+    require(sha(result.stdout) == EXPERIENCE_READ_LINE_SHA256,
+            "accepted direct-plane read-line authority drift")
+    original = STD._read_source
+
+    def read_source(path: str) -> str:
+        if str(path).replace("\\", "/").endswith("lib/stdlib-read-line.lisp"):
+            return result.stdout.decode("utf-8")
+        return original(path)
+
+    STD._read_source = read_source
+    try:
+        yield
+    finally:
+        STD._read_source = original
+
+
 def validate_candidate_publication(manifest: dict[str, Any]) -> None:
     entries = {row["name"]: row for row in manifest["entries"]}
     require(
@@ -255,11 +285,12 @@ def emit_candidate(prefix: Path) -> tuple[dict[str, Any], dict[str, Any], str]:
         ["git", "show", f"{EXPERIENCE_BASE_COMMIT}:lib/stdlib-require.lisp"],
         cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     ).stdout)
-    emitted = STD.emit_artifacts(
-        str(BASE_SUITE),
-        candidate_suite(runtime_path, require_path=require_path), str(prefix),
-        artifact_role="stdlib",
-    )
+    with historical_read_line_input():
+        emitted = STD.emit_artifacts(
+            str(BASE_SUITE),
+            candidate_suite(runtime_path, require_path=require_path), str(prefix),
+            artifact_role="stdlib",
+        )
     manifest = load(Path(emitted["manifest"]))
     validate_candidate_publication(manifest)
     return emitted, manifest, runtime
@@ -317,9 +348,12 @@ class GateVM(PIPE.PipelineVM):
 
 
 def runtime(candidate_manifest: Path) -> tuple[Any, ...]:
-    canonical_value, _old_stdlib, carrier_path = PIPE.manifest_paths(
-        LINK96_CANONICAL
-    )
+    canonical_value = load(LINK96_CANONICAL)
+    # The semantic proof belongs to the accepted Link-96 direct-expression
+    # world, but its compiler execution must use the carrier bound by the
+    # selected living product.  Release names and historical manifest hashes
+    # are not carrier identities.
+    carrier_path, _tier, _product, _sources = PARITY.default_authorities()
     heap = C.prepare_heap([])
     directory: dict[int, B.CodeObject] = {}
     macros: set[int] = set()
@@ -553,11 +587,11 @@ def amortisation_audit() -> dict[str, Any]:
     )
     return {
         "authorities": {
-            "product_runtime": bind(PRODUCT_RUNTIME),
-            "product_dispatch": bind(EVAL_SOURCE),
-            "legacy_installer": bind(LEGACY_INSTALLER),
-            "dynamic_code_gap": bind(DYNAMIC_GAP),
-            "experience_plan": bind(EXPERIENCE_PLAN),
+            "product_runtime": ERA.era_bind(SEALED_COMMIT, PRODUCT_RUNTIME),
+            "product_dispatch": ERA.era_bind(SEALED_COMMIT, EVAL_SOURCE),
+            "legacy_installer": ERA.era_bind(SEALED_COMMIT, LEGACY_INSTALLER),
+            "dynamic_code_gap": ERA.era_bind(SEALED_COMMIT, DYNAMIC_GAP),
+            "experience_plan": ERA.era_bind(SEALED_COMMIT, EXPERIENCE_PLAN),
         },
         "current_product_lane": (
             "emit -> authenticated append -> execute -> rollback; serial and "
@@ -672,11 +706,12 @@ def core_receipt() -> dict[str, Any]:
             "resident_bytes_delta": 0, "release_claim": False,
         },
         "authorities": {
-            "contract": bind(CONTRACT), "source": bind(SOURCE),
+            "contract": ERA.era_bind(SEALED_COMMIT, CONTRACT),
+            "source": ERA.era_bind(SEALED_COMMIT, SOURCE),
             "baseline_manifest": bind(BASE_MANIFEST),
             "baseline_attribution": bind(BASE_RECEIPT),
             "Link96_world": bind(LINK96_CANONICAL),
-            "driver": bind(DRIVER),
+            "driver": ERA.era_bind(SEALED_COMMIT, DRIVER),
         },
         "source_gate": source_gate,
         "candidate_runtime": {
@@ -722,27 +757,6 @@ def main() -> int:
             RECEIPT.write_bytes(canonical(value))
         else:
             historical = load(RECEIPT)
-            historical_runtime = historical["ceremony_amortisation"][
-                "authorities"]["product_runtime"]
-            current_runtime = value["ceremony_amortisation"][
-                "authorities"]["product_runtime"]
-            require(historical_runtime["path"] == current_runtime["path"],
-                    "REPL direct-expression runtime authority changed identity")
-            # amortisation_audit() has just re-run every relevant current-source
-            # assertion.  Preserve the historical receipt while comparing the
-            # semantic result, not unrelated bytes in the shared runtime file.
-            historical_runtime.clear()
-            historical_runtime["path"] = current_runtime["path"]
-            current_runtime.clear()
-            current_runtime["path"] = historical_runtime["path"]
-            historical_driver = historical["authorities"]["driver"]
-            current_driver = value["authorities"]["driver"]
-            require(historical_driver["path"] == current_driver["path"],
-                    "REPL direct-expression checker identity drift")
-            historical_driver.clear()
-            historical_driver["path"] = current_driver["path"]
-            current_driver.clear()
-            current_driver["path"] = historical_driver["path"]
             require(historical == value,
                     "REPL direct-expression semantic receipt drift")
         print(json.dumps({

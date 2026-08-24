@@ -345,7 +345,59 @@ def configure_producer() -> dict[str, Path]:
     plane.CONTRACT = CANDIDATE_CONTRACT
     plane.HEADER = CANDIDATE_HEADER
     PRODUCT.configure_full_map_ownership()
-    return BASE.configure(CANDIDATE_PROFILE)
+    # The card and every successor own a copied static plane under BUILD.
+    # Qualification consumes that artifact set, never the mutable preflight
+    # directory that later releases legitimately regenerate.
+    return BASE.configure(CANDIDATE_PROFILE, freight_root=BUILD)
+
+
+def candidate_freight_source_gate(
+        source_override: str | None = None) -> dict[str, Any]:
+    source = DRIVER.read_text(encoding="utf-8") if source_override is None \
+        else source_override
+    tree = ast.parse(source)
+    function = next((node for node in tree.body
+                     if isinstance(node, ast.FunctionDef)
+                     and node.name == "configure_producer"), None)
+    require(function is not None, "candidate freight configurator absent")
+    calls = [node for node in ast.walk(function) if isinstance(node, ast.Call)
+             and ast.unparse(node.func) == "BASE.configure"]
+    require(len(calls) == 1, "candidate freight configure call is ambiguous")
+    call = calls[0]
+    keywords = {item.arg: ast.unparse(item.value) for item in call.keywords}
+    require(
+        [ast.unparse(item) for item in call.args] == ["CANDIDATE_PROFILE"]
+        and keywords == {"freight_root": "BUILD"},
+        "candidate qualifier can consume ambient preflight freight")
+    return {
+        "status": "PASS: candidate profile and candidate-owned freight paired",
+        "profile": "CANDIDATE_PROFILE", "freight_root": "BUILD",
+    }
+
+
+def candidate_freight_source_mutations() -> list[str]:
+    source = DRIVER.read_text(encoding="utf-8")
+    anchor = "BASE.configure(CANDIDATE_PROFILE, freight_root=BUILD)"
+    # One executable call plus this mutation literal.
+    require(source.count(anchor) == 2,
+            "candidate freight source mutation anchor drift")
+    cases = {
+        "fall-back-to-ambient-preflight": source.replace(
+            anchor, "BASE.configure(CANDIDATE_PROFILE)", 1),
+        "pair-profile-with-wrong-freight": source.replace(
+            anchor,
+            "BASE.configure(CANDIDATE_PROFILE, freight_root=BASE.PRE.BUILD)",
+            1),
+    }
+    rejected: list[str] = []
+    for name, candidate in cases.items():
+        try:
+            candidate_freight_source_gate(candidate)
+        except RecharterError:
+            rejected.append(name)
+    require(rejected == list(cases),
+            "candidate freight source mutation survived")
+    return rejected
 
 
 def candidate_oracle_input_paths() -> dict[str, Path]:
@@ -634,11 +686,15 @@ def selftest() -> None:
     commission_binding()
     gate = audit_card_path()
     mutations = path_mutations()
+    freight = candidate_freight_source_gate()
+    freight_mutations = candidate_freight_source_mutations()
     require(GOLD.golden_bytes() and gate["golden_comparisons"] == 1
-            and len(mutations) == 4,
+            and len(mutations) == 4
+            and freight["freight_root"] == "BUILD"
+            and len(freight_mutations) == 2,
             "2.0 sole-acceptance path selftest red")
     print("2.0 ownership recharter: SELFTEST PASS "
-          "acceptance=golden-only path-mutations=4")
+          "acceptance=golden-only path-mutations=4 freight-mutations=2")
 
 
 def check() -> None:

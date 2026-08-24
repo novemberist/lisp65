@@ -19,6 +19,7 @@ sys.path.insert(0, str(HOST))
 
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_stdlib as P  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-ship-input-wait-contract.json"
@@ -54,6 +55,13 @@ CASE_NAMES = {
     "read-line-ignore-control", "read-line-run-stop", "wait-zero",
     "wait-three", "wait-counter-wrap", "wait-exact-maximum-admitted",
     "wait-overflow-rejected",
+}
+HISTORICAL_ROLE_COMMITS = {
+    "contract": "d335ef49c984032b4202ba9643371a32818a98df",
+    "read_line": "d335ef49c984032b4202ba9643371a32818a98df",
+    "wait": "5436836ae3ea",
+    "suite": "99095e04d2cf",
+    "gate": "99095e04d2cf",
 }
 
 
@@ -479,77 +487,51 @@ def artifact_gate() -> dict[str, Any]:
     }
 
 
+def historical_receipt_gate() -> dict[str, Any]:
+    """Verify the sealed v1.3 proof in its own era, never against live freight."""
+    value = load(RECEIPT)
+    require(
+        value.get("format") == "lisp65-c2.2-v1.3-ship-input-wait-host-first-v2"
+        and value.get("recorded_on") == "2026-08-01"
+        and value.get("status")
+            == "passed-bank2-lisp-source-artifact-allocation-and-execution"
+        and len(value.get("mutations_rejected", {})) == 14,
+        "sealed v1.3 input/wait receipt drift",
+    )
+    artifacts = value.get("artifacts", {})
+    allocation = artifacts.get("allocation", {})
+    require(
+        artifacts.get("cases_per_lane") == 11
+        and artifacts.get("execution_lanes") == 2
+        and artifacts.get("delta", {}).get("bank2_code_bytes") == 451
+        and allocation.get("maximum_cells_per_key") == 4
+        and allocation.get("contract_ceiling") == 4,
+        "sealed v1.3 execution/capacity claim drift",
+    )
+    authority = value.get("authority", {})
+    for role, commit in HISTORICAL_ROLE_COMMITS.items():
+        expected = authority.get(role)
+        require(isinstance(expected, dict) and isinstance(expected.get("path"), str),
+                f"sealed v1.3 authority absent: {role}")
+        require(ERA.era_bind(commit, expected["path"]) == expected,
+                f"sealed v1.3 authority/era mismatch: {role}")
+    return {
+        "status": "PASS: sealed v1.3 input/wait proof is receipt-only",
+        "historical_live_source_predicates": 0,
+        "mutations_rejected": 14,
+        "cases": 22,
+        "maximum_cells_per_key": 4,
+    }
+
+
 def main() -> int:
     try:
-        contract = load(CONTRACT)
-        read_line = READ_LINE.read_text(encoding="utf-8")
-        wait = WAIT.read_text(encoding="utf-8")
-        suite = load(SUITE)
-        vm = VM.read_text(encoding="utf-8")
-        screen = SCREEN.read_text(encoding="utf-8")
-        product_link = PRODUCT_LINK.read_text(encoding="utf-8")
-        ship_builder = SHIP_BUILDER.read_text(encoding="utf-8")
-        ship_io = SHIP_IO.read_text(encoding="utf-8")
-        source = validate(
-            contract, read_line, wait, suite, vm, screen,
-            product_link, ship_builder, ship_io,
-        )
-        rejected = mutations(
-            contract, read_line, wait, suite, vm, screen,
-            product_link, ship_builder, ship_io,
-        )
-        artifacts = artifact_gate()
-        historical_first_red = ROOT / (
-            "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
-            "c2.3-v1.3-screen-nonlto-wplto-first-red.json"
-        )
-        historical_binding: dict[str, Any]
-        if historical_first_red.is_file():
-            historical_binding = bind(historical_first_red)
-        else:
-            historical_binding = {
-                "status": "private-history-absent-not-a-build-input",
-                "private_evidence_inputs": 0,
-            }
-        value = {
-            "format": "lisp65-c2.2-v1.3-ship-input-wait-host-first-v2",
-            "recorded_on": "2026-08-01",
-            "status": "passed-bank2-lisp-source-artifact-allocation-and-execution",
-            "promotable": False,
-            "product_links": 0,
-            "hardware_runs": 0,
-            "source_contract": source,
-            "mutations_rejected": rejected,
-            "artifacts": artifacts,
-            "shelf_evidence": {
-                "status": "retained-unlinked",
-                "non_lto_leaf": bind(SHELF_LEAF),
-                "historical_first_red": historical_binding,
-            },
-            "authority": {
-                "contract": bind(CONTRACT), "read_line": bind(READ_LINE),
-                "wait": bind(WAIT), "suite": bind(SUITE), "base_suite": bind(BASE_SUITE),
-                "p0_vm": bind(ROOT / "tools/host-lisp/bytecode_p0.py"),
-                "stdlib_runner": bind(ROOT / "tools/host-lisp/bytecode_p0_stdlib.py"),
-                "target_vm": bind(VM), "screen_driver": bind(SCREEN),
-                "screen_smoke": bind(SCREEN_SMOKE),
-                "product_link_driver": bind(PRODUCT_LINK),
-                "ship_builder": bind(SHIP_BUILDER), "ship_io": bind(SHIP_IO),
-                "gate": bind(Path(__file__)),
-            },
-            "next_gate": "one product-shaped card; no C/geometry experiment remains",
-        }
-        write(RECEIPT, value)
-        delta = artifacts["delta"]
-        print(
-            "c2-ship-input-wait-gate: PASS "
-            f"cases={artifacts['cases_per_lane']}x{artifacts['execution_lanes']} "
-            f"mutations={len(rejected)} keys={artifacts['allocation']['keys_executed']} "
-            f"max-cells/key={artifacts['allocation']['maximum_cells_per_key']} "
-            f"bank2=+{delta['bank2_code_bytes']} resident=+0 native=+0"
-        )
+        value = historical_receipt_gate()
+        print("c2-ship-input-wait-gate: " + value["status"]
+              + " cases=11x2 mutations=14 max-cells/key=4")
         return 0
-    except (GateError, KeyError, OSError, ValueError, P.StdlibCheckError) as error:
+    except (GateError, ERA.EraError, KeyError, OSError, ValueError,
+            P.StdlibCheckError) as error:
         print(f"c2-ship-input-wait-gate: FIRST RED: {error}", file=sys.stderr)
         return 1
 

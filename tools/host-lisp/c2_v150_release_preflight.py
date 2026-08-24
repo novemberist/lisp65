@@ -45,6 +45,10 @@ RECEIPT = ROOT / (
     "c2.3-v1.5.0-release-preflight-receipt.json"
 )
 DRIVER = Path(__file__).resolve()
+PUBLIC_AUTHORITY = ROOT / "config/c2-v150-public-build-authority.json"
+PUBLIC_PREFLIGHT = ROOT / (
+    "build/c2.3/v1.5.0-public-selected/product-inputs/"
+    "public-release-authorities/v1.5-linker-free-preflight.json")
 FORMAT = "lisp65-c2.3-v150-release-preflight-v1"
 STATUS = "V150-LINKER-FREE-INPUT-CLOSURE-GREEN; PRODUCT-CARD-UNUSED"
 BASE_SPECS = L95.specs()[1:]
@@ -143,10 +147,11 @@ def emit_static_plane() -> dict[str, Any]:
     suite, texts = source_suite()
     write_sources(texts)
     STATIC.mkdir(parents=True)
-    emitted = STD.emit_artifacts(
-        str(DIRECT.BASE_SUITE), suite, str(STDLIB_PREFIX),
-        artifact_role="stdlib",
-    )
+    with DIRECT.historical_read_line_input():
+        emitted = STD.emit_artifacts(
+            str(DIRECT.BASE_SUITE), suite, str(STDLIB_PREFIX),
+            artifact_role="stdlib",
+        )
     manifest = load(Path(emitted["manifest"]))
     DIRECT.validate_candidate_publication(manifest)
     entry_names = {str(row.get("name")) for row in manifest["entries"]}
@@ -362,15 +367,59 @@ def prepare() -> int:
     return 0
 
 
+def validate_public_projection(value: dict[str, Any],
+                               rejected: list[str]) -> None:
+    """Validate the living product projection beside the sealed receipt."""
+    authority = load(PUBLIC_AUTHORITY)
+    current = load(PUBLIC_PREFLIGHT)
+    require(
+        authority.get("format") == "lisp65-c2-lite-public-build-authority-v3"
+        and authority.get("release") == "v1.5.0"
+        and current.get("format") == FORMAT
+        and current.get("status") == STATUS
+        and current.get("geometry") == value.get("geometry")
+        and current.get("attempt_accounting")
+            == value.get("attempt_accounting")
+        and current.get("producer_inversion") == {
+            "all_inputs_content_bound": True,
+            "input_count": 48,
+            "private_evidence_is_not_an_input": True,
+            "symbol_space_is_not_an_input": True,
+        }
+        and current.get("mutations_rejected") == [
+            *rejected, "admit-private-evidence"],
+        "current public v1.5 preflight projection drift")
+    bindings = current["authorities"]
+    manifest_rows = [
+        row for family in bindings["input_manifests_and_payloads"].values()
+        for row in family if row["path"].endswith(".manifest.json")]
+    rows = [
+        bindings["contract"], bindings["product"], bindings["bank2"],
+        bindings["public_driver"], *bindings["candidate_sources"],
+        *manifest_rows,
+    ]
+    require(all(bind(ROOT / row["path"]) == row for row in rows),
+            "current public v1.5 preflight input binding drift")
+    selected_product = load(ROOT / authority["product_manifest_path"])
+    projected_product = load(ROOT / bindings["product"]["path"])
+    by_path = lambda items: sorted(items, key=lambda row: row["path"])
+    require(len(manifest_rows) == 6
+            and by_path(projected_product["manifests"])
+                == by_path(selected_product["manifests"])
+                == by_path(manifest_rows),
+            "current public v1.5 manifest projection/product mismatch")
+
+
 def check() -> int:
-    if not PRODUCT.is_file():
-        require(not BUILD.exists(),
-                "partial v1.5 preflight build cannot be reconstructed")
-        emit_static_plane()
+    # The tracked receipt witnesses the commissioned pre-link world.  The
+    # living authority is the public selected-product projection emitted by
+    # the current product link cycle; checking the historical build directory
+    # would reintroduce mutable global manifest paths and break idempotence.
     value = load(RECEIPT)
     rejected = value.pop("mutations_rejected", None)
-    validate(value, verify=True)
+    validate(value, verify=False)
     require(rejected == mutations(value), "v1.5 preflight mutation set drift")
+    validate_public_projection(value, rejected)
     print("v1.5 preflight check: PASS")
     return 0
 

@@ -24,6 +24,7 @@ import c2_lite_media_product as MEDIA  # noqa: E402
 import c2_link95_world_bound_media as PAIR  # noqa: E402
 import c2_terminal_return_guard_link96 as CARD  # noqa: E402
 import c2_v112_candidate_media as LIB  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 PREDECESSOR_COMMIT = "3a0aba8e1b980a855eb0edde05c5862c430da968"
@@ -533,6 +534,11 @@ def validate_live_bindings_rebind_r3(value: dict[str, Any]) -> None:
                 f"Link-96 r3 {role} identity drift")
         value["authority"][role] = {"path": historical_source["path"]}
         current["authority"][role] = {"path": current_source["path"]}
+    # A sealed receipt witnesses the plan at the commit which accepted that
+    # receipt.  Appending later dispositions to the living plan must not
+    # rewrite Link-96 history.
+    current["authority"]["live_plan"] = ERA.era_bind(
+        "91dca237f6ee8217224fb5ac304f87f618b460d3", V150_PLAN)
     require(value == current,
             "Link-96 live-bindings r3 semantic revalidation drift")
 
@@ -685,7 +691,64 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
         and value.get("mutation_contract") == list(MUTATIONS),
         "Link-96 guarded media claim drift")
     if verify:
-        require(value == derive(), "Link-96 guarded media receipt is stale")
+        # Link 96 is sealed media evidence.  Re-running derive() would enter
+        # configure() through facts() and materialize historical product-input
+        # snapshots in the shared living build paths.  Bind only the outputs
+        # and handoff artifacts recorded by this world.
+        rows = [
+            value["authority"]["media_stager_first_red"],
+            value["authority"]["missing_place_device_first_red"],
+            value["authority"]["product_card"],
+            value["authority"]["guard_gate"],
+            value["authority"]["product_manifest"],
+            value["authority"]["device_result_recorder"],
+            value["shared_system"]["manifest"],
+            value["shared_system"]["product_D81"],
+            value["shared_system"]["work_D81"],
+            value["defstruct_library"]["D81"],
+            value["defstruct_library"]["index"],
+            value["defstruct_library"]["place"],
+            value["defstruct_library"]["defstruct"],
+            value["session"]["contract"],
+            value["session"]["runner"],
+        ]
+        require(all(bind(ROOT / row["path"]) == row for row in rows),
+                "Link-96 sealed guarded-media artifact drift")
+
+
+def sealed_check_source_gate(source_override: str | None = None) -> None:
+    source = Path(__file__).read_text(encoding="utf-8") \
+        if source_override is None else source_override
+    tree = ast.parse(source)
+    validate_node = next((node for node in tree.body
+                          if isinstance(node, ast.FunctionDef)
+                          and node.name == "validate"), None)
+    require(validate_node is not None, "Link-96 guarded-media validator absent")
+    calls = [ast.unparse(node.func) for node in ast.walk(validate_node)
+             if isinstance(node, ast.Call)]
+    require("derive" not in calls and "configure" not in calls
+            and "bind" in calls,
+            "Link-96 guarded-media check can materialize historical inputs")
+
+
+def sealed_check_source_mutations() -> list[str]:
+    source = Path(__file__).read_text(encoding="utf-8")
+    anchor = 'bind(ROOT / row["path"])'
+    # One executable binding plus this mutation literal.
+    require(source.count(anchor) == 2,
+            "sealed Link-96 source mutation anchor drift")
+    cases = {
+        "restore-live-derive": source.replace(anchor, "derive()", 1),
+    }
+    rejected: list[str] = []
+    for name, candidate in cases.items():
+        try:
+            sealed_check_source_gate(candidate)
+        except MediaError:
+            rejected.append(name)
+    require(rejected == list(cases),
+            "sealed Link-96 source mutation survived")
+    return rejected
 
 
 def rejected_mutations(value: dict[str, Any]) -> list[str]:
@@ -809,7 +872,9 @@ def main() -> int:
         return 0
     gate_wiring()
     value = load(RECEIPT)
-    validate(value, verify=False)
+    sealed_check_source_gate()
+    source_mutations = sealed_check_source_mutations()
+    validate(value, verify=(action == "check"))
     stager_live_binding_gate()
     if action == "check":
         require(LIVE_BINDINGS_REBIND.is_file(),
@@ -819,12 +884,11 @@ def main() -> int:
         require(LIVE_BINDINGS_REBIND_R3.is_file(),
                 "Link-96 live-bindings r3 rebind receipt absent")
         validate_live_bindings_rebind_r3(load(LIVE_BINDINGS_REBIND_R3))
-        current = derive()
-        project_historical_bindings(current, value)
-        require(current == value,
-                "Link-96 historical media receipt differs after semantic projection")
     rejected = rejected_mutations(value)
-    print(f"Link-96 guarded media {action}: PASS mutations={len(rejected)}")
+    print(
+        f"Link-96 guarded media {action}: PASS "
+        f"mutations={len(rejected)}+{len(source_mutations)}"
+    )
     return 0
 
 

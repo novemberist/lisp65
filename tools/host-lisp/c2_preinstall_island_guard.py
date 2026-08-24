@@ -133,7 +133,8 @@ def write_bound(path: Path, data: bytes) -> None:
 
 def _guard_body(source: str) -> str:
     match = re.search(
-        r"static RTOV_NOINLINE uint8_t rtov_transaction_context_if_ready\s*"
+        r"(?:static RTOV_NOINLINE|LISP65_C2_MAPPED_FAR_FN) uint8_t "
+        r"rtov_transaction_context_if_ready(?:_far)?\s*"
         r"\([^)]*\)\s*\{(.*?)\n\}", source, re.DOTALL)
     require(match is not None, "resident transaction guard absent")
     return match.group(1)
@@ -280,7 +281,8 @@ def _closure_model_violations(
         edges: list[tuple[str, str]], data_refs: list[tuple[str, str]]) -> list[str]:
     violations: list[str] = []
     for source, target in edges:
-        permitted = (source == "rtov_transaction_context_if_ready"
+        permitted = (source in ("rtov_transaction_context_if_ready",
+                                "rtov_transaction_context_if_ready_far")
                      and target == "rtov_transaction_context")
         if not permitted:
             violations.append("unguarded-Island-control-edge")
@@ -293,6 +295,9 @@ def closure_model_selftest() -> dict[str, str]:
     require(not _closure_model_violations(
         [("rtov_transaction_context_if_ready", "rtov_transaction_context")],
         []), "valid guarded edge rejected")
+    require(not _closure_model_violations(
+        [("rtov_transaction_context_if_ready_far", "rtov_transaction_context")],
+        []), "valid relocated guarded edge rejected")
     require("unguarded-Island-control-edge" in _closure_model_violations(
         [("vm_runtime_overlay_exec_family", "rtov_run_batch")], []),
         "retired Island batch edge mutation accepted")
@@ -991,6 +996,13 @@ def static_elf_gate(elf: Path) -> dict[str, Any]:
     require(symbol_sections["rtov_transaction_context_if_ready"]
             != ".lisp65_resident_island",
             "resident guard was placed inside the uninstalled Island")
+    guard_name = ("rtov_transaction_context_if_ready_far"
+                  if "rtov_transaction_context_if_ready_far" in symbols
+                  else "rtov_transaction_context_if_ready")
+    if guard_name.endswith("_far"):
+        require(symbol_sections[guard_name]
+                == ".lisp65_c2_mapped_far_service",
+                "relocated transaction guard escaped mapped Far service")
     retired_batch_symbols = (
         "rtov_run_batch", "vm_runtime_overlay_exec_batch_island")
     require(not any(name in symbols for name in retired_batch_symbols),
@@ -1049,7 +1061,7 @@ def static_elf_gate(elf: Path) -> dict[str, Any]:
     context_address = symbols["rtov_transaction_context"]["address"]
     allowed_edges = [row for row in edges
                      if (row["source"]
-                         == "rtov_transaction_context_if_ready"
+                         == guard_name
                          and row["target_address"] == context_address)]
     require(len(edges) == 1 and len(allowed_edges) == 1,
             f"unguarded or nonunique Island control edge: {edges}")
@@ -1100,7 +1112,7 @@ def static_elf_gate(elf: Path) -> dict[str, Any]:
             island_refs.append(row)
     non_guard_refs = [row for row in island_refs
                       if not (row["source_function"]["name"]
-                              == "rtov_transaction_context_if_ready"
+                              == guard_name
                               and (row["target"]
                                    == "rtov_transaction_context"
                                    or (row["target"]
@@ -1142,7 +1154,7 @@ def static_elf_gate(elf: Path) -> dict[str, Any]:
 
     helper_key = next(
         key for key, row in ordinary.items()
-        if "rtov_transaction_context_if_ready" in row["names"])
+        if guard_name in row["names"])
     helper_instructions = P._machine_instructions(ordinary[helper_key]["lines"])
     branch_count = sum(1 for mnemonic, _operand in helper_instructions
                        if mnemonic.startswith("b"))

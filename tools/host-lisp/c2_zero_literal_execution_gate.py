@@ -41,6 +41,7 @@ ENTRY_OFFSET = 2096
 ENTRY_BYTES = 10
 INVALID = 0
 CANONICAL_SPECS: tuple[tuple[str, str, Path], ...] | None = None
+LINKED_PRODUCT_INVENTORY: tuple[Path, Path] | None = None
 WITNESS_IMAGE = "lcc"
 WITNESS_NAME = "%lcc-consp"
 WITNESS_KIND = "function"
@@ -107,6 +108,45 @@ def mutated(row: bytes, at: int, value: int) -> bytes:
     return bytes(result)
 
 
+def witness_drift_message(*, ordinal: int, expected: bytes,
+                          observed: bytes) -> str:
+    """Render both sides of a linked-witness refusal for its receipt."""
+    return (
+        "linked C2D zero-literal witness drift: "
+        f"ordinal={ordinal} expected={expected.hex()} "
+        f"observed={observed.hex()}"
+    )
+
+
+def drift_report_selftest() -> dict[str, Any]:
+    expected = bytes.fromhex("0500fd8b2600f5080100")
+    observed = bytes.fromhex("030101845400cb080100")
+    message = witness_drift_message(
+        ordinal=609, expected=expected, observed=observed)
+    fields = {
+        "ordinal": "ordinal=609",
+        "expected": "expected=" + expected.hex(),
+        "observed": "observed=" + observed.hex(),
+    }
+    require(all(token in message for token in fields.values()),
+            "zero-literal drift report omitted one side")
+    rejected: list[str] = []
+    for name, token in fields.items():
+        mutant = message.replace(token, "", 1)
+        try:
+            require(all(value in mutant for value in fields.values()),
+                    "zero-literal drift report omitted one side")
+        except GateError:
+            rejected.append("omit-" + name)
+    require(rejected == ["omit-ordinal", "omit-expected", "omit-observed"],
+            "zero-literal drift-report mutation survived")
+    return {
+        "status": "passed-both-sides-drift-report",
+        "fields": sorted(fields),
+        "mutations_rejected": rejected,
+    }
+
+
 def canonical_specs() -> tuple[tuple[str, str, Path], ...]:
     """Consume the manifest set bound by the canonical L-full profile."""
     if CANONICAL_SPECS is not None:
@@ -133,10 +173,33 @@ def canonical_specs() -> tuple[tuple[str, str, Path], ...]:
     return tuple(result)
 
 
-def canonical_witness() -> dict[str, Any]:
+def product_inventory_specs(inventory: Path, inventory_root: Path
+                            ) -> tuple[tuple[str, str, Path], ...]:
+    value = json.loads(inventory.read_text(encoding="utf-8"))
+    rows = value.get("manifests")
+    require(isinstance(rows, list) and len(rows) == len(SPEC_ROLES),
+            "linked product manifest inventory drift")
+    result: list[tuple[str, str, Path]] = []
+    for (key, role), row in zip(SPEC_ROLES, rows):
+        require(isinstance(row, dict) and isinstance(row.get("path"), str)
+                and isinstance(row.get("sha256"), str),
+                f"linked product manifest row drift: {key}")
+        path = inventory_root / row["path"]
+        require(path.is_file()
+                and hashlib.sha256(path.read_bytes()).hexdigest() ==
+                    row["sha256"],
+                f"linked product manifest binding drift: {key}")
+        result.append((key, role, path))
+    return tuple(result)
+
+
+def canonical_witness(
+        specs: tuple[tuple[str, str, Path], ...] | None = None
+        ) -> dict[str, Any]:
     """Derive the witness from the same six manifests as product emission."""
     F.contract_check()
-    images = [F.emit_image(*spec) for spec in canonical_specs()]
+    images = [F.emit_image(*spec) for spec in
+              (canonical_specs() if specs is None else specs)]
     entry_base = code_base = resolution_base = 0
     target: dict[str, Any] | None = None
     counts: list[int] = []
@@ -418,9 +481,66 @@ def source_gate(*, generated_runtime: Path | None = None) -> dict[str, Any]:
         "status": "passed-zero-literal-source-contract",
         "canonical_emitter": "code_length nonzero; literal_count may be zero",
         "semantic_witness_contract": semantic_witness_selftest(),
+        "drift_report_contract": drift_report_selftest(),
         "manifest": manifest_gate(),
         "fixture": model_gate(),
         "generated_sources": generated,
+    }
+
+
+def linked_row_gate(witness: dict[str, Any], observed: bytes) -> None:
+    ordinal = int(witness["ordinal"])
+    expected = bytes(witness["row"])
+    require(
+        observed == expected
+        and execution_length(
+            ordinal, observed,
+            entry_count=int(witness["entry_count"]),
+            resolution_limit=int(witness["resolution_limit"])) == 38,
+        witness_drift_message(
+            ordinal=ordinal, expected=expected, observed=observed))
+
+
+def linked_inventory_selftest(inventory: Path, inventory_root: Path,
+                              c2d: Path) -> dict[str, Any]:
+    specs = product_inventory_specs(inventory, inventory_root)
+    witness = canonical_witness(specs)
+    ordinal = int(witness["ordinal"])
+    data = c2d.read_bytes()
+    at = ENTRY_OFFSET + ordinal * ENTRY_BYTES
+    observed = data[at:at + ENTRY_BYTES]
+    linked_row_gate(witness, observed)
+
+    rejected: list[str] = []
+    stored_ordinal = 609
+    require(stored_ordinal != ordinal,
+            "stored-ordinal mutation no longer distinguishes the worlds")
+    stored_at = ENTRY_OFFSET + stored_ordinal * ENTRY_BYTES
+    try:
+        linked_row_gate(witness, data[stored_at:stored_at + ENTRY_BYTES])
+    except GateError:
+        rejected.append("restore-stored-ordinal-609")
+    foreign = bytearray(observed)
+    foreign[0] = 3
+    try:
+        linked_row_gate(witness, bytes(foreign))
+    except GateError:
+        rejected.append("foreign-row-at-derived-ordinal")
+    require(rejected == ["restore-stored-ordinal-609",
+                         "foreign-row-at-derived-ordinal"],
+            "linked inventory witness mutation survived")
+    return {
+        "status": "passed-name-derived-candidate-inventory-witness",
+        "inventory": {
+            "path": inventory.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(inventory.read_bytes()).hexdigest(),
+        },
+        "identity": {"name": witness["name"], "image": witness["image"],
+                     "local_ordinal": witness["local_ordinal"]},
+        "derived_ordinal": ordinal,
+        "expected_row_hex": bytes(witness["row"]).hex(),
+        "observed_row_hex": observed.hex(),
+        "mutations_rejected": rejected,
     }
 
 
@@ -465,19 +585,25 @@ def linked_gate(elf: Path, c2d: Path) -> dict[str, Any]:
     require(length_targets.count("c2_product_entry_record") == 1,
             f"entry-length record edge drift: {length_targets}")
 
-    witness = canonical_witness()
+    inventory_authority: dict[str, Any] = {"mode": "legacy-canonical-specs"}
+    if LINKED_PRODUCT_INVENTORY is None:
+        witness = canonical_witness()
+    else:
+        inventory, inventory_root = LINKED_PRODUCT_INVENTORY
+        specs = product_inventory_specs(inventory, inventory_root)
+        witness = canonical_witness(specs)
+        inventory_authority = {
+            "mode": "candidate-product-inventory",
+            "path": inventory.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(inventory.read_bytes()).hexdigest(),
+            "semantic_lookup": "%lcc-consp by name",
+        }
     target_ordinal = int(witness["ordinal"])
     target_row = bytes(witness["row"])
     data = c2d.read_bytes()
     at = ENTRY_OFFSET + target_ordinal * ENTRY_BYTES
     row = data[at:at + ENTRY_BYTES]
-    require(
-        row == target_row
-        and execution_length(
-            target_ordinal, row,
-            entry_count=int(witness["entry_count"]),
-            resolution_limit=int(witness["resolution_limit"])) == 38,
-            f"linked C2D zero-literal witness drift: {row.hex()}")
+    linked_row_gate(witness, row)
     return {
         "status": "passed-linked-vm-run-dir-zero-literal-chain",
         "functions": {
@@ -493,9 +619,13 @@ def linked_gate(elf: Path, c2d: Path) -> dict[str, Any]:
         "c2d_witness": {
             "ordinal": target_ordinal,
             "row_hex": row.hex(),
+            "expected_row_hex": target_row.hex(),
+            "observed_row_hex": row.hex(),
             "literal_count": row[1],
             "code_length": u16(row, 4),
         },
+        "inventory_authority": inventory_authority,
+        "drift_report_contract": drift_report_selftest(),
         "fixture": model_gate(),
     }
 

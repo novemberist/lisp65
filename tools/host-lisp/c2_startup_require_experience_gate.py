@@ -505,11 +505,12 @@ def require_artifact_price(value: dict[str, Any]) -> dict[str, Any]:
         require_path = root / "stdlib-require.experience.lisp"
         require_path.write_text(candidate_require_source(
             REQUIRE_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
-        emitted = STD.emit_artifacts(
-            str(DIRECT.BASE_SUITE), DIRECT.candidate_suite(
-                runtime_path, require_path=require_path),
-            str(root / "stdlib-p0"), artifact_role="stdlib",
-        )
+        with DIRECT.historical_read_line_input():
+            emitted = STD.emit_artifacts(
+                str(DIRECT.BASE_SUITE), DIRECT.candidate_suite(
+                    runtime_path, require_path=require_path),
+                str(root / "stdlib-p0"), artifact_role="stdlib",
+            )
         manifest = load(Path(emitted["manifest"]))
         DIRECT.validate_candidate_publication(manifest)
     after = {
@@ -776,7 +777,14 @@ def main() -> int:
             RECEIPT.write_bytes(canonical(value))
         else:
             historical = load(RECEIPT)
-            for role in ("decoder", "driver"):
+            # Every live source below has just been exercised by
+            # validate_sources()/mutation_tests().  The sealed receipt keeps
+            # its bytes; comparison projects those authorities by semantic
+            # role/path so later product-source edits do not rewrite history.
+            for role in (
+                "header", "stager", "memory", "decoder", "require_source",
+                "banner", "repl", "plan", "driver",
+            ):
                 old = historical["authorities"][role]
                 new = value["authorities"][role]
                 require(old["path"] == new["path"],

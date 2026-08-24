@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import c2_v21_full_span_product_config as FULL
+import c2_source_owner_identity as OWNER_IDENTITY
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,13 +30,16 @@ def configure(product: Any) -> dict[str, Any]:
     require(FEATURE not in product.CONVERGENCE_DEFINES,
             "mutable CPU-read product feature configured twice")
     defines = (*product.CONVERGENCE_DEFINES, FEATURE)
+    scoped_defines = OWNER_IDENTITY.definitions(
+        product, "mapped-far-content-convergence", product.CONVERGENCE_DEFINES,
+        (FEATURE,))
     sources = (*product.CONVERGENCE_SOURCES, PADDING)
     scopes: list[dict[str, Any]] = []
     replaced = 0
     for scope in product.SOURCE_OWNER_SCOPES:
         if scope.get("name") == "mapped-far-content-convergence":
             row = dict(scope)
-            row["defines"] = defines
+            row["defines"] = scoped_defines
             row["sources"] = sources
             scopes.append(row)
             replaced += 1

@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_STRINGS_LIB = ROOT / "lib" / "stdlib-strings.lisp"
 DEFAULT_IDE_BUFFER_LIB = ROOT / "lib" / "ide-buffer.lisp"
 DEFAULT_IDE_STATUS_LIB = ROOT / "lib" / "ide-status.lisp"
+DEFAULT_SEXP_DEPTH_LIB = ROOT / "lib" / "sexp-depth.lisp"
 DEFAULT_IDE_SYNTAX_LIB = ROOT / "lib" / "ide-syntax.lisp"
 DEFAULT_IDE_KEYMAP_LIB = ROOT / "lib" / "ide-keymap-generated.lisp"
 DEFAULT_IDE_UI_LIB = ROOT / "lib" / "ide-ui.lisp"
@@ -44,6 +45,7 @@ def main(argv: list[str]) -> int:
         load_prelude(strings_lib, reset=False)
         load_prelude(buffer_lib, reset=False)
         load_prelude(status_lib, reset=False)
+        load_prelude(DEFAULT_SEXP_DEPTH_LIB, reset=False)
         load_prelude(DEFAULT_IDE_SYNTAX_LIB, reset=False)   # Syntax-Feature (ide-ui ruft %ide-hl-walk/split-indented)
         load_prelude(DEFAULT_IDE_KEYMAP_LIB, reset=False)
         load_prelude(ui_lib, reset=False)

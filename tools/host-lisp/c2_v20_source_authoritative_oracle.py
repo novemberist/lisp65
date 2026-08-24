@@ -29,6 +29,7 @@ if str(HOST) not in sys.path:
 import c2_lite_v6_product_probe as V6  # noqa: E402
 import c2_product_substitution_link as PRODUCT  # noqa: E402
 from elf_truth import ElfTruth  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -40,6 +41,7 @@ SOURCE_REBIND = ARCH / (
 SOURCE = ROOT / "scripts/c2-stream-decoder.c"
 GENERATOR = ROOT / "tools/host-lisp/c2_lite_v6_product_probe.py"
 DRIVER = Path(__file__).resolve()
+TOOL_IDENTITY_SEALING_COMMIT = "4db8b6dc7d08c233c330a34c46a184eb05588504"
 AUTHORIZATION = "5ebd8ed5"
 INTEGRATION_AUTHORIZATION = "50bddcd6"
 RECORDED_ON = "2026-08-13"
@@ -485,8 +487,18 @@ def value() -> dict[str, Any]:
         "card_boundary": contract["card"],
         "authority": {"owner_commission": git_authority(),
                       "integration_repair": git_integration_authority(),
-                      "contract": bind(CONTRACT), "source": bind(SOURCE),
-                      "generator": bind(GENERATOR), "driver": bind(DRIVER)},
+                      "contract": bind(CONTRACT),
+                      # This record's semantic gates above still consume the
+                      # living source, generator and driver.  Their identity
+                      # provenance, however, belongs to the era that sealed
+                      # the dated source-authority rebind; later tool edits
+                      # must not rewrite that historical world.
+                      "source": ERA.era_bind(
+                          TOOL_IDENTITY_SEALING_COMMIT, SOURCE),
+                      "generator": ERA.era_bind(
+                          TOOL_IDENTITY_SEALING_COMMIT, GENERATOR),
+                      "driver": ERA.era_bind(
+                          TOOL_IDENTITY_SEALING_COMMIT, DRIVER)},
         "claim_limit": (
             "Host/source/target-codegen qualification only. The one product "
             "card remains locked at the owner's explicit veto boundary."),

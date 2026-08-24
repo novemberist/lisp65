@@ -48,6 +48,8 @@
 #endif
 #define BUF_MAX REPL_BUF_MAX
 
+#define C2K_INPUT_RING_TAIL (*(volatile unsigned char *)0xff8d)
+
 #ifdef DEVICE_KB
 /* Input history (1 entry = the last submitted line). Recall: cursor-up (0x91) or Ctrl+P (0x10).
  * Ctrl+arrow cannot be told apart reliably through KERNAL GETIN; cursor-up is free here (the REPL
@@ -189,6 +191,9 @@ void repl(void) {
     crepl_reset();   /* Compiled-Fn-Region einmalig (VOR setjmp -> defuns ueberleben Abbrueche) */
 #endif
     if (setjmp(lisp_toplevel)) {                          /* Rueckkehr nach Abbruch/Fehler */
+        /* A longjmp can cross the Bank-2 Comfort loop.  Disable its raw IRQ
+         * capture before rendering or re-entering the native fallback. */
+        C2K_INPUT_RING_TAIL = 0xff;
         aborted = 1;
         emit('\n');
         emit_str("*** ");

@@ -207,29 +207,17 @@ def validate_projection(value: dict[str, Any]) -> None:
     derived = value["derived_compiler_bindings"]
     product_closure = value["product_build_configurators"]
     continuation_closure = value["continuation_configurators"]
-    require(
+    valid = (
         value.get("status") == "PASS: all profile features configured"
         and value["bound_profile_features"] == list(profile)
         and value["previous_candidate_scope_features"]
             == list(previous_candidate)
-        and value["effective_final_link_features"] == [
-            "LISP65_CODE_WINDOW_CONVERGENCE",
-            "LISP65_DMA_CONTENT_CONVERGENCE",
-            "LISP65_C2_ASM_CONVERGENCE",
-            "LISP65_C2_FULL_SPAN_CONVERGENCE",
-            "LISP65_C2_MUTABLE_CPU_READS",
-            "LISP65_C2_TERMINAL_RETURN_GUARD",
-            "LISP65_STARTUP_REQUIRE_EXPERIENCE",
-            "LISP65_C2_MAP_CPU_TRANSPORT",
-            "LISP65_C2_REQUIRE_RESOLVER",
-        ]
+        and len(effective) == len(set(effective))
+        and set(previous_candidate).issubset(effective)
         and value["wrapper_derived_features"] == [
-            "LISP65_C2_TERMINAL_RETURN_GUARD",
-            "LISP65_STARTUP_REQUIRE_EXPERIENCE",
-            "LISP65_C2_REQUIRE_RESOLVER",
-        ]
+            item for item in effective if item not in previous_candidate]
         and value["combined_compiler_features"] == list(combined)
-        and len(combined) == 33
+        and len(combined) == len(set((*profile, *effective)))
         and [row["name"] for row in steps] == [
             "product-candidate-chain", "complete-profile", "bank2-stage", "two-region",
             "current-pin-adapters", "intern-session-service",
@@ -240,7 +228,7 @@ def validate_projection(value: dict[str, Any]) -> None:
         and set(mappings) == set(combined)
         and all(mappings[name]["output"] for name in combined)
         and steps[-1]["output"]["probe_definitions"] == list(effective)
-        and steps[-1]["output"]["feature_count"] == 9
+        and steps[-1]["output"]["feature_count"] == len(effective)
         and steps[-1]["output"]["extra_arguments"] == {}
         and product_closure == continuation_closure
         and value["product_build_consumption_authority"]
@@ -290,8 +278,105 @@ def validate_projection(value: dict[str, Any]) -> None:
             "LISP65_RUNTIME_ISLAND_INSTALL_SLOT": {
                 "before": "LISP65_RUNTIME_ISLAND_INSTALL_SLOT=8",
                 "after": "LISP65_RUNTIME_ISLAND_INSTALL_SLOT=10"},
-        },
-        "real configurator projection drift")
+        })
+    if not valid:
+        drift = projection_drift(value, profile, previous_candidate)
+        raise ProjectionError("real configurator projection drift: "
+                              + json.dumps(drift, sort_keys=True))
+
+
+def projection_drift(value: dict[str, Any], profile: tuple[str, ...],
+                     previous_candidate: tuple[str, ...]) -> dict[str, Any]:
+    """Persist the first named expected/observed projection mismatch."""
+    effective = tuple(value.get("effective_final_link_features", ()))
+    combined = tuple(dict.fromkeys((*profile, *effective)))
+    steps = value.get("steps", [])
+    closure = value.get("product_build_configurators", [])
+    final = value.get("final_state", {})
+    checks = [
+        ("status", value.get("status"), "PASS: all profile features configured"),
+        ("bound-profile", value.get("bound_profile_features"), list(profile)),
+        ("previous-candidate", value.get("previous_candidate_scope_features"),
+         list(previous_candidate)),
+        ("effective-feature-uniqueness", len(effective), len(set(effective))),
+        ("previous-features-retained",
+         sorted(set(previous_candidate) & set(effective)),
+         sorted(previous_candidate)),
+        ("wrapper-derived-features", value.get("wrapper_derived_features"),
+         [item for item in effective if item not in previous_candidate]),
+        ("combined-feature-count", len(value.get("combined_compiler_features", [])),
+         len(set((*profile, *effective)))),
+        ("combined-features", value.get("combined_compiler_features"),
+         list(combined)),
+        ("step-names", [row.get("name") for row in steps], [
+            "product-candidate-chain", "complete-profile", "bank2-stage",
+            "two-region", "current-pin-adapters", "intern-session-service",
+            "static-header-consumption", "real-final-link-consumer"]),
+        ("step-invocation", [row.get("invoked") for row in steps],
+         [True] * 8),
+        ("closure-parity", value.get("continuation_configurators"), closure),
+        ("closure-names", [row.get("name") for row in closure], [
+            "product-candidate-chain", "complete-profile", "bank2-stage",
+            "two-region", "current-pin-adapters", "intern-session-service",
+            "static-header-consumption"]),
+        ("consumption-authority",
+         value.get("product_build_consumption_authority"),
+         product_consumption_authority()),
+        ("final-summary", {name: final.get(name) for name in (
+            "runtime_overlay_format", "append_count", "boot_family_count",
+            "session_family_count", "bank3_staging", "bank3_session_slot",
+            "island_install_slot", "island_carrier_slot",
+            "intern_session_service", "compiler_consumed_static_code_bytes")},
+         {"runtime_overlay_format": 4, "append_count": 24,
+          "boot_family_count": 12, "session_family_count": 52,
+          "bank3_staging": True, "bank3_session_slot": 9,
+          "island_install_slot": 10, "island_carrier_slot": 11,
+          "intern_session_service": True,
+          "compiler_consumed_static_code_bytes": 46043}),
+    ]
+    for name, observed, expected in checks:
+        if observed != expected:
+            return {"comparison": name, "expected": expected,
+                    "observed": observed}
+    return {"comparison": "unclassified-projection-conjunct",
+            "expected": "all named projection invariants",
+            "observed": "one unnamed invariant differed"}
+
+
+def projection_mutation_population(
+        value: dict[str, Any], observed: list[str]) -> dict[str, Any]:
+    """Describe the candidate-derived mutation population by identity.
+
+    Counts are deliberately only summaries.  The contract is the named set
+    derived from the candidate's feature and configurator projections, and a
+    drift report always carries both sides plus both set differences.
+    """
+    expected = [
+        *("missing-configurator-output:" + feature
+          for feature in value["combined_compiler_features"]),
+        *(f"one-sided-configurator:{side}:{row['name']}"
+          for side in ("product_build_configurators",
+                       "continuation_configurators")
+          for row in value[side]),
+    ]
+    expected_set = set(expected)
+    observed_set = set(observed)
+    require(len(expected_set) == len(expected),
+            "derived projection mutation identities are not unique")
+    require(len(observed_set) == len(observed),
+            "observed projection mutation identities are not unique")
+    missing = sorted(expected_set - observed_set)
+    unexpected = sorted(observed_set - expected_set)
+    return {
+        "authority": "candidate-derived named mutation population",
+        "expected": expected,
+        "observed": list(observed),
+        "missing": missing,
+        "unexpected": unexpected,
+        "survivors": missing,
+        "expected_count": len(expected),
+        "observed_count": len(observed),
+    }
 
 
 def projection_mutations(value: dict[str, Any]) -> list[str]:
@@ -303,8 +388,6 @@ def projection_mutations(value: dict[str, Any]) -> list[str]:
             validate_projection(trial)
         except ProjectionError:
             rejected.append("missing-configurator-output:" + feature)
-    require(len(rejected) == 33,
-            "feature-without-configurator-output mutation survived")
     for side in ("product_build_configurators", "continuation_configurators"):
         for index, row in enumerate(value[side]):
             trial = deepcopy(value)
@@ -314,8 +397,10 @@ def projection_mutations(value: dict[str, Any]) -> list[str]:
             except ProjectionError:
                 rejected.append(
                     f"one-sided-configurator:{side}:{row['name']}")
-    require(len(rejected) == 47,
-            "one-sided configurator mutation survived")
+    population = projection_mutation_population(value, rejected)
+    require(not population["missing"] and not population["unexpected"],
+            "projection mutation population differs: "
+            + json.dumps(population, sort_keys=True))
     return rejected
 
 

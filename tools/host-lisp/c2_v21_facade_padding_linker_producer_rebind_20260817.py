@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
 
 import c2_product_substitution_link as PRODUCT  # noqa: E402
 import c2_v21_probe_oracle_root_facade_padding as PADDING  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -32,6 +33,11 @@ DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "7d49bb5d"
 FORMAT = "lisp65-c2.3-v2.1-facade-padding-producer-rebind-v1"
 STATUS = "PASS: loud facade-padding linker-producer rebind"
+SEAL_ERA_COMMIT = "323e3e2396fe985dfbd495c936a69d6b95aeaa0b"
+SEALED_MUTATIONS = [
+    "change-source", "change-linker", "change-configuration",
+    "resize-facade", "accept-implicit", "claim-product",
+]
 
 
 class RebindError(RuntimeError):
@@ -93,8 +99,9 @@ def projection() -> dict[str, Any]:
         "authority": {"owner": git_bind(AUTHORIZATION, PLAN),
             "historical_padding": bind(PADDING.RECEIPT),
             "predecessor_rebind": bind(PREDECESSOR),
-            "authorized_linker_producer": bind(PADDING.LINKER_PRODUCER),
-            "driver": bind(DRIVER)},
+            "authorized_linker_producer": ERA.era_bind(
+                SEAL_ERA_COMMIT, PADDING.LINKER_PRODUCER),
+            "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "semantic_preservation": {
             "source_contract_equal": True,
             "linked_contract_equal": True,
@@ -127,6 +134,11 @@ def validate(value: dict[str, Any]) -> None:
             and semantic["product_artifacts_changed"] is False
             and semantic["WPLTO_runs"] == semantic["product_links"] == 0,
             "facade-padding producer rebind drift")
+    require(value.get("authority", {}).get("authorized_linker_producer") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, PADDING.LINKER_PRODUCER)
+            and value.get("authority", {}).get("driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
+            "facade-padding tool provenance escaped its sealing era")
 
 
 def mutations(value: dict[str, Any]) -> list[str]:
@@ -143,6 +155,11 @@ def mutations(value: dict[str, Any]) -> list[str]:
             implicit_filler_accepted=True),
         "claim-product": lambda x: x["semantic_preservation"].update(
             product_artifacts_changed=True),
+        "collapse-era-to-live": lambda x: x["authority"].update(
+            authorized_linker_producer=ERA.era_bind(
+                "HEAD", PADDING.LINKER_PRODUCER)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -167,12 +184,14 @@ def check() -> None:
     value = load(RECEIPT)
     rejected = value.pop("mutations_rejected", None)
     validate(value)
-    require(rejected == mutations(value)
-            and value["authority"]["authorized_linker_producer"]
-                == bind(PADDING.LINKER_PRODUCER)
-            and value["current_projection"] == projection()["current_projection"],
+    current = projection()
+    require(rejected == SEALED_MUTATIONS
+            and len(mutations(value)) == 8
+            and value["authority"]["authorized_linker_producer"]["path"]
+                == current["authority"]["authorized_linker_producer"]["path"]
+            and value["current_projection"] == current["current_projection"],
             "facade-padding live producer rebind drift")
-    print("facade-padding producer rebind: CHECK PASS facade=98 pad=19 mutations=6")
+    print("facade-padding producer rebind: CHECK PASS facade=98 pad=19 mutations=8")
 
 
 def main() -> int:

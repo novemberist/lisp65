@@ -19,6 +19,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v112_candidate_media as OLD  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 BUILD = ROOT / "build/c2.3/v1.4.0-candidate-media-link92-r5-split"
@@ -44,6 +45,7 @@ RELEASE_CONTRACT = ROOT / "config/c2-v112-release-closure.json"
 PARITY_CONTRACT = ROOT / "config/v11-surface-delivery-parity.json"
 D3_CONTRACT = ROOT / "config/c2-v112-link92-phase-d-d3.json"
 USER_GUIDE = ROOT / "docs/user-guide.md"
+GUIDE_ERA_COMMIT = "ac039d3b"
 LANGUAGE_REFERENCE = ROOT / "docs/language-reference.md"
 DEFSTRUCT_MANIFEST = ROOT / (
     "build/post-promotion/v110-performance/defstruct-candidate.manifest.json"
@@ -178,9 +180,18 @@ def trace_descope_gate(
     release = overrides.get("release", load(RELEASE_CONTRACT))
     parity = overrides.get("parity", load(PARITY_CONTRACT))
     d3 = overrides.get("d3", load(D3_CONTRACT))
-    guide = overrides.get("guide", USER_GUIDE.read_text(encoding="utf-8"))
+    # "Trace is not delivered in v1.4.0" is true of the world this receipt
+    # sealed, and it stayed true until v1.5.0 delivered trace/untrace.  Read
+    # against the living guide the sentence became a demand that today's
+    # documentation deny a shipped feature, so the guide is read at the
+    # commit that reclosed this medium.
+    guide = overrides.get(
+        "guide",
+        ERA.era_blob(GUIDE_ERA_COMMIT, "docs/user-guide.md").decode("utf-8"))
     reference = overrides.get(
-        "reference", LANGUAGE_REFERENCE.read_text(encoding="utf-8"))
+        "reference",
+        ERA.era_blob(
+            GUIDE_ERA_COMMIT, "docs/language-reference.md").decode("utf-8"))
     require(isinstance(suite, dict) and isinstance(manifest, dict)
             and isinstance(release, dict) and isinstance(parity, dict)
             and isinstance(d3, dict) and isinstance(guide, str)
@@ -228,8 +239,10 @@ def trace_descope_mutations() -> dict[str, str]:
         "release": load(RELEASE_CONTRACT),
         "parity": load(PARITY_CONTRACT),
         "d3": load(D3_CONTRACT),
-        "guide": USER_GUIDE.read_text(encoding="utf-8"),
-        "reference": LANGUAGE_REFERENCE.read_text(encoding="utf-8"),
+        "guide": ERA.era_blob(
+            GUIDE_ERA_COMMIT, "docs/user-guide.md").decode("utf-8"),
+        "reference": ERA.era_blob(
+            GUIDE_ERA_COMMIT, "docs/language-reference.md").decode("utf-8"),
     }
     result: dict[str, str] = {}
 

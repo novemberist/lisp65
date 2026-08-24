@@ -21,6 +21,7 @@ if str(HOST) not in sys.path:
 
 from elf_truth import ElfTruth  # noqa: E402
 import c2_v21_relocation_inventory_artifact_replay as REPLAY  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -37,6 +38,7 @@ RECEIPT = ARCH / (
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "20a5f4ec"
 RECORDED_ON = "2026-08-16"
+SEALED_COMMIT = "48d9768196fd3a4433bf248acd3ea5704f9669e2"
 
 
 class AbsenceError(RuntimeError):
@@ -219,8 +221,12 @@ def linked_model() -> dict[str, Any]:
         "registered_surfaces": classifications,
         "physical_DMA_content_entry_callers": physical_callers,
         "immutable_CRC_authority": {
-            "vm_runtime_overlay_exec_family": bind(RUNTIME),
-            "c2k_copy": bind(KERNAL),
+            # This receipt witnesses the source world in which the absence
+            # proof was sealed.  The live sources remain semantic inputs
+            # above; their historical identities are provenance only.
+            "vm_runtime_overlay_exec_family": ERA.era_bind(
+                SEALED_COMMIT, RUNTIME),
+            "c2k_copy": ERA.era_bind(SEALED_COMMIT, KERNAL),
         },
         "unsafe_content_DMA_surfaces": unsafe,
         "unsafe_content_DMA_count": len(unsafe),
@@ -285,7 +291,8 @@ def derive() -> dict[str, Any]:
         "authority": {"owner": authorization(),
             "artifact_replay": bind(REPLAY.RECEIPT),
             "root_fix": bind(ROOT_FIX), "content_sweep": bind(SWEEP),
-            "candidate_ELF": bind(ELF), "driver": bind(DRIVER)},
+            "candidate_ELF": bind(ELF),
+            "driver": ERA.era_bind(SEALED_COMMIT, DRIVER)},
         "linked_model": model,
         "execution_accounting": {"WPLTO_runs": 0, "product_links": 0,
             "cards_consumed": 0, "completion_runs": 0, "media_builds": 0,

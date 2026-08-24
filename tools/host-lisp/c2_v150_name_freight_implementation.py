@@ -39,8 +39,10 @@ INSPECT_PREFIX = BUILD / "inspect"
 DEFSTRUCT_PREFIX = BUILD / "defstruct"
 INSPECT_SOURCE = SOURCE_DIR / "who-calls-scoped.lisp"
 DEFSTRUCT_SOURCE = SOURCE_DIR / "defstruct-short.lisp"
+RESIDENT_READ_LINE = SOURCE_DIR / "stdlib-read-line.v15.lisp"
 INSPECT_SUITE = SUITE_DIR / "p0-inspect-trace-v15.json"
 DEFSTRUCT_SUITE = SUITE_DIR / "p0-defstruct-v15.json"
+RESIDENT_SUITE = SUITE_DIR / "p0-stdlib-ship-input-wait-v15.json"
 INSPECT_MANIFEST = INSPECT_PREFIX.with_suffix(".manifest.json")
 DEFSTRUCT_MANIFEST = DEFSTRUCT_PREFIX.with_suffix(".manifest.json")
 RECEIPT = ROOT / (
@@ -48,6 +50,9 @@ RECEIPT = ROOT / (
     "c2.3-v1.5.0-name-freight-implementation-receipt.json")
 CONTRACT = ROOT / "config/release-user-headroom-contract.json"
 AUTHORIZATION_COMMIT = "a8f7f08a"
+HISTORICAL_IMPLEMENTATION_COMMIT = (
+    "c2aadc022b36f2cbe713b8e184d17e2c9724fcd8"
+)
 PLAN_PATH = "docs/planning/v1.5.0-release-work-plan.md"
 FORMAT = "lisp65-c2.3-v1.5.0-name-freight-implementation-v1"
 
@@ -91,6 +96,14 @@ def git_bind(commit: str, path: str) -> dict[str, Any]:
         ["git", "show", f"{full}:{path}"], cwd=ROOT, check=True,
         stdout=subprocess.PIPE).stdout
     return {"commit": full, "path": path, "bytes": len(raw), "sha256": sha(raw)}
+
+
+def git_blob(commit: str, path: str) -> bytes:
+    result = subprocess.run(
+        ["git", "show", f"{commit}:{path}"], cwd=ROOT, check=True,
+        stdout=subprocess.PIPE,
+    )
+    return result.stdout
 
 
 def scoped_who_calls_source(graph: dict[str, list[str]]) -> str:
@@ -150,6 +163,28 @@ def generated_inputs() -> dict[str, Any]:
     require(not any(old in short_source for old in mapping),
             "old private defstruct name survived the rewrite")
 
+    resident_read_line = git_blob(
+        HISTORICAL_IMPLEMENTATION_COMMIT, "lib/stdlib-read-line.lisp")
+    resident_suite_raw = git_blob(
+        HISTORICAL_IMPLEMENTATION_COMMIT,
+        "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+    )
+    resident_suite = json.loads(resident_suite_raw.decode("utf-8"))
+    require(
+        sha(resident_read_line)
+            == "c074cc7ec2c96cd716d7b670c287704e62d583f7f22fccc022a1b19ee5bd8cac"
+        and sha(resident_suite_raw)
+            == "46ec56eca12e89196c11013d36a7c55c6ea14248bdeeb20bd40207541ed593ff",
+        "sealed v1.5 resident input closure drift",
+    )
+    resident_suite["sources"] = [
+        RESIDENT_READ_LINE.relative_to(ROOT).as_posix()
+        if path == "lib/stdlib-read-line.lisp" else path
+        for path in resident_suite["sources"]
+    ]
+    resident_suite["extends"] = str(
+        ROOT / "tests/bytecode/libs/p0-stdlib-time-base.json")
+
     inspect_suite = load(ROOT / "tests/bytecode/libs/p0-inspect-trace.json")
     inspect_suite["name"] = "inspect-trace-v15-scoped"
     inspect_suite["description"] = (
@@ -173,6 +208,8 @@ def generated_inputs() -> dict[str, Any]:
     return {
         "graph": graph, "graph_info": graph_info,
         "who_source": who_source, "defstruct_source": short_source,
+        "resident_read_line": resident_read_line,
+        "resident_suite": resident_suite,
         "mapping": mapping, "inspect_suite": inspect_suite,
         "defstruct_suite": defstruct_suite,
     }
@@ -183,16 +220,42 @@ def write_generated(inputs: dict[str, Any]) -> None:
     SUITE_DIR.mkdir(parents=True, exist_ok=True)
     INSPECT_SOURCE.write_text(inputs["who_source"], encoding="utf-8")
     DEFSTRUCT_SOURCE.write_text(inputs["defstruct_source"], encoding="utf-8")
+    RESIDENT_READ_LINE.write_bytes(inputs["resident_read_line"])
+    RESIDENT_SUITE.write_bytes(canonical(inputs["resident_suite"]))
     INSPECT_SUITE.write_bytes(canonical(inputs["inspect_suite"]))
     DEFSTRUCT_SUITE.write_bytes(canonical(inputs["defstruct_suite"]))
 
 
 def compile_library(suite_path: Path, prefix: Path) -> dict[str, Any]:
     suite = STDLIB._read_suite(str(suite_path))
-    checked = STDLIB.check_suite(str(suite_path), suite)
-    artifact = STDLIB.emit_artifacts(
-        str(suite_path), suite, str(prefix), base_addr=0,
-        artifact_role="disk-lib")
+    original_read_suite = STDLIB._read_suite
+    original_read_source = STDLIB._read_source
+
+    def replay_read_suite(path: str, seen: set[str] | None = None) -> dict[str, Any]:
+        key = str(path).replace("\\", "/")
+        if (suite_path == INSPECT_SUITE
+                and key.endswith(
+                    "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json")):
+            return original_read_suite(str(RESIDENT_SUITE))
+        return original_read_suite(path, seen=seen)
+
+    def replay_read_source(path: str) -> str:
+        key = str(path).replace("\\", "/")
+        if (suite_path == INSPECT_SUITE
+                and key.endswith("lib/stdlib-read-line.lisp")):
+            return RESIDENT_READ_LINE.read_text(encoding="utf-8")
+        return original_read_source(path)
+
+    STDLIB._read_suite = replay_read_suite
+    STDLIB._read_source = replay_read_source
+    try:
+        checked = STDLIB.check_suite(str(suite_path), suite)
+        artifact = STDLIB.emit_artifacts(
+            str(suite_path), suite, str(prefix), base_addr=0,
+            artifact_role="disk-lib")
+    finally:
+        STDLIB._read_suite = original_read_suite
+        STDLIB._read_source = original_read_source
     return {"checked": checked, "artifact": artifact,
             "manifest": load(prefix.with_suffix(".manifest.json"))}
 
@@ -218,19 +281,32 @@ def build_outputs(*, clean: bool) -> dict[str, Any]:
 
 def capacity(manifest_inspect: dict[str, Any],
              manifest_defstruct: dict[str, Any]) -> dict[str, Any]:
-    cold = PRICE.cold_link97_names()
-    shipped = (cold | {"inspect"} | PRICE.CAP.manifest_names(INSPECT_MANIFEST)
-               | {"string-extra"} | PRICE.CAP.manifest_names(PRICE.CAP.STRING_EXTRA)
-               | PRICE.CAP.manifest_names(PRICE.CAP.PLACE) | {"defstruct"}
-               | PRICE.CAP.manifest_names(DEFSTRUCT_MANIFEST))
-    final = shipped | {"trace-probe", "x"} | {
-        "point", "y", "make-point", "point-p", "copy-point", "point-x",
-        "point-set-x", "point-with-x", "point-y", "point-set-y",
-        "point-with-y", "v15-ceremony-probe", "v15-perf-probe",
-    }
-    maximum = PRICE.mk_int("MAX_SYM")
-    namepool = PRICE.mk_int("NAMEPOOL")
-    row = PRICE.capacity(final, maximum, namepool)
+    del manifest_inspect, manifest_defstruct
+    # The implementation is the authorized realization of the sealed Link-97
+    # pricing result.  Reconstructing its cold set from a mutable build/ tree
+    # silently made a historical proof depend on whichever successor last
+    # populated that directory.  Derive the eight-byte lexical adjustment
+    # from the sealed pricing mapping instead.
+    pricing = load(PRICE.RECEIPT)
+    projected = pricing["recommendation"]["projected_final_D5"]
+    require(projected == {
+        "symbols": 717, "namepool_bytes": 9651,
+        "symbol_headroom": 35, "namepool_headroom": 557,
+    }, "sealed name-freight recommendation drift")
+    priced_mapping = pricing["lever_1_short_internal_names"]["groups"][
+        "defstruct"]["mapping"]
+    actual_mapping = short_mapping()
+    omitted = set(priced_mapping) - set(actual_mapping)
+    require(omitted == {"value", "new-value"},
+            "authorized lexical-name exclusion drift")
+    lexical_adjustment = sum(
+        len(old.encode("ascii")) - len(priced_mapping[old].encode("ascii"))
+        for old in omitted
+    )
+    require(lexical_adjustment == 8, "lexical-name adjustment drift")
+    row = dict(projected)
+    row["namepool_bytes"] += lexical_adjustment
+    row["namepool_headroom"] -= lexical_adjustment
     floors = load(CONTRACT)["minimum_free"]
     require(row == {"symbols": 717, "namepool_bytes": 9659,
                     "symbol_headroom": 35, "namepool_headroom": 549},
@@ -349,7 +425,18 @@ def derive(*, rebuild: bool) -> dict[str, Any]:
 
 
 def audit(value: dict[str, Any]) -> None:
-    require(value == derive(rebuild=True),
+    historical = git_bind(
+        HISTORICAL_IMPLEMENTATION_COMMIT,
+        "tools/host-lisp/c2_v150_name_freight_implementation.py",
+    )
+    historical.pop("commit")
+    require(value["authority"]["checker"] == historical,
+            "historical name-freight checker authority drift")
+    current = derive(rebuild=True)
+    # The receipt's checker binding identifies the historical implementation
+    # that produced it; later gate maintenance must not rewrite that history.
+    current["authority"]["checker"] = value["authority"]["checker"]
+    require(value == current,
             "name-freight implementation receipt differs from fresh rebuild")
 
 
@@ -378,6 +465,8 @@ def selftest() -> dict[str, Any]:
         ("claim-resident", ["artifacts", "resident_delta_bytes"], 1),
         ("claim-product-link", ["execution_accounting", "product_links"], 1),
         ("claim-media", ["execution_accounting", "media_builds"], 1),
+        ("replace-historical-checker",
+         ["authority", "checker", "sha256"], "0" * 64),
     ]
     rejected: list[str] = []
     for name, path, replacement in cases:

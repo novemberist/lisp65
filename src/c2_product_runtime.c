@@ -749,8 +749,23 @@ C2_COLD_SOURCE_FN uint8_t c2_source_read(const uint8_t image[32], uint32_t relat
              ) base = LISP65_C2_SESSION_PHYSICAL;
     else return 0;
     if (c2_u16(image + 4) != c2_runtime.generation) return 0;
+#ifdef LISP65_C2_MAP_CPU_TRANSPORT
+    /*
+     * This is the common source seam for product metadata and bytecode
+     * refills.  It must share the synchronous MAP/CPU transport used by the
+     * other mutable readers: a void DMA submission cannot establish that the
+     * destination contains the requested span before success is returned.
+     */
+    {
+        extern uint8_t c2_facade_map_cpu_read(uint32_t, uint8_t *, uint16_t)
+            __asm__("c2_facade_runtime_overlay_exec");
+        return c2_facade_map_cpu_read(
+            base + relative, (uint8_t *)dst, length);
+    }
+#else
     c2_dma_copy(base + relative, (uint32_t)(uint16_t)(uintptr_t)dst, length);
     return 1;
+#endif
 }
 
 #ifdef LISP65_C2_NESTED_APPEND_V5
@@ -3708,7 +3723,13 @@ uint8_t c2_append_abort_control_phase(void *opaque) {
     return C2_STREAM_OK;
 }
 
-static LISP65_C2_REOPEN_TEXT_GAP1_FN uint8_t c2_abort_driver(void) {
+#ifdef LISP65_C2_ABORT_DRIVER_FAR
+LISP65_C2_MAPPED_FAR_FN
+__attribute__((noinline, visibility("hidden")))
+#else
+static LISP65_C2_REOPEN_TEXT_GAP1_FN
+#endif
+uint8_t c2_abort_driver(void) {
     uint8_t fuel = (uint8_t)(C2D_MAX_TRANSIENT_DEPTH * 9u + 9u), ok = 0;
     (void)c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND);
     (void)c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_EMITTER);
@@ -3770,6 +3791,12 @@ done:
 #endif
 
 uint8_t c2_product_abort_cleanup(void) {
+#if defined(__mos__) && defined(LISP65_C2_RTOV_CONTINUATION_LIVENESS)
+    extern void c2_rtov_retire_continuations_facade(void);
+    /* Retirement owns continuation liveness.  Sanitize every restorable
+     * snapshot while the retiring generation is still named, before wipe. */
+    c2_rtov_retire_continuations_facade();
+#endif
     if (vm_runtime_overlay_abort_cleanup() != VM_RUNTIME_OVERLAY_OK) {
         c2_ready = 0; return 0;
     }
@@ -3777,7 +3804,12 @@ uint8_t c2_product_abort_cleanup(void) {
      * harmless pre-READY landing in the low seam; ordinary profiles retain
      * their byte-pinned guard in c2_abort_driver itself. */
 #ifdef LISP65_C2_E000_REOPEN
+#if defined(__mos__) && defined(LISP65_C2_ABORT_DRIVER_FAR)
+    extern uint8_t c2_abort_driver_facade(void);
+    return !c2_ready || c2_abort_driver_facade();
+#else
     return !c2_ready || c2_abort_driver();
+#endif
 #else
     return c2_abort_driver();
 #endif

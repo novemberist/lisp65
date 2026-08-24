@@ -18,6 +18,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v20_source_authoritative_oracle as O  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -26,8 +27,13 @@ RECEIPT = ARCH / (
     "c2.3-v2.0-source-authoritative-oracle-rebind-2026-08-14.json")
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "b3f6adc2"
+SEAL_ERA_COMMIT = "4db8b6dc7d08c233c330a34c46a184eb05588504"
 ALLOWED = ("authority.driver.bytes", "authority.driver.sha256",
            "authority.source.bytes", "authority.source.sha256")
+SEALED_MUTATIONS = [
+    "rewrite-history", "change-claims", "widen-fields", "drop-site",
+    "consume-card",
+]
 
 
 class RebindError(RuntimeError):
@@ -107,6 +113,15 @@ def derive() -> dict[str, Any]:
     )
     O.value.cache_clear()
     current = O.value(); O.validate(current)
+    require(
+        current["authority"]["driver"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, O.DRIVER)
+        and current["authority"]["generator"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, O.GENERATOR)
+        and current["authority"]["source"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, O.SOURCE),
+        "oracle tool provenance escaped its sealing era",
+    )
     changed = tuple(changed_paths(historical, current))
     require(changed == ALLOWED,
             f"oracle rebind exceeds decoder source authority: {changed}")
@@ -126,7 +141,8 @@ def derive() -> dict[str, Any]:
             "historical_source": historical["authority"]["source"],
             "current_source": current["authority"]["source"],
             "current_projection_sha256": hashlib.sha256(
-                O.canonical(current)).hexdigest(), "rebind_driver": bind(DRIVER)},
+                O.canonical(current)).hexdigest(),
+            "rebind_driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "change": {"allowed_paths": list(ALLOWED),
             "actual_changed_paths": list(changed),
             "semantic_claims_changed": False,
@@ -152,6 +168,22 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
                 "site_count": 3, "timeout_frames": 64,
                 "card_consumed": 0},
             "oracle source rebind receipt red")
+    sealed_projection = O.value()
+    historical = load(O.RECEIPT)
+    historical.pop("mutations_rejected", None)
+    require(
+        value["authority"]["current_driver"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, O.DRIVER)
+        and value["authority"]["current_source"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, O.SOURCE)
+        and historical["authority"]["generator"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, O.GENERATOR)
+        and value["authority"]["current_projection_sha256"]
+            == hashlib.sha256(O.canonical(sealed_projection)).hexdigest()
+        and value["authority"]["rebind_driver"] == ERA.era_bind(
+            SEAL_ERA_COMMIT, DRIVER),
+        "oracle rebind tool provenance escaped its sealing era",
+    )
     if verify:
         require(value == derive(), "oracle source rebind drift")
 
@@ -166,6 +198,20 @@ def mutations(value: dict[str, Any]) -> list[str]:
             "host_equivalence.sites"),
         "drop-site": lambda x: x["claim_continuity"].update(site_count=2),
         "consume-card": lambda x: x["claim_continuity"].update(card_consumed=1),
+        "collapse-driver-era-to-live": lambda x: x["authority"].update(
+            current_driver=bind(O.DRIVER)),
+        "escape-source-sealing-era": lambda x: x["authority"].update(
+            current_source=deepcopy(x["authority"]["historical_source"])),
+        "collapse-generator-era-to-live": lambda x: x["authority"].update(
+            current_projection_sha256=hashlib.sha256(O.canonical({
+                **O.value(),
+                "authority": {
+                    **O.value()["authority"],
+                    "generator": bind(O.GENERATOR),
+                },
+            })).hexdigest()),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            rebind_driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -189,9 +235,10 @@ def record() -> None:
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
     validate(value, verify=True)
-    require(rejected == mutations(value),
+    require(rejected == SEALED_MUTATIONS and len(mutations(value)) == 9,
             "oracle source rebind mutation set drift")
-    print("source-authoritative oracle dated rebind: CHECK PASS history=unchanged")
+    print("source-authoritative oracle dated rebind: CHECK PASS "
+          "history=unchanged sealed=5 live-era=9")
 
 
 def main() -> int:

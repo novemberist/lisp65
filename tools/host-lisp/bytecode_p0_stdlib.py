@@ -1817,7 +1817,7 @@ def _validate_disk_lib_manifest_metadata(suite):
             raise StdlibCheckError("%s: %s must be a list of non-empty strings" % (name, key))
 
 
-def _validate_case_io(case, vm, path, lane):
+def _validate_case_io(case, vm, path, lane, ignored_output_codes=()):
     expected = case.get("expect_io_min")
     observed = {}
     if expected is not None:
@@ -1901,12 +1901,21 @@ def _validate_case_io(case, vm, path, lane):
                 "%s (%s): expect_output_codes must be byte list"
                 % (case["name"], path)
             )
-        if vm.output_chars != output:
+        ignored = set(ignored_output_codes)
+        if not all(type(value) is int and 0 <= value <= 255
+                   for value in ignored):
+            raise StdlibCheckError(
+                "%s (%s): ignored_output_codes must be a byte list"
+                % (case["name"], path)
+            )
+        observed_output = [value for value in vm.output_chars
+                           if value not in ignored]
+        if observed_output != output:
             raise AssertionError(
                 "%s (%s %s): output expected %r got %r"
-                % (case["name"], path, lane, output, vm.output_chars)
+                % (case["name"], path, lane, output, observed_output)
             )
-        observed["output_codes"] = list(vm.output_chars)
+        observed["output_codes"] = list(observed_output)
     if "expect_key_events_remaining" in case:
         remaining = case["expect_key_events_remaining"]
         if type(remaining) is not int or remaining < 0:
@@ -2010,6 +2019,7 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
                 "disk_mount_token_change_after_guard_before_write_ops"
             ),
             key_events=case.get("key_events"),
+            private_key_event_modes=suite.get("private_key_event_modes", False),
             memory_read_sequences=case.get("memory_read_sequences"),
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
@@ -2022,7 +2032,9 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
             if exc.status != expected_vm_error:
                 raise
             observation = {"name": case["name"], "error": exc.status}
-            io_witness = _validate_case_io(case, vm, path, "source")
+            io_witness = _validate_case_io(
+                case, vm, path, "source",
+                suite.get("ignored_output_codes", ()))
             if io_witness is not None:
                 observation["io_witness"] = io_witness
             observations.append(observation)
@@ -2035,7 +2047,8 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
                 "%s (%s): expected VM error %r"
                 % (case["name"], path, expected_vm_error)
             )
-        io_witness = _validate_case_io(case, vm, path, "source")
+        io_witness = _validate_case_io(
+            case, vm, path, "source", suite.get("ignored_output_codes", ()))
         total_steps += vm.steps
         got = case_heap.obj_to_text(result)
         if got != case["expect"]:
@@ -2770,6 +2783,7 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
                 "disk_mount_token_change_after_guard_before_write_ops"
             ),
             key_events=case.get("key_events"),
+            private_key_event_modes=suite.get("private_key_event_modes", False),
             memory_read_sequences=case.get("memory_read_sequences"),
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
@@ -2781,7 +2795,9 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             total_steps += vm.steps
             if exc.status != expected_vm_error:
                 raise
-            _validate_case_io(case, vm, path, "artifact")
+            _validate_case_io(
+                case, vm, path, "artifact",
+                suite.get("ignored_output_codes", ()))
             if verbose:
                 print("EMBED PASS %-22s steps=%d error=%s" %
                       (case["name"], vm.steps, exc.status))
@@ -2791,7 +2807,9 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
                 "%s (%s embed): expected VM error %r"
                 % (case["name"], path, expected_vm_error)
             )
-        _validate_case_io(case, vm, path, "artifact")
+        _validate_case_io(
+            case, vm, path, "artifact",
+            suite.get("ignored_output_codes", ()))
         total_steps += vm.steps
         got = case_heap.obj_to_text(result)
         if got != case["expect"]:

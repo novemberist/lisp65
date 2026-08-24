@@ -306,10 +306,12 @@ def generated_linker_check(contract: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def source_owner_check() -> dict[str, Any]:
+def source_owner_check(*, dma_text: str | None = None,
+                       runtime_text: str | None = None) -> dict[str, Any]:
     header = OWNER_HEADER.read_text(encoding="utf-8")
-    dma = DMA_SOURCE.read_text(encoding="utf-8")
-    runtime = RUNTIME_SOURCE.read_text(encoding="utf-8")
+    dma = DMA_SOURCE.read_text(encoding="utf-8") if dma_text is None else dma_text
+    runtime = (RUNTIME_SOURCE.read_text(encoding="utf-8")
+               if runtime_text is None else runtime_text)
     facade = FACADE_SOURCE.read_text(encoding="utf-8")
     assembly = ASSEMBLY_SOURCE.read_text(encoding="utf-8")
     for token in (
@@ -319,8 +321,11 @@ def source_owner_check() -> dict[str, Any]:
         ".lisp65_c2_convergence_zp.",
     ):
         require(token in header, f"owner macro absent: {token}")
-    require(dma.count("LISP65_C2_MAPPED_FAR_FN") == 3
-            and runtime.count("LISP65_C2_MAPPED_FAR_FN") == 3,
+    far_members = {
+        "dma": dma.count("LISP65_C2_MAPPED_FAR_FN"),
+        "runtime": runtime.count("LISP65_C2_MAPPED_FAR_FN"),
+    }
+    require(all(count > 0 for count in far_members.values()),
             "far implementation escaped its named owner")
     require(dma.count("LISP65_C2_CONVERGENCE_STATE") == 2
             and runtime.count("LISP65_C2_CONVERGENCE_STATE") == 2
@@ -339,9 +344,32 @@ def source_owner_check() -> dict[str, Any]:
             and "LISP65_C2_ASM_CONVERGENCE" in
                 LINKER_SOURCE.read_text(encoding="utf-8"),
             "assembly implementation is not the selected product owner")
-    return {"far_annotations": 6, "state_owners": 4,
+    return {"far_annotations": sum(far_members.values()),
+            "far_annotations_by_source": far_members, "state_owners": 4,
             "zp_owners": 2, "service_entries": 2,
             "map_unmap_pairs": 2}
+
+
+def source_owner_mutations() -> dict[str, str]:
+    dma = DMA_SOURCE.read_text(encoding="utf-8")
+    runtime = RUNTIME_SOURCE.read_text(encoding="utf-8")
+    base = source_owner_check(dma_text=dma, runtime_text=runtime)
+    additive = source_owner_check(
+        dma_text=dma,
+        runtime_text=runtime +
+            "\nLISP65_C2_MAPPED_FAR_FN void candidate_addition(void) {}\n")
+    require(additive["far_annotations"] == base["far_annotations"] + 1,
+            "additive far owner was rejected by a cardinality pin")
+    rejected = False
+    try:
+        source_owner_check(
+            dma_text=dma.replace("LISP65_C2_MAPPED_FAR_FN", ""),
+            runtime_text=runtime)
+    except GateError:
+        rejected = True
+    require(rejected, "ownerless far source mutation survived")
+    return {"additive-candidate-member": "accepted-and-count-derived",
+            "ownerless-source": "rejected"}
 
 
 def validate_facts(facts: dict[str, Any]) -> None:
@@ -421,6 +449,7 @@ def build_receipt() -> dict[str, Any]:
             "Halt-1 pricing authority drift")
     generated = generated_linker_check(contract)
     owners = source_owner_check()
+    owners["mutations"] = source_owner_mutations()
     far = contract["mapped_far_service"]
     geometry = contract["geometry"]
     owner_sections = contract["phase_c_owners"]["sections"]

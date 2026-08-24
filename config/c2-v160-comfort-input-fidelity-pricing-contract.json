@@ -1,0 +1,49 @@
+{
+  "format": "lisp65-c2-v160-comfort-input-fidelity-pricing-v1",
+  "recorded_on": "2026-08-18",
+  "status": "owner-commissioned-host-only-pricing",
+  "authority_commit": "89369d50",
+  "scope": "price lossless Comfort input capture against a fully allocation-free path; do not change product sources, build a product, or contact hardware",
+  "loss_model": {
+    "hardware_queue_events": 5,
+    "worst_collection_frames": 89,
+    "physical_input_contract_events_per_frame": 1,
+    "required_capture_events": 94,
+    "reason": "five already-pending events plus one physical event per 50 Hz frame throughout the accepted worst whole-collection pause"
+  },
+  "candidate_geometry": {
+    "ordinary_text_free_bytes": 11,
+    "c2_window_gap_bytes": 606,
+    "fixed_state_section_bytes": 16,
+    "fixed_state_first_unowned_address": "0xff8c",
+    "native_repl_buffer_address": "0xbc89",
+    "native_repl_buffer_bytes": 192,
+    "canonical_activation_bytes_including_nul": 7
+  },
+  "capture_shape": {
+    "ring_base": "0xbc90",
+    "ring_storage_bytes": 112,
+    "ring_index_values": 112,
+    "usable_events": 111,
+    "head_address": "0xff8c",
+    "tail_address": "0xff8d",
+    "disabled_tail": 255,
+    "event_representation": "one raw PETSCII code byte; modifiers are intentionally absent because the Comfort editor consumes only code",
+    "producer": "owned raster IRQ drains every available ordinary hardware event before returning",
+    "consumer": "Comfort-only raw scalar poll through existing peek/poke primitives",
+    "lifetime": "enabled only while Comfort is collecting input; disabled before evaluation, on normal exit, and in native error recovery"
+  },
+  "walls": {
+    "device_contacts": 0,
+    "product_links": 0,
+    "product_source_changes": 0,
+    "do_not_lower_input_rate": true,
+    "do_not_shorten_collection_envelope": true,
+    "public_key_event_abi_unchanged": true,
+    "native_repl_fallback_unchanged": true,
+    "wysiwyg_a0_to_space_preserved": true,
+    "run_stop_abort_preserved": true,
+    "resident_cost_requires_owner_decision": true
+  },
+  "acceptance": "the sixth event and the entire one-event-per-frame burst survive an 89-frame forced collection; no option passes merely by reducing heap cells"
+}

@@ -12,24 +12,6 @@
   ;; color but cannot express pad-to-EOL in the current screen-write-string ABI.
   (ide-render-line-at text y columns 1))
 
-;; Net parenthesis depth of ONE line: ( and ) count only outside strings and
-;; comments; a comment ends the scan. d may become negative for lines that
-;; begin with closing parentheses. st: 0 normal, 2 string.
-(defun %ide-line-net-depth (codes st d)
-  (if codes
-      ((lambda (c)
-         (if (= st 2)
-             (%ide-line-net-depth (cdr codes) (if (= c 34) 0 2) d)
-             (if (= c 59)
-                 d
-                 (if (= c 34)
-                     (%ide-line-net-depth (cdr codes) 2 d)
-                     (%ide-line-net-depth (cdr codes) 0
-                                          (if (= c 40) (+ d 1)
-                                              (if (= c 41) (- d 1) d)))))))
-       (car codes))
-      d))
-
 ;; Parenthesis depth BEFORE line n is the sum of the net depths of lines
 ;; 0..n-1, never negative.
 (defun %ide-depth-above (lines n d)

@@ -29,6 +29,7 @@ if str(HOST) not in sys.path:
 import c2_lite_media_product as MEDIA  # noqa: E402
 import c2_link95_world_bound_media as PAIR  # noqa: E402
 import c2_v20_crc_carveout_media as PRODUCT  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 import c2_v20_crc_carveout_media_liveness as PREVIOUS  # noqa: E402
 from elf_truth import ElfTruth, ElfTruthError  # noqa: E402
 
@@ -67,6 +68,10 @@ SERVICE_SECTION = ".lisp65_c2_mapped_far_service"
 ROLE = "c2-bank2-static-code-plane"
 VISIBLE_NAME = b"CODE.BIN"
 OPT_IN = PREVIOUS.OPT_IN
+
+# The far-payload session handoff is sealed in this receipt; the release
+# contract it names is read in the world that sealed it (evidence_era).
+SEAL_ERA_COMMIT = "c3c5ad77"
 
 
 class DeliveryError(RuntimeError):
@@ -436,7 +441,8 @@ def session_value() -> dict[str, Any]:
     value["authority"] = {
         "product_card": bind(PRODUCT.CARD.RECEIPT),
         "media_closure": RECEIPT.relative_to(ROOT).as_posix(),
-        "release_contract": bind(PRODUCT.RELEASE_CONTRACT),
+        "release_contract": ERA.era_bind(
+            SEAL_ERA_COMMIT, PRODUCT.RELEASE_CONTRACT),
         "far_return_attribution": bind(ATTRIBUTION),
     }
     value["recontact_authorized"] = True
@@ -491,7 +497,7 @@ def derive(*, configured: bool = False) -> dict[str, Any]:
             "predecessor_media": bind(PREVIOUS.RECEIPT),
             "frozen_linked_ELF": bind(ELF),
             "frozen_product_manifest": bind(BASE_MANIFEST),
-            "producer": bind(DRIVER),
+            "producer": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
         },
         "predecessor_retirement": {
             "current_authority": False,

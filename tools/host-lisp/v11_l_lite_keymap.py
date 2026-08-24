@@ -15,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "config/v11-l-lite-keymap.json"
 LISP_OUT = ROOT / "lib/ide-keymap-generated.lisp"
+READ_LINE_OUT = ROOT / "lib/stdlib-read-line.lisp"
 HOST_CASES_OUT = ROOT / "lib/tests/ide-keymap-eval-cases.generated.json"
 P0_CORE_CASES_OUT = ROOT / "tests/bytecode/libs/p0-ide-keymap-cases.generated.json"
 P0_EXTRA_CASES_OUT = ROOT / "tests/bytecode/libs/p0-ide-keymap-extra-cases.generated.json"
@@ -36,6 +37,9 @@ ROUTE_IDS = {
     "motion": 12,
     "exit": 13,
 }
+
+REPL_BLOCK_BEGIN = ";; BEGIN GENERATED REPL LINE KEYMAP"
+REPL_BLOCK_END = ";; END GENERATED REPL LINE KEYMAP"
 
 
 class KeymapError(RuntimeError):
@@ -65,6 +69,7 @@ def validate(value: dict[str, Any]) -> None:
     mx = value.get("m_x_commands")
     global_bindings = value.get("global_hardware_bindings")
     behavior_cases = value.get("behavior_hardware_cases")
+    repl = value.get("repl_line_projection")
     require(isinstance(model, dict), "event_model missing")
     require(isinstance(commands, list) and commands, "commands missing")
     require(isinstance(bindings, list) and bindings, "bindings missing")
@@ -75,6 +80,7 @@ def validate(value: dict[str, Any]) -> None:
             "global hardware bindings missing")
     require(isinstance(behavior_cases, list) and behavior_cases,
             "behavior hardware cases missing")
+    require(isinstance(repl, dict), "REPL line projection missing")
 
     command_ids: set[int] = set()
     command_names: set[str] = set()
@@ -133,6 +139,27 @@ def validate(value: dict[str, Any]) -> None:
                 f"required binding drift: {sequence} -> {command}")
     require((0,) not in actual, "unreachable C-Space binding returned")
     require((3,) not in actual, "RUN/STOP must not be an editor binding")
+
+    repl_ids = repl.get("binding_ids")
+    repl_aliases = repl.get("legacy_aliases")
+    require(isinstance(repl_ids, list) and repl_ids == [
+        "return", "delete-backward", "cursor-left", "cursor-right",
+        "cursor-up", "cursor-down", "control-d", "control-f", "control-b",
+        "control-a", "control-e",
+    ], "REPL line binding projection drift")
+    binding_by_id = {row["id"]: row for row in bindings}
+    require(all(binding_id in binding_by_id for binding_id in repl_ids),
+            "REPL line projection names an absent IDE binding")
+    require(all(len(binding_by_id[binding_id]["codes"]) == 1
+                for binding_id in repl_ids),
+            "REPL line projection contains a prefix binding")
+    require(repl_aliases == [{"code": 127, "command": 1101}],
+            "REPL legacy DEL alias drift")
+    repl_codes = [binding_by_id[binding_id]["codes"][0]
+                  for binding_id in repl_ids]
+    require(len(repl_codes) == len(set(repl_codes))
+            and 127 not in repl_codes,
+            "REPL line projection has duplicate codes")
 
     masks = model.get("modifier_masks")
     require(masks == {"control": 4, "meta": 16}, "modifier mask drift")
@@ -309,6 +336,44 @@ def render_lisp(value: dict[str, Any]) -> str:
         lines.append(f"        ((string= name {json.dumps(row['name'])}) {row['command']})")
     lines.extend(("        (t nil)))", ""))
     return "\n".join(lines)
+
+
+def repl_projection(value: dict[str, Any]) -> list[dict[str, int]]:
+    by_id = {row["id"]: row for row in value["bindings"]}
+    rows = [
+        {"code": by_id[binding_id]["codes"][0],
+         "command": by_id[binding_id]["command"]}
+        for binding_id in value["repl_line_projection"]["binding_ids"]
+    ]
+    rows.extend(value["repl_line_projection"]["legacy_aliases"])
+    return rows
+
+
+def render_repl_expression(value: dict[str, Any]) -> str:
+    rows = repl_projection(value)
+    pairs = " ".join(
+        f"({row['code']} . {row['command']})" for row in rows)
+    lines = [
+        "          ((lambda (binding) (if binding (cdr binding) 0))",
+        "           (assoc code",
+        f"                  (quote ({pairs}))))",
+    ]
+    return "\n".join(lines)
+
+
+def render_read_line(value: dict[str, Any]) -> str:
+    try:
+        source = READ_LINE_OUT.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        raise KeymapError(f"cannot read REPL line editor: {exc}") from exc
+    require(source.count(REPL_BLOCK_BEGIN) == 1
+            and source.count(REPL_BLOCK_END) == 1,
+            "REPL generated keymap block boundary drift")
+    before, tail = source.split(REPL_BLOCK_BEGIN, 1)
+    _old, after = tail.split(REPL_BLOCK_END, 1)
+    return (before + REPL_BLOCK_BEGIN + "\n"
+            + render_repl_expression(value) + "\n"
+            + REPL_BLOCK_END + after)
 
 
 def sequence_expr(codes: list[int]) -> str:
@@ -518,6 +583,7 @@ def outputs(value: dict[str, Any]) -> dict[Path, str]:
     validate(value)
     return {
         LISP_OUT: render_lisp(value),
+        READ_LINE_OUT: render_read_line(value),
         HOST_CASES_OUT: render_host_cases(value),
         P0_CORE_CASES_OUT: render_p0_cases(value, extra=False),
         P0_EXTRA_CASES_OUT: render_p0_cases(value, extra=True),
@@ -539,7 +605,8 @@ def check_outputs(value: dict[str, Any]) -> None:
         require(path.read_text(encoding="utf-8") == expected,
                 f"generated output drift: {path.relative_to(ROOT)}")
     print(f"v11-l-lite-keymap: PASS bindings={len(value['bindings'])} "
-          f"mx={len(value['m_x_commands'])} outputs=6")
+          f"repl={len(repl_projection(value))} "
+          f"mx={len(value['m_x_commands'])} outputs=7")
 
 
 def selftest(value: dict[str, Any]) -> None:
@@ -586,12 +653,19 @@ def selftest(value: dict[str, Any]) -> None:
             and "(member (quote control) modifiers)" in partial
             and "(member (quote meta) modifiers)" in partial,
             "modifier-aware product consumer was not generated")
+    repl = render_repl_expression(value)
+    require("(157 . 1106)" in repl
+            and "(29 . 1107)" in repl
+            and "(145 . 1108)" in repl
+            and "(17 . 1003)" in repl
+            and "(127 . 1101)" in repl,
+            "REPL line projection was not generated from the IDE bindings")
     with tempfile.TemporaryDirectory(prefix="v11-l-lite-keymap-") as raw:
         tmp = Path(raw) / "contract.json"
         tmp.write_text(json.dumps(value), encoding="utf-8")
         validate(load_contract(tmp))
     print("v11-l-lite-keymap: SELFTEST PASS mutations=4 exact-mx=true "
-          "typed-modifiers=true")
+          "typed-modifiers=true repl-projection=true")
 
 
 def main(argv: list[str]) -> int:

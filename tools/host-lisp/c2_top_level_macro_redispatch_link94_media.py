@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 from copy import deepcopy
 import hashlib
 import json
@@ -52,6 +53,7 @@ CROSSING_RECEIPT = ROOT / (
     "c2.3-live-repl-ftp-crossing-gate-receipt.json"
 )
 GATES = ROOT / "mk/gates.mk"
+DRIVER = Path(__file__).resolve()
 FORMAT = "lisp65-c2.3-link94-media-closure-v1"
 EXPECTED_PRODUCT_D81 = "f47f8e49cd1378cc54dc6f62defc4dca6fa37ae69ce425e52109456f7be515ff"
 EXPECTED_WORK_D81 = "bf887cd4f8b14b2e808bccfc223e64bfb1223a61e16e11169be0d34e669c63e3"
@@ -294,7 +296,21 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
         "Link-94 media closure claim drift",
     )
     if verify:
-        require(value == derive(), "Link-94 media closure receipt is stale")
+        # This receipt witnesses the Link-94 world.  Re-running configure()
+        # would restore historical IDE/buffer snapshots into shared live build
+        # paths, making the next full check depend on target order.  Verify the
+        # sealed outputs directly and never materialize historical inputs.
+        rows = [
+            value["authority"]["live_REPL_FTP_crossing_gate"],
+            value["authority"]["product_card"],
+            value["authority"]["product_manifest"],
+            value["shared_system"]["manifest"],
+            value["shared_system"]["product_D81"],
+            value["shared_system"]["work_D81"],
+            *value["trace_library"]["artifacts"].values(),
+        ]
+        require(all(bind(ROOT / row["path"]) == row for row in rows),
+                "Link-94 sealed media artifact drift")
 
 
 def gate_wiring() -> None:
@@ -306,6 +322,41 @@ def gate_wiring() -> None:
         "c2_top_level_macro_redispatch_link94_media.py check",
         "check-source: c2-link94-media-selftest",
     )), "Link-94 media gate wiring absent")
+
+
+def sealed_check_source_gate(source_override: str | None = None) -> None:
+    source = DRIVER.read_text(encoding="utf-8") if source_override is None \
+        else source_override
+    tree = ast.parse(source)
+    validate_node = next((node for node in tree.body
+                          if isinstance(node, ast.FunctionDef)
+                          and node.name == "validate"), None)
+    require(validate_node is not None, "Link-94 media validator absent")
+    calls = [ast.unparse(node.func) for node in ast.walk(validate_node)
+             if isinstance(node, ast.Call)]
+    require("derive" not in calls and "configure" not in calls
+            and "bind" in calls,
+            "historical media check can materialize living build inputs")
+
+
+def sealed_check_source_mutations() -> list[str]:
+    source = DRIVER.read_text(encoding="utf-8")
+    anchor = 'bind(ROOT / row["path"])'
+    # One executable binding plus this mutation literal.
+    require(source.count(anchor) == 2,
+            "sealed media source mutation anchor drift")
+    cases = {
+        "restore-live-derive": source.replace(anchor, "derive()", 1),
+    }
+    rejected: list[str] = []
+    for name, candidate in cases.items():
+        try:
+            sealed_check_source_gate(candidate)
+        except ClosureError:
+            rejected.append(name)
+    require(rejected == list(cases),
+            "sealed media source mutation survived")
+    return rejected
 
 
 def rejected_mutations(base: dict[str, Any]) -> list[str]:
@@ -376,9 +427,11 @@ def main() -> int:
         return 0
     value = load(RECEIPT)
     gate_wiring()
+    sealed_check_source_gate()
+    source_mutations = sealed_check_source_mutations()
     validate(value, verify=(action == "check"))
     count = len(rejected_mutations(value))
-    print(f"Link-94 media {action}: PASS mutations={count}")
+    print(f"Link-94 media {action}: PASS mutations={count}+{len(source_mutations)}")
     return 0
 
 

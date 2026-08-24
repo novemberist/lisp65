@@ -149,6 +149,19 @@ def git_bind(commit: str, path: Path) -> dict[str, Any]:
             "bytes": len(completed.stdout), "sha256": sha(completed.stdout)}
 
 
+def historical_blob(path: Path) -> bytes:
+    name = path.relative_to(ROOT).as_posix()
+    return subprocess.run(
+        ["git", "show", f"{AUTHORIZATION_COMMIT}:{name}"], cwd=ROOT,
+        check=True, stdout=subprocess.PIPE).stdout
+
+
+def historical_bind(path: Path) -> dict[str, Any]:
+    raw = historical_blob(path)
+    return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
+            "sha256": sha(raw)}
+
+
 def alloc_bytes(truth: ElfTruth, address: int, count: int,
                 *, section: str | None = None) -> bytes:
     owners = [row for row in truth.sections_at_vma(address)
@@ -263,7 +276,7 @@ def device_facts() -> dict[str, Any]:
             "captured mapping tuple drift")
     require(not (0x6000 <= 0x3185 < 0x8000),
             "stacked opcode site unexpectedly lies in mapped block 3")
-    window = WINDOW.read_text(encoding="utf-8")
+    window = historical_blob(WINDOW).decode("utf-8")
     handler = window.split("c2_kernal_irq_handler:", 1)[1].split(
         "c2_kernal_output_cell:", 1)[0]
     require("\tmap" not in handler and "\teom" not in handler,
@@ -348,7 +361,7 @@ def derive() -> dict[str, Any]:
             "mapped_far_contract": bind(MAP_CONTRACT),
             "mapped_far_facade_source": bind(FAR_FACADE),
             "mapped_far_body_source": bind(FAR_BODY),
-            "IRQ_window_source": bind(WINDOW),
+            "IRQ_window_source": historical_bind(WINDOW),
             "candidate_ELF": bind(ELF),
             "result_driver": bind(DRIVER),
         },

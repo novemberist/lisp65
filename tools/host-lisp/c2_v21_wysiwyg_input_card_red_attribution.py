@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 from typing import Any, Callable
 
@@ -27,6 +28,9 @@ RECEIPT = ARCH / "c2.3-v2.1-wysiwyg-input-card-red-attribution-receipt.json"
 FORMAT = "lisp65-c2.3-v2.1-wysiwyg-input-card-red-attribution-v1"
 STATUS = "FINAL-RED-ATTRIBUTED: WYSIWYG COSTS 17 BYTES; ORDINARY-TEXT DEFICIT 13"
 RECORDED_ON = "2026-08-17"
+HISTORICAL_EVIDENCE_COMMIT = (
+    "9c2e5b31e064651fe42696f6c0a3456f6bacf808"
+)
 
 
 class AttributionError(RuntimeError):
@@ -56,6 +60,30 @@ def bind(path: Path) -> dict[str, Any]:
             "sha256": hashlib.sha256(raw).hexdigest()}
 
 
+def historical_bytes(path: Path) -> bytes:
+    name = path.relative_to(ROOT).as_posix()
+    process = subprocess.run(
+        ["git", "show", f"{HISTORICAL_EVIDENCE_COMMIT}:{name}"], cwd=ROOT,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    require(process.returncode == 0,
+            process.stderr.decode(errors="replace").strip()
+            or f"historical source absent: {name}")
+    return process.stdout
+
+
+def historical_bind(path: Path) -> dict[str, Any]:
+    raw = historical_bytes(path)
+    return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest()}
+
+
+def historical_load(path: Path) -> dict[str, Any]:
+    value = json.loads(historical_bytes(path).decode())
+    require(isinstance(value, dict), f"historical JSON object required: {path}")
+    return value
+
+
 def map_values(path: Path) -> dict[str, int]:
     text = path.read_text(encoding="utf-8")
     repl = re.search(
@@ -76,7 +104,11 @@ def map_values(path: Path) -> dict[str, int]:
 
 
 def derive() -> dict[str, Any]:
-    red, fix = load(RED), load(FIX)
+    # This attribution is immutable evidence about the Link-115 world.  Its
+    # tracked inputs come from the commit that recorded it; a later authorized
+    # WYSIWYG successor must not turn this historical receipt into a predicate
+    # over the living product.
+    red, fix = historical_load(RED), historical_load(FIX)
     prior, candidate = map_values(PRIOR_MAP), map_values(CANDIDATE_MAP)
     require(red["status"] == "FINAL RED: WYSIWYG card returns to owner"
             and red["retry_authorized"] is False
@@ -132,9 +164,11 @@ def derive() -> dict[str, Any]:
             "alternative": "park the WYSIWYG contract/card and keep D2 closed",
             "not_authorized": ["retry", "Completion", "media", "device", "D2"],
         },
-        "authority": {"Final_Red": bind(RED), "host_fix": bind(FIX),
+        "authority": {"Final_Red": historical_bind(RED),
+            "host_fix": historical_bind(FIX),
             "candidate_seed_map": bind(CANDIDATE_MAP),
-            "prior_green_map": bind(PRIOR_MAP), "checker": bind(Path(__file__))},
+            "prior_green_map": bind(PRIOR_MAP),
+            "checker": historical_bind(Path(__file__))},
         "claim_limit": (
             "Read-only Final-Red attribution. No source fix, WPLTO retry, "
             "Completion, media, device contact, or D2 authorization."),

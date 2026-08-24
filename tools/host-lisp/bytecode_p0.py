@@ -762,6 +762,7 @@ class P0VM:
         disk_mount_token_change_before_write_ops=None,
         disk_mount_token_change_after_guard_before_write_ops=None,
         key_events=None,
+        private_key_event_modes=False,
         memory_read_sequences=None,
         abi_profile="dialect-v1",
         abi_ledger=None,
@@ -797,6 +798,10 @@ class P0VM:
         self.memory = {
             0xD68B + offset: value for offset, value in enumerate(token)
         }
+        # Direct library-unit cases enter the Comfort loop without running its
+        # public arming wrapper, so the reference VM starts this test seam
+        # empty (head == tail == 0).  Product reset truth ($FF disabled) is
+        # proved from the linked fixed-state bytes by the implementation gate.
         self.disk_mount_token_change_before_write_ops = {}
         self.disk_mount_token_change_after_guard_before_write_ops = {}
         self.disk_mount_token_change_before_read_ops = {}
@@ -827,11 +832,20 @@ class P0VM:
         self.compile_source_forms = []
         self.compile_source_index = 0
         self.key_events = []
+        self.private_key_event_modes = bool(private_key_event_modes)
         for event in key_events or ():
             if type(event) is int:
                 event = {"code": event, "modifiers": []}
+            if isinstance(event, dict) and set(event) == {"empty_polls"}:
+                count = event["empty_polls"]
+                if type(count) is not int or count < 1:
+                    raise ValueError("empty_polls must be a positive integer")
+                self.key_events.append((None, count))
+                continue
             if not isinstance(event, dict) or set(event) != {"code", "modifiers"}:
-                raise ValueError("key events must be integers or code/modifiers objects")
+                raise ValueError(
+                    "key events must be integers, code/modifiers objects or empty_polls"
+                )
             code = event["code"]
             modifiers = event["modifiers"]
             if (
@@ -868,6 +882,41 @@ class P0VM:
         self.steps = 0
 
     @staticmethod
+    def _normalize_raw_petscii(code):
+        if 0x41 <= code <= 0x5A:
+            return code + 0x20
+        if 0xC1 <= code <= 0xDA:
+            return code - 0x80
+        if code == 0xA0:
+            return 0x20
+        return code
+
+    def _private_key_event(self, mode):
+        if not self.key_events:
+            return NIL
+        code, _modifiers = self.key_events[0]
+        if code is None:
+            self._consume_empty_poll()
+            return NIL
+        code = self._normalize_raw_petscii(code)
+        if mode == 3 and not 32 <= code <= 126:
+            return NIL
+        self.key_events.pop(0)
+        self.io_counters["key_event"] += 1
+        return mkfix(code)
+
+    def _consume_empty_poll(self):
+        """Consume one explicit no-event interval from a boundary fixture."""
+        code, polls = self.key_events[0]
+        if code is not None:
+            return False
+        if polls == 1:
+            self.key_events.pop(0)
+        else:
+            self.key_events[0] = (None, polls - 1)
+        return True
+
+    @staticmethod
     def _fault_ops(values, label):
         result = set()
         for value in values or ():
@@ -890,6 +939,7 @@ class P0VM:
             "math_input_write": 0,
             "math_refresh": 0,
             "key_event": 0,
+            "raw_input_capture": 0,
             "write_char": 0,
             "screen_put_char": 0,
             "memory_read": 0,
@@ -900,6 +950,36 @@ class P0VM:
         self.disk_write_trace = []
         self.memory_read_trace = []
         self.memory_write_trace = []
+
+    def _c2_raw_capture_before_peek(self, address):
+        """Advance one product-shaped raw event at the consumer boundary."""
+        if self.memory.get(0xFF8D, 0) == 0xFF or not self.key_events:
+            return
+        code, _modifiers = self.key_events[0]
+        if code is None:
+            if address == 0xFF8C:
+                self._consume_empty_poll()
+            return
+        if code == 3:
+            # RUN/STOP is matrix authority, never a raw-ring payload.  Expose
+            # the same pending edge that the target IRQ samples after drain.
+            if address == 0xFF8A:
+                self.memory[0xFF8A] = 1
+            return
+        if address != 0xFF8C:
+            return
+        head = self.memory.get(0xFF8C, 0)
+        tail = self.memory.get(0xFF8D, 0)
+        next_head = 0 if head == 111 else head + 1
+        if next_head == tail:
+            return
+        # Producer commit order: payload, hardware acknowledgement (modeled by
+        # consuming the fixture), then head.  Modifiers are intentionally not
+        # represented because the Comfort editor consumes only the raw code.
+        self.memory[0xBC90 + head] = code
+        self.key_events.pop(0)
+        self.memory[0xFF8C] = next_head
+        self.io_counters["raw_input_capture"] += 1
 
     def _math_u32(self, address):
         return sum(
@@ -1076,6 +1156,15 @@ class P0VM:
         if self.trace is not None and hasattr(self.trace, "instruction"):
             self.trace.instruction(name, code, pc, spec, operand)
 
+    def _trace_instruction_state(self, name, code, pc, operand_depth,
+                                 frame_slots):
+        """Expose pre-instruction VM state to opt-in structural witnesses."""
+        if self.trace is not None and hasattr(self.trace, "instruction_state"):
+            self.trace.instruction_state(
+                name, code, pc, operand_depth=operand_depth,
+                frame_slots=frame_slots,
+            )
+
     def _trace_call(self, kind, target, argc, pc=None, resolved=False):
         if self.trace is not None and hasattr(self.trace, "call"):
             caller = self._trace_stack[-1] if self._trace_stack else "<top>"
@@ -1176,6 +1265,8 @@ class P0VM:
                     code.payload, pc,
                     profile_id=self.abi_profile, abi_ledger=self.abi_ledger,
                 )
+                self._trace_instruction_state(
+                    name, code, op_pc, len(stack), len(frame))
                 self._trace_instruction(name, code, op_pc, spec, operand)
                 op = spec.code
 
@@ -1594,15 +1685,24 @@ class P0VM:
             if len(args) > 1:
                 raise VMError("ArityError", "key-event expects zero or one argument")
             mode = 0 if not args else fixval(args[0]) if is_fix(args[0]) else -1
+            if mode in (2, 3) and self.private_key_event_modes:
+                return self._private_key_event(mode)
             if mode not in (0, 1):
                 raise VMError("TypeError", "key-event mode must be 0 or 1")
             if not self.key_events:
                 if mode == 0:
                     return NIL
                 raise VMError("InputExhausted", "blocking key-event fixture exhausted")
+            while self.key_events and self.key_events[0][0] is None:
+                self._consume_empty_poll()
+                if mode == 0:
+                    return NIL
+            if not self.key_events:
+                raise VMError("InputExhausted", "blocking key-event fixture exhausted")
             code, modifiers = self.key_events.pop(0)
             self.io_counters["key_event"] += 1
             if code == 3:
+                self.memory[0xFF8A] = 0
                 raise VMError("Stopped", "RUN/STOP")
             modifier_list = self._list_from_objs(
                 [self.heap.intern(item) for item in modifiers]
@@ -1966,15 +2066,24 @@ class P0VM:
             if argc > 1:
                 raise VMError("ArityError", "key-event expects zero or one argument")
             mode = 0 if argc == 0 else fixval(args[0]) if is_fix(args[0]) else -1
+            if mode in (2, 3) and self.private_key_event_modes:
+                return self._private_key_event(mode)
             if mode not in (0, 1):
                 raise VMError("TypeError", "key-event mode must be 0 or 1")
             if not self.key_events:
                 if mode == 0:
                     return NIL
                 raise VMError("InputExhausted", "blocking key-event fixture exhausted")
+            while self.key_events and self.key_events[0][0] is None:
+                self._consume_empty_poll()
+                if mode == 0:
+                    return NIL
+            if not self.key_events:
+                raise VMError("InputExhausted", "blocking key-event fixture exhausted")
             code, modifiers = self.key_events.pop(0)
             self.io_counters["key_event"] += 1
             if code == 3:
+                self.memory[0xFF8A] = 0
                 raise VMError("Stopped", "RUN/STOP")
             modifier_list = self._list_from_objs(
                 [self.heap.intern(item) for item in modifiers]
@@ -1991,6 +2100,7 @@ class P0VM:
             if any(value < 0 or value > 255 for value in values):
                 raise VMError("TypeError", "peek arguments must be in 0..255")
             address = (values[0] << 8) | values[1]
+            self._c2_raw_capture_before_peek(address)
             self.io_counters["memory_read"] += 1
             self.memory_read_trace.append(address)
             sequence = self.memory_read_sequences.get(address)

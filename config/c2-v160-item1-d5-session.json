@@ -1,0 +1,92 @@
+{
+  "format": "lisp65-c2-v160-item1-d5-session-v1",
+  "recorded_on": "2026-08-25",
+  "status": "prepared-not-run",
+  "claim_scope": {
+    "accepts": [
+      "v1.6-shipped-configuration-user-headroom",
+      "v1.6-D5-smoke"
+    ],
+    "excludes": [
+      "repl-comfort",
+      "v1.6-item-2",
+      "v1.6-items-3-4",
+      "candidate-seal",
+      "clean-build-qualification",
+      "publication"
+    ]
+  },
+  "configuration": {
+    "loaded_library_roles": [
+      "v16core"
+    ],
+    "absent_library_roles": [
+      "repl-comfort"
+    ],
+    "library_rows": 1,
+    "measurement_world": "accepted v1.6 item-1-only product/library pair"
+  },
+  "choreography": {
+    "fresh_product_boot": true,
+    "library_mounted_physically_through_freezer": true,
+    "owner_physical_keyboard_only": true,
+    "one_form_per_submission": true,
+    "observation_during_active_form": 0,
+    "post_boot_FTP": 0,
+    "final_stops": 1,
+    "physical_bank0_captures": 1
+  },
+  "rows": [
+    {
+      "id": "d5-setup-published-call",
+      "form": "(defun v16-perf-probe (x) (+ x 1))",
+      "oracle": {
+        "kind": "exact",
+        "value": "v16-perf-probe"
+      }
+    },
+    {
+      "id": "d5-list-read",
+      "form": "(time (car (cdr (list 1 2))))",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "2"
+      }
+    },
+    {
+      "id": "d5-list-write",
+      "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "(9 2)"
+      }
+    },
+    {
+      "id": "d5-string-op",
+      "form": "(time (string-ref \"abc\" 1))",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "98"
+      }
+    },
+    {
+      "id": "d5-published-call",
+      "form": "(time (v16-perf-probe 41))",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "42"
+      }
+    }
+  ],
+  "headroom_postcondition": {
+    "contract": "config/release-user-headroom-contract.json",
+    "counter_addresses": "accepted candidate ELF symbols nsym and npool",
+    "counter_view": "one final physical Bank-0 stopped-state capture",
+    "observation_point": "after all five D5 rows in the same fresh session",
+    "public_repl_introspection": 0
+  }
+}

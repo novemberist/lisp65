@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
 import bytecode_p0_stdlib as S  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/comfort-track-contract.json"
@@ -25,6 +26,7 @@ RECEIPT = (ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
            / "comfort-track-host-first-receipt.json")
 PUBLIC_SURFACE = ROOT / "config/dialect-v2-surface.json"
 RECORDED_ON = "2026-08-06"
+SEALED_COMMIT = "361c95df369f332224a5d8ac71a6b6de5465370a"
 
 
 class ComfortError(RuntimeError):
@@ -405,19 +407,26 @@ def build_receipt() -> dict[str, Any]:
              lambda: require(False, "comfort Bank-2 freight exceeds its host-only budget"),
              mutations)
 
+    authority_paths = {
+        "contract": CONTRACT,
+        "suite": suite_path,
+        "generated_who_calls": generated_path,
+        "public_surface": PUBLIC_SURFACE,
+        "treewalk_function_semantics": ROOT / "src/eval.c",
+        "function_cell_runtime": ROOT / "src/symbol.c",
+        "p0_compiler": ROOT / "tools/host-lisp/bytecode_p0_compiler.py",
+        "p0_stdlib_runner": ROOT / "tools/host-lisp/bytecode_p0_stdlib.py",
+        "budget": ROOT / contract["budget"]["bank2_headroom_authority"],
+    }
+    # This receipt witnesses its 2026-08-06 world.  The live files above are
+    # still executed and audited; only their receipt provenance is historical.
     authorities = {
-        "contract": bind(CONTRACT),
-        "suite": bind(suite_path),
-        "generated_who_calls": bind(generated_path),
-        "public_surface": bind(PUBLIC_SURFACE),
-        "treewalk_function_semantics": bind(ROOT / "src/eval.c"),
-        "function_cell_runtime": bind(ROOT / "src/symbol.c"),
-        "p0_compiler": bind(ROOT / "tools/host-lisp/bytecode_p0_compiler.py"),
-        "p0_stdlib_runner": bind(ROOT / "tools/host-lisp/bytecode_p0_stdlib.py"),
-        "budget": bind(ROOT / contract["budget"]["bank2_headroom_authority"]),
+        name: ERA.era_bind(SEALED_COMMIT, path)
+        for name, path in authority_paths.items()
     }
     for path in contract["sources"]:
-        authorities["source:" + Path(path).name] = bind(ROOT / path)
+        authorities["source:" + Path(path).name] = ERA.era_bind(
+            SEALED_COMMIT, ROOT / path)
     return {
         "format": "lisp65-comfort-track-host-first-receipt-v1",
         "recorded_on": RECORDED_ON,
@@ -458,14 +467,23 @@ def selftest() -> None:
     changed["scope"]["device_contacts"] = 1
     rejected("toy-device-contact",
              lambda: audit_contract(changed), mutations)
-    require(len(mutations) == 2, "comfort selftest mutation count drift")
+    rejected(
+        "sealed-authority-collapsed-to-live",
+        lambda: require(
+            bind(ROOT / "src/eval.c")
+            == ERA.era_bind(SEALED_COMMIT, ROOT / "src/eval.c"),
+            "sealed comfort authority collapsed to the living source",
+        ),
+        mutations,
+    )
+    require(len(mutations) == 3, "comfort selftest mutation count drift")
 
 
 def main(argv: list[str]) -> int:
     command = argv[1] if len(argv) > 1 else "check"
     if command == "selftest":
         selftest()
-        print("comfort-track selftest: PASS mutations=2")
+        print("comfort-track selftest: PASS mutations=3")
         return 0
     receipt = build_receipt()
     if command == "show":

@@ -1024,8 +1024,9 @@ uint8_t c2_product_entry_read(uint16_t ordinal, uint16_t relative,
     if (!destination || !c2_product_entry_record(ordinal, row, &physical)) return 0;
     code_length = c2_u16(row + 4);
     if (relative > code_length || length > (uint16_t)(code_length - relative)) return 0;
-    c2_facade_vm_code_load(2u, (uint16_t)(c2_u16(row + 2) + relative),
-                           length, destination);
+    if (!c2_map_cpu_read(
+            ((uint32_t)2u << 16) + (uint16_t)(c2_u16(row + 2) + relative),
+            destination, length)) return 0;
     lit_end = (uint16_t)(7u + 2u * row[1]);
     if (relative < lit_end && (uint16_t)(relative + length) > 7u && row[1]) {
         if (c2_stream_product_materialize_entry(
@@ -1461,7 +1462,9 @@ def full_product_wplto() -> dict[str, Any]:
             and "c2_stream_shelf_read" not in hot_entry
             and "c2_dma_copy" not in hot_entry
             and "rtov_dma_submit_wait" not in rtov_read
-            and "c2_facade_vm_code_load(2u" in hot_entry
+            and "c2_map_cpu_read(" in hot_entry
+            and "c2_facade_runtime_overlay_exec" not in hot_entry
+            and "c2_facade_vm_code_load(2u" not in hot_entry
             and "c2_facade_vm_code_load(3u" in rtov_read,
             "hot no-Attic source closure is red")
     retired = {
@@ -1470,7 +1473,7 @@ def full_product_wplto() -> dict[str, Any]:
         "dma_completion_fence_define":
             "LISP65_RTOV_DMA_COMPLETION_FENCE" not in features,
         "hot_c2i_reads": 0, "hot_attic_reads": 0,
-        "bank2_loader_callsites": hot_entry.count("c2_facade_vm_code_load(2u"),
+        "bank2_MAP_CPU_callsites": hot_entry.count("c2_facade_map_cpu_read("),
         "bank3_loader_callsites": rtov_read.count("c2_facade_vm_code_load(3u"),
     }
     require(all(value is True or isinstance(value, int) for value in retired.values()),

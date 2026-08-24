@@ -16,7 +16,11 @@
         "ASM_L65M_REPEAT_PHASE_OFFSET"
       ],
       "kind": "generated-c-contract",
-      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1", "ldz\t#0"],
+      "permitted_numeric_immediates": [
+        "lda\t#0",
+        "lda\t#1",
+        "ldz\t#0"
+      ],
       "path": "src/l65m_batch_repeat.s"
     },
     {
@@ -35,7 +39,11 @@
         "ASM_R3_PRODUCT_ENTRY"
       ],
       "kind": "generated-c-contract",
-      "permitted_numeric_immediates": ["lda\t#0", "lda\t#1", "ldz\t#0"],
+      "permitted_numeric_immediates": [
+        "lda\t#0",
+        "lda\t#1",
+        "ldz\t#0"
+      ],
       "path": "scripts/r3-cold-stager-chain.s"
     },
     {
@@ -137,6 +145,12 @@
       "reason": "Journal selector is ABI- and marker-totality-gated from the linked ELF."
     },
     {
+      "path": "src/c2_kernal_irq_base.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_input_fidelity_reopen_card.py",
+      "reason": "Base-world IRQ owner is selected by the input-fidelity build-membership gate and excluded from the capture world."
+    },
+    {
       "path": "src/c2_kernal_facade.s",
       "class": "product-map-or-facade",
       "authority": "tools/host-lisp/c2_kernal_unmap_contract_gate.py",
@@ -167,34 +181,16 @@
       "reason": "Bank-3 staging entry is covered by the ELF-derived C/ASM ABI gate."
     },
     {
-      "path": "src/c2_mapped_far_service.s",
-      "class": "product-map-or-facade",
-      "authority": "tools/host-lisp/c2_mapped_far_service_gate.py",
-      "reason": "Mapped Bank-2 entry facade is byte-, MAP-ABI-, ownership-, and final-ELF-gated by the permanent far-service gate."
-    },
-    {
-      "path": "src/optional/c2_mapped_far_service_v2.s",
-      "class": "product-map-or-facade",
-      "authority": "tools/host-lisp/c2_v20_map_tuple_fix.py",
-      "reason": "The opt-in corrected MAP-tuple successor is source-, contract-, decode-, entry-model-, mutation-, and linked-artifact-gated by the v2.0 MAP-tuple fix lane."
-    },
-    {
-      "path": "src/optional/c2_map_cpu_read.s",
-      "class": "elf-gated-product-leaf",
-      "authority": "tools/host-lisp/c2_v21_local_return_identity_card.py",
-      "reason": "The opt-in MAP CPU reader and selector are source-, object-, emitted-identity-, crossing-, unmap-, mutation-, and linked-ELF-gated by the v2.1 local-return identity lane."
-    },
-    {
-      "path": "src/optional/c2_mapped_far_convergence_full_span.s",
-      "class": "elf-gated-product-leaf",
-      "authority": "tools/host-lisp/c2_v21_full_span_convergence.py",
-      "reason": "The opt-in full-span convergence successor is source-, ABI-, partial-transfer-, semantic-equivalence-, mutation-, and linked-ELF-gated by the v2.1 full-span lane."
-    },
-    {
       "path": "src/c2_mapped_far_convergence.s",
       "class": "elf-gated-product-leaf",
       "authority": "tools/host-lisp/c2_mapped_far_asm_equivalence.py",
       "reason": "Mapped Bank-2 convergence body is byte-, VMA-, ABI-, semantic-equivalence-, mutation-, and final-ELF-gated against the retained C reference."
+    },
+    {
+      "path": "src/c2_mapped_far_service.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_mapped_far_service_gate.py",
+      "reason": "Mapped Bank-2 entry facade is byte-, MAP-ABI-, ownership-, and final-ELF-gated by the permanent far-service gate."
     },
     {
       "path": "src/l65e_bcode_ordinal.s",
@@ -209,6 +205,78 @@
       "reason": "ASH is covered by its tagged-domain, range, mutation, and linked ABI gates."
     },
     {
+      "path": "src/optional/c2_map_cpu_read.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_v21_local_return_identity_card.py",
+      "reason": "The opt-in MAP CPU reader and selector are source-, object-, emitted-identity-, crossing-, unmap-, mutation-, and linked-ELF-gated by the v2.1 local-return identity lane."
+    },
+    {
+      "path": "src/optional/c2_kernal_input_capture.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_input_fidelity_reopen_card.py",
+      "reason": "Capture-world IRQ and ring fragments are selected, placed and acceptance-gated by the input-fidelity card."
+    },
+    {
+      "path": "src/optional/c2_kernal_input_consumer.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_input_service_hybrid.py",
+      "reason": "The adaptive raw-ring consumer is selected with the capture card and governed by normalization, loss, responsiveness and linked-placement gates."
+    },
+    {
+      "path": "src/optional/c2_refill_boundary_witness.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_refill_boundary_witness.py",
+      "reason": "The temporary refill witness and its cold installer successor are selected by the witness feature and governed by bound-origin, full-payload, linked-caller, placement, capacity and removal-default gates; they mirror no C constant."
+    },
+    {
+      "path": "src/optional/c2_product_cold_disk_chain.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_clean_product_candidate.py",
+      "reason": "The clean product world owns the cold disk-chain MAP wrapper; feature materialization, final-ELF placement, MAP nesting, capacity, scope and Acceptance gates derive from the product candidate."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_convergence_full_span.s",
+      "class": "elf-gated-product-leaf",
+      "authority": "tools/host-lisp/c2_v21_full_span_convergence.py",
+      "reason": "The opt-in full-span convergence successor is source-, ABI-, partial-transfer-, semantic-equivalence-, mutation-, and linked-ELF-gated by the v2.1 full-span lane."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_facade_padding.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_product_substitution_link.py",
+      "reason": "Named filler that holds the mapped far facade at its owned 98-byte contract after the MAP-CPU root fix; its size is measured by the linker and gated with the facade, and it mirrors no C constant."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_facade_padding_abort_v2.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_abort_driver_relocation.py",
+      "reason": "R1 facade successor and explicit padding are gated by the abort-driver relocation card and fixed-facade contract."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_facade_padding_liveness_v3.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_active_frame_liveness.py",
+      "reason": "The liveness facade successor and its retired-continuation stub are derived and gated from the active final candidate."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_service_v2.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v20_map_tuple_fix.py",
+      "reason": "The opt-in corrected MAP-tuple successor is source-, contract-, decode-, entry-model-, mutation-, and linked-artifact-gated by the v2.0 MAP-tuple fix lane."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_service_abort_v3.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_abort_driver_relocation.py",
+      "reason": "R1 far-service successor carries the relocated abort body under linked reachability, ABI and every-exit-unmap gates."
+    },
+    {
+      "path": "src/optional/c2_mapped_far_service_liveness_v4.s",
+      "class": "product-map-or-facade",
+      "authority": "tools/host-lisp/c2_v160_active_frame_liveness.py",
+      "reason": "The active liveness service successor is population-, stack-frame-, capacity-, ABI-, and final-ELF-gated."
+    },
+    {
       "path": "src/rtov_crc_mem.s",
       "class": "elf-gated-product-leaf",
       "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
@@ -221,16 +289,16 @@
       "reason": "DMA-completion leaf is covered by the ELF-derived C/ASM ABI gate."
     },
     {
-      "path": "src/screen_backspace_nonlto.s",
-      "class": "shelf-evidence",
-      "authority": "tools/host-lisp/c2_v13_screen_nonlto_wplto.py",
-      "reason": "Rejected 105-byte non-LTO DEL leaf retained only as evidence for the three-method stack/overlay geometry result; excluded from product links."
-    },
-    {
       "path": "src/runtime_overlay_verifier_bindings.s",
       "class": "elf-gated-product-leaf",
       "authority": "tools/host-lisp/c2_asm_leaf_abi_gate.py",
       "reason": "Verifier binding leaf is covered by linked callsite and ABI gates."
+    },
+    {
+      "path": "src/screen_backspace_nonlto.s",
+      "class": "shelf-evidence",
+      "authority": "tools/host-lisp/c2_v13_screen_nonlto_wplto.py",
+      "reason": "Rejected 105-byte non-LTO DEL leaf retained only as evidence for the three-method stack/overlay geometry result; excluded from product links."
     },
     {
       "path": "src/vm_c2d_byte.s",
@@ -241,5 +309,8 @@
   ],
   "generated_include": "build/generated/asm-c-contract.inc",
   "generator": "scripts/asm-c-contract-values-main.c",
-  "scan_roots": ["src", "scripts"]
+  "scan_roots": [
+    "src",
+    "scripts"
+  ]
 }

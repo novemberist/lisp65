@@ -129,6 +129,7 @@ static obj k_key, k_shift, k_control, k_meta;
 #endif
 
 #ifdef LISP65_EVAL_KEYBOARD_PRIMS
+#include "petscii_normalization.h"
 /* Tastatur-Event normalisieren (Codex-Vertrag: `(key code mods)`). PETSCII-Buchstaben ->
  * ASCII klein; geshiftete ($C1-$DA) -> ASCII GROSS + (shift). Steuercodes (RETURN $0D,
  * DEL $14, CRSR $11/$91/$1D/$9D, CLR $93, Ctrl+Buchstabe $01-$1A, ...) bleiben ROH —
@@ -136,8 +137,7 @@ static obj k_key, k_shift, k_control, k_meta;
  * unterscheidbar (beide $0D) — Editor behandelt $0D als RETURN. */
 static obj key_event(int c, uint8_t event_modifiers) {
     obj mods = NIL, e;
-    if (c >= 0xC1 && c <= 0xDA) { c -= 0x80; event_modifiers |= LISP65_KEYMOD_SHIFT; }
-    else if (c >= 'A' && c <= 'Z') c += 0x20;
+    c = lisp65_normalize_petscii((uint8_t)c, &event_modifiers);
     if (event_modifiers & LISP65_KEYMOD_SHIFT) mods = cons(k_shift, mods);
     if (event_modifiers & LISP65_KEYMOD_CONTROL) mods = cons(k_control, mods);
     if (event_modifiers & LISP65_KEYMOD_META) mods = cons(k_meta, mods);

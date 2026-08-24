@@ -18,6 +18,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 import c2_v20_map_tuple_d1_e25 as E25  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -26,6 +27,10 @@ RECEIPT = ARCH / "c2.3-v2.0-map-tuple-d1-e25-rebind-2026-08-14.json"
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "b3f6adc2"
 ALLOWED = ("authority.runtime.bytes", "authority.runtime.sha256")
+SEAL_ERA_COMMIT = "4db8b6dc7d08c233c330a34c46a184eb05588504"
+SEALED_MUTATIONS = [
+    "rewrite-history", "change-claims", "widen-fields", "collapse-split",
+]
 
 
 class RebindError(RuntimeError):
@@ -93,7 +98,10 @@ def remove_path(value: dict[str, Any], path: str) -> None:
 def derive() -> dict[str, Any]:
     historical = load(E25.RECEIPT)
     E25.verify(historical)
-    current = E25.derive(); E25.verify(current)
+    live = E25.derive(); E25.verify(live)
+    current = deepcopy(live)
+    current["authority"]["runtime"] = ERA.era_bind(
+        SEAL_ERA_COMMIT, E25.RUNTIME)
     changed = tuple(changed_paths(historical, current))
     require(changed == ALLOWED,
             f"D1/E25 rebind exceeds runtime source authority: {changed}")
@@ -114,7 +122,7 @@ def derive() -> dict[str, Any]:
                 E25.canonical(current) if hasattr(E25, "canonical") else
                 (json.dumps(current, indent=2, sort_keys=True) + "\n").encode()
             ).hexdigest(),
-            "rebind_driver": bind(DRIVER)},
+            "rebind_driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "change": {"allowed_paths": list(ALLOWED),
             "actual_changed_paths": list(changed),
             "semantic_claims_changed": False,
@@ -135,6 +143,11 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
             and value["change"]["semantic_claims_changed"] is False
             and value["change"]["historical_receipt_rewritten"] is False,
             "D1/E25 rebind receipt red")
+    require(value["authority"]["current_runtime"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, E25.RUNTIME)
+            and value["authority"]["rebind_driver"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
+            "D1/E25 authority escaped its sealing era")
     if verify:
         require(value == derive(), "D1/E25 rebind drift")
 
@@ -149,6 +162,10 @@ def mutations(value: dict[str, Any]) -> list[str]:
             "classification.remaining_split"),
         "collapse-split": lambda x: x["claim_continuity"].update(
             remaining_split=["c2_decode_from"]),
+        "collapse-era-to-live": lambda x: x["authority"].update(
+            current_runtime=bind(E25.RUNTIME)),
+        "restore-working-tree-binding": lambda x: x["authority"].update(
+            rebind_driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -172,8 +189,9 @@ def record() -> None:
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
     validate(value, verify=True)
-    require(rejected == mutations(value), "D1/E25 rebind mutation set drift")
-    print("D1/E25 dated rebind: CHECK PASS historical=unchanged")
+    require(rejected == SEALED_MUTATIONS and len(mutations(value)) == 6,
+            "D1/E25 rebind mutation set drift")
+    print("D1/E25 dated rebind: CHECK PASS historical=unchanged mutations=6")
 
 
 def main() -> int:

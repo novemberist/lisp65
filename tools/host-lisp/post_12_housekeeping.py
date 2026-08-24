@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 from typing import Any
 
 
@@ -24,6 +25,16 @@ ARCHIVED_FIXTURES = {
         "lib/m65-disk-alloc-var.lisp",
 }
 ACTIVE_ROOTS = ("Makefile", "config", "src", "lib", "scripts", "tools", "tests")
+SEALED_COMMIT = "43cfeb94a8cc80c86b8ffd441f767d48ac53b297"
+SEALED_SOURCE_SHA256 = (
+    "02dc549d887b34011aa6965f5bf6f1f2854f9c1a1849dd6d0df1e0523099b503")
+WITNESS_FORMAT = "lisp65-post-v1.2-housekeeping-witness-v2"
+SEALED_ROWS = (
+    "archived_legacy_fixtures", "baseline_commit", "claim_limit",
+    "comment_go_forward", "elf_truth_migration", "format", "idea_store",
+    "recorded_on", "status", "version",
+)
+LIVE_ROWS = {"bindings", "index_and_evidence"}
 
 
 class HousekeepingError(RuntimeError):
@@ -178,7 +189,7 @@ def active_old_fixture_references() -> list[str]:
     return failures
 
 
-def collect() -> dict[str, Any]:
+def collect_living() -> dict[str, Any]:
     for successor, predecessor in ARCHIVED_FIXTURES.items():
         require((ROOT / successor).is_file(),
                 f"archived fixture missing: {successor}")
@@ -213,168 +224,101 @@ def collect() -> dict[str, Any]:
         require(phrase in extension, f"C2 library lesson absent: {phrase}")
 
     return {
-        "format": "lisp65-post-v1.2-housekeeping-receipt-v1",
-        "version": 1,
-        "recorded_on": "2026-07-27",
-        "status": "pass",
-        "baseline_commit": "084d51b1019b98ac0784c98842ef5950195d1cbd",
-        "claim_limit": (
-            "Class-A host, fixture-location and documentation housekeeping. "
-            "No product bytes, product link, hardware, promotion, tag, public "
-            "push or release claim."
-        ),
-        "elf_truth_migration": {
-            "status": "complete",
-            "gate": migration,
-            "named_consumers": 6,
-            "private_views": 0,
-            "objdump_boundary": "instruction decoding only",
-        },
-        "archived_legacy_fixtures": [
-            {
-                "predecessor": predecessor,
-                "successor": bind(successor),
-                "active_old_path_references": 0,
-            }
-            for successor, predecessor in sorted(ARCHIVED_FIXTURES.items())
-        ],
-        "comment_go_forward": {
-            "status": "pass",
-            "baseline": "v1.1.0",
-            "sealed_evidence_and_historical_docs": "exempt",
-            "gate": comments,
-        },
+        "elf_truth_migration": migration,
+        "comment_language": comments,
         "index_and_evidence": {
             "document_index": document_index,
             "promotion_register": promotion,
             **evidence_consistency(),
         },
-        "idea_store": {
-            "status": "updated",
-            "document": bind("docs/planning/extension-libraries-design.md"),
-            "rules_added": 7,
-            "random_ring_buffer_pairing": "retained",
-        },
-        "bindings": {
-            "verifier": bind("tools/host-lisp/post_12_housekeeping.py"),
-            "elf_truth_contract": bind("config/c2-elf-truth-contract.json"),
-            "elf_truth_migration_gate": bind(
-                "tools/host-lisp/c2_elf_truth_migration_gate.py"),
-            "canonical_product_gate": bind(
-                "tools/host-lisp/c2_product_substitution_link.py"),
-            "document_index": bind("config/document-index.json"),
-            "promotion_register": bind("config/promotion-register.json"),
-            "asset_inventory": bind("config/evidence-archive-assets.json"),
-        },
+        "archived_fixture_paths_present": len(ARCHIVED_FIXTURES),
+        "active_old_path_references": len(stale),
+        "idea_store_required_phrases": 5,
     }
 
 
-def stale_rows(recorded: dict[str, Any], current: dict[str, Any]) -> list[str]:
-    return sorted(
-        key for key in recorded.keys() | current.keys()
-        if recorded.get(key) != current.get(key))
+def sealed_source() -> dict[str, Any]:
+    relative = RECEIPT.relative_to(ROOT).as_posix()
+    raw = subprocess.run(
+        ["git", "show", f"{SEALED_COMMIT}:{relative}"], cwd=ROOT,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
+    require(sha256(raw) == SEALED_SOURCE_SHA256,
+            "sealed housekeeping source identity drift")
+    source = json.loads(raw)
+    return {"binding": {"authority": "git-blob", "commit": SEALED_COMMIT,
+                         "path": relative, "bytes": len(raw),
+                         "sha256": sha256(raw)},
+            "witness": {name: source[name] for name in SEALED_ROWS}}
 
 
-def rebind_rows(
-        recorded: dict[str, Any],
-        current: dict[str, Any],
-        rows: list[str]) -> dict[str, Any]:
-    """Rebind only explicitly selected top-level receipt rows."""
-    value = json.loads(json.dumps(recorded))
-    for key in rows:
-        if key in current:
-            value[key] = current[key]
-        else:
-            value.pop(key, None)
-    return value
-
-
-def write() -> tuple[dict[str, Any], list[str]]:
-    current = collect()
-    recorded = (
-        json.loads(RECEIPT.read_text(encoding="utf-8"))
-        if RECEIPT.is_file() else {}
-    )
-    rows = stale_rows(recorded, current)
-    value = rebind_rows(recorded, current, rows)
-    require(value == current, "selective receipt rebind did not converge")
-    RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-    RECEIPT.write_text(
-        json.dumps(value, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8")
-    return value, rows
+def validate_witness(value: dict[str, Any]) -> None:
+    expected = sealed_source()
+    require(set(value) == {"format", "version", "sealed_source", "witness"}
+            and value.get("format") == WITNESS_FORMAT
+            and value.get("version") == 2,
+            "housekeeping witness schema admits living rows")
+    require(not (set(value) & LIVE_ROWS)
+            and not (set(value.get("witness", {})) & LIVE_ROWS),
+            "living repository value persisted in sealed witness")
+    require(value.get("sealed_source") == expected["binding"]
+            and value.get("witness") == expected["witness"],
+            "sealed housekeeping witness row drift")
 
 
 def check() -> dict[str, Any]:
-    value = collect()
-    require(RECEIPT.is_file(), "housekeeping receipt missing")
-    recorded = json.loads(RECEIPT.read_text(encoding="utf-8"))
-    rows = stale_rows(recorded, value)
-    require(
-        not rows,
-        "housekeeping receipt stale rows: "
-        f"{', '.join(rows)}; regenerate with --write")
-    return value
+    require(RECEIPT.is_file(), "housekeeping witness missing")
+    witness = json.loads(RECEIPT.read_text(encoding="utf-8"))
+    validate_witness(witness)
+    return {"witness": witness, "living": collect_living()}
 
 
 def selftest() -> None:
+    base = json.loads(RECEIPT.read_text(encoding="utf-8"))
+    cases = []
+
+    living = json.loads(json.dumps(base))
+    living["bindings"] = {"verifier": {"sha256": "live"}}
+    cases.append(living)
+
+    changed = json.loads(json.dumps(base))
+    changed["witness"]["status"] = "rewritten"
+    cases.append(changed)
+
     rejected = 0
-    for condition in (False, 1 == 2, "old" == "new"):
+    for candidate in cases:
         try:
-            require(condition, "mutation")
+            validate_witness(candidate)
         except HousekeepingError:
             rejected += 1
-    require(rejected == 3, f"mutations accepted: {3 - rejected}")
-
-    recorded = {
-        "stable": {"sha256": "same"},
-        "stale": {"sha256": "old"},
-    }
-    current = {
-        "stable": {"sha256": "same"},
-        "stale": {"sha256": "new"},
-    }
-    unrelated = {"foreign_receipt": {"sha256": "in-flight"}}
-    before = json.loads(json.dumps(unrelated))
-    rows = stale_rows(recorded, current)
-    require(rows == ["stale"], f"wrong stale-row set: {rows}")
-    rebound = rebind_rows(recorded, current, rows)
-    require(rebound == current, "selected stale row was not rebound")
-    require(
-        unrelated == before,
-        "an unrelated stale receipt row was rewritten")
-
     try:
-        require_repository_unchanged("before", "after", "mutation")
+        parse_args(["--write"])
     except HousekeepingError:
         rejected += 1
-    require(rejected == 4, "read-only subcheck mutation was accepted")
+    require(rejected == 3, f"witness/derivation mutations accepted: {3-rejected}")
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    require("--write" not in arguments,
+            "--write was removed: living housekeeping facts are derived")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--selftest", action="store_true")
+    return parser.parse_args(arguments)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--selftest", action="store_true")
-    parser.add_argument("--write", action="store_true")
-    args = parser.parse_args()
+    args = parse_args()
     if args.selftest:
         selftest()
-        print("post-v1.2-housekeeping: SELFTEST PASS mutations=4 "
-              "selective-rebind=pass")
+        print("post-v1.2-housekeeping: SELFTEST PASS mutations=3 "
+              "sealed-witness=pass living-persistence=forbidden write=removed")
         return 0
-    rebound_rows: list[str] = []
-    if args.write:
-        value, rebound_rows = write()
-    else:
-        value = check()
+    value = check()
     print(
         "post-v1.2-housekeeping: PASS "
         "evidence="
-        f"{value['index_and_evidence']['tracked_json_receipts_excluding_this_receipt']} "
-        "elf-consumers=6 archived-fixtures=2"
-        + (
-            " rebound=" + (",".join(rebound_rows) if rebound_rows else "none")
-            if args.write else ""
-        ))
+        f"{value['living']['index_and_evidence']['tracked_json_receipts_excluding_this_receipt']} "
+        "elf-consumers=6 archived-fixtures=2 witness=sealed living=derived")
     return 0
 
 

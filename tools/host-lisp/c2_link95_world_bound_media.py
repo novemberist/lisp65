@@ -11,6 +11,7 @@ library under the same Link-95 product is the permanent negative witness.
 from __future__ import annotations
 
 import argparse
+import ast
 from copy import deepcopy
 import hashlib
 import json
@@ -544,7 +545,71 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
         "Link-95 same-world media claim drift",
     )
     if verify:
-        require(value == derive(), "Link-95 same-world media receipt is stale")
+        # The same-world media receipt is sealed Link-95 evidence.  Calling
+        # derive() here would call configure_media(), which restores historical
+        # IDE/buffer inputs into the shared live build paths.  Bind the emitted
+        # product, library and session artifacts without materializing that
+        # historical producer world.
+        rows = [
+            value["authority"]["attribution"],
+            value["authority"]["historical_cross_world_media"],
+            value["authority"]["product_card"],
+            value["authority"]["product_manifest"],
+            value["authority"]["canonical_library_manifest"],
+            value["authority"]["canonical_library_extended_image"],
+            value["authority"]["canonical_library_disassembly"],
+            value["authority"]["live_REPL_FTP_crossing_gate"],
+            value["shared_system"]["manifest"],
+            value["shared_system"]["product_D81"],
+            value["shared_system"]["work_D81"],
+            value["trace_library"]["inspect"],
+            value["trace_library"]["index"],
+            value["trace_library"]["library_D81"],
+            value["trace_library"]["readback"]["inspect"],
+            value["trace_library"]["readback"]["index"],
+            value["cross_world_negative_witness"]["historical_library_D81"],
+            value["bundled_session"]["trace_contract"],
+            value["bundled_session"]["trace_runner"],
+            value["bundled_session"]["trace_runner_base"],
+            value["bundled_session"]["defstruct_sister_receipt"],
+        ]
+        require(all(bind(ROOT / row["path"]) == row for row in rows),
+                "Link-95 sealed same-world artifact drift")
+
+
+def sealed_check_source_gate(source_override: str | None = None) -> None:
+    source = Path(__file__).read_text(encoding="utf-8") \
+        if source_override is None else source_override
+    tree = ast.parse(source)
+    validate_node = next((node for node in tree.body
+                          if isinstance(node, ast.FunctionDef)
+                          and node.name == "validate"), None)
+    require(validate_node is not None, "Link-95 same-world validator absent")
+    calls = [ast.unparse(node.func) for node in ast.walk(validate_node)
+             if isinstance(node, ast.Call)]
+    require("derive" not in calls and "configure_media" not in calls
+            and "bind" in calls,
+            "same-world media check can materialize historical inputs")
+
+
+def sealed_check_source_mutations() -> list[str]:
+    source = Path(__file__).read_text(encoding="utf-8")
+    anchor = 'bind(ROOT / row["path"])'
+    # One executable binding plus this mutation literal.
+    require(source.count(anchor) == 2,
+            "sealed same-world source mutation anchor drift")
+    cases = {
+        "restore-live-derive": source.replace(anchor, "derive()", 1),
+    }
+    rejected: list[str] = []
+    for name, candidate in cases.items():
+        try:
+            sealed_check_source_gate(candidate)
+        except ClosureError:
+            rejected.append(name)
+    require(rejected == list(cases),
+            "sealed same-world source mutation survived")
+    return rejected
 
 
 def rejected_mutations(base: dict[str, Any]) -> list[str]:
@@ -638,9 +703,14 @@ def main() -> int:
         return 0
     value = load(RECEIPT)
     gate_wiring()
+    sealed_check_source_gate()
+    source_mutations = sealed_check_source_mutations()
     validate(value, verify=(action == "check"))
     rejected = rejected_mutations(value)
-    print(f"Link-95 same-world media {action}: PASS mutations={len(rejected)}")
+    print(
+        f"Link-95 same-world media {action}: PASS "
+        f"mutations={len(rejected)}+{len(source_mutations)}"
+    )
     return 0
 
 

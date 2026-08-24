@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "tools/host-lisp"))
 
 from elf_truth import ElfTruth  # noqa: E402
 import c2_asm_leaf_abi_gate as ABI  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-v19-acceptance-vocabulary.json"
@@ -31,6 +32,7 @@ PLAN = ROOT / "docs/planning/1.9-full-map-recharter-work-plan.md"
 LLVM_READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 RECORDED_ON = "2026-08-06"
 HISTORICAL_GATE_COMMIT = "361c95df"
+EXPECTATION_SHAPE_SEAL_COMMIT = "6d29dafd4d150d3132c6e523cad8230e5cd5630e"
 DRIVER_SUCCESSORS = {
     "bank2_workbench_scratch_negative":
         "bank2-target-and-workbench-identity",
@@ -38,6 +40,12 @@ DRIVER_SUCCESSORS = {
         "final-island-carrier-identity",
     "roots_fronts_one_slice_two_entry":
         "roots-fronts-single-slice-entry-identity",
+}
+ASM_DECLARATION_SUCCESSORS = {
+    "retired_window_brk_classifier":
+        "v1.6 execution-boundary classifier",
+    "retired_window_resume":
+        "v1.6 execution-boundary recovery tail",
 }
 
 
@@ -184,9 +192,19 @@ def abi_vocabulary(contract: dict[str, Any],
     elf = ROOT / contract["authorities"]["terminal_repair_elf"]["path"]
     declarations = set(ABI._declared_asm_functions())
     policies = set(ABI.ABI_POLICIES)
-    exact_set(declarations, count=spec["declared_assembler_functions"],
-              digest=spec["declared_member_set_sha256"],
-              label="declared assembler vocabulary")
+    historical = load(RECEIPT)["classes"]["assembler_abi_policies"]
+    predecessor = set(historical["declared_members"])
+    require(len(predecessor) == spec["declared_assembler_functions"]
+            and set_sha(predecessor) == spec["declared_member_set_sha256"],
+            "historical declared assembler named set drift")
+    expected_declarations = predecessor | set(ASM_DECLARATION_SUCCESSORS)
+    missing = sorted(expected_declarations - declarations)
+    unexpected = sorted(declarations - expected_declarations)
+    require(not missing and not unexpected,
+            "declared assembler named-set drift: "
+            f"expected={sorted(expected_declarations)} "
+            f"observed={sorted(declarations)} missing={missing} "
+            f"unexpected={unexpected}")
     exact_set(policies, count=spec["policy_members"],
               digest=spec["policy_member_set_sha256"],
               label="assembler ABI policy vocabulary")
@@ -202,12 +220,17 @@ def abi_vocabulary(contract: dict[str, Any],
     for name in declarations:
         rejected(
             f"assembler-declaration-deleted:{name}",
-            lambda name=name: exact_set(
-                declarations - {name},
-                count=spec["declared_assembler_functions"],
-                digest=spec["declared_member_set_sha256"],
-                label="declared assembler vocabulary"),
+            lambda name=name: require(
+                declarations - {name} == expected_declarations,
+                "declared assembler named member missing"),
             mutations)
+    rejected(
+        "assembler-declaration-unregistered-successor",
+        lambda: require(
+            declarations | {"c2_unregistered_asm_successor"}
+            == expected_declarations,
+            "unregistered assembler successor present"),
+        mutations)
     for name in policies:
         rejected(
             f"assembler-policy-deleted:{name}",
@@ -227,6 +250,8 @@ def abi_vocabulary(contract: dict[str, Any],
         "producer": spec["producer"],
         "declared_members": sorted(declarations),
         "declared_count": len(declarations),
+        "historical_declared_members": sorted(predecessor),
+        "authorized_declared_successors": ASM_DECLARATION_SUCCESSORS,
         "policy_members": sorted(policies),
         "policy_count": len(policies),
         "C_called_members": sorted(called),
@@ -428,10 +453,11 @@ def build_receipt(driver_members: set[str] | None = None) -> dict[str, Any]:
         "mutations": len(mutations),
     }
     driver_count = (92 if driver_members is None else len(driver_members))
-    mutation_count = 378 + driver_count - 92
+    declaration_delta = len(ASM_DECLARATION_SUCCESSORS) + 1
+    mutation_count = 378 + driver_count - 92 + declaration_delta
     require(counts == {
         "output_sections": 190,
-        "assembler_declarations": 29,
+        "assembler_declarations": 29 + len(ASM_DECLARATION_SUCCESSORS),
         "assembler_policies": 17,
         "C_called_assembler_members": 13,
         "driver_receipt_tokens": driver_count,
@@ -558,12 +584,22 @@ def validate_driver_rebind(value: dict[str, Any]) -> None:
         and rebind.get("current_member_count") == len(current)
         and rebind.get("current_member_set_sha256") == set_sha(current)
         and rebind.get("removed_members") == []
-        and authority.get("vocabulary_gate") == bind(Path(__file__)),
+        and authority.get("vocabulary_gate") ==
+            ERA.era_bind(EXPECTATION_SHAPE_SEAL_COMMIT, Path(__file__)),
         "v1.9 driver-vocabulary successor authority drift")
 
 
 def historical_projection(value: dict[str, Any],
                           historical: dict[str, Any]) -> None:
+    value["classes"]["assembler_abi_policies"] = deepcopy(
+        historical["classes"]["assembler_abi_policies"])
+    abi_prefix = "assembler-declaration-"
+    for key in list(value["mutations_rejected"]):
+        if key.startswith(abi_prefix):
+            del value["mutations_rejected"][key]
+    for key, message in historical["mutations_rejected"].items():
+        if key.startswith(abi_prefix):
+            value["mutations_rejected"][key] = message
     value["classes"]["driver_receipt_tokens"] = deepcopy(
         historical["classes"]["driver_receipt_tokens"])
     prefix = "driver-token-deleted:"
@@ -574,6 +610,7 @@ def historical_projection(value: dict[str, Any],
         if key.startswith(prefix):
             value["mutations_rejected"][key] = message
     value["execution_witness"]["driver_receipt_tokens"] = 92
+    value["execution_witness"]["assembler_declarations"] = 29
     value["execution_witness"]["mutations"] = 378
 
 

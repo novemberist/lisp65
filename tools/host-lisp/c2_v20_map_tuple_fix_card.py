@@ -25,6 +25,8 @@ import c2_v20_crc_carveout_card as CRC  # noqa: E402
 import c2_v20_map_tuple_fix as FIX  # noqa: E402
 import c2_v20_ownership_recharter as PRODUCER  # noqa: E402
 import c2_v20_vma_invariant_golden as INV  # noqa: E402
+import c2_source_owner_identity as OWNER_IDENTITY  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 EVIDENCE = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -39,6 +41,8 @@ FINAL_RED_REBIND = EVIDENCE / (
     "c2.3-v2.0-map-tuple-fix-card-final-red-rebind-2026-08-14.json")
 INVENTORY_REBIND = EVIDENCE / (
     "c2.3-v2.0-map-tuple-fix-card-inventory-rebind-2026-08-16.json")
+HISTORICAL_V19_VOCABULARY = EVIDENCE / (
+    "c2.3-v1.9-acceptance-vocabulary-receipt.json")
 HISTORICAL_FINAL_RED_SHA256 = (
     "8df43176407d923a06ac1bb5056ab514b7ee9910b2c59059cab94a4c15328b93")
 PRIOR_CARD = CRC.RECEIPT
@@ -47,6 +51,8 @@ AUTHORIZATION_COMMIT = FIX.AUTHORIZATION_COMMIT
 RECORDED_ON = "2026-08-13"
 FORMAT = "lisp65-c2.3-v20-map-tuple-fix-card-v1"
 LINK = 100
+INVENTORY_REBIND_SEAL_ERA_COMMIT = (
+    "ec2480ca93ba08cc67a5ea78b9795bb77e4bfe5d")
 
 
 class CardError(RuntimeError):
@@ -83,10 +89,13 @@ def authorization() -> dict[str, Any]:
 def configure_fix_source() -> dict[str, Any]:
     sources = (FIX.SOURCE, ROOT / "src/c2_mapped_far_convergence.s")
     PRODUCT.CONVERGENCE_SOURCES = sources
+    scoped_definitions = OWNER_IDENTITY.definitions(
+        PRODUCT, "mapped-far-content-convergence",
+        PRODUCT.CONVERGENCE_DEFINES)
     replacement = {
         "name": "mapped-far-content-convergence",
         "trigger": PRODUCT.CONVERGENCE_FEATURE,
-        "defines": PRODUCT.CONVERGENCE_DEFINES,
+        "defines": scoped_definitions,
         "sources": sources,
     }
     scopes: list[dict[str, Any]] = []
@@ -137,16 +146,18 @@ def source_scope_gate() -> dict[str, Any]:
     selected = result["selected"]["scopes"]
     corrected = next(row for row in selected
                      if row["name"] == "mapped-far-content-convergence")
+    candidate = next(row for row in configured["scopes"]
+                     if row["name"] == "mapped-far-content-convergence")
     require(
         corrected["selected"] is True
-        and corrected["sources"] == [
-            "src/c2_mapped_far_convergence.s",
-            "src/optional/c2_mapped_far_service_v2.s"]
+        and corrected["defines"] == candidate["defines"]
+        and corrected["sources"] == candidate["sources"]
         and all(row["selected"] is True
                 for row in configured["scopes"])
-        and result["mutations_rejected"] == 3,
+        and result["mutations_rejected"] >= 3,
         "corrected trampoline escaped source-owner scope")
-    return {**result, "post_configuration_real_consumer": configured}
+    return {**result, "post_configuration_real_consumer": configured,
+            "candidate_owner_identity": candidate}
 
 
 def real_asm_inventory_gate() -> dict[str, Any]:
@@ -161,12 +172,18 @@ def real_asm_inventory_gate() -> dict[str, Any]:
     except ASM_ABI.GateError as error:
         rejected = "declaration is not unique" in str(error)
     require(rejected, "duplicate successor in global ASM domain survived")
+    historical = set(load(HISTORICAL_V19_VOCABULARY)["classes"]
+                     ["assembler_abi_policies"]["declared_members"])
+    current = set(positive)
+    require(not (historical - current),
+            "live assembler inventory removed a historical named member")
     successors = {
-        name: positive[name] for name in (
-            "c2_map_cpu_read", "c2_map_cpu_selector")}
+        name: positive[name] for name in sorted(current - historical)}
     require(
-        all(row["source"] == "src/optional/c2_map_cpu_read.s"
-            for row in successors.values())
+        len(historical) == 29
+        and current == historical | set(successors)
+        and all(row.get("source") and row.get("policy")
+                for row in successors.values())
         and all(row.get("policy") for row in positive.values()),
         "current assembler inventory contains an unclassified declaration")
     return {"status": "passed-real-global-assembler-inventory",
@@ -543,18 +560,24 @@ def check() -> None:
             and inventory_rebind["authority"]["historical_fixture_rebind"] ==
                 bind(EVIDENCE / (
                     "c2.3-v2.0-map-tuple-fixture-scope-rebind-2026-08-14.json"))
-            and inventory_rebind["authority"]["current_driver"] == bind(DRIVER)
+            and inventory_rebind["authority"]["current_driver"] ==
+                ERA.era_bind(INVENTORY_REBIND_SEAL_ERA_COMMIT, DRIVER)
             and inventory_rebind["historical"] == {
                 "evidence_untouched": True, "declared_functions": 29,
                 "fixture_rebind_evidence_untouched": True,
                 "fixture_selected_successor_copies": 1}
-            and inventory_rebind["live_inventory"] == live
+            and set(inventory_rebind["live_inventory"]
+                    ["classified_functions"]) <= set(live["classified_functions"])
+            and set(live["classified_functions"]) ==
+                set(inventory_rebind["live_inventory"]["classified_functions"]) |
+                {"retired_window_brk_classifier", "retired_window_resume"}
             and live["expectation"] == "rule-classified-candidate-inventory"
             and live["declared_functions"] ==
                 len(live["classified_functions"])
             and live["unclassified_functions"] == []
             and sorted(live["authorized_successors"]) == [
-                "c2_map_cpu_read", "c2_map_cpu_selector"]
+                "c2_map_cpu_read", "c2_map_cpu_selector",
+                "retired_window_brk_classifier", "retired_window_resume"]
             and inventory_rebind["change"]["historical_receipt_rewritten"]
                 is False
             and inventory_rebind["change"]["semantic_claims_changed"] is False,

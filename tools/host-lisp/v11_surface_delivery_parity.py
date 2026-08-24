@@ -18,8 +18,16 @@ CONTRACT_KEYS = {
     "format", "version", "status", "profile", "surface", "dialect_contract",
     "language_reference", "native_registry", "workbench_profile",
     "resident_manifest", "library_manifests", "artifact_closure",
-    "profile_exclusions", "claims",
+    "profile_exclusions", "claims", "release_freight",
 }
+
+# A library manifest under build/ is a working-tree artifact of whichever era
+# last produced it, so it silently ages out from under the language reference:
+# v1.5.0 shipped defstruct, trace and untrace while the v1.1.2 manifests still
+# described the v1.1.2 world, and the gate read that staleness as three
+# undelivered documented names.  The release contract that the D-session
+# accepted names its own freight, so it is a delivery authority in its own
+# right -- a tracked contract rather than a build leftover.
 
 
 class ParityError(RuntimeError):
@@ -125,7 +133,8 @@ def verify_values(
     contract: dict[str, Any], surface: dict[str, Any], dialect: dict[str, Any],
     manifest: dict[str, Any], library_manifests: list[dict[str, Any]],
     reference: str, registry: dict[str, Any], closure: dict[str, Any],
-    workbench_profile: str, *, authorities: bool = True,
+    workbench_profile: str, release_freight: dict[str, Any] | None = None,
+    *, authorities: bool = True,
 ) -> list[str]:
     if (
         contract.get("format") != "lisp65-v11-surface-delivery-parity-v1"
@@ -184,8 +193,14 @@ def verify_values(
         row.get("name") for row in implemented["native-service"]
         if isinstance(row, dict)
     }
+    freight_names: set[str] = set()
+    for library_names in (release_freight or {}).get("freight", {}).values():
+        if not isinstance(library_names, list) or not all(
+                isinstance(name, str) for name in library_names):
+            raise ParityError("release freight schema drift")
+        freight_names.update(library_names)
     known_names = (
-        delivered_names | native_service_names
+        delivered_names | native_service_names | freight_names
         | (registry_names - restricted_names - excluded_names)
     )
     missing_reference = sorted(reference_names - known_names)
@@ -301,6 +316,7 @@ def selftest() -> None:
         "native_registry": "registry", "workbench_profile": "profile",
         "resident_manifest": "manifest", "library_manifests": ["library"],
         "artifact_closure": "closure", "claims": claims,
+        "release_freight": "freight",
         "profile_exclusions": [{
             "name": "screen-write-string", "kind": "callprim", "value": 12,
             "required_define": "LISP65_SCREEN_WRITE_STRING",
@@ -325,6 +341,35 @@ def selftest() -> None:
         "The released surface includes:\n\n- symbols: `eval`, `filter`, `random`.\n\n"
         "The complete native visibility follows.\n"
     )
+    freight = {"freight": {"inspect": ["shipped-by-freight"]}}
+    reference_with_freight = reference.replace(
+        "`random`.", "`random`, `shipped-by-freight`.")
+    verify_values(
+        contract, surface, dialect, manifest, [library], reference_with_freight,
+        registry, closure, workbench_profile, freight, authorities=False)
+    for broken, label in (
+        ({"freight": {"inspect": []}}, "freight-name-removed"),
+        ({}, "freight-authority-absent"),
+    ):
+        try:
+            verify_values(
+                contract, surface, dialect, manifest, [library],
+                reference_with_freight, registry, closure, workbench_profile,
+                broken, authorities=False)
+        except ParityError:
+            pass
+        else:
+            raise ParityError(
+                f"documented name survived without delivery: {label}")
+    try:
+        verify_values(
+            contract, surface, dialect, manifest, [library],
+            reference_with_freight, registry, closure, workbench_profile,
+            {"freight": {"inspect": "not-a-list"}}, authorities=False)
+    except ParityError:
+        pass
+    else:
+        raise ParityError("release freight schema drift was accepted")
     verify_values(
         contract, surface, dialect, manifest, [library], reference, registry, closure,
         workbench_profile, authorities=False,
@@ -366,7 +411,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.selftest:
             selftest()
-            print("v11-surface-delivery-parity: SELFTEST PASS mutations=10")
+            print("v11-surface-delivery-parity: SELFTEST PASS mutations=13")
             return 0
         contract = load(args.contract, "parity contract")
         names = verify_values(
@@ -379,6 +424,7 @@ def main(argv: list[str] | None = None) -> int:
             load(repo_path(contract["native_registry"]), "native registry"),
             load(repo_path(contract["artifact_closure"]), "artifact closure"),
             repo_path(contract["workbench_profile"]).read_text(encoding="utf-8"),
+            load(repo_path(contract["release_freight"]), "release freight"),
         )
     except (KeyError, OSError, UnicodeError, ParityError) as exc:
         print(f"v11-surface-delivery-parity: FAIL: {exc}", file=sys.stderr)

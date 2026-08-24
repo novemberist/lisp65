@@ -37,6 +37,15 @@ PADDING_RECEIPT = ARCH / (
 AUTHORIZATION = "20a5f4ec"
 FORMAT = "lisp65-c2.3-v2.1-probe-oracle-root-fix-v1"
 STATUS = "HOST-GREEN: NINE-MUTABLE-READERS-USE-MAP-CPU; CARD-PENDING"
+PADDING_STATUS = "HOST-GREEN: EXPLICIT-NAMED-19-BYTE-FACADE-PADDING"
+PADDING_AUTHORIZED_CHANGED_PATHS = [
+    "authority.checker.bytes",
+    "authority.checker.sha256",
+    "authority.configuration.bytes",
+    "authority.configuration.sha256",
+    "configuration.component.facade_padding",
+    "configuration.source_owner.sources",
+]
 
 
 class RootFixError(RuntimeError):
@@ -69,6 +78,75 @@ def bind(path: Path) -> dict[str, Any]:
 def bind_raw(path: Path, raw: bytes) -> dict[str, Any]:
     return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
             "sha256": hashlib.sha256(raw).hexdigest()}
+
+
+def changed_paths(old: Any, new: Any, prefix: str = "") -> list[str]:
+    if isinstance(old, dict) and isinstance(new, dict):
+        result: list[str] = []
+        for key in sorted(set(old) | set(new)):
+            child = f"{prefix}.{key}" if prefix else key
+            if key not in old or key not in new:
+                result.append(child)
+            else:
+                result.extend(changed_paths(old[key], new[key], child))
+        return result
+    return [] if old == new else [prefix]
+
+
+def successor_contract(historical: dict[str, Any], current: dict[str, Any],
+                       padding: dict[str, Any]) -> dict[str, Any]:
+    """Validate the successor from current authorities, never its snapshot."""
+    successor = padding.get("root_fix_successor", {})
+    actual_changed = changed_paths(historical, current)
+    require(
+        padding.get("status") == PADDING_STATUS
+        and successor.get("historical_receipt") == bind(RECEIPT)
+        and successor.get("historical_receipt_rewritten") is False
+        and successor.get("semantic_root_claim_changed") is False
+        and successor.get("authorized_changed_paths") ==
+            PADDING_AUTHORIZED_CHANGED_PATHS
+        and actual_changed == PADDING_AUTHORIZED_CHANGED_PATHS,
+        "root-fix padding successor derivation drift")
+    return {
+        "current_projection": bind_raw(RECEIPT, canonical(current)),
+        "actual_changed_paths": actual_changed,
+    }
+
+
+def successor_projection_source_gate(source: str | None = None) -> None:
+    """A sealed successor snapshot is a witness, never current authority."""
+    body = (Path(__file__).read_text(encoding="utf-8")
+            if source is None else source)
+    start = body.index("def successor_contract(")
+    stop = body.index("\n\ndef successor_projection_source_gate", start)
+    contract = body[start:stop]
+    require('successor.get("current_projection")' not in contract
+            and 'successor["current_projection"]' not in contract,
+            "persisted root-fix successor projection became authority")
+
+
+def successor_mutations(historical: dict[str, Any], current: dict[str, Any],
+                        padding: dict[str, Any]) -> list[str]:
+    rejected: list[str] = []
+    changed = deepcopy(current)
+    changed["priced_geometry"]["new_reader_bytes"] = 1
+    try:
+        successor_contract(historical, changed, padding)
+    except RootFixError:
+        rejected.append("derive-disagrees-with-sealed-claim")
+    source = Path(__file__).read_text(encoding="utf-8")
+    marker = "    actual_changed = changed_paths(historical, current)"
+    mutant = source.replace(
+        marker,
+        marker + '\n    successor.get("current_projection")', 1)
+    try:
+        successor_projection_source_gate(mutant)
+    except RootFixError:
+        rejected.append("restore-persisted-successor-authority")
+    require(rejected == ["derive-disagrees-with-sealed-claim",
+                         "restore-persisted-successor-authority"],
+            "root-fix successor mutation survived")
+    return rejected
 
 
 def git_bind(commit: str, path: Path) -> tuple[bytes, dict[str, Any]]:
@@ -356,31 +434,23 @@ def main() -> int:
         historical = load(RECEIPT)
         if historical != value:
             padding = load(PADDING_RECEIPT)
-            successor = padding.get("root_fix_successor", {})
-            require(
-                padding.get("status") ==
-                    "HOST-GREEN: EXPLICIT-NAMED-19-BYTE-FACADE-PADDING"
-                and successor.get("historical_receipt") == bind(RECEIPT)
-                and successor.get("historical_receipt_rewritten") is False
-                and successor.get("current_projection") ==
-                    bind_raw(RECEIPT, canonical(value))
-                and successor.get("authorized_changed_paths") == [
-                    "authority.checker.bytes",
-                    "authority.checker.sha256",
-                    "authority.configuration.bytes",
-                    "authority.configuration.sha256",
-                    "configuration.component.facade_padding",
-                    "configuration.source_owner.sources",
-                ],
-                "root-fix padding successor rebind drift")
+            successor_projection_source_gate()
+            successor_contract(historical, value, padding)
+            successor_mutations(historical, value, padding)
         else:
             require(historical == value, "root-fix receipt stale")
     else:
         require(len(value["source_mutations_rejected"]) == 6
                 and len(value["mutations_rejected"]) == 10,
                 "root-fix mutation count drift")
+        historical = load(RECEIPT)
+        padding = load(PADDING_RECEIPT)
+        successor_projection_source_gate()
+        successor_contract(historical, value, padding)
+        require(len(successor_mutations(historical, value, padding)) == 2,
+                "root-fix successor mutation count drift")
     print(f"probe-oracle root fix: PASS action={action} readers=9 "
-          f"partial=6 mutations=16")
+          f"partial=6 mutations=18")
     return 0
 
 

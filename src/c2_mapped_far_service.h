@@ -11,6 +11,10 @@
     __attribute__((section(".lisp65_c2_mapped_far_service")))
 #define LISP65_C2_MAPPED_FACADE_FN \
     __attribute__((section(".lisp65_c2_mapped_far_facade.abort")))
+#define LISP65_C2_MAPPED_DIAGNOSTIC_FN \
+    __attribute__((section(".lisp65_c2_mapped_diagnostic")))
+#define LISP65_C2_MAPPED_PRODUCT_COLD_FN \
+    __attribute__((section(".lisp65_c2_mapped_product_cold")))
 #define LISP65_C2_CONVERGENCE_STATE(name) \
     __attribute__((used, section(".lisp65_c2_convergence_state." name)))
 #define LISP65_C2_CONVERGENCE_ZP(name) \
@@ -18,6 +22,8 @@
 #else
 #define LISP65_C2_MAPPED_FAR_FN
 #define LISP65_C2_MAPPED_FACADE_FN
+#define LISP65_C2_MAPPED_DIAGNOSTIC_FN
+#define LISP65_C2_MAPPED_PRODUCT_COLD_FN
 #define LISP65_C2_CONVERGENCE_STATE(name)
 #define LISP65_C2_CONVERGENCE_ZP(name)
 #endif

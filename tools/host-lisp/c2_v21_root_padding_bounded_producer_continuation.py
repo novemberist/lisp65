@@ -254,14 +254,22 @@ def configure_candidate() -> tuple[dict[str, Any], dict[str, Path]]:
     PRODUCER.V6.OUT = oracle["c2d"].parent
     PRODUCER.V6.PRODUCT_IDENTITY = oracle["product_identity"]
     old = PRODUCER.BASE.L95.CAN.configure_wplto()
+    # The continuation consumes the active successor configuration.  Its
+    # predecessor once had exactly five convergence definitions; later
+    # product cards legitimately add source-owned features.  Preserve the
+    # semantic floor and uniqueness, never the historical tuple equality.
+    active_defines = tuple(PRODUCT.CONVERGENCE_DEFINES)
+    required_defines = {
+        "LISP65_CODE_WINDOW_CONVERGENCE",
+        "LISP65_DMA_CONTENT_CONVERGENCE",
+        "LISP65_C2_ASM_CONVERGENCE",
+        "LISP65_C2_FULL_SPAN_CONVERGENCE",
+        "LISP65_C2_MUTABLE_CPU_READS",
+    }
     require(PRODUCT.FULL_MAP_OWNERSHIP is True
             and PRODUCT.LOW_RESIDENT_LMA_RESET is True
-            and PRODUCT.CONVERGENCE_DEFINES == (
-                "LISP65_CODE_WINDOW_CONVERGENCE",
-                "LISP65_DMA_CONTENT_CONVERGENCE",
-                "LISP65_C2_ASM_CONVERGENCE",
-                "LISP65_C2_FULL_SPAN_CONVERGENCE",
-                "LISP65_C2_MUTABLE_CPU_READS"),
+            and len(active_defines) == len(set(active_defines))
+            and required_defines <= set(active_defines),
             "bounded continuation product configuration drift")
     return old, paths
 

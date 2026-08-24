@@ -9,7 +9,15 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
 from typing import Any
+
+
+HOST = Path(__file__).resolve().parent
+if str(HOST) not in sys.path:
+    sys.path.insert(0, str(HOST))
+
+import evidence_era as ERA  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,6 +46,7 @@ ENTRY_FIELD_WIDTHS = {
     "diagnostic_ordinal_u16": 2,
     "reserved_u16_zero": 2,
 }
+SEALED_COMMIT = "6e9389408024580a375f52f223b4b6f5875f1ef6"
 
 
 class ContractError(RuntimeError):
@@ -182,16 +191,16 @@ def collect() -> dict[str, Any]:
             "authorize capacity or make a product claim."
         ),
         "bindings": {
-            "verifier": binding(ROOT / "tools/host-lisp/c2_contract_check.py"),
-            "contract": binding(CONTRACT),
-            "freight": binding(FREIGHT),
-            "design_document": binding(ROOT / "docs/planning/c2.0-address-identity-contract.md"),
-            "design_inputs": binding(ROOT / "docs/planning/c2.0-design-inputs.md"),
-            "scope_memo": binding(ROOT / "docs/planning/v1.2-scope-memo.md"),
-            "v4_model": binding(MODEL),
-            "metadata_audit": binding(AUDIT),
-            "object_abi": binding(ROOT / "src/obj.h"),
-            "current_vm": binding(ROOT / "src/vm.c"),
+            "verifier": ERA.era_bind(SEALED_COMMIT, ROOT / "tools/host-lisp/c2_contract_check.py"),
+            "contract": ERA.era_bind(SEALED_COMMIT, CONTRACT),
+            "freight": ERA.era_bind(SEALED_COMMIT, FREIGHT),
+            "design_document": ERA.era_bind(SEALED_COMMIT, ROOT / "docs/planning/c2.0-address-identity-contract.md"),
+            "design_inputs": ERA.era_bind(SEALED_COMMIT, ROOT / "docs/planning/c2.0-design-inputs.md"),
+            "scope_memo": ERA.era_bind(SEALED_COMMIT, ROOT / "docs/planning/v1.2-scope-memo.md"),
+            "v4_model": ERA.era_bind(SEALED_COMMIT, MODEL),
+            "metadata_audit": ERA.era_bind(SEALED_COMMIT, AUDIT),
+            "object_abi": ERA.era_bind(SEALED_COMMIT, ROOT / "src/obj.h"),
+            "current_vm": ERA.era_bind(SEALED_COMMIT, ROOT / "src/vm.c"),
         },
         "validated": {
             "logical_callable_bits": 12,
@@ -241,6 +250,9 @@ def selftest() -> None:
         except ContractError:
             mutations.append(label)
     require(len(mutations) == 7, f"mutations not rejected: {mutations}")
+    require(binding(ROOT / "src/vm.c") != ERA.era_bind(
+                SEALED_COMMIT, ROOT / "src/vm.c"),
+            "address-identity era binding collapsed to the living VM")
 
 
 def write() -> dict[str, Any]:

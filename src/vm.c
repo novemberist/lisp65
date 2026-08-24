@@ -622,8 +622,15 @@ static uint8_t vm_object_load(uint8_t bank, uint16_t object,
                               uint16_t relative, uint16_t length,
                               uint8_t *destination) {
 #ifdef LISP65_C2_PRODUCT_CUT
-    if (bank == LISP65_C2_CODE_BANK_TAG)
+    if (bank == LISP65_C2_CODE_BANK_TAG) {
+#ifdef LISP65_C2_REFILL_BOUNDARY_WITNESS
+        extern uint8_t c2_refill_trace_read(
+            uint16_t, uint16_t, uint8_t *, uint16_t);
+        return c2_refill_trace_read(object, relative, destination, length);
+#else
         return c2_product_entry_read(object, relative, destination, length);
+#endif
+    }
 #endif
 #ifdef LISP65_CODE_WINDOW_CONVERGENCE
     return vm_code_load_converged(
@@ -1148,11 +1155,11 @@ void vm_init(void) {
 }
 
 #ifdef LISP65_VM_SCREEN_PRIMS
+#include "petscii_normalization.h"
 /* Gleiches Eventformat wie eval.c:key_event: (key code mods). */
 static obj vm_key_event(int c, uint8_t event_modifiers) {
     obj mods = NIL, e;
-    if (c >= 0xC1 && c <= 0xDA) { c -= 0x80; event_modifiers |= LISP65_KEYMOD_SHIFT; }
-    else if (c >= 'A' && c <= 'Z') c += 0x20;
+    c = lisp65_normalize_petscii((uint8_t)c, &event_modifiers);
     if (event_modifiers & LISP65_KEYMOD_SHIFT) mods = cons(vm_k_shift, mods);
     if (event_modifiers & LISP65_KEYMOD_CONTROL) mods = cons(vm_k_control, mods);
     if (event_modifiers & LISP65_KEYMOD_META) mods = cons(vm_k_meta, mods);
@@ -1741,12 +1748,23 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
             vm_status = VM_TYPEERROR; return NIL;
         }
         set_sym_value(a[0], a[1]); return a[1];
-    case 60: { /* key-event: optional mode 0=nonblocking, 1=blocking */
+    case 60: { /* key-event: public 0/1; private Comfort 2/3 use the raw ring */
         int16_t mode;
         if (n > 1) { vm_status = VM_ARITY; return NIL; }
         if (n == 1 && !IS_FIX(a[0])) { vm_status = VM_TYPEERROR; return NIL; }
         mode = n == 0 ? 0 : FIXVAL(a[0]);
-        if (mode != 0 && mode != 1) { vm_status = VM_TYPEERROR; return NIL; }
+        if (mode != 0 && mode != 1
+#ifdef LISP65_V160_INPUT_HYBRID
+                && mode != 2 && mode != 3
+#endif
+                ) { vm_status = VM_TYPEERROR; return NIL; }
+#ifdef LISP65_V160_INPUT_HYBRID
+        if (mode == 2 || mode == 3) {
+            extern uint8_t c2_kernal_input_take(uint8_t);
+            uint8_t code = c2_kernal_input_take((uint8_t)mode);
+            return code == 0u ? NIL : MKFIX(code);
+        }
+#endif
 #ifdef LISP65_SHIP_RUNTIME_IO
         {
             int c = lisp65_ship_io_getin((uint8_t)mode);

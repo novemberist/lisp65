@@ -20,6 +20,7 @@ if str(HOST) not in sys.path:
 
 import c2_asm_leaf_abi_gate as ABI  # noqa: E402
 import c2_lite_canonical_product as CONSUMER  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -33,6 +34,11 @@ DRIVER = Path(__file__).resolve()
 PRODUCER = ROOT / "tools/host-lisp/c2_asm_leaf_abi_gate.py"
 CONSUMER_SOURCE = ROOT / "tools/host-lisp/c2_lite_canonical_product.py"
 AUTHORIZATION = "9180e59a"
+SEAL_ERA_COMMIT = "2a292fc3d9964198df039f60cd21d35cac410543"
+SEALED_MUTATIONS = [
+    "restore-historical-pin", "rename-consumer-only", "hide-unclassified",
+    "authorize-wplto", "source-restore-historical-pin",
+]
 
 
 class PairingError(RuntimeError):
@@ -122,6 +128,27 @@ def validate(value: dict[str, Any], expected: dict[str, Any]) -> None:
     require(value == expected, "ABI vocabulary pairing drift")
 
 
+def validate_sealed(value: dict[str, Any], current: dict[str, Any]) -> None:
+    """Keep the receipt in its era while proving the live producer/consumer pair."""
+    require(
+        value.get("format") == current.get("format")
+        and value.get("status") == current.get("status")
+        and value.get("pairing") == current.get("pairing")
+        and value.get("linked_witness") == current.get("linked_witness")
+        and value.get("execution_lock") == current.get("execution_lock")
+        and value.get("authority", {}).get("owner") ==
+            current.get("authority", {}).get("owner")
+        and value.get("authority", {}).get("frozen_ELF") ==
+            current.get("authority", {}).get("frozen_ELF")
+        and value.get("authority", {}).get("producer") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, PRODUCER)
+        and value.get("authority", {}).get("consumer") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, CONSUMER_SOURCE)
+        and value.get("authority", {}).get("driver") ==
+            ERA.era_bind(SEAL_ERA_COMMIT, DRIVER),
+        "sealed ABI producer/consumer pairing drift")
+
+
 def mutations(value: dict[str, Any]) -> list[str]:
     cases: dict[str, Callable[[dict[str, Any]], None]] = {
         "restore-historical-pin": lambda x: x["pairing"].update(
@@ -162,9 +189,11 @@ def record() -> None:
 
 def check() -> None:
     value = load(RECEIPT); rejected = value.pop("mutations_rejected", None)
-    expected = derive(); validate(value, expected)
-    require(rejected == mutations(expected), "ABI pairing mutation receipt drift")
-    print("2.1 ABI vocabulary: CHECK PASS producer=consumer")
+    current = derive(); validate_sealed(value, current)
+    require(rejected == SEALED_MUTATIONS
+            and mutations(current) == SEALED_MUTATIONS,
+            "ABI pairing mutation receipt drift")
+    print("2.1 ABI vocabulary: CHECK PASS sealed-era live-pair=producer+consumer")
 
 
 def main() -> int:

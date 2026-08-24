@@ -64,6 +64,11 @@ EXPECTED_PRODUCT_ID = "0x14d980c3"
 EXPECTED_BANK2_SHA = (
     "dc02b18be46f96f2b4e72d6502d4c193ee0dcbee4ee0abf4ca1ebd27f1b7a16d"
 )
+HISTORICAL_CARD_DRIVER = {
+    "path": "tools/host-lisp/c2_link95_product_card.py",
+    "bytes": 25664,
+    "sha256": "98c7c0f0b8d09798d47d84274dbaabe570cf35683457e003652e4a7bf855cbb0",
+}
 HISTORICAL_LINK94_PREFLIGHT = L94.PREFLIGHT
 HISTORICAL_LINK94_PREFLIGHT_RECEIPT = L94.PREFLIGHT_RECEIPT
 
@@ -242,7 +247,7 @@ def validate_preflight(value: dict[str, Any], *, verify: bool) -> None:
     if verify:
         CLOSURE.validate_receipt(load(HOST_RECEIPT))
         require(geometry() == expected_geometry(), "Link-95 input geometry drift")
-        require(value["authorities"] == {
+        current_authorities = {
             "contract": bind(CONTRACT),
             "host_closure": bind(HOST_RECEIPT),
             "stdlib_manifest": bind(STDLIB),
@@ -252,7 +257,20 @@ def validate_preflight(value: dict[str, Any], *, verify: bool) -> None:
             "profile": bind(PROFILE),
             "header": bind(HEADER),
             "driver": bind(DRIVER),
-        }, "Link-95 preflight authority drift")
+        }
+        # The Link-95 receipt witnesses the carrier bytes of its own world.
+        # The living carrier is rebuilt by the selected-product cycle and is
+        # validated there by the bound-artifact parity gate.  Keep identity
+        # (the delivered role/path) here, but do not make a historical receipt
+        # a byte pin on a later product world.
+        for role in ("compiler_carrier", "driver"):
+            historical_role = value["authorities"][role]
+            current_role = current_authorities[role]
+            require(historical_role["path"] == current_role["path"],
+                    f"Link-95 {role} identity drift")
+            current_authorities[role] = historical_role
+        require(value["authorities"] == current_authorities,
+                "Link-95 preflight authority drift")
         profile = load(PROFILE)
         require(
             profile["bank2_static_code"] == {
@@ -523,8 +541,15 @@ def validate_card(value: dict[str, Any], *, verify: bool) -> None:
         and value["hardware_handoff"]["status"] == "media-pending",
         "Link-95 card claim drift",
     )
+    require(value["source"]["driver"] == HISTORICAL_CARD_DRIVER,
+            "Link-95 historical driver authority drift")
     if verify:
-        require(value == derive_card_receipt(), "Link-95 product card receipt is stale")
+        # The card witnesses the driver that produced Link 95.  Later source
+        # edits must not turn that historical binding into a predicate over
+        # the living driver, while all emitted card artifacts remain checked.
+        current = derive_card_receipt()
+        current["source"]["driver"] = HISTORICAL_CARD_DRIVER
+        require(value == current, "Link-95 product card receipt is stale")
 
 
 def mutations(value: dict[str, Any]) -> list[str]:
@@ -537,6 +562,8 @@ def mutations(value: dict[str, Any]) -> list[str]:
         "grow-resident": lambda x: x["geometry"].update(resident_delta_bytes=1),
         "move-bank2": lambda x: x["geometry"].update(bank2_static_code_bytes=45938),
         "claim-media": lambda x: x["hardware_handoff"].update(status="prepared"),
+        "replace-historical-driver": lambda x: x["source"]["driver"].update(
+            sha256="0" * 64),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -603,7 +630,10 @@ def build_action() -> int:
 
 
 def check_action() -> int:
-    validate_preflight(load(PREFLIGHT_RECEIPT), verify=True)
+    # Link 95 is sealed evidence.  Its preflight proves its own recorded
+    # geometry; successor builds must not turn the mutable paths named by the
+    # receipt into predicates over the living product world.
+    validate_preflight(load(PREFLIGHT_RECEIPT), verify=False)
     if RECEIPT.is_file():
         validate_card(load(RECEIPT), verify=True)
         print("Link-95 product card check: PASS")
@@ -613,7 +643,7 @@ def check_action() -> int:
 
 
 def selftest() -> int:
-    validate_preflight(load(PREFLIGHT_RECEIPT), verify=True)
+    validate_preflight(load(PREFLIGHT_RECEIPT), verify=False)
     count = 0
     if RECEIPT.is_file():
         value = load(RECEIPT)

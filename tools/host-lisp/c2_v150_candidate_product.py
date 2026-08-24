@@ -216,21 +216,48 @@ def profile_geometry(profile: Path = PROFILE) -> dict[str, Any]:
     }
 
 
-def configure_identity(profile: Path = PROFILE) -> None:
-    geo = PRE.geometry()
+def freight_geometry(freight_root: Path) -> dict[str, Any]:
+    """Read identity from candidate-owned freight, never ambient PRE state."""
+    static = freight_root / "static-plane/narrow-static"
+    product = load(static / "product/substitution-artifacts.json")
+    bank2 = static / "v6-semantics/bank2-static-code.bin"
+    require(bank2.is_file() and not bank2.is_symlink(),
+            "candidate-owned Bank-2 freight absent")
+    raw = bank2.read_bytes()
+    return {
+        "static_code_bytes": len(raw),
+        "bank2_headroom_bytes": 65536 - len(raw),
+        "bank2_sha256": hashlib.sha256(raw).hexdigest(),
+        "entries": int(product["entries"]),
+        "resolutions": int(product["resolutions"]),
+        "roots": int(product["roots"]),
+        "direct_entry_refs": L95.L94.direct_entry_census(
+            static / "product"),
+        "product_build_id": str(product["product_build_id_hex"]),
+    }
+
+
+def configure_identity(
+        profile: Path = PROFILE, *, freight_root: Path | None = None) -> None:
+    # Historical qualifiers own copied static planes.  Reading PRE.geometry()
+    # here made a second full check depend on whether a later successor had
+    # already regenerated the mutable v1.5 preflight directory.
+    freight_root = BUILD if freight_root is None else freight_root
+    static = freight_root / "static-plane/narrow-static"
+    geo = freight_geometry(freight_root)
     require(geo == profile_geometry(profile),
-            "v1.5 qualification profile differs from preflight")
+            "v1.5 qualification profile differs from candidate freight")
     L95.RELEASE = RELEASE
     L95.LINK = LINK
     L95.DRIVER = DRIVER
-    L95.PREFLIGHT = PRE.BUILD
+    L95.PREFLIGHT = freight_root
     L95.BUILD = BUILD
     L95.MANIFEST = MANIFEST
-    L95.STATIC = PRE.STATIC
-    L95.STATIC_PRODUCT = PRE.STATIC / "product"
-    L95.V6_PLANE = PRE.V6_PLANE
-    L95.STDLIB_PREFIX = PRE.STDLIB_PREFIX
-    L95.STDLIB = PRE.STDLIB
+    L95.STATIC = static
+    L95.STATIC_PRODUCT = static / "product"
+    L95.V6_PLANE = static / "v6-semantics"
+    L95.STDLIB_PREFIX = static / "stdlib-p0"
+    L95.STDLIB = L95.STDLIB_PREFIX.with_suffix(".manifest.json")
     L95.PREFLIGHT_RECEIPT = PRE.RECEIPT
     L95.HOST_RECEIPT = PRE.RECEIPT
     L95.CONTRACT = CONTRACT
@@ -243,18 +270,24 @@ def configure_identity(profile: Path = PROFILE) -> None:
     L95.EXPECTED_DIRECT_REFS = geo["direct_entry_refs"]
     L95.EXPECTED_PRODUCT_ID = geo["product_build_id"]
     L95.EXPECTED_BANK2_SHA = geo["bank2_sha256"]
-    L95.specs = PRE.specs
-    L95.CLOSURE.OUT = PRE.BUILD
-    L95.CLOSURE.PRODUCT = PRE.PRODUCT
+
+    def candidate_specs() -> tuple[tuple[str, str, Path], ...]:
+        return (("stdlib-p0", "stdlib", L95.STDLIB), *PRE.BASE_SPECS)
+
+    L95.specs = candidate_specs
+    L95.CLOSURE.OUT = freight_root
+    L95.CLOSURE.PRODUCT = static / "product/substitution-artifacts.json"
     L95.CLOSURE.RECEIPT = PRE.RECEIPT
     L95.CLOSURE.restore_bound_authorities = lambda: None
 
 
-def configure(profile: Path | None = None) -> dict[str, Path]:
+def configure(
+        profile: Path | None = None, *,
+        freight_root: Path | None = None) -> dict[str, Path]:
     if profile is None:
         profile = (REPLAY_PROFILE if os.environ.get(
             "LISP65_V150_POSTLINK_REPLAY") == "1" else PROFILE)
-    configure_identity(profile)
+    configure_identity(profile, freight_root=freight_root)
     paths = L95.configure_card()
     # Link-95's compatibility adapter predates profile injection and leaves
     # these two readers on the tracked predecessor.  Qualification replay

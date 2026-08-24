@@ -843,13 +843,25 @@ c2-phase-v-gc-ext-dma-check:
 c2-v122-g5-freezer-authority-check:
 	python3 tools/host-lisp/c2_v122_g5_freezer_authority_gate.py
 
-workbench-product:
+.PHONY: c2-v150-public-product-lifecycle-selftest
+c2-v150-public-product-lifecycle-selftest:
+	python3 tools/host-lisp/c2_v150_public_product.py lifecycle-selftest
+
+workbench-product: c2-v150-public-product-lifecycle-selftest
 	@if test -f build/c2.3/v1.5.0-public-selected/candidate-manifest.json; then \
 		python3 tools/host-lisp/c2_v150_public_product.py check; \
 	else \
 		python3 tools/host-lisp/c2_v150_public_product.py build; \
 	fi
 	python3 tools/host-lisp/c2_lite_public_clean_build.py check-local
+
+.PHONY: workbench-product-v160
+workbench-product-v160:
+	@if test -f build/c2.3/v1.6.0-public-selected/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_v160_public_product.py check; \
+	else \
+		python3 tools/host-lisp/c2_v160_public_product.py build; \
+	fi
 
 workbench-product-footprint-report: workbench-product
 	@test -f build/c2.2/canonical-product/final/substitution-balance.json

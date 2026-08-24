@@ -220,7 +220,9 @@ def derive() -> dict[str, Any]:
 def validate(value: dict[str, Any]) -> None:
     boundary = value["completion_boundary"]
     require(
-        value.get("status") == STATUS
+        value.get("format") == FORMAT
+        and value.get("recorded_on") == "2026-08-16"
+        and value.get("status") == STATUS
         and all(value["green_preconditions"].values())
         and len(boundary["present_seed_artifacts"]) == 4
         and len(boundary["absent_final_product_artifacts"]) == 4
@@ -275,13 +277,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("record", "check"))
     action = parser.parse_args().action
-    value = derive()
     if action == "record":
+        value = derive()
         require(not RECEIPT.exists(), "Completion preflight receipt exists")
         RECEIPT.write_bytes(canonical(value))
     else:
-        require(load(RECEIPT) == value,
-                "Completion preflight receipt stale")
+        # This Final Red is a boundary decision in the seed world, not a live
+        # assertion that the later authorized continuation never happened.
+        value = load(RECEIPT)
+        rejected = value.pop("mutations_rejected", None)
+        validate(value)
+        require(rejected == mutations(value),
+                "Completion preflight mutation receipt drift")
     print("root-padding Completion preflight: FINAL RED final=0 seed=1 "
           "WPLTO=0 link=0 completion=0 mutations=7")
     return 0

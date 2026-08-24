@@ -51,6 +51,9 @@ MEM = ROOT / "src/mem.c"
 EMITTER = ROOT / "src/c2_session_emitter.c"
 
 AUTHORIZATION = "f1aabb5f"
+HISTORICAL_EVIDENCE_COMMIT = (
+    "ab21184735d611f615cf73fdd73b4e21cfd89f23"
+)
 FORMAT = "lisp65-c2.3-v2.1-reader-caller-path-attribution-v1"
 STATUS = "ATTRIBUTED: INVISIBLE-PETSCII-A0-INGRESS"
 HEAP_CELLS = 48
@@ -92,6 +95,24 @@ def load(path: Path) -> dict[str, Any]:
 def bind(path: Path) -> dict[str, Any]:
     require(path.is_file() and not path.is_symlink(), f"input absent: {path}")
     raw = path.read_bytes()
+    return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
+            "sha256": digest(raw)}
+
+
+def historical_bytes(path: Path) -> bytes:
+    name = path.relative_to(ROOT).as_posix()
+    process = subprocess.run(
+        ["git", "show", f"{HISTORICAL_EVIDENCE_COMMIT}:{name}"], cwd=ROOT,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    require(process.returncode == 0,
+            process.stderr.decode(errors="replace").strip()
+            or f"historical source absent: {name}")
+    return process.stdout
+
+
+def historical_bind(path: Path) -> dict[str, Any]:
+    raw = historical_bytes(path)
     return {"path": path.relative_to(ROOT).as_posix(), "bytes": len(raw),
             "sha256": digest(raw)}
 
@@ -277,10 +298,13 @@ def parse_model(raw: bytes) -> Any:
 
 
 def input_seam() -> dict[str, Any]:
-    repl = REPL.read_text(encoding="utf-8")
-    reader = READER.read_text(encoding="utf-8")
-    screen = SCREEN.read_text(encoding="utf-8")
-    kernal = KERNAL.read_text(encoding="utf-8")
+    # This receipt names the pre-WYSIWYG ingress mechanism.  Its source facts
+    # belong to the commit that produced the receipt; the living REPL now
+    # contains the authorized fix and must not be used to invalidate history.
+    repl = historical_bytes(REPL).decode()
+    reader = historical_bytes(READER).decode()
+    screen = historical_bytes(SCREEN).decode()
+    kernal = historical_bytes(KERNAL).decode()
     require("if (c < 0x20 || (c >= 0x80 && c < 0xA0)) continue;" in repl,
             "REPL acceptance boundary changed")
     require("buf[n++] = (char)c;" in repl,
@@ -364,8 +388,8 @@ def emitted_paths() -> dict[str, Any]:
         require(symbol_bytes(truth, name).endswith(bytes.fromhex("4c3336")),
                 f"{name} no longer tail-calls ext_dma")
 
-    mem = MEM.read_text(encoding="utf-8")
-    emitter = EMITTER.read_text(encoding="utf-8")
+    mem = historical_bytes(MEM).decode()
+    emitter = historical_bytes(EMITTER).decode()
     require("ext_disk_get((uint16_t)(256u + at))" in emitter
             and "ext_disk_put((uint16_t)(256u + at), value)" in emitter,
             "emitter disk caller derivation changed")
@@ -488,9 +512,13 @@ def derive() -> dict[str, Any]:
             "Link113_receipt": bind(R113), "Bank4_probe": bind(PROBE),
             "Link112_bank4": bind(CAP112 / "physical-bank4.bin"),
             "Link113_bank4": bind(CAP113 / "physical-bank4.bin"),
-            "repl": bind(REPL), "reader": bind(READER), "screen": bind(SCREEN),
-            "kernal": bind(KERNAL), "mem": bind(MEM), "emitter": bind(EMITTER),
-            "checker": bind(Path(__file__)),
+            "repl": historical_bind(REPL),
+            "reader": historical_bind(READER),
+            "screen": historical_bind(SCREEN),
+            "kernal": historical_bind(KERNAL),
+            "mem": historical_bind(MEM),
+            "emitter": historical_bind(EMITTER),
+            "checker": historical_bind(Path(__file__)),
         },
         "execution_accounting": {"WPLTO": 0, "links": 0,
                                  "product_bytes_changed": 0,

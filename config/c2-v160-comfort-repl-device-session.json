@@ -1,0 +1,97 @@
+{
+  "format": "lisp65-c2-v160-comfort-repl-device-session-v1",
+  "recorded_on": "2026-08-18",
+  "status": "device-first-red-input-fidelity",
+  "review_authority_commit": "71a6211f",
+  "product_world": {
+    "build_id": "0x0401e53e",
+    "medium": "build/c2.3/v2.1-wysiwyg-text-recovery-media/shared-system/lisp65-product.d81",
+    "remote_name": "V16PROD.D81"
+  },
+  "library_world": {
+    "medium": "build/c2.3/v1.6-comfort-repl-hardware/v16comfort.d81",
+    "remote_name": "V16LIB.D81",
+    "resolver_order": [
+      "v16core",
+      "repl-comfort"
+    ]
+  },
+  "choreography": {
+    "fresh_basic_first": true,
+    "single_pre_boot_ftp_lifetime": true,
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "product_mounted_last": true,
+    "library_mounted_physically_through_freezer": true,
+    "post_boot_ftp_calls": 0,
+    "device_access_during_active_repl_form": 0,
+    "final_read_only_screen_capture_after_repl_exit": true
+  },
+  "rows": [
+    "require returns t",
+    "balanced expression returns 3",
+    "cursor-left insertion produces (1 2 3)",
+    "balanced multiline expression returns 42 with two-space continuation indent",
+    "over-close is rejected before evaluation",
+    "history Up recalls and re-evaluates (list 7 8)",
+    "parenthesis in string does not continue input",
+    "parenthesis in comment does not close input",
+    "201-byte aggregate crosses the native 192-byte buffer and returns 3",
+    "empty balanced line returns nil to the native REPL"
+  ],
+  "result": {
+    "semantic_rows": "10/10 owner-confirmed",
+    "final_native_prompt": true,
+    "vm_error": false,
+    "disk_error": false,
+    "owner_input_fidelity_observation": "Comfort typing feels clunky and less fluid than the native REPL; physical key presses are frequently not registered and must be repeated.",
+    "classification": "FIRST RED: loss of ordinary physical input is a correctness failure, not a cosmetic latency finding",
+    "device_acceptance": false,
+    "d5_open": false
+  },
+  "screen_witness": {
+    "text": {
+      "path": "build/c2.3/v1.6-comfort-repl-hardware/final.txt",
+      "bytes": 2241,
+      "sha256": "ca9cd3297dfd72613b70d5ab17554568c3e7a431808dd596bc38f574d626aa1c"
+    },
+    "png": {
+      "path": "build/c2.3/v1.6-comfort-repl-hardware/final.png",
+      "bytes": 6026,
+      "sha256": "5c169fd14761e9e8800091fccd1f9c45e4853af7a137cff231ebcc134f9bec67"
+    }
+  },
+  "host_attribution": {
+    "hardware_queue_depth": 5,
+    "hardware_overflow_rule": "a sixth event is not enqueued while the five-event queue is full",
+    "comfort_input_path": "key-event allocates a three-cell (key code modifiers) tuple; an accepted printable allocates one editor cell; synchronous edit/render work completes before the next queue poll",
+    "native_repl_control": "lisp_input_event writes one event to a stack struct and the native REPL appends the code directly to its static C buffer before polling again",
+    "nursery_cells": 192,
+    "ordinary_printable_cells_per_key": 4,
+    "maximum_printables_between_collections_if_no_other_allocation": 48,
+    "current_host_vm_steps_between_key_polls": {
+      "append_three_characters": [1259, 1275, 1291],
+      "cursor_left": 1016,
+      "middle_insert": 1271
+    },
+    "standing_whole_collection_hardware_authority_frames": [88, 89],
+    "mechanism_class": "the synchronous Lisp consumer has service gaps larger than the finite producer queue can absorb; periodic collection is the strongest pre-registered gap term, while the exact current screen/VM/GC split remains unmeasured",
+    "gate_gap": "the accepted allocation gate bounded one collection per key but never related that pause to the five-event queue or asserted zero dropped physical input"
+  },
+  "next": {
+    "device_contacts": "closed until a host-priced input-fidelity repair exists",
+    "required_property": "ordinary physical keys cannot be lost while editor work or collection is in progress",
+    "pricing_candidates": [
+      "capture into a product-owned queue independently of Lisp edit/render/GC work",
+      "a zero-allocation scalar event path plus preallocated editor storage, with an explicit queue-service bound",
+      "queue-aware drain/coalescing only if its event materialization cannot itself collect before the hardware queue is drained"
+    ]
+  },
+  "claim_limit": {
+    "item_1_and_2_semantic_rows": true,
+    "item_1_and_2_device_acceptance": false,
+    "release_media": false,
+    "device_d5_headroom": false,
+    "release_acceptance": false,
+    "reason": "The same-world delta proves the listed semantics, but the owner's physical typing observation is a release-relevant input-fidelity First Red. No exact current GC timing or individual dropped-key count is claimed."
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "format": "lisp65-c2-v160-input-service-hybrid-reclaim-pricing-v1",
+  "status": "review-released-host-only-pricing",
+  "authority_commit": "120758b7",
+  "candidate": {
+    "name": "%require-c2d-header-layout-p",
+    "source": "lib/stdlib-require.lisp",
+    "only_caller": "%require-c2d-state",
+    "recursive": false,
+    "name_bytes_including_nul": 29
+  },
+  "suite": {
+    "path": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+    "required_cases": 248,
+    "entry_must_be_absent": true,
+    "caller_must_be_present": true
+  },
+  "capacity": {
+    "accepted_device_free_before_hybrid": {
+      "symbol_slots": 32,
+      "namepool_bytes": 572
+    },
+    "returned_rl_put_cost": {
+      "symbol_slots": 1,
+      "namepool_bytes": 8
+    },
+    "release_minimum": {
+      "symbol_slots": 32,
+      "namepool_bytes": 384
+    }
+  },
+  "walls": {
+    "product_cards": 0,
+    "WPLTO_runs": 0,
+    "product_links": 0,
+    "media_builds": 0,
+    "device_contacts": 0,
+    "owner_fork_untouched": ["one-name-convergence", "MAX_SYM"]
+  }
+}

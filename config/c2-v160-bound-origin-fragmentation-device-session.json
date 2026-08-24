@@ -1,0 +1,96 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.6-bound-origin-input-loss-attribution"
+    ],
+    "excludes": [
+      "v1.6-items-1-2-final-acceptance",
+      "D5-headroom",
+      "release-acceptance",
+      "v1.6-items-3-4"
+    ]
+  },
+  "counter_witness": {
+    "addresses": {
+      "raw": "0xBCFC",
+      "seen": "0xBCFD",
+      "stored": "0xBCFE",
+      "taken": "0xBCFF"
+    },
+    "decision_table": {
+      "physical=raw=seen=stored=taken": "no loss; display/timing path",
+      "physical>raw": "keyboard/core before queue-present observation",
+      "raw>seen": "IRQ queue read or filtering",
+      "seen>stored": "ring write or full-ring admission",
+      "stored>taken": "consumer/take path"
+    },
+    "maximum_physical_events": 255,
+    "origin": "atomic zero at Comfort entry while capture tail remains $FF",
+    "submit_after_target": false,
+    "target_visible_text": "a(a(a(a(",
+    "width_bits": 8
+  },
+  "format": "lisp65-c2-v160-bound-origin-fragmentation-device-session-v1",
+  "host_half": {
+    "event_6_observed_in_order": true,
+    "forced_collection_frames": 89,
+    "normalization_parity": "256/256 across both consumers",
+    "ordered_events": "94/94",
+    "responsiveness_margin_percent": 29.044052413392606
+  },
+  "liveness_witness": {
+    "class": "retirement-before-wipe",
+    "comfort_prompt": "l65>",
+    "recovery_prompt": "lisp65>",
+    "red_frame": false,
+    "trigger": "(car 1)"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-device-preparation/library/lisp65-library.d81",
+      "remote_name": "V16L5.D81",
+      "sha256": "f264756c89d737ea37e1c4072cf42c70238dfb69f0ef9768324c974758ddfbc3"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.6-bound-origin-fragmentation-device-preparation/shared-system/lisp65-product.d81",
+      "remote_name": "V16P5.D81",
+      "sha256": "1dfe154d49780831b92214c0740280e02adda915dddfbea375b59d329305cc84"
+    }
+  },
+  "recorded_on": "2026-08-21",
+  "rows": [
+      {
+        "action": "cold boot, mount library, require v16core and repl-comfort",
+        "expect": "both requires return t; native lisp65> remains live",
+        "id": "D1"
+      },
+      {
+        "action": "submit (repl)",
+        "expect": "l65> appears; all four counters atomically start at zero",
+        "id": "D2-enter"
+      },
+      {
+        "action": "At l65>, slowly produce exactly the visible target a(a(a(a(. Repeat a physical key whenever it is not shown, count every physical key actuation including Shift+8 and every repeat, do not press Return, and stay below 256.",
+        "expect": "target is visible; physical actuation count is recorded",
+        "id": "D2-bound-origin"
+      },
+      {
+        "action": "stop once without resume; read raw/seen/stored/taken at $BCFC..$BCFF",
+        "expect": "four raw bytes and the physical actuation count determine one arc",
+        "id": "D2-read-only-stop"
+      }
+  ],
+  "status": "ready-owner-contact"
+}

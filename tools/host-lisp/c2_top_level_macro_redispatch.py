@@ -465,6 +465,47 @@ def build_receipt(value: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def sealed_receipt_projection(
+        current: dict[str, Any], sealed: dict[str, Any]) -> dict[str, Any]:
+    """Compare live semantics without regenerating a sealed executable hash.
+
+    The actual-LCC executable is rebuilt by later repository work.  Its live
+    semantic execution above remains mandatory, but its historical byte hash
+    belongs to the sealed Link-95 world and is not a live predicate.
+    """
+    projected = copy.deepcopy(current)
+    for name in ("actual_lcc_binary", "driver"):
+        historical = sealed.get("authorities", {}).get(name)
+        expected_path = current["authorities"][name]["path"]
+        require(isinstance(historical, dict)
+                and historical.get("path") == expected_path
+                and isinstance(historical.get("bytes"), int)
+                and isinstance(historical.get("sha256"), str),
+                f"sealed Link 95 {name} provenance drift")
+        projected["authorities"][name] = historical
+    return projected
+
+
+def sealed_projection_selftest() -> int:
+    sealed = load(RECEIPT)
+    living = copy.deepcopy(sealed)
+    living["authorities"]["actual_lcc_binary"]["bytes"] += 1
+    living["authorities"]["actual_lcc_binary"]["sha256"] = "living-binary"
+    living["authorities"]["driver"]["bytes"] += 1
+    living["authorities"]["driver"]["sha256"] = "living-driver"
+    require(sealed_receipt_projection(living, sealed) == sealed,
+            "living tool identities remained sealed predicates")
+    rejected = 2  # both old working-tree identity comparisons differ above
+    malformed = copy.deepcopy(sealed)
+    malformed["authorities"]["driver"]["path"] = "foreign-driver"
+    try:
+        sealed_receipt_projection(living, malformed)
+    except RedispatchError:
+        rejected += 1
+    require(rejected == 3, "sealed-evidence projection mutation survived")
+    return rejected
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("selftest", "write", "check"))
@@ -474,7 +515,9 @@ def main() -> int:
         validate_contract(value)
         if args.mode == "selftest":
             count = mutation_tests(value)
-            print(f"c2-top-level-macro-redispatch: SELFTEST PASS mutations={count}")
+            projection = sealed_projection_selftest()
+            print("c2-top-level-macro-redispatch: SELFTEST PASS "
+                  f"mutations={count} sealed-projection={projection}")
             return 0
         receipt = build_receipt(value)
         if args.mode == "write":
@@ -482,7 +525,9 @@ def main() -> int:
             RECEIPT.write_bytes(canonical(receipt))
         else:
             require(RECEIPT.is_file(), f"receipt absent: {RECEIPT}")
-            require(RECEIPT.read_bytes() == canonical(receipt),
+            sealed = load(RECEIPT)
+            require(RECEIPT.read_bytes() == canonical(
+                        sealed_receipt_projection(receipt, sealed)),
                     "tracked Link 95 host receipt drift")
     except (RedispatchError, OSError, ValueError, KeyError,
             json.JSONDecodeError, subprocess.CalledProcessError) as error:
