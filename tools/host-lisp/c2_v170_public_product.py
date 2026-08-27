@@ -60,6 +60,7 @@ EXPECTED_RAW = {
         "560a64601ada7f64a688eaff8a386f1e560f0857ef34a7f49bed972083c9ea14"),
 }
 PUBLIC_V15_REPOSITORY = "https://github.com/novemberist/lisp65.git"
+PUBLIC_V16_SOURCE_COMMIT = "9938c274e34ff7163d0d6e0109df60e0540ae83a"
 
 
 class PublicBuildError(RuntimeError):
@@ -479,16 +480,21 @@ def build_shared_media() -> dict[str, Any]:
 def build_library_media() -> dict[str, Any]:
     generated = PUBLIC / "library-inputs"
     generated.mkdir(parents=True, exist_ok=True)
-    era = RELEASE_MEDIA.V16CORE_SOURCE_ERA
+    # v16core is sealed v1.6 freight.  Read it from the public predecessor
+    # history already cloned for the source build; a private proof commit is
+    # neither present nor authoritative in a public checkout/source archive.
+    era = PUBLIC_V16_SOURCE_COMMIT
     historical = subprocess.run(
-        ["git", "show", f"{era}:lib/stdlib-read-line.lisp"], cwd=ROOT,
+        ["git", "show", f"{era}:lib/stdlib-read-line.lisp"],
+        cwd=V160.HISTORICAL,
         check=True, stdout=subprocess.PIPE).stdout.decode()
     source = generated / "stdlib-read-line-v160-sealed.lisp"
     source.write_text(V160.ITEM1.CURSOR.public_only_source(historical),
                       encoding="utf-8")
     sexp = generated / "sexp-depth-v160-sealed.lisp"
     sexp.write_bytes(subprocess.run(
-        ["git", "show", f"{era}:lib/sexp-depth.lisp"], cwd=ROOT,
+        ["git", "show", f"{era}:lib/sexp-depth.lisp"],
+        cwd=V160.HISTORICAL,
         check=True, stdout=subprocess.PIPE).stdout)
     suite_path = generated / "v16core-v170-suite.json"
     cursor_suite = ROOT / "tests/bytecode/libs/p0-v160-comfort-device-delta.json"
@@ -544,7 +550,8 @@ def build_library_media() -> dict[str, Any]:
         "index": expected_role("optional-library-index", index_path),
         "v16core": expected_role("library-v16core", artifact_path),
         "rows": ["v16core"], "Comfort_absent": True,
-        "source_authority": {"commit": era,
+        "source_authority": {"kind": "public-v1.6-sealed-era",
+            "commit": era,
             "paths": ["lib/stdlib-read-line.lisp", "lib/sexp-depth.lisp"]},
         "private_evidence_inputs": 0}
     (PUBLIC / "library.json").write_bytes(canonical(value))
