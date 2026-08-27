@@ -1,0 +1,84 @@
+{
+  "format": "lisp65-c2-v17-comfort-phase1b-implementation-v1",
+  "recorded_on": "2026-08-25",
+  "status": "owner-authorized-variant-b-host-first",
+  "authorization_commit": "65c3b76d",
+  "pricing_commit": "e91a526a",
+  "selection_commit": "e890b5e8",
+  "activation": {
+    "library_designator": "repl-comfort",
+    "public_entry": "repl",
+    "requires": ["core", "ide"],
+    "native_repl_remains_fallback": true
+  },
+  "variant_b": {
+    "capability": "screen-bulk-p",
+    "bulk_primitive": "screen-write-string",
+    "fallback_primitive": "screen-put-char",
+    "fallback_cells": [108, 54, 53, 62, 32],
+    "fallback_attribute": 1,
+    "product_primitive_delta": 0,
+    "tombstoned_primitive_id": 12
+  },
+  "semantics": {
+    "maximum_history_lines": 10,
+    "indent_spaces_per_depth": 2,
+    "maximum_indent_depth": 10,
+    "physical_line_limit": 250,
+    "aggregate_input_exceeds_native_192": true,
+    "overclose_rejected_before_evaluation": true,
+    "scanner_shared_with_ide": "%ide-line-net-depth",
+    "evaluation_path": ["read-from-string", "lcc-run"],
+    "top_level_wrapper": "progn"
+  },
+  "symbol_budget": {
+    "d5_configuration": "release acceptance loads repl-comfort before measuring headroom",
+    "prior_bias_adjusted_free": {
+      "symbol_slots": 33,
+      "namepool_bytes": 594
+    },
+    "new_interned_names": ["%repl-prompt"],
+    "new_namepool_bytes": 13,
+    "bias_adjusted_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 581
+    },
+    "release_minimum_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 384
+    },
+    "bias_adjusted_margin": {
+      "symbol_slots": 0,
+      "namepool_bytes": 197
+    },
+    "future_named_helper_requires_repricing": true
+  },
+  "placement": {
+    "bank2_library_delta_bytes": 76,
+    "resident_code_delta_bytes": 0,
+    "resident_state_delta_bytes": 0,
+    "native_primitive_delta": 0,
+    "hardware_runs": 0
+  },
+  "gates": {
+    "real_workbench_cases": 248,
+    "comfort_required_cases": [
+      "comfort-balanced-expression",
+      "comfort-multiline-balanced",
+      "comfort-overclose-runs-nothing",
+      "comfort-history-up",
+      "comfort-cursor-down-empty-boundary",
+      "comfort-auto-indent-prefix",
+      "comfort-string-parens-do-not-continue",
+      "comfort-comment-parens-do-not-close",
+      "comfort-history-ring-caps-at-ten"
+    ],
+    "long_input_dynamic_cases": 1,
+    "code_object_limit_bytes": 255,
+    "maximum_frames_per_character": 0.8,
+    "minimum_service_events_per_frame": 1.25,
+    "minimum_margin_percent": 25.0,
+    "product_profile_callprim_required": true,
+    "device_d5_required_before_release": true
+  }
+}

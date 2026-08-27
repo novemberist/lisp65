@@ -1,0 +1,64 @@
+{
+  "format": "lisp65-c2-v17-repl-idle-blink-card-contract-v1",
+  "recorded_on": "2026-08-26",
+  "status": "implementation-card-2-open",
+  "pricing_commit": "7c8e4fc4",
+  "card1_commit": "0c1486a4",
+  "scope": {
+    "included": [
+      "native Bank-2 read-line idle polling",
+      "line-surface activation of the shared scanner and paint transition",
+      "software cursor blink over C2K_FRAME_LO",
+      "exact emitted object and successor name pricing",
+      "permanent scheduling, ownership and composed-framebuffer gates"
+    ],
+    "excluded": [
+      "IDE idle activation",
+      "Comfort activation or acceptance",
+      "alternative scanner",
+      "second paint owner",
+      "resident code or state",
+      "WPLTO",
+      "product link",
+      "media",
+      "emulator acceptance",
+      "device timing or contact"
+    ]
+  },
+  "surface_source": "lib/stdlib-read-line.lisp",
+  "shared_source": "lib/sexp-depth.lisp",
+  "resident_suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+  "line_suite": "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+  "card2_functions": [
+    "%cursor-blink",
+    "%rl-start",
+    "%rl-kind",
+    "%rl-scan",
+    "%rl-close",
+    "%rl-open",
+    "%rl-idle",
+    "%rl-clear",
+    "%rl-paint",
+    "%rl-poll"
+  ],
+  "accepted_pricing_functions": [
+    "%cursor-blink",
+    "%rl-idle"
+  ],
+  "limits": {
+    "codes_per_poll": 3,
+    "max_code_object_bytes_exclusive": 255,
+    "delivery_free_after_card1": {
+      "symbol_slots": 97,
+      "namepool_bytes": 1322
+    },
+    "minimum_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 384
+    },
+    "half_period_frames": 32,
+    "frame_counter_low": "0xff83"
+  },
+  "repricing_rule": "the two-name prototype may be replaced only by exact emitted split objects; every added entry is charged against the device-measured successor world and every object remains below 255 bytes",
+  "decision_rule": "pass only if the native line editor alone activates one public input owner, every matcher pass remains self-capped at three code units, one shared paint seam composes delimiter and cursor attributes, idle ticks allocate no cells, every emitted object is below 255 bytes, and no current device timing claim is made"
+}

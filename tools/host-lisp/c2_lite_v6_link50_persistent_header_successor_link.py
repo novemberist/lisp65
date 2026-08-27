@@ -78,10 +78,19 @@ def validate_authority() -> dict[str, Any]:
     return value
 
 
+def qualification_output_root(_elf: Path) -> Path:
+    """Return the active phase-owned report root, never an input ELF root."""
+    return BASE_LINK.OUT
+
+
 def corrected_replacement(product: Path, elf: Path,
                           host: dict[str, Any]) -> dict[str, Any]:
     """Current co-resident replacement model, not the retired section view."""
     artifact_root = elf.parent
+    # Reports belong to the active producer/qualification phase.  The ELF
+    # parent is an input authority and may already be a sealed frozen world
+    # during a read-only resume; it is never an output-root authority.
+    phase_output_root = qualification_output_root(elf)
     walls, family = BASE_LINK.walls_and_family(elf)
     shape = {"walls": walls, "runtime_slices": family["runtime_slices"],
              "successor_bank3_pack": family["successor_bank3_pack"]}
@@ -100,14 +109,15 @@ def corrected_replacement(product: Path, elf: Path,
     root = BASE_LINK.ROOT_GATE.collect()
     old_direct_out = BASE_LINK.DIRECT.OUT
     try:
-        BASE_LINK.DIRECT.OUT = artifact_root
+        BASE_LINK.DIRECT.OUT = phase_output_root
         direct = BASE_LINK.DIRECT.generated_direct_entry_gate()
     finally:
         BASE_LINK.DIRECT.OUT = old_direct_out
     old_link_out = BASE_LINK.OUT
     try:
-        BASE_LINK.OUT = artifact_root
-        crc = BASE_LINK.workbench_crc_gate(product, elf)
+        BASE_LINK.OUT = phase_output_root
+        crc = BASE_LINK.workbench_crc_gate(
+            product, elf, report_root=phase_output_root)
     finally:
         BASE_LINK.OUT = old_link_out
     require(capacity["status"].startswith("passed")

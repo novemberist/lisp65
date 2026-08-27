@@ -4,6 +4,25 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.7.0 — prepared 2026-08-27
+
+- Added the native, once-per-boot `INIT.L65` hook after resident readiness;
+  absence is silent and startup errors return to one live native prompt.
+- Reduced empty-journal recovery from eight overlay transports and 17,852 CRC
+  bytes to two transports and 6,110 CRC bytes through a fully derived,
+  fail-closed A0 fast path.
+- Added composed Bank-2 ownership, MAP page-congruence at placement time, and
+  emitted MAP-tuple equality with linker `LOADADDR` authority.
+- Retained the v1.6 `v16core` cursor-navigation package and the delivered-byte,
+  MAP-CPU refill, queue-owner, and retired-overlay recovery protections.
+- Kept Comfort and delimiter-matcher/blink development freight outside the
+  selected product after their bounded hardware rounds did not close.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives Halt-B publication
+authorization.
+
 ## v1.5.0 — prepared 2026-08-18
 
 - Added visible boot and `require` progress, with a clean handoff to the

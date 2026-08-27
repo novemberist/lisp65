@@ -195,7 +195,13 @@ def sealed_projection_selftest() -> int:
         sealed_final_world_projection(living, malformed)
     except CardError:
         rejected += 1
-    require(rejected == 3, "sealed display projection mutation survived")
+    not_green = copy.deepcopy(living)
+    not_green["status"] = "FIRST RED: LIVING DISPLAY SUCCESSOR IS NOT GREEN"
+    try:
+        sealed_final_world_projection(not_green, sealed)
+    except CardError:
+        rejected += 1
+    require(rejected == 4, "sealed display projection mutation survived")
     return rejected
 
 
@@ -276,7 +282,13 @@ def record_red(error: Exception) -> None:
 
 def check() -> None:
     value = load(RECEIPT)
-    living = final_world()
+    # The card's own final_world() is the exact v1.6 construction-time shape.
+    # Later authorized Comfort successors may add named components while the
+    # completed card remains sealed.  Consume the living display gate here;
+    # sealed_final_world_projection() then verifies the historical identities
+    # in their own evidence era instead of re-running the old shape as a live
+    # equality.
+    living = DISPLAY.check()
     require(value["status"] == "PASS: V1.6 DISPLAY OWNERSHIP GREEN"
             and value["final_world"]
                 == sealed_final_world_projection(living, value)

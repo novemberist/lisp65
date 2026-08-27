@@ -46,6 +46,12 @@ advisory: a gate rejects any content-consuming DMA read outside the immutable,
 CRC-covered boot spans, so the class cannot return by inattention. DMA remains
 in use where the payload is immutable and its identity is proven by CRC.
 
+The boot library refill is a member of that rule: generated product code uses
+the verified MAP-CPU transport and checks convergence before reporting success.
+Its proof follows the complete delivery chain. The resident facade in the
+packed PRG is compared byte for byte with the final ELF, so a link that is
+correct but a medium that omits the bytes cannot pass.
+
 The rule was bought rather than assumed. A DMA transport whose completion
 signal could be trusted while its content was not yet visible produced
 recurring, order-dependent library-load corruption; moving the readers to CPU
@@ -62,19 +68,31 @@ mapping are rejected visibly rather than silently accepted. A line may carry
 several forms; they are evaluated left to right, so forms completed before a
 later reader error remain in effect.
 
-The v1.6 `v16core` library replaces the native line reader with an
+The v1.7 `v16core` library replaces the native line reader with an
 insertion-mode, cursor-following one-line editor. Its navigation bindings come
 from the same generated keymap authority as their tests. Balanced multiline
-input, history and the separate capture/Comfort path are not part of the v1.6
+input, history and the separate capture/Comfort path are not part of the v1.7
 selected product.
+
+Keyboard-queue ownership is explicit. The selected native reader is the one
+ordinary consumer in v1.7; development capture paths must disable the evaluator
+drain before they may own the same queue. A gate derives the readers from the
+final ELF and rejects two simultaneous owners. The same one-owner/defined-
+handoff rule governs composed framebuffer writers.
+
+Error recovery has a carrier-independent boundary check. A control transfer
+into a retired overlay generation is redirected to recovery, and all seven
+restored control/status register pairs are sanitized before the prompt resumes.
+Ordinary type errors therefore return to a usable prompt instead of re-entering
+cleared overlay code; unrelated fail-closed faults remain fail-closed.
 
 ## Media model
 
-Release 1.6.0 uses three D81 roles with one drive:
+Release 1.7.0 uses three D81 roles with one drive:
 
 - `L65SYS` is the immutable product image used for boot and library loading.
 - `lisp65-library.d81` carries the one-row `v16core` package used to activate
-  the v1.6 REPL line editor.
+  the v1.7 REPL line editor.
 - A valid non-product 1581 image holds user files.
 
 M65D denies the product medium by identity and binds each transaction to disk

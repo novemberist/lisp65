@@ -35,6 +35,7 @@ import c2_link95_product_card as CARD  # noqa: E402
 import c2_require_resolver_gate as L65I  # noqa: E402
 import c2_session_extension_probe as S  # noqa: E402
 import c2_trace_core_abi as TRACE  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 BUILD = ROOT / "build/c2.3/packed-callee-link95-world-bound-media"
@@ -81,6 +82,7 @@ GATES = ROOT / "mk/gates.mk"
 FORMAT = "lisp65-c2.3-link95-world-bound-media-closure-v1"
 STATUS = "LINK95-WORLD-BOUND-MEDIA-GREEN; HARDWARE-RECONTACT-READY"
 RECORDED_ON = "2026-08-10"
+SEALED_COMMIT = "61a861f14f1aeda8328fc5b4426202170ba56754"
 LINK93_ID = 0x3B48650D
 LINK95_ID = 0x14D980C3
 EXPECTED_PRODUCT_D81 = (
@@ -550,14 +552,14 @@ def validate(value: dict[str, Any], *, verify: bool) -> None:
         # IDE/buffer inputs into the shared live build paths.  Bind the emitted
         # product, library and session artifacts without materializing that
         # historical producer world.
+        require(RECEIPT.read_bytes() == ERA.era_blob(
+            SEALED_COMMIT, RECEIPT.relative_to(ROOT).as_posix()),
+            "sealed Link-95 same-world receipt was rewritten")
         rows = [
             value["authority"]["attribution"],
             value["authority"]["historical_cross_world_media"],
             value["authority"]["product_card"],
             value["authority"]["product_manifest"],
-            value["authority"]["canonical_library_manifest"],
-            value["authority"]["canonical_library_extended_image"],
-            value["authority"]["canonical_library_disassembly"],
             value["authority"]["live_REPL_FTP_crossing_gate"],
             value["shared_system"]["manifest"],
             value["shared_system"]["product_D81"],

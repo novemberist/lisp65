@@ -227,6 +227,9 @@ void load_source_stream(char (*fetch)(void)) {
             obj form = read_expr_stream();
             if (reader_status != READER_OK) return;
             compile_run_top_form(form);
+            /* The next top-level form resets vm_status.  Stop here so it
+             * cannot mask the first failing INIT/library form. */
+            if (vm_status != VM_OK && vm_status != VM_HALT) return;
         }
         if (crepl_progress) crepl_progress();
     }

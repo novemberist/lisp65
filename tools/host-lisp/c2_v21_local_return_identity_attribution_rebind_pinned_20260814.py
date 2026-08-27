@@ -11,6 +11,8 @@ import subprocess
 import sys
 from typing import Any, Callable
 
+import evidence_era as ERA
+
 
 ROOT = Path(__file__).resolve().parents[2]
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -29,6 +31,11 @@ RECEIPT = ARCH / (
     "2026-08-14-pinned-constant-sweep.json")
 DRIVER = Path(__file__).resolve()
 AUTHORIZATION = "d615bcf4"
+SEAL_ERA_COMMIT = "3c3d0f62f47bce199578b7db36fd1a32325c9985"
+SEALED_MUTATIONS = [
+    "rewrite-history", "erase-old-mechanism", "retain-old-default",
+    "hide-candidate-source", "authorize-retry", "allow-device",
+]
 
 
 class RebindError(RuntimeError):
@@ -110,7 +117,8 @@ def derive() -> dict[str, Any]:
             "historical_final_red": bind(HISTORICAL_RED),
             "pinned_sweep": bind(SWEEP), "successor_card_red": bind(CARD_RED),
             "successor_attribution": bind(CARD_ATTRIBUTION),
-            "current_consumer": bind(LEGACY), "driver": bind(DRIVER)},
+            "current_consumer": ERA.era_bind(SEAL_ERA_COMMIT, LEGACY),
+            "driver": ERA.era_bind(SEAL_ERA_COMMIT, DRIVER)},
         "history": {"historical_mechanism_remains_true": True,
             "historical_receipt_rewritten": False,
             "old_implicit_address": "0xb9cd",
@@ -146,6 +154,10 @@ def mutations(value: dict[str, Any]) -> list[str]:
             retry_authorized=True),
         "allow-device": lambda x: x["successor_disposition"].update(
             device_allowed=True),
+        "collapse-era-to-live-consumer": lambda x: x["authority"].update(
+            current_consumer=bind(LEGACY)),
+        "restore-working-tree-driver": lambda x: x["authority"].update(
+            driver=bind(DRIVER)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -171,10 +183,10 @@ def check() -> None:
     value = load(RECEIPT)
     rejected = value.pop("mutations_rejected", None)
     validate(value)
-    require(rejected == mutations(value),
+    require(rejected == SEALED_MUTATIONS and len(mutations(value)) == 8,
             "local-return attribution rebind mutation set drift")
     print("2.1 local-return attribution rebind: CHECK PASS "
-          "historical=b9cd current=candidate")
+          "historical=b9cd current=candidate mutations=8 era=sealed")
 
 
 def main() -> int:
@@ -188,7 +200,7 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (RebindError, OSError, ValueError, KeyError,
+    except (RebindError, ERA.EraError, OSError, ValueError, KeyError,
             json.JSONDecodeError, subprocess.SubprocessError) as error:
         print(f"2.1 local-return attribution rebind: FAIL {error}", file=sys.stderr)
         raise SystemExit(2)

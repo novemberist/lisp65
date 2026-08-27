@@ -48,16 +48,35 @@ def _replace_linker_contract(text: str) -> str:
             "R1 facade-padding contract absent before liveness")
     text = text.replace(old_padding,
         "__lisp65_c2_mapped_far_facade_padding_contract_bytes == 0", 1)
-    old_service = """SIZEOF(.lisp65_c2_mapped_far_service) == 1382 &&
-        __lisp65_c2_mapped_far_service_end == 0x7e18 &&
-        __lisp65_c2_mapped_far_service_load_end == 0x0002be18"""
-    new_service = """SIZEOF(.lisp65_c2_mapped_far_service) > 0 &&
-        SIZEOF(.lisp65_c2_mapped_far_service) <= 1499 &&
-        __lisp65_c2_mapped_far_service_end <= 0x7e8d &&
-        __lisp65_c2_mapped_far_service_load_end <= 0x0002be8d"""
-    require(text.count(old_service) == 1,
-            "R1 mapped-far stored-size contract absent before liveness")
-    return text.replace(old_service, new_service, 1)
+    # Widen only the two service-capacity predicates that liveness owns.  The
+    # physical LOADADDR relation belongs to the active placement policy and is
+    # deliberately retained byte-for-byte (fixed, tight-top or page-congruent).
+    old_size = "SIZEOF(.lisp65_c2_mapped_far_service) == 1382"
+    new_size = ("SIZEOF(.lisp65_c2_mapped_far_service) > 0 &&\n"
+                "        SIZEOF(.lisp65_c2_mapped_far_service) <= 1499")
+    old_end = "__lisp65_c2_mapped_far_service_end == 0x7e18"
+    new_end = "__lisp65_c2_mapped_far_service_end <= 0x7e8d"
+    require(text.count(old_size) == text.count(old_end) == 1,
+            "R1 mapped-far semantic capacity predicates absent")
+    fixed_load = "__lisp65_c2_mapped_far_service_load_end == 0x0002be18"
+    if fixed_load in text:
+        require(text.count(fixed_load) == 1,
+                "R1 fixed load-end predicate is not unique")
+        text = text.replace(
+            fixed_load,
+            "__lisp65_c2_mapped_far_service_load_end <= 0x0002be8d", 1)
+    else:
+        relations = (
+            "__lisp65_c2_mapped_far_service_load_end ==\n"
+            "            LOADADDR(.lisp65_c2_mapped_product_cold)",
+            "LOADADDR(.lisp65_c2_mapped_product_cold) -\n"
+            "            __lisp65_c2_mapped_far_service_load_end ==\n"
+            "        ADDR(.lisp65_c2_mapped_product_cold) -\n"
+            "            __lisp65_c2_mapped_far_service_end",
+        )
+        require(sum(text.count(row) for row in relations) == 1,
+                "active mapped-far LOADADDR relation is not unique")
+    return text.replace(old_size, new_size, 1).replace(old_end, new_end, 1)
 
 
 def configure(product: Any) -> dict[str, Any]:

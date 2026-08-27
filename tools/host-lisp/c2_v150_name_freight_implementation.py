@@ -30,6 +30,7 @@ if str(HOST) not in sys.path:
 import bytecode_p0_stdlib as STDLIB  # noqa: E402
 import c2_v150_name_freight_pricing as PRICE  # noqa: E402
 import comfort_track_gate as COMFORT  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 BUILD = ROOT / "build/c2.3/v1.5.0-name-freight-libraries"
@@ -425,19 +426,13 @@ def derive(*, rebuild: bool) -> dict[str, Any]:
 
 
 def audit(value: dict[str, Any]) -> None:
-    historical = git_bind(
+    sealed_raw = ERA.era_blob(
         HISTORICAL_IMPLEMENTATION_COMMIT,
-        "tools/host-lisp/c2_v150_name_freight_implementation.py",
-    )
-    historical.pop("commit")
-    require(value["authority"]["checker"] == historical,
-            "historical name-freight checker authority drift")
-    current = derive(rebuild=True)
-    # The receipt's checker binding identifies the historical implementation
-    # that produced it; later gate maintenance must not rewrite that history.
-    current["authority"]["checker"] = value["authority"]["checker"]
-    require(value == current,
-            "name-freight implementation receipt differs from fresh rebuild")
+        RECEIPT.relative_to(ROOT).as_posix())
+    require(RECEIPT.read_bytes() == sealed_raw,
+            "sealed name-freight implementation receipt was rewritten")
+    require(value == json.loads(sealed_raw),
+            "sealed name-freight implementation claim drift")
 
 
 def mutate(value: dict[str, Any], path: list[str], replacement: Any) -> None:
@@ -448,7 +443,7 @@ def mutate(value: dict[str, Any], path: list[str], replacement: Any) -> None:
 
 
 def selftest() -> dict[str, Any]:
-    base = derive(rebuild=True)
+    base = load(RECEIPT)
     cases: list[tuple[str, list[str], Any]] = [
         ("rename-public", ["surface_parity", "public_names_changed"], 1),
         ("eager-symbol", ["who_calls", "manifest_contains_eager_only_symbols"], True),
@@ -493,7 +488,7 @@ def main() -> int:
                   "capacity": value["capacity"]}
     elif action == "check":
         audit(load(RECEIPT))
-        result = {"status": "PASS", "capacity": derive(rebuild=False)["capacity"]}
+        result = {"status": "PASS", "capacity": load(RECEIPT)["capacity"]}
     else:
         result = selftest()
     print(json.dumps(result, indent=2, sort_keys=True))

@@ -26,7 +26,7 @@ import evidence_era as ERA  # noqa: E402
 import v11_l_lite_keymap as KEYMAP  # noqa: E402
 
 
-CONTRACT = ROOT / "config/c2-v160-comfort-repl-implementation-contract.json"
+CONTRACT = ROOT / "config/c2-v17-comfort-phase1b-implementation-contract.json"
 COMFORT = ROOT / "lib/repl-comfort.lisp"
 SCANNER = ROOT / "lib/sexp-depth.lisp"
 IDE_SYNTAX = ROOT / "lib/ide-syntax.lisp"
@@ -61,7 +61,9 @@ RECLAIM_CALLERS = {
     "%subseq-list": ["substring"],
     "%append2": ["%append-lists"],
 }
-NEW_NAMES = ["repl", "repl-comfort", "%repl-read", "%repl-step"]
+NEW_NAMES = [
+    "repl", "repl-comfort", "%repl-read", "%repl-prompt", "%repl-step",
+]
 
 
 class ComfortGateError(RuntimeError):
@@ -104,10 +106,12 @@ def write(path: Path, value: dict[str, Any]) -> None:
 
 def validate_contract(contract: dict[str, Any]) -> dict[str, Any]:
     require(
-        contract.get("format") == "lisp65-c2-v160-comfort-repl-implementation-v1"
-        and contract.get("status") == "owner-authorized-host-first"
-        and contract.get("pricing_acceptance_commit") == "cac1ee30"
-        and contract.get("library_scope_commit") == "7002c51c",
+        contract.get("format")
+            == "lisp65-c2-v17-comfort-phase1b-implementation-v1"
+        and contract.get("status") == "owner-authorized-variant-b-host-first"
+        and contract.get("authorization_commit") == "65c3b76d"
+        and contract.get("pricing_commit") == "e91a526a"
+        and contract.get("selection_commit") == "e890b5e8",
         "Comfort implementation authority drift",
     )
     activation = contract["activation"]
@@ -135,36 +139,38 @@ def validate_contract(contract: dict[str, Any]) -> dict[str, Any]:
         },
         "Comfort semantic contract drift",
     )
+    variant = contract["variant_b"]
+    require(
+        variant == {
+            "capability": "screen-bulk-p",
+            "bulk_primitive": "screen-write-string",
+            "fallback_primitive": "screen-put-char",
+            "fallback_cells": [108, 54, 53, 62, 32],
+            "fallback_attribute": 1,
+            "product_primitive_delta": 0,
+            "tombstoned_primitive_id": 12,
+        },
+        "Variant-B capability/fallback contract drift",
+    )
     budget = contract["symbol_budget"]
-    reclaimed = sum(len(name) + 1 for name in RECLAIMS)
-    added = sum(len(name) + 1 for name in NEW_NAMES)
-    baseline = budget["baseline_projected_free"]
-    projected = {
-        "symbol_slots": baseline["symbol_slots"] + len(RECLAIMS) - len(NEW_NAMES),
-        "namepool_bytes": baseline["namepool_bytes"] + reclaimed - added,
-    }
+    prior = budget["prior_bias_adjusted_free"]
+    added = sum(len(name) + 1 for name in budget["new_interned_names"])
     adjusted = {
-        key: projected[key] + budget["measured_projection_bias"][key]
-        for key in projected
+        "symbol_slots": prior["symbol_slots"]
+            - len(budget["new_interned_names"]),
+        "namepool_bytes": prior["namepool_bytes"] - added,
     }
     minimum = budget["release_minimum_free"]
     margin = {key: adjusted[key] - minimum[key] for key in adjusted}
     require(
-        budget["reclaimed_private_entries"] == RECLAIMS
-        and budget["new_interned_names"] == NEW_NAMES
-        and (reclaimed, added) == (54, 40)
-        and budget["reclaimed_namepool_bytes"] == reclaimed
-        and budget["new_namepool_bytes"] == added
-        and baseline == {"symbol_slots": 32, "namepool_bytes": 562}
-        and projected == budget["projected_free"]
-        == {"symbol_slots": 33, "namepool_bytes": 576}
-        and budget["measured_projection_bias"]
-        == {"symbol_slots": -1, "namepool_bytes": -4}
+        prior == {"symbol_slots": 33, "namepool_bytes": 594}
+        and budget["new_interned_names"] == ["%repl-prompt"]
+        and added == budget["new_namepool_bytes"] == 13
         and adjusted == budget["bias_adjusted_free"]
-        == {"symbol_slots": 32, "namepool_bytes": 572}
+        == {"symbol_slots": 32, "namepool_bytes": 581}
         and minimum == {"symbol_slots": 32, "namepool_bytes": 384}
         and margin == budget["bias_adjusted_margin"]
-        == {"symbol_slots": 0, "namepool_bytes": 188}
+        == {"symbol_slots": 0, "namepool_bytes": 197}
         and budget["future_named_helper_requires_repricing"] is True
         and "loads repl-comfort" in budget["d5_configuration"],
         "bias-adjusted Comfort symbol arithmetic drift",
@@ -172,10 +178,10 @@ def validate_contract(contract: dict[str, Any]) -> dict[str, Any]:
     placement = contract["placement"]
     require(
         placement == {
+            "bank2_library_delta_bytes": 76,
             "resident_code_delta_bytes": 0,
             "resident_state_delta_bytes": 0,
             "native_primitive_delta": 0,
-            "product_links": 0,
             "hardware_runs": 0,
         },
         "Comfort placement/claim wall drift",
@@ -185,6 +191,9 @@ def validate_contract(contract: dict[str, Any]) -> dict[str, Any]:
     require(
         set(gates) == {"real_workbench_cases", "comfort_required_cases",
             "long_input_dynamic_cases", "code_object_limit_bytes",
+            "maximum_frames_per_character",
+            "minimum_service_events_per_frame", "minimum_margin_percent",
+            "product_profile_callprim_required",
             "device_d5_required_before_release"}
         and gates["real_workbench_cases"] == 248
         and isinstance(required_cases, list)
@@ -192,14 +201,16 @@ def validate_contract(contract: dict[str, Any]) -> dict[str, Any]:
         and "comfort-cursor-down-empty-boundary" in required_cases
         and gates["long_input_dynamic_cases"] == 1
         and gates["code_object_limit_bytes"] == 255
+        and gates["maximum_frames_per_character"] == 0.8
+        and gates["minimum_service_events_per_frame"] == 1.25
+        and gates["minimum_margin_percent"] == 25.0
+        and gates["product_profile_callprim_required"] is True
         and gates["device_d5_required_before_release"] is True,
         "Comfort executable/release gate wall drift",
     )
     return {
-        "projected_free": projected,
         "bias_adjusted_free": adjusted,
         "bias_adjusted_margin": margin,
-        "reclaimed_namepool_bytes": reclaimed,
         "new_namepool_bytes": added,
     }
 
@@ -221,6 +232,7 @@ def source_gate(contract: dict[str, Any]) -> dict[str, Any]:
                            case_names)
     require(
         comfort.count("(defun %repl-read ") == 1
+        and comfort.count("(defun %repl-prompt ") == 1
         and comfort.count("(defun %repl-step ") == 1
         and comfort.count("(defun repl ") == 1
         and comfort.count("(read-from-string ") == 1
@@ -271,10 +283,22 @@ def source_gate(contract: dict[str, Any]) -> dict[str, Any]:
         "native C REPL no longer owns boot/fail-closed input",
     )
     require(
+        comfort.count("(screen-bulk-p)") == 1
+        and comfort.count('(screen-write-string 0 row "l65> ")') == 1
+        and comfort.count("(screen-put-char ") == 5
+        and "(%repl-prompt row)" in comfort
+        and all(
+            f"(screen-put-char {column} row {code} 1)" in comfort
+            for column, code in enumerate([108, 54, 53, 62, 32])
+        ),
+        "Variant-B prompt is not the priced capability/fallback form",
+    )
+    require(
         suite.get("name") == contract["activation"]["library_designator"]
         and suite.get("provides") == ["repl-comfort"]
         and suite.get("requires") == contract["activation"]["requires"]
-        and suite.get("functions") == ["%repl-read", "%repl-step", "repl"]
+        and suite.get("functions")
+            == ["%repl-read", "%repl-prompt", "%repl-step", "repl"]
         and suite.get("tailcall_self") == ["%repl-read", "%repl-step"]
         and suite.get("require_all_defuns") is True
         and resident.get("private_inline_functions", [])[-7:]
@@ -348,8 +372,9 @@ def run_artifact() -> dict[str, Any]:
         and manifest.get("name") == "repl-comfort"
         and manifest.get("provides") == ["repl-comfort"]
         and manifest.get("requires") == ["core", "ide"]
-        and manifest.get("functions") == ["%repl-read", "%repl-step", "repl"]
-        and manifest.get("objects") == 3
+        and manifest.get("functions")
+            == ["%repl-read", "%repl-prompt", "%repl-step", "repl"]
+        and manifest.get("objects") == 4
         and manifest["cost"]["largest_code_object"] in manifest["functions"]
         and manifest["cost"]["largest_code_object_bytes"] <= 255,
         "Comfort disk-library artifact identity/size drift",
@@ -490,10 +515,10 @@ def mutations(contract: dict[str, Any]) -> dict[str, str]:
         rows.append((label, candidate))
 
     changed("lower-symbol-floor", ["symbol_budget", "release_minimum_free", "symbol_slots"], 31)
-    changed("erase-measured-bias", ["symbol_budget", "measured_projection_bias", "symbol_slots"], 0)
-    changed("hide-private-helper", ["symbol_budget", "new_interned_names"], NEW_NAMES[:-1])
-    changed("drop-reclaim", ["symbol_budget", "reclaimed_private_entries"], RECLAIMS[:-1])
-    changed("omit-NUL-price", ["symbol_budget", "new_namepool_bytes"], 36)
+    changed("inflate-prior-slot", ["symbol_budget", "prior_bias_adjusted_free", "symbol_slots"], 34)
+    changed("hide-private-helper", ["symbol_budget", "new_interned_names"], [])
+    changed("erase-slot-cost", ["symbol_budget", "bias_adjusted_free", "symbol_slots"], 33)
+    changed("omit-NUL-price", ["symbol_budget", "new_namepool_bytes"], 12)
     changed("skip-D5", ["gates", "device_d5_required_before_release"], False)
     changed("replace-eval-path", ["semantics", "evaluation_path"], ["eval"])
     changed("weaken-overclose", ["semantics", "overclose_rejected_before_evaluation"], False)
@@ -527,9 +552,60 @@ def run_selftest() -> dict[str, Any]:
     }
 
 
+def live_sources_moved() -> bool:
+    return any(
+        path.read_bytes() != ERA.era_blob(
+            SEALED_COMMIT, path.relative_to(ROOT).as_posix())
+        for path in (COMFORT, READ_LINE, NATIVE_REPL))
+
+
+def sealed_successor_check() -> dict[str, Any]:
+    """Validate the completed v1.6 card in its own source world.
+
+    The v1.7 path-closed adapter is the live executable consumer once the
+    editor grows successor-only callees.  Recompiling this older card against
+    that editor would make its deliberately incomplete library adapter a live
+    authority again.
+    """
+    sealed = ERA.era_blob(
+        SEALED_COMMIT, RECEIPT.relative_to(ROOT).as_posix())
+    require(RECEIPT.read_bytes() == sealed,
+            "historical Comfort receipt changed under successor source")
+    value = load(RECEIPT)
+    require(
+        value.get("format") == FORMAT
+        and value.get("status") == "PASS: v1.6 Comfort REPL host-qualified"
+        and value.get("product_links") == 0
+        and value.get("hardware_runs") == 0
+        and value.get("artifact", {}).get("objects") == 3
+        and value.get("artifact", {}).get("largest_code_object_bytes") == 249
+        and value.get("reclamation", {}).get("cases") == 248
+        and value.get("reclamation", {}).get("functions_after") == 388
+        and value.get("reclamation", {}).get(
+            "private_inline_functions_after") == 9
+        and value.get("long_input", {}).get("cases") == 1
+        and value.get("symbol_budget", {}).get("bias_adjusted_free")
+            == {"symbol_slots": 32, "namepool_bytes": 572}
+        and len(value.get("mutations_rejected", {}).get("contract", {})) == 10
+        and value.get("mutations_rejected", {}).get("scanner")
+            == "rejected-by-executable-overclose-case",
+        "sealed v1.6 Comfort proof drift",
+    )
+    authority = value.get("authority")
+    require(isinstance(authority, dict) and authority,
+            "sealed v1.6 Comfort authority absent")
+    for name, row in authority.items():
+        require(isinstance(row, dict) and isinstance(row.get("path"), str)
+                and ERA.era_bind(SEALED_COMMIT, row["path"]) == row,
+                f"sealed v1.6 Comfort {name} provenance drift")
+    return value
+
+
 def run_check() -> dict[str, Any]:
     contract = load(CONTRACT)
     selftest = run_selftest()
+    if live_sources_moved():
+        return sealed_successor_check()
     artifact = run_artifact()
     reclaim = reclaim_gate(contract)
     long_input = long_input_gate()
@@ -569,17 +645,7 @@ def run_check() -> dict[str, Any]:
     # This receipt certifies the original Comfort card.  Once a successor
     # changes its sources, execute the live semantics above but leave the
     # historical receipt in its own world instead of rewriting its evidence.
-    sealed = ERA.era_blob(
-        SEALED_COMMIT, RECEIPT.relative_to(ROOT).as_posix())
-    live_moved = any(
-        path.read_bytes() != ERA.era_blob(
-            SEALED_COMMIT, path.relative_to(ROOT).as_posix())
-        for path in (COMFORT, READ_LINE, NATIVE_REPL))
-    if live_moved:
-        require(RECEIPT.read_bytes() == sealed,
-                "historical Comfort receipt changed under successor source")
-    else:
-        write(RECEIPT, value)
+    write(RECEIPT, value)
     return value
 
 
@@ -591,6 +657,11 @@ def main(argv: list[str]) -> int:
         value = run_selftest() if args.command == "selftest" else run_check()
         if args.command == "selftest":
             print("c2-v160-comfort-repl: SELFTEST PASS mutations=10+2+1")
+        elif live_sources_moved():
+            print(
+                "c2-v160-comfort-repl: PASS sealed=c4a78738 "
+                "live-consumer=v1.7-path-closed-adapter"
+            )
         else:
             print(
                 "c2-v160-comfort-repl: PASS "
@@ -598,7 +669,7 @@ def main(argv: list[str]) -> int:
                 f"workbench={value['reclamation']['cases']} "
                 f"objects={value['artifact']['objects']} "
                 f"largest={value['artifact']['largest_code_object_bytes']} "
-                "D5=32/572 resident=+0 native=+0"
+                "D5=32/581 resident=+0 native=+0"
             )
         return 0
     except (ComfortGateError, KEYMAP.KeymapError, P.StdlibCheckError,

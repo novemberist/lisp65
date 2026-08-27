@@ -18,9 +18,11 @@ sys.path.insert(0, str(HOST))
 
 import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_stdlib as P  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 CONTRACT = ROOT / "config/c2-v160-display-ownership-contract.json"
+PHASE1B = ROOT / "config/c2-v17-comfort-phase1b-implementation-contract.json"
 EDITOR = ROOT / "lib/stdlib-read-line.lisp"
 COMFORT = ROOT / "lib/repl-comfort.lisp"
 SUITE = ROOT / "tests/bytecode/libs/p0-repl-comfort.json"
@@ -30,12 +32,13 @@ RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.6-display-ownership-receipt.json"
 )
+SEALED_COMMIT = "36063046bf5b37a6700a85328ef66fa831b3337d"
 
 EDITOR_FUNCTIONS = (
     "%rl-render", "%rl-cut", "%rl-move", "%rl-put", "%rl-dispatch",
     "%read-line-loop", "read-line", "%rl-screen-tail",
 )
-COMFORT_FUNCTIONS = ("%repl-read", "%repl-step", "repl")
+COMFORT_FUNCTIONS = ("%repl-read", "%repl-prompt", "%repl-step", "repl")
 
 
 class GateError(RuntimeError):
@@ -111,6 +114,18 @@ def source_gate(contract: dict[str, Any], editor: str, comfort: str) -> dict[str
         },
         "display-ownership contract drift",
     )
+    phase1b = load(PHASE1B)
+    require(
+        phase1b.get("format")
+            == "lisp65-c2-v17-comfort-phase1b-implementation-v1"
+        and phase1b.get("status") == "owner-authorized-variant-b-host-first"
+        and phase1b.get("authorization_commit") == "65c3b76d"
+        and phase1b["symbol_budget"]["bias_adjusted_free"]
+            == {"symbol_slots": 32, "namepool_bytes": 581}
+        and phase1b["variant_b"]["fallback_cells"]
+            == [108, 54, 53, 62, 32],
+        "display successor authority drift",
+    )
     for token in (
         "(if (= row -1)", "(defun %rl-screen-tail (codes index column stop cursor row)",
         "(prompted (< row -2))",
@@ -122,7 +137,12 @@ def source_gate(contract: dict[str, Any], editor: str, comfort: str) -> dict[str
     ):
         require(token in editor, f"editor ownership token absent: {token}")
     for token in (
+        '(defun %repl-prompt (row)',
+        '(screen-bulk-p)',
         '(screen-write-string 0 row "l65> ")',
+        '(screen-put-char 0 row 108 1)',
+        '(screen-put-char 4 row 32 1)',
+        '(%repl-prompt row)',
         '(%rl-screen-tail nil 0 0 (- row 1) 0 -2)',
         "(if top (- columns 5) columns)",
         "(if top (- 0 (+ row 2)) row)",
@@ -136,8 +156,8 @@ def source_gate(contract: dict[str, Any], editor: str, comfort: str) -> dict[str
     )
     return {
         "prompt": contract["prompt"], "prompt_columns": 5,
-        "new_names": 1, "reclaimed_names": 1,
-        "bias_adjusted_free": {"symbol_slots": 33, "namepool_bytes": 594},
+        "new_names": 2, "reclaimed_names": 1,
+        "bias_adjusted_free": {"symbol_slots": 32, "namepool_bytes": 581},
         "resident_bytes": 0, "far_service_bytes": 0,
     }
 
@@ -326,7 +346,7 @@ def executable_mutations() -> dict[str, str]:
     rejected["handoff-does-not-clear"] = vm.after_result[0].rstrip()
 
     separate = comfort.replace(
-        '(screen-write-string 0 row "l65> ")', '(write-line "l65>")', 1)
+        '(%repl-prompt row)', '(write-line "l65>")', 1)
     vm = run_world(mutated_suite("separate-prompt", comfort=separate),
                    EDIT_EVENTS, at_return=True)
     require(vm.active_row is not None and not vm.active_row.startswith("l65> "),
@@ -370,13 +390,13 @@ def artifact_gate(contract: dict[str, Any]) -> dict[str, Any]:
             f"display owner exceeds object ceiling: {sizes}")
     require("%fasl-fs" not in code and "%c1-compile-source" in code,
             "authorized one-for-one private reclaim did not reach emitted resident world")
-    require(result["cases"] == 9 and result["functions"] == 3,
+    require(result["cases"] == 9 and result["functions"] == 4,
             "Comfort artifact execution coverage drift")
     return {
         "code_object_bytes": sizes,
         "largest_bytes": max(sizes.values()),
         "comfort_cases": result["cases"],
-        "new_names": 1,
+        "new_names": 2,
         "reclaimed_names": 1,
         "resident_bytes": 0,
         "far_service_bytes": 0,
@@ -399,7 +419,8 @@ def derive() -> dict[str, Any]:
         "source": source, "composed_framebuffer": composed,
         "mutations_rejected": mutations, "artifacts": artifacts,
         "authority": {
-            "contract": bind(CONTRACT), "editor": bind(EDITOR),
+            "contract": bind(CONTRACT), "phase1b_contract": bind(PHASE1B),
+            "editor": bind(EDITOR),
             "comfort": bind(COMFORT), "suite": bind(SUITE),
             "resident": bind(RESIDENT), "gate": bind(Path(__file__)),
         },
@@ -417,10 +438,23 @@ def selftest() -> None:
 
 
 def check() -> dict[str, Any]:
-    # This is a living semantic gate over the current sources.  The tracked
-    # receipt witnesses the completed display card's world and is consumed by
-    # later media evidence; a check is therefore a reader, never its writer.
-    return derive()
+    # The display receipt witnesses the completed v1.6/Phase-1b world.  Card 2
+    # legitimately extends the line editor with new private calls, so replaying
+    # that historical suite over the live source would make the receipt a
+    # successor rewrite target.  Current composed-framebuffer semantics are
+    # owned by the v1.7 card-2 gate; this reader keeps the reviewed world sealed.
+    require(RECEIPT.is_file() and not RECEIPT.is_symlink(),
+            "display ownership receipt absent")
+    raw = RECEIPT.read_bytes()
+    require(raw == ERA.era_blob(
+        SEALED_COMMIT, RECEIPT.relative_to(ROOT).as_posix()),
+        "sealed display ownership receipt was rewritten")
+    value = json.loads(raw)
+    require(value.get("status")
+                == "PASS: COMFORT DISPLAY HAS ONE OWNER AND DEFINED HANDOFF"
+            and value.get("composed_framebuffer", {}).get("result_tail_blank") is True,
+            "sealed display ownership identity drift")
+    return value
 
 
 def main(argv: list[str]) -> int:
@@ -435,8 +469,8 @@ def main(argv: list[str]) -> int:
             value = check()
             art = value["artifacts"]
             print("v1.6 display ownership: CHECK PASS "
-                  f"largest={art['largest_bytes']} names=+1/-1 "
-                  "headroom=33/594 framebuffer=composed")
+                f"largest={art['largest_bytes']} names=+2/-1 "
+                "headroom=32/581 framebuffer=composed")
         return 0
     except (GateError, P.StdlibCheckError, B.VMError, AssertionError) as error:
         print(f"v1.6 display ownership: FIRST RED: {error}", file=sys.stderr)

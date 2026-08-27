@@ -29,6 +29,17 @@
             (%repl-read next-prefix history next-index columns row))
           result)))))
 
+
+(defun %repl-prompt (row)
+  (if (screen-bulk-p)
+      (screen-write-string 0 row "l65> ")
+      (progn
+        (screen-put-char 0 row 108 1)
+        (screen-put-char 1 row 54 1)
+        (screen-put-char 2 row 53 1)
+        (screen-put-char 3 row 62 1)
+        (screen-put-char 4 row 32 1))))
+
 (defun %repl-step (history pending depth)
   (let* ((size (screen-size))
          (columns (car size))
@@ -41,7 +52,7 @@
             (if top
                 (progn
             (%rl-screen-tail nil 0 0 (- row 1) 0 -2)
-                  (screen-write-string 0 row "l65> "))
+                  (%repl-prompt row))
                 nil)
             (%repl-read indent history 0
                         (if top (- columns 5) columns)

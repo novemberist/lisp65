@@ -29,6 +29,9 @@
 #ifdef LISP65_COMPILE_REPL
 #include "compile_repl.h"   /* compile_run_top_form: REPL wertet via geraeteseitigem Compiler aus (M6, Design §4a) */
 #endif
+#ifdef LISP65_C2_NESTED_APPEND_V5
+#include "c2_product_runtime.h"
+#endif
 
 #if defined(__MEGA65__) || defined(__C64__) || defined(__CBM__)
 #ifndef LISP65_C2_KERNAL_UNMAP
@@ -194,6 +197,13 @@ void repl(void) {
         /* A longjmp can cross the Bank-2 Comfort loop.  Disable its raw IRQ
          * capture before rendering or re-entering the native fallback. */
         C2K_INPUT_RING_TAIL = 0xff;
+#ifdef LISP65_C2_NESTED_APPEND_V5
+        /* Retirement ran before longjmp while its generation was still
+         * named.  Transported journal recovery belongs here: setjmp has now
+         * restored the shallow top-level soft stack, and no new evaluation
+         * or error rendering has begun. */
+        (void)c2_product_abort_recover();
+#endif
         aborted = 1;
         emit('\n');
         emit_str("*** ");
@@ -238,10 +248,7 @@ void repl(void) {
             /* The numeric error seam is the one resident error truth.  Do not
              * pull vm_status_message() and its private string table into Bank
              * 0 merely to report a boot-time VM failure. */
-            emit_str("*** ");
-            (void)lisp65_error_render_code(vm_status_error_code(vm_status), NIL);
-            emit('\n');
-            return;
+            lisp_abort_code(vm_status_error_code(vm_status));
         }
     }
 #else

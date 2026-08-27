@@ -116,6 +116,11 @@ PRODUCT_COLD_BUILD_CONFIGURATION = {
 PRODUCT_COLD_FEATURE = str(PRODUCT_COLD_BUILD_CONFIGURATION["feature"])
 PRODUCT_COLD_SOURCE = Path(PRODUCT_COLD_BUILD_CONFIGURATION["source"])
 PRODUCT_COLD_ENABLED = False
+RECOVERY_QUIESCENCE_ENABLED = False
+# The historical ownership contract gives the mapped tenants fixed Bank-2
+# load addresses.  Successor cards may instead select a structural policy;
+# the linker remains the sole producer of the resulting LOADADDR symbols.
+MAPPED_TENANT_LMA_POLICY = "contract"
 KERNAL_EQUATES_INCLUDE = ROOT / "src/c2_kernal_window_equates.inc"
 E000_REOPEN_DEBIT_CAP = 450
 E000_FINAL_FLOOR_BYTES = 63
@@ -153,6 +158,22 @@ def configure_full_map_ownership() -> None:
     """
     global FULL_MAP_OWNERSHIP
     FULL_MAP_OWNERSHIP = True
+
+
+def configure_mapped_tenant_lma_policy(policy: str) -> None:
+    """Select a structural Bank-2 load-address policy for mapped tenants.
+
+    ``bank2-top`` is the sealed r9 tight-pack policy. ``map-page-top`` derives
+    the greatest common page-aligned MAP offset whose complete tenant VMA
+    population fits below the owning Bank-2 end.  Neither form stores a tenant
+    address.
+    """
+    global MAPPED_TENANT_LMA_POLICY
+    if policy not in ("bank2-top", "map-page-top"):
+        raise RuntimeError(f"unsupported mapped-tenant LMA policy: {policy}")
+    if MAPPED_TENANT_LMA_POLICY not in ("contract", policy):
+        raise RuntimeError("mapped-tenant LMA policy configured twice")
+    MAPPED_TENANT_LMA_POLICY = policy
 
 
 LOW_RESIDENT_LMA_SECTIONS = (
@@ -504,6 +525,10 @@ EXTRA_INCLUDE_DIRS: tuple[Path, ...] = ()
 COMPILER_CONSUMED_STATIC_HEADER: Path | None = None
 COMPILER_CONSUMED_STATIC_HEADER_BINDING: dict[str, object] | None = None
 COMPILER_CONSUMED_STATIC_CODE_BYTES: int | None = None
+COMPILER_CONSUMED_STATIC_HEADER_RESOLVER: object | None = None
+COMPILER_CONSUMED_STDLIB_HEADER: Path | None = None
+COMPILER_CONSUMED_STDLIB_HEADER_BINDING: dict[str, object] | None = None
+COMPILER_CONSUMED_REPL_BANNER_ENTRY: int | None = None
 COMPILER_CONSUMED_FEATURE_PROFILE: Path | None = None
 COMPILER_CONSUMED_FEATURE_PROFILE_BINDING: dict[str, object] | None = None
 COMPILER_CONSUMED_FEATURES: tuple[str, ...] = ()
@@ -538,17 +563,65 @@ def configure_compiler_consumed_static_header(
     COMPILER_CONSUMED_STATIC_CODE_BYTES = code_bytes
 
 
+def configure_compiler_consumed_static_header_resolver(resolver: object) -> None:
+    """Resolve the static-plane compiler input at each real consumer.
+
+    Successor cards can otherwise bind their candidate before an inherited
+    configurator restores a historical header.  The late resolver makes the
+    compiler invocation, rather than configuration order, the authority.
+    """
+    global COMPILER_CONSUMED_STATIC_HEADER_RESOLVER
+    if not callable(resolver):
+        raise RuntimeError("compiler-consumed header resolver is not callable")
+    COMPILER_CONSUMED_STATIC_HEADER_RESOLVER = resolver
+
+
+def resolved_compiler_consumed_static_header() -> tuple[
+        Path | None, dict[str, object] | None, int | None]:
+    if COMPILER_CONSUMED_STATIC_HEADER_RESOLVER is not None:
+        result = COMPILER_CONSUMED_STATIC_HEADER_RESOLVER()
+        if (not isinstance(result, tuple) or len(result) != 3
+                or not isinstance(result[0], Path)
+                or not isinstance(result[1], dict)
+                or not isinstance(result[2], int)):
+            raise RuntimeError("compiler-consumed header resolver result drift")
+        header, binding, code_bytes = result
+        raw = header.read_bytes()
+        actual = {
+            "path": header.relative_to(ROOT).as_posix(),
+            "bytes": len(raw),
+            "sha256": hashlib.sha256(raw).hexdigest(),
+        }
+        values = re.findall(
+            rb"^#define LISP65_C2_LITE_STATIC_CODE_BYTES ([0-9]+)UL$",
+            raw, re.MULTILINE)
+        if actual != binding or values != [str(code_bytes).encode()]:
+            raise RuntimeError(
+                "resolved compiler-consumed header identity/value mismatch")
+        return header, dict(binding), code_bytes
+    return (COMPILER_CONSUMED_STATIC_HEADER,
+            COMPILER_CONSUMED_STATIC_HEADER_BINDING,
+            COMPILER_CONSUMED_STATIC_CODE_BYTES)
+
+
+def validate_materialized_static_header(
+        expected_binding: dict[str, object], expected_value: int,
+        actual_binding: dict[str, object], actual_value: int) -> None:
+    """Prove path identity and the value read at that path as one claim."""
+    if (actual_binding != expected_binding
+            or actual_value != expected_value):
+        raise RuntimeError(
+            "materialized compiler header path/value diverged from candidate")
+
+
 def compiler_consumed_static_header_flags(
         out: Path, target: Path) -> tuple[list[str], dict[str, object] | None]:
     """Return the actual force-include flags and their build-local proof."""
-    if COMPILER_CONSUMED_STATIC_HEADER is None:
-        if (COMPILER_CONSUMED_STATIC_HEADER_BINDING is not None
-                or COMPILER_CONSUMED_STATIC_CODE_BYTES is not None):
+    header, binding, code_bytes = resolved_compiler_consumed_static_header()
+    if header is None:
+        if binding is not None or code_bytes is not None:
             raise RuntimeError("partial compiler-consumed header state")
         return [], None
-    header = COMPILER_CONSUMED_STATIC_HEADER
-    binding = COMPILER_CONSUMED_STATIC_HEADER_BINDING
-    code_bytes = COMPILER_CONSUMED_STATIC_CODE_BYTES
     if binding is None or code_bytes is None:
         raise RuntimeError("partial compiler-consumed header contract")
     raw = header.read_bytes()
@@ -573,8 +646,8 @@ def compiler_consumed_static_header_flags(
         "-include", assertion.relative_to(ROOT).as_posix(),
     ]
     return flags, {
-        "format": "lisp65-real-compiler-input-consumption-v1",
-        "status": "passed-bound-candidate-header-consumed",
+        "format": "lisp65-real-compiler-input-consumption-v2",
+        "status": "armed-candidate-header-consumption-proof",
         "consumer": "c2_product_substitution_link.compile_link",
         "target": target.relative_to(ROOT).as_posix(),
         "bound_header": binding,
@@ -591,6 +664,162 @@ def compiler_consumed_static_header_flags(
         },
         "historical_same_basename_accepted": False,
     }
+
+
+def configure_compiler_consumed_stdlib_header(
+        header: Path, binding: dict[str, object], repl_banner_entry: int) -> None:
+    """Force the candidate bytecode ABI header into every real C consumer.
+
+    The static-plane extent header and the generated bytecode header are two
+    distinct compiler inputs.  Binding only the former allowed ``repl.c`` to
+    find a historical ``stdlib-p0.h`` earlier on the include path and emit a
+    predecessor banner ordinal.  Force-inclusion makes the candidate header's
+    include guard authoritative for the complete compiler invocation.
+    """
+    global COMPILER_CONSUMED_STDLIB_HEADER
+    global COMPILER_CONSUMED_STDLIB_HEADER_BINDING
+    global COMPILER_CONSUMED_REPL_BANNER_ENTRY
+    raw = header.read_bytes()
+    actual = {
+        "path": header.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    values = re.findall(
+        rb"^#define LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY ([0-9]+)u$",
+        raw, re.MULTILINE)
+    if actual != binding or values != [str(repl_banner_entry).encode()]:
+        raise RuntimeError("bound candidate stdlib header identity/value mismatch")
+    COMPILER_CONSUMED_STDLIB_HEADER = header
+    COMPILER_CONSUMED_STDLIB_HEADER_BINDING = dict(binding)
+    COMPILER_CONSUMED_REPL_BANNER_ENTRY = repl_banner_entry
+
+
+def compiler_consumed_stdlib_header_flags(
+        out: Path, target: Path) -> tuple[list[str], dict[str, object] | None]:
+    header = COMPILER_CONSUMED_STDLIB_HEADER
+    binding = COMPILER_CONSUMED_STDLIB_HEADER_BINDING
+    ordinal = COMPILER_CONSUMED_REPL_BANNER_ENTRY
+    if header is None:
+        if binding is not None or ordinal is not None:
+            raise RuntimeError("partial compiler-consumed stdlib header state")
+        return [], None
+    if binding is None or ordinal is None:
+        raise RuntimeError("partial compiler-consumed stdlib header contract")
+    raw = header.read_bytes()
+    actual = {
+        "path": header.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    if actual != binding:
+        raise RuntimeError("compiler-consumed candidate stdlib header drift")
+    assertion = out / (target.stem + ".stdlib-input-assert.h")
+    write(assertion, "\n".join([
+        "#ifndef LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+        '#error "bound candidate bytecode header was not consumed"',
+        "#endif",
+        f"#if LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY != {ordinal}u",
+        '#error "consumed banner ordinal differs from bound candidate"',
+        "#endif", "",
+    ]))
+    flags = [
+        "-include", header.relative_to(ROOT).as_posix(),
+        "-include", assertion.relative_to(ROOT).as_posix(),
+    ]
+    return flags, {
+        "format": "lisp65-real-stdlib-input-consumption-v1",
+        "status": "armed-candidate-stdlib-header-consumption-proof",
+        "consumer": "c2_product_substitution_link.compile_link",
+        "target": target.relative_to(ROOT).as_posix(),
+        "bound_header": binding,
+        "macro": "LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY",
+        "consumed_value": ordinal,
+        "force_include_order": [
+            header.relative_to(ROOT).as_posix(),
+            assertion.relative_to(ROOT).as_posix(),
+        ],
+        "compile_time_assertion": {
+            "path": assertion.relative_to(ROOT).as_posix(),
+            "bytes": assertion.stat().st_size,
+            "sha256": hashlib.sha256(assertion.read_bytes()).hexdigest(),
+        },
+        "historical_same_basename_accepted": False,
+    }
+
+
+def materialized_compiler_stdlib_header_gate(
+        compile_flags: list[str], report: dict[str, object]) -> None:
+    order = report.get("force_include_order")
+    binding = report.get("bound_header")
+    expected_value = report.get("consumed_value")
+    if (not isinstance(order, list) or len(order) != 2
+            or not isinstance(binding, dict)
+            or not isinstance(expected_value, int)):
+        raise RuntimeError("compiler stdlib-header proof contract malformed")
+    expected_flags = ["-include", order[0], "-include", order[1]]
+    positions = [
+        index for index in range(len(compile_flags) - 3)
+        if compile_flags[index:index + 4] == expected_flags]
+    if len(positions) != 1:
+        raise RuntimeError(
+            "bound candidate stdlib header escaped the real compiler flags")
+    actual_header = ROOT / str(compile_flags[positions[0] + 1])
+    raw = actual_header.read_bytes()
+    actual_binding = {
+        "path": actual_header.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    values = re.findall(
+        rb"^#define LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY ([0-9]+)u$",
+        raw, re.MULTILINE)
+    if (actual_binding != binding
+            or values != [str(expected_value).encode()]):
+        raise RuntimeError(
+            "materialized stdlib header path/value diverged from candidate")
+    report["status"] = "passed-bound-candidate-stdlib-header-consumed"
+    report["actual_force_include_flags"] = expected_flags
+    report["materialized_header"] = actual_binding
+    report["materialized_value"] = expected_value
+
+
+def materialized_compiler_static_header_gate(
+        compile_flags: list[str], report: dict[str, object]) -> None:
+    """Close the receipt only from the flags and header actually consumed."""
+    order = report.get("force_include_order")
+    binding = report.get("bound_header")
+    expected_value = report.get("consumed_value")
+    if (not isinstance(order, list) or len(order) != 2
+            or not isinstance(binding, dict)
+            or not isinstance(expected_value, int)):
+        raise RuntimeError("compiler header proof contract malformed")
+    expected_flags = ["-include", order[0], "-include", order[1]]
+    positions = [
+        index for index in range(len(compile_flags) - 3)
+        if compile_flags[index:index + 4] == expected_flags]
+    if len(positions) != 1:
+        raise RuntimeError(
+            "bound candidate header escaped the real compiler flags")
+    actual_header = ROOT / str(compile_flags[positions[0] + 1])
+    raw = actual_header.read_bytes()
+    actual_binding = {
+        "path": actual_header.relative_to(ROOT).as_posix(),
+        "bytes": len(raw),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+    }
+    values = re.findall(
+        rb"^#define LISP65_C2_LITE_STATIC_CODE_BYTES ([0-9]+)UL$",
+        raw, re.MULTILINE)
+    if len(values) != 1:
+        raise RuntimeError("materialized compiler header value is ambiguous")
+    actual_value = int(values[0])
+    validate_materialized_static_header(
+        binding, expected_value, actual_binding, actual_value)
+    report["status"] = "passed-bound-candidate-header-consumed"
+    report["actual_force_include_flags"] = expected_flags
+    report["materialized_header"] = actual_binding
+    report["materialized_value"] = actual_value
 
 
 def configure_compiler_consumed_feature_profile(
@@ -761,6 +990,7 @@ C2_PHASE_SOURCES = [
 ]
 
 CONVERGENCE_FEATURE = "LISP65_CODE_WINDOW_CONVERGENCE"
+RECOVERY_QUIESCENCE_FEATURE = "LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS"
 CONVERGENCE_DEFINES = (
     CONVERGENCE_FEATURE,
     "LISP65_DMA_CONTENT_CONVERGENCE",
@@ -1403,6 +1633,27 @@ def configure_refill_boundary_witness() -> dict[str, object]:
     return refill_witness_inventory_registration()
 
 
+def configure_recovery_quiescence() -> dict[str, object]:
+    """Activate the state-free recovery probe at the real compiler seam.
+
+    Unlike source-owned optional features, this feature selects code in the
+    already mandatory runtime translation unit.  Its materialized truth is
+    therefore the resolved compiler profile plus the emitted final symbol,
+    not a second source-membership registry.
+    """
+    global CONVERGENCE_DEFINES, RECOVERY_QUIESCENCE_ENABLED
+    RECOVERY_QUIESCENCE_ENABLED = True
+    if RECOVERY_QUIESCENCE_FEATURE not in CONVERGENCE_DEFINES:
+        CONVERGENCE_DEFINES = (
+            *CONVERGENCE_DEFINES, RECOVERY_QUIESCENCE_FEATURE)
+    return {
+        "feature": RECOVERY_QUIESCENCE_FEATURE,
+        "translation_unit": "src/c2_product_runtime.c",
+        "state_bytes": 0,
+        "authority": "resolved-profile-and-final-ELF-symbol",
+    }
+
+
 def product_cold_inventory_registration(
         definitions: tuple[str, ...] | None = None) -> dict[str, object]:
     """Project product-cold ownership from the clean-world feature."""
@@ -1417,6 +1668,17 @@ def product_cold_inventory_registration(
     linked = {Path(path).resolve() for path in source_list(selected_definitions)}
     if (PRODUCT_COLD_SOURCE.resolve() in linked) != selected:
         raise RuntimeError("product-cold owner was not compiler-consumed")
+    placement = ({
+        "kind": ("map-page-top-derived" if
+                 MAPPED_TENANT_LMA_POLICY == "map-page-top" else
+                 "bank2-top-derived"),
+        "bank_end_exclusive": 0x00030000,
+        "authority": "linker MAPPED_TENANT_LMA_POLICY",
+    } if MAPPED_TENANT_LMA_POLICY in ("bank2-top", "map-page-top") else {
+        "kind": "fixed-contract",
+        "physical_start": PRODUCT_COLD_BUILD_CONFIGURATION["physical_start"],
+        "authority": "PRODUCT_COLD_BUILD_CONFIGURATION",
+    })
     return {
         "feature": PRODUCT_COLD_FEATURE,
         "selected": selected,
@@ -1425,9 +1687,12 @@ def product_cold_inventory_registration(
         "relocations": list(relocations),
         "names": [*allocated, *relocations],
         "cpu_start": PRODUCT_COLD_BUILD_CONFIGURATION["cpu_start"],
-        "physical_start": PRODUCT_COLD_BUILD_CONFIGURATION["physical_start"],
+        "physical_placement": placement,
         "capacity_bytes": PRODUCT_COLD_BUILD_CONFIGURATION["capacity_bytes"],
-        "authority": "PRODUCT_COLD_BUILD_CONFIGURATION",
+        "authority": ("linker-policy-and-source-membership" if
+                      MAPPED_TENANT_LMA_POLICY in
+                      ("bank2-top", "map-page-top") else
+                      "PRODUCT_COLD_BUILD_CONFIGURATION"),
     }
 
 
@@ -1963,6 +2228,14 @@ def linker_script(*, ownership_opt_in: bool = False) -> str:
     )
     ownership_selected = ownership_opt_in or FULL_MAP_OWNERSHIP
     ownership: dict[str, object] | None = None
+    bank2_end: int | None = None
+    map_shared_offset: str | None = None
+    if MAPPED_TENANT_LMA_POLICY in ("bank2-top", "map-page-top"):
+        tenant_contract = json.loads(
+            OWNERSHIP_CONTRACT.read_text(encoding="utf-8"))[
+                "mapped_far_service"]["bank2"]
+        bank2_end = (int(tenant_contract["physical_base"], 0)
+                     + int(tenant_contract["capacity_bytes"]))
     if ownership_selected:
         contract = json.loads(OWNERSHIP_CONTRACT.read_text(encoding="utf-8"))
         ownership = contract["mapped_far_service"]
@@ -2793,6 +3066,56 @@ ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) +
         bank2 = ownership["bank2"]
         mapping = ownership["map_tuple"]
         resident = ownership["resident"]
+        selected_bank2_end = (int(bank2["physical_base"], 0)
+                              + int(bank2["capacity_bytes"]))
+        if bank2_end is None:
+            bank2_end = selected_bank2_end
+        elif bank2_end != selected_bank2_end:
+            raise RuntimeError("mapped-tenant Bank-2 authority diverged")
+        if MAPPED_TENANT_LMA_POLICY == "map-page-top":
+            if not PRODUCT_COLD_ENABLED or REFILL_WITNESS_ENABLED:
+                raise RuntimeError(
+                    "map-page-top policy requires the clean Product-Cold world")
+            cold_section = str(PRODUCT_COLD_BUILD_CONFIGURATION["allocated"][0])
+            cold_cpu_start = int(PRODUCT_COLD_BUILD_CONFIGURATION["cpu_start"])
+            map_shared_offset = (
+                f"(({bank2_end:#010x} - ({cold_cpu_start:#06x} + "
+                f"SIZEOF({cold_section}))) / 0x100 * 0x100)")
+            far_cpu_start = int(mapping["mapped_service_cpu_start"], 0)
+            far_lma = f"({far_cpu_start:#06x} + {map_shared_offset})"
+            far_lma_assertion = (
+                "LOADADDR(.lisp65_c2_mapped_far_service) -\n"
+                "            ADDR(.lisp65_c2_mapped_far_service) ==\n"
+                "                __lisp65_c2_mapped_shared_offset &&\n"
+                "        (__lisp65_c2_mapped_shared_offset & 0xff) == 0")
+            far_load_end_assertion = (
+                "LOADADDR(.lisp65_c2_mapped_product_cold) -\n"
+                "            __lisp65_c2_mapped_far_service_load_end ==\n"
+                "        ADDR(.lisp65_c2_mapped_product_cold) -\n"
+                "            __lisp65_c2_mapped_far_service_end")
+        elif MAPPED_TENANT_LMA_POLICY == "bank2-top":
+            if not PRODUCT_COLD_ENABLED or REFILL_WITNESS_ENABLED:
+                raise RuntimeError(
+                    "bank2-top mapped policy requires the clean Product-Cold world")
+            far_lma = (
+                f"({bank2_end:#010x} - "
+                "SIZEOF(.lisp65_c2_mapped_product_cold) - "
+                "SIZEOF(.lisp65_c2_mapped_far_service))")
+            far_lma_assertion = (
+                "LOADADDR(.lisp65_c2_mapped_far_service) +\n"
+                "            SIZEOF(.lisp65_c2_mapped_far_service) ==\n"
+                "                LOADADDR(.lisp65_c2_mapped_product_cold)")
+            far_load_end_assertion = (
+                "__lisp65_c2_mapped_far_service_load_end ==\n"
+                "            LOADADDR(.lisp65_c2_mapped_product_cold)")
+        else:
+            far_lma = f"{int(bank2['service_physical_start'], 0):#010x}"
+            far_lma_assertion = (
+                "LOADADDR(.lisp65_c2_mapped_far_service) == "
+                f"{int(bank2['service_physical_start'], 0):#010x}")
+            far_load_end_assertion = (
+                "__lisp65_c2_mapped_far_service_load_end == "
+                f"{int(bank2['service_physical_end_exclusive'], 0):#010x}")
         owned_layout = f"""/* Halt-1-selected stack/state/far-service owners.
  * Expected addresses live in the reviewed ownership contract; the permanent
  * gate compares this generated script and the final ELF against that
@@ -2822,7 +3145,7 @@ SECTIONS {{
         KEEP(*(.lisp65_c2_mapped_far_facade.*))
     }} >ram
     .lisp65_c2_mapped_far_service {int(mapping['mapped_service_cpu_start'], 0):#06x}
-        : AT({int(bank2['service_physical_start'], 0):#010x}) {{
+        : AT({far_lma}) {{
         KEEP(*(.lisp65_c2_mapped_far_service))
         KEEP(*(.lisp65_c2_mapped_far_service.*))
     }} >ram
@@ -2844,6 +3167,13 @@ __lisp65_c2_mapped_far_service_load_start =
 __lisp65_c2_mapped_far_service_load_end =
     LOADADDR(.lisp65_c2_mapped_far_service) +
     SIZEOF(.lisp65_c2_mapped_far_service);
+__lisp65_c2_mapped_shared_offset =
+    LOADADDR(.lisp65_c2_mapped_far_service) -
+    ADDR(.lisp65_c2_mapped_far_service);
+__lisp65_c2_mapped_far_maplo_a =
+    (__lisp65_c2_mapped_shared_offset / 0x100) & 0xff;
+__lisp65_c2_mapped_far_maplo_x =
+    0x80 + ((__lisp65_c2_mapped_shared_offset / 0x10000) & 0x0f);
 
 ASSERT(ADDR(.lisp65_c2_static_stack) == 0xc074 &&
        SIZEOF(.lisp65_c2_static_stack) <= 12 &&
@@ -2873,10 +3203,10 @@ ASSERT(__lisp65_c2_mapped_far_facade_padding_required == 0 ||
        "mapped far facade explicit padding drift");
 ASSERT(__lisp65_c2_mapped_far_required == 0 ||
        (ADDR(.lisp65_c2_mapped_far_service) == {int(mapping['mapped_service_cpu_start'], 0):#06x} &&
-        LOADADDR(.lisp65_c2_mapped_far_service) == {int(bank2['service_physical_start'], 0):#010x} &&
+        {far_lma_assertion} &&
         SIZEOF(.lisp65_c2_mapped_far_service) == {int(bank2['service_bytes'])} &&
         __lisp65_c2_mapped_far_service_end == {int(mapping['mapped_service_cpu_end_exclusive'], 0):#06x} &&
-        __lisp65_c2_mapped_far_service_load_end == {int(bank2['service_physical_end_exclusive'], 0):#010x}),
+        {far_load_end_assertion}),
        "mapped far body escaped its Bank-2 owner");
 ASSERT(__lisp65_c2_mapped_far_required == 0 ||
        ADDR(.text) + SIZEOF(.text) <= {int(resident['start'], 0):#06x},
@@ -2893,7 +3223,28 @@ ASSERT({int(cpu['start'], 0):#06x} == 0x6000 &&
                   else PRODUCT_COLD_BUILD_CONFIGURATION)
         section_name = str(mapped["allocated"][0])
         cpu_start = int(mapped["cpu_start"])
-        physical_start = int(mapped["physical_start"])
+        if (MAPPED_TENANT_LMA_POLICY == "map-page-top"
+                and not REFILL_WITNESS_ENABLED):
+            if map_shared_offset is None:
+                raise RuntimeError("page-congruent MAP offset was not derived")
+            physical_start = f"({cpu_start:#06x} + {map_shared_offset})"
+            physical_assertion = (
+                f"LOADADDR({section_name}) - ADDR({section_name}) == "
+                "__lisp65_c2_mapped_shared_offset && "
+                f"LOADADDR({section_name}) + SIZEOF({section_name}) <= "
+                f"{bank2_end:#010x}")
+        elif (MAPPED_TENANT_LMA_POLICY == "bank2-top"
+                and not REFILL_WITNESS_ENABLED):
+            physical_start = (
+                f"({bank2_end:#010x} - SIZEOF({section_name}))")
+            physical_assertion = (
+                f"LOADADDR({section_name}) + SIZEOF({section_name}) == "
+                f"{bank2_end:#010x}")
+        else:
+            physical_start = f"{int(mapped['physical_start']):#010x}"
+            physical_assertion = (
+                f"LOADADDR({section_name}) == "
+                f"{int(mapped['physical_start']):#010x}")
         capacity = int(mapped["capacity_bytes"])
         prefix = ("__lisp65_c2_mapped_diagnostic" if REFILL_WITNESS_ENABLED
                   else "__lisp65_c2_mapped_product_cold")
@@ -2902,7 +3253,7 @@ ASSERT({int(cpu['start'], 0):#06x} == 0x6000 &&
         owned_layout += f"""
 SECTIONS {{
     {section_name} {cpu_start:#06x}
-        : AT({physical_start:#010x}) {{
+        : AT({physical_start}) {{
         KEEP(*({section_name}))
         KEEP(*({section_name}.*))
     }} >ram
@@ -2913,8 +3264,14 @@ SECTIONS {{
 {prefix}_load_start = LOADADDR({section_name});
 {prefix}_load_end = LOADADDR({section_name}) + SIZEOF({section_name});
 
+__lisp65_c2_mapped_congruence_gap_start =
+    __lisp65_c2_mapped_far_service_load_end;
+__lisp65_c2_mapped_congruence_gap_end = {prefix}_load_start;
+__lisp65_c2_mapped_bank_end_reserve_start = {prefix}_load_end;
+__lisp65_c2_mapped_bank_end_reserve_end = {bank2_end:#010x};
+
 ASSERT(ADDR({section_name}) == {cpu_start:#06x} &&
-       LOADADDR({section_name}) == {physical_start:#010x} &&
+       {physical_assertion} &&
        SIZEOF({section_name}) > 0 &&
        SIZEOF({section_name}) <= {capacity} &&
        {prefix}_end <= 0x8000,
@@ -3324,6 +3681,9 @@ def compile_link(out: Path, name: str, headers: list[Path],
     consumed_flags, consumed_report = compiler_consumed_static_header_flags(
         out, target)
     compile_flags.extend(consumed_flags)
+    stdlib_consumed_flags, stdlib_consumed_report = (
+        compiler_consumed_stdlib_header_flags(out, target))
+    compile_flags.extend(stdlib_consumed_flags)
     for header in headers:
         compile_flags.extend(["-include", checkout_arg(header)])
     compile_flags.extend([
@@ -3478,20 +3838,17 @@ def compile_link(out: Path, name: str, headers: list[Path],
     input_capture_seed_size_witness(
         _readobj_sections(Path(str(target) + ".elf")), probe_definitions)
     if consumed_report is not None:
-        expected_flags = [
-            "-include", consumed_report["force_include_order"][0],
-            "-include", consumed_report["force_include_order"][1],
-        ]
-        positions = [
-            index for index in range(len(compile_flags) - 3)
-            if compile_flags[index:index + 4] == expected_flags]
-        if len(positions) != 1:
-            raise RuntimeError(
-                "bound candidate header escaped the real compiler flags")
-        consumed_report["actual_force_include_flags"] = expected_flags
+        materialized_compiler_static_header_gate(
+            compile_flags, consumed_report)
         receipt = Path(str(target) + ".compiler-input-consumption.json")
         write(receipt, json.dumps(
             consumed_report, indent=2, sort_keys=True) + "\n")
+    if stdlib_consumed_report is not None:
+        materialized_compiler_stdlib_header_gate(
+            compile_flags, stdlib_consumed_report)
+        receipt = Path(str(target) + ".stdlib-input-consumption.json")
+        write(receipt, json.dumps(
+            stdlib_consumed_report, indent=2, sort_keys=True) + "\n")
     if feature_consumption_report is not None:
         receipt = Path(str(target) + ".compiler-feature-consumption.json")
         write(receipt, json.dumps(
@@ -4443,7 +4800,11 @@ def refill_witness_inventory_registration(
         "relocations": list(relocations),
         "names": [*allocated, *relocations],
         "cpu_start": REFILL_WITNESS_BUILD_CONFIGURATION["cpu_start"],
-        "physical_start": REFILL_WITNESS_BUILD_CONFIGURATION["physical_start"],
+        "physical_placement": {
+            "kind": "fixed-contract",
+            "physical_start":
+                REFILL_WITNESS_BUILD_CONFIGURATION["physical_start"],
+            "authority": "REFILL_WITNESS_BUILD_CONFIGURATION"},
         "capacity_bytes": REFILL_WITNESS_BUILD_CONFIGURATION["capacity_bytes"],
         "authority": "REFILL_WITNESS_BUILD_CONFIGURATION",
     }
@@ -4522,26 +4883,24 @@ def input_capture_consumption_closure(
 
 def input_capture_compile_profile(
         definitions: tuple[str, ...]) -> tuple[str, ...]:
-    """Project card membership at the real single-link consumer."""
-    feature = str(INPUT_CAPTURE_BUILD_CONFIGURATION["feature"])
-    count = definitions.count(feature)
-    if INPUT_CAPTURE_ENABLED:
-        if count == 0:
-            definitions = (*definitions, feature)
-        elif count != 1:
-            raise RuntimeError("duplicate input-capture compiler feature")
-    elif count:
-        raise RuntimeError(
-            "input-capture compiler feature exists without layout selection")
-    hybrid_count = definitions.count(INPUT_HYBRID_FEATURE)
-    if INPUT_HYBRID_ENABLED:
-        if hybrid_count == 0:
-            definitions = (*definitions, INPUT_HYBRID_FEATURE)
-        elif hybrid_count != 1:
-            raise RuntimeError("duplicate input-hybrid compiler feature")
-    elif hybrid_count:
-        raise RuntimeError(
-            "input-hybrid compiler feature exists without layout selection")
+    """Fold every active runtime feature at the real single-link consumer."""
+    features = (
+        (str(INPUT_CAPTURE_BUILD_CONFIGURATION["feature"]),
+         INPUT_CAPTURE_ENABLED, "input-capture"),
+        (INPUT_HYBRID_FEATURE, INPUT_HYBRID_ENABLED, "input-hybrid"),
+        (RECOVERY_QUIESCENCE_FEATURE, RECOVERY_QUIESCENCE_ENABLED,
+         "recovery-quiescence"),
+    )
+    for feature, enabled, label in features:
+        count = definitions.count(feature)
+        if enabled:
+            if count == 0:
+                definitions = (*definitions, feature)
+            elif count != 1:
+                raise RuntimeError(f"duplicate {label} compiler feature")
+        elif count:
+            raise RuntimeError(
+                f"{label} compiler feature exists without activation")
     return definitions
 
 

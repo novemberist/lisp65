@@ -6,6 +6,17 @@
     "lib/stdlib-wait.lisp"
   ],
   "functions": [
+    "%frame-low",
+    "%cursor-blink",
+    "%rl-start",
+    "%rl-kind",
+    "%rl-scan",
+    "%rl-close",
+    "%rl-open",
+    "%rl-idle",
+    "%rl-clear",
+    "%rl-paint",
+    "%rl-poll",
     "%rl-render",
     "%rl-cut",
     "%rl-move",
@@ -33,6 +44,10 @@
     {
       "name": "fasl-emit-scratch",
       "reason": "excluded from the compile-string Workbench profile"
+    },
+    {
+      "name": "%ide-line-net-depth",
+      "reason": "IDE-only indentation helper; this resident profile owns only the shared matcher objects from lib/sexp-depth.lisp"
     }
   ],
   "cases": [
@@ -158,6 +173,52 @@
       "expect_output_codes": [],
       "expect_screen_rows": {"24": "        "},
       "expect_io_min": {"screen_put_char": 80}
+    },
+    {
+      "name": "read-line-idle-empty-boundary",
+      "expr": "(read-line)",
+      "expect": "\"a\"",
+      "key_events": [
+        {"empty_polls": 2},
+        97,
+        13
+      ],
+      "expect_key_events_remaining": 0,
+      "memory_read_sequences": {"0xff83": [0, 0, 0, 0]},
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "a       "}
+    },
+    {
+      "name": "read-line-idle-close-match",
+      "expr": "(read-line)",
+      "expect": "\"(a)\"",
+      "key_events": [
+        40,
+        97,
+        41,
+        {"empty_polls": 3},
+        13
+      ],
+      "expect_key_events_remaining": 0,
+      "memory_read_sequences": {"0xff83": [0, 0, 0, 0, 0, 0, 0, 0]},
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "(a)     "}
+    },
+    {
+      "name": "read-line-idle-ordinary-bypass",
+      "expr": "(read-line)",
+      "expect": "\"abc\"",
+      "key_events": [
+        97,
+        {"empty_polls": 3},
+        98,
+        99,
+        13
+      ],
+      "expect_key_events_remaining": 0,
+      "memory_read_sequences": {"0xff83": [0, 0, 0, 0, 0, 0, 0]},
+      "expect_output_codes": [10],
+      "expect_screen_rows": {"24": "abc     "}
     },
     {
       "name": "wait-zero",

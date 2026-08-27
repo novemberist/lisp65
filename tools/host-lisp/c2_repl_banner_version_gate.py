@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import json
 from pathlib import Path
 import re
@@ -13,7 +14,13 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "lib/repl-banner.lisp"
-AUTHORITY = ROOT / "config/v12-known-issues.json"
+# The v1.2 known-issues register is sealed history, not the living product
+# banner authority.  The most recent product contract that owns this source
+# banner derives the visible text from its release identity.
+AUTHORITY = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
+    "c2.3-v1.7.0-release-card-r1-receipt.json"
+)
 SUBTITLE_PREFIX = "WORKBENCH "
 SUBTITLE_CENTER_COLUMN = 55
 SUBTITLE_PATTERN = re.compile(
@@ -35,26 +42,45 @@ def require(value: bool, message: str) -> None:
         raise GateError(message)
 
 
-def validate(source: str, authority: dict[str, Any]) -> dict[str, Any]:
-    require(
-        authority.get("format") == "lisp65-v12-known-issues-register-v1",
-        "release authority format drift",
-    )
-    package_release = authority.get("release")
-    release = authority.get("product_banner_release", package_release)
+def release_identity(authority: dict[str, Any]) -> tuple[str, str]:
+    if authority.get("format") == "lisp65-c2-v150-release-contract-v1":
+        package_release = authority.get("release")
+        subtitle = authority.get("banner")
+    elif authority.get("format") == "lisp65-c2-v170-release-product-card-v1":
+        release = authority.get("final_product", {}).get(
+            "release_v1_7_0", {})
+        banner = release.get("banner", {})
+        subtitle = banner.get("final_composed_literal")
+        package_release = (
+            "v" + subtitle.removeprefix(SUBTITLE_PREFIX)
+            if isinstance(subtitle, str) else None
+        )
+        require(
+            authority.get("status") ==
+                "PASS: V1.7.0 RELEASE PRODUCT CARD FINAL GREEN"
+            and banner.get("status") ==
+                "PASS: WORKBENCH 1.7.0 IS THE UNIQUE EMITTED BANNER",
+            "release-card banner authority is not green",
+        )
+    else:
+        raise GateError("product banner authority format drift")
     require(
         isinstance(package_release, str)
-        and re.fullmatch(
-            r"[0-9]+\.[0-9]+\.[0-9]+", package_release
-        ) is not None
-        and isinstance(release, str)
-        and re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", release) is not None,
-        "release authority has no canonical package/banner versions",
+        and re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+", package_release)
+            is not None
+        and subtitle == SUBTITLE_PREFIX + package_release[1:],
+        "product authority does not derive one canonical package/banner identity",
     )
+    return package_release, subtitle
+
+
+def validate(source: str, authority: dict[str, Any]) -> dict[str, Any]:
+    package_release, authority_subtitle = release_identity(authority)
+    release = package_release[1:]
     matches = list(SUBTITLE_PATTERN.finditer(source))
     require(len(matches) == 1, "expected exactly one canonical banner subtitle body")
     text, length_text, start_text = matches[0].groups()
-    expected_text = SUBTITLE_PREFIX + release
+    expected_text = authority_subtitle
     expected_length = len(expected_text)
     expected_start = SUBTITLE_CENTER_COLUMN - expected_length // 2
     require(text == expected_text, "banner release text drift")
@@ -78,6 +104,12 @@ def selftest(source: str, authority: dict[str, Any]) -> int:
     result = validate(source, authority)
     major, minor, patch = (int(part) for part in result["release"].split("."))
     next_release = f"{major}.{minor}.{patch + 1}"
+    bumped_authority = deepcopy(authority)
+    if bumped_authority.get("format") == "lisp65-c2-v150-release-contract-v1":
+        bumped_authority["release"] = f"v{next_release}"
+    else:
+        bumped_authority["final_product"]["release_v1_7_0"]["banner"][
+            "final_composed_literal"] = SUBTITLE_PREFIX + next_release
     mutations: list[tuple[str, str, dict[str, Any]]] = [
         (
             "stale-version",
@@ -105,7 +137,7 @@ def selftest(source: str, authority: dict[str, Any]) -> int:
         (
             "banner-authority-bump-without-banner",
             source,
-            {**authority, "product_banner_release": next_release},
+            bumped_authority,
         ),
     ]
     for label, mutant_source, mutant_authority in mutations:

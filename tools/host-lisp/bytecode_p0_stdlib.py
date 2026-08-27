@@ -2023,6 +2023,7 @@ def check_suite(path, suite, verbose=False, base_addr=PB.DEFAULT_BASE_ADDR):
             memory_read_sequences=case.get("memory_read_sequences"),
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
+            delivered_callprims=suite.get("delivered_callprims"),
         )
         expected_vm_error = case.get("expect_vm_error")
         try:
@@ -2787,6 +2788,7 @@ def _check_embed_manifest(path, suite, manifest, blob, verbose=False):
             memory_read_sequences=case.get("memory_read_sequences"),
             abi_profile=abi_profile,
             abi_ledger=abi_ledger,
+            delivered_callprims=suite.get("delivered_callprims"),
         )
         expected_vm_error = case.get("expect_vm_error")
         try:

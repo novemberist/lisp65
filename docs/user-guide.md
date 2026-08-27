@@ -1,9 +1,9 @@
-# lisp65 1.6.0 User Guide
+# lisp65 1.7.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.6.0` release bundle
+- The extracted `lisp65-1.7.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -21,7 +21,7 @@ python3 verify.py
 ```
 
 Do not use a bundle that fails. The verifier checks every packaged file, all 19
-product artifacts, the three v1.6 library-medium roles, and the embedded
+product artifacts, the three v1.7 library-medium roles, and the embedded
 hardware-acceptance evidence without using the live repository or network.
 
 ## Start from BASIC and perform the one-drive swap
@@ -40,7 +40,7 @@ hardware-acceptance evidence without using the live repository or network.
 
 5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
    `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL.
-6. To activate v1.6 cursor navigation, mount
+6. To activate the optional cursor navigation retained in v1.7, mount
    `media/lisp65-library.d81` and submit:
 
    ```lisp
@@ -85,6 +85,12 @@ denial is the applicable protection in this profile.
 (load-lib "demo-lib")             ; load the compiled library
 ```
 
+The selected v1.7 product checks for `INIT.L65` after the resident world is
+ready and before the first banner. The release medium deliberately omits the
+file, so the normal release boot takes the silent absence path. On a derived
+medium that supplies it, the file is evaluated once per cold boot. An open or
+evaluation error returns to one live `lisp65>` prompt and is not retried.
+
 The REPL accepts several forms on one input line and evaluates them from left
 to right. If a later form has a reader error, earlier forms on that line have
 already run; durable changes made by them are not rolled back. The error
@@ -94,8 +100,13 @@ After `(require 'v16core)`, the REPL line is editable in insertion mode.
 Cursor Left/Right and `C-b`/`C-f` move by one character; `C-a` and `C-e` move
 to the line endpoints; Delete removes backward and `C-d` removes forward.
 Movement or deletion beyond an endpoint is a no-op. The cursor-following
-viewport preserves the 250-character line limit. This is the focused v1.6
+viewport preserves the 250-character line limit. This is the focused native
 line editor, not the deferred balanced multiline/history Comfort REPL.
+
+The input queue has one active product owner. The v1.7 editor and evaluator do
+not race to acknowledge the same ordinary key event. The capture-based Comfort
+path that motivated this rule is deliberately absent from the selected v1.7
+medium and remains deferred as one unit.
 
 Persistent compilation no longer uses preallocated `fasl*` slots. `compile-string`
 and the editor compiler path save arbitrary library names through the full M65D
@@ -112,9 +123,9 @@ Example:
 (answer)                           ; => 42
 ```
 
-### The v1.6 library medium
+### The v1.7 library medium
 
-The selected v1.6 library medium contains one package, `v16core`, which
+The selected v1.7 library medium contains one package, `v16core`, which
 installs the accepted cursor-aware input library. Mount the library D81,
 remount M65D if it is already active, and require it once per cold session:
 
@@ -126,11 +137,19 @@ remount M65D if it is already active, and require it once per cold session:
 Restore the product or work disk afterward and run `(m65d-remount)` again
 before loading or saving through M65D. The optional v1.5 package set
 (`string-extra`, `inspect`, `place`, and `defstruct`) is not included in the
-v1.6 selected library image and is outside the v1.6 hardware claim.
+v1.7 selected library image and is outside the v1.7 hardware claim.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two
 parentheses even though the screen displays an ordinary-looking space.
+
+Boot library reads use the verified CPU/MAP refill path; the release verifier
+also checks that the packed PRG contains the same resident facade bytes as the
+linked product. A successful boot therefore does not treat an unverified DMA
+completion signal as proof that library code is ready. The empty-journal
+recovery path first derives quiescence from all 64 C2J bytes and skips six of
+the eight former overlay transports; any uncertainty uses the unchanged
+serial verifier.
 
 ## Build a standalone disk
 
@@ -364,6 +383,12 @@ code. This is not a general condition system or user-handler API.
 Wrong arity, invalid types, and unavailable functions fail loudly. After an
 ordinary error the REPL remains usable; a mistyped form does not invalidate the
 session.
+
+The v1.6 recovery boundary also catches a transfer into a retired overlay and
+sanitizes restored control-state pairs before returning to the native prompt.
+This was hardware-observed with an ordinary type error followed by a successful
+list evaluation. It does not turn unrelated fail-closed faults into recoverable
+conditions.
 
 ## Disk safety and recovery
 

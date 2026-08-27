@@ -1,0 +1,67 @@
+{
+  "format": "lisp65-c2-v17-sexp-scanner-paint-card-contract-v1",
+  "recorded_on": "2026-08-26",
+  "status": "implementation-card-1-open",
+  "pricing_commit": "7c8e4fc4",
+  "pricing_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.7-editing-surface-polish-pricing-receipt.json",
+  "scope": {
+    "included": [
+      "one resident shared lexical matcher core",
+      "surface-owned composed paint transition",
+      "exact emitted object sizes",
+      "permanent lexical, chunk and ownership gates"
+    ],
+    "excluded": [
+      "line-editor idle activation",
+      "IDE idle activation",
+      "cursor blink",
+      "WPLTO",
+      "product link",
+      "media",
+      "emulator acceptance",
+      "device contact",
+      "Comfort delivery or acceptance"
+    ]
+  },
+  "source": "lib/sexp-depth.lisp",
+  "resident_suite": "tests/bytecode/stdlib/p0-stdlib-einsuite-core-workbench-subset.json",
+  "ide_suite": "tests/bytecode/libs/p0-ide-core-lib.json",
+  "functions": [
+    "%sexp-code",
+    "%sexp-rest",
+    "%sexp-step",
+    "%sexp-scan",
+    "%sexp-open",
+    "%sexp-close",
+    "%sexp-match",
+    "%sexp-paint"
+  ],
+  "limits": {
+    "codes_per_pass": 3,
+    "max_code_object_bytes": 255,
+    "conservative_block3_bank2_ceiling": 1684,
+    "delivery_free_before": {
+      "symbol_slots": 105,
+      "namepool_bytes": 1413
+    },
+    "minimum_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 384
+    }
+  },
+  "ownership": {
+    "shared_core_owner": "resident Workbench stdlib",
+    "permitted_paint_callers": [
+      "%rl-idle",
+      "%ide-idle"
+    ],
+    "activation_deferred_to_cards": [
+      "line-editor idle blink",
+      "IDE idle blink"
+    ],
+    "cursor_attribute": 129,
+    "delimiter_attribute": 7,
+    "base_attribute": 1
+  },
+  "decision_rule": "pass only if the exact emitted core fits, every object is below 255 bytes, all three passes self-cap at three code units, the resident suite is the sole emitted owner, and composed paint clears stale cells with cursor paint winning"
+}

@@ -20,6 +20,7 @@ HOST = ROOT / "tools/host-lisp"
 sys.path.insert(0, str(HOST))
 
 import bytecode_p0 as B  # noqa: E402
+import bytecode_p0_compiler as C  # noqa: E402
 from ide_bytecode_dynamic_report import Runtime  # noqa: E402
 import c2_v125_editor_latency_accounting as A  # noqa: E402
 
@@ -422,15 +423,89 @@ def scroll_route(
     }
 
 
+def _defun_forms(source: str) -> dict[str, list[Any]]:
+    result = {}
+    for form in C.parse_all(source):
+        if (isinstance(form, list) and len(form) >= 4
+                and form[0] == "defun" and isinstance(form[1], str)):
+            result[form[1]] = form
+    return result
+
+
+def _drain_step_edges(node: Any) -> int:
+    if not isinstance(node, list):
+        return 0
+    here = int(
+        len(node) == 2
+        and node[0] == "%ide-drain-pending"
+        and isinstance(node[1], list)
+        and bool(node[1])
+        and node[1][0] == "ide-step"
+    )
+    return here + sum(_drain_step_edges(item) for item in node)
+
+
+def _coalescing_edge_proof(forms: dict[str, list[Any]]) -> dict[str, Any]:
+    required_owners = ("%ide-drain-pending", "%ide-poll")
+    counts = {
+        name: _drain_step_edges(forms.get(name))
+        for name in required_owners
+    }
+    require(
+        counts == {"%ide-drain-pending": 1, "%ide-poll": 1},
+        "coalescing ide-step result edge missing or duplicated",
+    )
+    return {
+        "relation": "%ide-drain-pending consumes an ide-step result",
+        "owners": counts,
+        "proof_shape": "parsed defun call tree; local variable spelling ignored",
+    }
+
+
+def _remove_first_drain_step(node: Any) -> tuple[Any, bool]:
+    if not isinstance(node, list):
+        return node, False
+    if (
+        len(node) == 2
+        and node[0] == "%ide-drain-pending"
+        and isinstance(node[1], list)
+        and bool(node[1])
+        and node[1][0] == "ide-step"
+    ):
+        return copy.deepcopy(node[1]), True
+    changed = []
+    removed = False
+    for item in node:
+        replacement, item_removed = _remove_first_drain_step(item)
+        changed.append(replacement)
+        if item_removed:
+            removed = True
+            changed.extend(copy.deepcopy(rest) for rest in node[len(changed):])
+            break
+    return changed, removed
+
+
 def coalescing_source_proof() -> dict[str, Any]:
     ui = (ROOT / "lib/ide-ui.lisp").read_text(encoding="utf-8")
     interrupt = (ROOT / "src/interrupt.c").read_text(encoding="utf-8")
     keymap = read_json(ROOT / "config/v11-l-lite-keymap.json")
+    forms = _defun_forms(ui)
+    edges = _coalescing_edge_proof(forms)
+    mutated = copy.deepcopy(forms)
+    mutated["%ide-poll"], removed = _remove_first_drain_step(
+        mutated["%ide-poll"]
+    )
+    require(removed, "coalescing edge mutation could not be constructed")
+    try:
+        _coalescing_edge_proof(mutated)
+    except GateError:
+        edge_mutation_rejected = True
+    else:
+        edge_mutation_rejected = False
+    require(edge_mutation_rejected, "removed coalescing edge mutation survived")
     required = [
-        "(%ide-drain-pending (ide-step state k))",
         "(poll-key)",
         "(eq (ide-state-message state) 1015)",
-        "(%ide-drain-pending (ide-step saved-state key))",
     ]
     for needle in required:
         require(needle in ui, f"coalescing source seam missing: {needle}")
@@ -461,7 +536,9 @@ def coalescing_source_proof() -> dict[str, Any]:
         "exit_drained": exit_drained,
         "physical_run_stop_owner": "src/interrupt.c:lisp_poll",
         "physical_run_stop_queued": False,
-        "source_assertions": len(required) + 2,
+        "coalescing_edge": edges,
+        "structural_edge_mutations": 1,
+        "source_assertions": len(required) + 2 + len(edges["owners"]),
     }
 
 
@@ -580,7 +657,9 @@ def build_receipt(
     }
     semantic = coalescing_source_proof()
     screens = semantic_screen_proof(suite, contract, max_steps=max_steps)
-    mutations = mutation_selftest(contract)
+    mutations = mutation_selftest(contract) + semantic[
+        "structural_edge_mutations"
+    ]
     failures = evaluate(contract, routes)
     keys = sum(len(route["rows"]) for route in routes.values())
     witness = contract["execution_witness"]

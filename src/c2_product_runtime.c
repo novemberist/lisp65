@@ -3790,6 +3790,67 @@ done:
 }
 #endif
 
+#ifdef LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS
+#if !defined(LISP65_C2_NESTED_APPEND_V5) \
+    || !defined(LISP65_C2_LITE_COLD_EVICTION) \
+    || !defined(LISP65_C2_RESIDENCY_TRIAGE)
+#error "derived empty-journal recovery requires the v6 nested serial driver"
+#endif
+
+/* Bypass only the journal validation/reconstruction pair after deriving the
+ * complete physical C2J as empty.  The two front/prepare overlays still run;
+ * a transient obligation continues through the existing rollback-plan body.
+ * Every read failure or nonzero journal byte releases the borrowed scratch and
+ * selects the byte-identical serial abort driver below.
+ *
+ * Keep this body in permanently visible ordinary text: c2_stream_c2d_read
+ * enters/leaves the MAP-CPU transport, so executing it from a mapped tenant
+ * would violate the transitive no-nested-MAP contract. */
+static __attribute__((noinline, used, visibility("hidden"),
+                      section(".text.c2_abort_empty_journal")))
+uint8_t c2_abort_empty_journal_derived(void) {
+    uint8_t *facts = c2aw.journal_snapshot;
+    uint8_t i, ok = 0u;
+
+    (void)c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND);
+    (void)c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_EMITTER);
+    if (!c2_phase_scratch_acquire(LISP65_C2_PHASE_OWNER_APPEND)) return 0u;
+
+    if (!c2_stream_c2d_read(C2D_UNWIND_BASE, facts, C2D_UNWIND_BYTES))
+        goto done;
+    for (i = 0u; i < C2D_UNWIND_BYTES; ++i)
+        if (facts[i]) goto done;
+
+    c2aw.main_ordinal = 0u;
+    C2AW_JOURNAL_RESULT(&c2aw) = C2J_RESULT_NONE;
+    C2AW_COMPLETION_MARK(&c2aw) = 0u;
+#ifdef LISP65_C2_LITE_V6_ROOTS_FRONTS_CORESIDENT
+    C2AW_ROOTS_FRONTS_MARK(&c2aw) = C2_FRONTS_REQUEST_MARK;
+#endif
+    if (!c2_overlay_call(LISP65_C2_APPEND_FRONTS_SLOT, &c2aw)
+        || !c2_overlay_call(LISP65_C2_APPEND_ROLLBACK_PREPARE_SLOT, &c2aw))
+        goto failed;
+    if (C2AW_JOURNAL_RESULT(&c2aw) == C2J_RESULT_NONE) {
+        ok = 1u;
+    } else if (C2AW_JOURNAL_RESULT(&c2aw) ==
+#ifdef LISP65_C2_LITE_V6_JOURNAL_PREPARE_CORESIDENT
+               C2J_RESULT_PREPARED
+#else
+               C2J_RESULT_ACTIVE
+#endif
+               && c2_append_run_rollback_plan(&c2aw)) {
+        ok = 1u;
+    } else {
+failed:
+        c2_ready = 0u;
+    }
+
+done:
+    if (!c2_phase_scratch_release(LISP65_C2_PHASE_OWNER_APPEND)) return 0u;
+    return ok;
+}
+#endif
+
 uint8_t c2_product_abort_cleanup(void) {
 #if defined(__mos__) && defined(LISP65_C2_RTOV_CONTINUATION_LIVENESS)
     extern void c2_rtov_retire_continuations_facade(void);
@@ -3800,13 +3861,24 @@ uint8_t c2_product_abort_cleanup(void) {
     if (vm_runtime_overlay_abort_cleanup() != VM_RUNTIME_OVERLAY_OK) {
         c2_ready = 0; return 0;
     }
+    return 1;
+}
+
+__attribute__((noinline, used))
+uint8_t c2_product_abort_recover(void) {
     /* E000 is not callable before ownership.  The formal reopening keeps the
      * harmless pre-READY landing in the low seam; ordinary profiles retain
      * their byte-pinned guard in c2_abort_driver itself. */
 #ifdef LISP65_C2_E000_REOPEN
 #if defined(__mos__) && defined(LISP65_C2_ABORT_DRIVER_FAR)
     extern uint8_t c2_abort_driver_facade(void);
+#ifdef LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS
+    if (!c2_ready) return 1u;
+    if (c2_abort_empty_journal_derived()) return 1u;
     return !c2_ready || c2_abort_driver_facade();
+#else
+    return !c2_ready || c2_abort_driver_facade();
+#endif
 #else
     return !c2_ready || c2_abort_driver();
 #endif

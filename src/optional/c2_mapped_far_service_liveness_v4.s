@@ -38,13 +38,13 @@ c2_rtov_retire_continuations_facade:
 	.globl c2_mapped_far_enter
 	.type c2_mapped_far_enter,@function
 c2_mapped_far_enter:
-	; Preserve A/X/Y and the C-ABI value Z=0.  $40/$82 exposes physical
-	; $02A000..$02BFFF in CPU block 3 only.
+	; Preserve A/X/Y and the C-ABI value Z=0.  The linker owns both the
+	; page-congruent tenant placement and these two derived MAP bytes.
 	pha
 	phx
 	phy
-	lda #0x40
-	ldx #0x82
+	lda #mos16lo(__lisp65_c2_mapped_far_maplo_a)
+	ldx #mos16lo(__lisp65_c2_mapped_far_maplo_x)
 	ldy #0x00
 	ldz #0x80
 	map

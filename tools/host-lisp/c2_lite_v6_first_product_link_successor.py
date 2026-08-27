@@ -36,9 +36,12 @@ def current_b2_gate(out: Path) -> dict[str, Any]:
     out.mkdir(parents=True, exist_ok=True)
     interrupt = LINK.BASE.PRE.INTERRUPT.read_text(encoding="utf-8")
     runtime = LINK.BASE.PRE.SOURCE.read_text(encoding="utf-8")
+    repl = (ROOT / "src/repl.c").read_text(encoding="utf-8")
     jump = LINK.BASE.PRE.function_body(interrupt, "lisp_abort_jump")
     poll = LINK.BASE.PRE.function_body(interrupt, "lisp_poll")
     cleanup = LINK.BASE.PRE.function_body(runtime, "c2_product_abort_cleanup")
+    recover = LINK.BASE.PRE.function_body(runtime, "c2_product_abort_recover")
+    landing = LINK.BASE.PRE.function_body(repl, "repl")
     checks = {
         "one_central_cleanup_before_longjmp":
             jump.count("c2_product_abort_cleanup()") == 1
@@ -47,8 +50,14 @@ def current_b2_gate(out: Path) -> dict[str, Any]:
             poll.count("lisp_abort_static(LISP65_ERR_STOPPED") >= 1,
         "cleanup_first_closes_overlay_transaction":
             "vm_runtime_overlay_abort_cleanup()" in cleanup,
-        "cleanup_then_runs_single_c2j_driver":
-            "return c2_abort_driver();" in cleanup,
+        "cleanup_does_not_run_c2j_on_failing_stack":
+            "c2_abort_driver" not in cleanup,
+        "restored_landing_runs_single_c2j_driver":
+            recover.count("c2_abort_driver") >= 1
+            and landing.count("c2_product_abort_recover()") == 1
+            and landing.find("if (setjmp(lisp_toplevel))")
+                < landing.find("c2_product_abort_recover()")
+                < landing.find("lisp65_error_render_pending()"),
     }
     LINK.require(all(checks.values()),
                  "current C2-lite B2 source gate red: "

@@ -30,11 +30,14 @@
       (%banner-run runs run))))
 
 (defun %banner-subtitle ()
-  (let ((text "WORKBENCH 1.4.0"))
+  (let ((text "WORKBENCH 1.7.0"))
     (dotimes (index 15 nil)
       (screen-put-char (+ 48 index) 7 (string-ref text index) 15))))
 
 (defun %repl-banner ()
+  ; Native-only v1.7 boot hook.  Missing INIT.L65 is the ordinary silent NIL
+  ; result of load; failures use the installed native toplevel recovery.
+  (load "init.l65")
   (%banner-runs)
   (%banner-subtitle)
   ; Direct-at writes do not move the cursor. Put the first prompt on row 9.

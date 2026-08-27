@@ -1,8 +1,8 @@
 ;; lisp65 IDE: narrow S-expression helpers for automatic indentation and
-;; delta rendering. The former syntax-overpaint path is removed from the
-;; Workbench profile: highlighting was disabled, expensive in the render hot
-;; path, and occupied several disk-library slots. The active surface remains
-;; plain rendering plus indentation.
+;; delta rendering.  The v1.7 shared matcher and composed paint seam are
+;; resident, but deliberately inactive until the IDE-idle card owns their
+;; scheduling state.  The current active surface remains plain rendering plus
+;; indentation; this card introduces no synchronous render-hot-path scan.
 
 ;; Render a CODE line. Syntax overpainting is removed from the Workbench
 ;; profile; the product path draws only the base line in default white.

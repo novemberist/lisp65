@@ -4,6 +4,10 @@
  "extends": "p0-stdlib-einsuite-subset.json",
  "allow_omitted_defuns": [
   {
+   "name": "%ide-line-net-depth",
+   "reason": "IDE-only indentation helper shares the matcher source but remains disk-library freight"
+  },
+  {
    "name": "%lcc-proper-list-p",
    "reason": "device-LCC private helper is delivered by the resident compiler carrier, not the FASL subset"
   },
@@ -79,7 +83,6 @@
  "remove_sources": [
   "lib/ide-buffer.lisp",
   "lib/ide-status.lisp",
-  "lib/sexp-depth.lisp",
   "lib/ide-syntax.lisp",
   "lib/ide-keymap-generated.lisp",
   "lib/ide-ui.lisp"

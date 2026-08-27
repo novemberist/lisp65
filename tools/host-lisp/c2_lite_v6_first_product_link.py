@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import sys
 from typing import Any
 
@@ -268,8 +269,193 @@ def walls_and_family(elf: Path) -> tuple[dict[str, int], dict[str, Any]]:
     return walls, family
 
 
+_C_TOKEN = re.compile(
+    r"/\*.*?\*/|//[^\n]*|\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|"
+    r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*|"
+    r"[A-Za-z_][A-Za-z0-9_]*|<<|>>|<=|>=|==|!=|&&|\|\||->|"
+    r"[{}()\[\],;:?~!+\-*/%&|^<>=.]",
+    re.DOTALL,
+)
+_C_CAST_TYPES = {
+    "char", "short", "int", "long", "signed", "unsigned", "const",
+    "volatile", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t",
+    "int32_t", "size_t",
+}
+
+
+def _c_tokens(text: str) -> list[str]:
+    """Lex claim-relevant C structure without depending on source layout."""
+    return [token for token in _C_TOKEN.findall(text)
+            if not token.startswith(("/*", "//", "\"", "'"))]
+
+
+def _matching_paren(tokens: list[str], start: int) -> int:
+    require(tokens[start] == "(", "C call parser did not start at a paren")
+    depth = 0
+    for index in range(start, len(tokens)):
+        if tokens[index] == "(":
+            depth += 1
+        elif tokens[index] == ")":
+            depth -= 1
+            if depth == 0:
+                return index
+    raise LinkError("unterminated C call in no-runtime-Attic gate")
+
+
+def _split_call_arguments(tokens: list[str]) -> list[list[str]]:
+    rows: list[list[str]] = []
+    start = 0
+    depth = 0
+    for index, token in enumerate(tokens):
+        if token in ("(", "["):
+            depth += 1
+        elif token in (")", "]"):
+            depth -= 1
+        elif token == "," and depth == 0:
+            rows.append(tokens[start:index]); start = index + 1
+    rows.append(tokens[start:])
+    return rows
+
+
+def _c_calls(function_text: str) -> list[dict[str, Any]]:
+    """Derive function-call identities and tokenized arguments from a body."""
+    tokens = _c_tokens(function_text)
+    try:
+        body = tokens.index("{")
+    except ValueError as error:
+        raise LinkError("C function body absent in no-runtime-Attic gate") from error
+    calls: list[dict[str, Any]] = []
+    index = body + 1
+    while index + 1 < len(tokens):
+        if (re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", tokens[index])
+                and tokens[index + 1] == "("
+                and tokens[index] not in ("if", "for", "while", "switch",
+                                           "sizeof")):
+            end = _matching_paren(tokens, index + 1)
+            calls.append({"callee": tokens[index],
+                "arguments": _split_call_arguments(tokens[index + 2:end])})
+        index += 1
+    return calls
+
+
+def _strip_casts(tokens: list[str]) -> list[str]:
+    result: list[str] = []
+    index = 0
+    while index < len(tokens):
+        if tokens[index] == "(":
+            end = _matching_paren(tokens, index)
+            inside = tokens[index + 1:end]
+            if (inside and all(token in _C_CAST_TYPES or token == "*"
+                               or token.endswith("_t") for token in inside)):
+                index = end + 1
+                continue
+        result.append(tokens[index]); index += 1
+    return result
+
+
+def _strip_outer_parens(tokens: list[str]) -> list[str]:
+    while (len(tokens) >= 2 and tokens[0] == "("
+           and _matching_paren(tokens, 0) == len(tokens) - 1):
+        tokens = tokens[1:-1]
+    return tokens
+
+
+def _top_level_split(tokens: list[str], operator: str) -> list[list[str]]:
+    tokens = _strip_outer_parens(tokens)
+    rows: list[list[str]] = []
+    start = 0
+    depth = 0
+    for index, token in enumerate(tokens):
+        if token in ("(", "["):
+            depth += 1
+        elif token in (")", "]"):
+            depth -= 1
+        elif token == operator and depth == 0:
+            rows.append(tokens[start:index]); start = index + 1
+    rows.append(tokens[start:])
+    return rows
+
+
+def _c_integer(token: str) -> int | None:
+    if not re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*", token):
+        return None
+    return int(re.sub(r"[uUlL]+$", "", token), 0)
+
+
+def _constant_c_expression(tokens: list[str]) -> int | None:
+    """Evaluate the integer-only subset needed to derive a bank selector."""
+    tokens = _strip_outer_parens(_strip_casts(tokens))
+    if len(tokens) == 1:
+        return _c_integer(tokens[0])
+    for operators in (("|",), ("^",), ("&",), ("<<", ">>"),
+                      ("+", "-"), ("*", "/", "%")):
+        depth = 0
+        for index in range(len(tokens) - 1, -1, -1):
+            token = tokens[index]
+            if token in (")", "]"):
+                depth += 1
+            elif token in ("(", "["):
+                depth -= 1
+            elif depth == 0 and token in operators and index > 0:
+                left = _constant_c_expression(tokens[:index])
+                right = _constant_c_expression(tokens[index + 1:])
+                if left is None or right is None:
+                    return None
+                if token == "|": return left | right
+                if token == "^": return left ^ right
+                if token == "&": return left & right
+                if token == "<<": return left << right
+                if token == ">>": return left >> right
+                if token == "+": return left + right
+                if token == "-": return left - right
+                if token == "*": return left * right
+                if token == "/": return left // right
+                if token == "%": return left % right
+    return None
+
+
+def _bank_reader_semantics(entry: str, bank: int) -> dict[str, Any]:
+    """Recognize supported content-reader ABIs by call structure and value."""
+    calls = _c_calls(entry)
+    rows: list[dict[str, Any]] = []
+    for call in calls:
+        arguments = call["arguments"]
+        if not arguments:
+            continue
+        if call["callee"] == "c2_map_cpu_read":
+            terms = _top_level_split(_strip_casts(arguments[0]), "+")
+            values = [_constant_c_expression(term) for term in terms]
+            if (bank << 16) in values:
+                rows.append({"reader": call["callee"],
+                    "address_model": "absolute-bank-base-plus-offset",
+                    "bank_ordinal": bank, "bank_base": bank << 16,
+                    "constant_addends": [value for value in values
+                                         if value is not None]})
+        elif call["callee"] == "c2_facade_vm_code_load":
+            value = _constant_c_expression(arguments[0])
+            if value == bank:
+                rows.append({"reader": call["callee"],
+                    "address_model": "bank-ordinal-argument",
+                    "bank_ordinal": bank, "bank_base": bank << 16,
+                    "constant_addends": [value]})
+    return {"calls": sorted({call["callee"] for call in calls}),
+            "matching_readers": rows}
+
+
+def _validate_no_runtime_attic_semantics(source: dict[str, Any],
+                                          linked_targets: set[str]) -> None:
+    forbidden = {"c2_stream_shelf_read", "c2_dma_copy",
+                 "rtov_dma_submit_wait"}
+    readers = source["entry"]["matching_readers"]
+    require(len(readers) == 1
+            and readers[0]["reader"] in linked_targets
+            and not (forbidden & set(source["entry"]["calls"]))
+            and not (forbidden & linked_targets),
+            "no-runtime-Attic semantic closure red")
+
+
 def no_runtime_attic_gate(elf: Path, generated: Path) -> dict[str, Any]:
-    """Bind the hot source and retained relocation closure to Chip RAM only."""
+    """Bind content-reader semantics and retained ELF edges to Chip RAM."""
     hot_text = (generated / "c2_hot_literal.c").read_text(encoding="utf-8")
     runtime_text = (generated / "c2_product_runtime.c").read_text(
         encoding="utf-8")
@@ -279,22 +465,29 @@ def no_runtime_attic_gate(elf: Path, generated: Path) -> dict[str, Any]:
     materializer = V6.c_function_definition(
         hot_text, "c2_stream_product_materialize_entry")
     rtov_read = V6.c_function_definition(rtov_text, "rtov_read")
+    source = {"entry": _bank_reader_semantics(entry, 2),
+              "materializer": _bank_reader_semantics(materializer, 2),
+              "native_refill": _bank_reader_semantics(rtov_read, 3)}
+    forbidden = {"c2_stream_shelf_read", "c2_dma_copy",
+                 "rtov_dma_submit_wait"}
     checks = {
-        "hot_literal_has_no_shelf_read": "c2_stream_shelf_read" not in materializer,
+        "hot_literal_has_no_shelf_read":
+            "c2_stream_shelf_read" not in source["materializer"]["calls"],
         "hot_entry_has_no_shelf_or_dma_read":
-            "c2_stream_shelf_read" not in entry and "c2_dma_copy" not in entry,
-        "hot_entry_uses_bank2": "c2_facade_vm_code_load(2u" in entry,
-        "native_refill_uses_bank3": "c2_facade_vm_code_load(3u" in rtov_read,
+            not ({"c2_stream_shelf_read", "c2_dma_copy"}
+                 & set(source["entry"]["calls"])),
+        "hot_entry_uses_bank2":
+            len(source["entry"]["matching_readers"]) == 1,
+        "native_refill_uses_bank3":
+            len(source["native_refill"]["matching_readers"]) == 1,
         "native_refill_has_no_attic_completion_path":
-            "rtov_dma_submit_wait" not in rtov_read,
+            "rtov_dma_submit_wait" not in source["native_refill"]["calls"],
         "retired_runtime_retry_defines_absent": True,
     }
     truth = ElfTruth.read(elf, llvm_readobj=P.TOOLCHAIN / "llvm-readobj")
     hot_symbols = (
         "c2_product_entry_read", "c2_stream_product_materialize_entry",
         "c2_product_entry_record", "c2_product_entry_length")
-    forbidden_targets = {
-        "c2_stream_shelf_read", "c2_dma_copy", "rtov_dma_submit_wait"}
     relocation_rows = []
     bad = []
     for name in hot_symbols:
@@ -308,18 +501,55 @@ def no_runtime_attic_gate(elf: Path, generated: Path) -> dict[str, Any]:
                 relocation_rows.append({
                     "owner": name, "target": row.target,
                     "type": row.relocation_type, "offset": row.offset})
-                if row.target in forbidden_targets:
+                if row.target in forbidden:
                     bad.append(relocation_rows[-1])
+    entry_targets = {row["target"] for row in relocation_rows
+                     if row["owner"] == "c2_product_entry_read"}
+    _validate_no_runtime_attic_semantics(source, entry_targets)
     require(all(checks.values()) and not bad,
             f"no-runtime-Attic closure red: checks={checks} edges={bad}")
+    mutation_rejections = []
+    selected_reader = source["entry"]["matching_readers"][0]["reader"]
+    if selected_reader == "c2_map_cpu_read":
+        bank_mutant = re.sub(
+            r"\(\s*\(\s*uint32_t\s*\)\s*2[uUlL]*\s*<<\s*16\s*\)",
+            "((uint32_t)3u << 16)", entry, count=1)
+    else:
+        bank_mutant = re.sub(
+            r"(c2_facade_vm_code_load\s*\(\s*)2[uUlL]*",
+            r"\g<1>3u", entry, count=1)
+    require(bank_mutant != entry, "bank-expression mutation did not bite")
+    trials = [("lost-bank2-expression",
+               {**source, "entry": _bank_reader_semantics(bank_mutant, 2)},
+               entry_targets)]
+    trials.extend((f"reintroduced-{name}-edge", source,
+                   entry_targets | {target}) for name, target in (
+        ("Shelf", "c2_stream_shelf_read"),
+        ("DMA", "c2_dma_copy"),
+        ("Attic-completion", "rtov_dma_submit_wait"),
+    ))
+    for name, trial_source, trial_targets in trials:
+        try:
+            _validate_no_runtime_attic_semantics(trial_source, trial_targets)
+        except LinkError:
+            mutation_rejections.append(name)
+    require(mutation_rejections == [
+                "lost-bank2-expression", "reintroduced-Shelf-edge",
+                "reintroduced-DMA-edge", "reintroduced-Attic-completion-edge"],
+            "no-runtime-Attic semantic mutation survived")
     return {
         "status": "passed-source-and-linked-relocation-closure",
         "checks": checks,
+        "source_semantics": source,
         "hot_symbols": list(hot_symbols),
         "retained_hot_relocations_examined": len(relocation_rows),
         "forbidden_control_or_data_edges": bad,
-        "bank2_loader_callsites": entry.count("c2_facade_vm_code_load(2u"),
-        "bank3_loader_callsites": rtov_read.count("c2_facade_vm_code_load(3u"),
+        "bank2_loader_callsites": len(source["entry"]["matching_readers"]),
+        "bank3_loader_callsites": len(
+            source["native_refill"]["matching_readers"]),
+        "bank2_linked_reader_targets": sorted(entry_targets & {
+            row["reader"] for row in source["entry"]["matching_readers"]}),
+        "mutations_rejected": mutation_rejections,
     }
 
 

@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.6.0. Sealed
+This is the maintained user-facing issue register for lisp65 1.7.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -123,9 +123,9 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Not delivered in 1.6.0: Comfort REPL and capture path
+## Not delivered in 1.7.0: Comfort REPL and capture path
 
-Status: **development evidence retained for v1.7; absent from selected v1.6**
+Status: **development evidence retained; absent from selected v1.7**
 
 A v1.6 development measurement slowly produced eight visible Comfort-REPL
 characters using 11 physical character attempts. Product counters read
@@ -146,8 +146,24 @@ The correction gives an armed capture sole ownership of the hardware queue;
 The corrected development path later passed the physical eight-of-eight
 arrival comparison, but the larger Comfort feature was descoped as one unit
 after a separate bytecode failure. Neither the capture path nor
-`repl-comfort` is present in the v1.6 selected product. This finding is retained
-as v1.7 evidence and is not a keyboard/core limitation.
+`repl-comfort` is present in neither the v1.6 nor v1.7 selected product. The
+v1.7 investigation proved that its input side is responsive and single-owner,
+then found that synchronous recovery service time could still block ordinary
+use. The A0 recovery fast path shipped in v1.7 removes the measured dominant
+empty-journal cost, but Comfort was not reopened automatically. Its complete
+feature and evidence set remains deferred rather than partially delivered.
+
+## Not delivered in 1.7.0: delimiter matcher and cursor blink
+
+Status: **hardware blocker preserved; absent from selected v1.7**
+
+The shared resumable delimiter scanner, line-editor/IDE matcher, and idle
+cursor blink passed host qualification but were not accepted on hardware. The
+device build first exposed a publication-boundary arity defect and then hung
+on the first cursor-left operation after loading. Under the predeclared
+anti-rabbit-hole rule the whole block was descoped after its single repair
+round. No matcher or blink claim is made for v1.7, and none of that diagnostic
+or feature freight is present in the selected product.
 
 ## Active Ship limitation: RUN/STOP source not independently verified
 

@@ -7,7 +7,7 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 1.6.0**, using **Dialect V2**.
+The current release is **lisp65 1.7.0**, using **Dialect V2**.
 
 ## Highlights
 
@@ -21,6 +21,8 @@ The current release is **lisp65 1.6.0**, using **Dialect V2**.
 - A reproducible Ship Builder for standalone bootable application D81s
 - A lower-allocation editor renderer measured at about 3× the former speed
 - Optional `v16core` library with insertion-mode REPL cursor navigation
+- Native once-per-boot `INIT.L65` hook with fail-safe prompt recovery
+- Faster fully derived empty-journal recovery
 - Immediate non-persistent REPL expressions, with durable state changes kept on
   the transactional publication path
 - Visible `STAGING MEDIA`, `BUILDING HEAP`, and `LOADING LIBRARIES` boot phases
@@ -34,13 +36,13 @@ The current release is **lisp65 1.6.0**, using **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.6.0.tar.gz` from the
-[v1.6.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.6.0).
+Download `lisp65-1.7.0.tar.gz` from the
+[v1.7.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.7.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.6.0.tar.gz
-cd lisp65-1.6.0
+tar -xzf lisp65-1.7.0.tar.gz
+cd lisp65-1.7.0
 python3 verify.py
 ```
 
@@ -48,7 +50,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.6.0 release notes](docs/releases/1.6.0.md) for the complete change
+See the [1.7.0 release notes](docs/releases/1.7.0.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -66,7 +68,7 @@ summary and evidence boundary.
    ```
 
 5. Follow the three visible boot phases, then wait for the banner and REPL.
-6. Mount `media/lisp65-library.d81` and activate the v1.6 REPL line editor:
+6. Mount `media/lisp65-library.d81` and activate the optional REPL line editor:
 
    ```lisp
    (require 'v16core)
@@ -88,7 +90,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.6.0.
+identity. There is no on-device disk formatter in 1.7.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -96,14 +98,15 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.6.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.7.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
 
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
-| Focused REPL editing | `v16core` adds insertion-mode cursor navigation to the native one-line REPL. Balanced multiline input, history and the Comfort prompt are not delivered in v1.6. | The Comfort REPL and its input-capture work remain a v1.7 item. |
+| Focused REPL editing | `v16core` adds insertion-mode cursor navigation to the native one-line REPL. Balanced multiline input, history and the Comfort prompt are not delivered in v1.7. | The complete Comfort feature remains deferred; v1.7 does not ship a partial capture path. |
+| Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v1.7 makes no matcher/blink claim. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | The C2D session store separates immutable code from mutable session state; dependency-aware reclamation remains later work. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
@@ -127,24 +130,26 @@ acceptance.
 
 ## Verification status
 
-Release 1.6.0 binds artifact set
-`8cb9a718b722e9076581a9bb02ee769263b713a2d36caff3b5749cc5ab60685f`,
+Release 1.7.0 binds artifact set
+`7d8ef2e8a0a6cad5f40fcdc625d797025344d8a0e19e1d6080f1998f3c8621b6`,
 resident PRG
-`0e1f6b99afbbd2950bd9e140c9491b487296f04bc52b7023c92a0c28b4a1610d`
+`69fe2aefd209c2619a96a605865fbfda4f76de8c96ffd7f8ee371b5f3b98efae`
 and one-row library D81
-`caa08cc36931cc758c0a1fd68102b7042263c39d982bed5b60145ea3b4b9208b`:
+`9df3628a4ca155ea6b009128950e1aa0bb20664bcab7bf11c6b34bf3504c4558`:
 
 - insertion, mixed cursor/control movement, endpoint movement, backward and
   forward deletion, and boundary no-ops passed on one physical MEGA65;
 - an ordinary type error returned to a usable native prompt through the new
   retired-overlay execution backstop;
-- the stopped D5 session retained 105 free symbol slots and 1,413 free name
+- valid and failing `INIT.L65` variants ran once before the first prompt, with
+  a failing form returning promptly to a usable native REPL;
+- the stopped D5 session retained 113 free symbol slots and 1,506 free name
   bytes, above the mandatory 32/384 user floor; and
 - two varied fresh public clones reproduced all 22 selected roles with zero
   private evidence inputs.
 
 Exact hashes and claim limits are recorded in the
-[1.6.0 release notes](docs/releases/1.6.0.md). The maintained limitations and
+[1.7.0 release notes](docs/releases/1.7.0.md). The maintained limitations and
 retired 1.1 latency exception are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
@@ -173,12 +178,12 @@ With the pinned LLVM-MOS SDK and `c1541` installed, the public C2-lite build is:
 
 ```sh
 make clean
-make workbench-product-v160
+make workbench-product-v170
 ```
 
 The target uses the single C2 emitter, one WPLTO closure, and the canonical
 media packer. Its final gate requires all 19 product roles and the three-role
-`v16core` library medium to reproduce the sealed 1.6.0 artifact-set identity.
+`v16core` library medium to reproduce the sealed 1.7.0 artifact-set identity.
 The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -187,6 +192,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 1.7.0](docs/releases/1.7.0.md)
 - [Release Notes for 1.6.0](docs/releases/1.6.0.md)
 - [Release Notes for 1.5.0](docs/releases/1.5.0.md)
 - [Known Issues and Retired Exceptions](docs/known-issues.md)

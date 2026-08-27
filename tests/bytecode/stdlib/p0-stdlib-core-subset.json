@@ -2,7 +2,40 @@
   "format": "lisp65-bytecode-p0-stdlib-subset-v1",
   "description": "Resident core profile for disk-lib builds: p0-stdlib-subset without IDE buffer/UI code; shared IDE deps and IDE status helpers stay resident, plus load/load-lib/load-libs/edit so disk libraries and the IDE launcher can be loaded.",
   "extends": "p0-stdlib-subset.json",
-  "allow_omitted_defuns": [],
+  "allow_omitted_defuns": [
+    {
+      "name": "%sexp-code",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-rest",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-step",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-scan",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-open",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-close",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-match",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    },
+    {
+      "name": "%sexp-paint",
+      "reason": "shared matcher freight is owned by the v1.7 Workbench resident suite"
+    }
+  ],
   "sources": [
     "lib/stdlib-load.lisp",
     "lib/stdlib-load-lib.lisp",

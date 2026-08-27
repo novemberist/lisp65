@@ -270,12 +270,19 @@ def linked_tuple_gate(elf: Path) -> dict[str, Any]:
         enter.value - section.address:enter.value - section.address + enter.bytes]
     model = _interpret_trampoline(raw)
     operation = model["map_operations"][0]
-    require(operation == {"A": 0x40, "X": 0x82, "Y": 0, "Z": 0x80},
+    far = truth.section(".lisp65_c2_mapped_far_service")
+    load_start = truth.symbol(
+        "__lisp65_c2_mapped_far_service_load_start").value
+    offset = load_start - far.address
+    require(offset >= 0 and offset <= 0xFFFFF and offset % 0x100 == 0,
+            "linked MAP offset is not hardware-page-encodable")
+    expected = {"A": (offset >> 8) & 0xFF,
+                "X": 0x80 | ((offset >> 16) & 0x0F),
+                "Y": 0, "Z": 0x80}
+    require(operation == expected,
             "decoded hardware MAP tuple drift")
     decoded = MAP.decode_low(operation["A"], operation["X"])
-    far = truth.section(".lisp65_c2_mapped_far_service")
     service = truth.symbol("c2_mapped_far_vm_code_load_converged")
-    load_start = truth.symbol("__lisp65_c2_mapped_far_service_load_start").value
     physical = MAP.map_low(service.value, decoded)
     require(service.section == far.name
             and physical == load_start + service.value - far.address

@@ -1,0 +1,122 @@
+{
+  "choreography": {
+    "all_media_uploaded_and_read_back_before_resume": true,
+    "manual_boot_media_swap": false,
+    "one_form_per_submission": true,
+    "one_product_medium_per_cold_boot": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.7-native-INIT.L65"
+    ],
+    "excludes": [
+      "Comfort",
+      "Block-3",
+      "canonical-prompt-swap",
+      "release-publication",
+      "automatic-feature-reopening"
+    ],
+    "observes_only": [
+      "A0-error-to-prompt-perception"
+    ]
+  },
+  "decision_table": {
+    "A0-observation": "owner input to a later reopening decision",
+    "daily-use-blocker": "stop under the standing anti-rabbit-hole rule",
+    "predecessor-I-absent-plus-all-resume-rows-green": "Block I hardware accepted"
+  },
+  "format": "lisp65-c2-v17-native-init-product-variants-resume-session-v1",
+  "media": {
+    "absent": {
+      "INIT_L65": null,
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-product-variants-media/lisp65-product-init-absent.d81",
+      "remote_name": "V17IM.D81",
+      "sha256": "73f7e5f828d2c5d52a570c2d273dfbbea6aa494fb3378ca4f9cad76763a4a321"
+    },
+    "error": {
+      "INIT_L65": {
+        "bytes": 12,
+        "path": "build/c2.3/v1.7-init-l65-product-variants-media/INIT-ERROR.L65",
+        "sha256": "073038300abc088f99613adbcbd343d2867cbb6f258bcea2eacdf8c1dfbf2000"
+      },
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-product-variants-media/lisp65-product-init-error.d81",
+      "remote_name": "V17IBAD.D81",
+      "sha256": "a4d2e8192bb5b1be4588e4b5f0fcc911ed2659962ce04a5e37e362ff860d2dfe"
+    },
+    "valid": {
+      "INIT_L65": {
+        "bytes": 45,
+        "path": "build/c2.3/v1.7-init-l65-product-variants-media/INIT-VALID.L65",
+        "sha256": "f5817bf7ba721960fcf246c129cdb0df47b4f61ae7572321e37157f7631cd764"
+      },
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-product-variants-media/lisp65-product-init-valid.d81",
+      "remote_name": "V17IOK.D81",
+      "sha256": "c9bea983db18de6196f56bd33dbb4f000cdd238294a9f90595dfe86d0325d730"
+    }
+  },
+  "predecessor_contact": {
+    "I-absent": "accepted-green: frozen product without INIT.L65 reached a usable native lisp65>",
+    "remaining_rows": [
+      "I-present",
+      "I-error",
+      "A0-perception"
+    ]
+  },
+  "recorded_on": "2026-08-27",
+  "rows": [
+    {
+      "actions": [
+        "cold boot this product medium",
+        "observe exactly one line containing 17 before the banner",
+        "at lisp65> submit (init-proof)"
+      ],
+      "expect": [
+        "INIT executes before the first banner",
+        "the pre-banner 17 side effect appears exactly once",
+        "init-proof returns 17",
+        "no INIT retry"
+      ],
+      "id": "I-present",
+      "medium": "V17IOK.D81"
+    },
+    {
+      "actions": [
+        "cold boot this product medium",
+        "observe exactly one product-profile VM type error",
+        "report approximate seconds from the error to lisp65>",
+        "at the returned lisp65> submit (list 1 3)"
+      ],
+      "expect": [
+        "exactly one VM_TYPEERROR with distinguishable text",
+        "the banner may be absent because INIT aborts %repl-banner",
+        "no red frame",
+        "INIT is not retried",
+        "result is (1 3)",
+        "A0 perception time recorded"
+      ],
+      "id": "I-error",
+      "medium": "V17IBAD.D81"
+    },
+    {
+      "actions": [
+        "reuse the I-error startup measurement",
+        "do not inject a second error"
+      ],
+      "claim": "observation only; does not reopen Comfort or Block 3",
+      "expect": [
+        "ordinary type error",
+        "no red frame",
+        "usable native prompt",
+        "one timing observation"
+      ],
+      "id": "A0-perception",
+      "medium": "V17IBAD.D81"
+    }
+  ],
+  "status": "ready-owner-contact-resume"
+}

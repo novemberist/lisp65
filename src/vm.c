@@ -1630,7 +1630,12 @@ static __attribute__((noinline)) obj vm_callprim(uint8_t pid, obj *a, uint8_t n)
         return MKFIX(io_disk_byte((uint8_t)FIXVAL(a[0])));
     case 17:  /* %disk-load-file — io.c streamt die Datei aus EXT via load_source_stream */
         if (n != 2 || !IS_FIX(a[0]) || !IS_FIX(a[1])) { vm_status = VM_TYPEERROR; return NIL; }
-        return io_disk_load_chain((uint8_t)FIXVAL(a[0]), (uint8_t)FIXVAL(a[1])) ? vm_t : NIL;
+        if (!io_disk_load_chain((uint8_t)FIXVAL(a[0]),
+                                (uint8_t)FIXVAL(a[1]))) {
+            lisp_abort_code(LISP65_ERR_LOAD_OPEN);
+            return NIL;
+        }
+        return vm_t;
 #if defined(LISP65_DISK_LIBS) || defined(LISP65_C2_PRODUCT_CUT)
     case 18:  /* %disk-load-lib — Bytecode-Lib nach Bank 5 stagen + registrieren (Stufe 2) */
 #ifdef LISP65_C2_PRODUCT_CUT

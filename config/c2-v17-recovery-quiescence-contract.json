@@ -1,0 +1,37 @@
+{
+  "format": "lisp65-c2-v17-recovery-quiescence-contract-v1",
+  "decision": "variant-A0-bound-placement-fallback",
+  "feature": "LISP65_C2_RECOVERY_EMPTY_JOURNAL_BYPASS",
+  "authorities": {
+    "journal": {
+      "offset": 50752,
+      "bytes": 64,
+      "required": "all-zero"
+    },
+    "residual_fronts": {
+      "required": "fronts-plus-rollback-prepare-always-run",
+      "transient_result": "continues-through-existing-rollback-plan"
+    }
+  },
+  "fast_result": {
+    "overlay_calls": 2,
+    "crc_bytes": 6110,
+    "new_state_bytes": 0
+  },
+  "fallback": "every uncertainty selects the unchanged serial abort driver",
+  "placement": {
+    "required_domain": "ordinary-baseline-always-visible",
+    "physical_owner": "ordinary Bank-2 static code plane",
+    "forbidden": "mapped tenant because the probe consumes MAP-CPU transport",
+    "a0_only_if_unpriceable": true
+  },
+  "standing_gates": [
+    "all-64-journal-bytes-consumed",
+    "probe-before-journal-validate-overlay",
+    "fronts-and-rollback-prepare-retained",
+    "serial-driver-byte-identity",
+    "composed-bank2-disjointness",
+    "transitive-map-nesting",
+    "zero-overlay-zero-crc-sealed-empty-world"
+  ]
+}

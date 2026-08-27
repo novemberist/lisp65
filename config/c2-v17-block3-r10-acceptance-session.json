@@ -1,0 +1,113 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.7-block3-matcher",
+      "v1.7-block3-cursor-blink"
+    ],
+    "excludes": [
+      "release-publication",
+      "other-v1.7-blocks"
+    ]
+  },
+  "counter_witness": {
+    "addresses": {
+      "raw": "0xBCFC",
+      "seen": "0xBCFD",
+      "stored": "0xBCFE",
+      "taken": "0xBCFF"
+    },
+    "decision_table": {
+      "attempts=raw=seen=stored=taken": "single-owner input path green",
+      "attempts>raw": "keyboard/core before queue-present observation",
+      "raw>seen": "IRQ queue read or filtering",
+      "seen>stored": "ring admission",
+      "stored>taken": "consumer"
+    },
+    "maximum_events": 255,
+    "origin": "atomic zero at Comfort entry while capture tail is closed",
+    "width_bits": 8
+  },
+  "decision_table": {
+    "all-four-groups-green": "Block 3 hardware accepted",
+    "daily-use-blocker": "at most one fix round, else feature descope",
+    "rare-or-cosmetic": "Known Issue and v1.7 register row"
+  },
+  "format": "lisp65-c2-v17-block3-r10-acceptance-session-v1",
+  "host_half": {
+    "event_6_observed_in_order": true,
+    "forced_collection_frames": 89,
+    "normalization_parity": "256/256 across both consumers",
+    "ordered_events": "94/94",
+    "responsiveness_margin_percent": 29.044052413392606
+  },
+  "liveness_witness": {
+    "class": "retirement-before-wipe",
+    "comfort_prompt": "l65>",
+    "recovery_prompt": "lisp65>",
+    "red_frame": false,
+    "trigger": "(car 1)"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-block3-r10-acceptance-media/library/lisp65-library.d81",
+      "remote_name": "V17B3L.D81",
+      "sha256": "841eec3a12b019212780fd985b8fffed88eeaaf0ed29df41b2f843844736fefd"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-block3-r10-acceptance-media/shared-system/lisp65-product.d81",
+      "remote_name": "V17B3P.D81",
+      "sha256": "2491125b70267855fd9fc9325af65da30b1edab0ef75eac2d2fff396b9dcb491"
+    }
+  },
+  "recorded_on": "2026-08-26",
+  "rows": [
+    {
+      "actions": [
+        "type and navigate across matching parens and quotes",
+        "verify old highlight disappears after cursor movement",
+        "verify delimiters inside strings/comments do not match",
+        "verify over-close remains unmarked"
+      ],
+      "expect": "one correct current match, no stale or false match",
+      "id": "B3-1-line-editor-matcher"
+    },
+    {
+      "actions": [
+        "repeat matcher cases in IDE",
+        "scroll a long line"
+      ],
+      "expect": "same semantics and no freeze",
+      "id": "B3-2-IDE-matcher"
+    },
+    {
+      "actions": [
+        "observe idle cursor in line editor and IDE",
+        "type while cursor is in blink-off phase",
+        "place cursor on a matched delimiter"
+      ],
+      "expect": "cursor blinks, typing makes it immediately visible, blink never erases match attribute",
+      "id": "B3-3-blink"
+    },
+    {
+      "actions": [
+        "type normally and rapidly on both surfaces",
+        "run final loaded-configuration D5 probe"
+      ],
+      "expect": "no perceptible typing regression; D5 remains at or above 32 slots and 384 name bytes",
+      "id": "B3-4-responsiveness-D5"
+    }
+  ],
+  "status": "ready-owner-contact"
+}

@@ -618,22 +618,37 @@ def main() -> int:
     parser.add_argument("action", choices=("selftest", "record", "check"))
     args = parser.parse_args()
     try:
-        value = derive()
+        if args.action == "record":
+            value = derive()
+        else:
+            raw = RECEIPT.read_bytes()
+            require(raw == ERA.era_blob(
+                SEALED_COMMIT, RECEIPT.relative_to(ROOT).as_posix()),
+                "sealed trace core-ABI receipt was rewritten")
+            value = json.loads(raw)
+            validate(value)
         mutations = rejected_mutations(value)
-        value["mutations_rejected"] = mutations
-        value["mutation_count"] = len(mutations)
         if args.action == "selftest":
             print(f"trace core-ABI selftest: PASS mutations={len(mutations)}")
             return 0
         if args.action == "record":
+            value["mutations_rejected"] = mutations
+            value["mutation_count"] = len(mutations)
             write_json(RECEIPT, value)
             print(f"trace core-ABI: WROTE {RECEIPT.relative_to(ROOT)}")
             return 0
-        historical = load(RECEIPT)
-        require(historical == value,
-                "trace core-ABI semantic receipt is stale")
+        live_claim = {
+            "abi": abi_contract(),
+            "primitive_execution": execute_primitive(),
+            "transactions": transaction_cases(),
+            "publication": publication_contract(),
+            "history": historical_boundary(),
+            "gate_wiring": gate_wiring(),
+        }
+        require(all(value[key] == observed for key, observed in live_claim.items()),
+                "trace core-ABI live semantic claim drift")
         print("trace core-ABI check: PASS host-green-link-pending "
-              "runtime-source=semantically-revalidated")
+              "runtime-source=semantically-revalidated artifact=sealed")
         return 0
     except (GateError, B.VMError, KeyError, TypeError, ValueError,
             OSError, subprocess.SubprocessError) as error:

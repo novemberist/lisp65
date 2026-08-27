@@ -617,11 +617,17 @@ uint8_t c2_product_entry_read(uint16_t ordinal, uint16_t relative,
  * set only while rollback remains possible. */
 void c2_product_gc_mark_roots(void);
 
-/* Central non-local-abort seam.  In the C2D-v5 product this is the sole
- * bridge from every error/RUN-STOP longjmp source to the generation-bound
- * Bank-5 C2J rollback journal.  It is deliberately harmless before the C2
- * session has reached READY. */
+/* First half of the central non-local-abort seam.  It sanitizes restorable
+ * continuations and retires the active runtime-overlay generation while that
+ * generation is still named.  Transported journal work cannot run here: the
+ * failing Lisp evaluation still owns the deep soft stack until longjmp. */
 uint8_t c2_product_abort_cleanup(void);
+
+/* Second half of the abort seam.  The native REPL calls this immediately
+ * after longjmp has restored its shallow top-level soft stack, before error
+ * rendering or another evaluation.  It is the only abort path allowed to run
+ * transported C2J validation and rollback phases. */
+uint8_t c2_product_abort_recover(void);
 
 /* The sole dynamic-code seam.  It consumes the compiler's detached fnlist,
  * emits one C2I-v2 image, appends it through the shared decoder and either

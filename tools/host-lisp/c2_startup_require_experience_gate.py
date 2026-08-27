@@ -30,6 +30,7 @@ import bytecode_p0 as B  # noqa: E402
 import bytecode_p0_compiler as C  # noqa: E402
 import bytecode_p0_stdlib as STD  # noqa: E402
 import c2_repl_direct_expression_gate as DIRECT  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 from elf_truth import ElfTruth, ElfTruthError  # noqa: E402
 
 
@@ -64,6 +65,7 @@ ABI_LEDGER = ROOT / "config/bytecode-abi-ledger.json"
 
 FORMAT = "lisp65-c2.3-startup-require-experience-v1"
 RECORDED_ON = "2026-08-11"
+SEAL_COMMIT = "e5d14f735a4b5bb30b88d4978202c1e48ca82ff7"
 
 BASE_REQUIRE_DEFINITION = """(defun require (library)
   (if (symbolp library)
@@ -281,8 +283,21 @@ def validate_sources(
     require(decoder_body.index("LISP65_BOOT_PROGRESS_LIBRARIES();") <
             decoder_body.index("if (!c ||"),
             "library life sign does not precede C2D validation/read")
-    require("WORKBENCH 1.4.0" in banner and 'emit_str("lisp65> ")' in repl,
-            "existing terminal banner/prompt authority absent")
+    subtitle_start = banner.find("(defun %banner-subtitle ()")
+    subtitle_end = banner.find("\n(defun ", subtitle_start + 1)
+    require(subtitle_start >= 0, "Bank-2 banner owner absent")
+    if subtitle_end < 0:
+        subtitle_end = len(banner)
+    subtitle = banner[subtitle_start:subtitle_end]
+    banner_matches = re.findall(
+        r'\(let \(\(text "(WORKBENCH [0-9]+\.[0-9]+\.[0-9]+)"\)\)',
+        subtitle,
+    )
+    require(len(banner_matches) == 1
+            and banner.count("(%banner-subtitle)") == 1,
+            "derived Bank-2 terminal banner authority absent or ambiguous")
+    require('emit_str("lisp65> ")' in repl,
+            "native terminal prompt authority absent")
 
     require_body = require_source[require_source.index("(defun require (library)"):]
     output_tokens = (
@@ -637,6 +652,13 @@ def mutation_tests(value: dict[str, Any], texts: dict[str, str]) -> int:
     )
     mutations.append((copy.deepcopy(value), bad_texts))
     bad_texts = dict(texts)
+    bad_texts["banner"], replacements = re.subn(
+        r'"WORKBENCH [0-9]+\.[0-9]+\.[0-9]+"', '"READY"',
+        bad_texts["banner"], count=1,
+    )
+    require(replacements == 1, "banner mutation anchor absent or ambiguous")
+    mutations.append((copy.deepcopy(value), bad_texts))
+    bad_texts = dict(texts)
     bad_texts["repl"] = bad_texts["repl"].replace("lisp65> ", "ready> ", 1)
     mutations.append((copy.deepcopy(value), bad_texts))
     for path, replacement in (
@@ -773,29 +795,13 @@ def main() -> int:
             return 0
         value = core_receipt()
         if args.mode == "write":
-            RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-            RECEIPT.write_bytes(canonical(value))
+            raise ExperienceError(
+                "startup/require receipt is sealed evidence and cannot be regenerated"
+            )
         else:
-            historical = load(RECEIPT)
-            # Every live source below has just been exercised by
-            # validate_sources()/mutation_tests().  The sealed receipt keeps
-            # its bytes; comparison projects those authorities by semantic
-            # role/path so later product-source edits do not rewrite history.
-            for role in (
-                "header", "stager", "memory", "decoder", "require_source",
-                "banner", "repl", "plan", "driver",
-            ):
-                old = historical["authorities"][role]
-                new = value["authorities"][role]
-                require(old["path"] == new["path"],
-                        f"startup/require {role} identity drift")
-                old.clear(); old["path"] = new["path"]
-                new.clear(); new["path"] = old["path"]
-            # validate_sources() and mutation_tests() have just exercised the
-            # current decoder and checker.  Keep the historical receipt sealed
-            # while comparing their complete derived semantics.
-            require(historical == value,
-                    "startup/require semantic receipt drift")
+            receipt_name = RECEIPT.relative_to(ROOT).as_posix()
+            require(RECEIPT.read_bytes() == ERA.era_blob(SEAL_COMMIT, receipt_name),
+                    "startup/require sealed receipt bytes drift")
         print(json.dumps({
             "status": value["status"],
             "boot_delta_bytes": value["boot_target_price"]["delta_bytes"],
@@ -804,7 +810,8 @@ def main() -> int:
             "mutations": value["source_gate"]["mutations_rejected"],
         }, indent=2, sort_keys=True))
     except (
-        ExperienceError, DIRECT.GateError, STD.StdlibCheckError, ElfTruthError,
+        ExperienceError, ERA.EraError, DIRECT.GateError, STD.StdlibCheckError,
+        ElfTruthError,
         C.CompileError, B.BytecodeError, B.VMError, OSError, ValueError,
         KeyError, json.JSONDecodeError,
     ) as error:

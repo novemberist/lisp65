@@ -766,11 +766,24 @@ class P0VM:
         memory_read_sequences=None,
         abi_profile="dialect-v1",
         abi_ledger=None,
+        delivered_callprims=None,
     ):
         if abi_profile not in ("dialect-v1", "dialect-v2"):
             raise ValueError("unknown ABI profile: %s" % abi_profile)
         if abi_profile != "dialect-v1" and abi_ledger is None:
             raise ValueError("non-default ABI profile requires an explicit ledger")
+        if delivered_callprims is None:
+            self.delivered_callprims = None
+        else:
+            try:
+                delivered = tuple(delivered_callprims)
+            except TypeError as error:
+                raise ValueError("delivered_callprims must be iterable") from error
+            if any(type(value) is not int or not 0 <= value <= 255
+                   for value in delivered):
+                raise ValueError(
+                    "delivered_callprims must contain byte-sized integer IDs")
+            self.delivered_callprims = frozenset(delivered)
         self.heap = heap if heap is not None else Heap()
         self.directory = dict(directory or {})
         self.function_cells = {}
@@ -1748,6 +1761,13 @@ class P0VM:
                 "BadOpcode",
                 "CALLPRIM rejected %s Prim-ID %d: %s"
                 % (self.abi_profile, prim_id, classification["diagnostic"]),
+            )
+        if (self.delivered_callprims is not None
+                and prim_id not in self.delivered_callprims):
+            raise VMError(
+                "BadOpcode",
+                "CALLPRIM rejected product-profile tombstone Prim-ID %d"
+                % prim_id,
             )
         args = self._pop_args(argc, stack)
         callee_base = native_base + frame_slots + len(stack)

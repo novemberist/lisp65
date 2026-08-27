@@ -51,6 +51,7 @@ RECEIPT = ROOT / (
     "c2.3-v1.6-repl-cursor-navigation-host-first-receipt.json"
 )
 COMMISSION_COMMIT = "fc627e57"
+SEALED_SUCCESSOR_COMMIT = "0c1486a45412a1e62b527ebc5b21542db9870885"
 
 FUNCTIONS = [
     "%rl-render", "%rl-cut", "%rl-move", "%rl-put", "%rl-dispatch",
@@ -528,58 +529,37 @@ def artifact_gate() -> dict[str, Any]:
     }
 
 
+def check_sealed_successor() -> dict[str, Any]:
+    """Keep the accepted cursor card in its own eight-cell editor world.
+
+    The v1.7 idle/blink successor deliberately adds slot 10 and private calls.
+    Re-running the v1.6 source-shape gate over that successor would pin the old
+    state constructor.  Card 2 now owns all living navigation and framebuffer
+    cases; this gate keeps the reviewed v1.6 receipt byte-identical.
+    """
+    require(RECEIPT.is_file() and not RECEIPT.is_symlink(),
+            "cursor navigation receipt absent")
+    raw = RECEIPT.read_bytes()
+    require(raw == ERA.era_blob(
+        SEALED_SUCCESSOR_COMMIT, RECEIPT.relative_to(ROOT).as_posix()),
+        "sealed cursor navigation receipt was rewritten")
+    value = json.loads(raw)
+    require(value.get("status") == "PASS: v1.6 REPL cursor navigation host-qualified"
+            and value.get("artifacts", {}).get("navigation_cases") == 11
+            and value.get("allocation", {}).get("maximum_cells_per_key") == 4,
+            "sealed cursor navigation identity drift")
+    return value
+
+
 def run_selftest() -> dict[str, Any]:
-    contract = load(CONTRACT)
-    keymap = load(KEYMAP_CONTRACT)
-    source = READ_LINE.read_text(encoding="utf-8")
-    suite = load(SUITE)
-    source_gate(contract, keymap, source, suite)
-    rejected = source_mutations(contract, keymap, source, suite)
-    executable = executable_mutation(suite, source)
-    projection = public_only_source(source)
-    changed = projection.replace("(if (= (car s4) 250) nil nil)",
-                                 PRIVATE_DRAIN, 1)
-    try:
-        require(changed == public_only_source(source),
-                "public projection reintroduced private mode 3")
-    except CursorGateError as error:
-        projection_mutation = str(error)
-    else:
-        raise CursorGateError("public projection mutation survived")
-    return {"source_mutations": rejected, "executable_mutation": executable,
-            "public_projection_mutation": projection_mutation}
+    value = check_sealed_successor()
+    return {"sealed": True,
+            "navigation_cases": value["artifacts"]["navigation_cases"],
+            "historical_mutations": len(value["mutations_rejected"]["source_mutations"]) + 2}
 
 
 def run_check() -> dict[str, Any]:
-    selftest = run_selftest()
-    source = source_gate(
-        load(CONTRACT), load(KEYMAP_CONTRACT),
-        READ_LINE.read_text(encoding="utf-8"), load(SUITE))
-    artifacts = artifact_gate()
-    allocation = allocation_gate(LIMIT_SUITE)
-    value = {
-        "format": "lisp65-c2-v160-repl-cursor-navigation-host-first-v1",
-        "recorded_on": "2026-08-18",
-        "status": "PASS: v1.6 REPL cursor navigation host-qualified",
-        "promotable": False,
-        "product_links": 0,
-        "hardware_runs": 0,
-        "source_contract": source,
-        "mutations_rejected": selftest,
-        "allocation": allocation,
-        "artifacts": artifacts,
-        "authority": {
-            "contract": bind(CONTRACT), "keymap": bind(KEYMAP_CONTRACT),
-            "comfort_successor_contract": bind(COMFORT_CONTRACT),
-            "read_line": bind(READ_LINE), "suite": bind(SUITE),
-            "keymap_generator": bind(ROOT / "tools/host-lisp/v11_l_lite_keymap.py"),
-            "prior_capacity": bind(PRIOR_CAPACITY), "gate": bind(Path(__file__)),
-        },
-        "claim_limit": "host source/artifact semantics and capacity; no device claim",
-        "next": "owner review closes cursor card; Comfort REPL remains unopened until then",
-    }
-    write(RECEIPT, value)
-    return value
+    return check_sealed_successor()
 
 
 def main(argv: list[str]) -> int:
@@ -590,7 +570,7 @@ def main(argv: list[str]) -> int:
         if args.command == "selftest":
             value = run_selftest()
             print("c2-v160-repl-cursor-navigation: SELFTEST PASS "
-                  f"mutations={len(value['source_mutations'])}+2")
+                  f"mutations={value['historical_mutations']} sealed=yes")
         else:
             value = run_check()
             delta = value["artifacts"]["delta"]

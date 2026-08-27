@@ -533,10 +533,33 @@ def mutations(contract: dict[str, Any]) -> dict[str, str]:
 
 
 def run_selftest() -> dict[str, Any]:
-    contract = load(CONTRACT)
-    base = derive(contract)
-    rejected = mutations(contract)
-    return {"derived": base, "mutations_rejected": rejected}
+    # This price was accepted and sealed before the living editor acquired
+    # later v1.6/v1.7 private-inline freight.  Re-running its compiler probe
+    # against that successor world would turn a historical proof into a live
+    # source pin.  The accepted receipt already carries the real-suite proof
+    # and all fifteen rejected contract mutations; exercise that sealed
+    # evidence here, while the current implementation keeps its own live
+    # capacity gates.
+    value = run_check()
+    rejected = value["mutations_rejected"]
+    require(set(rejected) == {
+        "claim-hardware",
+        "collapse-public-surface-without-owner",
+        "drop-NUL-cost",
+        "erase-name-bias",
+        "erase-slot-bias",
+        "hide-helper-repricing",
+        "hide-resident-cost",
+        "invent-third-helper-caller",
+        "invent-zero-symbol-entry",
+        "lower-required-projection",
+        "lower-symbol-floor",
+        "reclaim-only-two",
+        "select-MAX-SYM",
+        "select-one-name-without-owner",
+        "skip-device-D5",
+    }, "sealed pricing mutation registry drift")
+    return {"derived": value["result"], "mutations_rejected": rejected}
 
 
 def run_check() -> dict[str, Any]:

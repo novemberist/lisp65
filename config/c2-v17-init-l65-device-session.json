@@ -1,0 +1,114 @@
+{
+  "choreography": {
+    "all_media_uploaded_and_read_back_before_boot": true,
+    "fresh_cold_boot_for_each_library_variant": true,
+    "library_mounted_physically_through_freezer": true,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.7-native-INIT.L65"
+    ],
+    "excludes": [
+      "Comfort",
+      "Block-3",
+      "canonical-prompt-swap",
+      "release-publication",
+      "automatic-feature-reopening"
+    ],
+    "observes_only": [
+      "A0-error-to-prompt-perception"
+    ]
+  },
+  "decision_table": {
+    "A0-observation": "owner input to a later, separate reopening decision",
+    "all-I-rows-green": "Block I hardware accepted",
+    "daily-use-blocker": "stop under the standing anti-rabbit-hole rule"
+  },
+  "format": "lisp65-c2-v17-native-init-device-session-v1",
+  "media": {
+    "library_error": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-acceptance-media/library/lisp65-library-init-error.d81",
+      "remote_name": "V17IBAD.D81",
+      "sha256": "63c4198c1bba136cc04b9f115154f99fbabd539b94293b385050b9b5ca3c9d89"
+    },
+    "library_missing": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-acceptance-media/library/lisp65-library.d81",
+      "remote_name": "V17IM.D81",
+      "sha256": "d6e94551e7182155a9280011d3be253943991cdd5fcdf852ffa398f5b29d7d30"
+    },
+    "library_valid": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-acceptance-media/library/lisp65-library-init-valid.d81",
+      "remote_name": "V17IOK.D81",
+      "sha256": "5c8c6823e3084a5333582f42eb3c5d303dc4589fc6ae3afc5b62a8aae6609c01"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-init-l65-acceptance-media/shared-system/lisp65-product.d81",
+      "remote_name": "V17IP.D81",
+      "sha256": "73f7e5f828d2c5d52a570c2d273dfbbea6aa494fb3378ca4f9cad76763a4a321"
+    }
+  },
+  "recorded_on": "2026-08-27",
+  "rows": [
+    {
+      "actions": [
+        "cold boot with no INIT.L65 on the library medium"
+      ],
+      "expect": [
+        "no INIT error or output",
+        "native lisp65> is usable"
+      ],
+      "id": "I-absent",
+      "library": "V17IM.D81"
+    },
+    {
+      "actions": [
+        "cold boot",
+        "at lisp65> submit (init-proof)"
+      ],
+      "expect": [
+        "INIT evaluates before the banner",
+        "result is 17"
+      ],
+      "id": "I-present",
+      "library": "V17IOK.D81"
+    },
+    {
+      "actions": [
+        "cold boot",
+        "observe the one ordinary INIT error",
+        "at the returned lisp65> submit (list 1 3)"
+      ],
+      "expect": [
+        "exactly one normal numeric VM error",
+        "no red frame",
+        "INIT is not retried",
+        "result is (1 3)"
+      ],
+      "id": "I-error",
+      "library": "V17IBAD.D81"
+    },
+    {
+      "actions": [
+        "at a live native prompt submit (>= nil 32)",
+        "report approximate seconds from Return to lisp65>"
+      ],
+      "claim": "observation only; does not reopen Comfort or Block 3",
+      "expect": [
+        "ordinary type error",
+        "no red frame",
+        "usable native prompt"
+      ],
+      "id": "A0-perception",
+      "library": "V17IM.D81"
+    }
+  ],
+  "status": "ready-owner-contact"
+}

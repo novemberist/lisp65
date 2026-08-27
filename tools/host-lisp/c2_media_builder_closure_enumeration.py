@@ -45,10 +45,37 @@ PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v10-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v11-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v12-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v13-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v14-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v15-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v16-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v17-receipt.json"
 BANK4 = ARCH / "c2.3-v2.1-bank4-map-probe-receipt.json"
 DEVICE_PREPARATION = ARCH / (
     "c2.3-v1.6-item1-only-media-r1-public2-receipt.json")
-FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v11"
+PUBLICATION = ROOT / (
+    "tests/bytecode/dialect-v2/evidence/post-release/"
+    "v160-public-publication-receipt-20260825.json")
+COMFORT_MEDIA = ARCH / (
+    "c2.3-v1.7-comfort-phase1b-acceptance-media-r1-receipt.json")
+COMFORT_REPAIR_MEDIA = ARCH / (
+    "c2.3-v1.7-comfort-abort-reentry-media-r1-receipt.json")
+BLOCK3_R10_MEDIA = ARCH / (
+    "c2.3-v1.7-block3-r10-acceptance-media-receipt.json")
+BLOCK3_BANNER_MEDIA = ARCH / (
+    "c2.3-v1.7-block3-banner-ordinal-acceptance-media-receipt.json")
+INIT_L65_MEDIA = ARCH / (
+    "c2.3-v1.7-init-l65-acceptance-media-receipt.json")
+INIT_L65_PRODUCT_VARIANTS_MEDIA = ARCH / (
+    "c2.3-v1.7-init-l65-product-variants-media-receipt.json")
+FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v17"
 SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 
 # The registry is deliberately explicit.  Discovery below is independent of
@@ -63,6 +90,7 @@ REGISTERED = {
     "tools/host-lisp/c2_defstruct_terminal_ingress_sister.py",
     "tools/host-lisp/c2_link75_library_media_successor.py",
     "tools/host-lisp/c2_v150_public_product.py",
+    "tools/host-lisp/c2_v160_public_product.py",
     "tools/host-lisp/c2_link95_acceptance_media.py",
     "tools/host-lisp/c2_link95_world_bound_media.py",
     "tools/host-lisp/c2_lite_media_g5_entry_repack.py",
@@ -102,6 +130,11 @@ REGISTERED = {
     "tools/host-lisp/c2_v160_clean_product_acceptance_media.py",
     "tools/host-lisp/c2_v160_clean_product_operand_root_media.py",
     "tools/host-lisp/c2_v160_item1_only_media.py",
+    "tools/host-lisp/c2_v17_comfort_phase1b_acceptance_media.py",
+    "tools/host-lisp/c2_v17_comfort_abort_reentry_media.py",
+    "tools/host-lisp/c2_v17_block3_r10_acceptance_media.py",
+    "tools/host-lisp/c2_v17_init_l65_acceptance_media.py",
+    "tools/host-lisp/c2_v17_init_l65_product_variants_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media_liveness.py",
     "tools/host-lisp/c2_v20_far_payload_delivery.py",
@@ -141,6 +174,16 @@ CURRENT = {
         "non-promotable Bank-4 MAP probe plus closed same-world D81",
     "tools/host-lisp/c2_v160_item1_only_media.py":
         "one-row item-1 product media with packed-artifact closure",
+    "tools/host-lisp/c2_v160_public_product.py":
+        "published 22-role v1.6 product/library producer with packed-facade and readback closure",
+    "tools/host-lisp/c2_v17_comfort_phase1b_acceptance_media.py":
+        "Phase-1b Same-World product/library producer with packed-facade and product-profile library readback closure",
+    "tools/host-lisp/c2_v17_comfort_abort_reentry_media.py":
+        "artifact-only two-stage abort-reentry successor with Same-World packed-facade and product-profile library closure",
+    "tools/host-lisp/c2_v17_block3_r10_acceptance_media.py":
+        "Block-3 Same-World product/library producer inherited by banner-ordinal artifact-only successor with packed-facade and readback closure",
+    "tools/host-lisp/c2_v17_init_l65_product_variants_media.py":
+        "native INIT.L65 artifact-only one-drive product variants with one frozen product filesystem and INIT-only diff attribution",
 }
 
 
@@ -278,6 +321,29 @@ def active_closure() -> dict[str, Any]:
         encoding="utf-8")
     device_source = (HOST /
         "c2_v160_item1_only_media.py").read_text(encoding="utf-8")
+    public_source = (HOST /
+        "c2_v160_public_product.py").read_text(encoding="utf-8")
+    publication = load(PUBLICATION)
+    comfort_source = (HOST /
+        "c2_v17_comfort_phase1b_acceptance_media.py").read_text(
+            encoding="utf-8")
+    comfort = load(COMFORT_MEDIA)
+    comfort_repair_source = (HOST /
+        "c2_v17_comfort_abort_reentry_media.py").read_text(encoding="utf-8")
+    comfort_repair = load(COMFORT_REPAIR_MEDIA)
+    block3_source = (HOST /
+        "c2_v17_block3_r10_acceptance_media.py").read_text(encoding="utf-8")
+    block3 = load(BLOCK3_R10_MEDIA)
+    block3_banner_source = (HOST /
+        "c2_v17_block3_banner_ordinal_media.py").read_text(encoding="utf-8")
+    block3_banner = load(BLOCK3_BANNER_MEDIA)
+    init_l65_source = (HOST /
+        "c2_v17_init_l65_acceptance_media.py").read_text(encoding="utf-8")
+    init_l65 = load(INIT_L65_MEDIA)
+    init_l65_product_variants_source = (HOST /
+        "c2_v17_init_l65_product_variants_media.py").read_text(
+            encoding="utf-8")
+    init_l65_product_variants = load(INIT_L65_PRODUCT_VARIANTS_MEDIA)
     require(
         "PACKED_ARTIFACT_GATES" in far_source
         and "run_packed_artifact_gates()" in far_source
@@ -300,11 +366,158 @@ def active_closure() -> dict[str, Any]:
         and device.get("stager_gate", {}).get("status") ==
             "passed-strict-build-and-address-qualified-hybrid-f018b-content-defined-target-readback",
         "active medium builder omits registered packed-artifact gates")
+    require(
+        "FACADE.packed_facade_gate(final_product, final_elf)" in public_source
+        and "build_shared_media()" in public_source
+        and "build_library_media()" in public_source
+        and publication.get("status") == "passed"
+        and publication.get("product_authority", {}).get("artifact_count") == 22
+        and publication.get("verification", {}).get(
+            "product_bundle_readback_offline") == "passed-roles-22-files-32"
+        and publication.get("verification", {}).get(
+            "all_four_asset_digests_match_github_and_downloaded_readback") is True,
+        "v1.6 public medium builder lacks packed/readback closure")
+    require(
+        "MEDIA.build()" in comfort_source
+        and "accepted product-profile Comfort artifact" in comfort_source
+        and comfort.get("status")
+            == "PASS: V1.7 COMFORT PHASE 1B ACCEPTANCE MEDIA READY"
+        and comfort.get("shipped_byte_facade", {}).get("status")
+            == "passed-packed-prg-facade-byte-equals-final-elf"
+        and comfort.get("same_world_pair", {}).get("result")
+            == "same-world-pair"
+        and comfort.get("phase1b_library_closure", {}).get(
+            "accepted_comfort_artifact", {}).get("blob", {}).get("sha256")
+            == "911653530f52979a92da462ad354d1fa9cc783e42d97ee955d870297a3c16fe5",
+        "v1.7 Comfort medium builder lacks packed/product-profile closure")
+    require(
+        "MEDIA.build()" in comfort_repair_source
+        and "two-stage-final-ELF-green" in comfort_repair_source
+        and comfort_repair.get("status")
+            == "PASS: V1.7 COMFORT ABORT REENTRY MEDIA READY"
+        and comfort_repair.get("repair_world", {}).get("WPLTO_runs") == 0
+        and comfort_repair.get("repair_world", {}).get("product_links") == 0
+        and comfort_repair.get("shipped_byte_facade", {}).get("status")
+            == "passed-packed-prg-facade-byte-equals-final-elf"
+        and comfort_repair.get("same_world_pair", {}).get("result")
+            == "same-world-pair",
+        "v1.7 Comfort repair medium builder lacks artifact-only packed closure")
+    require(
+        "MEDIA.build()" in block3_source
+        and block3.get("status")
+            == "PASS: V1.7 BLOCK3 R10 ACCEPTANCE MEDIA READY"
+        and block3.get("accounting") == {"WPLTO_runs": 0,
+            "product_links": 0, "product_cards": 0,
+            "replacement_media_builds": 2, "device_contacts": 0}
+        and block3.get("shipped_byte_facade", {}).get("status")
+            == "passed-packed-prg-facade-byte-equals-final-elf"
+        and block3.get("same_world_pair", {}).get("result")
+            == "same-world-pair"
+        and block3.get("readback") == {
+            "library": "passed-one-row-index-and-artifact-identity-closure",
+            "product": "passed-packed-visible-file-and-role-identity-closure"}
+        and "BASE_MEDIA.MEDIA.build()" in block3_banner_source
+        and "expected_final_banner_ordinal" in block3_banner_source
+        and block3_banner.get("status")
+            == "PASS: V1.7 BLOCK3 BANNER-ORDINAL REPAIR MEDIA READY"
+        and block3_banner.get("accounting") == {"WPLTO_runs": 0,
+            "product_links": 0, "product_cards": 0,
+            "replacement_media_builds": 2, "device_contacts": 0}
+        and block3_banner.get("shipped_byte_facade", {}).get("status")
+            == "passed-packed-prg-facade-byte-equals-final-elf"
+        and block3_banner.get("same_world_pair", {}).get("result")
+            == "same-world-pair"
+        and block3_banner.get("readback") == block3.get("readback"),
+        "v1.7 Block-3 medium builder lacks packed/readback successor closure")
+    require(
+        "MEDIA.build()" in init_l65_source
+        and "pair_identity(" in init_l65_source
+        and init_l65.get("status")
+            == "PASS: V1.7 NATIVE INIT.L65 ACCEPTANCE MEDIA READY"
+        and init_l65.get("accounting") == {"WPLTO_runs": 0,
+            "product_links": 0, "product_cards": 0,
+            "replacement_media_builds": 4, "device_contacts": 0}
+        and init_l65.get("shipped_byte_facade", {}).get("status")
+            == "passed-packed-prg-facade-byte-equals-final-elf"
+        and set(init_l65.get("same_world_pairs", {}))
+            == {"missing", "valid", "error"}
+        and all(pair.get("result")
+            == "same-world-pair-with-raw-init-source"
+            for pair in init_l65.get("same_world_pairs", {}).values())
+        and init_l65.get("readback") == {
+            "libraries":
+                "passed-indexed-world-plus-explicit-raw-INIT-closure",
+            "product":
+                "passed-packed-visible-file-and-role-identity-closure"},
+        "v1.7 native INIT.L65 medium builder lacks packed/readback closure")
+    require(
+        "cross_variant_proof(" in init_l65_product_variants_source
+        and "source_compile_proof()" in init_l65_product_variants_source
+        and init_l65_product_variants.get("status") ==
+            "PASS: V1.7 INIT.L65 ONE-DRIVE PRODUCT VARIANTS READY"
+        and init_l65_product_variants.get("accounting") == {
+            "WPLTO_runs": 0, "product_links": 0, "product_cards": 0,
+            "replacement_media_builds": 3,
+            "device_contacts_during_build": 0}
+        and set(init_l65_product_variants.get("media", {})) ==
+            {"absent", "valid", "error"}
+        and init_l65_product_variants.get("diff_attribution", {}).get(
+            "rule") ==
+            "one frozen product filesystem; INIT.L65 is the sole variant"
+        and init_l65_product_variants.get("session", {}).get("path") ==
+            "config/c2-v17-init-l65-product-variants-resume-session.json",
+        "v1.7 native INIT.L65 product variants lack one-drive closure")
     return {"current": dict(sorted(CURRENT.items())),
             "repair_registry": repaired,
             "breadcrumb_registry": traced,
             "bank4_registry": bank4,
-            "device_preparation_registry": device}
+            "device_preparation_registry": device,
+            "public_release_registry": {
+                "producer": "tools/host-lisp/c2_v160_public_product.py",
+                "packed_facade_gate": True,
+                "artifact_count": 22,
+                "offline_readback": "passed-roles-22-files-32",
+                "fresh_download_digests": 4},
+            "comfort_phase1b_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v17_comfort_phase1b_acceptance_media.py",
+                "packed_facade_gate": True,
+                "same_world_pair": True,
+                "product_profile_library": True,
+                "callprim_12_tombstoned": True},
+            "comfort_abort_reentry_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v17_comfort_abort_reentry_media.py",
+                "packed_facade_gate": True,
+                "same_world_pair": True,
+                "artifact_only": True,
+                "two_stage_abort_reentry": True},
+            "block3_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v17_block3_r10_acceptance_media.py",
+                "artifact_only_successor":
+                    "tools/host-lisp/c2_v17_block3_banner_ordinal_media.py",
+                "packed_facade_gate": True,
+                "same_world_pair": True,
+                "product_and_library_readback": True,
+                "banner_ordinal": 247},
+            "init_l65_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v17_init_l65_acceptance_media.py",
+                "artifact_only": True,
+                "packed_facade_gate": True,
+                "same_world_variants": ["error", "missing", "valid"],
+                "raw_init_source_readback": True,
+                "status": "historical-predecessor-one-drive-session-invalid"},
+            "init_l65_product_variants_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v17_init_l65_product_variants_media.py",
+                "artifact_only": True,
+                "one_frozen_product_filesystem": True,
+                "variants": ["absent", "error", "valid"],
+                "INIT_only_diff_attribution": True,
+                "source_compile_proof": True,
+                "manual_boot_media_swap": False}}
 
 
 def derive() -> dict[str, Any]:
@@ -317,7 +530,7 @@ def derive() -> dict[str, Any]:
         domains.setdefault(domain(path), []).append(path)
     value = {
         "format": FORMAT,
-        "recorded_on": "2026-08-24",
+        "recorded_on": "2026-08-27",
         "status": "PASS: EVERY MEDIUM BUILDER IN TREE ENUMERATED",
         "builders": {
             "total": len(observed),
@@ -365,7 +578,22 @@ def audit(value: dict[str, Any]) -> None:
         and value.get("active_closure", {}).get("bank4_registry", {})
             .get("complete") is True
         and value.get("active_closure", {}).get(
-            "device_preparation_registry", {}).get("artifact_count") == 19,
+            "device_preparation_registry", {}).get("artifact_count") == 19
+        and value.get("active_closure", {}).get(
+            "public_release_registry", {}).get("artifact_count") == 22
+        and value.get("active_closure", {}).get(
+            "comfort_phase1b_registry", {}).get(
+                "product_profile_library") is True
+        and value.get("active_closure", {}).get(
+            "comfort_abort_reentry_registry", {}).get(
+                "two_stage_abort_reentry") is True
+        and value.get("active_closure", {}).get(
+            "block3_registry", {}).get("banner_ordinal") == 247
+        and value.get("active_closure", {}).get(
+            "init_l65_registry", {}).get("raw_init_source_readback") is True
+        and value.get("active_closure", {}).get(
+            "init_l65_product_variants_registry", {}).get(
+                "one_frozen_product_filesystem") is True,
         "media-builder structural enumeration drift")
 
 
@@ -391,6 +619,23 @@ def mutations(base: dict[str, Any]) -> list[str]:
             ["bank4_registry"].update(complete=False)),
         ("incomplete-device-preparation-registry", lambda x: x["active_closure"]
             ["device_preparation_registry"].update(artifact_count=0)),
+        ("incomplete-public-release-registry", lambda x: x["active_closure"]
+            ["public_release_registry"].update(artifact_count=0)),
+        ("incomplete-comfort-product-profile-registry", lambda x:
+            x["active_closure"]["comfort_phase1b_registry"].update(
+                product_profile_library=False)),
+        ("incomplete-comfort-repair-registry", lambda x:
+            x["active_closure"]["comfort_abort_reentry_registry"].update(
+                two_stage_abort_reentry=False)),
+        ("incomplete-block3-registry", lambda x:
+            x["active_closure"]["block3_registry"].update(
+                banner_ordinal=239)),
+        ("incomplete-init-l65-registry", lambda x:
+            x["active_closure"]["init_l65_registry"].update(
+                raw_init_source_readback=False)),
+        ("incomplete-init-l65-product-variants-registry", lambda x:
+            x["active_closure"]["init_l65_product_variants_registry"].update(
+                one_frozen_product_filesystem=False)),
         ("promote-noncurrent-without-gates", lambda x: x["builders"]
             ["current_gate_closed"].append(
                 x["builders"]["registered_noncurrent"][0])),
@@ -403,7 +648,7 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 9,
+    require(len(rejected) == 15,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 
@@ -425,7 +670,48 @@ def check() -> dict[str, Any]:
             and value["active_closure"]["bank4_registry"] ==
                 load(BANK4)["media"]["packed_artifact_closure"]
             and value["active_closure"]["device_preparation_registry"] ==
-                load(DEVICE_PREPARATION)["packed_artifact_closure"],
+                load(DEVICE_PREPARATION)["packed_artifact_closure"]
+            and value["active_closure"]["comfort_phase1b_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v17_comfort_phase1b_acceptance_media.py",
+                "packed_facade_gate": True,
+                "same_world_pair": True,
+                "product_profile_library": True,
+                "callprim_12_tombstoned": True}
+            and value["active_closure"]["comfort_abort_reentry_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v17_comfort_abort_reentry_media.py",
+                "packed_facade_gate": True,
+                "same_world_pair": True,
+                "artifact_only": True,
+                "two_stage_abort_reentry": True}
+            and value["active_closure"]["block3_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v17_block3_r10_acceptance_media.py",
+                "artifact_only_successor":
+                    "tools/host-lisp/c2_v17_block3_banner_ordinal_media.py",
+                "packed_facade_gate": True,
+                "same_world_pair": True,
+                "product_and_library_readback": True,
+                "banner_ordinal": 247}
+            and value["active_closure"]["init_l65_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v17_init_l65_acceptance_media.py",
+                "artifact_only": True,
+                "packed_facade_gate": True,
+                "same_world_variants": ["error", "missing", "valid"],
+                "raw_init_source_readback": True,
+                "status": "historical-predecessor-one-drive-session-invalid"}
+            and value["active_closure"][
+                "init_l65_product_variants_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v17_init_l65_product_variants_media.py",
+                "artifact_only": True,
+                "one_frozen_product_filesystem": True,
+                "variants": ["absent", "error", "valid"],
+                "INIT_only_diff_attribution": True,
+                "source_compile_proof": True,
+                "manual_boot_media_swap": False},
             "media-builder enumeration reconstruction drift")
     return value
 

@@ -252,14 +252,37 @@ def _freight_proof_rows(layout: dict[str, Any],
                     "relation": "section-vma-equals-predecessor-vma-plus-bytes",
                     "status": "passed"}
             else:
+                placement = registration.get("physical_placement")
+                require(isinstance(placement, dict),
+                        "mapped additive freight placement authority absent")
+                fixed = (placement.get("kind") == "fixed-contract"
+                         and row["lma"] == placement.get("physical_start"))
+                top = (placement.get("kind") == "bank2-top-derived"
+                       and row["lma"] + row["bytes"] ==
+                           placement.get("bank_end_exclusive"))
+                by_name = {item["name"]: item
+                           for item in layout["allocatable_sections"]}
+                far = by_name.get(".lisp65_c2_mapped_far_service")
+                page = (placement.get("kind") == "map-page-top-derived"
+                        and far is not None
+                        and row["lma"] - row["vma"] ==
+                            far["lma"] - far["vma"]
+                        and (row["lma"] - row["vma"]) & 0xff == 0
+                        and row["lma"] + row["bytes"] <=
+                            placement.get("bank_end_exclusive"))
                 require(registry["placement_gate"] == "mapped-arena-contract"
                         and row["bytes"] > 0
                         and row["bytes"] <= registration["capacity_bytes"]
                         and row["vma"] == registration["cpu_start"]
-                        and row["lma"] == registration["physical_start"],
+                        and (fixed or top or page),
                         f"mapped additive freight violates arena contract: {name}")
                 proof = {"gate": "mapped-arena-contract",
-                    "relation": "candidate-section-fits-configured-mapped-arena",
+                    "relation": (
+                        "candidate-section-shares-page-encodable-map-offset"
+                        if page else
+                        "candidate-section-ends-at-derived-bank-end"
+                        if top else
+                        "candidate-section-fits-fixed-mapped-arena"),
                     "status": "passed"}
             rows.append({"name": name,
                 "membership_authority": registry["registry"],
@@ -292,8 +315,10 @@ def _validate_freight_rows(rows: list[dict[str, Any]],
                           "gate", "predecessor", "relation", "status"})
                      or (row["placement_proof"].get("gate") ==
                          "mapped-arena-contract"
-                         and row["placement_proof"].get("relation") ==
-                         "candidate-section-fits-configured-mapped-arena"
+                         and row["placement_proof"].get("relation") in {
+                             "candidate-section-ends-at-derived-bank-end",
+                             "candidate-section-shares-page-encodable-map-offset",
+                             "candidate-section-fits-fixed-mapped-arena"}
                          and set(row["placement_proof"]) == {
                              "gate", "relation", "status"})),
                 f"additive freight row is an address snapshot: {row.get('name')}")
@@ -319,12 +344,113 @@ def _additive_section_closure(layout: dict[str, Any], golden: dict[str, Any],
             "freight_rows": proof_rows}
 
 
+def _mapped_lma_successor(layout: dict[str, Any],
+                          golden: dict[str, Any]
+                          ) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Project an authorized derived mapped LMA without rewriting v5."""
+    policy = PRODUCT.MAPPED_TENANT_LMA_POLICY
+    if policy not in ("bank2-top", "map-page-top"):
+        return layout, None
+    rows = {row["name"]: row for row in layout["allocatable_sections"]}
+    far_name = ".lisp65_c2_mapped_far_service"
+    cold_name = ".lisp65_c2_mapped_product_cold"
+    boundary = "__lisp65_c2_mapped_far_service_load_start"
+    require(far_name in rows and cold_name in rows,
+            "upper-anchor mapped tenant population incomplete")
+    far, cold = rows[far_name], rows[cold_name]
+    actual = layout["boundary_symbols"][boundary]
+    if policy == "map-page-top":
+        far_offset = far["lma"] - far["vma"]
+        cold_offset = cold["lma"] - cold["vma"]
+        highest_cpu_end = max(far["vma"] + far["bytes"],
+                              cold["vma"] + cold["bytes"])
+        require(actual == far["lma"] and far_offset == cold_offset
+                and far_offset & 0xff == 0
+                and highest_cpu_end + far_offset <= 0x00030000
+                and highest_cpu_end + far_offset + 0x100 > 0x00030000,
+                "candidate page-congruent LMA relation is not composed")
+        relations = [
+            "both-tenant-offsets-equal",
+            "shared-offset-is-page-encodable",
+            "next-page-offset-escapes-bank2"]
+        authority = "candidate final-ELF LOADADDR plus map-page-top policy"
+    else:
+        require(actual == far["lma"]
+                and far["lma"] + far["bytes"] == cold["lma"]
+                and cold["lma"] + cold["bytes"] == 0x00030000,
+                "candidate upper-anchor LMA relation is not composed")
+        relations = [
+            "far-load-start-equals-far-section-lma",
+            "far-load-end-equals-product-cold-load-start",
+            "product-cold-load-end-equals-bank2-end"]
+        authority = "candidate final-ELF LOADADDR plus bank2-top policy"
+    normalized = deepcopy(layout)
+    normalized["boundary_symbols"][boundary] = (
+        golden["fixed_boundary_symbols"][boundary])
+    return normalized, {
+        "status": "passed",
+        "authority": authority,
+        "boundary": boundary,
+        "relations": relations,
+        "golden_rewritten": False,
+        "candidate_boundary_is_additive_successor": True,
+    }
+
+
+def mapped_lma_successor_mutations(elf: Path) -> list[str]:
+    policy = PRODUCT.MAPPED_TENANT_LMA_POLICY
+    if policy not in ("bank2-top", "map-page-top"):
+        return []
+    layout = LAYOUT.layout_from_elf(elf)
+    golden = load(V5_GOLDEN.GOLDEN)
+    rejected: list[str] = []
+    boundary = "__lisp65_c2_mapped_far_service_load_start"
+    far_name = ".lisp65_c2_mapped_far_service"
+    cold_name = ".lisp65_c2_mapped_product_cold"
+    mutants = {}
+    stored = deepcopy(layout)
+    by_name = {row["name"]: row for row in stored["allocatable_sections"]}
+    by_name[far_name]["lma"] = 0x0002B8B2
+    stored["boundary_symbols"][boundary] = 0x0002B8B2
+    mutants["stored-far-LMA"] = stored
+    broken = deepcopy(layout)
+    by_name = {row["name"]: row for row in broken["allocatable_sections"]}
+    by_name[cold_name]["lma"] += 1
+    mutants[("broken-shared-map-offset" if policy == "map-page-top" else
+             "broken-mapped-tenant-adjacency")] = broken
+    if policy == "map-page-top":
+        residue = deepcopy(layout)
+        by_name = {row["name"]: row for row in
+                   residue["allocatable_sections"]}
+        by_name[far_name]["lma"] += 1
+        by_name[cold_name]["lma"] += 1
+        residue["boundary_symbols"][boundary] += 1
+        mutants["non-page-congruent-shared-offset"] = residue
+    for label, mutant in mutants.items():
+        try:
+            _mapped_lma_successor(mutant, golden)
+        except ConversionError:
+            rejected.append(label)
+        else:
+            raise ConversionError(
+                f"mapped LMA successor mutation survived: {label}")
+    return rejected
+
+
 def additive_freight_mutations(elf: Path) -> list[str]:
     golden = load(V5_GOLDEN.GOLDEN)
     layout = LAYOUT.layout_from_elf(elf)
     registries, registered = _active_freight_union()
     rows = _freight_proof_rows(layout, registries)
     rejected: list[str] = []
+
+    pinned_registries = deepcopy(registries)
+    mapped_rows = [registry for registry in pinned_registries
+                   if registry["placement_gate"] == "mapped-arena-contract"]
+    if mapped_rows:
+        mapped_rows[-1]["registration"]["physical_placement"] = {
+            "kind": "fixed-contract", "physical_start": 0x0002BE8D,
+            "authority": "stored predecessor world"}
 
     third = deepcopy(layout)
     mutant = deepcopy(third["allocatable_sections"][0])
@@ -345,7 +471,9 @@ def additive_freight_mutations(elf: Path) -> list[str]:
                 layout, golden,
                 registered - set(registries[-1]["allocated"]),
                 [row for row in rows if row["name"] not in
-                    set(registries[-1]["allocated"])]))):
+                    set(registries[-1]["allocated"])])),
+            ("stored-mapped-LMA", lambda: _freight_proof_rows(
+                layout, pinned_registries))):
         try:
             action()
         except ConversionError:
@@ -368,7 +496,20 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN
         proof_rows = _freight_proof_rows(layout, registries)
         additive = _additive_section_closure(
             layout, authority, registered, proof_rows)
-        comparison = golden.compare_layout(additive.pop("base_layout"), authority)
+        base_layout = additive.pop("base_layout")
+        comparison_layout, relocation = _mapped_lma_successor(
+            layout, authority)
+        # The additive section closure removes card freight before the Golden
+        # comparison.  Carry the one reviewed boundary normalization into
+        # that same base view while retaining every other candidate member.
+        if relocation is not None:
+            boundary = relocation["boundary"]
+            base_layout["boundary_symbols"][boundary] = (
+                comparison_layout["boundary_symbols"][boundary])
+            additive["mapped_LMA_successor"] = relocation
+            additive["mapped_LMA_mutations_rejected"] = (
+                mapped_lma_successor_mutations(elf))
+        comparison = golden.compare_layout(base_layout, authority)
         additive["placement_gate"] = {
             "gate": "active-card-registry-union",
             "status": "passed",

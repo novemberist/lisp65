@@ -114,10 +114,14 @@ def source_gate(decoder_path: Path = B.DECODER,
             < boot.index("c2_publish_exports_from(0)")
             < boot.index("c2_ready = 1;"),
         "banner_uses_single_numeric_error_truth":
-            "lisp65_error_render_code(vm_status_error_code(vm_status), NIL)"
-                in banner
-            and "emit_str(vm_status_message())" not in banner,
-        "failed_banner_returns_before_prompt": "return;" in banner,
+            "lisp_abort_code(vm_status_error_code(vm_status));" in banner
+            and "emit_str(vm_status_message())" not in banner
+            and "lisp65_error_render_code(" not in banner,
+        "failed_banner_recovers_before_prompt":
+            repl_fn.index("lisp_toplevel_active = 1;") < banner_at
+            and banner.index(
+                "lisp_abort_code(vm_status_error_code(vm_status));")
+                < len(banner),
     }
     B.require(all(checks.values()), "phase-02b source contract red: "
               + str([name for name, ok in checks.items() if not ok]))
@@ -151,11 +155,11 @@ def source_gate(decoder_path: Path = B.DECODER,
             "if (vm_status != VM_OK && vm_status != VM_HALT)",
             "if (0)", 1)),
         "banner-text-truth-reintroduced": ("repl", repl.replace(
-            "(void)lisp65_error_render_code(vm_status_error_code(vm_status), NIL);",
+            "lisp_abort_code(vm_status_error_code(vm_status));",
             "emit_str(vm_status_message());", 1)),
-        "banner-return-removed": ("repl", repl.replace(
-            "            emit('\\n');\n            return;",
-            "            emit('\\n');", 1)),
+        "banner-recovery-removed": ("repl", repl.replace(
+            "lisp_abort_code(vm_status_error_code(vm_status));",
+            "(void)vm_status_error_code(vm_status);", 1)),
     }
     rejected: dict[str, str] = {}
     for name, (kind, mutation) in mutations.items():

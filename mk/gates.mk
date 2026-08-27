@@ -664,7 +664,7 @@ c2-v20-phase02b-header-consumption-d1-result-check: c2-v20-phase02b-header-consu
 
 .PHONY: c2-v20-cpu-transport-reconciliation-check
 c2-v20-cpu-transport-reconciliation-check: c2-v20-phase02b-header-consumption-d1-result-check
-	python3 tools/host-lisp/c2_v20_cpu_transport_reconciliation.py --check
+	python3 tools/host-lisp/c2_v20_cpu_transport_reconciliation_rebind_20260825.py check
 
 .PHONY: c2-v20-loading-libraries-progress-ring-selftest
 .PHONY: c2-v20-loading-libraries-progress-ring-check
@@ -3112,3 +3112,131 @@ c2-v160-candidate-seal-check: c2-v160-item1-d5-result-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v160_candidate_seal.py check
 
 check-source: c2-v160-candidate-seal-check
+
+.PHONY: c2-v160-post-release-housekeeping-selftest c2-v160-post-release-housekeeping-check
+c2-v160-post-release-housekeeping-selftest:
+	python3 tools/host-lisp/c2_v160_post_release_housekeeping.py selftest
+
+c2-v160-post-release-housekeeping-check: c2-v160-post-release-housekeeping-selftest
+	python3 tools/host-lisp/c2_v160_post_release_housekeeping.py check
+
+check-source: c2-v160-post-release-housekeeping-check
+
+.PHONY: c2-product-callprim-delivery-check c2-v17-comfort-phase1b-pricing-check c2-v17-comfort-phase1b-qualification-check c2-v17-comfort-phase1b-media-check c2-v17-comfort-abort-reentry-media-check c2-v17-editing-surface-polish-pricing-check c2-v17-sexp-scanner-paint-card-check c2-v17-repl-idle-blink-card-check c2-v17-block3-r8-r9-attribution-check c2-v17-block3-r9-r10-attribution-check c2-v17-block3-r10-product-check c2-v17-block3-banner-ordinal-repair-check c2-v17-block3-banner-ordinal-media-check
+c2-product-callprim-delivery-check: c2-v160-post-release-housekeeping-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_product_callprim_delivery_gate.py
+
+c2-v17-comfort-phase1b-pricing-check: c2-product-callprim-delivery-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_pricing.py --check
+
+c2-v17-comfort-phase1b-qualification-check: c2-v17-comfort-phase1b-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_adapter_replacement_card.py qualification-check
+
+c2-v17-comfort-phase1b-media-check: c2-v17-comfort-phase1b-qualification-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_phase1b_acceptance_media.py check
+
+c2-v17-comfort-abort-reentry-media-check: c2-v17-comfort-phase1b-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_comfort_abort_reentry_media.py check
+
+check-source: c2-v17-comfort-abort-reentry-media-check
+
+c2-v17-editing-surface-polish-pricing-check: c2-v17-comfort-abort-reentry-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_editing_surface_polish_pricing.py --check
+
+check-source: c2-v17-editing-surface-polish-pricing-check
+
+c2-v17-sexp-scanner-paint-card-check: c2-v17-editing-surface-polish-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_sexp_scanner_paint_card.py --check
+
+check-source: c2-v17-sexp-scanner-paint-card-check
+
+c2-v17-repl-idle-blink-card-check: c2-v17-sexp-scanner-paint-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_repl_idle_blink_card.py --check
+
+check-source: c2-v17-repl-idle-blink-card-check
+
+c2-v17-block3-r8-r9-attribution-check: c2-v17-repl-idle-blink-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_block3_r8_r9_attribution.py source-check
+
+check-source: c2-v17-block3-r8-r9-attribution-check
+
+c2-v17-block3-r9-r10-attribution-check: c2-v17-block3-r8-r9-attribution-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_block3_r9_r10_attribution.py source-check
+
+c2-v17-block3-r10-product-check: c2-v17-block3-r9-r10-attribution-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_ide_idle_blink_product_card_r10.py source-check
+
+check-source: c2-v17-block3-r10-product-check
+
+c2-v17-block3-banner-ordinal-repair-check: c2-v17-block3-r10-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_block3_banner_ordinal_repair.py source-check
+
+check-source: c2-v17-block3-banner-ordinal-repair-check
+
+c2-v17-block3-banner-ordinal-media-check: c2-v17-block3-banner-ordinal-repair-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_block3_banner_ordinal_media.py source-check
+
+check-source: c2-v17-block3-banner-ordinal-media-check
+
+.PHONY: c2-v17-recovery-service-time-pricing-check
+c2-v17-recovery-service-time-pricing-check: c2-v17-block3-banner-ordinal-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_recovery_service_time_pricing.py --check
+
+check-source: c2-v17-recovery-service-time-pricing-check
+
+.PHONY: c2-v17-recovery-quiescence-card-check
+c2-v17-recovery-quiescence-card-check: c2-v17-recovery-service-time-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_recovery_quiescence_card.py check
+
+check-source: c2-v17-recovery-quiescence-card-check
+
+.PHONY: c2-v17-init-l65-pricing-check
+c2-v17-init-l65-pricing-check: c2-v17-recovery-quiescence-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_init_l65_pricing.py --check
+
+check-source: c2-v17-init-l65-pricing-check
+
+.PHONY: c2-v17-init-l65-card-check
+c2-v17-init-l65-card-check: c2-v17-init-l65-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_init_l65_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_release_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_release_media.py check
+
+check-source: c2-v17-init-l65-card-check
+
+.PHONY: c2-v17-init-l65-media-check
+c2-v17-init-l65-media-check: c2-v17-init-l65-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_init_l65_acceptance_media.py check
+
+check-source: c2-v17-init-l65-media-check
+
+.PHONY: c2-v17-init-l65-product-variants-media-check
+c2-v17-init-l65-product-variants-media-check: c2-v17-init-l65-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_init_l65_product_variants_media.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v17_init_l65_product_variants_media.py device-check
+
+check-source: c2-v17-init-l65-product-variants-media-check
+
+.PHONY: c2-v170-release-d5-delta-selftest c2-v170-release-d5-delta-check
+c2-v170-release-d5-delta-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_release_d5_delta.py selftest
+
+c2-v170-release-d5-delta-check: c2-v170-release-d5-delta-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_release_d5_delta.py check
+
+check-source: c2-v170-release-d5-delta-check
+
+.PHONY: c2-v170-candidate-seal-check
+c2-v170-candidate-seal-check: c2-v170-release-d5-delta-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_candidate_seal.py check
+
+check-source: c2-v170-candidate-seal-check
+
+.PHONY: c2-v170-public-clean-build-selftest c2-v170-release-package-selftest
+c2-v170-public-clean-build-selftest: c2-v170-candidate-seal-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_public_clean_build.py selftest
+
+c2-v170-release-package-selftest: c2-v170-public-clean-build-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_release_package.py selftest
+
+check-source: c2-v170-release-package-selftest

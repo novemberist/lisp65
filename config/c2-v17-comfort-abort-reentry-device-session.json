@@ -1,0 +1,122 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "fresh_basic_first": true,
+    "library_mounted_physically_through_freezer": true,
+    "observation_during_active_persistent_forms": 0,
+    "one_form_per_submission": true,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.7-comfort-phase1b-hardware-acceptance"
+    ],
+    "excludes": [
+      "D5-headroom",
+      "release-acceptance",
+      "v1.7-later-blocks"
+    ],
+    "green_consequence": "Phase 1b accepted on hardware"
+  },
+  "decision_table": {
+    "all-four-groups-green": "Phase 1b accepted on hardware",
+    "daily-use-blocker": "at most one repair round; a second required round descopes Comfort",
+    "rare-or-cosmetic": "Known Issue plus v1.7 register row"
+  },
+  "format": "lisp65-c2-v17-comfort-phase1b-device-session-v1",
+  "host_half": {
+    "callprim_12_tombstoned": true,
+    "capacity_bias_adjusted": "32/581",
+    "dropped_events": 0,
+    "fallback_frames_per_character": 0.7732179166666666,
+    "fallback_margin_percent": 29.329646719903792,
+    "normalization": "512/512 final-linked consumer executions",
+    "ordered_events": "94/94"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/library/lisp65-library.d81",
+      "remote_name": "V17R1L.D81",
+      "sha256": "6ad3ec8edbeba5f5688e9660535fdf5fd9d3e0ddf93668129809f9aade5949f3"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.7-comfort-abort-reentry-media-r1/shared-system/lisp65-product.d81",
+      "remote_name": "V17R1.D81",
+      "sha256": "8bbb1f5f15eb44023932bedbfc82f069280a24462e2efc905ec521213274df97"
+    }
+  },
+  "recorded_on": "2026-08-25",
+  "rows": [
+    {
+      "actions": [
+        "cold boot product; mount library physically",
+        "submit (require 'v16core), then (require 'repl-comfort)",
+        "submit (repl)",
+        "after the other rows, submit an empty Comfort line"
+      ],
+      "expect": [
+        "native lisp65> before Comfort",
+        "t after each require",
+        "l65> at the editor cursor",
+        "empty line returns to native lisp65>"
+      ],
+      "group": "prompt rows",
+      "id": "C1-prompts"
+    },
+    {
+      "actions": [
+        "at l65> submit (>= nil 32)",
+        "at native lisp65> submit (repl) once to continue"
+      ],
+      "expect": [
+        "*** vm: type error",
+        "no red frame",
+        "clean recovery to native lisp65>",
+        "second Comfort entry shows l65>"
+      ],
+      "group": "abort recovery",
+      "id": "C2-abort"
+    },
+    {
+      "actions": [
+        "type (list 1 3), move left twice, insert 2 followed by a space, submit",
+        "submit (+ 10 on one line and 32) on the continuation line",
+        "evaluate (list 7 8), then Up and Return",
+        "with Shift-Lock off type lowercase letters and one Shift+8",
+        "rapidly enter more than 192 checked printable cells before closing and submitting the form"
+      ],
+      "expect": [
+        "(1 2 3)",
+        "42",
+        "(7 8) repeats from history",
+        "lowercase stays lowercase and Shift+8 yields (",
+        "all characters remain present and ordered across at least one collection"
+      ],
+      "group": "input",
+      "id": "C3-input"
+    },
+    {
+      "actions": [
+        "at l65> type and submit (list 1 3)",
+        "inspect the evaluated row and following prompt"
+      ],
+      "expect": [
+        "l65> and editable input share one row before Return",
+        "evaluated row is exactly (1 3) with no stale tail",
+        "next l65> and its cursor share one row"
+      ],
+      "group": "composed display",
+      "id": "C4-display"
+    }
+  ],
+  "status": "ready-owner-contact",
+  "triage_limits": {
+    "new_instruments": 0,
+    "new_walls": 0,
+    "raised_bars": 0
+  }
+}

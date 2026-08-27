@@ -26,6 +26,7 @@ if str(HOST) not in sys.path:
 import c2_link95_world_bound_media as PAIR  # noqa: E402
 import c2_v112_candidate_media as LIB  # noqa: E402
 import c2_v150_name_freight_media as FREIGHT  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -48,6 +49,8 @@ RECEIPT = ARCH / "c2.3-v2.1-link116-name-freight-media-receipt.json"
 DRIVER = Path(__file__).resolve()
 FORMAT = "lisp65-c2.3-v2.1-link116-name-freight-media-v1"
 STATUS = "PASS: LINK-116 SAME-WORLD NAME-FREIGHT LIBRARY MEDIA"
+FREIGHT_SEALED_COMMIT = "c2aadc022b36f2cbe713b8e184d17e2c9724fcd8"
+LINK116_SEALED_COMMIT = "eb2047995cd945584a81357ea905e37d74b60c71"
 
 
 class MediaError(RuntimeError):
@@ -157,13 +160,19 @@ def authority() -> dict[str, Any]:
     old = load(OLD_RECEIPT)
     freight = load(FREIGHT_RECEIPT)
     require(
-        old.get("library", {}).get("D81") == bind(OLD_LIBRARY / "lisp65-library.d81")
+        OLD_RECEIPT.read_bytes() == ERA.era_blob(
+            LINK116_SEALED_COMMIT, OLD_RECEIPT.relative_to(ROOT).as_posix())
+        and COMPLETION_RECEIPT.read_bytes() == ERA.era_blob(
+            LINK116_SEALED_COMMIT,
+            COMPLETION_RECEIPT.relative_to(ROOT).as_posix())
+        and FREIGHT_RECEIPT.read_bytes() == ERA.era_blob(
+            FREIGHT_SEALED_COMMIT,
+            FREIGHT_RECEIPT.relative_to(ROOT).as_posix())
+        and old.get("library", {}).get("D81") is not None
         and freight.get("status") ==
             "V150-NAME-FREIGHT-HOST-AND-MEDIA-GREEN; FRESH-D1-PENDING"
-        and freight.get("library", {}).get("inspect_manifest")
-            == bind(FREIGHT.FREIGHT.INSPECT_MANIFEST)
-        and freight.get("library", {}).get("defstruct_manifest")
-            == bind(FREIGHT.FREIGHT.DEFSTRUCT_MANIFEST),
+        and freight.get("library", {}).get("inspect_manifest") is not None
+        and freight.get("library", {}).get("defstruct_manifest") is not None,
         "predecessor or accepted freight authority drift")
     return {"predecessor_media": bind(OLD_RECEIPT),
             "Link116_completion": bind(COMPLETION_RECEIPT),

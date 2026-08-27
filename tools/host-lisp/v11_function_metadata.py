@@ -65,6 +65,20 @@ def binding(path: Path) -> dict[str, Any]:
     return {"path": rel(path), "bytes": len(data), "sha256": sha(data)}
 
 
+def manifest_authority(path: Path, manifest: dict[str, Any],
+                       entries: list[dict[str, Any]]) -> dict[str, Any]:
+    """Bind the fields this metadata contract actually consumes."""
+    consumed = [{key: entry.get(key) for key in (
+        "name", "anonymous", "kind", "blob_offset", "length", "code_flags")}
+        for entry in entries]
+    return {
+        "path": rel(path),
+        "entries": len(entries),
+        "blob_sha256": manifest.get("blob_sha256"),
+        "consumed_fields_sha256": sha(canonical(consumed)),
+    }
+
+
 def arity(code: P0.CodeObject) -> dict[str, Any]:
     optional = code.flags >> P0.CO_FLAG_OPTIONAL_SHIFT
     require(optional <= code.nargs, "code object optional arity exceeds nargs")
@@ -169,7 +183,7 @@ def bytecode_definitions(contract: dict[str, Any]) -> tuple[dict[str, dict[str, 
             }
         bindings.append({
             "library": library,
-            "manifest": binding(manifest_path),
+            "manifest": manifest_authority(manifest_path, manifest, entries),
             "blob": binding(blob_path),
             "entries": len(entries),
         })
@@ -259,6 +273,9 @@ def validate(index: dict[str, Any]) -> None:
     names = [row.get("name") for row in records]
     require(names == sorted(names) and len(names) == len(set(names)),
             "metadata names must be sorted and unique")
+    require(not any(isinstance(name, str) and name.startswith("%ide-")
+                    for name in names),
+            "private IDE object leaked into public metadata")
     for row in records:
         require(set(row) == {"name", "kind", "visibility", "arity",
                              "signature", "docstring", "authority"},
@@ -384,9 +401,34 @@ def selftest() -> None:
         validate(overclaim)
     except MetadataError:
         mutations.append("device-overclaim")
-    require(mutations == ["duplicate-name", "bad-arity", "device-overclaim"],
+    private_leak = json.loads(json.dumps(index))
+    leaked = dict(private_leak["records"][0])
+    leaked["name"] = "%ide-private-mutation"
+    private_leak["records"].append(leaked)
+    private_leak["records"].sort(key=lambda row: row["name"])
+    try:
+        validate(private_leak)
+    except MetadataError:
+        mutations.append("private-ide-leak")
+    manifest = {"blob_sha256": "aa", "build_id": "stored-world"}
+    entries = [{"name": "f", "anonymous": False, "kind": "defun",
+                "blob_offset": 0, "length": 4, "code_flags": 2}]
+    authority = manifest_authority(ROOT / "synthetic.json", manifest, entries)
+    noisy = manifest_authority(ROOT / "synthetic.json",
+        {**manifest, "build_id": "successor-world"}, entries)
+    require(authority == noisy, "irrelevant manifest identity remained pinned")
+    changed = [dict(entries[0], code_flags=3)]
+    require(authority != manifest_authority(
+        ROOT / "synthetic.json", manifest, changed),
+        "consumed manifest field mutation survived")
+    mutations.extend(["ignore-unconsumed-manifest-noise",
+                      "reject-consumed-manifest-drift"])
+    require(mutations == ["duplicate-name", "bad-arity", "device-overclaim",
+                          "private-ide-leak",
+                          "ignore-unconsumed-manifest-noise",
+                          "reject-consumed-manifest-drift"],
             "metadata mutation selftest drift")
-    print("v11-function-metadata: SELFTEST PASS mutations=3")
+    print("v11-function-metadata: SELFTEST PASS mutations=6")
 
 
 def main() -> int:

@@ -125,14 +125,15 @@ def integer_literals(node: ast.AST) -> set[int]:
 def source_gate(overrides: dict[str, str] | None = None) -> dict[str, Any]:
     text = sources(overrides)
     link50 = function(text["link50"], "corrected_replacement")
+    link50_output = function(text["link50"], "qualification_output_root")
     link49 = function(text["link49"], "replacement")
     link47 = function(text["link47"], "replacement")
     rtov = function(text["rtov"], "build")
     configure = function(text["canonical"], "configure_wplto")
     replay = function(text["modern"], "post_link_replay")
     ambient = function(text["ambient"], "source_gate")
-    e50, e49, e47, ertov = (expressions(node) for node in (
-        link50, link49, link47, rtov))
+    e50, e50_output, e49, e47, ertov = (expressions(node) for node in (
+        link50, link50_output, link49, link47, rtov))
     econfigure, ereplay, eambient = (expressions(node) for node in (
         configure, replay, ambient))
 
@@ -144,8 +145,14 @@ def source_gate(overrides: dict[str, str] | None = None) -> dict[str, Any]:
             in e50
         and "BASE.ART.stage_product_gate(elf)" not in e50
         and "expected_sections=set(family['overlay_sections'])" in e50
-        and "BASE_LINK.DIRECT.OUT = artifact_root" in e50
-        and "BASE_LINK.OUT = artifact_root" in e50,
+        and "BASE_LINK.OUT" in e50_output
+        and "phase_output_root = qualification_output_root(elf)" in e50
+        and "BASE_LINK.DIRECT.OUT = phase_output_root" in e50
+        and "BASE_LINK.OUT = phase_output_root" in e50
+        and "BASE_LINK.workbench_crc_gate(product, elf, "
+            "report_root=phase_output_root)" in e50
+        and "BASE_LINK.DIRECT.OUT = artifact_root" not in e50
+        and "BASE_LINK.OUT = artifact_root" not in e50,
         "Link-50 replacement retains a default, ambient or historical identity")
     require(
         "expected = {'.lisp65_c2_host_facade': (46532, 48)" not in text["link49"]
@@ -233,6 +240,9 @@ def source_mutations() -> list[str]:
         ("restore-implicit-0xb9cd-stage-default", "link50",
          "stage = BASE.ART.stage_product_gate(\n        elf, verifier_base=verifier.address)",
          "stage = BASE.ART.stage_product_gate(elf)"),
+        ("restore-input-root-as-report-root", "link50",
+         "phase_output_root = qualification_output_root(elf)",
+         "phase_output_root = artifact_root"),
         ("restore-link49-section-table", "link49",
          "section_names = (", "expected = {'.lisp65_c2_host_facade': (46532, 48)}\n        section_names = ("),
         ("restore-link49-wall-pin", "link49",
@@ -369,7 +379,7 @@ def check() -> None:
 
 def selftest() -> None:
     value = derive(); validate(value, verify=True); receipt_mutations(value)
-    print("2.1 pinned-constant sweep: SELFTEST PASS mutations=11")
+    print("2.1 pinned-constant sweep: SELFTEST PASS mutations=12")
 
 
 def main() -> int:

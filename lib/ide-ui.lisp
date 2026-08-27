@@ -1121,10 +1121,203 @@
              columns
              rows)))))
 
+;; One software phase owner over the existing product frame byte.  MARKED says
+;; that the cursor cell is also one of the delimiter cells: hiding the cursor
+;; must preserve the delimiter attribute rather than erase it.
+(defun %ide-blink (state force)
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (blink (car idle))
+         (source (car (nthcdr 5 idle)))
+         (point (car (nthcdr 2 idle)))
+         (row (car (nthcdr 11 idle)))
+         (columns (car (nthcdr 12 idle)))
+         (now (%frame-low))
+         (elapsed (mod (- now (car blink)) 256))
+         (visible (if force 't
+                      (if (>= elapsed 32)
+                          (if (cdr blink) nil 't) (cdr blink)))))
+    (if (or (if row nil 't) (and (if force nil 't) (< elapsed 32)))
+        nil
+        (progn
+          (rplaca blink now)
+          (rplacd blink visible)
+          (if (< point columns)
+              (screen-put-char point row
+                               (if (< point (string-length source))
+                                   (string-ref source point) 95)
+                               (if visible 129
+                                   (if (car (nthcdr 10 idle)) 7 1)))
+              nil)
+          nil))))
+
+;; Derive one new IDE job without scanning a code unit.  The persisted buffer
+;; is already materialized; reading it here preserves the typing cache and
+;; allocates no adapter representation on an idle tick.
+(defun %ide-idle-mini-start (state)
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (mini (symbol-value (quote ide-step)))
+         (prompt (car (cdr mini)))
+         (input (car (cdr (cdr mini))))
+         (default (car (cdr (cdr (cdr mini)))))
+         (point (+ (string-length prompt)
+                   (if (> (string-length input) 0)
+                       (string-length input)
+                       (if (> (string-length default) 0)
+                           (+ (string-length default) 2) 0)))))
+    (progn
+      (rplaca (nthcdr 2 idle) point)
+      (rplaca (nthcdr 3 idle) 0)
+      (rplaca (nthcdr 4 idle) 0)
+      (rplaca (nthcdr 5 idle) "")
+      (rplaca (nthcdr 11 idle) (- (ide-state-render-rows state) 1))
+      (rplaca (nthcdr 12 idle) (ide-state-render-columns state))
+      (rplaca (cdr idle) 0)
+      nil)))
+
+(defun %ide-start (state)
+  (if (eq (ide-state-message state) 1005)
+      (%ide-idle-mini-start state)
+      (let* ((idle (symbol-value (quote %ide-idle)))
+             (buffer (ide-state-buffer state))
+             (saved (%ide-buffers-find (ide-buffer-name buffer)
+                                       (%ide-buffers-alist)))
+             (source (ide-current-line saved))
+             (point (cdr (ide-buffer-point buffer)))
+             (code (if (< point (string-length source))
+                       (string-ref source point) 0)))
+        (progn
+          (rplaca (nthcdr 2 idle) point)
+          (rplaca (nthcdr 3 idle) 0)
+          (rplaca (nthcdr 4 idle) 0)
+          (rplaca (nthcdr 5 idle) source)
+          (rplaca (nthcdr 11 idle)
+                  (ide-cursor-row state (ide-state-render-rows state)))
+          (rplaca (nthcdr 12 idle) (ide-state-render-columns state))
+          (rplaca (cdr idle)
+                  (if (or (= code 40) (or (= code 41) (= code 34))) 1 0))
+          nil))))
+
+;; Complete the prefix-to-partner transition after the final prefix chunk.
+(defun %ide-kind (result)
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (point (car (nthcdr 2 idle)))
+         (source (car (nthcdr 5 idle)))
+         (kind (%sexp-match (string-ref source point) result)))
+    (progn
+      (rplaca (cdr idle) (if (= kind 0) 0 (+ kind 1)))
+      (rplaca (nthcdr 3 idle) (if (= (mod kind 2) 1) (+ point 1) 0))
+      (rplaca (nthcdr 4 idle) (if (= kind 1) 4 (if (= kind 3) 2 0)))
+      (rplaca (nthcdr 6 idle) (if (= kind 2) (/ result 4) 0))
+      nil)))
+
+;; Exactly one self-capped prefix chunk.
+(defun %ide-scan ()
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (source (car (nthcdr 5 idle)))
+         (point (car (nthcdr 2 idle)))
+         (i (car (nthcdr 3 idle)))
+         (result (%ide-idle 0 source nil point i
+                            (car (nthcdr 4 idle)) nil nil nil))
+         (next (if (< (+ i 3) point) (+ i 3) point)))
+    (progn
+      (rplaca (nthcdr 3 idle) next)
+      (rplaca (nthcdr 4 idle) result)
+      (if (= next point) (%ide-kind result) nil))))
+
+;; Exactly one self-capped forward partner chunk.  NIL means incomplete;
+;; zero means complete without a partner; partner+1 preserves index zero.
+(defun %ide-close ()
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (kind (- (car (cdr idle)) 1))
+         (source (car (nthcdr 5 idle)))
+         (i (car (nthcdr 3 idle)))
+         (limit (string-length source))
+         (result (%ide-idle 1 source nil limit i
+                            (car (nthcdr 4 idle))
+                            (if (= kind 1) 41 34) nil nil))
+         (next (if (< (+ i 3) limit) (+ i 3) limit)))
+    (if (< result 0)
+        (progn (rplaca (cdr idle) 0) (- 0 result))
+        (if (= next limit)
+            (progn (rplaca (cdr idle) 0) 0)
+            (progn
+              (rplaca (nthcdr 3 idle) next)
+              (rplaca (nthcdr 4 idle) result)
+              nil)))))
+
+;; Exactly one self-capped opening replay chunk, with the same result encoding.
+(defun %ide-open ()
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (kind (- (car (cdr idle)) 1))
+         (source (car (nthcdr 5 idle)))
+         (i (car (nthcdr 3 idle)))
+         (limit (car (nthcdr 2 idle)))
+         (result (%ide-idle 2 source nil limit i
+                            (car (nthcdr 4 idle)) (car (nthcdr 6 idle))
+                            (if (= kind 2) 40 34) nil))
+         (next (if (< (+ i 3) limit) (+ i 3) limit)))
+    (if (= next limit)
+        (progn (rplaca (cdr idle) 0) (mod result 256))
+        (progn
+          (rplaca (nthcdr 3 idle) next)
+          (rplaca (nthcdr 4 idle) result)
+          nil))))
+
+;; The IDE surface's sole seam into input polling, every shared matcher pass
+;; and the composed paint transition.  Modes 0/1/2 select scan/close/open;
+;; mode 3 selects paint; mode 4 owns the existing burst-drain poll.
+(defun %ide-idle (mode a b c d e f g h)
+  (if (= mode 0)
+      (%sexp-scan a b c d e nil)
+      (if (= mode 1)
+          (%sexp-close a b c d e f nil)
+          (if (= mode 2)
+              (%sexp-open a b c d e f g nil)
+              (if (= mode 3)
+                  (%sexp-paint a b c d e f g 0)
+                  (poll-key))))))
+
+;; Clear the IDE-owned pair at an input handoff or unmatched completion.
+(defun %ide-clear (dirty)
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (active (car (nthcdr 7 idle)))
+         (pair-a (car (nthcdr 8 idle)))
+         (pair-b (car (nthcdr 9 idle)))
+         (old (if (= active 1) pair-a (if (= active 2) pair-b nil))))
+    (progn
+      (if old
+          (%ide-idle 3 (car (nthcdr 5 idle)) old nil 0
+                     (car (nthcdr 11 idle)) (car (nthcdr 12 idle))
+                     (car (nthcdr 2 idle)) nil) nil)
+      (rplaca (nthcdr 7 idle) 0)
+      (rplaca (nthcdr 10 idle) nil)
+      (rplaca (cdr idle) (if dirty -1 0))
+      (if old 't nil))))
+
+;; Install one completed partner result (ANSWER is partner+1).
+(defun %ide-paint (answer)
+  (let* ((idle (symbol-value (quote %ide-idle)))
+         (active (car (nthcdr 7 idle)))
+         (pair-a (car (nthcdr 8 idle)))
+         (pair-b (car (nthcdr 9 idle)))
+         (old (if (= active 1) pair-a (if (= active 2) pair-b nil)))
+         (new (if (= active 1) pair-b pair-a))
+         (found (- answer 1))
+         (point (car (nthcdr 2 idle))))
+    (progn
+      (rplaca new point)
+      (rplacd new found)
+      (%ide-idle 3 (car (nthcdr 5 idle)) old new 0
+                 (car (nthcdr 11 idle)) (car (nthcdr 12 idle)) point nil)
+      (rplaca (nthcdr 7 idle) (if (= active 1) 2 1))
+      (rplaca (nthcdr 10 idle)
+              (if (or (= point (car new)) (= point found)) 't nil))
+      (rplaca (cdr idle) 0)
+      't)))
+
 ;; Render coalescing prevents lagging behind during fast typing: while more
-;; keys wait in the queue (poll-key), run only ide-step (about 600 steps)
-;; instead of step+render (about 2,400 steps). Render ONCE when the queue is
-;; empty.
+;; keys wait in the queue, run only ide-step instead of step+render.  The poll
+;; itself still passes through the one IDE input owner.
 (defun %ide-drain-pending (state)
   (if (eq (ide-state-message state) 1015)
       state
@@ -1132,22 +1325,47 @@
          (if k
              (%ide-drain-pending (ide-step state k))
              state))
-       (poll-key))))
+       (%ide-idle 4 nil nil nil nil nil nil nil nil))))
+
+;; One nonblocking IDE loop.  Empty polls advance at most one self-capped pass
+;; and one blink phase; an input handoff restores stale paint and forces the
+;; cursor visible before dispatch.
+(defun %ide-poll (state)
+  ((lambda (key)
+     (if key
+         (progn
+           (%ide-clear 't)
+           (%ide-blink state 't)
+           ((lambda (next)
+              (if (eq (ide-state-message next) 1015)
+                  (%ide-persist-state (%ide-state-with-message next nil))
+                  (ide-run (ide-render next))))
+            (%ide-drain-pending (ide-step state key))))
+         (let* ((idle (symbol-value (quote %ide-idle)))
+                (phase (car (cdr idle)))
+                (painted
+                 (if (< phase 0)
+                     (%ide-start state)
+                     (if (= phase 1)
+                         (%ide-scan)
+                         (if (> phase 1)
+                             (let* ((answer
+                                     (if (= (mod phase 2) 0)
+                                         (%ide-close) (%ide-open))))
+                               (if answer
+                                   (if (= answer 0)
+                                       (%ide-clear nil)
+                                       (%ide-paint answer))
+                                   nil))
+                             nil)))))
+           (progn (%ide-blink state painted) (%ide-poll state)))))
+   (%ide-idle 4 nil nil nil nil nil nil nil nil)))
 
 ;; C-x C-c is the only editor exit. RUN/STOP remains exclusively the global
-;; evaluation abort, and ESC remains a minibuffer cancel key. The exit marker
-;; stops queue draining before a later key can consume it; persistence happens
-;; before returning to the REPL.
+;; evaluation abort, and ESC remains a minibuffer cancel key. Persistence runs
+;; once before the nonblocking poll loop and after every rendered input batch.
 (defun ide-run (state)
-  ((lambda (saved-state)
-     ((lambda (key)
-        ((lambda (next)
-           (if (eq (ide-state-message next) 1015)
-               (%ide-persist-state (%ide-state-with-message next nil))
-               (ide-run (ide-render next))))
-         (%ide-drain-pending (ide-step saved-state key))))
-      (read-key)))
-   (%ide-persist-state state)))
+  (%ide-poll (%ide-persist-state state)))
 
 ;; ---- Buffer persistence plus MULTIPLE named buffers (hardware user finding/request,
 ;; 2026-07-05) ----
@@ -1232,8 +1450,20 @@
 (defun ide-buffers ()
   (%ide-buffers-names (%ide-buffers-alist)))
 
+(defun %ide-init (state)
+  (let* ((buffer (ide-state-buffer state))
+         (point (cdr (ide-buffer-point buffer)))
+         (columns (ide-state-render-columns state))
+         (rows (ide-state-render-rows state))
+         (idle (cons (cons (%frame-low) 't)
+                     (list -1 point 0 0 (ide-current-line buffer) 0 0
+                           (cons 0 0) (cons 0 0) nil
+                           (ide-cursor-row state rows) columns))))
+    (progn (set-symbol-value (quote %ide-idle) idle) state)))
+
 (defun ide (&rest name)
   (%ide-store-buffer
    (ide-state-buffer
-    (ide-run (ide-render (ide-make-state
-                          (%ide-resume-buffer (if name (car name) nil))))))))
+    (ide-run (%ide-init (ide-render (ide-make-state
+                                     (%ide-resume-buffer
+                                      (if name (car name) nil)))))))))

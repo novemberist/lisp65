@@ -1,0 +1,74 @@
+{
+  "format": "lisp65-c2-v17-editing-surface-polish-pricing-contract-v1",
+  "recorded_on": "2026-08-25",
+  "status": "host-only-pricing",
+  "commission_commit": "60599dbb",
+  "scope": {
+    "included": [
+      "shared parenthesis and quote matcher",
+      "blinking cursor for the Bank-2 line editor and IDE",
+      "parked Comfort compatibility at the shared matcher seam"
+    ],
+    "excluded": [
+      "product or library source changes",
+      "WPLTO",
+      "product link",
+      "media",
+      "emulator acceptance",
+      "device contact",
+      "native C fallback REPL matcher claim",
+      "parked Comfort acceptance claim"
+    ]
+  },
+  "delivery_baseline": {
+    "device_receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.6-item1-d5-result-receipt.json",
+    "free": {
+      "symbol_slots": 105,
+      "namepool_bytes": 1413
+    },
+    "minimum_free": {
+      "symbol_slots": 32,
+      "namepool_bytes": 384
+    },
+    "loaded_library_roles": [
+      "v16core"
+    ],
+    "absent_library_roles": [
+      "repl-comfort"
+    ]
+  },
+  "matcher": {
+    "single_source": "lib/sexp-depth.lisp",
+    "line_limit": 250,
+    "ide_fill_column": 79,
+    "idle_chunk_codes": 3,
+    "maximum_idle_chunk_frames": 0.5,
+    "lexical_rules": [
+      "parentheses inside strings do not match",
+      "parentheses after a line comment do not match",
+      "escaped quotes do not terminate strings",
+      "unmatched input returns no partner",
+      "the hot scanner allocates no cells",
+      "the IDE adapter scans the packed line directly and never materializes a code list",
+      "no forward, opening or closing pass runs atomically on the input-dispatch path"
+    ]
+  },
+  "blink": {
+    "half_period_frames": 32,
+    "frame_counter_low": "0xff83",
+    "hardware_candidate": {
+      "attribute_bit": 4,
+      "requires_extended_attributes": true,
+      "requires_all_surface_rows_writable": true
+    },
+    "software_candidate": {
+      "polls_only_while_waiting_for_input": true,
+      "uses_existing_frame_counter": true,
+      "new_resident_bytes": 0,
+      "new_timer_owner": false,
+      "new_input_owner": false,
+      "must_restore_visible_cursor_before_dispatch": true
+    }
+  },
+  "decision_rule": "return one priced matcher form and one priced blink form; implementation remains closed until review accepts the prices"
+}

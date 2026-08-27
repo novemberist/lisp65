@@ -1,0 +1,43 @@
+{
+  "format": "lisp65-c2-v17-init-l65-pricing-contract-v1",
+  "scope": "host-only pricing; no product source change, WPLTO, product link, medium, or device contact",
+  "selected_seam": {
+    "owner": "%repl-banner",
+    "form": "evaluate (load \"init.l65\") before the existing banner body",
+    "ordering": [
+      "repl setjmp installed",
+      "native toplevel marked active",
+      "screen initialized",
+      "INIT.L65 load/evaluation attempted once",
+      "banner and native prompt"
+    ]
+  },
+  "contracts": {
+    "absence": "missing INIT.L65 returns NIL without output, allocation, or retry",
+    "failure": "reader, load, or VM evaluation failure uses the normal numeric error seam and reaches a live native lisp65> prompt",
+    "run_stop": "existing RUN/STOP fail-closed path is unchanged",
+    "prompt": "no canonical prompt swap and no Comfort dependency",
+    "publication": "an externally appended definition resolves and executes against the exact final static-plane authority"
+  },
+  "capacity_floors": {
+    "free_symbol_slots": 32,
+    "free_name_bytes": 384
+  },
+  "implementation_bars": {
+    "new_product_symbol_slots": 0,
+    "new_product_name_bytes": 0,
+    "resident_delta_bytes_max": 0,
+    "bank2_object_bytes_max": 255,
+    "new_product_links_authorized": 0,
+    "new_device_contacts_authorized": 0
+  },
+  "required_mutations": [
+    "hook-before-setjmp",
+    "missing-file-treated-as-error",
+    "failure-returns-from-repl",
+    "retry-init-after-abort",
+    "later-form-masks-earlier-vm-error",
+    "external-entry-not-published",
+    "external-caller-loses-final-static-owner"
+  ]
+}
