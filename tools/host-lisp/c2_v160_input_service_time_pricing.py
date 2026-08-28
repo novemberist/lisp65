@@ -39,6 +39,10 @@ READ_LINE = ROOT / "lib/stdlib-read-line.lisp"
 COMFORT = ROOT / "lib/repl-comfort.lisp"
 RESIDENT = ROOT / "config/c2-v160-comfort-repl-resident-suite.json"
 DISK_SUITE = ROOT / "tests/bytecode/libs/p0-repl-comfort.json"
+LIVE_EDITOR_SUITES = (
+    ROOT / "tests/bytecode/libs/p0-stdlib-ship-input-wait-base.json",
+    ROOT / "tests/bytecode/libs/p0-ide-lib.json",
+)
 FIRST_RED = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
     "c2.3-v1.6-items12-input-first-red-device-receipt.json"
@@ -343,12 +347,74 @@ def combined_suite(source_path: Path, expr: str, expected: str,
     return suite
 
 
+def live_function_directory(suite: dict[str, Any],
+                            source_path: Path) -> dict[str, Any]:
+    """Replace the historical editor slice with its live owned selection.
+
+    Historical service-time receipts intentionally keep their sealed function
+    inventory.  A live claim removes every function defined by the current
+    line-editor/shared-scanner sources, then restores exactly the population
+    selected by the current line-editor and IDE suites.  Thus the route keeps
+    its unchanged dependency population without treating the sealed Comfort
+    directory as authority for the live editor slice.
+    """
+    authorities = (source_path.resolve(), (ROOT / "lib/sexp-depth.lisp").resolve())
+    names: list[str] = []
+    rows: list[dict[str, Any]] = []
+    for path in authorities:
+        require(path.is_file() and not path.is_symlink(),
+                f"live function source absent: {path}")
+        raw = path.read_bytes()
+        forms = COMPILER.parse_all(raw.decode("utf-8"))
+        source_names = [form[1] for form in forms
+                        if isinstance(form, list) and len(form) >= 4
+                        and form[0] == "defun" and isinstance(form[1], str)]
+        require(source_names and len(source_names) == len(set(source_names)),
+                f"live function source has no/duplicate defuns: {path}")
+        names.extend(source_names)
+        rows.append({"path": path.relative_to(ROOT).as_posix(),
+                     "bytes": len(raw), "sha256": sha(raw),
+                     "defuns": source_names})
+    defined = list(dict.fromkeys(names))
+    defined_set = set(defined)
+    selected: list[str] = []
+    suite_rows = []
+    for path in LIVE_EDITOR_SUITES:
+        raw = path.read_bytes()
+        live_suite = P0._read_suite(str(path))
+        owned = [name for name in live_suite["functions"]
+                 if name in defined_set and name not in selected]
+        selected.extend(owned)
+        suite_rows.append({"path": path.relative_to(ROOT).as_posix(),
+                           "bytes": len(raw), "sha256": sha(raw),
+                           "selected_owned_functions": owned})
+    require(set(selected) == defined_set,
+            "live editor suites do not select every current owned defun")
+    historical_owned = [name for name in suite["functions"]
+                        if name in defined_set]
+    retained = [name for name in suite["functions"] if name not in defined_set]
+    suite["functions"] = list(dict.fromkeys(retained + selected))
+    return {"authority": "parsed live sources plus live owner-suite selection",
+            "sources": rows, "derived_functions": defined,
+            "owner_suites": suite_rows,
+            "replaced_historical_editor_functions": historical_owned,
+            "selected_live_editor_functions": selected,
+            "directory_functions": list(suite["functions"])}
+
+
 def execute_route(source_path: Path, route: str, count: int,
-                  batch_cap: int | None = None) -> dict[str, Any]:
+                  batch_cap: int | None = None, *,
+                  function_world: str = "historical-sealed") -> dict[str, Any]:
     events = [97] * count + [13]
     expr = ("(read-line)" if route == "old-key-event"
             else "(%repl-read \"\" nil 0 80 0)")
     suite = combined_suite(source_path, expr, "a" * count, events)
+    directory_authority = None
+    if function_world == "live-artifacts":
+        directory_authority = live_function_directory(suite, source_path)
+    else:
+        require(function_world == "historical-sealed",
+                f"unknown responsiveness function world: {function_world}")
     (heap, _names, _code, _entry_flags, resident_flags, _bundle,
      directory, _cases, entries, _inliner) = P0._compile_suite(suite)
     macros = P0._macro_symbol_objs(heap, {}, resident_flags)
@@ -378,7 +444,7 @@ def execute_route(source_path: Path, route: str, count: int,
                 f"{route} boundary count drift: {len(points)}")
     first, last = points[0], points[-1]
     screens = sum(first <= step < last for step in vm.screen_steps)
-    return {
+    value = {
         "characters": count,
         "dynamic_vm_steps": last - first,
         "vm_steps_per_character": (last - first) / count,
@@ -387,6 +453,10 @@ def execute_route(source_path: Path, route: str, count: int,
         "boundary_count": len(points),
         "heap_cells_per_character": 4 if route == "old-key-event" else 1,
     }
+    if directory_authority is not None:
+        value["function_world"] = function_world
+        value["function_directory_authority"] = directory_authority
+    return value
 
 
 def compile_sizes(source: str) -> dict[str, int]:

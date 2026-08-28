@@ -1,0 +1,167 @@
+{
+  "choreography": {
+    "both_media_uploaded_and_read_back_before_boot": true,
+    "final_stops": 1,
+    "fresh_BASIC_first": true,
+    "one_form_per_submission": true,
+    "physical_bank0_captures": 1,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.8.0-substrate-neutrality",
+      "v1.8.0-release-D5",
+      "v1.8.0-performance-smoke"
+    ],
+    "excludes": [
+      "Capture activation",
+      "lossless user input",
+      "Comfort",
+      "Matcher/Blink",
+      "Block-3",
+      "$22",
+      "publication"
+    ],
+    "green_consequence": "owner Ship halt becomes decidable",
+    "host_qualified_only": [
+      "Capture infrastructure present",
+      "94/94 laboratory loss wall"
+    ],
+    "known_issue_stays_open": "v1.5 fast-typing input loss"
+  },
+  "configuration": {
+    "INIT_L65_on_product_or_library": false,
+    "available_optional_roles": [
+      "v16core"
+    ],
+    "capture_initial_tail": 255,
+    "capture_lifecycle": "closed/inert",
+    "cursor_navigation": "not an acceptance row; the optional v16core library remains unloaded in the release-terminal measurement world",
+    "loaded_library_roles": [],
+    "measurement_world": "v1.8.0 substrate-only release candidate",
+    "native_repl_input_boundary": "the lisp65> C line collector has no Cursor Left/Right editor; unhandled PETSCII controls fail visibly as reader-invalid-token"
+  },
+  "decision_table": {
+    "Cursor-Left-at-native-lisp65-prompt": "unsupported control at the raw C line collector; its visible reader-invalid-token is a session-protocol error, not a substrate product red",
+    "all-neutrality-performance-and-D5-green": "owner may say Ship",
+    "daily-use-blocker": "stop; no Ship",
+    "fast-typing-observation": "not an acceptance row; Capture is deliberately closed",
+    "publication": "remains closed until later owner Publish"
+  },
+  "format": "lisp65-c2-v180-substrate-d-session-v3",
+  "headroom_postcondition": {
+    "counter_addresses": "derive nsym and npool from the substrate ELF",
+    "counter_view": "one final physical Bank-0 stopped-state capture",
+    "minimum": {
+      "free_name_bytes": 384,
+      "free_symbol_slots": 32
+    },
+    "observation_point": "after all rows in the same fresh session"
+  },
+  "media": {
+    "library": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.8.0-substrate-media/library/lisp65-library.d81",
+      "remote_name": "V180L.D81",
+      "sha256": "9df3628a4ca155ea6b009128950e1aa0bb20664bcab7bf11c6b34bf3504c4558"
+    },
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.8.0-substrate-media/shared-system/lisp65-product.d81",
+      "remote_name": "V180P.D81",
+      "sha256": "d2e927c300cf143a631e9531dc0daef8e37fba1c1edea76a842f3da02dd73c57"
+    }
+  },
+  "recorded_on": "2026-08-28",
+  "rows": [
+    {
+      "actions": [
+        "cold boot the substrate product medium"
+      ],
+      "expect": [
+        "WORKBENCH 1.7.0",
+        "native lisp65>",
+        "no INIT.L65 output or error before the banner"
+      ],
+      "id": "S-boot-and-init-absence"
+    },
+    {
+      "actions": [
+        "press Delete at the empty lisp65> input boundary",
+        "type (list 1 4 without Return",
+        "press Delete",
+        "type 3)",
+        "Return"
+      ],
+      "expect": [
+        "leading Delete is a boundary no-op",
+        "result is (1 3)",
+        "native input remains responsive"
+      ],
+      "id": "S-native-line-input-and-delete"
+    },
+    {
+      "expect": [
+        "ordinary type error",
+        "no red frame",
+        "native lisp65> returns practically immediately"
+      ],
+      "follow_up": {
+        "form": "(list 1 3)",
+        "oracle": {
+          "kind": "exact",
+          "value": "(1 3)"
+        }
+      },
+      "form": "(>= nil 32)",
+      "id": "S-abort-recovery"
+    },
+    {
+      "form": "(defun v18-perf-probe (x) (+ x 1))",
+      "id": "D-setup-published-call",
+      "oracle": {
+        "kind": "exact",
+        "value": "v18-perf-probe"
+      }
+    },
+    {
+      "form": "(time (car (cdr (list 1 2))))",
+      "id": "D-list-read",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "2"
+      }
+    },
+    {
+      "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+      "id": "D-list-write",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "(9 2)"
+      }
+    },
+    {
+      "form": "(time (string-ref \"abc\" 1))",
+      "id": "D-string-op",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "98"
+      }
+    },
+    {
+      "form": "(time (v18-perf-probe 41))",
+      "id": "D-published-call",
+      "oracle": {
+        "kind": "time",
+        "max_frames": 2,
+        "value": "42"
+      }
+    }
+  ],
+  "status": "ready-owner-Ship-contact"
+}

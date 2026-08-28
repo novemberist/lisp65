@@ -1,9 +1,9 @@
-# lisp65 1.7.0 User Guide
+# lisp65 1.8.0 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.7.0` release bundle
+- The extracted `lisp65-1.8.0` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -21,7 +21,7 @@ python3 verify.py
 ```
 
 Do not use a bundle that fails. The verifier checks every packaged file, all 19
-product artifacts, the three v1.7 library-medium roles, and the embedded
+product artifacts, the three v1.8 library-medium roles, and the embedded
 hardware-acceptance evidence without using the live repository or network.
 
 ## Start from BASIC and perform the one-drive swap
@@ -40,7 +40,7 @@ hardware-acceptance evidence without using the live repository or network.
 
 5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
    `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL.
-6. To activate the optional cursor navigation retained in v1.7, mount
+6. To activate the optional cursor navigation retained in v1.8, mount
    `media/lisp65-library.d81` and submit:
 
    ```lisp
@@ -85,7 +85,7 @@ denial is the applicable protection in this profile.
 (load-lib "demo-lib")             ; load the compiled library
 ```
 
-The selected v1.7 product checks for `INIT.L65` after the resident world is
+The selected v1.8 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium deliberately omits the
 file, so the normal release boot takes the silent absence path. On a derived
 medium that supplies it, the file is evaluated once per cold boot. An open or
@@ -96,14 +96,27 @@ to right. If a later form has a reader error, earlier forms on that line have
 already run; durable changes made by them are not rolled back. The error
 applies to the remaining input, not to results already printed.
 
-After `(require 'v16core)`, the REPL line is editable in insertion mode.
-Cursor Left/Right and `C-b`/`C-f` move by one character; `C-a` and `C-e` move
-to the line endpoints; Delete removes backward and `C-d` removes forward.
-Movement or deletion beyond an endpoint is a no-op. The cursor-following
-viewport preserves the 250-character line limit. This is the focused native
-line editor, not the deferred balanced multiline/history Comfort REPL.
+The native `lisp65>` input line is a small append/Delete collector, not a
+cursor editor. Cursor Left or Cursor Right there visibly rejects the current
+line with `*** reader: invalid token`; it does not move within the line. The
+prompt remains usable, so correct direct prompt input with Delete and retype
+the suffix.
 
-The input queue has one active product owner. The v1.7 editor and evaluator do
+After `(require 'v16core)`, explicit calls to `(read-line)` use the focused
+insertion-mode editor. Within that call, Cursor Left/Right and `C-b`/`C-f`
+move by one character; `C-a` and `C-e` move to the endpoints; Delete removes
+backward and `C-d` removes forward. Movement or deletion beyond an endpoint
+is a no-op. The cursor-following viewport preserves the 250-character limit.
+This does not replace the surrounding native prompt collector and is not the
+deferred balanced multiline/history Comfort REPL.
+
+To make cursor-aware `read-line` available from startup, a derived boot medium
+may place `(require 'v16core)` in `INIT.L65`, provided that the same boot-visible
+medium also contains the `v16core` artifact and its library-index row. This is
+an initialization convenience for explicit `read-line` users; the native
+`lisp65>` collector remains append/Delete-only.
+
+The input queue has one active product owner. The v1.8 editor and evaluator do
 not race to acknowledge the same ordinary key event. The capture-based Comfort
 path that motivated this rule is deliberately absent from the selected v1.7
 medium and remains deferred as one unit.
@@ -125,7 +138,7 @@ Example:
 
 ### The v1.7 library medium
 
-The selected v1.7 library medium contains one package, `v16core`, which
+The selected v1.8 library medium contains one package, `v16core`, which
 installs the accepted cursor-aware input library. Mount the library D81,
 remount M65D if it is already active, and require it once per cold session:
 
@@ -137,7 +150,7 @@ remount M65D if it is already active, and require it once per cold session:
 Restore the product or work disk afterward and run `(m65d-remount)` again
 before loading or saving through M65D. The optional v1.5 package set
 (`string-extra`, `inspect`, `place`, and `defstruct`) is not included in the
-v1.7 selected library image and is outside the v1.7 hardware claim.
+v1.8 selected library image and is outside the v1.8 hardware claim.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two

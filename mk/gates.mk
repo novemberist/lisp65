@@ -3240,3 +3240,64 @@ c2-v170-release-package-selftest: c2-v170-public-clean-build-selftest
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v170_release_package.py selftest
 
 check-source: c2-v170-release-package-selftest
+
+.PHONY: c2-v18-block1-symbol22-attribution-check c2-v18-capture-reopening-pricing-check c2-v18-capture-hybrid-first-red-check c2-v18-capture-hybrid-source-world-resume-check c2-v18-capture-hybrid-responsiveness-repair-check c2-v18-capture-hybrid-product-check c2-v18-capture-hybrid-acceptance-preflight-check c2-v18-capture-hybrid-native-client-final-red-check
+c2-v18-block1-symbol22-attribution-check: c2-v170-release-package-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_block1_symbol22_attribution.py --check
+
+c2-v18-capture-reopening-pricing-check: c2-v18-block1-symbol22-attribution-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_reopening_pricing.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_reopening_pricing.py check
+
+c2-v18-capture-hybrid-first-red-check: c2-v18-capture-reopening-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_product_card.py check-red
+
+c2-v18-capture-hybrid-source-world-resume-check: c2-v18-capture-hybrid-first-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_product_card.py check-resume-red
+
+c2-v18-capture-hybrid-responsiveness-repair-check: c2-v18-capture-hybrid-source-world-resume-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_responsiveness_repair.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_responsiveness_repair.py check
+
+c2-v18-capture-hybrid-product-check: c2-v18-capture-hybrid-responsiveness-repair-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_product_card.py check
+
+c2-v18-capture-hybrid-acceptance-preflight-check: c2-v18-capture-hybrid-product-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_acceptance_preflight.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_acceptance_preflight.py check
+
+check-source: c2-v18-capture-hybrid-acceptance-preflight-check
+
+c2-v18-capture-hybrid-native-client-final-red-check: c2-v18-capture-hybrid-acceptance-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v18_capture_hybrid_native_client_card.py check-red
+
+check-source: c2-v18-capture-hybrid-native-client-final-red-check
+
+.PHONY: c2-v180-substrate-media-check
+c2-v180-substrate-media-check: c2-v18-capture-hybrid-native-client-final-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_substrate_media.py check
+
+check-source: c2-v180-substrate-media-check
+
+.PHONY: c2-v180-substrate-device-result-check
+c2-v180-substrate-device-result-check: c2-v180-substrate-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_substrate_device_result.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_substrate_device_result.py check
+
+check-source: c2-v180-substrate-device-result-check
+
+.PHONY: c2-v180-release-card-check c2-v180-release-media-check c2-v180-candidate-seal-check c2-v180-public-clean-build-selftest
+c2-v180-release-card-check: c2-v180-substrate-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_release_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_release_card.py selftest
+
+c2-v180-release-media-check: c2-v180-release-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_release_media.py check
+
+c2-v180-candidate-seal-check: c2-v180-release-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_candidate_seal.py check
+
+c2-v180-public-clean-build-selftest: c2-v180-candidate-seal-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_public_clean_build.py selftest
+
+check-source: c2-v180-public-clean-build-selftest

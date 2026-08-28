@@ -70,6 +70,51 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
+## Active input limitation: Cursor Left/Right at the native `lisp65>` prompt
+
+Status: **documented; machine-replayed on sealed v1.7 and v1.8 ELFs**
+
+The native `lisp65>` prompt uses a small C line collector, not the Bank-2
+cursor editor. It supports ordinary append input and backward Delete, but it
+does not implement Cursor Left or Cursor Right. Pressing either cursor key at
+that prompt aborts the current input line with:
+
+```text
+*** reader: invalid token
+```
+
+This is a visible rejection of the PETSCII control code, not an early Return
+and not evaluation of the partial line. The prompt remains usable afterward.
+Use Delete and retype the suffix when editing directly at `lisp65>`.
+
+The optional `v16core` package does not replace this C prompt collector. After
+`(require 'v16core)`, cursor navigation belongs to explicit calls of the Lisp
+`(read-line)` function: Cursor Left/Right, `C-b`/`C-f`, `C-a`/`C-e`, backward
+Delete and `C-d` operate while that function is collecting its returned
+string. The v1.6 hardware evidence exercised exactly this `(read-line)` path;
+it did not exercise Cursor Left on the surrounding `lisp65>` prompt.
+
+This remains true when `v16core` is loaded from `INIT.L65`: the boot hook
+returns to the same fixed resident C loop. The sealed v1.7 release ELF already
+routes Cursor Left to stable error code 5 before parsing or evaluation, so the
+behavior is not a v1.8 regression. The earlier Block-3 acceptance plan also
+did not enter explicit `(read-line)` and therefore supplied no contrary
+native-prompt evidence.
+
+For programs that obtain input through `(read-line)`, the immediate workaround
+is to make `v16core` visible and require it before the first such call. This can
+be done interactively after mounting the library medium. A derived boot medium
+that contains both `v16core` (and its index row) and an `INIT.L65` may instead
+put `(require 'v16core)` in that startup file. This enables cursor-aware
+explicit `read-line` calls from boot; it still does **not** add Cursor
+Left/Right editing to the surrounding native `lisp65>` prompt.
+
+v1.9 has a registered product question with two separately priced forms: make
+known navigation controls harmless no-ops in the minimal C collector, or route
+the prompt through/default-load the Bank-2 editor. Until one of those forms is
+accepted, no release claim may describe Cursor Left/Right at bare `lisp65>` as
+supported.
+
 ## Historical v1.5 optional-library limitation: `defstruct`
 
 v1.5 delivers positional, option-free `defstruct`. A definition publishes a

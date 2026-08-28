@@ -634,6 +634,79 @@ def compile_sizes(forms: list[Any]) -> dict[str, int]:
     return result
 
 
+def walk_form(form: Any) -> list[Any]:
+    """Return every list node in one parsed Lisp form."""
+    nodes: list[Any] = []
+    if isinstance(form, list):
+        nodes.append(form)
+        for item in form:
+            nodes.extend(walk_form(item))
+    return nodes
+
+
+def public_native_fallback_gate(editor: str) -> dict[str, Any]:
+    """Prove the native fallback edge without pinning source spelling.
+
+    A successor may bind the `(nthcdr 8 state)` suffix once and consume the
+    binding from the branch.  The historic literal checker mistook that
+    ownership improvement for removal of the fallback.
+    """
+    poll = next((form for form in defuns(editor)
+                 if form[1] == "%rl-poll"), None)
+    require(poll is not None, "%rl-poll definition absent")
+    suffix = ["nthcdr", 8, "state"]
+    aliases = {
+        binding[0]
+        for node in walk_form(poll)
+        if len(node) >= 2 and node[0] in ("let", "let*")
+        and isinstance(node[1], list)
+        for binding in node[1]
+        if isinstance(binding, list) and len(binding) == 2
+        and binding[1] == suffix
+    }
+    conditions: list[Any] = [suffix, *sorted(aliases)]
+    edges = [
+        node for node in walk_form(poll)
+        if len(node) == 4 and node[0] == "if"
+        and node[1] in conditions
+        and ["%rl-render", "nil", 0, 0, 0, 0, -1]
+            in walk_form(node[2])
+        and ["key-event", 1] in walk_form(node[3])
+    ]
+    mode1 = [node for node in walk_form(poll)
+             if node == ["key-event", 1]]
+    require(len(edges) == 1 and len(mode1) == 1,
+            "public/native read-line fallback edge changed")
+    return {
+        "status": "passed-structural-fallback-edge",
+        "suffix": "nthcdr(8,state)",
+        "suffix_authority": ("single-bound-suffix" if aliases
+                             else "inline-suffix"),
+        "native_sink": "key-event(mode=1)",
+        "extended_sink": "%rl-render(clear-sentinel)",
+    }
+
+
+def public_native_fallback_mutations(editor: str) -> list[str]:
+    cases = {
+        "remove-native-mode1": editor.replace(
+            "(key-event 1)", "(key-event 0)", 1),
+        "reverse-native-and-extended-sinks": editor.replace(
+            "(%rl-render nil 0 0 0 0 -1)\n            (key-event 1)",
+            "(key-event 1)\n            (%rl-render nil 0 0 0 0 -1)", 1),
+    }
+    rejected: list[str] = []
+    for name, source in cases.items():
+        require(source != editor, f"fallback mutation did not apply: {name}")
+        try:
+            public_native_fallback_gate(source)
+        except FidelityError:
+            rejected.append(name)
+    require(rejected == list(cases),
+            f"fallback mutation survived: {set(cases) - set(rejected)}")
+    return rejected
+
+
 def hybrid_editor_selected() -> bool:
     """Derive the successor from the consumed source, not process phase."""
     editor = EDITOR.read_text(encoding="utf-8")
@@ -691,9 +764,7 @@ def lifecycle_gate() -> dict[str, Any]:
                 and "(poke 255 141 next)" in editor
                 and "(if (= code 160) 32 code)" in editor,
                 "raw scalar consumer/WYSIWYG boundary drift")
-    require(editor.count("(key-event 1)") == 1
-            and "(if (nthcdr 8 state)" in editor,
-            "public/native read-line fallback changed")
+    fallback = public_native_fallback_gate(editor)
     disable = "(poke 255 141 255)"
     require(comfort.count(disable) == 3
             and comfort.count("(poke 255 140 0)") == 2
@@ -714,6 +785,9 @@ def lifecycle_gate() -> dict[str, Any]:
                      "native longjmp recovery"],
         "public_key_event_abi_changed": False,
         "native_repl_fallback_changed": False,
+        "public_native_fallback": fallback,
+        "public_native_fallback_mutations":
+            public_native_fallback_mutations(editor),
     }
 
 

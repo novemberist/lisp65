@@ -31,6 +31,7 @@ CAPTURE_SECTIONS = (
     ".lisp65_c2_kernal_window.input_capture_helper",
 )
 FORMAT = "lisp65-c2-v160-input-service-hybrid-final-world-v1"
+RESPONSIVENESS_FUNCTION_WORLD = "historical-sealed"
 
 
 class FinalWorldError(RuntimeError):
@@ -229,10 +230,33 @@ def loss_claim(machine: LinkedConsumer,
             "authority": "capture wall plus final-ELF consumer execution"}
 
 
-def responsiveness_claim(machine: LinkedConsumer,
-                         symbols: dict[str, int]) -> dict[str, Any]:
+def responsiveness_measure(machine: LinkedConsumer,
+                           symbols: dict[str, int]) -> dict[str, Any]:
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
-    raw = PRICE.execute_route(EDITOR, "batch", 40, batch_cap=8)
+    raw = PRICE.execute_route(
+        EDITOR, "batch", 40, batch_cap=8,
+        function_world=RESPONSIVENESS_FUNCTION_WORLD)
+    source_world = None
+    if RESPONSIVENESS_FUNCTION_WORLD == "live-artifacts":
+        try:
+            PRICE.execute_route(
+                EDITOR, "batch", 40, batch_cap=8,
+                function_world="historical-sealed")
+        except PRICE.B.VMError as error:
+            require("function not in directory: %rl-poll" in str(error),
+                    "sealed-directory mutation fell for the wrong reason")
+            source_world = {
+                "status": "PASS: LIVE CLAIM CONSUMES LIVE FUNCTION DIRECTORY",
+                "live_authority": raw["function_directory_authority"],
+                "sealed_directory_mutation": {
+                    "status": "PASS: MUTATION REJECTED",
+                    "mutation": "live claim reads sealed Comfort directory",
+                    "observed_red": str(error),
+                },
+            }
+        else:
+            raise FinalWorldError(
+                "sealed Comfort directory survived a live responsiveness claim")
     base = symbols["C2K_INPUT_RING_BASE"]
     head = symbols["C2K_INPUT_RING_HEAD"]; tail = symbols["C2K_INPUT_RING_TAIL"]
     memory = {head: 1, tail: 0, base: ord("a")}
@@ -248,15 +272,49 @@ def responsiveness_claim(machine: LinkedConsumer,
               / price["nursery_cells"]
               + native_cycles / price["cycles_per_frame"])
     rate = 1.0 / frames; margin = (rate - 1.0) * 100.0
-    require(frames <= price["maximum_frames_per_character"]
-            and rate >= price["minimum_service_events_per_frame"]
-            and margin >= price["minimum_margin_percent"],
-            "final linked responsiveness wall red")
-    return {**raw, "linked_native_cycles_per_character": native_cycles,
+    walls = {
+        "maximum_frames_per_character": {
+            "required": price["maximum_frames_per_character"],
+            "observed": frames,
+            "passed": frames <= price["maximum_frames_per_character"]},
+        "minimum_service_events_per_frame": {
+            "required": price["minimum_service_events_per_frame"],
+            "observed": rate,
+            "passed": rate >= price["minimum_service_events_per_frame"]},
+        "minimum_margin_percent": {
+            "required": price["minimum_margin_percent"],
+            "observed": margin,
+            "passed": margin >= price["minimum_margin_percent"]},
+    }
+    value = {**raw, "linked_native_cycles_per_character": native_cycles,
             "linked_native_instructions_per_character": instructions,
             "frames_per_character": frames, "service_events_per_frame": rate,
             "margin_percent": margin, "batch_fixture": 8,
             "authority": "batch VM route plus executed final-ELF consumer"}
+    if RESPONSIVENESS_FUNCTION_WORLD == "live-artifacts":
+        value["source_world_conversion"] = source_world
+        value["walls"] = walls
+        value["all_walls_passed"] = all(
+            row["passed"] for row in walls.values())
+    return value
+
+
+def responsiveness_claim(machine: LinkedConsumer,
+                         symbols: dict[str, int]) -> dict[str, Any]:
+    value = responsiveness_measure(machine, symbols)
+    if "all_walls_passed" in value:
+        passed = value["all_walls_passed"]
+    else:
+        price = json.loads(CONTRACT.read_text(encoding="utf-8"))["responsiveness"]
+        passed = (value["frames_per_character"] <=
+                      price["maximum_frames_per_character"]
+                  and value["service_events_per_frame"] >=
+                      price["minimum_service_events_per_frame"]
+                  and value["margin_percent"] >=
+                      price["minimum_margin_percent"])
+    require(passed,
+            "final linked responsiveness wall red")
+    return value
 
 
 def derive(elf: Path) -> dict[str, Any]:

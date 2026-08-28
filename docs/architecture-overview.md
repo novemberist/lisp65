@@ -88,11 +88,11 @@ cleared overlay code; unrelated fail-closed faults remain fail-closed.
 
 ## Media model
 
-Release 1.7.0 uses three D81 roles with one drive:
+Release 1.8.0 uses three D81 roles with one drive:
 
 - `L65SYS` is the immutable product image used for boot and library loading.
 - `lisp65-library.d81` carries the one-row `v16core` package used to activate
-  the v1.7 REPL line editor.
+  the v1.8 optional `(read-line)` editor.
 - A valid non-product 1581 image holds user files.
 
 M65D denies the product medium by identity and binds each transaction to disk

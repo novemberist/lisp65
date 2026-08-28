@@ -177,9 +177,10 @@
 ; Card-2 polling owner.  States without slot 10 are parked Comfort/history
 ; callers and retain their prior scalar or blocking input path.
 (defun %rl-poll (state)
-  (let* ((idle (car (nthcdr 10 state))))
+  (let* ((tail (nthcdr 8 state))
+         (idle (car (cdr (cdr tail)))))
     (if (not idle)
-        (if (nthcdr 8 state)
+        (if tail
             (%rl-render nil 0 0 0 0 -1)
             (key-event 1))
         (let* ((event (key-event 0)))

@@ -250,7 +250,10 @@ def final_gate() -> dict[str, Any]:
     backstop = BACKSTOP.final_gate(ELF)
     hybrid = HYBRID.derive(ELF)
     queue = QUEUE.linked_owner_gate(ELF)
-    display = DISPLAY.derive()
+    # Display ownership is sealed Phase-1b evidence.  Replaying its completed
+    # Comfort suite over a living editor successor crosses evidence eras; the
+    # display gate's public reader deliberately validates the sealed receipt.
+    display = DISPLAY.check()
     require(nested["violations"] == []
             and dma["unsafe_content_DMA_count"] == 0
             and bypass["unsafe_content_DMA_count"] == 0

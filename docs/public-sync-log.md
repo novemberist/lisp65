@@ -4,6 +4,25 @@ The public repository is a curated source snapshot with independent Git
 history. Each sync records its user-visible scope and contribution attribution
 here.
 
+## v1.8.0 — prepared 2026-08-28
+
+- Shipped the qualified native Capture/Hybrid substrate in a deliberately
+  closed state; activation and a lossless-input claim remain v1.9 work.
+- Re-proved the 94/94 laboratory loss wall, normalization parity,
+  responsiveness and queue-single-owner properties on the final ELF.
+- Retained native `INIT.L65`, the A0 empty-journal recovery path, composed
+  Bank-2 ownership, MAP geometry and delivered-byte closure from v1.7.
+- Documented that Cursor Left/Right editing belongs to explicit `(read-line)`
+  through `v16core`, not to the bare native `lisp65>` C collector; replay of
+  the sealed v1.7 and v1.8 ELFs proves this is not a regression.
+- Kept Comfort, matcher/blink and the native Capture client outside the
+  selected product and its release claims.
+- External contributions included in this sync: **none**.
+
+The corresponding public commit, tag, and GitHub release are prepared locally.
+No public ref or release is changed until the owner gives publication
+authorization.
+
 ## v1.7.0 — prepared 2026-08-27
 
 - Added the native, once-per-boot `INIT.L65` hook after resident readiness;

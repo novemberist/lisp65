@@ -871,6 +871,14 @@ workbench-product-v170:
 		python3 tools/host-lisp/c2_v170_public_product.py build; \
 	fi
 
+.PHONY: workbench-product-v180
+workbench-product-v180:
+	@if test -f build/c2.3/v1.8.0-public-selected/candidate-manifest.json; then \
+		python3 tools/host-lisp/c2_v180_public_product.py check; \
+	else \
+		python3 tools/host-lisp/c2_v180_public_product.py build; \
+	fi
+
 workbench-product-footprint-report: workbench-product
 	@test -f build/c2.2/canonical-product/final/substitution-balance.json
 

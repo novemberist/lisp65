@@ -30,12 +30,12 @@
       (%banner-run runs run))))
 
 (defun %banner-subtitle ()
-  (let ((text "WORKBENCH 1.7.0"))
+  (let ((text "WORKBENCH 1.8.0"))
     (dotimes (index 15 nil)
       (screen-put-char (+ 48 index) 7 (string-ref text index) 15))))
 
 (defun %repl-banner ()
-  ; Native-only v1.7 boot hook.  Missing INIT.L65 is the ordinary silent NIL
+  ; Native-only v1.8 boot hook.  Missing INIT.L65 is the ordinary silent NIL
   ; result of load; failures use the installed native toplevel recovery.
   (load "init.l65")
   (%banner-runs)
