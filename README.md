@@ -7,7 +7,7 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 1.8.0**, using **Dialect V2**.
+The current release is **lisp65 1.9.0**, using **Dialect V2**.
 
 ## Highlights
 
@@ -20,10 +20,11 @@ The current release is **lisp65 1.8.0**, using **Dialect V2**.
 - Q8.7 fixed-point arithmetic, `(time form)`, `wait`, and `read-line`
 - A reproducible Ship Builder for standalone bootable application D81s
 - A lower-allocation editor renderer measured at about 3× the former speed
-- Optional `v16core` library with insertion-mode REPL cursor navigation
+- Native `lisp65>` prompt with insertion-mode cursor navigation
+- Lossless prompt input across garbage collection on physical hardware
 - Native once-per-boot `INIT.L65` hook with fail-safe prompt recovery
 - Faster fully derived empty-journal recovery
-- Qualified native Capture/Hybrid substrate, shipped closed for v1.9 activation
+- Native Capture/Hybrid input with one queue owner and a delivered ring consumer
 - Immediate non-persistent REPL expressions, with durable state changes kept on
   the transactional publication path
 - Visible `STAGING MEDIA`, `BUILDING HEAP`, and `LOADING LIBRARIES` boot phases
@@ -37,13 +38,13 @@ The current release is **lisp65 1.8.0**, using **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.8.0.tar.gz` from the
-[v1.8.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.8.0).
+Download `lisp65-1.9.0.tar.gz` from the
+[v1.9.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.9.0).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.8.0.tar.gz
-cd lisp65-1.8.0
+tar -xzf lisp65-1.9.0.tar.gz
+cd lisp65-1.9.0
 python3 verify.py
 ```
 
@@ -51,7 +52,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.8.0 release notes](docs/releases/1.8.0.md) for the complete change
+See the [1.9.0 release notes](docs/releases/1.9.0.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -69,13 +70,8 @@ summary and evidence boundary.
    ```
 
 5. Follow the three visible boot phases, then wait for the banner and REPL.
-6. Mount `media/lisp65-library.d81` and activate the optional REPL line editor:
-
-   ```lisp
-   (require 'v16core)
-   ```
-
-7. Restore `L65SYS` and load the composition:
+6. Use Cursor Left/Right, insertion and deletion directly at `lisp65>`.
+7. Load the composition from `L65SYS`:
 
    ```lisp
    (load-lib "ide")
@@ -91,7 +87,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.8.0.
+identity. There is no on-device disk formatter in 1.9.0.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -99,15 +95,15 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.8.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 1.9.0 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
 
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
-| Focused REPL editing | `v16core` adds insertion-mode cursor navigation to `(read-line)`. The bare `lisp65>` prompt remains a minimal C collector; balanced multiline input, history and Comfort are not delivered. | Capture is qualified but closed; native-client activation and Comfort remain later work. |
-| Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v1.8 makes no matcher/blink claim. |
+| Focused REPL editing | The native `lisp65>` prompt has lossless insertion-mode line editing. Balanced multiline input, history and Comfort are not delivered. | Type-ahead during evaluation and Comfort remain later work. |
+| Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v1.9 makes no matcher/blink claim. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | The C2D session store separates immutable code from mutable session state; dependency-aware reclamation remains later work. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
@@ -131,26 +127,26 @@ acceptance.
 
 ## Verification status
 
-Release 1.8.0 binds artifact set
-`cb6fee08d9f1b639a8d746edac0005e7398b02cf9acd781520ce3c99fc70d8ed`,
+Release 1.9.0 binds artifact set
+`518237bba41d6e1ff60f51de87e409ea9ccf62a819515dea00d288611ce3e079`,
 resident PRG
-`4200c960a881af4822e9092c51555966837a7729c362682a933ae67a23f28aac`
-and one-row library D81
-`a89f28c32306d84028c469f8ee0b0c6f0d0eb42532a925b5338a64183ccd4768`:
+`c91e342839901afa02516ce842bc32d1c077b9a4fa132911aef9d831906ccbff`:
 
-- insertion, mixed cursor/control movement, endpoint movement, backward and
-  forward deletion, and boundary no-ops passed on one physical MEGA65;
+- prompt-line insertion, cursor movement and deletion passed on one physical
+  MEGA65, with no native `invalid token` response;
+- a forced-collection input sequence ended with
+  `raw = seen = stored = taken = 136`;
 - an ordinary type error returned to a usable native prompt through the new
   retired-overlay execution backstop;
 - valid and failing `INIT.L65` variants ran once before the first prompt, with
   a failing form returning promptly to a usable native REPL;
-- the stopped D5 session retained 113 free symbol slots and 1,506 free name
+- the stopped D5 session retained 109 free symbol slots and 1,486 free name
   bytes, above the mandatory 32/384 user floor; and
-- two varied fresh public clones reproduced all 22 selected roles with zero
+- two varied fresh public clones reproduced all 19 selected roles with zero
   private evidence inputs.
 
 Exact hashes and claim limits are recorded in the
-[1.8.0 release notes](docs/releases/1.8.0.md). The maintained limitations and
+[1.9.0 release notes](docs/releases/1.9.0.md). The maintained limitations and
 retired 1.1 latency exception are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
@@ -179,12 +175,12 @@ With the pinned LLVM-MOS SDK and `c1541` installed, the public C2-lite build is:
 
 ```sh
 make clean
-make workbench-product-v180
+make workbench-product-v190
 ```
 
 The target uses the single C2 emitter, one WPLTO closure, and the canonical
-media packer. Its final gate requires all 19 product roles and the three-role
-`v16core` library medium to reproduce the sealed 1.8.0 artifact-set identity.
+media packer. Its final gate requires all 19 product roles to reproduce the
+sealed 1.9.0 artifact-set identity; the line editor is resident product freight.
 The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -193,7 +189,7 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
-- [Release Notes for 1.8.0](docs/releases/1.8.0.md)
+- [Release Notes for 1.9.0](docs/releases/1.9.0.md)
 - [Release Notes for 1.7.0](docs/releases/1.7.0.md)
 - [Release Notes for 1.6.0](docs/releases/1.6.0.md)
 - [Release Notes for 1.5.0](docs/releases/1.5.0.md)

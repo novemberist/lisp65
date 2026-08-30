@@ -140,7 +140,11 @@ void scr_clear(void) {
     crow = 0; ccol = 0;
 }
 
-void scr_cursor(uint8_t on) {
+/* Keep the public screen cursor behind a real target call boundary.  The
+ * fixed-Bank0 kb_cursor_off wrapper is intentionally tiny; without this
+ * boundary final LTO folds the complete screen-cell implementation into the
+ * fixed arena and overlaps Hot-BSS. */
+__attribute__((noinline)) void scr_cursor(uint8_t on) {
     uint8_t *p = cell(crow, ccol);
     if (on) { *p |= 0x80; } else { *p &= 0x7F; }
     cursor_on = on;

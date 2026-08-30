@@ -133,6 +133,15 @@ def source_gate(decoder_path: Path = B.DECODER,
                 "runtime": B.bind(runtime_path), "repl": B.bind(repl_path),
                 "phase_wrapper": B.bind(B.PHASE)}
 
+    def mutate_repl_function(old: str, new: str) -> str:
+        """Mutate the semantic repl body, never a same-spelled earlier helper."""
+        B.require(repl_fn.count(old) == 1,
+                  "phase-02b repl mutation target is not unique in repl")
+        changed = repl_fn.replace(old, new, 1)
+        B.require(repl.count(repl_fn) == 1,
+                  "phase-02b repl function is not unique in source")
+        return repl.replace(repl_fn, changed, 1)
+
     mutations = {
         "stage-call-removed": ("runtime", runtime.replace(
             "LISP65_C2_PHASE_03B_SLOT, stream)",
@@ -151,15 +160,15 @@ def source_gate(decoder_path: Path = B.DECODER,
         "static-plane-close-bypassed": ("decoder", decoder.replace(
             "if (code_target != LISP65_C2_LITE_STATIC_CODE_BYTES)",
             "if (0u)", 1)),
-        "banner-status-discarded": ("repl", repl.replace(
+        "banner-status-discarded": ("repl", mutate_repl_function(
             "if (vm_status != VM_OK && vm_status != VM_HALT)",
-            "if (0)", 1)),
-        "banner-text-truth-reintroduced": ("repl", repl.replace(
+            "if (0)")),
+        "banner-text-truth-reintroduced": ("repl", mutate_repl_function(
             "lisp_abort_code(vm_status_error_code(vm_status));",
-            "emit_str(vm_status_message());", 1)),
-        "banner-recovery-removed": ("repl", repl.replace(
+            "emit_str(vm_status_message());")),
+        "banner-recovery-removed": ("repl", mutate_repl_function(
             "lisp_abort_code(vm_status_error_code(vm_status));",
-            "(void)vm_status_error_code(vm_status);", 1)),
+            "(void)vm_status_error_code(vm_status);")),
     }
     rejected: dict[str, str] = {}
     for name, (kind, mutation) in mutations.items():

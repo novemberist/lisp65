@@ -1,6 +1,6 @@
 # Known Issues and Retired Exceptions
 
-This is the maintained user-facing issue register for lisp65 1.7.0. Sealed
+This is the maintained user-facing issue register for lisp65 1.9.0. Sealed
 historical documents retain the wording that was true when they were issued;
 this page states the current product boundary.
 
@@ -70,50 +70,21 @@ out-of-memory error appears despite a small live data set, preserve the exact
 form and preceding steps, restart lisp65, and include those details in a bug
 report. The permanent reproducer remains in the test suite.
 
-## Active input limitation: Cursor Left/Right at the native `lisp65>` prompt
+## Retired in 1.9.0: Cursor Left/Right rejected at the native prompt
 
-Status: **documented; machine-replayed on sealed v1.7 and v1.8 ELFs**
+Status: **fixed and hardware-proven in v1.9.0**
 
-The native `lisp65>` prompt uses a small C line collector, not the Bank-2
-cursor editor. It supports ordinary append input and backward Delete, but it
-does not implement Cursor Left or Cursor Right. Pressing either cursor key at
-that prompt aborts the current input line with:
+The v1.7 and v1.8 native `lisp65>` prompt used a small C line collector.
+Cursor Left or Cursor Right therefore rejected the current line with
+`*** reader: invalid token`. This was not a v1.8 regression: sealed-ELF replay
+showed the same collector in v1.7, while the v1.6 cursor acceptance had covered
+only explicit Lisp `(read-line)` calls.
 
-```text
-*** reader: invalid token
-```
-
-This is a visible rejection of the PETSCII control code, not an early Return
-and not evaluation of the partial line. The prompt remains usable afterward.
-Use Delete and retype the suffix when editing directly at `lisp65>`.
-
-The optional `v16core` package does not replace this C prompt collector. After
-`(require 'v16core)`, cursor navigation belongs to explicit calls of the Lisp
-`(read-line)` function: Cursor Left/Right, `C-b`/`C-f`, `C-a`/`C-e`, backward
-Delete and `C-d` operate while that function is collecting its returned
-string. The v1.6 hardware evidence exercised exactly this `(read-line)` path;
-it did not exercise Cursor Left on the surrounding `lisp65>` prompt.
-
-This remains true when `v16core` is loaded from `INIT.L65`: the boot hook
-returns to the same fixed resident C loop. The sealed v1.7 release ELF already
-routes Cursor Left to stable error code 5 before parsing or evaluation, so the
-behavior is not a v1.8 regression. The earlier Block-3 acceptance plan also
-did not enter explicit `(read-line)` and therefore supplied no contrary
-native-prompt evidence.
-
-For programs that obtain input through `(read-line)`, the immediate workaround
-is to make `v16core` visible and require it before the first such call. This can
-be done interactively after mounting the library medium. A derived boot medium
-that contains both `v16core` (and its index row) and an `INIT.L65` may instead
-put `(require 'v16core)` in that startup file. This enables cursor-aware
-explicit `read-line` calls from boot; it still does **not** add Cursor
-Left/Right editing to the surrounding native `lisp65>` prompt.
-
-v1.9 has a registered product question with two separately priced forms: make
-known navigation controls harmless no-ops in the minimal C collector, or route
-the prompt through/default-load the Bank-2 editor. Until one of those forms is
-accepted, no release claim may describe Cursor Left/Right at bare `lisp65>` as
-supported.
+v1.9 routes the native prompt through the insertion-mode editor. Prompt,
+editable text, and cursor share one editor-owned line; Cursor Left/Right,
+insertion, and deletion were accepted on physical hardware, and the old error
+did not appear. The editor is resident product freight and needs no optional
+package or startup form.
 
 ## Historical v1.5 optional-library limitation: `defstruct`
 
@@ -168,9 +139,9 @@ if the REPL does not recover. Preserve the preceding forms and approximate key
 count. Reopening the parked diagnosis requires a natural physical recurrence
 with a hardware arrival witness.
 
-## Not delivered in 1.7.0: Comfort REPL and capture path
+## Retired in 1.9.0: ordinary prompt input lost around collection
 
-Status: **development evidence retained; absent from selected v1.7**
+Status: **fixed and measured on physical hardware in v1.9.0**
 
 A v1.6 development measurement slowly produced eight visible Comfort-REPL
 characters using 11 physical character attempts. Product counters read
@@ -186,17 +157,18 @@ subsequently found the product's second reader of the same hardware queue:
 capture is armed. Whichever reader runs first owns that event, explaining both
 the slow-typing loss and the smaller raw count.
 
-The correction gives an armed capture sole ownership of the hardware queue;
+The correction gives armed capture sole ownership of the hardware queue;
 `lisp_poll()` retains RUN/STOP through the independent matrix-pending latch.
-The corrected development path later passed the physical eight-of-eight
-arrival comparison, but the larger Comfort feature was descoped as one unit
-after a separate bytecode failure. Neither the capture path nor
-`repl-comfort` is present in neither the v1.6 nor v1.7 selected product. The
-v1.7 investigation proved that its input side is responsive and single-owner,
-then found that synchronous recovery service time could still block ordinary
-use. The A0 recovery fast path shipped in v1.7 removes the measured dominant
-empty-journal cost, but Comfort was not reopened automatically. Its complete
-feature and evidence set remains deferred rather than partially delivered.
+v1.9 delivers that capture path and makes the native editor its real consumer.
+A fixed physical input sequence crossed a forced collection and ended with
+`raw=seen=stored=taken=136`. The equal, nonzero counters prove arrival,
+capture, storage, and consumption in the delivered world; the earlier
+consumer mutation ends with `taken=0` and remains a permanent counterexample.
+
+This closes ordinary input loss while the native prompt is reading. It does
+not claim type-ahead while evaluation is running. The larger Comfort REPL,
+balanced multiline input, and history remain deferred despite sharing some of
+the now-delivered input substrate.
 
 ## Not delivered in 1.7.0: delimiter matcher and cursor blink
 

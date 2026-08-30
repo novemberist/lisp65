@@ -1035,7 +1035,9 @@ def placement_gate(elf: Path) -> dict[str, Any]:
     require(len(emitted_disable) == 1,
             "native longjmp capture disable absent from final ELF")
     text = truth.section(".text")
-    require(text.address + text.bytes <= 0xB3AA,
+    facade = truth.section(".lisp65_c2_mapped_far_facade")
+    ordinary_reserve = facade.address - (text.address + text.bytes)
+    require(ordinary_reserve >= 6,
             "ordinary text did not retain the authorized six-byte reserve")
     return {
         "status": "passed-final-linked-ELF",
@@ -1051,7 +1053,7 @@ def placement_gate(elf: Path) -> dict[str, Any]:
         "surplus_over_floor_bytes": post_capture_free - reserve_floor,
         "reserve_source": "ElfTruth final-SHF_ALLOC arena complement",
         "ordinary_text_end_exclusive": text.address + text.bytes,
-        "ordinary_text_reserve_bytes": 0xB3B0 - (text.address + text.bytes),
+        "ordinary_text_reserve_bytes": ordinary_reserve,
         "irq_bytes": len(irq), "irq_capture_call_count": 1,
         "irq_body_authority": "owning-section-plus-unique-entry-and-call",
         "irq_entry_symbol_bytes": irq_entry.bytes,
@@ -1063,6 +1065,11 @@ def placement_gate(elf: Path) -> dict[str, Any]:
             "stores": 1,
         },
         "allocated_section_count": len(allocated),
+        "ordinary_text_facade_authority": {
+            "facade_section": facade.name,
+            "facade_address": facade.address,
+            "minimum_reserve_bytes": 6,
+        },
     }
 
 

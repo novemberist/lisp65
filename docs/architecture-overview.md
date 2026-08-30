@@ -68,17 +68,21 @@ mapping are rejected visibly rather than silently accepted. A line may carry
 several forms; they are evaluated left to right, so forms completed before a
 later reader error remain in effect.
 
-The v1.7 `v16core` library replaces the native line reader with an
+In v1.9 the native `lisp65>` prompt and public `read-line` share the resident
 insertion-mode, cursor-following one-line editor. Its navigation bindings come
-from the same generated keymap authority as their tests. Balanced multiline
-input, history and the separate capture/Comfort path are not part of the v1.7
-selected product.
+from the same generated keymap authority as their tests. The editor owns the
+complete active line: prompt cells, editable text, cursor, and the handoff to
+result rendering use one positioning model. Balanced multiline input, history,
+and the separate Comfort composition are not part of the selected product.
 
-Keyboard-queue ownership is explicit. The selected native reader is the one
-ordinary consumer in v1.7; development capture paths must disable the evaluator
-drain before they may own the same queue. A gate derives the readers from the
-final ELF and rejects two simultaneous owners. The same one-owner/defined-
-handoff rule governs composed framebuffer writers.
+Keyboard-queue ownership is explicit. Capture is armed for the native
+`read-line` lifecycle and becomes the sole ordinary queue owner; the delivered
+editor consumes from its ring. The evaluator drain retains RUN/STOP through an
+independent matrix latch but cannot acknowledge ordinary keys while capture is
+armed. Final-ELF gates prove both arming and real consumer routing, and the
+device acceptance ended with `raw=seen=stored=taken=136` across a forced
+collection. The same one-owner/defined-handoff rule governs composed
+framebuffer writers.
 
 Error recovery has a carrier-independent boundary check. A control transfer
 into a retired overlay generation is redirected to recovery, and all seven
@@ -88,12 +92,12 @@ cleared overlay code; unrelated fail-closed faults remain fail-closed.
 
 ## Media model
 
-Release 1.8.0 uses three D81 roles with one drive:
+Release 1.9.0 uses two D81 roles with one drive:
 
-- `L65SYS` is the immutable product image used for boot and library loading.
-- `lisp65-library.d81` carries the one-row `v16core` package used to activate
-  the v1.8 optional `(read-line)` editor.
-- A valid non-product 1581 image holds user files.
+- `L65SYS` is the immutable product image used for boot and for the resident
+  IDE, IDEX, and M65D library payloads.
+- A valid non-product 1581 image holds user files; the release bundle includes
+  a blank convenience image.
 
 M65D denies the product medium by identity and binds each transaction to disk
 name, disk ID, and mount generation. It verifies written sectors and treats a

@@ -57,6 +57,8 @@ PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v16-receipt.json"
 PREDECESSOR_RECEIPT = RECEIPT
 RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v17-receipt.json"
+PREDECESSOR_RECEIPT = RECEIPT
+RECEIPT = ARCH / "c2.3-media-builder-closure-enumeration-v18-receipt.json"
 BANK4 = ARCH / "c2.3-v2.1-bank4-map-probe-receipt.json"
 DEVICE_PREPARATION = ARCH / (
     "c2.3-v1.6-item1-only-media-r1-public2-receipt.json")
@@ -75,7 +77,9 @@ INIT_L65_MEDIA = ARCH / (
     "c2.3-v1.7-init-l65-acceptance-media-receipt.json")
 INIT_L65_PRODUCT_VARIANTS_MEDIA = ARCH / (
     "c2.3-v1.7-init-l65-product-variants-media-receipt.json")
-FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v17"
+BLOCKS_AB_MEDIA = ARCH / (
+    "c2.3-v1.9-blocks-ab-acceptance-media-receipt.json")
+FORMAT = "lisp65-c2.3-media-builder-closure-enumeration-v18"
 SELF = "tools/host-lisp/c2_media_builder_closure_enumeration.py"
 
 # The registry is deliberately explicit.  Discovery below is independent of
@@ -135,6 +139,7 @@ REGISTERED = {
     "tools/host-lisp/c2_v17_block3_r10_acceptance_media.py",
     "tools/host-lisp/c2_v17_init_l65_acceptance_media.py",
     "tools/host-lisp/c2_v17_init_l65_product_variants_media.py",
+    "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media.py",
     "tools/host-lisp/c2_v20_crc_carveout_media_liveness.py",
     "tools/host-lisp/c2_v20_far_payload_delivery.py",
@@ -184,6 +189,8 @@ CURRENT = {
         "Block-3 Same-World product/library producer inherited by banner-ordinal artifact-only successor with packed-facade and readback closure",
     "tools/host-lisp/c2_v17_init_l65_product_variants_media.py":
         "native INIT.L65 artifact-only one-drive product variants with one frozen product filesystem and INIT-only diff attribution",
+    "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py":
+        "v1.9 Blocks A+B artifact-only product/work media with packed-facade, composed-Bank2 and physical-session closure",
 }
 
 
@@ -344,6 +351,9 @@ def active_closure() -> dict[str, Any]:
         "c2_v17_init_l65_product_variants_media.py").read_text(
             encoding="utf-8")
     init_l65_product_variants = load(INIT_L65_PRODUCT_VARIANTS_MEDIA)
+    blocks_ab_source = (HOST /
+        "c2_v190_blocks_ab_acceptance_media.py").read_text(encoding="utf-8")
+    blocks_ab = load(BLOCKS_AB_MEDIA)
     require(
         "PACKED_ARTIFACT_GATES" in far_source
         and "run_packed_artifact_gates()" in far_source
@@ -467,6 +477,25 @@ def active_closure() -> dict[str, Any]:
         and init_l65_product_variants.get("session", {}).get("path") ==
             "config/c2-v17-init-l65-product-variants-resume-session.json",
         "v1.7 native INIT.L65 product variants lack one-drive closure")
+    require(
+        "MEDIA.build(" in blocks_ab_source
+        and "packed_facade_gate(final_prg, final_elf)" in blocks_ab_source
+        and blocks_ab.get("status") ==
+            "PASS: V1.9 BLOCKS A+B ACCEPTANCE MEDIA READY"
+        and blocks_ab.get("accounting") == {
+            "WPLTO_runs": 0, "product_links": 0, "product_cards": 0,
+            "artifact_completions": 1, "product_media_builds": 1,
+            "work_media_builds": 1, "device_contacts": 0}
+        and blocks_ab.get("packed_PRG_facade", {}).get("status") ==
+            "passed-packed-prg-facade-byte-equals-final-elf"
+        and blocks_ab.get("composed_bank2", {}).get(
+            "static_plane", {}).get("largest_contiguous_hole", {}).get(
+                "bytes") == 16198
+        and blocks_ab.get("readback") ==
+            "passed-packed-visible-file-and-role-identity-closure"
+        and blocks_ab.get("optional_library_media") ==
+            "not built; boot-surface group requires none",
+        "v1.9 Blocks A+B medium builder lacks product-only packed closure")
     return {"current": dict(sorted(CURRENT.items())),
             "repair_registry": repaired,
             "breadcrumb_registry": traced,
@@ -517,7 +546,16 @@ def active_closure() -> dict[str, Any]:
                 "variants": ["absent", "error", "valid"],
                 "INIT_only_diff_attribution": True,
                 "source_compile_proof": True,
-                "manual_boot_media_swap": False}}
+                "manual_boot_media_swap": False},
+            "blocks_ab_registry": {
+                "producer":
+                    "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py",
+                "artifact_only": True,
+                "packed_facade_gate": True,
+                "composed_bank2_gate": True,
+                "product_and_work_readback": True,
+                "optional_library_media": False,
+                "device_contacts_during_build": 0}}
 
 
 def derive() -> dict[str, Any]:
@@ -593,7 +631,9 @@ def audit(value: dict[str, Any]) -> None:
             "init_l65_registry", {}).get("raw_init_source_readback") is True
         and value.get("active_closure", {}).get(
             "init_l65_product_variants_registry", {}).get(
-                "one_frozen_product_filesystem") is True,
+                "one_frozen_product_filesystem") is True
+        and value.get("active_closure", {}).get(
+            "blocks_ab_registry", {}).get("composed_bank2_gate") is True,
         "media-builder structural enumeration drift")
 
 
@@ -619,6 +659,8 @@ def mutations(base: dict[str, Any]) -> list[str]:
             ["bank4_registry"].update(complete=False)),
         ("incomplete-device-preparation-registry", lambda x: x["active_closure"]
             ["device_preparation_registry"].update(artifact_count=0)),
+        ("incomplete-blocks-ab-registry", lambda x: x["active_closure"]
+            ["blocks_ab_registry"].update(composed_bank2_gate=False)),
         ("incomplete-public-release-registry", lambda x: x["active_closure"]
             ["public_release_registry"].update(artifact_count=0)),
         ("incomplete-comfort-product-profile-registry", lambda x:
@@ -648,7 +690,7 @@ def mutations(base: dict[str, Any]) -> list[str]:
             audit(trial)
         except EnumerationError:
             rejected.append(name)
-    require(len(rejected) == 15,
+    require(len(rejected) == 16,
             "media-builder enumeration mutation survived")
     return sorted(rejected)
 
@@ -711,7 +753,16 @@ def check() -> dict[str, Any]:
                 "variants": ["absent", "error", "valid"],
                 "INIT_only_diff_attribution": True,
                 "source_compile_proof": True,
-                "manual_boot_media_swap": False},
+                "manual_boot_media_swap": False}
+            and value["active_closure"]["blocks_ab_registry"] == {
+                "producer":
+                    "tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py",
+                "artifact_only": True,
+                "packed_facade_gate": True,
+                "composed_bank2_gate": True,
+                "product_and_work_readback": True,
+                "optional_library_media": False,
+                "device_contacts_during_build": 0},
             "media-builder enumeration reconstruction drift")
     return value
 

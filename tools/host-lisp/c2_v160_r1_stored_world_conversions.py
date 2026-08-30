@@ -509,7 +509,29 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN
             additive["mapped_LMA_successor"] = relocation
             additive["mapped_LMA_mutations_rejected"] = (
                 mapped_lma_successor_mutations(elf))
-        comparison = golden.compare_layout(base_layout, authority)
+        successor = candidate_fixed_successors(base_layout, authority)
+        additive["candidate_derived_fixed_successors"] = successor
+        additive["candidate_derived_fixed_successor_mutations"] = (
+            candidate_fixed_successor_mutations(base_layout, authority))
+        # The sealed Golden remains byte-history.  Its comparison view is
+        # normalized only for the independently proved candidate successors;
+        # every other fixed member remains exact.
+        golden_layout = deepcopy(base_layout)
+        sections = {row["name"]: row
+                    for row in golden_layout["allocatable_sections"]}
+        golden_sections = {row["name"]: row
+                           for row in authority["section_invariants"]}
+        ordinary_arena = next(row for row in authority["capacity_arenas"]
+                              if row["id"] == "ordinary-text")
+        sections[".text"]["bytes"] = (
+            ordinary_arena["end_exclusive"] - sections[".text"]["vma"])
+        sections[".lisp65_c2_mapped_far_facade"]["vma"] = (
+            golden_sections[".lisp65_c2_mapped_far_facade"]["vma"])
+        for name in ("__bss_end", "__bss_size",
+                     "__lisp65_resident_island_end"):
+            golden_layout["boundary_symbols"][name] = (
+                authority["fixed_boundary_symbols"][name])
+        comparison = golden.compare_layout(golden_layout, authority)
         additive["placement_gate"] = {
             "gate": "active-card-registry-union",
             "status": "passed",
@@ -528,6 +550,71 @@ def acceptance_golden_gate(elf: Path, golden: Any = V5_GOLDEN
             "mode": "read-only-additive-successor-authority",
             "historical_dependent_vma_v4": DEPENDENT.review_authority(),
             "accepted_freight_boundary_v5": V5_GOLDEN.bind(V5_GOLDEN.RECEIPT)}}
+
+
+def candidate_fixed_successors(layout: dict[str, Any],
+                               authority: dict[str, Any]) -> dict[str, Any]:
+    rows = {row["name"]: row for row in layout["allocatable_sections"]}
+    text = rows[".text"]
+    facade = rows[".lisp65_c2_mapped_far_facade"]
+    handoff = rows[".lisp65_c2_kernal_handoff"]
+    bss = rows[".bss"]
+    island = rows[".lisp65_resident_island"]
+    symbols = layout["boundary_symbols"]
+    expected_facade = max(0xB3B0, text["vma"] + text["bytes"] + 32)
+    bss_end = bss["vma"] + bss["bytes"]
+    island_end = island["vma"] + island["bytes"]
+    require(facade["vma"] == expected_facade
+            and facade["vma"] + facade["bytes"] <= handoff["vma"],
+            "candidate facade is not derived from final text/owner interval")
+    require(symbols["__bss_start"] == bss["vma"]
+            and symbols["__bss_size"] == bss["bytes"]
+            and symbols["__bss_end"] == bss_end
+            and 0xC000 - bss_end >= 5,
+            "candidate BSS successor is not extent-derived/margin-safe")
+    require(symbols["__lisp65_resident_island_start"] == island["vma"]
+            and symbols["__lisp65_resident_island_end"] == island_end,
+            "candidate resident-island end is not extent-derived")
+    return {"status": "passed-candidate-derived-fixed-successors",
+        "facade": {"vma": facade["vma"], "derived_vma": expected_facade,
+            "text_reserve_bytes": facade["vma"]-text["vma"]-text["bytes"],
+            "next_owner_reserve_bytes":
+                handoff["vma"]-facade["vma"]-facade["bytes"]},
+        "BSS": {"vma": bss["vma"], "bytes": bss["bytes"],
+            "end": bss_end, "margin_bytes": 0xC000-bss_end},
+        "resident_island": {"vma": island["vma"], "bytes": island["bytes"],
+            "end": island_end},
+        "sealed_golden_unchanged": True,
+        "normalized_fixed_members": [".text.capacity_end",
+            ".lisp65_c2_mapped_far_facade.vma",
+            "__bss_end", "__bss_size", "__lisp65_resident_island_end"]}
+
+
+def candidate_fixed_successor_mutations(
+        layout: dict[str, Any], authority: dict[str, Any]) -> list[str]:
+    cases: dict[str, Callable[[dict[str, Any]], None]] = {
+        "facade-unexplained-shift": lambda x: next(row for row in
+            x["allocatable_sections"] if row["name"] ==
+            ".lisp65_c2_mapped_far_facade").update(vma=0xB3DD),
+        "BSS-end-diverges": lambda x: x["boundary_symbols"].update(
+            __bss_end=x["boundary_symbols"]["__bss_end"] + 1),
+        "BSS-margin-spent": lambda x: next(row for row in
+            x["allocatable_sections"] if row["name"] == ".bss").update(
+                bytes=1586),
+        "resident-end-diverges": lambda x: x["boundary_symbols"].update(
+            __lisp65_resident_island_end=
+                x["boundary_symbols"]["__lisp65_resident_island_end"] + 1),
+    }
+    rejected = []
+    for name, mutate in cases.items():
+        trial = deepcopy(layout); mutate(trial)
+        try:
+            candidate_fixed_successors(trial, authority)
+        except ConversionError:
+            rejected.append(name)
+    require(rejected == list(cases),
+            "candidate fixed-successor acceptance mutation survived")
+    return rejected
 
 
 def acceptance_golden_mutation(elf: Path) -> str:

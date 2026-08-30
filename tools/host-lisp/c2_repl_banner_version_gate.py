@@ -19,7 +19,7 @@ SOURCE = ROOT / "lib/repl-banner.lisp"
 # banner derives the visible text from its release identity.
 AUTHORITY = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
-    "c2.3-v1.8.0-release-card-r1-receipt.json"
+    "c2.3-v1.9.0-release-card-r1-receipt.json"
 )
 SUBTITLE_PREFIX = "WORKBENCH "
 SUBTITLE_CENTER_COLUMN = 55
@@ -48,10 +48,26 @@ def release_identity(authority: dict[str, Any]) -> tuple[str, str]:
         subtitle = authority.get("banner")
     elif authority.get("format") in (
             "lisp65-c2-v170-release-product-card-v1",
-            "lisp65-c2-v180-release-product-card-v1"):
-        is_v180 = authority.get("format") == "lisp65-c2-v180-release-product-card-v1"
+            "lisp65-c2-v180-release-product-card-v1",
+            "lisp65-c2-v190-release-product-card-v1"):
+        release_worlds = {
+            "lisp65-c2-v170-release-product-card-v1": (
+                "release_v1_7_0",
+                "PASS: V1.7.0 RELEASE PRODUCT CARD FINAL GREEN",
+                "PASS: WORKBENCH 1.7.0 IS THE UNIQUE EMITTED BANNER"),
+            "lisp65-c2-v180-release-product-card-v1": (
+                "v1_8_0_release",
+                "PASS: V1.8.0 RELEASE PRODUCT CARD FINAL GREEN",
+                "PASS: WORKBENCH 1.8.0 IS THE UNIQUE EMITTED BANNER"),
+            "lisp65-c2-v190-release-product-card-v1": (
+                "release_v1_9_0",
+                "PASS: V1.9.0 RELEASE PRODUCT CARD FINAL GREEN",
+                "PASS: WORKBENCH 1.9.0 IS THE UNIQUE EMITTED BANNER"),
+        }
+        key, expected_status, expected_banner_status = release_worlds[
+            authority["format"]]
         release = authority.get("final_product", {}).get(
-            "v1_8_0_release" if is_v180 else "release_v1_7_0", {})
+            key, {})
         banner = release.get("banner", {})
         subtitle = banner.get("final_composed_literal")
         package_release = (
@@ -59,10 +75,8 @@ def release_identity(authority: dict[str, Any]) -> tuple[str, str]:
             if isinstance(subtitle, str) else None
         )
         require(
-            authority.get("status") == ("PASS: V1.8.0 RELEASE PRODUCT CARD FINAL GREEN"
-                if is_v180 else "PASS: V1.7.0 RELEASE PRODUCT CARD FINAL GREEN")
-            and banner.get("status") == ("PASS: WORKBENCH 1.8.0 IS THE UNIQUE EMITTED BANNER"
-                if is_v180 else "PASS: WORKBENCH 1.7.0 IS THE UNIQUE EMITTED BANNER"),
+            authority.get("status") == expected_status
+            and banner.get("status") == expected_banner_status,
             "release-card banner authority is not green",
         )
     else:
@@ -111,8 +125,11 @@ def selftest(source: str, authority: dict[str, Any]) -> int:
     if bumped_authority.get("format") == "lisp65-c2-v150-release-contract-v1":
         bumped_authority["release"] = f"v{next_release}"
     else:
-        key = ("v1_8_0_release" if bumped_authority.get("format") ==
-               "lisp65-c2-v180-release-product-card-v1" else "release_v1_7_0")
+        key = {
+            "lisp65-c2-v170-release-product-card-v1": "release_v1_7_0",
+            "lisp65-c2-v180-release-product-card-v1": "v1_8_0_release",
+            "lisp65-c2-v190-release-product-card-v1": "release_v1_9_0",
+        }[bumped_authority["format"]]
         bumped_authority["final_product"][key]["banner"][
             "final_composed_literal"] = SUBTITLE_PREFIX + next_release
     mutations: list[tuple[str, str, dict[str, Any]]] = [

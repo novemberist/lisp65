@@ -159,11 +159,14 @@ def derive() -> dict[str, Any]:
             is True
             and prior["status"] == "ATTRIBUTED: INVISIBLE-PETSCII-A0-INGRESS",
             "input-origin authority drift")
-    reader_binding, screen_binding = bind(READER), bind(SCREEN)
+    reader_binding = ERA.era_bind(SEAL_ERA_COMMIT, READER)
+    screen_binding = ERA.era_bind(SEAL_ERA_COMMIT, SCREEN)
     require(reader_binding["sha256"] == prior["authority"]["reader"]["sha256"]
             and screen_binding["sha256"] == prior["authority"]["screen"]["sha256"],
             "reader/screen changed outside the input-boundary scope")
-    source = source_contract(REPL.read_text(encoding="utf-8"))
+    source = source_contract(
+        ERA.era_blob(SEAL_ERA_COMMIT, REPL.relative_to(ROOT).as_posix())
+        .decode("utf-8"))
     fixtures: dict[str, Any] = {}
     for name, row in origin["captured_buffers"].items():
         raw = bytes.fromhex(row["line_hex"])
@@ -228,7 +231,11 @@ def validate(value: dict[str, Any]) -> None:
     require(value["authority"]["repl"] ==
             ERA.era_bind(SEAL_ERA_COMMIT, REPL)
             and value["authority"]["checker"] ==
-            ERA.era_bind(SEAL_ERA_COMMIT, Path(__file__)),
+            ERA.era_bind(SEAL_ERA_COMMIT, Path(__file__))
+            and value["authority"]["reader"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, READER)
+            and value["authority"]["screen"] ==
+            ERA.era_bind(SEAL_ERA_COMMIT, SCREEN),
             "WYSIWYG authority escaped its sealing era")
     contract = value["contract"]
     require(contract["a0_normalized_before_echo"] is True
@@ -307,6 +314,10 @@ def mutations(value: dict[str, Any]) -> list[str]:
             repl=bind(REPL)),
         "restore-working-tree-binding": lambda x: x["authority"].update(
             checker=bind(Path(__file__))),
+        "corrupt-era-reader-binding": lambda x: x["authority"]["reader"].update(
+            sha256="0" * 64),
+        "restore-live-screen-binding": lambda x: x["authority"].update(
+            screen=bind(SCREEN)),
     }
     rejected: list[str] = []
     for name, mutate in cases.items():
@@ -333,14 +344,14 @@ def main() -> int:
         historical = load(RECEIPT)
         sealed_rejected = historical.pop("mutations_rejected", None)
         require(historical == value and sealed_rejected == SEALED_MUTATIONS
-                and len(rejected) == 19,
+                and len(rejected) == 21,
                 "WYSIWYG input receipt stale")
     else:
-        require(len(rejected) == 19,
+        require(len(rejected) == 21,
                 "mutation count drift")
     print("WYSIWYG input: PASS "
           f"action={action} fixtures=2 canonical-bytes=12 "
-          f"mutations=17+2")
+          f"mutations=17+4")
     return 0
 
 

@@ -32,7 +32,6 @@ V160_SESSION = ROOT / "config/c2-v160-item1-only-r1-public2-session.json"
 V170_SESSION = ROOT / "config/c2-v170-release-d-session.json"
 BLOCK3_SESSION = ROOT / "config/c2-v17-block3-r10-acceptance-session.json"
 REPAIR = ARCH / "c2.3-v1.8-capture-hybrid-responsiveness-repair-receipt.json"
-REPL_SOURCE = ROOT / "src/repl.c"
 ERROR_TEXTS = ROOT / "config/error-texts.json"
 ELF = ROOT / "build/c2.3/v1.8-capture-hybrid-product-card-r1/wplto/lisp65-c2-substitution-linked.prg.elf"
 V18_MEDIA_ELF = ROOT / "build/c2.3/v1.8.0-substrate-media/canonical-product/final/lisp65-c2-substitution-linked.prg.elf"
@@ -41,6 +40,7 @@ BLOCK3_ELF = ROOT / "build/c2.3/v1.7-ide-idle-blink-product-card-r10/wplto/lisp6
 OBJDUMP = ROOT / "tools/llvm-mos/bin/llvm-objdump"
 READOBJ = ROOT / "tools/llvm-mos/bin/llvm-readobj"
 STATUS = "PASS: V1.8.0 SUBSTRATE D-SESSION HARDWARE GREEN; OWNER-SHIP-PENDING"
+SEAL_ERA_COMMIT = "ec67136ac10a8a10ce2bdd313866fbda284d84b7"
 
 
 class ResultError(RuntimeError):
@@ -84,6 +84,17 @@ def era_bytes(commit: str, path: str) -> bytes:
     return subprocess.run(
         ["git", "show", f"{commit}:{path}"], cwd=ROOT, check=True,
         stdout=subprocess.PIPE).stdout
+
+
+def era_section_bind(commit: str, path: str, header: str) -> dict[str, Any]:
+    text = era_bytes(commit, path).decode("utf-8")
+    require(text.count(header) == 1,
+            f"sealed-era section drift: {commit}:{path}:{header}")
+    section = header + text.split(header, 1)[1]
+    section = section.split("\n## ", 1)[0].rstrip() + "\n"
+    raw = section.encode()
+    return {"path": path, "section": header,
+            "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
 
 
 def instruction_records(elf: Path, name: str) -> list[dict[str, Any]]:
@@ -282,12 +293,12 @@ def derive() -> dict[str, Any]:
                         if "cursor" in row["id"].lower()
                         or "left" in json.dumps(row).lower()]
     published_repl = era_bytes("8ab12662", "src/repl.c")
-    current_repl = REPL_SOURCE.read_bytes()
+    sealed_repl = era_bytes(SEAL_ERA_COMMIT, "src/repl.c")
     require(v160_left["actions"][0] == "submit (read-line)"
             and v170_cursor_rows == []
             and "(read-line)" not in json.dumps(block3["rows"])
             and session["configuration"]["loaded_library_roles"] == []
-            and published_repl == current_repl
+            and published_repl == sealed_repl
             and v17_prompt["ELF"]["sha256"] ==
                 "e8ca0734427cbe22c6d60dfbba2cc141b8c98dd031beecdab8c57aa7d499efab"
             and v18_prompt["ELF"]["sha256"] ==
@@ -310,8 +321,8 @@ def derive() -> dict[str, Any]:
                 PLAN, "## v1.8 substrate D-session result — 2026-08-28"),
             "native_cursor_attribution_section": section_bind(
                 PLAN, "## Native-prompt cursor attribution — three-way question closed — 2026-08-28"),
-            "known_issue_section": section_bind(
-                KNOWN,
+            "known_issue_section": era_section_bind(
+                SEAL_ERA_COMMIT, KNOWN.relative_to(ROOT).as_posix(),
                 "## Active input limitation: Cursor Left/Right at the native `lisp65>` prompt"),
         },
         "media_readback": {
@@ -377,7 +388,7 @@ def derive() -> dict[str, Any]:
                 "published_v1_7_source_commit": "8ab12662",
                 "path": "src/repl.c",
                 "byte_identical": True,
-                "sha256": hashlib.sha256(current_repl).hexdigest(),
+                "sha256": hashlib.sha256(sealed_repl).hexdigest(),
             },
             "nthcdr_repair": {
                 "reachable_from_observed_surface": False,
@@ -490,6 +501,7 @@ def selftest() -> None:
         "invent-boot-editor-rebind": lambda x: x["native_cursor_attribution"]["delivered_v1_8_ELF"].update(boot_or_runtime_editor_rebind=True),
         "hide-v17-error": lambda x: x["native_cursor_attribution"]["sealed_v1_7_release_replay"]["cursor_left_replay"].update(error_code=0),
         "promote-block3-prompt-claim": lambda x: x["native_cursor_attribution"]["block3_correction"].update(session_explicit_read_line_entries=1),
+        "collapse-sealed-source-authority": lambda x: x["native_cursor_attribution"]["source_identity"].update(published_v1_7_source_commit="HEAD"),
     }
     rejected = []
     for name, mutate in cases.items():

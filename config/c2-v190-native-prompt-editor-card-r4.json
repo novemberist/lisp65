@@ -1,0 +1,28 @@
+{
+  "format": "lisp65-c2-v190-native-prompt-editor-card-r4-authorization-v1",
+  "recorded_on": "2026-08-29",
+  "owner_decision": "r4-Link frei",
+  "status": "one-replacement-card-authorized",
+  "cause": "final LTO folded scr_cursor into kb_cursor_off, growing fixed Bank0 by 46 bytes into Hot-BSS",
+  "r3_evidence": {
+    "receipt": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-card-r3-link-red-attribution.json",
+    "WPLTO_runs": 1,
+    "product_links": 0,
+    "overlap_bytes": 46
+  },
+  "budget": {
+    "WPLTO_runs": 1,
+    "product_links": 1,
+    "media_builds": 0,
+    "device_contacts": 0
+  },
+  "requirements": [
+    "final ELF proves a stable scr_cursor call boundary and no fixed-Bank0/Hot-BSS overlap",
+    "removing the boundary reproduces the sealed r3 46-byte overlap",
+    "rodata and bss expectations are derived bounds rather than exact size pins",
+    "both real compiler consumers prove the candidate stdlib header path and value",
+    "every r3-to-r4 emitted difference belongs to a named causal family before Scope or Acceptance",
+    "Acceptance proves the complete B-light prompt, collector, framebuffer and 192-byte boundary effects"
+  ],
+  "claim_limit": "one WPLTO and one product link; no media build and no device contact"
+}

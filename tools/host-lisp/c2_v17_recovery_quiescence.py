@@ -248,7 +248,20 @@ def final_gate(elf: Path, plane: Path) -> dict[str, Any]:
     state_sections = (".bss", ".zp.bss")
     state = {name: truth.section(name).bytes for name in state_sections}
     old_state = {name: baseline.section(name).bytes for name in state_sections}
-    require(state == old_state, "quiescence feature allocated product state")
+    # The claim is zero *added* quiescence state, not identity with an older
+    # whole-program allocation. Later candidates may legitimately reclaim or
+    # repack unrelated state. Addresses/sections remain LTO placement choices.
+    def state_population(image: ElfTruth) -> set[tuple[str, int]]:
+        return {(row.name, row.bytes) for row in image.symbols
+                if row.section in state_sections and row.bytes > 0}
+
+    old_population = state_population(baseline)
+    population = state_population(truth)
+    added_state = sorted(population - old_population)
+    removed_state = sorted(old_population - population)
+    require(not added_state and all(state[name] <= old_state[name]
+                                    for name in state_sections),
+            "quiescence feature allocated product state")
     nested = MAP_NEST.check(elf)
     require(nested["violations"] == [], "transitive MAP nesting regressed")
     composed = BANK2.derive(
@@ -282,7 +295,13 @@ def final_gate(elf: Path, plane: Path) -> dict[str, Any]:
         },
         "control_flow": calls,
         "state_bytes": {"candidate": state, "baseline": old_state,
-                        "delta": 0},
+                        "added_named_allocations": added_state,
+                        "removed_named_allocations": removed_state,
+                        "new_state_bytes": 0,
+                        "whole_program_delta": {
+                            name: state[name] - old_state[name]
+                            for name in state_sections},
+                        "authority": "candidate-minus-baseline named allocations"},
         "ordinary_text": {
             "start": text_section.address,
             "end_exclusive": text_section.address + text_section.bytes,

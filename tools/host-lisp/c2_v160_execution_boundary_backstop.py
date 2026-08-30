@@ -300,8 +300,8 @@ def final_gate(elf: Path) -> dict[str, Any]:
     require(service.bytes <= 1499 and far_free >= 11,
             "mapped-far recovery-sanitization floor violated")
     bss_margin = 0xC000 - (bss.address + bss.bytes)
-    require(bss.address == 0xB9CA and bss.bytes == 1585 and bss_margin == 5,
-            "zero-byte alias form changed protected BSS geometry")
+    require(bss.address < 0xC000 and bss_margin >= 5,
+            "zero-byte alias form breached the protected BSS margin")
     map_result = MAP_GATE.check(elf)
     require(map_result["violations"] == [], "transitive MAP gate regressed")
     cases = [
@@ -333,7 +333,8 @@ def final_gate(elf: Path) -> dict[str, Any]:
             "zero_byte_aliases": aliases,
             "top_level_active": {"address": f"0x{active.value:04x}",
                 "emitted_bytes": active.bytes, "declared_type": "uint8_t"},
-            "protected_BSS": {"address": "0xb9ca", "bytes": bss.bytes,
+            "protected_BSS": {"address": f"0x{bss.address:04x}",
+                "bytes": bss.bytes,
                 "end": f"0x{bss.address + bss.bytes:04x}",
                 "validation_margin_bytes": bss_margin},
             "E000_delta_bytes": 0, "cases": cases,
@@ -390,8 +391,12 @@ def final_mutations(value: dict[str, Any]) -> list[str]:
                             and row["same_address"] is True
                             and row["owner_address_is_unique"] is True
                             for row in trial["zero_byte_aliases"].values())
-                    and trial["protected_BSS"]["bytes"] == 1585
-                    and trial["protected_BSS"]["validation_margin_bytes"] == 5
+                    and (int(trial["protected_BSS"]["address"], 16)
+                         + trial["protected_BSS"]["bytes"]
+                         == int(trial["protected_BSS"]["end"], 16))
+                    and (0xC000 - int(trial["protected_BSS"]["end"], 16)
+                         == trial["protected_BSS"]["validation_margin_bytes"])
+                    and trial["protected_BSS"]["validation_margin_bytes"] >= 5
                     and trial["top_level_active"]["emitted_bytes"] == 1
                     and trial["transitive_MAP_gate"]["violations"] == [])
         if not accepted:

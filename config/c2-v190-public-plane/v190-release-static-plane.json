@@ -1,0 +1,521 @@
+{
+  "attempt_accounting": {
+    "WPLTO_runs": 0,
+    "device_contacts": 0,
+    "media_builds": 0,
+    "product_links": 0
+  },
+  "bank2": {
+    "bytes": 47469,
+    "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/v6-semantics/bank2-static-code.bin",
+    "sha256": "66953b971103de081bb0762d9d5ee0cf427b590964f7c02ced74225927d2315a"
+  },
+  "contract": {
+    "bytes": 28730,
+    "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/c2-lite-execution-contract.json",
+    "sha256": "d922408ff5ea10075b605ae43ff2465033c19b375dc14fcc6d9c57f54f4d9517"
+  },
+  "delivered_consumer_repair": {
+    "candidate_plane_bytes": 47469,
+    "delta_bytes": 1,
+    "manifest_entries": 398,
+    "mutations_rejected": [
+      {
+        "name": "restore-device-red-eight-cell-state",
+        "observed_red": "delivered consumer is not the exact ninth-nil transform"
+      },
+      {
+        "name": "select-public-queue-with-armed-state",
+        "observed_red": "delivered consumer is not the exact ninth-nil transform"
+      },
+      {
+        "name": "enable-history-escape-in-native-state",
+        "observed_red": "delivered consumer is not the exact ninth-nil transform"
+      }
+    ],
+    "objects": {
+      "%native-prompt": 21,
+      "%native-read-line": 16,
+      "%read-line-loop": 250,
+      "%rl-screen-tail": 223,
+      "read-line": 236
+    },
+    "predecessor_plane_bytes": 47468,
+    "source_gate": {
+      "candidate": {
+        "bytes": 8192,
+        "sha256": "b1e2a3f75553228b71c82cc993be16c93707977da19d87255a659740cac9fc3e"
+      },
+      "disarmed_fallback_retained": "public key-event mode 1",
+      "history_selector": "(car (nthcdr 8 state))",
+      "history_selector_value": "NIL",
+      "predecessor": {
+        "bytes": 8188,
+        "path": "build/c2.3/v1.9-native-prompt-editor-display-repair-r7-preflight/sources/stdlib-read-line.lisp",
+        "sha256": "388ec514e06aae4f67c2e62e557bb1a00daa561d4bf5c7252e22f093777df7b5"
+      },
+      "ring_selector": "(nthcdr 8 state)",
+      "ring_selector_value": "one-cell suffix containing NIL",
+      "selected_batch_route": "key-event mode 3 through %rl-put",
+      "selected_main_route": "key-event mode 2 through %rl-render",
+      "state_cells": 9,
+      "status": "PASS: DELIVERED STATE SELECTS RING WITHOUT HISTORY"
+    }
+  },
+  "emitted_client": {
+    "%native-prompt": {
+      "entry": {
+        "blob_offset": 18550,
+        "code_flags": 2,
+        "ext_addr": "0x054876",
+        "flags": 0,
+        "kind": "function",
+        "length": 21,
+        "lit_count": 1,
+        "lit_first": 960,
+        "literals": [
+          {
+            "symbol": "%rl-screen-tail"
+          }
+        ],
+        "name": "%native-prompt",
+        "name_obj": "0x0316"
+      },
+      "length": 21
+    },
+    "%native-read-line": {
+      "entry": {
+        "blob_offset": 18571,
+        "code_flags": 2,
+        "ext_addr": "0x05488b",
+        "flags": 0,
+        "kind": "function",
+        "length": 16,
+        "lit_count": 2,
+        "lit_first": 961,
+        "literals": [
+          {
+            "symbol": "native"
+          },
+          {
+            "symbol": "read-line"
+          }
+        ],
+        "name": "%native-read-line",
+        "name_obj": "0x0318"
+      },
+      "length": 16
+    },
+    "%read-line-loop": {
+      "entry": {
+        "blob_offset": 18064,
+        "code_flags": 2,
+        "ext_addr": "0x054690",
+        "flags": 0,
+        "kind": "function",
+        "length": 250,
+        "lit_count": 11,
+        "lit_first": 940,
+        "literals": [
+          {
+            "symbol": "nthcdr"
+          },
+          {
+            "symbol": "%rl-render"
+          },
+          {
+            "symbol": "cadr"
+          },
+          250,
+          {
+            "symbol": "%rl-put"
+          },
+          {
+            "symbol": "%read-line-loop"
+          },
+          [
+            {
+              "cons": [
+                13,
+                1109
+              ]
+            },
+            {
+              "cons": [
+                20,
+                1101
+              ]
+            },
+            {
+              "cons": [
+                157,
+                1106
+              ]
+            },
+            {
+              "cons": [
+                29,
+                1107
+              ]
+            },
+            {
+              "cons": [
+                145,
+                1108
+              ]
+            },
+            {
+              "cons": [
+                17,
+                1003
+              ]
+            },
+            {
+              "cons": [
+                4,
+                1102
+              ]
+            },
+            {
+              "cons": [
+                6,
+                1107
+              ]
+            },
+            {
+              "cons": [
+                2,
+                1106
+              ]
+            },
+            {
+              "cons": [
+                1,
+                1104
+              ]
+            },
+            {
+              "cons": [
+                5,
+                1103
+              ]
+            },
+            {
+              "cons": [
+                127,
+                1101
+              ]
+            }
+          ],
+          {
+            "symbol": "assoc"
+          },
+          1109,
+          {
+            "symbol": "%rl-screen-tail"
+          },
+          {
+            "symbol": "%rl-dispatch"
+          }
+        ],
+        "name": "%read-line-loop",
+        "name_obj": "0x0312"
+      },
+      "length": 250
+    },
+    "%rl-cut": {
+      "entry": {
+        "blob_offset": 17124,
+        "code_flags": 2,
+        "ext_addr": "0x0542e4",
+        "flags": 0,
+        "kind": "function",
+        "length": 253,
+        "lit_count": 3,
+        "lit_first": 881,
+        "literals": [
+          {
+            "symbol": "nthcdr"
+          },
+          {
+            "symbol": "%rl-screen-tail"
+          },
+          {
+            "symbol": "%read-line-loop"
+          }
+        ],
+        "name": "%rl-cut",
+        "name_obj": "0x030a"
+      },
+      "length": 253
+    },
+    "%rl-dispatch": {
+      "entry": {
+        "blob_offset": 17816,
+        "code_flags": 2,
+        "ext_addr": "0x054598",
+        "flags": 0,
+        "kind": "function",
+        "length": 248,
+        "lit_count": 12,
+        "lit_first": 892,
+        "literals": [
+          {
+            "symbol": "nthcdr"
+          },
+          1101,
+          {
+            "symbol": "%rl-cut"
+          },
+          {
+            "symbol": "%read-line-loop"
+          },
+          1102,
+          1106,
+          {
+            "symbol": "%rl-move"
+          },
+          1107,
+          1104,
+          1103,
+          1108,
+          1003
+        ],
+        "name": "%rl-dispatch",
+        "name_obj": "0x0310"
+      },
+      "length": 248
+    },
+    "%rl-move": {
+      "entry": {
+        "blob_offset": 17377,
+        "code_flags": 2,
+        "ext_addr": "0x0543e1",
+        "flags": 0,
+        "kind": "function",
+        "length": 199,
+        "lit_count": 3,
+        "lit_first": 884,
+        "literals": [
+          {
+            "symbol": "nthcdr"
+          },
+          {
+            "symbol": "%rl-screen-tail"
+          },
+          {
+            "symbol": "%read-line-loop"
+          }
+        ],
+        "name": "%rl-move",
+        "name_obj": "0x030c"
+      },
+      "length": 199
+    },
+    "%rl-put": {
+      "entry": {
+        "blob_offset": 17576,
+        "code_flags": 2,
+        "ext_addr": "0x0544a8",
+        "flags": 0,
+        "kind": "function",
+        "length": 240,
+        "lit_count": 5,
+        "lit_first": 887,
+        "literals": [
+          250,
+          {
+            "symbol": "%rl-put"
+          },
+          {
+            "symbol": "nthcdr"
+          },
+          {
+            "symbol": "%rl-screen-tail"
+          },
+          {
+            "symbol": "%read-line-loop"
+          }
+        ],
+        "name": "%rl-put",
+        "name_obj": "0x030e"
+      },
+      "length": 240
+    },
+    "%rl-render": {
+      "entry": {
+        "blob_offset": 16797,
+        "code_flags": 2,
+        "ext_addr": "0x05419d",
+        "flags": 0,
+        "kind": "function",
+        "length": 104,
+        "lit_count": 2,
+        "lit_first": 876,
+        "literals": [
+          129,
+          {
+            "symbol": "%rl-render"
+          }
+        ],
+        "name": "%rl-render",
+        "name_obj": "0x0306"
+      },
+      "length": 104
+    },
+    "%rl-screen-tail": {
+      "entry": {
+        "blob_offset": 16901,
+        "code_flags": 2,
+        "ext_addr": "0x054205",
+        "flags": 0,
+        "kind": "function",
+        "length": 223,
+        "lit_count": 3,
+        "lit_first": 878,
+        "literals": [
+          {
+            "string": "lisp65> "
+          },
+          {
+            "symbol": "%rl-render"
+          },
+          {
+            "symbol": "%rl-screen-tail"
+          }
+        ],
+        "name": "%rl-screen-tail",
+        "name_obj": "0x0308"
+      },
+      "length": 223
+    },
+    "read-line": {
+      "entry": {
+        "blob_offset": 18314,
+        "code_flags": 3,
+        "ext_addr": "0x05478a",
+        "flags": 0,
+        "kind": "function",
+        "length": 236,
+        "lit_count": 9,
+        "lit_first": 951,
+        "literals": [
+          255,
+          141,
+          140,
+          188,
+          252,
+          {
+            "symbol": "list"
+          },
+          {
+            "symbol": "%native-prompt"
+          },
+          {
+            "symbol": "%rl-screen-tail"
+          },
+          {
+            "symbol": "%read-line-loop"
+          }
+        ],
+        "name": "read-line",
+        "name_obj": "0x0314"
+      },
+      "length": 236
+    }
+  },
+  "format": "lisp65-c2-v190-release-product-card-v1-static-plane-v1",
+  "geometry": {
+    "bytes": 47469,
+    "entries": 760,
+    "headroom_bytes": 18067,
+    "images": 6,
+    "product_build_id": "0x8c6cc520",
+    "resolutions": 3020,
+    "roots": 378,
+    "sha256": "66953b971103de081bb0762d9d5ee0cf427b590964f7c02ced74225927d2315a"
+  },
+  "header": {
+    "bytes": 293,
+    "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/c2_lite_static_plane.h",
+    "sha256": "e5be58dcfc4bad03e015b2d58a631d88dced7c7ae1dd31220312ab1b70a22bd2"
+  },
+  "lifecycle": {
+    "candidate": {
+      "bytes": 8192,
+      "sha256": "b1e2a3f75553228b71c82cc993be16c93707977da19d87255a659740cac9fc3e"
+    },
+    "disarmed_fallback_retained": "public key-event mode 1",
+    "history_selector": "(car (nthcdr 8 state))",
+    "history_selector_value": "NIL",
+    "predecessor": {
+      "bytes": 8188,
+      "path": "build/c2.3/v1.9-native-prompt-editor-display-repair-r7-preflight/sources/stdlib-read-line.lisp",
+      "sha256": "388ec514e06aae4f67c2e62e557bb1a00daa561d4bf5c7252e22f093777df7b5"
+    },
+    "ring_selector": "(nthcdr 8 state)",
+    "ring_selector_value": "one-cell suffix containing NIL",
+    "selected_batch_route": "key-event mode 3 through %rl-put",
+    "selected_main_route": "key-event mode 2 through %rl-render",
+    "state_cells": 9,
+    "status": "PASS: DELIVERED STATE SELECTS RING WITHOUT HISTORY"
+  },
+  "manifests": [
+    {
+      "bytes": 362911,
+      "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/stdlib-p0.manifest.json",
+      "sha256": "55bbe4d44f1532656b83b5516e92ad522fa7fae8be46f0b96b8992455ddf00bc"
+    },
+    {
+      "bytes": 336226,
+      "path": "build/release-v1.5.0/public-product-build/build/bytecode/dialect-v2/libs/ide.manifest.json",
+      "sha256": "f0434e52446e9aea85a314811770452df510a666c8f07e19da9dd23cfd3ef260"
+    },
+    {
+      "bytes": 70458,
+      "path": "build/release-v1.5.0/public-product-build/build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/idex.manifest.json",
+      "sha256": "168b17833fa832e651826fc4e3ff66e9eff363bf27aa49a3a36c2f434fba4770"
+    },
+    {
+      "bytes": 64154,
+      "path": "build/release-v1.5.0/public-product-build/build/c2.2/substitution/published-nullary-call-bytecode-artifacts/libs/m65d.manifest.json",
+      "sha256": "f68b989f9d51e2b39ed728d64f88408ef7855751d1ddc3c3231c149b72d9dbfa"
+    },
+    {
+      "bytes": 8086,
+      "path": "build/release-v1.5.0/public-product-build/build/bytecode/dialect-v2/libs/buffer.manifest.json",
+      "sha256": "59d6ff0d107682ab5d35d2e201c3e3393472899a5b61855b41e809b9668e6a3f"
+    },
+    {
+      "bytes": 213511,
+      "path": "build/release-v1.5.0/public-product-build/build/post-promotion/v112/compiler/lcc.manifest.json",
+      "sha256": "a8dbbe0ed701ea2738334d4e8a04c234f959dfedfbd249523834f9eadb3f6105"
+    }
+  ],
+  "mutations_rejected": [
+    {
+      "name": "restore-device-red-eight-cell-state",
+      "observed_red": "delivered consumer is not the exact ninth-nil transform"
+    },
+    {
+      "name": "select-public-queue-with-armed-state",
+      "observed_red": "delivered consumer is not the exact ninth-nil transform"
+    },
+    {
+      "name": "enable-history-escape-in-native-state",
+      "observed_red": "delivered consumer is not the exact ninth-nil transform"
+    }
+  ],
+  "product": {
+    "bytes": 2598,
+    "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/product/substitution-artifacts.json",
+    "sha256": "d7d268adf6c87409b3ff30f1ce8255374d4f509b31588b5cfb88c19a74c89b28"
+  },
+  "profile": {
+    "bytes": 6682,
+    "path": "build/c2.3/v1.9.0-release-card-r1-preflight/setup-owned/static-plane/narrow-static/candidate-profile.json",
+    "sha256": "e332469a11ca30631d1b807556194ca54ea827ac56cb6c308c6a3e5f45403045"
+  },
+  "recorded_on": "2026-08-28",
+  "status": "PASS: NATIVE CLIENT CANDIDATE PLANE MATERIALIZED 0/1"
+}

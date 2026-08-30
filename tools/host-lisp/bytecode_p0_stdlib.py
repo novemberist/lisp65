@@ -2310,6 +2310,11 @@ def _emit_header(
             "#define LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY %du"
             % names.index("%repl-banner")
         )
+    if "%native-read-line" in names:
+        lines.append(
+            "#define LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY %du"
+            % names.index("%native-read-line")
+        )
     lines.extend([
         "",
         "#if defined(LISP65_STDLIB_BOOT_OVERLAY)",

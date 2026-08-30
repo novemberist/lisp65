@@ -3286,7 +3286,7 @@ c2-v180-substrate-device-result-check: c2-v180-substrate-media-check
 
 check-source: c2-v180-substrate-device-result-check
 
-.PHONY: c2-v180-release-card-check c2-v180-release-media-check c2-v180-candidate-seal-check c2-v180-public-clean-build-selftest
+.PHONY: c2-v180-release-card-check c2-v180-release-media-check c2-v180-candidate-seal-check c2-v180-public-clean-build-selftest c2-v180-release-package-selftest
 c2-v180-release-card-check: c2-v180-substrate-device-result-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_release_card.py check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_release_card.py selftest
@@ -3300,4 +3300,148 @@ c2-v180-candidate-seal-check: c2-v180-release-media-check
 c2-v180-public-clean-build-selftest: c2-v180-candidate-seal-check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_public_clean_build.py selftest
 
-check-source: c2-v180-public-clean-build-selftest
+c2-v180-release-package-selftest: c2-v180-public-clean-build-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v180_release_package.py selftest
+
+check-source: c2-v180-release-package-selftest
+
+.PHONY: c2-v190-native-capture-client-card-check
+c2-v190-native-capture-client-card-check: c2-v180-release-package-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_capture_client_card.py check
+
+check-source: c2-v190-native-capture-client-card-check
+
+.PHONY: c2-v190-native-prompt-editor-pricing-check
+c2-v190-native-prompt-editor-pricing-check: c2-v190-native-capture-client-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_pricing.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_pricing.py selftest
+
+check-source: c2-v190-native-prompt-editor-pricing-check
+
+.PHONY: c2-v190-native-prompt-editor-r5-pricing-check
+c2-v190-native-prompt-editor-r5-pricing-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_card.py check-r5-placement-price
+
+check-source: c2-v190-native-prompt-editor-r5-pricing-check
+
+.PHONY: c2-v190-native-prompt-editor-r5-link-red-check
+c2-v190-native-prompt-editor-r5-link-red-check: c2-v190-native-prompt-editor-r5-pricing-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_card.py check-r5-link-red
+
+check-source: c2-v190-native-prompt-editor-r5-link-red-check
+
+.PHONY: c2-v190-native-prompt-editor-r6-preflight-check
+c2-v190-native-prompt-editor-r6-preflight-check: c2-v190-native-prompt-editor-r5-link-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_r6_card.py check-prelink-red
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_r6_card.py check-preflight
+
+check-source: c2-v190-native-prompt-editor-r6-preflight-check
+
+.PHONY: c2-v190-native-prompt-editor-r6-product-red-check
+c2-v190-native-prompt-editor-r6-product-red-check: c2-v190-native-prompt-editor-r6-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_r6_card.py check-product-red
+
+check-source: c2-v190-native-prompt-editor-r6-product-red-check
+
+.PHONY: c2-v190-native-prompt-editor-r6-acceptance-red-check
+c2-v190-native-prompt-editor-r6-acceptance-red-check: c2-v190-native-prompt-editor-r6-product-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_r6_card.py check-acceptance-red
+
+check-source: c2-v190-native-prompt-editor-r6-acceptance-red-check
+
+.PHONY: c2-v190-native-prompt-editor-r6-acceptance-red2-check
+c2-v190-native-prompt-editor-r6-acceptance-red2-check: c2-v190-native-prompt-editor-r6-acceptance-red-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_r6_card.py check-acceptance-red2
+
+check-source: c2-v190-native-prompt-editor-r6-acceptance-red2-check
+
+.PHONY: c2-v190-native-prompt-editor-r6-card-check
+c2-v190-native-prompt-editor-r6-card-check: c2-v190-native-prompt-editor-r6-acceptance-red2-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_r6_card.py check
+
+check-source: c2-v190-native-prompt-editor-r6-card-check
+
+.PHONY: c2-v190-native-prompt-editor-display-r7-card-check
+c2-v190-native-prompt-editor-display-r7-card-check: c2-v190-native-prompt-editor-r6-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_native_prompt_editor_display_repair_r7.py check
+
+check-source: c2-v190-native-prompt-editor-display-r7-card-check
+
+.PHONY: c2-v190-blocks-ab-acceptance-media-check
+c2-v190-blocks-ab-acceptance-media-check: c2-v190-native-prompt-editor-display-r7-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_blocks_ab_acceptance_media.py source-check
+
+check-source: c2-v190-blocks-ab-acceptance-media-check
+
+.PHONY: c2-v190-blocks-ab-device-result-check
+c2-v190-blocks-ab-device-result-check: c2-v190-blocks-ab-acceptance-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_blocks_ab_device_result.py check
+
+check-source: c2-v190-blocks-ab-device-result-check
+
+.PHONY: c2-v190-block-a-forced-collection-followup-check
+c2-v190-block-a-forced-collection-followup-check: c2-v190-blocks-ab-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_forced_collection_followup.py check
+
+check-source: c2-v190-block-a-forced-collection-followup-check
+
+.PHONY: c2-v190-block-a-forced-collection-followup-result-check
+c2-v190-block-a-forced-collection-followup-result-check: c2-v190-block-a-forced-collection-followup-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_forced_collection_followup_result.py check
+
+check-source: c2-v190-block-a-forced-collection-followup-result-check
+
+.PHONY: c2-v190-block-a-delivered-consumer-repair-preflight-check
+c2-v190-block-a-delivered-consumer-repair-preflight-check: c2-v190-block-a-forced-collection-followup-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_repair.py check-preflight
+
+check-source: c2-v190-block-a-delivered-consumer-repair-preflight-check
+
+.PHONY: c2-v190-block-a-delivered-consumer-repair-card-check
+c2-v190-block-a-delivered-consumer-repair-card-check: c2-v190-block-a-delivered-consumer-repair-preflight-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_repair.py check
+
+check-source: c2-v190-block-a-delivered-consumer-repair-card-check
+
+.PHONY: c2-v190-block-a-delivered-consumer-media-preflight
+c2-v190-block-a-delivered-consumer-media-preflight: c2-v190-block-a-delivered-consumer-repair-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_media.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_media.py preflight
+
+.PHONY: c2-v190-block-a-delivered-consumer-media-check
+c2-v190-block-a-delivered-consumer-media-check: c2-v190-block-a-delivered-consumer-repair-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_media.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_media.py source-check
+
+check-source: c2-v190-block-a-delivered-consumer-media-check
+
+.PHONY: c2-v190-block-a-delivered-consumer-device-result-check
+c2-v190-block-a-delivered-consumer-device-result-check: c2-v190-block-a-delivered-consumer-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_device_result.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_block_a_delivered_consumer_device_result.py source-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_terminal_d5.py selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_terminal_d5.py source-check
+
+check-source: c2-v190-block-a-delivered-consumer-device-result-check
+
+.PHONY: c2-v190-release-card-check
+c2-v190-release-card-check: c2-v190-block-a-delivered-consumer-device-result-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_card.py check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_card.py selftest
+
+check-source: c2-v190-release-card-check
+
+.PHONY: c2-v190-release-media-check c2-v190-candidate-seal-check c2-v190-public-clean-build-selftest c2-v190-release-package-selftest
+c2-v190-release-media-check: c2-v190-release-card-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_media.py check
+
+c2-v190-candidate-seal-check: c2-v190-release-media-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_candidate_seal.py check
+
+c2-v190-public-clean-build-selftest: c2-v190-candidate-seal-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_public_clean_build.py selftest
+
+c2-v190-release-package-selftest: c2-v190-public-clean-build-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v190_release_package.py selftest
+
+check-source: c2-v190-release-package-selftest

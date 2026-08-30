@@ -25,6 +25,7 @@ if str(HOST) not in sys.path:
     sys.path.insert(0, str(HOST))
 
 from elf_truth import ElfTruth  # noqa: E402
+import evidence_era as ERA  # noqa: E402
 
 
 ARCH = ROOT / "tests/bytecode/dialect-v2/evidence/architecture-blocks"
@@ -56,6 +57,7 @@ ARM = (
     "(poke 188 (+ 252 counter) 0)",
     "(poke 255 141 0)",
 )
+SEAL_ERA_COMMIT = "b7928fa07ca9d6a3f4d171cb4fa69f32ed4d9be6"
 
 
 class PreflightError(RuntimeError):
@@ -121,11 +123,15 @@ def derive() -> dict[str, Any]:
     require(state_bytes[tail_offset] == 0xff,
             "final ELF no longer starts with Capture closed")
 
-    comfort = COMFORT.read_text(encoding="utf-8")
-    repl = REPL.read_text(encoding="utf-8")
-    interrupt = INTERRUPT.read_text(encoding="utf-8")
-    consumer = CONSUMER.read_text(encoding="utf-8")
-    editor = EDITOR.read_text(encoding="utf-8")
+    def era_text(path: Path) -> str:
+        return ERA.era_blob(
+            SEAL_ERA_COMMIT, path.relative_to(ROOT).as_posix()).decode("utf-8")
+
+    comfort = era_text(COMFORT)
+    repl = era_text(REPL)
+    interrupt = era_text(INTERRUPT)
+    consumer = era_text(CONSUMER)
+    editor = era_text(EDITOR)
     require(all(token in comfort for token in ARM),
             "Comfort no longer owns the complete atomic arm sequence")
     require("C2K_INPUT_RING_TAIL = 0xff;" in repl
@@ -179,7 +185,8 @@ def derive() -> dict[str, Any]:
             "interrupt": "read-only lifecycle guard",
             "consumer": "closed-tail returns empty; cannot arm itself",
             "live_editor": "modes 2/3 consume only after an owner arms",
-            "sources": {name: bind(path) for name, path in {
+            "sources": {name: ERA.era_bind(SEAL_ERA_COMMIT, path)
+                        for name, path in {
                 "capture": CAPTURE, "consumer": CONSUMER,
                 "interrupt": INTERRUPT, "native_repl": REPL,
                 "comfort": COMFORT, "editor": EDITOR}.items()},
@@ -228,6 +235,8 @@ def selftest(value: dict[str, Any]) -> None:
             claim_excludes=["Matcher/Blink", "Block 3", "$22"]),
         lambda row: row["selected_media_claim_world"].update(
             B2_1_executable=True),
+        lambda row: row["lifecycle_owners"]["sources"].update(
+            native_repl=bind(REPL)),
     )
     for mutate in mutations:
         trial = copy.deepcopy(value)

@@ -680,6 +680,31 @@ def append_only_plan(binding: dict[str, Any]) -> None:
             "Phase-C plan is not an exact append-only extension")
 
 
+def sealed_receipt_check(value: dict[str, Any]) -> None:
+    """Validate Phase C in the world that sealed its replay receipt.
+
+    The living linker generator is intentionally not an authority for this
+    historical product replay. Later cards legitimately change its selected
+    product linker; replaying those bytes against a v1.8 receipt conflates a
+    successor source world with the sealed evidence world.
+    """
+    check_receipt(value)
+    append_only_plan(value["authorities"]["plan"])
+    immutable_binding(HISTORICAL_GATE_COMMIT,
+                      value["authorities"]["gate"])
+    immutable_binding(HISTORICAL_GATE_COMMIT,
+                      value["authorities"]["canonical_linker_generator"])
+    for name, path in (
+        ("contract", CONTRACT),
+        ("phase_a", PHASE_A),
+        ("phase_b", PHASE_B),
+        ("bound_v17_linker", FAILED_LINKER),
+        ("bound_v17_lto", FAILED_LTO),
+    ):
+        require(bind(path) == value["authorities"][name],
+                f"sealed Phase-C authority drift: {name}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", nargs="?", choices=("run", "check", "selftest"),
@@ -688,30 +713,7 @@ def main() -> int:
     args = parser.parse_args()
     if args.mode == "check":
         value = load(args.receipt)
-        check_receipt(value)
-        append_only_plan(value["authorities"]["plan"])
-        immutable_binding(HISTORICAL_GATE_COMMIT,
-                          value["authorities"]["gate"])
-        fresh = build()
-        # The final-park decision appends to the plan and this checker now
-        # proves that prefix rather than rewriting the historical Phase-C
-        # receipt. The gate source is likewise verified at its receipt commit.
-        # On 2026-08-07 ad6aa0ef commissioned the complete opt-in closure of
-        # the parked ownership programme.  Its generator refactor must retain
-        # the selected historical linker bytes exactly, but naturally changes
-        # the generator file SHA.  Preserve the immutable receipt authority
-        # only after the fresh selected-source SHA has independently matched;
-        # the new canonical opt-out closure binds the current generator.
-        require(
-            fresh["generated_sources"]["product_linker_sha256"]
-                == value["generated_sources"]["product_linker_sha256"],
-            "2026-08-07 opt-in rebind changed selected product linker bytes")
-        fresh["authorities"]["plan"] = value["authorities"]["plan"]
-        fresh["authorities"]["gate"] = value["authorities"]["gate"]
-        fresh["authorities"]["canonical_linker_generator"] = (
-            value["authorities"]["canonical_linker_generator"])
-        require(canonical(fresh) == canonical(value),
-                "Phase-C receipt is not byteidentical to fresh reconstruction")
+        sealed_receipt_check(value)
     else:
         value = build()
         check_receipt(value)

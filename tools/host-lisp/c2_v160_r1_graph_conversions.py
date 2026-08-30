@@ -77,9 +77,10 @@ def dynamic_configuration_gate() -> dict[str, Any]:
     return classify_registry(BASE.candidate_rows())
 
 
-def placement_contract() -> dict[str, Any]:
+def placement_contract(elf: Path | None = None) -> dict[str, Any]:
     """Expose movable placement facts from the configured candidate ELF."""
-    elf = OLD.artifact_paths()["elf"]
+    if elf is None:
+        elf = OLD.artifact_paths()["elf"]
     truth = ElfTruth.read(elf, llvm_readobj=OLD.LLVM / "llvm-readobj",
                           include_section_data=False)
     text = truth.section(".text")
@@ -91,7 +92,10 @@ def placement_contract() -> dict[str, Any]:
         "ordinary_reserve_bytes_derived":
             facade.address - (text.address + text.bytes),
         "text_end_exclusive_derived": text.address + text.bytes,
-        "facade_address_contract": 0xB3B0,
+        "facade_address_derived": facade.address,
+        "facade_policy": "max(arena-start, final-text-end + 32)",
+        "facade_arena_start": 0xB3B0,
+        "ordinary_text_floor_bytes": 32,
         "stored_candidate_snapshot_fields": 0}
 
 
@@ -106,6 +110,7 @@ def linked_gate(elf: Path, manifest_path: Path) -> dict[str, Any]:
                           include_section_data=True)
     text = truth.section(".text")
     facade = truth.section(".lisp65_c2_mapped_far_facade")
+    handoff = truth.section(".lisp65_c2_kernal_handoff")
     fixed = truth.section(".lisp65_c2_host_facade")
     cold = truth.section(".lisp65_rt_c2emit_final_crc")
     reader = truth.symbol("c2_map_cpu_read")
@@ -115,11 +120,13 @@ def linked_gate(elf: Path, manifest_path: Path) -> dict[str, Any]:
     shelf = truth.symbol("c2_stream_shelf_read")
     c2d = truth.symbol("c2_stream_c2d_read")
     reserve = facade.address - (text.address + text.bytes)
-    contract = placement_contract()
+    derived_facade = max(0xB3B0, text.address + text.bytes + 32)
+    contract = placement_contract(elf)
     require(reader.section == text.name and selector.section == text.name
             and selector.value == reader.value + reader.bytes
             and selector.bytes >= 28 and reserve >= 0
-            and facade.address == 0xB3B0 and facade.bytes == 98
+            and facade.address == derived_facade and facade.bytes == 98
+            and facade.address + facade.bytes <= handoff.address
             and helper.section == cold.name and helper.bytes > 0
             and cold.bytes > 0 and shelf.bytes > 0 and c2d.bytes > 0
             and fixed.address == 0xB5C4 and fixed.bytes == 48
@@ -130,7 +137,10 @@ def linked_gate(elf: Path, manifest_path: Path) -> dict[str, Any]:
             "reader_bytes_derived": reader.bytes,
             "ordinary_reserve_bytes_derived": reserve,
             "text_end_exclusive_derived": text.address + text.bytes,
-            "facade_address_contract": 0xB3B0,
+            "facade_address_derived": facade.address,
+            "facade_policy": "max(arena-start, final-text-end + 32)",
+            "facade_arena_start": 0xB3B0,
+            "ordinary_text_floor_bytes": 32,
             "stored_candidate_snapshot_fields": 0},
             "candidate placement consumer differs from linked ELF")
     require(not truth.symbols_by_name.get("c2_stream_c2d_read_return")
@@ -179,7 +189,10 @@ def linked_gate(elf: Path, manifest_path: Path) -> dict[str, Any]:
         "placement_contract": contract,
         "ordinary": {"reserve_bytes_derived": reserve,
             "text_end_exclusive_derived": f"0x{text.address + text.bytes:04x}",
-            "facade_contract": {"address": "0xb3b0", "bytes": 98}},
+            "facade_derived": {"address": f"0x{facade.address:04x}",
+                "bytes": facade.bytes,
+                "next_owner_reserve_bytes":
+                    handoff.address - facade.address - facade.bytes}},
         "reader": {"address_derived": f"0x{reader.value:04x}",
                    "bytes_derived": reader.bytes},
         "selector": {"address_derived": f"0x{selector.value:04x}",
@@ -344,7 +357,9 @@ def tuple_mutations(elf: Path | None = None) -> list[str]:
 def linked_mutations(value: dict[str, Any], elf: Path, manifest: Path) -> list[str]:
     cases: dict[str, Callable[[dict[str, Any]], None]] = {
         "restore-placement-pin": lambda x: x["ordinary"].update(
-            reserve_bytes_derived=1, text_end_exclusive_derived="0xb3af"),
+            reserve_bytes_derived=1, text_end_exclusive_derived="0xb3af",
+            facade_derived={"address": "0xb3b0", "bytes": 98,
+                            "next_owner_reserve_bytes": 145}),
         "restore-code-size-pins": lambda x: x["derived_extents"].update(
             c2e_w32=63, cold_section=1246, shelf_reader=194, c2d_reader=85,
             stored_candidate_snapshot_fields=1),

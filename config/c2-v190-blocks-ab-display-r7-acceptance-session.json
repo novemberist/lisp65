@@ -1,0 +1,175 @@
+{
+  "choreography": {
+    "all_media_uploaded_and_read_back_before_boot": true,
+    "final_stopped_state_captures": 1,
+    "fresh_BASIC_first": true,
+    "one_form_per_submission": true,
+    "optional_library_mounts": 0,
+    "physical_owner_keyboard_only": true,
+    "post_boot_automated_device_access": 0,
+    "product_mounted_last": true
+  },
+  "claim_scope": {
+    "accepts": [
+      "v1.9-Block-A-lossless-capture-client",
+      "v1.9-Block-B-native-prompt-editor",
+      "v1.9-A+B-regression-freedom",
+      "release-terminal-D5"
+    ],
+    "excludes": [
+      "Comfort",
+      "Matcher/Blink",
+      "Block-C",
+      "Block-D",
+      "$22-closure",
+      "release-publication"
+    ],
+    "green_consequence": "Blocks A and B hardware-accepted"
+  },
+  "configuration": {
+    "Comfort_present": false,
+    "Matcher_Blink_present": false,
+    "capture_lifecycle": "armed at read-line entry; disarmed at return",
+    "forced_collection_basis": "more than 192 accepted printable insertions while line length stays below 192 forces at least one collection independent of nursery phase",
+    "native_prompt_collector": "public read-line editor",
+    "optional_libraries_loaded": []
+  },
+  "decision_table": {
+    "all-six-groups-green": "Blocks A and B hardware-accepted",
+    "claim-expansion": "forbidden during the device session",
+    "daily-use-blocker": "at most one repair round; otherwise descope the affected block",
+    "rare-or-cosmetic": "Known Issue and v1.9 register row"
+  },
+  "format": "lisp65-c2-v190-blocks-ab-display-r7-acceptance-session-v1",
+  "headroom_postcondition": {
+    "counter_addresses": "derive nsym and npool from the r7 ELF",
+    "minimum": {
+      "free_name_bytes": 384,
+      "free_symbol_slots": 32
+    },
+    "observation_point": "after all rows in this same fresh session"
+  },
+  "media": {
+    "product": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.9-blocks-ab-display-r7-acceptance-media/shared-system/lisp65-product.d81",
+      "remote_name": "V19R7P.D81",
+      "sha256": "9bc5d45db0c0280ce8f067856dee98ed1cc14aec256398c5e93eb1b56bb06412"
+    }
+  },
+  "recorded_on": "2026-08-30",
+  "rows": [
+    {
+      "actions": [
+        "cold boot the product medium",
+        "observe lisp65> and the active cursor before typing"
+      ],
+      "expect": [
+        "WORKBENCH banner and one live native lisp65> prompt",
+        "prompt and active cursor occupy the same row",
+        "no scattered positioning spaces and no second cursor"
+      ],
+      "group": "prompt and editable cursor share one owned row",
+      "id": "ABR7-1-composed-native-prompt-display"
+    },
+    {
+      "actions": [
+        "at lisp65> type (list 1 3) without Return",
+        "move Left twice, insert 2 followed by a space, then Return",
+        "exercise Left/Right, C-b/C-f, C-a/C-e, Delete/C-d and boundary no-ops"
+      ],
+      "expect": [
+        "first result is (1 2 3)",
+        "all edits occur at the cursor and preserve order",
+        "*** reader: invalid token does not appear"
+      ],
+      "group": "native prompt editor and v1.8 issue pension",
+      "id": "ABR7-2-native-prompt-editor"
+    },
+    {
+      "accepted_printable_insertions_minimum": 250,
+      "actions": [
+        "start a fresh native input with (length \"",
+        "type 0123456789 twelve times (120 printable insertions)",
+        "press Delete/Backspace eighty times so forty digits remain",
+        "rapidly type 0123456789 twelve more times, then close with \" ) and Return",
+        "visually keep the ten-digit grouping ordered while typing"
+      ],
+      "expect": [
+        "result is exactly 160",
+        "no character is swallowed",
+        "no reordering or progressive backlog",
+        "at least one collection occurred while Capture was armed"
+      ],
+      "forced_collection": true,
+      "group": "normal and fast physical typing over forced collection",
+      "id": "ABR7-3-lossless-forced-collection",
+      "maximum_simultaneous_line_bytes": 172
+    },
+    {
+      "actions": [
+        "confirm this boot used only the product medium",
+        "do not mount or require any optional library"
+      ],
+      "expect": [
+        "native prompt remains live without library freight",
+        "no INIT.L65 error, red frame or library dependency"
+      ],
+      "group": "boot surface without optional libraries",
+      "id": "ABR7-4-boot-surface-without-libraries"
+    },
+    {
+      "actions": [
+        "submit (read-line), type abde, move Left twice, insert c, Return",
+        "start another input and press physical RUN/STOP",
+        "submit (>= nil 32), then submit (list 1 3)"
+      ],
+      "expect": [
+        "explicit read-line returns abcde with the same framebuffer semantics",
+        "RUN/STOP returns to one live lisp65> without red frame",
+        "type error recovers practically immediately",
+        "follow-up result is (1 3)"
+      ],
+      "group": "explicit editor, ownership and recovery",
+      "id": "ABR7-5-explicit-read-line-break-and-A0"
+    },
+    {
+      "actions": [
+        "confirm the absent INIT.L65 path was silent at this boot",
+        "define (defun v19-perf-probe (x) (+ x 1))",
+        "run the four bound time forms",
+        "capture final D5 counters"
+      ],
+      "expect": [
+        "each time form stays at or below two frames",
+        "D5 free symbol slots >= 32",
+        "D5 free name bytes >= 384"
+      ],
+      "group": "INIT.L65 regression, performance smokes and D5",
+      "id": "ABR7-6-INIT-performance-and-D5",
+      "performance_forms": [
+        {
+          "form": "(time (car (cdr (list 1 2))))",
+          "max_frames": 2,
+          "value": "2"
+        },
+        {
+          "form": "(time ((lambda (x) (progn (rplaca x 9) x)) (list 1 2)))",
+          "max_frames": 2,
+          "value": "(9 2)"
+        },
+        {
+          "form": "(time (string-ref \"abc\" 1))",
+          "max_frames": 2,
+          "value": "98"
+        },
+        {
+          "form": "(time (v19-perf-probe 41))",
+          "max_frames": 2,
+          "value": "42"
+        }
+      ]
+    }
+  ],
+  "status": "ready-owner-A+B-r7-contact"
+}

@@ -23,7 +23,8 @@
 #error "Workbench REPL banner is required but absent from the generated stdlib directory"
 #endif
 #endif
-#if defined(LISP65_COMPILE_REPL) || defined(LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY)
+#if defined(LISP65_COMPILE_REPL) || defined(LISP65_BYTECODE_STDLIB_REPL_BANNER_ENTRY) \
+    || defined(LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY)
 #include "vm.h"
 #endif
 #ifdef LISP65_COMPILE_REPL
@@ -100,6 +101,33 @@ static void echo_char(char ch) {
 
 /* Liest eine Zeile, haengt ab buf[*np] an, aktualisiert *np.
  * return: 1 = mit RETURN beendet, 0 = EOF (Host), 2 = CLR/HOME (Screen geloescht). */
+#ifdef LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY
+static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
+    obj line;
+    uint16_t length;
+    lisp65_error_code code;
+    vm_status = VM_OK;
+    line = vm_run_dir(LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY, NULL, 0);
+    if (vm_status != VM_OK && vm_status != VM_HALT) {
+        code = vm_status_error_code(vm_status);
+        vm_status = VM_OK;
+        lisp_abort_code(code);
+        return 0;
+    }
+    vm_status = VM_OK;
+    if (!IS_PTR(line) || cell_type(line) != T_STR) {
+        lisp_abort_code(LISP65_ERR_VM_TYPE);
+        return 0;
+    }
+    length = str_len(line);
+    if (length >= (uint16_t)(max - *np)) {
+        lisp_abort_code(LISP65_ERR_READER_INVALID_TOKEN);
+        return 0;
+    }
+    *np = (uint8_t)(*np + str_copy_out(line, buf + *np, length));
+    return 1;
+}
+#else
 static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
     uint8_t n = *np, floor = *np;
 #ifdef DEVICE_KB
@@ -186,6 +214,8 @@ static uint8_t read_line(char *buf, uint8_t *np, uint8_t max) {
     }
 }
 
+#endif
+
 void repl(void) {
     static char buf[BUF_MAX];
     int aborted = 0;
@@ -258,9 +288,13 @@ void repl(void) {
 
     for (;;) {
         uint8_t n = 0, st;
+#ifndef LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY
         emit_str("lisp65> ");
+#endif
         st = read_line(buf, &n, BUF_MAX);
+#ifndef LISP65_BYTECODE_STDLIB_NATIVE_READ_LINE_ENTRY
         if (st == 1) emit('\n');
+#endif
         if (st == 0) return;                              /* EOF */
         if (st == 2) continue;                            /* CLR -> restart */
 #ifdef DEVICE_KB

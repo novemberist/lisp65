@@ -1,0 +1,162 @@
+{
+  "artifact_world": {
+    "ELF": {
+      "bytes": 635524,
+      "path": "build/c2.3/v1.9-native-prompt-editor-display-repair-r7/wplto/lisp65-c2-substitution-linked.prg.elf",
+      "sha256": "ddba7b5eeb62356ed92d9e9f933d394ceefee7d7e2f1f349496355cfc31ec04a"
+    },
+    "media_receipt": {
+      "bytes": 10363,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-blocks-ab-display-r7-acceptance-media-receipt.json",
+      "sha256": "f9228b3bc2fa7445020bf89f1d9248393c16dd3800e01d63809b589cd9ece433"
+    },
+    "optional_libraries": [],
+    "predecessor_device_result": {
+      "bytes": 6980,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-blocks-ab-display-r7-device-result-receipt.json",
+      "sha256": "63389df8bdbae18261f1c4dfeae8c70c4a293158159ca13181232ed79785beae"
+    },
+    "product_changes": 0,
+    "product_medium": {
+      "bytes": 819200,
+      "path": "build/c2.3/v1.9-blocks-ab-display-r7-acceptance-media/shared-system/lisp65-product.d81",
+      "remote_name": "V19R7P.D81",
+      "sha256": "9bc5d45db0c0280ce8f067856dee98ed1cc14aec256398c5e93eb1b56bb06412"
+    },
+    "r7_card": {
+      "bytes": 120743,
+      "path": "tests/bytecode/dialect-v2/evidence/architecture-blocks/c2.3-v1.9-native-prompt-editor-display-repair-r7-receipt.json",
+      "sha256": "f6291f78a51c9d8ec5ed42c0f400e00188f2eb89492c7840ac7f720e3c15c9e9"
+    }
+  },
+  "choreography": {
+    "fresh_BASIC_first": true,
+    "owner_keyboard_only_after_boot": true,
+    "post_boot_automated_access_before_final_stop": 0,
+    "product_medium_only": true,
+    "resumes_after_stop": 0,
+    "stops": 1
+  },
+  "claim_limit": "Typing inside one delivered read-line capture lifetime only; type-ahead during evaluation is not claimed.",
+  "claim_scope": {
+    "accepts": [
+      "v1.9-Block-A-lossless-input-across-device-collection"
+    ],
+    "already_closed": [
+      "v1.9-Block-B-native-prompt-editor"
+    ],
+    "excludes": [
+      "Comfort",
+      "Matcher/Blink",
+      "Block-C",
+      "Block-D",
+      "$22-closure",
+      "Ship",
+      "publication"
+    ],
+    "green_consequence": "Block A hardware-accepted; v1.5 fast-typing Known Issue pensioned"
+  },
+  "collection_derivation": {
+    "bound_printable_insertions": 199,
+    "delivered_r7_heap_cells_per_printable": 1,
+    "historical_four_cell_assumption_rejected": true,
+    "nursery_cells": 192,
+    "proof": "199 * 1 > 192; at least one collection while read-line capture is armed",
+    "required_printable_insertions_independent_of_incoming_phase": 193,
+    "single_origin_required": true
+  },
+  "controller": {
+    "expected_numeric_oracle": 7,
+    "form": "(progn (setq s (read-line)) (print (string-length s)) (wait 16383))",
+    "form_characters_before_counter_origin": 67,
+    "purpose": "nested read-line owns the measured origin; print gives the numeric oracle; wait keeps counters stable before the next prompt can re-zero them",
+    "wait_frames": 16383
+  },
+  "counter_witness": {
+    "addresses": {
+      "raw": "0xBCFC",
+      "seen": "0xBCFD",
+      "stored": "0xBCFE",
+      "taken": "0xBCFF"
+    },
+    "event_arithmetic": {
+      "delete_backward": 192,
+      "expected_each_modulo_256": 136,
+      "physical_events": 392,
+      "printable_insertions": 199,
+      "return": 1,
+      "wraps": 1
+    },
+    "green": "raw=seen=stored=taken=136 and visible numeric oracle=7",
+    "modulus": 256,
+    "order": [
+      "raw",
+      "seen",
+      "stored",
+      "taken"
+    ],
+    "origin": "atomic zero at nested read-line entry while capture tail is closed",
+    "width_bits": 8
+  },
+  "decision_table": {
+    "equal-but-not-136": "session choreography/count invalid; no product verdict",
+    "oracle-7-and-136=136=136=136": "Block A hardware-accepted; v1.5 fast-typing Known Issue pensioned",
+    "raw<136": "physical/core before queue-present observation",
+    "raw>seen": "IRQ queue read or filtering",
+    "seen>stored": "ring admission/write",
+    "stored>taken": "consumer/take",
+    "visible-token-or-delete-count-mismatch": "device input-loss red"
+  },
+  "format": "lisp65-c2-v190-block-a-forced-collection-followup-session-v1",
+  "recorded_on": "2026-08-30",
+  "status": "READY: OWNER BLOCK-A FORCED-COLLECTION FOLLOW-UP",
+  "steps": [
+    {
+      "action": "cold boot V19R7P.D81 alone and wait for the live lisp65> prompt",
+      "expect": "normal r7 native prompt; no optional library",
+      "id": "A-FC-1"
+    },
+    {
+      "action": "enter exactly (progn (setq s (read-line)) (print (string-length s)) (wait 16383)) and press Return",
+      "expect": "a fresh blank nested read-line row appears",
+      "id": "A-FC-2"
+    },
+    {
+      "action": "six times type exactly 01234567012345670123456701234567; verify its four 8-character groups; after each pass press Delete/Backspace exactly 32 times as four counted groups of eight until the row is blank",
+      "expect": "passes 1-2 ordinary and 3-6 fast; every token is exact and the row becomes blank exactly on deletion 32",
+      "id": "A-FC-3"
+    },
+    {
+      "action": "type abcdefg and press Return",
+      "expect": "7 is printed and no new prompt appears while wait is active",
+      "id": "A-FC-4"
+    },
+    {
+      "action": "leave the keyboard untouched; Codex stops the CPU once and reads $BCFC..$BCFF read-only",
+      "expect": "four bytes are 88 88 88 88 (hex), i.e. 136 each; no resume",
+      "id": "A-FC-5"
+    }
+  ],
+  "stimulus": {
+    "delete_discipline": "exactly four sets of eight individual Delete/Backspace presses; no hold/repeat; row must be blank after the 32nd",
+    "final_text": "abcdefg",
+    "maximum_simultaneous_test_text": 32,
+    "pace": {
+      "passes_1_to_2": "ordinary",
+      "passes_3_to_6": "fast"
+    },
+    "passes": 6,
+    "per_pass": {
+      "delete_backward_events": 32,
+      "printable_insertions": 32,
+      "text": "01234567012345670123456701234567",
+      "visible_groups": [
+        "01234567",
+        "01234567",
+        "01234567",
+        "01234567"
+      ]
+    },
+    "return_events": 1
+  }
+}

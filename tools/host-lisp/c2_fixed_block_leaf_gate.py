@@ -34,6 +34,7 @@ OWNED_STACK_ADDRESS = 0xC074
 OWNED_STACK_BYTES = 6
 OVERLAY_FLOOR = 0xC352
 EXPECTED_DATA_EDGES = 0
+DERIVED_CODE_LAYOUT = False
 
 
 class GateError(RuntimeError):
@@ -57,18 +58,68 @@ def configure_link60_geometry() -> None:
     EXPECTED_DATA_EDGES = 3
 
 
+def configure_candidate_derived_code_layout() -> None:
+    """Validate the live fixed-code members instead of a sealed snapshot.
+
+    Link-60 still owns the fixed arena and Hot-BSS address.  Successor LTO
+    worlds, however, may emit smaller member bodies.  In this mode the
+    member starts and total size come from the final ELF's sized symbols;
+    the independent Hot-BSS owner remains the hard envelope.
+    """
+    global DERIVED_CODE_LAYOUT
+    if HOT_BSS_ADDRESS != 0xC25D or EXPECTED_DATA_EDGES != 3:
+        raise GateError("candidate-derived fixed code requires Link-60 geometry")
+    DERIVED_CODE_LAYOUT = True
+
+
+def _derived_code_members(truth: ElfTruth) -> dict[str, Any]:
+    code = truth.section(CODE_SECTION)
+    members = [truth.symbol(name) for name in (
+        "kb_cursor_off", "c2_facade_target_c2e_cons", LEAF)]
+    cursor = code.address
+    rows = []
+    for member in members:
+        require(member.symbol_type == "Function"
+                and member.section == CODE_SECTION
+                and member.value == cursor
+                and member.bytes > 0,
+                f"candidate-derived fixed-code member drift: {member}")
+        rows.append({"name": member.name, "address": member.value,
+                     "bytes": member.bytes,
+                     "end_exclusive": member.value + member.bytes})
+        cursor += member.bytes
+    require(code.address == CODE_ADDRESS
+            and code.bytes == sum(row["bytes"] for row in rows)
+            and cursor == code.address + code.bytes
+            and cursor <= HOT_BSS_ADDRESS,
+            "candidate-derived fixed-code envelope/member-order drift")
+    return {"authority": "final-ELF-sized-member-order-plus-hot-BSS-envelope",
+            "members": rows, "derived_bytes": code.bytes,
+            "end_exclusive": cursor,
+            "headroom_to_hot_bss_bytes": HOT_BSS_ADDRESS - cursor}
+
+
 def audit_truth(truth: ElfTruth, *, require_hot_bss: bool,
                 full_map_ownership: bool = False) -> dict[str, Any]:
     code = truth.section(CODE_SECTION)
     leaf = truth.symbol(LEAF)
+    derived_layout = (_derived_code_members(truth)
+                      if DERIVED_CODE_LAYOUT else None)
     require(
-        (code.address, code.bytes) == (CODE_ADDRESS, CODE_BYTES),
+        code.address == CODE_ADDRESS
+        and (DERIVED_CODE_LAYOUT or code.bytes == CODE_BYTES),
         f"fixed-code geometry drift: {code}")
+    expected_leaf_address = (
+        derived_layout["members"][-1]["address"]
+        if derived_layout is not None else LEAF_ADDRESS)
+    expected_leaf_bytes = (
+        derived_layout["members"][-1]["bytes"]
+        if derived_layout is not None else LEAF_BYTES)
     require(
         leaf.symbol_type == "Function"
         and leaf.section == CODE_SECTION
-        and leaf.value == LEAF_ADDRESS
-        and leaf.bytes == LEAF_BYTES,
+        and leaf.value == expected_leaf_address
+        and leaf.bytes == expected_leaf_bytes,
         f"fixed rtov_fail identity drift: {leaf}")
 
     outgoing = [
@@ -198,6 +249,7 @@ def audit_truth(truth: ElfTruth, *, require_hot_bss: bool,
             "address": code.address,
             "bytes": code.bytes,
             "end_exclusive": code.address + code.bytes,
+            "derived_layout": derived_layout,
         },
         "leaf": {
             "name": leaf.name,

@@ -59,6 +59,8 @@ FIXED_BANK0_NOINIT_BYTES = 6
 SESSION_EMITTER_STATE_BYTES = 346
 SESSION_EMITTER_STATE_BASE: int | None = None
 LINK60_FINAL_GEOMETRY = False
+DERIVED_FIXED_BANK0_CODE_LAYOUT = False
+DERIVED_FIXED_BANK0_CODE_LAYOUT_REQUESTED = False
 E000_REOPENING = False
 BSS_TRIAGE = False
 FULL_MAP_OWNERSHIP = False
@@ -121,6 +123,13 @@ RECOVERY_QUIESCENCE_ENABLED = False
 # load addresses.  Successor cards may instead select a structural policy;
 # the linker remains the sole producer of the resulting LOADADDR symbols.
 MAPPED_TENANT_LMA_POLICY = "contract"
+# The mapped Far facade historically occupied the first byte of its resident
+# arena.  A final-link card may instead derive its VMA from the actual end of
+# ordinary text while retaining the same MAP-domain offset.  Keeping this a
+# one-way configured policy makes the linker, not a hand-maintained table, the
+# sole geometry owner.
+MAPPED_FACADE_PLACEMENT_POLICY = "contract"
+MAPPED_FACADE_TEXT_FLOOR_BYTES = 0
 KERNAL_EQUATES_INCLUDE = ROOT / "src/c2_kernal_window_equates.inc"
 E000_REOPEN_DEBIT_CAP = 450
 E000_FINAL_FLOOR_BYTES = 63
@@ -174,6 +183,28 @@ def configure_mapped_tenant_lma_policy(policy: str) -> None:
     if MAPPED_TENANT_LMA_POLICY not in ("contract", policy):
         raise RuntimeError("mapped-tenant LMA policy configured twice")
     MAPPED_TENANT_LMA_POLICY = policy
+
+
+def configure_mapped_facade_placement(policy: str, *, text_floor: int) -> None:
+    """Select candidate-derived placement for the resident MAP facade.
+
+    ``after-final-text-floor`` places the existing facade at
+    ``max(arena_start, final .text end + text_floor)``.  Its LMA follows the
+    mapped tenants' linker-derived shared offset.  The selector is one-way so
+    a process cannot silently combine two geometry authorities.
+    """
+    global MAPPED_FACADE_PLACEMENT_POLICY, MAPPED_FACADE_TEXT_FLOOR_BYTES
+    if policy != "after-final-text-floor":
+        raise RuntimeError(f"unsupported mapped-facade policy: {policy}")
+    if text_floor <= 0:
+        raise RuntimeError("mapped-facade text floor must be positive")
+    if MAPPED_FACADE_PLACEMENT_POLICY not in ("contract", policy):
+        raise RuntimeError("mapped-facade placement configured twice")
+    if (MAPPED_FACADE_PLACEMENT_POLICY == policy
+            and MAPPED_FACADE_TEXT_FLOOR_BYTES not in (0, text_floor)):
+        raise RuntimeError("mapped-facade text floor configured twice")
+    MAPPED_FACADE_PLACEMENT_POLICY = policy
+    MAPPED_FACADE_TEXT_FLOOR_BYTES = text_floor
 
 
 LOW_RESIDENT_LMA_SECTIONS = (
@@ -425,13 +456,14 @@ def full_map_rewrite_product_linker(script: str) -> str:
 
 /* v1.8 full-map simultaneous-live closure.  All addresses are duplicated in
  * the independent Phase-B contract and checked by the permanent gate. */
-ASSERT(ADDR(.rodata) == 0xb61d && SIZEOF(.rodata) == 879 &&
+ASSERT(ADDR(.rodata) == 0xb61d &&
+       ADDR(.rodata) + SIZEOF(.rodata) <= 0xb98c &&
        ADDR(.lisp65_runtime_overlay_verifier_bindings) == 0xb98c &&
        SIZEOF(.lisp65_runtime_overlay_verifier_bindings) == 40 &&
        ADDR(.data) == 0xb9b4 && LOADADDR(.data) == 0xb9b4 &&
        SIZEOF(.data) == 22 &&
-       ADDR(.bss) == 0xb9ca && SIZEOF(.bss) == 1585 &&
-       ADDR(.bss) + SIZEOF(.bss) == 0xbffb,
+       ADDR(.bss) == 0xb9ca &&
+       ADDR(.bss) + SIZEOF(.bss) <= 0xbffb,
        "ordinary full-map chain drift");
 ASSERT(ADDR(.lisp65_c2_convergence_state) == 0xc000 &&
        ADDR(.lisp65_c2_static_stack) == 0xc074 &&
@@ -444,8 +476,8 @@ ASSERT(ADDR(.lisp65_c2_convergence_state) == 0xc000 &&
        __lisp65_workbench_overlay_min_start == 0xc354 &&
        __lisp65_workbench_runtime_overlay_vma >= __heap_start,
        "fixed/full-map/heap/overlay simultaneous-live relation drift");
-ASSERT(0xc000 - (ADDR(.bss) + SIZEOF(.bss)) == 5,
-       "five-byte validation margin drifted; it is not capacity");
+ASSERT(0xc000 - (ADDR(.bss) + SIZEOF(.bss)) >= 5,
+       "five-byte validation margin floor violated; it is not capacity");
 '''
 
 
@@ -1396,7 +1428,7 @@ def configure_link60_final_geometry() -> None:
     global SESSION_EMITTER_STATE_BYTES, SESSION_EMITTER_STATE_BASE
     global E000_FINAL_FLOOR_BYTES, PROFILE_RODATA_BASE
     global VERIFIER_BINDING_BASE
-    global LINK60_FINAL_GEOMETRY
+    global LINK60_FINAL_GEOMETRY, DERIVED_FIXED_BANK0_CODE_LAYOUT
     E000_FINAL_FLOOR_BYTES = C2_LITE_HYBRID_E000_FLOOR_BYTES
     PROFILE_RODATA_BASE = C2_LITE_HYBRID_PROFILE_RODATA_BASE
     FIXED_BANK0_CODE_BYTES = 69
@@ -1406,6 +1438,29 @@ def configure_link60_final_geometry() -> None:
     VERIFIER_BINDING_BASE = LINK60_VERIFIER_BINDING_BASE
     LINK60_FINAL_GEOMETRY = True
     FIXED_BLOCK_LEAF.configure_link60_geometry()
+    if DERIVED_FIXED_BANK0_CODE_LAYOUT_REQUESTED:
+        DERIVED_FIXED_BANK0_CODE_LAYOUT = True
+        FIXED_BLOCK_LEAF.configure_candidate_derived_code_layout()
+
+
+def configure_candidate_derived_fixed_bank0_code_layout() -> None:
+    """Replace Link-60's code-size snapshot with final-ELF relations.
+
+    The fixed arena base and the independent Hot-BSS owner remain fixed.
+    Member starts and the code-section size are instead derived from the
+    linked candidate, so a favorable LTO shrink is not rejected and a gap,
+    overlap or unexplained member shift still is.
+    """
+    global DERIVED_FIXED_BANK0_CODE_LAYOUT
+    global DERIVED_FIXED_BANK0_CODE_LAYOUT_REQUESTED
+    DERIVED_FIXED_BANK0_CODE_LAYOUT_REQUESTED = True
+    # Stack configuration happens before the historical Link-33 profile
+    # proves its own 66-byte predecessor.  Request the successor here, but do
+    # not mutate that sealed phase.  The live Link-60 selector above activates
+    # the request at the first point where its geometry actually owns state.
+    if LINK60_FINAL_GEOMETRY:
+        DERIVED_FIXED_BANK0_CODE_LAYOUT = True
+        FIXED_BLOCK_LEAF.configure_candidate_derived_code_layout()
 
 
 def run(argv: list[str], *, capture: bool = False) -> str:
@@ -2842,6 +2897,44 @@ ASSERT(ADDR(.lisp65_c2_vectors) == 0xfffa && SIZEOF(.lisp65_c2_vectors) == 6,
                 raise RuntimeError(f"Link-60 fixed-code template drift: {old}")
             kernal_layout = kernal_layout.replace(old, new, 1)
 
+    if DERIVED_FIXED_BANK0_CODE_LAYOUT:
+        old = r"""ASSERT(ADDR(.lisp65_c2_fixed_bank0) + SIZEOF(.lisp65_c2_fixed_bank0) <=
+       ADDR(.lisp65_c2_fixed_bank0_code) &&
+       ADDR(.lisp65_c2_fixed_bank0_code) == 0xc218 &&
+       SIZEOF(.lisp65_c2_fixed_bank0_code) == 69 &&
+       __lisp65_c2_fixed_bank0_code_start == 0xc218 &&
+       __lisp65_c2_fixed_bank0_code_kb_cursor_off == 0xc218 &&
+       __lisp65_c2_fixed_bank0_code_c2e_cons == 0xc21d &&
+       __lisp65_c2_fixed_bank0_code_rtov_fail == 0xc245 &&
+       __lisp65_c2_fixed_bank0_code_end == 0xc25d &&
+       ADDR(.lisp65_c2_fixed_bank0_code) +
+       SIZEOF(.lisp65_c2_fixed_bank0_code) <=
+       __lisp65_workbench_runtime_overlay_vma,
+       "C2 fixed Bank-0 state overlaps the runtime overlay");"""
+        new = r"""ASSERT(ADDR(.lisp65_c2_fixed_bank0) + SIZEOF(.lisp65_c2_fixed_bank0) <=
+       ADDR(.lisp65_c2_fixed_bank0_code) &&
+       ADDR(.lisp65_c2_fixed_bank0_code) == 0xc218 &&
+       __lisp65_c2_fixed_bank0_code_start ==
+           ADDR(.lisp65_c2_fixed_bank0_code) &&
+       __lisp65_c2_fixed_bank0_code_kb_cursor_off ==
+           __lisp65_c2_fixed_bank0_code_start &&
+       __lisp65_c2_fixed_bank0_code_kb_cursor_off <=
+           __lisp65_c2_fixed_bank0_code_c2e_cons &&
+       __lisp65_c2_fixed_bank0_code_c2e_cons <=
+           __lisp65_c2_fixed_bank0_code_rtov_fail &&
+       __lisp65_c2_fixed_bank0_code_rtov_fail <=
+           __lisp65_c2_fixed_bank0_code_end &&
+       __lisp65_c2_fixed_bank0_code_end ==
+           ADDR(.lisp65_c2_fixed_bank0_code) +
+           SIZEOF(.lisp65_c2_fixed_bank0_code) &&
+       __lisp65_c2_fixed_bank0_code_end <=
+           ADDR(.lisp65_c2_fixed_bank0_hot_bss),
+       "C2 fixed Bank-0 code escaped its derived member envelope");"""
+        if kernal_layout.count(old) != 1:
+            raise RuntimeError(
+                "candidate-derived fixed-code template did not replace one snapshot")
+        kernal_layout = kernal_layout.replace(old, new, 1)
+
     if LOW_RESIDENT_LMA_RESET:
         kernal_layout = apply_low_resident_lma_reset(kernal_layout)
 
@@ -3116,6 +3209,49 @@ ASSERT(SIZEOF(.lisp65_c2_kernal_window.reopen_gap0) +
             far_load_end_assertion = (
                 "__lisp65_c2_mapped_far_service_load_end == "
                 f"{int(bank2['service_physical_end_exclusive'], 0):#010x}")
+
+        facade_arena_start = int(resident["start"], 0)
+        facade_arena_end = int(resident["end_exclusive"], 0)
+        facade_bytes = int(resident["total_bytes"])
+        if MAPPED_FACADE_PLACEMENT_POLICY == "after-final-text-floor":
+            if MAPPED_TENANT_LMA_POLICY != "map-page-top":
+                raise RuntimeError(
+                    "derived mapped facade requires map-page-top authority")
+            if map_shared_offset is None:
+                raise RuntimeError(
+                    "derived mapped facade lacks shared MAP offset")
+            facade_vma = (
+                f"MAX({facade_arena_start:#06x}, "
+                "ADDR(.text) + SIZEOF(.text) + "
+                f"{MAPPED_FACADE_TEXT_FLOOR_BYTES})")
+            facade_header = (
+                ".lisp65_c2_mapped_far_facade " + facade_vma
+                + " : AT((" + facade_vma + ") + (" + map_shared_offset + "))")
+            facade_position_assertion = (
+                "ADDR(.lisp65_c2_mapped_far_facade) == " + facade_vma
+                + " &&\n        "
+                "ADDR(.lisp65_c2_mapped_far_facade) -\n"
+                "            (ADDR(.text) + SIZEOF(.text)) >= "
+                f"{MAPPED_FACADE_TEXT_FLOOR_BYTES} &&\n        "
+                "LOADADDR(.lisp65_c2_mapped_far_facade) -\n"
+                "            ADDR(.lisp65_c2_mapped_far_facade) ==\n"
+                "                __lisp65_c2_mapped_shared_offset")
+            ordinary_text_assertion = (
+                "ADDR(.lisp65_c2_mapped_far_facade) -\n"
+                "           (ADDR(.text) + SIZEOF(.text)) >= "
+                f"{MAPPED_FACADE_TEXT_FLOOR_BYTES}")
+        elif MAPPED_FACADE_PLACEMENT_POLICY == "contract":
+            facade_vma = f"{facade_arena_start:#06x}"
+            facade_header = (
+                ".lisp65_c2_mapped_far_facade " + facade_vma + " :")
+            facade_position_assertion = (
+                "ADDR(.lisp65_c2_mapped_far_facade) == " + facade_vma)
+            ordinary_text_assertion = (
+                "ADDR(.text) + SIZEOF(.text) <= " + facade_vma)
+        else:
+            raise RuntimeError(
+                "unknown mapped-facade placement policy: "
+                f"{MAPPED_FACADE_PLACEMENT_POLICY}")
         owned_layout = f"""/* Halt-1-selected stack/state/far-service owners.
  * Expected addresses live in the reviewed ownership contract; the permanent
  * gate compares this generated script and the final ELF against that
@@ -3136,7 +3272,7 @@ SECTIONS {{
 }} INSERT BEFORE .noinit;
 
 SECTIONS {{
-    .lisp65_c2_mapped_far_facade {int(resident['start'], 0):#06x} : {{
+    {facade_header} {{
         KEEP(*(.lisp65_c2_mapped_far_facade.entries))
         KEEP(*(.lisp65_c2_mapped_far_facade.abort))
         __lisp65_c2_mapped_far_facade_padding_start = .;
@@ -3189,10 +3325,10 @@ ASSERT(__lisp65_c2_mapped_far_required == 0 ||
         SIZEOF(.lisp65_c2_convergence_state) == 66),
        "convergence state escaped its named owners");
 ASSERT(__lisp65_c2_mapped_far_required == 0 ||
-       (ADDR(.lisp65_c2_mapped_far_facade) == {int(resident['start'], 0):#06x} &&
-        SIZEOF(.lisp65_c2_mapped_far_facade) == {int(resident['total_bytes'])} &&
+       ({facade_position_assertion} &&
+        SIZEOF(.lisp65_c2_mapped_far_facade) == {facade_bytes} &&
         ADDR(.lisp65_c2_mapped_far_facade) +
-            SIZEOF(.lisp65_c2_mapped_far_facade) <= {int(resident['end_exclusive'], 0):#06x}),
+            SIZEOF(.lisp65_c2_mapped_far_facade) <= {facade_arena_end:#06x}),
        "mapped far facade escaped its resident wall");
 ASSERT(__lisp65_c2_mapped_far_facade_padding_required == 0 ||
        (DEFINED(__lisp65_c2_mapped_far_facade_padding_contract_bytes) &&
@@ -3209,7 +3345,7 @@ ASSERT(__lisp65_c2_mapped_far_required == 0 ||
         {far_load_end_assertion}),
        "mapped far body escaped its Bank-2 owner");
 ASSERT(__lisp65_c2_mapped_far_required == 0 ||
-       ADDR(.text) + SIZEOF(.text) <= {int(resident['start'], 0):#06x},
+       {ordinary_text_assertion},
        "ordinary text displaced the mapped far facade");
 ASSERT({int(cpu['start'], 0):#06x} == 0x6000 &&
        {int(cpu['end_exclusive'], 0):#06x} == 0x8000,
@@ -4720,6 +4856,21 @@ def _full_map_final_section_owners() -> list[dict[str, object]]:
             "flags": tuple(str(flag) for flag in flags),
             "size_policy": policy,
             "capacity_bytes": int(value.get("capacity_bytes", value["bytes"])),
+            "address_policy": (
+                "candidate-derived-after-final-text-floor"
+                if (name == ".lisp65_c2_mapped_far_facade" and
+                    MAPPED_FACADE_PLACEMENT_POLICY ==
+                        "after-final-text-floor")
+                else "fixed-contract"),
+            "arena_start": (
+                int(str(value["address"]), 0)
+                if name == ".lisp65_c2_mapped_far_facade" else None),
+            "arena_end": (
+                int(str(value["address"]), 0) + 243
+                if name == ".lisp65_c2_mapped_far_facade" else None),
+            "text_floor_bytes": (
+                MAPPED_FACADE_TEXT_FLOOR_BYTES
+                if name == ".lisp65_c2_mapped_far_facade" else None),
         })
     names = [str(row["name"]) for row in owners]
     if len(set(names)) != len(names):
@@ -5081,7 +5232,23 @@ def _final_section_inventory_violations(
             violations.append(f"full-map-owner-count:{name}")
             continue
         row = matches[0]
-        if int(row["address"]) != int(owner["address"]):
+        if owner.get("address_policy") == \
+                "candidate-derived-after-final-text-floor":
+            text_rows = [value for value in sections
+                         if value["name"] == ".text"]
+            if len(text_rows) != 1:
+                violations.append("full-map-derived-facade-text-count")
+            else:
+                text_end = (int(text_rows[0]["address"])
+                            + int(text_rows[0]["bytes"]))
+                expected_address = max(
+                    int(owner["arena_start"]),
+                    text_end + int(owner["text_floor_bytes"]))
+                if (int(row["address"]) != expected_address
+                        or int(row["address"]) + int(row["bytes"])
+                            > int(owner["arena_end"])):
+                    violations.append(f"full-map-owner-address:{name}")
+        elif int(row["address"]) != int(owner["address"]):
             violations.append(f"full-map-owner-address:{name}")
         if owner.get("size_policy") == "candidate-derived-relocation-records":
             # A relocation section's count follows the emitted freight.  Its
@@ -5471,13 +5638,18 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
         full_map_ownership=FULL_MAP_OWNERSHIP)
     sections = section_table(elf)
     symbols = defined_symbols(elf)
+    derived_fixed = (fixed_leaf["fixed_code"]["derived_layout"]
+                     if DERIVED_FIXED_BANK0_CODE_LAYOUT else None)
+    fixed_code_bytes = (int(derived_fixed["derived_bytes"])
+                        if derived_fixed is not None
+                        else FIXED_BANK0_CODE_BYTES)
     required_sections = {
         ".lisp65_c2_host_facade": (HOST_FACADE_BASE,
                                     host_facade_bytes()),
         ".lisp65_c2_fixed_zp": (FIXED_ZP_BASE, FIXED_ZP_BYTES),
         ".lisp65_c2_fixed_bank0": (FIXED_BANK0_BASE, FIXED_BANK0_BYTES),
         ".lisp65_c2_fixed_bank0_code": (FIXED_BANK0_CODE_BASE,
-                                          FIXED_BANK0_CODE_BYTES),
+                                          fixed_code_bytes),
         ".lisp65_c2_kernal_window.session_emitter_state": (
             sections.get(".lisp65_c2_kernal_window.session_emitter_state", {}).get(
                 "address", -1), SESSION_EMITTER_STATE_BYTES),
@@ -5523,15 +5695,32 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
         "__lisp65_c2_fixed_bank0_edma_job": 0xC0B2,
         "__lisp65_c2_fixed_bank0_phase_scratch": 0xC0C6,
         "__lisp65_c2_fixed_bank0_sym_name_scratch": 0xC1F6,
-        "__lisp65_c2_fixed_bank0_code_start": FIXED_BANK0_CODE_BASE,
-        "__lisp65_c2_fixed_bank0_code_kb_cursor_off": FIXED_BANK0_CODE_BASE,
-        "__lisp65_c2_fixed_bank0_code_c2e_cons": FIXED_BANK0_CODE_BASE + 5,
-        "__lisp65_c2_fixed_bank0_code_rtov_fail":
-            FIXED_BANK0_CODE_BASE + 45,
-        "rtov_fail": FIXED_BANK0_CODE_BASE + 45,
-        "__lisp65_c2_fixed_bank0_code_end": (
-            FIXED_BANK0_CODE_BASE + FIXED_BANK0_CODE_BYTES),
     }
+    if derived_fixed is not None:
+        members = {row["name"]: row for row in derived_fixed["members"]}
+        fixed_state.update({
+            "__lisp65_c2_fixed_bank0_code_start": FIXED_BANK0_CODE_BASE,
+            "__lisp65_c2_fixed_bank0_code_kb_cursor_off":
+                members["kb_cursor_off"]["address"],
+            "__lisp65_c2_fixed_bank0_code_c2e_cons":
+                members["c2_facade_target_c2e_cons"]["address"],
+            "__lisp65_c2_fixed_bank0_code_rtov_fail":
+                members["rtov_fail"]["address"],
+            "rtov_fail": members["rtov_fail"]["address"],
+            "__lisp65_c2_fixed_bank0_code_end":
+                derived_fixed["end_exclusive"],
+        })
+    else:
+        fixed_state.update({
+            "__lisp65_c2_fixed_bank0_code_start": FIXED_BANK0_CODE_BASE,
+            "__lisp65_c2_fixed_bank0_code_kb_cursor_off": FIXED_BANK0_CODE_BASE,
+            "__lisp65_c2_fixed_bank0_code_c2e_cons": FIXED_BANK0_CODE_BASE + 5,
+            "__lisp65_c2_fixed_bank0_code_rtov_fail":
+                FIXED_BANK0_CODE_BASE + 45,
+            "rtov_fail": FIXED_BANK0_CODE_BASE + 45,
+            "__lisp65_c2_fixed_bank0_code_end": (
+                FIXED_BANK0_CODE_BASE + FIXED_BANK0_CODE_BYTES),
+        })
     if BSS_TRIAGE:
         fixed_state.update({
             "__lisp65_c2_fixed_bank0_hot_bss_start": FIXED_BANK0_HOT_BSS_BASE,
@@ -5601,9 +5790,12 @@ def fixed_facade_gate(out: Path, target: Path, suffix: str) -> dict[str, object]
             "bank0": {"base": FIXED_BANK0_BASE, "bytes": FIXED_BANK0_BYTES},
             "bank0_code": {
                 "base": FIXED_BANK0_CODE_BASE,
-                "bytes": FIXED_BANK0_CODE_BYTES,
+                "bytes": fixed_code_bytes,
+                "layout_authority": (
+                    derived_fixed if derived_fixed is not None
+                    else "Link-60 sealed geometry"),
                 "headroom_to_runtime_overlay_bytes": (
-                    0xC356 - fixed_bank0_contract_end()),
+                    0xC356 - (FIXED_BANK0_CODE_BASE + fixed_code_bytes)),
             },
             "bank0_hot_bss": ({
                 "base": FIXED_BANK0_HOT_BSS_BASE,
