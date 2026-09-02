@@ -44,7 +44,7 @@ EXTERNAL_MANIFESTS = (
 )
 RELEASE_RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
-    "c2.3-v1.9.0-release-card-r1-receipt.json")
+    "c2.3-v2.0.0-release-card-r3-receipt.json")
 CONTRACT = ROOT / "config/public-surface-domain-contract.json"
 TIER2_RECEIPT = ROOT / (
     "tests/bytecode/dialect-v2/evidence/architecture-blocks/"
@@ -123,7 +123,7 @@ DELIVERED_CALLPRIMS = [
     75, 76, 77, 78, 79, 80, 81, 82, 83,
 ]
 TOMBSTONED_CALLPRIMS = [1, 2, 12, 26, 27, 40]
-RELEASE_ELF_SHA256 = "37cb8eff54b5394aff3130c279979ad22441c2d929c75dafc48679e3ad4b190e"
+RELEASE_ELF_SHA256 = "96ba670981172fab72383d40cf6da24d3318749d03a916014b716d4b881ecd05"
 
 
 class AuditError(RuntimeError):
@@ -339,7 +339,7 @@ def release_authority() -> dict[str, Any]:
                 walk(child)
 
     walk(receipt)
-    require(found, "v1.9 release receipt does not bind the product ELF")
+    require(found, "v2.0 release receipt does not bind the product ELF")
     return {
         "receipt": RELEASE_RECEIPT.relative_to(ROOT).as_posix(),
         "receipt_sha256": sha(RELEASE_RECEIPT),

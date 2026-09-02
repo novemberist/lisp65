@@ -1,6 +1,6 @@
 # Dialect V2 Language Reference
 
-This living reference describes **lisp65 1.9.0**. The language remains
+This living reference describes **lisp65 2.0.1**. The language remains
 Dialect V2.
 
 Dialect V2 is a small Common Lisp–inspired Lisp-2 for the MEGA65. It is
@@ -45,8 +45,22 @@ Core definition and control forms include `defun`, `defmacro`, `lambda`,
 parameters may include `&rest`, and `setq` updates local bindings as well as
 global values. These forms are lowered by the compiler; they are language
 syntax rather than function bindings, so their absence from a generated
-function-name list does not mean that the language lacks them. The historical
-`do` form and the public `remainder` name are not part of Dialect V2.
+function-name list does not mean that the language lacks them.
+
+Two global-definition macros, `defvar` and `defparameter`, complete the set:
+
+```lisp
+(defvar name [init])      ; assigns init only when name is not already bound
+(defparameter name init)  ; always assigns init
+```
+
+Both return the name as a symbol.
+
+The historical `do` and `do*` forms are deliberately not Dialect V2 compiler
+forms; use `dotimes`, `dolist`, or `while`. `remainder` is a different case:
+it remains a callable resident function, but it is not a Dialect V2
+source-operation and is not part of the generated public-surface metadata.
+Prefer `mod` in new code.
 
 Characters are fixnum character codes. There is no separate character type
 and no `#\` character-literal syntax; the reader's supported `#` syntax is
@@ -79,45 +93,95 @@ stays within one code window.
 
 The released surface includes:
 
-- arithmetic and comparison: `+`, `-`, `*`, `/`, `mod`, `1+`, `1-`, `=`,
-  `/=`, `<`, `>`, `<=`, `>=`, `zerop`, `plusp`, `minusp`;
-- lists and pairs: `cons`, `car`, `cdr`, `list`, `append`, `reverse`, `length`,
-  `nth`, `nthcdr`, `member`, `assoc`, `find`, `filter`, `mapcar`, `mapc`,
-  `reduce`, `every`, `some`, `count`, `position`;
+- arithmetic and comparison: `+`, `-`, `*`, `/`, `mod`, `1+`, `1-`, `abs`,
+  `max`, `min`, `=`, `/=`, `<`, `>`, `<=`, `>=`, `zerop`, `plusp`, `minusp`;
+- bitwise arithmetic: `logand`, `logior`, `logxor`, `ash`, each taking exactly
+  two arguments;
+- lists and pairs: `cons`, `car`, `cdr`, `list`, `list*`, `append`, `reverse`,
+  `nreverse`, `length`, `nth`, `nthcdr`, `last`, `butlast`, `copy-list`,
+  `member`, `assoc`, `find`, `filter`, `mapcar`, `mapcan`, `mapc`, `reduce`,
+  `every`, `some`, `count`, `position`, `rplaca`, `rplacd`;
+- property lists: `getf`, `remf`;
 - predicates and equality: `eq`, `eql`, `equal`, `atom`, `consp`,
   `symbolp`, `numberp`, `stringp`, `null`, `not`;
 - symbols and functions: `symbol-name`, `boundp`, `function-kind`, `eval`,
-  `funcall`, `apply`, `set`, `symbol-value`;
+  `funcall`, `apply`, `set`, `symbol-value`, `gensym`, `intern`;
 - fixed-point arithmetic: `q`, `int->q`, `q->int`, `q+`, `q-`, `q*`,
   `q/`, `q->string`;
 - random numbers: `random`, `random-seed`;
 - input: `read-line` (a Bank-2 last-row editor), plus low-level `key-event`
   for polling or raw events;
 - timing: `time`, `wait`;
-- optional strings from the separately loaded string-extra library:
-  `capitalize`, `string-split`;
-- optional inspection from the inspect library: `who-calls`, `trace`,
-  `untrace`;
-- optional positional structures from the defstruct library: `defstruct` and
-  its generated constructor, predicate, copier, accessors, setters and
-  functional updaters;
-- strings and character codes: `string-length`, `string-ref`, `search`,
-  `string-trim`, `string-upcase`, `string-downcase`, `char-upcase`,
-  `char-downcase`, `string=`, `string<`, `string-equal`, `string-prefix-p`,
-  `string-suffix-p`, `string-append`, `substring`;
-- reader, output, and system work: `read-from-string`, `write`, `write-char`,
-  `terpri`, `load-lib`, `load-libs`, `edit`, and the documented
-  IDE/M65D library commands.
+- strings and character codes: `string-length`, `string-ref`, `char`,
+  `char->string`, `number->string`, `search`, `string-trim`, `string-upcase`,
+  `string-downcase`, `char-upcase`, `char-downcase`, `string=`, `string<`,
+  `string-equal`, `string-prefix-p`, `string-suffix-p`, `string-append`,
+  `substring`;
+- output: `write`, `write-char`, `write-string`, `write-line`, `princ`,
+  `prin1`, `print`, `terpri`;
+- screen: `screen-size`, `screen-clear`, `screen-put-char`;
+- reader and system work: `read-from-string`, `load`, `load-lib`, `load-libs`,
+  `edit`, and the IDE/M65D library commands below.
 
 `search`, `position`, and `string-ref` use zero-based indexes. A missing search
 or position returns `nil`.
 
-These optional packages remain documented public modules, but they are not
-preloaded by the selected v1.9 boot profile. `trace` and `untrace` take an
-unquoted function name as macro input. Tracing publishes a wrapper
-transactionally, saves the exact original function-cell value and prints
-ordered `trace-enter`/`trace-exit` records. `untrace` restores the captured
-value exactly.
+Short notes on the less obvious names:
+
+- `(abs n)`, `(max n …)` and `(min n …)` take at least one number; `max` and
+  `min` accept any number of further arguments.
+- `(list* item … tail)` conses the leading items onto the final argument, so
+  `(list* 1 2 '(3))` is `(1 2 3)`.
+- `(butlast xs [n])` drops the last `n` elements, defaulting to one.
+- `(copy-list xs)` returns a fresh top-level copy.
+- `(mapcan fn list …)` applies `fn` like `mapcar` and appends the results.
+- `(nreverse xs)`, `(rplaca cons x)` and `(rplacd cons x)` mutate the cells
+  they are given and return the reversed list or the modified cons.
+- `(getf plist key [default])` reads a property-list value and `(remf plist
+  key)` returns the plist without that key; both require a well-formed plist.
+- `(gensym)` returns a fresh symbol and `(intern "name")` returns the symbol
+  for a string.
+- `(prin1 x)` prints the machine-readable form, `(princ x)` prints a string
+  without quoting and otherwise behaves like `prin1`, `(write-string s)` and
+  `(write-line s)` print a string with and without a trailing newline, and
+  `(number->string n)` converts a fixnum to a string.
+- `(char string index)` is `string-ref` under its Common Lisp name;
+  `(char->string code)` builds a one-character string.
+- `(screen-size)` returns `(columns rows)` and
+  `(screen-put-char x y code [attribute])` writes one cell.
+
+The IDE library adds `(ide)`, `(ide-buffers)`, `(dir)`,
+`(load-file-to-buffer file [buffer])`, `(save-buffer-to file [buffer])`,
+`(eval-buffer buffer)`, `(compile-buffer-to-lib slot [buffer])` and
+`(compile-file-to-lib source slot)`. The M65D library adds `(m65d-status)`,
+`(m65d-remount)`, `(m65d-save name string)` and
+`(m65d-save-new name string)`. Both libraries live on the product disk and
+must be loaded with `load-lib`; see the [User Guide](user-guide.md).
+
+### Names outside the 2.0.1 medium
+
+The generated public-surface metadata index is a host-side population. Several
+of its names belong to libraries that the 2.0.1 product disk does not carry,
+so they are documented modules without a 2.0.1 delivery claim:
+
+- generalized places from the `place` library: `setf`, `push`, `pop`, `incf`,
+  `decf`;
+- byte buffers from the `buffer` library: `make-buffer`, `buffer-ref`,
+  `buffer-set!`, `buffer-length`, `bufferp`, `string->buffer`,
+  `buffer->string`;
+- extra strings from the `string-extra` library: `capitalize`, `string-split`;
+- inspection from the `inspect` library: `who-calls`, `trace`, `untrace`;
+- positional structures from the `defstruct` library.
+
+`runtime-main` is the fixed-arity entry name of a standalone Ship runtime, not
+a Workbench command. `screen-write-string` keeps a stable native identity but
+the canonical Workbench product ships no Lisp wrapper for it; use
+`write-string` or `screen-put-char`.
+
+`trace` and `untrace` take an unquoted function name as macro input. Tracing
+publishes a wrapper transactionally, saves the exact original function-cell
+value and prints ordered `trace-enter`/`trace-exit` records. `untrace`
+restores the captured value exactly.
 
 `(defstruct name slot*)` is positional and option-free. It publishes
 `make-NAME`, `NAME-p`, `copy-NAME`, `NAME-SLOT`, `NAME-set-SLOT`, and
@@ -133,6 +197,29 @@ character-wise work, use an index loop with `dotimes`, `string-length`, and
 `string-ref`. Use `search`, `substring`, `string-prefix-p`,
 `string-suffix-p`, `string-equal`, and the case-conversion functions directly
 for string work.
+
+## List-domain errors
+
+Since 2.0.0 the public list and sequence functions reject an unsupported
+argument domain instead of returning a plausible but invalid value. Passing a
+non-list where a proper list is required — or a non-number where a count is
+required — raises the VM type error `vm: type error` and returns to one live
+prompt. `(length "abc")` is the canonical example; it no longer answers with a
+number.
+
+The functions with this behavior are `append`, `length`, `nth`, `nthcdr`,
+`reverse`, `last`, `member`, `assoc`, `mapcar`, `mapcan`, `mapc`, `find`,
+`position`, `butlast`, `copy-list`, `count`, `reduce`, `every`, `some`,
+`getf` and `remf`. Improper (dotted) list spines are rejected the same way.
+
+The hot `car` and `cdr` opcodes are deliberately excluded from this
+discipline: `(car nil)` and `(car 1)` both return `nil`. A fully checked
+implementation was measured but did not fit the resident text budget without
+an unacceptable per-key latency cost, so the inconsistency is documented
+rather than hidden. It is also recorded in
+[Known Issues](known-issues.md).
+
+## Further behavior
 
 `random` returns an unbiased value from zero through one less than its positive
 fixnum argument. `(random-seed seed)` makes a run reproducible; otherwise the
@@ -168,30 +255,36 @@ silently become a symbol character. Non-displayable control input is rejected.
 `(wait frames)` blocks for zero through 16,383 raster frames and returns
 `nil`. It uses the same atomic counter as `time`; RUN/STOP can abort the wait.
 
-`filter` and `read-from-string` were added in 1.1. `read-from-string` reads the
-first object from a String; malformed input uses the ordinary reader error
-path. `restart-repl` is deliberately not part of the 1.1 surface. It is
-reserved for the C2 immutable-code/mutable-session architecture after three
-bounded pre-C2 designs failed their hardware or capacity gates.
+`read-from-string` reads the first object from a String; malformed input uses
+the ordinary reader error path.
 
-`gc`, `room`, and `(error string)` have pinned semantics but are not delivered
-by the 1.1 profile: their one permitted carrier/pack attempt exceeded both the
-resident boundary and a runtime-slice cap. They are deferred together to the
-C2.2 format/carrier work rather than exposed as partially delivered names.
+`restart-repl` is deliberately not part of the released surface. It is
+reserved for the immutable-code/mutable-session architecture after three
+bounded earlier designs failed their hardware or capacity gates. Restart from
+the product disk for a fresh session.
 
-The complete native visibility and restriction inventory is generated from
-`config/v2-native-function-registry.json`; library manifests define the
-loadable surface.
+`gc`, `room`, and `(error string)` have pinned semantics but are not
+delivered: their one permitted carrier/pack attempt exceeded both the resident
+boundary and a runtime-slice cap. They remain deferred to a later
+format/carrier design rather than exposed as partially delivered names.
 
-Bitwise functions `logand`, `logior`, `logxor`, and `ash` are not available in
-1.1. Their compact implementation requires the catalog-format
-evolution planned with C2.2. Consequently `peekw` and `pokew` are also absent:
-1.1 exposes byte-sized `peek` and `poke`, but cannot compose a full unsigned
-16-bit result within its signed 15-bit fixnum representation.
+`peekw` and `pokew` are also absent. The release exposes byte-sized `peek` and
+`poke`, but cannot compose a full unsigned 16-bit result within its signed
+15-bit fixnum representation. The bitwise functions `logand`, `logior`,
+`logxor` and `ash` are delivered and listed above; use them to compose or
+decompose 16-bit values yourself, within the fixnum range.
 
-First-class byte buffers were added in 1.1. They print as the opaque marker
-`?`. Read their contents with `buffer-ref` and their length with
-`buffer-length`; the marker is not a readable representation.
+Native primitive visibility and restrictions are classified in
+`config/v2-native-function-registry.json`; the generated public-surface
+population is
+`tests/bytecode/dialect-v2/evidence/architecture-blocks/v11-function-metadata-index.json`,
+and library manifests define the loadable surface. Neither file alone is a
+list of everything a session can call: the resident library suite also
+publishes ordinary functions that carry no public-surface metadata.
+
+Byte buffers print as the opaque marker `?`, which is not a readable
+representation; read their contents with `buffer-ref` and their length with
+`buffer-length`. The `buffer` library is not on the 2.0.1 product disk.
 
 ## Interactive latency boundary
 
@@ -209,7 +302,8 @@ Public functions support direct calls and, where classified as function
 designators, `funcall` and `apply`. Hardware/internal primitives beginning with
 `%` are not user API.
 
-Wrong arity, invalid types, and unavailable functions fail loudly. The REPL
+Wrong arity, invalid types, and unavailable functions fail loudly, and since
+2.0.0 an unsupported list domain does too. The REPL
 recovers after an error; a failed form does not invalidate the session. Disk
 status and recovery rules are documented separately in the [User Guide](user-guide.md).
 

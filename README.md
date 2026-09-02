@@ -7,14 +7,17 @@ transactional 1581 disk persistence. This repository is a curated public
 source snapshot of a private proof repository; accepted public changes are
 validated there and returned in credited syncs.
 
-The current release is **lisp65 1.9.0**, using **Dialect V2**.
+The current release is **lisp65 2.0.1**, using **Dialect V2**. This
+documentation-only update reuses the 2.0.0 product bytes unchanged.
 
 ## Highlights
 
 - Native REPL and self-hosted `lcc` compiler on the MEGA65
 - Lisp-2 semantics, macros, closures, higher-order functions, and strict arity
 - Full-screen editor with one generated-and-tested L-full keymap
-- On-demand IDE, IDEX, M65D, and first-class Buffer libraries
+- Explicit list-domain errors instead of plausible but invalid results in
+  twenty-one Tier-1 library functions
+- On-demand IDE, IDEX, and M65D libraries from the product disk
 - C2-lite Chip-RAM execution with verified, publish-last cold staging
 - Native `while` and an unbiased, seedable `random`
 - Q8.7 fixed-point arithmetic, `(time form)`, `wait`, and `read-line`
@@ -38,13 +41,13 @@ The current release is **lisp65 1.9.0**, using **Dialect V2**.
 
 ## Get the release
 
-Download `lisp65-1.9.0.tar.gz` from the
-[v1.9.0 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v1.9.0).
+Download `lisp65-2.0.1.tar.gz` from the
+[v2.0.1 GitHub release](https://github.com/novemberist/lisp65/releases/tag/v2.0.1).
 Release bundles are GitHub Release assets and are not stored in Git history.
 
 ```sh
-tar -xzf lisp65-1.9.0.tar.gz
-cd lisp65-1.9.0
+tar -xzf lisp65-2.0.1.tar.gz
+cd lisp65-2.0.1
 python3 verify.py
 ```
 
@@ -52,7 +55,7 @@ Do not use a bundle that fails verification. The verifier checks every package
 file, the promoted product and package identities, and the embedded G5/G6
 hardware-acceptance bindings without consulting the repository or the network.
 
-See the [1.9.0 release notes](docs/releases/1.9.0.md) for the complete change
+See the [2.0.1 release notes](docs/releases/2.0.1.md) for the complete change
 summary and evidence boundary.
 
 ## First start from BASIC
@@ -87,7 +90,7 @@ automatic cold start therefore requires a default disk image configured in the
 MEGA65 Config menu; this procedure does not assume one.
 
 M65D accepts any valid non-product 1581 disk and denies `L65SYS` by product
-identity. There is no on-device disk formatter in 1.9.0.
+identity. There is no on-device disk formatter in 2.0.1.
 
 See the [User Guide](docs/user-guide.md) for the complete workflow and the
 [generated keymap](docs/generated/ide-keymap.md) for the authoritative editor
@@ -95,7 +98,7 @@ bindings.
 
 ## Maturity, known limitations, and roadmap
 
-**lisp65 1.9.0 is an early, hardware-validated release.** It is suitable for
+**lisp65 2.0.1 is an early, hardware-validated release.** It is suitable for
 exploration, learning, and small projects with reliable backups. It should not
 be treated as a general-purpose production environment for irreplaceable data,
 unattended operation, or large applications.
@@ -103,21 +106,23 @@ unattended operation, or large applications.
 | Current limitation | Practical effect | Planned direction |
 | --- | --- | --- |
 | Focused REPL editing | The native `lisp65>` prompt has lossless insertion-mode line editing. Balanced multiline input, history and Comfort are not delivered. | Type-ahead during evaluation and Comfort remain later work. |
-| Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v1.9 makes no matcher/blink claim. |
+| Structural editor display work deferred | Delimiter matching and cursor blinking passed host qualification but did not pass their bounded hardware round. | The full block remains sealed for a later release; v2.0 makes no matcher/blink claim. |
+| Permissive hot `car`/`cdr` opcodes | Tier-1 library functions raise a VM type error on an unsupported domain, but the hot opcodes stay permissive: `(car nil)` and `(car 1)` both return `nil`. | A fully checked Tier-2 implementation was measured but did not fit the resident text budget; it remains sealed for the 2.x series. |
 | Finite session metadata | Definitions are append-only and there is no dependency-safe `unload`; exhaustion requires a product-disk restart. | The C2D session store separates immutable code from mutable session state; dependency-aware reclamation remains later work. |
 | Freezer during a definition | Idle Freezer entry is hardware-proven. Entering the Freezer while a persistent definition/append is active is not supported. | Return with F3 and cold-restart before relying on the interrupted definition. The crossing is explicit C2.3 work. |
 | Intermittent post-GC OOM | One 1,200-allocation `while` workload ended with `vm: out of memory`; the follow-up run did not reproduce it. | Preserve the exact form and preceding steps if it recurs; the reproducer remains in the test suite. |
 | Fresh-session workflow | RUN/STOP aborts evaluation but keeps the session. The MEGA65 Reset button returns to BASIC rather than restarting lisp65. | Restart from the product disk for a fresh session; power-cycle for a cold start. `restart-repl` returns with C2.3. |
-| Standalone scope | The Ship Builder packages L65P-v1 projects; it does not capture arbitrary live Workbench session state. | Start from one of the four supplied Ship projects and declare the entry and library closure. |
-| Editor safety and discoverability | Buffers have fixed capacities. There is no undo/redo, interactive completion, integrated help, or full structural editing. | These remain measured post-1.2 work; no release date is promised. |
+| Standalone scope | The Ship Builder packages L65P-v1 projects; it does not capture arbitrary live Workbench session state. | Start from one of the five supplied Ship projects and declare the entry and library closure. |
+| Editor safety and discoverability | Editor buffers have fixed capacities. There is no undo/redo, interactive completion, integrated help, or full structural editing. | These remain measured later work; no release date is promised. |
 | File sizes are bounded | M65D and editor saves support 1–8,192 bytes. Evaluator `load` has a separate 38,400-byte staging ceiling; memory may become the practical limit earlier. | Larger files require a future storage/runtime design. |
 | Xemu-only use has limited fidelity | Xemu is useful for logic and boot choreography, but F011 writes, SD buffer mapping, Freezer behavior, reset semantics, and timing remain hardware claims. | Emulator-valid tests remain a prefilter, never a hardware substitute. |
 | Storage workflow remains narrow | One drive is supported, there is no on-device formatter, and a documented Freezer race can let at most one already-started sector cross a media boundary before status 12 stops further writes. | Keep backups. Multi-drive and core-assisted mount locking remain later work. |
 | Banner colors persist after scrolling | The screen driver scrolls character cells but not color RAM, so text crossing the former banner rows can inherit its colors. Data and program state are unaffected. | A later color-RAM-aware scroll path must preserve the native post-boot ownership contract. |
 | Function metadata is incomplete | Complete integrated help is not claimed for every native and macro entry. | Full metadata coverage and integrated help remain later work. |
 
-Buffers print as the opaque marker `?`; inspect them with `buffer-ref` and
-`buffer-length`. The physical product-medium write-protect case is not
+The first-class `buffer` library is not part of the 2.0.1 product medium; the
+byte-buffer names remain a documented module without a 2.0.1 delivery claim.
+The physical product-medium write-protect case is not
 applicable to the tested stock-core SD-D81 profile because it exposes no
 physical or virtual write-protect medium.
 
@@ -127,27 +132,27 @@ acceptance.
 
 ## Verification status
 
-Release 1.9.0 binds artifact set
-`518237bba41d6e1ff60f51de87e409ea9ccf62a819515dea00d288611ce3e079`,
+Release 2.0.1 reuses the sealed 2.0.0 artifact set
+`29a9c3eb63c662a94a24ab9b23582eda66bea5a656912bbe4f65660f1a04c2f2`,
 resident PRG
-`c91e342839901afa02516ce842bc32d1c077b9a4fa132911aef9d831906ccbff`:
+`39d317943cc4b39c2c2e8198f124ebe43708a945ba5a88dbd5296a5fc8577d25`:
 
+- `(length "abc")` raised a VM type error and recovered to a live prompt, while
+  the deliberately permissive `(car 1)` returned `nil`;
 - prompt-line insertion, cursor movement and deletion passed on one physical
   MEGA65, with no native `invalid token` response;
 - a forced-collection input sequence ended with
-  `raw = seen = stored = taken = 136`;
-- an ordinary type error returned to a usable native prompt through the new
-  retired-overlay execution backstop;
+  `raw = seen = stored = taken = 138`;
 - valid and failing `INIT.L65` variants ran once before the first prompt, with
   a failing form returning promptly to a usable native REPL;
-- the stopped D5 session retained 109 free symbol slots and 1,486 free name
+- the stopped D5 session retained 107 free symbol slots and 1,467 free name
   bytes, above the mandatory 32/384 user floor; and
 - two varied fresh public clones reproduced all 19 selected roles with zero
   private evidence inputs.
 
 Exact hashes and claim limits are recorded in the
-[1.9.0 release notes](docs/releases/1.9.0.md). The maintained limitations and
-retired 1.1 latency exception are in
+[2.0.1 release notes](docs/releases/2.0.1.md). The maintained limitations and
+retired exceptions are in
 [Known Issues and Retired Exceptions](docs/known-issues.md).
 
 The public repository is a curated source snapshot with independent Git
@@ -175,12 +180,12 @@ With the pinned LLVM-MOS SDK and `c1541` installed, the public C2-lite build is:
 
 ```sh
 make clean
-make workbench-product-v190
+make workbench-product-v200
 ```
 
 The target uses the single C2 emitter, one WPLTO closure, and the canonical
 media packer. Its final gate requires all 19 product roles to reproduce the
-sealed 1.9.0 artifact-set identity; the line editor is resident product freight.
+sealed 2.0.0 artifact-set identity; the line editor is resident product freight.
 The independently verifiable release bundle remains the
 authority for hardware-acceptance claims.
 
@@ -189,7 +194,10 @@ authority for hardware-acceptance claims.
 - [User Guide](docs/user-guide.md)
 - [Dialect V2 Language Reference](docs/language-reference.md)
 - [Generated IDE Keymap](docs/generated/ide-keymap.md)
+- [Release Notes for 2.0.1](docs/releases/2.0.1.md)
+- [Release Notes for 2.0.0](docs/releases/2.0.0.md)
 - [Release Notes for 1.9.0](docs/releases/1.9.0.md)
+- [Release Notes for 1.8.0](docs/releases/1.8.0.md)
 - [Release Notes for 1.7.0](docs/releases/1.7.0.md)
 - [Release Notes for 1.6.0](docs/releases/1.6.0.md)
 - [Release Notes for 1.5.0](docs/releases/1.5.0.md)

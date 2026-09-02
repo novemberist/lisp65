@@ -3,21 +3,23 @@
 This index is the curated entry point for the live lisp65 documentation.
 Documents not linked from the first three sections are implementation records,
 machine-bound contracts, proposals, or historical material; they are not user
-instructions for release 1.9.0.
+instructions for release 2.0.1.
 
 ## Users
 
 - [User Guide](user-guide.md) — verify, boot, edit, save, and recover
 - [Dialect V2 Language Reference](language-reference.md) — released syntax and surface
-- [Release Notes 1.9.0](releases/1.9.0.md) — current product and evidence boundary
+- [Release Notes 2.0.1](releases/2.0.1.md) — current documentation bundle and unchanged product boundary
+- [Release Notes 2.0.0](releases/2.0.0.md) — previous product and evidence boundary
+- [Release Notes 1.9.0](releases/1.9.0.md) — previous product and evidence boundary
 - [Release Notes 1.8.0](releases/1.8.0.md) — previous product and evidence boundary
-- [Release Notes 1.7.0](releases/1.7.0.md) — previous product and evidence boundary
+- [Release Notes 1.7.0](releases/1.7.0.md) — historical maintenance release
 - [Release Notes 1.6.0](releases/1.6.0.md) — historical cursor-navigation release
 - [Release Notes 1.5.0](releases/1.5.0.md) — historical input, tooling, and transport release
 - [Release Notes 1.4.0](releases/1.4.0.md) — historical locality and optional-library release
 - [Release Notes 1.3.0](releases/1.3.0.md) — historical Ship release
 - [Known Issues and Retired Exceptions](known-issues.md) — maintained product limitations
-- [Generated IDE Keymap](generated/ide-keymap.md) — authoritative 1.2 editor bindings
+- [Generated IDE Keymap](generated/ide-keymap.md) — authoritative L-full editor bindings
 - [Public Sync Log](public-sync-log.md) — curated-snapshot cadence and contribution credit
 - [Release Notes 1.2.5](releases/1.2.5.md) — historical `require` correction
 - [Release Notes 1.2.2](releases/1.2.2.md) — historical diagnostic correction

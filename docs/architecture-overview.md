@@ -17,6 +17,7 @@ persistent media, and verification artifacts as explicit product interfaces.
    execution path does not read code, records, literals, or native slices from
    Attic memory.
 6. **L65M libraries** — on-demand IDE, IDEX, M65D, and user-compiled code.
+   These three are the only library roles the product medium carries.
 7. **Boot stager** — a separate artifact that validates and stages the product
    before chaining into the workbench PRG.
 
@@ -30,6 +31,13 @@ checked public surface. Primitive identities come from a single registry and are
 cross-checked across CALLPRIM, `apply`, `function-kind`, and compile-REPL views.
 Dialect V2 uses strict arity metadata on code objects and L65M v2 directory
 entries, including anonymous private functions and explicit late-bound exports.
+
+Argument-domain behavior is a measured contract rather than an implementation
+accident. Every metadata-public symbol owns six domain cells, measured by
+invoking the materialized product bytecode; a changed classification or a new
+symbol without a row fails before repair. Release 2.0.1 retains the measured 545
+error-raised, 179 documented-permissive and 110 silently-wrong cells, with the
+hot `car`/`cdr` opcodes deliberately in the permissive group.
 
 ## Editor and libraries
 
@@ -68,7 +76,7 @@ mapping are rejected visibly rather than silently accepted. A line may carry
 several forms; they are evaluated left to right, so forms completed before a
 later reader error remain in effect.
 
-In v1.9 the native `lisp65>` prompt and public `read-line` share the resident
+The native `lisp65>` prompt and public `read-line` share the resident
 insertion-mode, cursor-following one-line editor. Its navigation bindings come
 from the same generated keymap authority as their tests. The editor owns the
 complete active line: prompt cells, editable text, cursor, and the handoff to
@@ -80,7 +88,7 @@ Keyboard-queue ownership is explicit. Capture is armed for the native
 editor consumes from its ring. The evaluator drain retains RUN/STOP through an
 independent matrix latch but cannot acknowledge ordinary keys while capture is
 armed. Final-ELF gates prove both arming and real consumer routing, and the
-device acceptance ended with `raw=seen=stored=taken=136` across a forced
+device acceptance ended with `raw=seen=stored=taken=138` across a forced
 collection. The same one-owner/defined-handoff rule governs composed
 framebuffer writers.
 
@@ -92,7 +100,7 @@ cleared overlay code; unrelated fail-closed faults remain fail-closed.
 
 ## Media model
 
-Release 1.9.0 uses two D81 roles with one drive:
+Release 2.0.1 uses the unchanged 2.0.0 product bytes in two D81 roles with one drive:
 
 - `L65SYS` is the immutable product image used for boot and for the resident
   IDE, IDEX, and M65D library payloads.

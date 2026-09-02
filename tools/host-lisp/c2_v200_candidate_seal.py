@@ -112,7 +112,8 @@ def acceptance() -> dict[str, Any]:
     return {"device": bind(DEVICE), "device_attributions": bind(ATTRIBUTIONS),
             "release_card": bind(CARD), "D5_free": d5,
             "forced_collection_counters": counters,
-            "loaded_library_roles": [], "delivered_library_roles": []}
+            "loaded_library_roles": [],
+            "delivered_library_roles": ["ide", "idex", "m65d"]}
 
 
 def derive_authority() -> dict[str, Any]:
@@ -141,7 +142,8 @@ def derive_authority() -> dict[str, Any]:
         "selected_media_sha256": facts["media"]["media"]["product"]["sha256"],
         "sealed_roles": {row["role"]: {"bytes": row["bytes"],
                                          "sha256": row["sha256"]} for row in rows},
-        "delivered_library_roles": [], "loaded_D5_library_roles": [],
+        "delivered_library_roles": ["ide", "idex", "m65d"],
+        "loaded_D5_library_roles": [],
         "excluded_library_roles": ["v16core-duplicate", "repl-comfort",
                                      "Matcher/Blink", "Tier-2"],
         "Tier_1_contract_counts": {"error-raised": 545,

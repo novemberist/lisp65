@@ -1,9 +1,9 @@
-# lisp65 1.9.0 User Guide
+# lisp65 2.0.1 User Guide
 
 ## What you need
 
 - A MEGA65 running the stock-core SD-D81 profile used by the release
-- The extracted `lisp65-1.9.0` release bundle
+- The extracted `lisp65-2.0.1` release bundle
 - Python 3 on a host computer for the one-time package verification
 - One writable 1581 disk image for your work
 
@@ -41,8 +41,9 @@ the live repository or network.
 5. Follow the three visible phases — `STAGING MEDIA`, `BUILDING HEAP`, and
    `LOADING LIBRARIES` — then wait for the lisp65 banner and REPL.
 6. Use Cursor Left/Right, insertion, and deletion directly at `lisp65>`; the
-   editor is already active and needs no library load.
-7. Load the workbench composition while `L65SYS` remains mounted:
+   one-line prompt editor is resident and needs no library load.
+7. Load the workbench composition while `L65SYS` remains mounted. These are the
+   full-screen editor and persistence libraries, not the prompt editor:
 
    ```lisp
    (load-lib "ide")
@@ -74,11 +75,18 @@ denial is the applicable protection in this profile.
 (load-file-to-buffer "demo")      ; load source into a buffer
 (save-buffer-to "demo")           ; save the current buffer
 (eval-buffer "demo")              ; evaluate a buffer in this session
-(compile-buffer-to-lib "demo-lib") ; transactional arbitrary-name output
-(load-lib "demo-lib")             ; load the compiled library
+(compile-buffer-to-lib "fasl1")   ; compile a buffer into an existing fasl slot
+(load-lib "fasl1")                ; load the compiled library
 ```
 
-The selected v1.9 product checks for `INIT.L65` after the resident world is
+`compile-buffer-to-lib` and `compile-file-to-lib` write only into a
+preallocated slot whose name begins with `fasl`, and only when that slot
+already exists on the mounted disk. Any other destination name sets the
+`ide-error` reason `not fasl`, and a missing slot sets `slot missing`. To
+publish a library under an arbitrary name, use `compile-string` directly, as
+shown below.
+
+The selected 2.0.1 product checks for `INIT.L65` after the resident world is
 ready and before the first banner. The release medium deliberately omits the
 file, so the normal release boot takes the silent absence path. On a derived
 medium that supplies it, the file is evaluated once per cold boot. An open or
@@ -100,15 +108,19 @@ single-line editor, not the deferred balanced multiline/history Comfort REPL.
 The input queue has one active product owner. Capture is armed while the native
 editor reads, and the delivered editor consumes from its ring; the evaluator
 does not race it for ordinary events. A physical-device sequence crossing a
-forced collection ended with `raw = seen = stored = taken = 136`. This proves
+forced collection ended with `raw = seen = stored = taken = 138`. This proves
 the interactive read phase used in the acceptance session. It does not promise
 type-ahead while Lisp evaluation is running.
 
-Persistent compilation no longer uses preallocated `fasl*` slots. `compile-string`
-and the editor compiler path save arbitrary library names through the full M65D
+The release-terminal capacity reading for this unchanged product world is
+107 free symbol slots and 1,467 free name bytes, above the required 32/384
+floor.
+
+`compile-string` saves an arbitrary library name through the full M65D
 copy-on-write transaction: allocation and verified staging happen first,
 directory publication happens last, and the transaction remains bound to the
-same mounted medium.
+same mounted medium. It does not need a preallocated `fasl*` slot; the two
+IDE compile commands above still do.
 
 Example:
 
@@ -121,11 +133,13 @@ Example:
 
 ### Product-resident libraries
 
-The v1.9 product D81 contains `ide`, `idex`, and `m65d`. Load the libraries you
-need before swapping to the work disk. If M65D is already active when the
-mounted image changes, run `(m65d-remount)` before loading or saving. Historical
-optional packages such as `string-extra`, `inspect`, `place`, and `defstruct`
-are not part of the selected v1.9 medium or its hardware claim.
+The 2.0.1 product D81 contains `ide`, `idex`, and `m65d`, and no other library
+role. Load the libraries you need before swapping to the work disk. If M65D is
+already active when the mounted image changes, run `(m65d-remount)` before
+loading or saving. Historical optional packages such as `buffer`,
+`string-extra`, `inspect`, `place`, and `defstruct` are not part of the
+selected 2.0.1 medium or its hardware claim; `(load-lib "buffer")` and the
+other package names therefore have nothing to load on the release disk.
 
 Interactive Shift-Space is normalized to ordinary space. This matters for the
 natural Lisp typing sequence `) (`, where Shift may remain held between the two
@@ -158,9 +172,11 @@ the resolution lock, the project manifest, and its redistribution notice. A
 failure leaves no partial destination image. Mount the resulting D81 as a boot
 disk and cold-start the MEGA65; it does not require the Workbench disk.
 
-The four supplied examples cover a minimal entry, `random` with Q8.7 math, a
-long-running computation, and interactive `read-line` input. Start from one of
-their `project.l65p` files when creating a new project.
+The five supplied examples under `examples/ship/` cover a minimal entry
+(`hello`), interactive `read-line` input (`interactive`), a long-running
+computation (`long-runner`), `random` with Q8.7 math (`random-q`), and a small
+parity toy (`parity-toy`). Start from one of their `project.l65p` files when
+creating a new project.
 
 ## Iteration and random numbers
 
@@ -312,9 +328,12 @@ Use direct operations such as `search`, `substring`, `string-prefix-p`,
 
 ## Editor keys
 
-The authoritative 1.2 L-full keymap is generated from the same source as its
+The authoritative L-full keymap is generated from the same source as its
 tests:
-[Workbench key bindings](generated/ide-keymap.md). It contains 41 bindings.
+[Workbench key bindings](generated/ide-keymap.md). It contains 41 bindings,
+generated from `config/v11-l-lite-keymap.json`, whose status is the L-full
+product table. The generated page and the executable consumers are projections
+of that same authority.
 
 Important conventions:
 
@@ -339,16 +358,20 @@ Save important edits first. The escalation ladder is:
    platform Reset button returns to BASIC; it does not restart lisp65.
 3. Power-cycle for a fully cold start that also clears Attic state.
 
-`restart-repl` is not part of 1.1. Three bounded pre-C2 implementations failed
-their product-semantics or capacity gates; the feature returns with the C2.3
-immutable-code/mutable-session architecture.
+`restart-repl` is not part of the released surface. Three bounded earlier
+implementations failed their product-semantics or capacity gates; the feature
+is reserved for the immutable-code/mutable-session architecture.
 
-## Buffers
+## Buffers (not on the 2.0.1 medium)
 
-The optional `buffer` shelf library provides fixed-length mutable byte buffers:
+The optional `buffer` shelf library provides fixed-length mutable byte
+buffers. Like `string-extra`, `inspect`, `place`, and `defstruct`, it is **not
+part of the 2.0.1 product disk**, so the sequence below cannot be run from the
+release medium. It is documented here because the module and its contract are
+still maintained:
 
 ```lisp
-(load-lib "buffer")
+(load-lib "buffer")               ; not present on the 2.0.1 product disk
 (setq b (make-buffer 16))
 (buffer-set! b 0 65)
 (buffer-ref b 0)                  ; => 65
@@ -363,14 +386,29 @@ operations on that object, as specified in the
 
 ## Errors
 
-The L65E-v1 overlay maps 60 stable error codes and supplies readable text for
-the 43 codes reachable in the Workbench profile. Unknown or unavailable text
+The L65E-v1 overlay maps 63 stable error codes and supplies readable text for
+the 44 codes reachable in the Workbench profile, 41 of which are addressed to
+the user and three to maintainers. Unknown or unavailable text
 uses the allocation-free `Ehh` fallback, where `hh` is the two-digit hexadecimal
 code. This is not a general condition system or user-handler API.
 
 Wrong arity, invalid types, and unavailable functions fail loudly. After an
 ordinary error the REPL remains usable; a mistyped form does not invalidate the
 session.
+
+Since 2.0.0 the public list functions also fail loudly on an unsupported
+argument domain instead of returning a plausible but invalid value:
+
+```lisp
+(length "abc")                    ; *** vm: type error
+```
+
+This covers `append`, `length`, `nth`, `nthcdr`, `reverse`, `last`, `member`,
+`assoc`, `mapcar`, `mapcan`, `mapc`, `find`, `position`, `butlast`,
+`copy-list`, `count`, `reduce`, `every`, `some`, `getf`, and `remf`, including
+improper (dotted) list spines. The hot `car` and `cdr` opcodes are the
+documented exception: `(car nil)` and `(car 1)` both return `nil`. See
+[Known Issues](known-issues.md).
 
 The v1.6 recovery boundary also catches a transfer into a retired overlay and
 sanitizes restored control-state pairs before returning to the native prompt.
@@ -423,9 +461,9 @@ further writes. The release does not claim atomicity inside that window.
   38,400-byte staging ceiling; memory may constrain practical input earlier.
 - The Ship Builder creates bootable application disks from L65P-v1 projects,
   but does not turn arbitrary live Workbench session state into an image.
-- Function metadata proves exact arity for 101 entries; 34 native or macro
-  entries are explicitly unresolved, so complete integrated help is not
-  claimed.
+- Function metadata proves exact arity for 103 of its 139 entries; 36 native
+  or macro entries are explicitly unresolved, so complete integrated help is
+  not claimed.
 - The editor has fixed-capacity buffers and no undo/redo, interactive symbol
   completion, integrated help, or full structural editing.
 - A virtual-input diagnostic delivered only 56 of 64 requested keys, but the

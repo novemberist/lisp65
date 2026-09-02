@@ -3458,6 +3458,24 @@ c2-v200-public-clean-build-selftest: c2-v200-candidate-seal-check
 
 check-source: c2-v200-public-clean-build-selftest
 
+.PHONY: c2-v200-public-surface-medium-projection-selftest c2-v200-public-surface-medium-projection-check
+c2-v200-public-surface-medium-projection-selftest:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_public_surface_medium_projection.py selftest
+
+c2-v200-public-surface-medium-projection-check: c2-v200-public-surface-medium-projection-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v200_public_surface_medium_projection.py check
+
+check-source: c2-v200-public-surface-medium-projection-check
+
+.PHONY: c2-v201-bundle-docs-selftest c2-v201-bundle-docs-source-check
+c2-v201-bundle-docs-selftest: c2-v200-public-surface-medium-projection-check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v201_bundle_docs_gate.py selftest
+
+c2-v201-bundle-docs-source-check: c2-v201-bundle-docs-selftest
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/c2_v201_bundle_docs_gate.py source-check
+
+check-source: c2-v201-bundle-docs-source-check
+
 .PHONY: check-source-runtime-selftest check-source-runtime-check check-source-inner
 check-source-runtime-selftest:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/host-lisp/check_source_runtime.py selftest
